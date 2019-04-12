@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Org_Email_Id__c</fullName>
+    <description>Id of the organizational email that allows for external sending out of Salesforce</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Id of the organizational email that allows for external sending out of Salesforce</inlineHelpText>
+    <label>Org Email Id</label>
+    <length>30</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

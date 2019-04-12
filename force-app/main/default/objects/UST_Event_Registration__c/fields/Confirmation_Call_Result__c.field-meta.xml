@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Confirmation_Call_Result__c</fullName>
+    <externalId>false</externalId>
+    <label>Confirmation Call Result</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Talked to Prospect</fullName>
+                <default>false</default>
+                <label>Talked to Prospect</label>
+            </value>
+            <value>
+                <fullName>Talked to Parent</fullName>
+                <default>false</default>
+                <label>Talked to Parent</label>
+            </value>
+            <value>
+                <fullName>Left Message</fullName>
+                <default>false</default>
+                <label>Left Message</label>
+            </value>
+            <value>
+                <fullName>No Answer</fullName>
+                <default>false</default>
+                <label>No Answer</label>
+            </value>
+            <value>
+                <fullName>Disconnected</fullName>
+                <default>false</default>
+                <label>Disconnected</label>
+            </value>
+            <value>
+                <fullName>Wrong Number</fullName>
+                <default>false</default>
+                <label>Wrong Number</label>
+            </value>
+            <value>
+                <fullName>Change needed-Call Logged</fullName>
+                <default>false</default>
+                <label>Change needed-Call Logged</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

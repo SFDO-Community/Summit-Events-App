@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Attendee_List__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Allows admin to choose whether or not to display the list of registrants on the event landing page. Registrants can opt to have their names not disply on the attendee list.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Allows admin to choose whether or not to display the list of registrants on the event landing page. Registrants can opt to have their names not disply on the attendee list.</inlineHelpText>
+    <label>Attendee List</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

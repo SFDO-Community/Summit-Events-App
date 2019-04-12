@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auto_Add_Time__c</fullName>
+    <description>Auto populate this appointment time when this appointment is added to a registration</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Auto populate this appointment time when this appointment is added to a registration</inlineHelpText>
+    <label>Auto Add Time</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Time</type>
+</CustomField>

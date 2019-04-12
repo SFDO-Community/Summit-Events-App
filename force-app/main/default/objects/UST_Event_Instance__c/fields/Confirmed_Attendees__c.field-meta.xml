@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Confirmed_Attendees__c</fullName>
+    <description>Number of attendees confirmed with sub status attended (the actually came to the event).</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Number of attendees confirmed with sub status attended (the actually came to the event).</inlineHelpText>
+    <label>Confirmed Attendees</label>
+    <summarizedField>UST_Event_Registration__c.Actual_Number_of_Guests__c</summarizedField>
+    <summaryForeignKey>UST_Event_Registration__c.Event_Instance__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

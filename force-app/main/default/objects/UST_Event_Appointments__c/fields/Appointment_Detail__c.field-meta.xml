@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Appointment_Detail__c</fullName>
+    <description>Added detail about the appointment</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Added detail about the appointment</inlineHelpText>
+    <label>Appointment Detail</label>
+    <length>5000</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Add_Info_Question_1__c</fullName>
+    <description>Question as defined for additional questions in event definition.</description>
+    <externalId>false</externalId>
+    <formula>Event__r.Add_Info_Question_Text_1__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Question as defined for additional questions in event definition.</inlineHelpText>
+    <label>Add Info Question 1</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

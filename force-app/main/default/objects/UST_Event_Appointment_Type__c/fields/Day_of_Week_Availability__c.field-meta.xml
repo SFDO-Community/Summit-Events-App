@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Day_of_Week_Availability__c</fullName>
+    <description>This option will only be available on the defined days of the week. It will be available all days if no items are selected.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This option will only be available on the defined days of the week. It will be available all days if no items are selected.</inlineHelpText>
+    <label>Day of Week Availability</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Sunday</fullName>
+                <default>false</default>
+                <label>Sunday</label>
+            </value>
+            <value>
+                <fullName>Monday</fullName>
+                <default>false</default>
+                <label>Monday</label>
+            </value>
+            <value>
+                <fullName>Tuesday</fullName>
+                <default>false</default>
+                <label>Tuesday</label>
+            </value>
+            <value>
+                <fullName>Wednesday</fullName>
+                <default>false</default>
+                <label>Wednesday</label>
+            </value>
+            <value>
+                <fullName>Thursday</fullName>
+                <default>false</default>
+                <label>Thursday</label>
+            </value>
+            <value>
+                <fullName>Friday</fullName>
+                <default>false</default>
+                <label>Friday</label>
+            </value>
+            <value>
+                <fullName>Saturday</fullName>
+                <default>false</default>
+                <label>Saturday</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>7</visibleLines>
+</CustomField>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Chosen_State__c</fullName>
+    <description>Defines the state of the appointment. None: must be selected by user, Added: Added to selected appointments but can be removed, Added and Required: Added to appointments and can not be removed.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Defines the state of the appointment. None: must be selected by user, Added: Added to selected appointments but can be removed, Added and Required: Added to appointments and can not be removed.</inlineHelpText>
+    <label>Chosen State</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Added</fullName>
+                <default>false</default>
+                <label>Added</label>
+            </value>
+            <value>
+                <fullName>Added and Required</fullName>
+                <default>false</default>
+                <label>Added and Required</label>
+            </value>
+            <value>
+                <fullName>Added but not shown</fullName>
+                <default>false</default>
+                <label>Added but not shown</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

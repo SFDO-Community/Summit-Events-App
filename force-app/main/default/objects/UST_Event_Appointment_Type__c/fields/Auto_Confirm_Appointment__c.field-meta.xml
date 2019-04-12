@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auto_Confirm_Appointment__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>When the appointment is added to the event a confirm status, rather than a requested status, will be applied.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When the appointment is added to the event a confirm status, rather than a requested status, will be applied.</inlineHelpText>
+    <label>Auto Confirm Appointment</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

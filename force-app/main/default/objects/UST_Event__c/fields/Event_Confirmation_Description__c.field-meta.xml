@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Confirmation_Description__c</fullName>
+    <description>The final page of the event registration. Thank for the registration and describe next steps.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The final page of the event registration. Thank for the registration and describe next steps.</inlineHelpText>
+    <label>Event Confirmation Description</label>
+    <length>15000</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Html</type>
+    <visibleLines>25</visibleLines>
+</CustomField>

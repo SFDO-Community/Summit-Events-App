@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Sponsor__c</fullName>
+    <description>This will allow filtering on this event based on non-program events.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This will allow filtering on this event based on non-program events.</inlineHelpText>
+    <label>Event Sponsor</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Center for Ethical Organizations</fullName>
+                <default>false</default>
+                <label>Center for Ethical Organizations</label>
+            </value>
+            <value>
+                <fullName>Center for Innovation in the Business of Health Care</fullName>
+                <default>false</default>
+                <label>Center for Innovation in the Business of Health Care</label>
+            </value>
+            <value>
+                <fullName>Center for Nonprofit Management</fullName>
+                <default>false</default>
+                <label>Center for Nonprofit Management</label>
+            </value>
+            <value>
+                <fullName>Entrepreneurship</fullName>
+                <default>false</default>
+                <label>Entrepreneurship</label>
+            </value>
+            <value>
+                <fullName>Executive Education</fullName>
+                <default>false</default>
+                <label>Executive Education</label>
+            </value>
+            <value>
+                <fullName>Family Business Center</fullName>
+                <default>false</default>
+                <label>Family Business Center</label>
+            </value>
+            <value>
+                <fullName>Graduate Admissions</fullName>
+                <default>false</default>
+                <label>Graduate Admissions</label>
+            </value>
+            <value>
+                <fullName>Healthcare</fullName>
+                <default>false</default>
+                <label>Healthcare</label>
+            </value>
+            <value>
+                <fullName>Norris Institute</fullName>
+                <default>false</default>
+                <label>Norris Institute</label>
+            </value>
+            <value>
+                <fullName>Principled Leadership</fullName>
+                <default>false</default>
+                <label>Principled Leadership</label>
+            </value>
+            <value>
+                <fullName>Schulze School of Entrepreneurship</fullName>
+                <default>false</default>
+                <label>Schulze School of Entrepreneurship</label>
+            </value>
+            <value>
+                <fullName>Small Business Development Center</fullName>
+                <default>false</default>
+                <label>Small Business Development Center</label>
+            </value>
+            <value>
+                <fullName>Small Business Institute</fullName>
+                <default>false</default>
+                <label>Small Business Institute</label>
+            </value>
+            <value>
+                <fullName>Veritas Institute</fullName>
+                <default>false</default>
+                <label>Veritas Institute</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>10</visibleLines>
+</CustomField>

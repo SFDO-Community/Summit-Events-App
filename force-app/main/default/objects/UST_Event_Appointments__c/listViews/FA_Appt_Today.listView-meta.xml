@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>FA_Appt_Today</fullName>
+    <columns>NAME</columns>
+    <columns>Appointment_Status__c</columns>
+    <columns>Event_Registration_Date__c</columns>
+    <columns>Contact__c</columns>
+    <columns>Faculty_Staff_Member__c</columns>
+    <columns>Appointment_Time_Formatted__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Appointment_Category__c</field>
+        <operation>equals</operation>
+        <value>Financial Aid Visit</value>
+    </filters>
+    <filters>
+        <field>Appointment_Date_Time__c</field>
+        <operation>equals</operation>
+        <value>TODAY</value>
+    </filters>
+    <label>FA Appt Today</label>
+    <language>en_US</language>
+</ListView>

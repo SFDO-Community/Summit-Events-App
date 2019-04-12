@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Appointment_Description__c</fullName>
+    <description>If entered these instructions/description that appear before the appointment options section of the event</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If entered these instructions/description that appear before the appointment options section of the event</inlineHelpText>
+    <label>Event Appointment Description</label>
+    <length>3000</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Html</type>
+    <visibleLines>10</visibleLines>
+</CustomField>

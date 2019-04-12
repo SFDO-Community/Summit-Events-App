@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Generated_Requested_Appointments__c</fullName>
+    <description>A list of all requested appointments regardless of status.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>A list of all requested appointments regardless of status.</inlineHelpText>
+    <label>Generated Requested Appointments</label>
+    <length>32768</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>25</visibleLines>
+</CustomField>

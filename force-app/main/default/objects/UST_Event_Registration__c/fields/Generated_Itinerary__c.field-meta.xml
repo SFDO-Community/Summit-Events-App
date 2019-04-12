@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Generated_Itinerary__c</fullName>
+    <description>Auto generated itinerary based on confirmed appointments.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Auto generated itinerary based on confirmed appointments.</inlineHelpText>
+    <label>Generated Itinerary</label>
+    <length>32000</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>25</visibleLines>
+</CustomField>

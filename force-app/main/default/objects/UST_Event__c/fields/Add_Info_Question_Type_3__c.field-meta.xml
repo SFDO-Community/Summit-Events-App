@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Add_Info_Question_Type_3__c</fullName>
+    <description>What type of additional question input do you require. If pick-list you will need to provide values in the Add Info Question Pick-list.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>What type of additional question input do you require. If pick-list you will need to provide values in the Add Info Question Pick-list.</inlineHelpText>
+    <label>Add Info Question Type 3</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Pick-list</fullName>
+                <default>false</default>
+                <label>Pick-list</label>
+            </value>
+            <value>
+                <fullName>Pick-list required</fullName>
+                <default>false</default>
+                <label>Pick-list required</label>
+            </value>
+            <value>
+                <fullName>Text area</fullName>
+                <default>false</default>
+                <label>Text area</label>
+            </value>
+            <value>
+                <fullName>Text area required</fullName>
+                <default>false</default>
+                <label>Text area required</label>
+            </value>
+            <value>
+                <fullName>Text box</fullName>
+                <default>false</default>
+                <label>Text box</label>
+            </value>
+            <value>
+                <fullName>Text box required</fullName>
+                <default>false</default>
+                <label>Text box required</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Registration_Highlights</fullName>
+    <fields>Preferred_First_Name_Formatted__c</fields>
+    <fields>Contact__c</fields>
+    <fields>Display_Attendance_Publicly__c</fields>
+    <fields>Event_Instance_Title__c</fields>
+    <fields>New_Contact_Created__c</fields>
+    <fields>Registrant_Mobile_Phone__c</fields>
+    <fields>Registrant_Phone__c</fields>
+    <fields>Registrant_Email__c</fields>
+    <label>Registration Highlights</label>
+</CompactLayout>

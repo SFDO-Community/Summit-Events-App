@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BCC_Email__c</fullName>
+    <description>Comma separated list of emails to blind carbon copy this email.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Comma separated list of emails to blind carbon copy this email.</inlineHelpText>
+    <label>BCC Email</label>
+    <length>1000</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

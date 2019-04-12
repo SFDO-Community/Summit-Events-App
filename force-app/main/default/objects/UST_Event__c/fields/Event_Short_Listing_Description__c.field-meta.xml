@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Short_Listing_Description__c</fullName>
+    <description>This description displays on concise list of events and should not be verbose</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This description displays on concise list of events and should not be verbose</inlineHelpText>
+    <label>Event Short Listing Description</label>
+    <length>3000</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

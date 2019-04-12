@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Registrant_Parent_Phone__c</fullName>
+    <description>Phone number for the parent of the student registering for the event.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Phone number for the parent of the student registering for the event.</inlineHelpText>
+    <label>Registrant Parent Phone</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Phone</type>
+</CustomField>

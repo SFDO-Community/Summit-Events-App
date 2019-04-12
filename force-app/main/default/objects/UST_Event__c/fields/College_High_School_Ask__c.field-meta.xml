@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>College_High_School_Ask__c</fullName>
+    <description>Get High School and College information and last attended/graduation date.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Get High School and College information and last attended/graduation date.</inlineHelpText>
+    <label>College High School Ask</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Don&#39;t ask</fullName>
+                <default>false</default>
+                <label>Don&#39;t ask</label>
+            </value>
+            <value>
+                <fullName>Both College and HS</fullName>
+                <default>false</default>
+                <label>Both College and HS</label>
+            </value>
+            <value>
+                <fullName>HS Only</fullName>
+                <default>false</default>
+                <label>HS Only</label>
+            </value>
+            <value>
+                <fullName>College Only</fullName>
+                <default>false</default>
+                <label>College Only</label>
+            </value>
+            <value>
+                <fullName>Auto Select on Audience</fullName>
+                <default>false</default>
+                <label>Auto Select on Audience</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

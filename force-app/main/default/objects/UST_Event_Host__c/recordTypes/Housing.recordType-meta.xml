@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Housing</fullName>
+    <active>true</active>
+    <description>A housing host (dorm room overnight)</description>
+    <label>Housing</label>
+    <picklistValues>
+        <picklist>Building__c</picklist>
+        <values>
+            <fullName>Anderson Athletic %26 Recreation Complex %28ARC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Anderson Student Center %28ASC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Aquinas Hall %28AQU%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Archbishop Ireland Memorial Library %28IRL%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Art History %2844C%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Binz Refectory %28BIN%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Brady Educational Center %28BEC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Chapel of St%2E Thomas Aquinas %28CHA%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Child Development Center %28CDC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Facilities %26 Design Center %28FDC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>John P%2E Monahan Plaza</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>John R Roach Center for Liberal Arts %28JRC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Koch Commons %28KOC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Loras Hall %28LOR%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>McCarthy Gym%2C %28MCG%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>McNeely Hall %28MCH%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Minneapolis Campus Buildings</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Murray-Herrick Campus Center %28MHC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>North Athletic Fields %28NAF%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>O%27Shaghnessy Science Hall %28OSS%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>O%27Shaghnessy-Frey Library Center %28LIB%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>O%27Shaughnessy Educational Center %28OEC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>O%E2%80%99Shaughnessy Stadium %28STA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Office of Admissions</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Office of Financial Aid</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Opus Hall %28MOH%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Owens Science Hall %28OWS%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>School of Law %28MSL%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Schulze Hall %28SCH%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sitzmann Hall %2855S%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>South Athletic Fields %28SAF%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>St%2E John Vianney Seminary %28SJV%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>St%2E Mary%E2%80%99s Chapel %28SMC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>St%2E Paul School of Divinity %28SOD%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Summit Classroom Building %28SCB%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Terrence Murphy Hall %28TMH%29</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Gender__c</picklist>
+        <values>
+            <fullName>F</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>M</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Undergrad_Major__c</picklist>
+        <values>
+            <fullName>ACSC</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Art History %28ARTH%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Biochemistry%28BCH1%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Biology %28BIOL%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Biology of Global Health %28BOGH%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Administration-Accounting %28BUAC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Administration-Business Communication %28BUBC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Administration-Entrepreneurship %28BUEN%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Administration-Family Business %28BUFM%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Administration-Financial Management %28BUFI%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Administration-General Business Management %28BUGB%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Administration-Human Resources Management %28BUHR%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Administration-International Business %28BUIB%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Administration-Leadership %26 Management %28BULM%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Administration-Legal Studies in Business %28BULS%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Administration-Marketing Management %28BUMK%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Administration-Operations Management %28BUOP%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Administration-Real Estate Studies %28BURE%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Catholic Studies %28CATH%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Chemistry %28CHEM%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Classical Civilization %28CLAS%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Classical Languages %28LAGK%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Communication and Journalism %28COJO%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Computer Sciences-Computer Science %28CSIA%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Computer Sciences-Information Security %28CSIE%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Computer Sciences-Information Systems %28CSIC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Criminal Justice %28SOCJ%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Economics %28ECON%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Education-Elementary Education %28XELE%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Education-Secondary Education %28XMSE%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Engineering-Computer %28COEN%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Engineering-Electrical %28EEE1%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Engineering-Mechanical %28EGM1%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>English %28ENGL%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>English-Writing %28ENWR%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Environmental Science %28XESC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Environmental Studies %28XENV%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Exercise Science %28EXSC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Family Studies %28FAST%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>French %28FREN%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Geographic Information Systems%28GGIS%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Geography %28GEOG%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Geology %28GEOL%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>German %28GERM%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Health Promotion %28PEH1%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>History %28HIST%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>International Studies %28INTS%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Journalism %28see Communication and Journalism%29 %28XJOU%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Justice %26 Peace Studies %28JPST%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Latin %28LATN%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Literary Studies %28XLST%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mathematics %28MATH%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Music %28MUSC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Music - Business %28MUBA%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Music - Liturgical Music %28MULT%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Music - Performance %28MUPE%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Music Education-Instrumental %28K-12%29 %28MEIN%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Music Education-Vocal %28K-12%29 %28MEVO%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Neuroscience %28NSCI%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Philosophy %28PHIL%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Physics %28PHYS%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Political Science %28POLS%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pre-Chiropractic %28XCHR%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pre-Dentistry %28XDEN%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pre-Engineering %28EN32%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pre-Law %28XLAW%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pre-Medicine %28XMED%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pre-Occupational Therapy %28XOCT%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pre-Optometry %28XOPT%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pre-Pharmacy %28XPHA%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pre-Physical Therapy %28XPPT%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pre-Physician Assistant %28XPPA%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pre-Veterinary Medicine %28XVET%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Psychology %28PSYC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Public Health Studies %28PHLS%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Social Sciences %28XSSC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Social Work %28SOWK%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sociology %28SOCI%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Spanish %28SPAN%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Statistics %28STAT%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Theology %28THEO%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Undecided %28UNDC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Women%27s Studies %28WMST%29</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

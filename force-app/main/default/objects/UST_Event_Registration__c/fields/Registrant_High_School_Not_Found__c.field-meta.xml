@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Registrant_High_School_Not_Found__c</fullName>
+    <description>Field to record the name entered by registrant for a High School when they couldn&#39;t find it in our search.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Field to record the name entered by registrant for a High School when they couldn&#39;t find it in our search.</inlineHelpText>
+    <label>Registrant High School Not Found</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

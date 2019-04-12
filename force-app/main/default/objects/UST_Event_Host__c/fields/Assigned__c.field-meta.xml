@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Assigned__c</fullName>
+    <defaultValue>0</defaultValue>
+    <description>The number of registrants currently assigned to this host.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The number of registrants currently assigned to this host.</inlineHelpText>
+    <label>Assigned</label>
+    <precision>5</precision>
+    <required>true</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

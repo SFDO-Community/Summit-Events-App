@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Letter_Head_Definition</fullName>
+    <availability>online</availability>
+    <description>Set up letter head for this email to used to wrap this email</description>
+    <displayType>button</displayType>
+    <hasMenubar>false</hasMenubar>
+    <hasScrollbars>true</hasScrollbars>
+    <hasToolbar>false</hasToolbar>
+    <height>500</height>
+    <isResizable>true</isResizable>
+    <linkType>page</linkType>
+    <masterLabel>Letter Head Definition</masterLabel>
+    <openType>newWindow</openType>
+    <page>USTEventLetterheadLookup</page>
+    <position>none</position>
+    <protected>false</protected>
+    <showsLocation>false</showsLocation>
+    <showsStatus>false</showsStatus>
+    <width>480</width>
+</WebLink>

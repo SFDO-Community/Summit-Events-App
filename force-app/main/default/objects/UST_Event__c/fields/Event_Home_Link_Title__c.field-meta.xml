@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Home_Link_Title__c</fullName>
+    <defaultValue>&#39;Event Home&#39;</defaultValue>
+    <description>The title that will appear as a link at the top of the page to take you back to wherever you described the event on the Web.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The title that will appear as a link at the top of the page to take you back to wherever you described the event on the Web.</inlineHelpText>
+    <label>Event Home Link Title</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

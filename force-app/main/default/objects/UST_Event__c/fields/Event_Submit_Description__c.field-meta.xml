@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Submit_Description__c</fullName>
+    <description>This text appears at the top of the submit page where confirmation of selections is given and the user submits their registration.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This text appears at the top of the submit page where confirmation of selections is given and the user submits their registration.</inlineHelpText>
+    <label>Event Submit Description</label>
+    <length>3000</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Html</type>
+    <visibleLines>25</visibleLines>
+</CustomField>

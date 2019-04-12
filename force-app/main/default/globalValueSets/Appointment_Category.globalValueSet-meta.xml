@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Additional Options</fullName>
+        <default>false</default>
+        <label>Additional Options</label>
+    </customValue>
+    <customValue>
+        <fullName>Admissions Visit</fullName>
+        <default>false</default>
+        <label>Admissions Visit</label>
+    </customValue>
+    <customValue>
+        <fullName>Athletic Visit</fullName>
+        <default>false</default>
+        <label>Athletic Visit</label>
+    </customValue>
+    <customValue>
+        <fullName>Campus Tour</fullName>
+        <default>false</default>
+        <label>Campus Tour</label>
+    </customValue>
+    <customValue>
+        <fullName>Attend A Class</fullName>
+        <default>false</default>
+        <label>Attend A Class</label>
+    </customValue>
+    <customValue>
+        <fullName>Faculty Visit</fullName>
+        <default>false</default>
+        <label>Faculty Visit</label>
+    </customValue>
+    <customValue>
+        <fullName>Financial Aid Visit</fullName>
+        <default>false</default>
+        <label>Financial Aid Visit</label>
+    </customValue>
+    <customValue>
+        <fullName>Transportation</fullName>
+        <default>false</default>
+        <label>Transportation</label>
+    </customValue>
+    <masterLabel>Appointment Category</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

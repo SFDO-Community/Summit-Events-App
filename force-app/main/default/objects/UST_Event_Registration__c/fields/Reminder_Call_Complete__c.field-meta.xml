@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reminder_Call_Complete__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Has the attendee been called to remind them of the event?</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Has the attendee been called to remind them of the event?</inlineHelpText>
+    <label>Reminder Call Complete?</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

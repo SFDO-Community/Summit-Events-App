@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Letterhead__c</fullName>
+    <description>Choose the letterhead you would like to wrap your email message.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Choose the letterhead you would like to wrap your email message.</inlineHelpText>
+    <label>Letterhead</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>UG Admissions</fullName>
+                <default>false</default>
+                <label>UG Admissions</label>
+            </value>
+            <value>
+                <fullName>DFC Letterhead</fullName>
+                <default>false</default>
+                <label>DFC Letterhead</label>
+            </value>
+            <value>
+                <fullName>SOE School of Engineering</fullName>
+                <default>false</default>
+                <label>SOE School of Engineering</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

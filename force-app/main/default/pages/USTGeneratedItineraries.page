@@ -1,0 +1,27 @@
+<!--
+ - Created by dahl3702 on 2/26/2019.
+ -->
+<apex:page id="USTGeneratedItineraries" standardController="UST_Event_Registration__c" showHeader="false" sideBar="false" lightningStylesheets="true">
+<table class="slds-table slds-table_cell-buffer slds-table_bordered">
+    <thead>
+    <tr class="slds-line-height_reset">
+        <th class="" scope="col">
+            Generated Itinerary
+        </th>
+        <th class="" scope="col">
+            Requested Appointments
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <apex:outputText escape="false" value="{!UST_Event_Registration__c.Generated_Itinerary__c}"></apex:outputText>
+        </td>
+        <td>
+            <apex:outputText escape="false" value="{!UST_Event_Registration__c.Generated_Requested_Appointments__c}"></apex:outputText>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</apex:page>

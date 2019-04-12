@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>This_Month_s_Visits</fullName>
+    <columns>NAME</columns>
+    <columns>Event_Instance_Name__c</columns>
+    <columns>Contact__c</columns>
+    <columns>Date__c</columns>
+    <columns>Number_of_Guests__c</columns>
+    <columns>Status__c</columns>
+    <columns>Substatus__c</columns>
+    <columns>Registrant_High_School_Grad_Year__c</columns>
+    <columns>Registrant_Mobile_Phone__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Date__c</field>
+        <operation>equals</operation>
+        <value>THIS_MONTH</value>
+    </filters>
+    <label>This Month&#39;s Visits</label>
+    <language>en_US</language>
+</ListView>

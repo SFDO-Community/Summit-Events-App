@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Ask_Date_Of_Birth__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Ask for registrants date of birth upon registration. This will be included in matching to the contact record.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Ask for registrants date of birth upon registration. This will be included in matching to the contact record.</inlineHelpText>
+    <label>Ask Date Of Birth</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

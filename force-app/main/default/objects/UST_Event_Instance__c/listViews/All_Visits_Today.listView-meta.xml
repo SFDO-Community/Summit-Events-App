@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_Visits_Today</fullName>
+    <columns>NAME</columns>
+    <columns>Start_Date_Time__c</columns>
+    <columns>Event__c</columns>
+    <columns>Event_Name__c</columns>
+    <columns>Count_of_Attendees__c</columns>
+    <columns>Capacity__c</columns>
+    <columns>Active_Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Start_Date_Time__c</field>
+        <operation>equals</operation>
+        <value>TODAY</value>
+    </filters>
+    <label>All Visits Today</label>
+    <language>en_US</language>
+</ListView>

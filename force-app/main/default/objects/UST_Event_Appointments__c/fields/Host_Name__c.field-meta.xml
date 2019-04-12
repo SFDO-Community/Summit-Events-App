@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Host_Name__c</fullName>
+    <externalId>false</externalId>
+    <formula>Event_Host__r.First_Name__c + &#39; &#39; + Event_Host__r.Last_Name__c +
+            IF(!ISBLANK(Event_Host__r.Preferred_Title__c) , &#39; - &#39; + Event_Host__r.Preferred_Title__c,&#39;&#39;)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Host Name</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

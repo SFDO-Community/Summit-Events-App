@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Appointment_Title__c</fullName>
+    <description>Title (heading) that appears before the appointments (if any) for the event.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Title (heading) that appears before the appointments (if any) for the event.</inlineHelpText>
+    <label>Event Appointment Title</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

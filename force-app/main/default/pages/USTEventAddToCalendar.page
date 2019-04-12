@@ -1,0 +1,19 @@
+<!--
+ - Created by dahl3702 on 11/12/2018.
+ -->
+<apex:page id="USTEventAddToCalendar" title="event.ics" contentType="text/calendar" cache="false" controller="USTEventAddToCalendarController">
+BEGIN:VCALENDAR
+VERSION:2.0
+METHOD:PUBLISH
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+DTSTART;TZID=America/Chicago:{!DTSTART}
+DTEND;TZID=America/Chicago:{!DTEND}
+DTSTAMP:{!DTSTAMP}
+SUMMARY:{!SUMMARY}
+DESCRIPTION:{!DESCRIPTION}
+LOCATION: University of St. Thomas
+UID:{!UUID}
+END:VEVENT
+END:VCALENDAR
+</apex:page>

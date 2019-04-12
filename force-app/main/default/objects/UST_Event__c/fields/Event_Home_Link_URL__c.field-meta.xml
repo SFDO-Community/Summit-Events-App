@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Home_Link_URL__c</fullName>
+    <description>The link to the page that initiated the event registration.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The link to the page that initiated the event registration.</inlineHelpText>
+    <label>Event Home Link URL</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

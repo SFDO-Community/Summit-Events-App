@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Preferred_Visit_Time__c</fullName>
+    <externalId>false</externalId>
+    <label>Preferred Visit Time</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Morning</fullName>
+                <default>false</default>
+                <label>Morning</label>
+            </value>
+            <value>
+                <fullName>Afternoon</fullName>
+                <default>false</default>
+                <label>Afternoon</label>
+            </value>
+            <value>
+                <fullName>All Day</fullName>
+                <default>false</default>
+                <label>All Day</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Registrant_Input__c</fullName>
+    <description>Optional: Choose a type of input you wish to record from the registrant upon appointment registration.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Optional: Choose a type of input you wish to record from the registrant upon appointment registration.</inlineHelpText>
+    <label>Registrant Input</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Custom pick list</fullName>
+                <default>false</default>
+                <label>Custom pick list</label>
+            </value>
+            <value>
+                <fullName>Required custom pick list</fullName>
+                <default>false</default>
+                <label>Required custom pick list</label>
+            </value>
+            <value>
+                <fullName>Required text box</fullName>
+                <default>false</default>
+                <label>Required text box</label>
+            </value>
+            <value>
+                <fullName>Text box</fullName>
+                <default>false</default>
+                <label>Text box</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

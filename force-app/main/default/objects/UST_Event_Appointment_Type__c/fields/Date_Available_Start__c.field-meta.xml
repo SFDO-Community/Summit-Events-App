@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Date_Available_Start__c</fullName>
+    <description>The date this appointment type will begin to be available (if blank it will always be available).</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The date this appointment type will begin to be available (if blank it will always be available).</inlineHelpText>
+    <label>Date Available Start</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

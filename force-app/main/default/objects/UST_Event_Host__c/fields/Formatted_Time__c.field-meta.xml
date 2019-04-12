@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Formatted_Time__c</fullName>
+    <externalId>false</externalId>
+    <formula>TEXT( 
+IF((HOUR(Time__c) &gt; 12), 
+HOUR(Time__c) - 12, 
+IF(HOUR(Time__c) == 0, 12, HOUR(Time__c)) 
+) 
+
+) 
+&amp; 
+IF(!ISBLANK(HOUR(Time__c)),&#39;:&#39;,&#39;&#39;) 
+&amp; 
+IF(MINUTE(Time__c)&lt;10,&#39;0&#39;,&#39;&#39;) 
+&amp; 
+TEXT( 
+MINUTE(Time__c) 
+) 
+&amp; 
+IF(!ISBLANK(MINUTE(Time__c)),&#39; &#39;,&#39;&#39;) 
+&amp; 
+IF(!ISBLANK(HOUR(Time__c)), 
+IF(HOUR(Time__c) &gt;= 12, &#39;PM&#39;, &#39;AM&#39;), &#39;&#39; 
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Formatted Time</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

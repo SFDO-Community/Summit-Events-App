@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Registrant_Do_Not_Call__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Preference to not call reported by the event registrant upon registering. This may not be the same as on the contact record.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Preference to not call reported by the event registrant upon registering. This may not be the same as on the contact record.</inlineHelpText>
+    <label>Registrant Do Not Call</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

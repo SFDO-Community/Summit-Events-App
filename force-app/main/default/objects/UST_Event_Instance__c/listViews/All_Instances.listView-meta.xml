@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_Instances</fullName>
+    <columns>NAME</columns>
+    <columns>Instance_Title__c</columns>
+    <columns>Event_Name__c</columns>
+    <columns>Active_Status__c</columns>
+    <columns>Count_of_Attendees__c</columns>
+    <columns>Current_Available_Capacity__c</columns>
+    <columns>Instance_Short_Description__c</columns>
+    <columns>Event__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All Instances</label>
+    <language>en_US</language>
+</ListView>

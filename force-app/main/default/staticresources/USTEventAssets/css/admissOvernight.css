@@ -1,0 +1,86 @@
+@page Section1 {
+    size: 8.5in 11.0in;
+    mso-page-orientation: portrait;
+    margin: 0;
+    mso-header-margin: 0in;
+    mso-footer-margin: 0in;
+    mso-paper-source: 0;
+    view: print-layout;
+    font-family: "AvenirNext LT Pro Regular", "Nunito", sans-serif;
+}
+
+div.Section1 {
+    page: Section1;
+    margin: 0px;
+    padding: 0px;
+}
+
+div.itWrap {
+    margin: 1.5in .75in 0in .75in;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Nunito|Nunito+Sans');
+
+body, html {
+    margin: 0px;
+    padding: 0px;
+    font-family: "AvenirNext LT Pro Regular", "Nunito", sans-serif;
+    color: #212121;
+    font-size: 11.5pt;
+    line-height: 13pt;
+    width: 8.5in;
+}
+
+p {
+    font-family: "AvenirNext LT Pro Regular", "Nunito", sans-serif;
+    margin: 0in 0in .19in 0in;
+    font-size: 11.5pt;
+    line-height: 13pt;
+    padding: 0in;
+}
+
+table {
+    font-family: "AvenirNext LT Pro Regular", "Nunito", sans-serif;
+    width: 7.25in;
+    padding: 0px;
+    margin: 0px;
+    font-family: 'Nunito', sans-serif;
+    border-collapse: collapse;
+}
+
+table td, table th {
+    font-family: "AvenirNext LT Pro Regular", "Nunito", sans-serif;
+    line-height: 13pt;
+    vertical-align: top;
+    text-align: left;
+}
+
+table td {
+    font-size: 11.5pt;
+    min-width: .75in;
+    font-weight: 500 !important;
+    padding: .05in .1in .05in 0in;
+}
+
+table th {
+    font-size: 12pt;
+    font-weight: 500 !important;
+    padding: .05in .1in .1in 0in;
+}
+
+h2 {
+    font-family: "AvenirNext LT Pro Regular", "Nunito", sans-serif;
+    font-size: 14pt;
+    font-weight: 500 !important;
+    margin: .15in 0in .1in 0in;
+    padding: 0px;
+}
+
+h3 {
+    font-family: "AvenirNext LT Pro Regular", "Nunito", sans-serif;
+    font-size: 13pt;
+    font-weight: normal!important;
+    margin: .15in 0in .05in 0in;
+    padding: 0in 0in .05in 0in;
+
+}

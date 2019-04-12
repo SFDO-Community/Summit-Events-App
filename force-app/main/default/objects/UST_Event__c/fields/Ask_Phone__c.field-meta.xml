@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Ask_Phone__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Ask the registrant for their phone number on the registration page.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Ask the registrant for their phone number on the registration page.</inlineHelpText>
+    <label>Ask Phone</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

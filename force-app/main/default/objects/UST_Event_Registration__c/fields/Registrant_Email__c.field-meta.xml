@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Registrant_Email__c</fullName>
+    <description>The email reported by the event registrant upon registering. This may not be the same as on the contact record.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The email reported by the event registrant upon registering. This may not be the same as on the contact record.</inlineHelpText>
+    <label>Registrant Email</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Email</type>
+    <unique>false</unique>
+</CustomField>

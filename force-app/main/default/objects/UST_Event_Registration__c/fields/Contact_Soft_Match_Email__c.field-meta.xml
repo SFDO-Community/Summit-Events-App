@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact_Soft_Match_Email__c</fullName>
+    <description>When a new contact is created by the event app this field displays possible matches to other contact records that have the same email address.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When a new contact is created by the event app this field displays possible matches to other contact records that have the same email address.</inlineHelpText>
+    <label>Contact Soft Match Email</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

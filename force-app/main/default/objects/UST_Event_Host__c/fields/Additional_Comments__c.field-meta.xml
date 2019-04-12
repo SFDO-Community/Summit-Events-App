@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Additional_Comments__c</fullName>
+    <description>Additional comments about the host that will appear in any generated itinerary.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Additional comments about the host that will appear in any generated itinerary.</inlineHelpText>
+    <label>Additional Comments</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

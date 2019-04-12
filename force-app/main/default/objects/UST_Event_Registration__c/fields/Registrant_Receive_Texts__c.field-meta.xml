@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Registrant_Receive_Texts__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>The preference to receive text messages reported by the event registrant upon registering. This may not be the same as on the contact record.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The preference to receive text messages reported by the event registrant upon registering. This may not be the same as on the contact record.</inlineHelpText>
+    <label>Registrant Receive Texts</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

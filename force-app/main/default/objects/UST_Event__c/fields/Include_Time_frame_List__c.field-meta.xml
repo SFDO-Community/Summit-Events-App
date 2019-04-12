@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Include_Time_frame_List__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Ask the client for a general time-frame for event (drop down)</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Ask the client for a general time-frame for event (drop down)</inlineHelpText>
+    <label>Include Time frame List</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

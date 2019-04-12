@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Substatus__c</fullName>
+    <externalId>false</externalId>
+    <label>Substatus</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Status__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>On Hold</fullName>
+                <default>false</default>
+                <label>On Hold</label>
+            </value>
+            <value>
+                <fullName>Pending Appointments</fullName>
+                <default>false</default>
+                <label>Pending Appointments</label>
+            </value>
+            <value>
+                <fullName>No-Show</fullName>
+                <default>false</default>
+                <label>No-Show</label>
+            </value>
+            <value>
+                <fullName>Declined</fullName>
+                <default>false</default>
+                <label>Declined</label>
+            </value>
+            <value>
+                <fullName>Unavailable</fullName>
+                <default>false</default>
+                <label>Unavailable</label>
+            </value>
+            <value>
+                <fullName>All Appointments Confirmed</fullName>
+                <default>false</default>
+                <label>All Appointments Confirmed</label>
+            </value>
+            <value>
+                <fullName>Attended</fullName>
+                <default>false</default>
+                <label>Attended</label>
+            </value>
+            <value>
+                <fullName>Attended - Incomplete</fullName>
+                <default>false</default>
+                <label>Attended - Incomplete</label>
+            </value>
+            <value>
+                <fullName>Checked-in</fullName>
+                <default>false</default>
+                <label>Checked-in</label>
+            </value>
+            <value>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+                <label>In Progress</label>
+            </value>
+            <value>
+                <fullName>Attended - walk in</fullName>
+                <default>false</default>
+                <label>Attended - walk in</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Requested</controllingFieldValue>
+            <controllingFieldValue>Received</controllingFieldValue>
+            <valueName>On Hold</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Received</controllingFieldValue>
+            <controllingFieldValue>Confirmed</controllingFieldValue>
+            <valueName>Pending Appointments</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Received</controllingFieldValue>
+            <controllingFieldValue>Confirmed</controllingFieldValue>
+            <controllingFieldValue>Cancelled</controllingFieldValue>
+            <valueName>No-Show</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Received</controllingFieldValue>
+            <controllingFieldValue>Confirmed</controllingFieldValue>
+            <valueName>Declined</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Received</controllingFieldValue>
+            <controllingFieldValue>Confirmed</controllingFieldValue>
+            <valueName>Unavailable</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Received</controllingFieldValue>
+            <valueName>In Progress</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Confirmed</controllingFieldValue>
+            <valueName>All Appointments Confirmed</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Confirmed</controllingFieldValue>
+            <valueName>Attended</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Confirmed</controllingFieldValue>
+            <valueName>Attended - Incomplete</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Confirmed</controllingFieldValue>
+            <valueName>Checked-in</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Confirmed</controllingFieldValue>
+            <valueName>Attended - walk in</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

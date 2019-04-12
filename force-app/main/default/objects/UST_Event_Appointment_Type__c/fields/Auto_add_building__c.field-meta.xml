@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auto_add_building__c</fullName>
+    <description>Auto assign this building to a requested appointment.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Auto assign this building to a requested appointment.</inlineHelpText>
+    <label>Auto add building</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetName>Buildings</valueSetName>
+    </valueSet>
+</CustomField>

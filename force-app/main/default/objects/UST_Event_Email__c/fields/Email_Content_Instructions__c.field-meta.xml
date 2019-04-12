@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Email_Content_Instructions__c</fullName>
+    <defaultValue>&#39;THIS IS TEXT&#39;</defaultValue>
+    <description>Hooks of registrant information you can add to the email.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Hooks of registrant information you can add to the email.</inlineHelpText>
+    <label>Email Content Instructions</label>
+    <length>1000</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

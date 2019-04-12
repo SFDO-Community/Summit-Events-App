@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Upcoming_Registrations_Not_Confirmed</fullName>
+    <columns>NAME</columns>
+    <columns>Event_Instance_Name__c</columns>
+    <columns>Contact_Name__c</columns>
+    <columns>Date__c</columns>
+    <columns>Status__c</columns>
+    <columns>Substatus__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Status__c</field>
+        <operation>equals</operation>
+        <value>Requested,Received</value>
+    </filters>
+    <filters>
+        <field>Date__c</field>
+        <operation>greaterThan</operation>
+        <value>YESTERDAY</value>
+    </filters>
+    <filters>
+        <field>Event_Instance_Name__c</field>
+        <operation>equals</operation>
+        <value>Personalized Visit</value>
+    </filters>
+    <label>Upcoming Registrations Not Confirmed</label>
+    <language>en_US</language>
+</ListView>

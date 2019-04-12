@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Required_Appointment__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>When checked the client is required to choose this appointment and any choices related to it.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When checked the client is required to choose this appointment and any choices related to it.</inlineHelpText>
+    <label>Required Appointment</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

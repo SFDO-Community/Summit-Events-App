@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Cancelled_Notification_Text__c</fullName>
+    <description>The text that appears to tell a client that their event is cancelled on the review cancel page.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The text that appears to tell a client that their event is cancelled on the review cancel page.</inlineHelpText>
+    <label>Event Cancelled Notification Text</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>
