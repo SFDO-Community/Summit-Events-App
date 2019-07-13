@@ -32,14 +32,14 @@
     [
         "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default",
         {
-            "state": "u",
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default",
             "isDirectory": true,
-            "isMetadataFile": false,
             "size": 0,
-            "modifiedTime": 1555091900811,
-            "changeTime": 1555091900811,
-            "contentHash": "4ea6b5e5e234de164a651412b774e335ce71e6f6"
+            "modifiedTime": 1555096271449,
+            "changeTime": 1555096271449,
+            "contentHash": "6243fa3b9a36930be5af7d07ef4659ff51369468",
+            "isMetadataFile": false,
+            "state": "u"
         }
     ],
     [
@@ -62,14 +62,12 @@
         {
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\applications\\UST_Events.app-meta.xml",
             "isDirectory": false,
-            "size": 759,
-            "modifiedTime": 1554928868722,
-            "changeTime": 1554928868722,
-            "contentHash": "7b404cb8a087262b02111ca6810a6ba711eb3a1d",
+            "size": 722,
+            "modifiedTime": 1555099889503,
+            "changeTime": 1555099889503,
+            "contentHash": "580c1fe1eadb93d27687f162081c65f32cd292e1",
             "isMetadataFile": true,
-            "state": "u",
-            "isWorkspace": false,
-            "isArtifactRoot": false
+            "state": "u"
         }
     ],
     [
@@ -77,14 +75,12 @@
         {
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\applications\\UST_Events_Lightning.app-meta.xml",
             "isDirectory": false,
-            "size": 973,
-            "modifiedTime": 1554928868726,
-            "changeTime": 1554928868726,
-            "contentHash": "20ddf37d4edc4ca0534f68e962f6a377bceacf24",
+            "size": 986,
+            "modifiedTime": 1555099889508,
+            "changeTime": 1555099889508,
+            "contentHash": "ec439a6c0c442e2ce491db8a3b3f5ff22281147c",
             "isMetadataFile": true,
-            "state": "u",
-            "isWorkspace": false,
-            "isArtifactRoot": false
+            "state": "u"
         }
     ],
     [
@@ -108,13 +104,11 @@
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes",
             "isDirectory": true,
             "size": 0,
-            "modifiedTime": 1554928869087,
-            "changeTime": 1554928869087,
-            "contentHash": "8127c0f0d009badb662e969ae8115e40b9f2e01c",
+            "modifiedTime": 1555096271283,
+            "changeTime": 1555096271283,
+            "contentHash": "ba07013a5f18b604537bd05b8de51b379eb16da8",
             "isMetadataFile": false,
-            "state": "u",
-            "isWorkspace": false,
-            "isArtifactRoot": false
+            "state": "u"
         }
     ],
     [
@@ -1323,13 +1317,11 @@
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components",
             "isDirectory": true,
             "size": 0,
-            "modifiedTime": 1554928869097,
-            "changeTime": 1554928869097,
-            "contentHash": "0a394b246d4a90335913a73cad0f3db12c4d72d8",
+            "modifiedTime": 1555096271105,
+            "changeTime": 1555096271105,
+            "contentHash": "947cf0f4bd65d396a698d6a540a72ec7158b3541",
             "isMetadataFile": false,
-            "state": "u",
-            "isWorkspace": false,
-            "isArtifactRoot": false
+            "state": "u"
         }
     ],
     [
@@ -1368,13 +1360,11 @@
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\contentassets",
             "isDirectory": true,
             "size": 0,
-            "modifiedTime": 1554928869111,
-            "changeTime": 1554928869111,
-            "contentHash": "9188fb7337d893abf689a3b0ad3bce4ce503045e",
+            "modifiedTime": 1555099889520,
+            "changeTime": 1555099889520,
+            "contentHash": "0a50a6d2e8d957f84238a4c0668c3d6f6df60135",
             "isMetadataFile": false,
-            "state": "u",
-            "isWorkspace": false,
-            "isArtifactRoot": false
+            "state": "u"
         }
     ],
     [
@@ -1818,28 +1808,11 @@
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\layouts\\UST_Event__c-UG Event Layout.layout-meta.xml",
             "isDirectory": false,
             "size": 18525,
-            "modifiedTime": 1554928869275,
-            "changeTime": 1554928869275,
-            "contentHash": "d1d8873871bcd2cacdab4f23d3493c5cd1afed2c",
+            "modifiedTime": 1555100964768,
+            "changeTime": 1555100964768,
+            "contentHash": "e143950e1af1ac70b7f4d425b189e16c59604af1",
             "isMetadataFile": true,
-            "state": "u",
-            "isWorkspace": false,
-            "isArtifactRoot": false
-        }
-    ],
-    [
-        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\layouts\\UST_Event__c-UST Event Layout.layout-meta.xml",
-        {
-            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\layouts\\UST_Event__c-UST Event Layout.layout-meta.xml",
-            "isDirectory": false,
-            "size": 4552,
-            "modifiedTime": 1554928869278,
-            "changeTime": 1554928869278,
-            "contentHash": "84e5ebfc6d2b6fb2acf884182b57279f4ae6561c",
-            "isMetadataFile": true,
-            "state": "u",
-            "isWorkspace": false,
-            "isArtifactRoot": false
+            "state": "u"
         }
     ],
     [
@@ -1860,14 +1833,14 @@
     [
         "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\objects",
         {
-            "state": "u",
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\objects",
             "isDirectory": true,
-            "isMetadataFile": false,
             "size": 0,
             "modifiedTime": 1555091900639,
             "changeTime": 1555091900639,
-            "contentHash": "8360aa3b6981cb0629d0c8085b8402cb6efe1ac8"
+            "contentHash": "8360aa3b6981cb0629d0c8085b8402cb6efe1ac8",
+            "isMetadataFile": false,
+            "state": "u"
         }
     ],
     [
@@ -7276,13 +7249,11 @@
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages",
             "isDirectory": true,
             "size": 0,
-            "modifiedTime": 1554928871353,
-            "changeTime": 1554928871353,
-            "contentHash": "d732d85e292f650290dc4f6c44ec6f5c933f72b7",
+            "modifiedTime": 1555096271218,
+            "changeTime": 1555096271218,
+            "contentHash": "77812a7b6e5dfe2777c50912a189bd499a0fdf1d",
             "isMetadataFile": false,
-            "state": "u",
-            "isWorkspace": false,
-            "isArtifactRoot": false
+            "state": "u"
         }
     ],
     [
@@ -7771,13 +7742,11 @@
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources",
             "isDirectory": true,
             "size": 0,
-            "modifiedTime": 1554928871980,
-            "changeTime": 1554928871980,
-            "contentHash": "987da24ab2cc25be086985a3226d3e856ae283eb",
+            "modifiedTime": 1555096271054,
+            "changeTime": 1555096271054,
+            "contentHash": "230aac717ac75d3c4fb9f23a1cbba7e9c87e00e1",
             "isMetadataFile": false,
-            "state": "u",
-            "isWorkspace": false,
-            "isArtifactRoot": false
+            "state": "u"
         }
     ],
     [
@@ -8848,40 +8817,40 @@
     [
         "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\objects\\Account\\recordTypes\\Test.recordType-meta.xml",
         {
-            "state": "u",
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\objects\\Account\\recordTypes\\Test.recordType-meta.xml",
             "isDirectory": false,
-            "isMetadataFile": true,
             "size": 6588,
             "modifiedTime": 1555091900646,
             "changeTime": 1555091900646,
-            "contentHash": "53f2fcb30d51be02808d5d8a972ebc5cdb1112fd"
+            "contentHash": "53f2fcb30d51be02808d5d8a972ebc5cdb1112fd",
+            "isMetadataFile": true,
+            "state": "u"
         }
     ],
     [
         "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\objects\\Account\\recordTypes\\Test2.recordType-meta.xml",
         {
-            "state": "u",
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\objects\\Account\\recordTypes\\Test2.recordType-meta.xml",
             "isDirectory": false,
-            "isMetadataFile": true,
             "size": 6542,
             "modifiedTime": 1555091900651,
             "changeTime": 1555091900651,
-            "contentHash": "2d5cf90558d4dd0082ba726af8d7346c47c19232"
+            "contentHash": "2d5cf90558d4dd0082ba726af8d7346c47c19232",
+            "isMetadataFile": true,
+            "state": "u"
         }
     ],
     [
         "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profiles\\Custom%3A Support Profile.profile-meta.xml",
         {
-            "state": "u",
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profiles\\Custom%3A Support Profile.profile-meta.xml",
             "isDirectory": false,
-            "isMetadataFile": true,
             "size": 66256,
             "modifiedTime": 1555091900706,
             "changeTime": 1555091900706,
-            "contentHash": "f96467397d8c995438cfd0f7a2dd7602e15c5fd5"
+            "contentHash": "f96467397d8c995438cfd0f7a2dd7602e15c5fd5",
+            "isMetadataFile": true,
+            "state": "u"
         }
     ],
     [
@@ -8891,127 +8860,1206 @@
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profiles\\Admin.profile-meta.xml",
             "isDirectory": false,
             "isMetadataFile": true,
-            "size": 82433,
-            "modifiedTime": 1555091900759,
-            "changeTime": 1555091900759,
-            "contentHash": "7e96e031e92a99bc79173fd1f89709dc5606e745"
+            "size": 85115,
+            "modifiedTime": 1555104076709,
+            "changeTime": 1555104076709,
+            "contentHash": "700d30c2f3f8abb9ce4bb888379d1a56eafb7d00"
         }
     ],
     [
         "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profiles\\Custom%3A Sales Profile.profile-meta.xml",
         {
-            "state": "u",
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profiles\\Custom%3A Sales Profile.profile-meta.xml",
             "isDirectory": false,
-            "isMetadataFile": true,
             "size": 65918,
             "modifiedTime": 1555091900786,
             "changeTime": 1555091900786,
-            "contentHash": "0e5cba7cfd602cc63d2d246de968a6eae688680f"
+            "contentHash": "0e5cba7cfd602cc63d2d246de968a6eae688680f",
+            "isMetadataFile": true,
+            "state": "u"
         }
     ],
     [
         "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profiles\\Custom%3A Marketing Profile.profile-meta.xml",
         {
-            "state": "u",
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profiles\\Custom%3A Marketing Profile.profile-meta.xml",
             "isDirectory": false,
-            "isMetadataFile": true,
             "size": 65918,
             "modifiedTime": 1555091900806,
             "changeTime": 1555091900806,
-            "contentHash": "0e5cba7cfd602cc63d2d246de968a6eae688680f"
+            "contentHash": "0e5cba7cfd602cc63d2d246de968a6eae688680f",
+            "isMetadataFile": true,
+            "state": "u"
         }
     ],
     [
         "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profilePasswordPolicies\\PT1_profilePasswordPolicy1555091853054.profilePasswordPolicy-meta.xml",
         {
-            "state": "u",
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profilePasswordPolicies\\PT1_profilePasswordPolicy1555091853054.profilePasswordPolicy-meta.xml",
             "isDirectory": false,
-            "isMetadataFile": true,
             "size": 632,
             "modifiedTime": 1555091900809,
             "changeTime": 1555091900809,
-            "contentHash": "e4326bb1a1bf01c5ba204cb0fba5919606333b8e"
+            "contentHash": "e4326bb1a1bf01c5ba204cb0fba5919606333b8e",
+            "isMetadataFile": true,
+            "state": "u"
         }
     ],
     [
         "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profileSessionSettings\\PT1_profileSessionSetting1555091853162.profileSessionSetting-meta.xml",
         {
-            "state": "u",
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profileSessionSettings\\PT1_profileSessionSetting1555091853162.profileSessionSetting-meta.xml",
             "isDirectory": false,
-            "isMetadataFile": true,
             "size": 432,
             "modifiedTime": 1555091900812,
             "changeTime": 1555091900812,
-            "contentHash": "3670b3d6c364eec73b32a32e1bf3dc2fff41cb4c"
+            "contentHash": "3670b3d6c364eec73b32a32e1bf3dc2fff41cb4c",
+            "isMetadataFile": true,
+            "state": "u"
         }
     ],
     [
         "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\objects\\Account\\recordTypes",
         {
-            "state": "u",
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\objects\\Account\\recordTypes",
             "isDirectory": true,
-            "isMetadataFile": false,
             "size": 0,
             "modifiedTime": 1555091900647,
             "changeTime": 1555091900647,
-            "contentHash": "9bf019ea7e1d66a3398d93f4db46c3660495e98a"
+            "contentHash": "9bf019ea7e1d66a3398d93f4db46c3660495e98a",
+            "isMetadataFile": false,
+            "state": "u"
         }
     ],
     [
         "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\objects\\Account",
         {
-            "state": "u",
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\objects\\Account",
             "isDirectory": true,
-            "isMetadataFile": false,
             "size": 0,
             "modifiedTime": 1555091900639,
             "changeTime": 1555091900639,
-            "contentHash": "01e62e8f969d1224b9785ce9509e9b90b753394f"
+            "contentHash": "01e62e8f969d1224b9785ce9509e9b90b753394f",
+            "isMetadataFile": false,
+            "state": "u"
         }
     ],
     [
         "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profiles",
         {
-            "state": "u",
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profiles",
             "isDirectory": true,
-            "isMetadataFile": false,
             "size": 0,
-            "modifiedTime": 1555091900802,
-            "changeTime": 1555091900802,
-            "contentHash": "9c367b0e719eb8c48c5b0d9cbfb5f580a4bd6717"
+            "modifiedTime": 1555096974894,
+            "changeTime": 1555096974894,
+            "contentHash": "51289ce0b8ed3c9a89ddc3fd6269f07e51c8a387",
+            "isMetadataFile": false,
+            "state": "u"
         }
     ],
     [
         "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profilePasswordPolicies",
         {
-            "state": "u",
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profilePasswordPolicies",
             "isDirectory": true,
-            "isMetadataFile": false,
             "size": 0,
-            "modifiedTime": 1555091900808,
-            "changeTime": 1555091900808,
-            "contentHash": "8bc9b083069f1b822c0a3fbc0a19f8dc8fc66dae"
+            "modifiedTime": 1555096271441,
+            "changeTime": 1555096271441,
+            "contentHash": "d34a21bdf2d32745767271777303a92a89d6e327",
+            "isMetadataFile": false,
+            "state": "u"
         }
     ],
     [
         "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profileSessionSettings",
         {
-            "state": "u",
             "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profileSessionSettings",
             "isDirectory": true,
-            "isMetadataFile": false,
             "size": 0,
-            "modifiedTime": 1555091900811,
-            "changeTime": 1555091900811,
-            "contentHash": "9eb259b1383ffea4b871a5606c1e61f47a4c735d"
+            "modifiedTime": 1555096271447,
+            "changeTime": 1555096271447,
+            "contentHash": "d504ecc87b5457437307ac54c7222cfd7746ba0d",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples.resource-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples.resource-meta.xml",
+            "isDirectory": false,
+            "size": 279,
+            "modifiedTime": 1555096271022,
+            "changeTime": 1555096271022,
+            "contentHash": "d631b8484f7cf65ecbe56127a65e4ec278d8657d",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\clock.png",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\clock.png",
+            "isDirectory": false,
+            "size": 4681,
+            "modifiedTime": 1555096271058,
+            "changeTime": 1555096271058,
+            "contentHash": "6f2f8d42808b3c04c1a2e7d9b6ba37ea7f862ba7",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\construction.png",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\construction.png",
+            "isDirectory": false,
+            "size": 15051,
+            "modifiedTime": 1555096271060,
+            "changeTime": 1555096271060,
+            "contentHash": "322851d6d1ef8caf107caf445de1b6c05caef6bc",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\force_logo.png",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\force_logo.png",
+            "isDirectory": false,
+            "size": 1728,
+            "modifiedTime": 1555096271062,
+            "changeTime": 1555096271062,
+            "contentHash": "40bb27e6354b88edcd694651e69ac817cc859541",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\maintenance.png",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\maintenance.png",
+            "isDirectory": false,
+            "size": 12247,
+            "modifiedTime": 1555096271064,
+            "changeTime": 1555096271064,
+            "contentHash": "3eae4032e6c554a7c44ec277b10f9fa92de2d6cf",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\poweredby.png",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\poweredby.png",
+            "isDirectory": false,
+            "size": 984,
+            "modifiedTime": 1555096271065,
+            "changeTime": 1555096271065,
+            "contentHash": "a29fa078df1fc18309a8fa02d5941312e4e41344",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\tools.png",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\tools.png",
+            "isDirectory": false,
+            "size": 2136,
+            "modifiedTime": 1555096271067,
+            "changeTime": 1555096271067,
+            "contentHash": "06ee26032a159736878decef296cba66ec8d8e25",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\unauthorized.png",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\unauthorized.png",
+            "isDirectory": false,
+            "size": 2076,
+            "modifiedTime": 1555096271069,
+            "changeTime": 1555096271069,
+            "contentHash": "74dc855d72862a1f62d1c9ec0535f43a229fb1a4",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\warning.png",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img\\warning.png",
+            "isDirectory": false,
+            "size": 1767,
+            "modifiedTime": 1555096271070,
+            "changeTime": 1555096271070,
+            "contentHash": "90ef2806b042926ca428c19654b9306555b53429",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\SiteStyles.css",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\SiteStyles.css",
+            "isDirectory": false,
+            "size": 402,
+            "modifiedTime": 1555096271072,
+            "changeTime": 1555096271072,
+            "contentHash": "acbb17c79c96e91d9c04ae4c847b7241ccde01de",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SiteHeader.component-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SiteHeader.component-meta.xml",
+            "isDirectory": false,
+            "size": 419,
+            "modifiedTime": 1555096271084,
+            "changeTime": 1555096271084,
+            "contentHash": "14fac90af9dfa21252311d3bcdcbf4d35e87c9ab",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SiteHeader.component",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SiteHeader.component",
+            "isDirectory": false,
+            "size": 1214,
+            "modifiedTime": 1555096271088,
+            "changeTime": 1555096271088,
+            "contentHash": "0a710387c2669b94a3224b8016f37d0a3fc20948",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SiteFooter.component-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SiteFooter.component-meta.xml",
+            "isDirectory": false,
+            "size": 419,
+            "modifiedTime": 1555096271092,
+            "changeTime": 1555096271092,
+            "contentHash": "49af41d0380ff12b9fec42ff5954182b5f3091db",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SiteFooter.component",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SiteFooter.component",
+            "isDirectory": false,
+            "size": 77,
+            "modifiedTime": 1555096271094,
+            "changeTime": 1555096271094,
+            "contentHash": "8c9f2b97bbfa52fdef76795bfea4a72ea95d3258",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SiteLogin.component-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SiteLogin.component-meta.xml",
+            "isDirectory": false,
+            "size": 410,
+            "modifiedTime": 1555096271098,
+            "changeTime": 1555096271098,
+            "contentHash": "8bd7db7b49bdf35ad38986dc2c7f372c8e60ff58",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SiteLogin.component",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SiteLogin.component",
+            "isDirectory": false,
+            "size": 1254,
+            "modifiedTime": 1555096271100,
+            "changeTime": 1555096271100,
+            "contentHash": "bc708781ea43467adf9e0efda09caf0e4abc96ba",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SitePoweredBy.component-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SitePoweredBy.component-meta.xml",
+            "isDirectory": false,
+            "size": 426,
+            "modifiedTime": 1555096271104,
+            "changeTime": 1555096271104,
+            "contentHash": "99ada18131be62dd4b157b280aa36592d266b50b",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SitePoweredBy.component",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\components\\SitePoweredBy.component",
+            "isDirectory": false,
+            "size": 532,
+            "modifiedTime": 1555096271106,
+            "changeTime": 1555096271106,
+            "contentHash": "353f26acfff5ff089406bc9b6029fec483f8360f",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteRegisterConfirm.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteRegisterConfirm.page-meta.xml",
+            "isDirectory": false,
+            "size": 542,
+            "modifiedTime": 1555096271110,
+            "changeTime": 1555096271110,
+            "contentHash": "9aee845503340d43c09a8d47b6ef15c930bac819",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteRegisterConfirm.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteRegisterConfirm.page",
+            "isDirectory": false,
+            "size": 1336,
+            "modifiedTime": 1555096271112,
+            "changeTime": 1555096271112,
+            "contentHash": "e1c4950e6f20b5744e83b77652be25196945a53b",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\MyProfilePage.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\MyProfilePage.page-meta.xml",
+            "isDirectory": false,
+            "size": 516,
+            "modifiedTime": 1555096271116,
+            "changeTime": 1555096271116,
+            "contentHash": "dac01be52c3b228909cf525a20e7aef8e7b06985",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\MyProfilePage.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\MyProfilePage.page",
+            "isDirectory": false,
+            "size": 5352,
+            "modifiedTime": 1555096271118,
+            "changeTime": 1555096271118,
+            "contentHash": "620edf5c2c314699cb5acd8a29ee2897a7f4be9c",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteLogin.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteLogin.page-meta.xml",
+            "isDirectory": false,
+            "size": 507,
+            "modifiedTime": 1555096271121,
+            "changeTime": 1555096271121,
+            "contentHash": "a6814cfc137f1a55c865cd6c3d5eca928fcb6608",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteLogin.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteLogin.page",
+            "isDirectory": false,
+            "size": 1178,
+            "modifiedTime": 1555096271126,
+            "changeTime": 1555096271126,
+            "contentHash": "cbc0628ee0ca131ce53c251ae3221ba5048f2020",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\ForgotPasswordConfirm.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\ForgotPasswordConfirm.page-meta.xml",
+            "isDirectory": false,
+            "size": 542,
+            "modifiedTime": 1555096271129,
+            "changeTime": 1555096271129,
+            "contentHash": "d0ee3a5508b619307f39823a4252581236974914",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\ForgotPasswordConfirm.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\ForgotPasswordConfirm.page",
+            "isDirectory": false,
+            "size": 1315,
+            "modifiedTime": 1555096271132,
+            "changeTime": 1555096271132,
+            "contentHash": "b36e48b39e4d3b8b31a82c9c5eee2ffffc194ee3",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\ChangePassword.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\ChangePassword.page-meta.xml",
+            "isDirectory": false,
+            "size": 522,
+            "modifiedTime": 1555096271136,
+            "changeTime": 1555096271136,
+            "contentHash": "91ca7960945a130458d38064b47bcc5d43013f28",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\ChangePassword.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\ChangePassword.page",
+            "isDirectory": false,
+            "size": 2253,
+            "modifiedTime": 1555096271138,
+            "changeTime": 1555096271138,
+            "contentHash": "ef99757f7f329769d4297658a07069ba6479259a",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\ForgotPassword.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\ForgotPassword.page-meta.xml",
+            "isDirectory": false,
+            "size": 535,
+            "modifiedTime": 1555096271142,
+            "changeTime": 1555096271142,
+            "contentHash": "d5c05ac01a1a08073ef02916d14313f9cb22349e",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\ForgotPassword.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\ForgotPassword.page",
+            "isDirectory": false,
+            "size": 1734,
+            "modifiedTime": 1555096271145,
+            "changeTime": 1555096271145,
+            "contentHash": "d08010b952d7bc3b249a76a840810bef066c56e8",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteRegister.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteRegister.page-meta.xml",
+            "isDirectory": false,
+            "size": 522,
+            "modifiedTime": 1555096271149,
+            "changeTime": 1555096271149,
+            "contentHash": "067cba8e0e458ecef43626d85b80ff14f5e411a7",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteRegister.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteRegister.page",
+            "isDirectory": false,
+            "size": 2535,
+            "modifiedTime": 1555096271152,
+            "changeTime": 1555096271152,
+            "contentHash": "41ff51ebecfc21b5b03567851586edbc5fefc6bf",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\Unauthorized.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\Unauthorized.page-meta.xml",
+            "isDirectory": false,
+            "size": 529,
+            "modifiedTime": 1555096271156,
+            "changeTime": 1555096271156,
+            "contentHash": "08b1d80cef88e140bde0760a100e5c4faeff81bc",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\Unauthorized.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\Unauthorized.page",
+            "isDirectory": false,
+            "size": 1728,
+            "modifiedTime": 1555096271162,
+            "changeTime": 1555096271162,
+            "contentHash": "e2d900a0e0685865732acee0c84539a31cb8638e",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\UnderConstruction.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\UnderConstruction.page-meta.xml",
+            "isDirectory": false,
+            "size": 530,
+            "modifiedTime": 1555096271166,
+            "changeTime": 1555096271166,
+            "contentHash": "c8a1a06dfe15b44c25f606ad935dcb111e0aa053",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\UnderConstruction.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\UnderConstruction.page",
+            "isDirectory": false,
+            "size": 819,
+            "modifiedTime": 1555096271168,
+            "changeTime": 1555096271168,
+            "contentHash": "7e44e8eff2115cba3f9494ac0ebac64ba628e919",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\Exception.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\Exception.page-meta.xml",
+            "isDirectory": false,
+            "size": 535,
+            "modifiedTime": 1555096271172,
+            "changeTime": 1555096271172,
+            "contentHash": "84bb264912a707f146746f749e4a2f6bd24ab8bb",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\Exception.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\Exception.page",
+            "isDirectory": false,
+            "size": 1716,
+            "modifiedTime": 1555096271173,
+            "changeTime": 1555096271173,
+            "contentHash": "830bc42abae82f60204235bc55bb4e817329b8db",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\InMaintenance.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\InMaintenance.page-meta.xml",
+            "isDirectory": false,
+            "size": 522,
+            "modifiedTime": 1555096271177,
+            "changeTime": 1555096271177,
+            "contentHash": "5c0d2ff573c9ff5d710308a0b5afae31766f9a03",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\InMaintenance.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\InMaintenance.page",
+            "isDirectory": false,
+            "size": 854,
+            "modifiedTime": 1555096271179,
+            "changeTime": 1555096271179,
+            "contentHash": "660848468f184da3bdb013f9fdf96c6104ec33d6",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\FileNotFound.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\FileNotFound.page-meta.xml",
+            "isDirectory": false,
+            "size": 526,
+            "modifiedTime": 1555096271185,
+            "changeTime": 1555096271185,
+            "contentHash": "226a22ad39720d5b03e91bfce31caec3d58ecebb",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\FileNotFound.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\FileNotFound.page",
+            "isDirectory": false,
+            "size": 1667,
+            "modifiedTime": 1555096271187,
+            "changeTime": 1555096271187,
+            "contentHash": "5e6c03f7313422001a3df2c492db52fabdc10212",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\BandwidthExceeded.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\BandwidthExceeded.page-meta.xml",
+            "isDirectory": false,
+            "size": 526,
+            "modifiedTime": 1555096271191,
+            "changeTime": 1555096271191,
+            "contentHash": "84ad4bd474fcb29a3deb9ace0db163617d9fdb49",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\BandwidthExceeded.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\BandwidthExceeded.page",
+            "isDirectory": false,
+            "size": 746,
+            "modifiedTime": 1555096271194,
+            "changeTime": 1555096271194,
+            "contentHash": "af8b65b80f92aa12ee84f138858b6b1253dde9f8",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\StdExceptionTemplate.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\StdExceptionTemplate.page-meta.xml",
+            "isDirectory": false,
+            "size": 547,
+            "modifiedTime": 1555096271197,
+            "changeTime": 1555096271197,
+            "contentHash": "47c6d1820a36244afab44d8551e68f261f903e27",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\StdExceptionTemplate.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\StdExceptionTemplate.page",
+            "isDirectory": false,
+            "size": 918,
+            "modifiedTime": 1555096271200,
+            "changeTime": 1555096271200,
+            "contentHash": "ee21ef14d08dc898cc2f7c14b009b44e39843047",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteTemplate.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteTemplate.page-meta.xml",
+            "isDirectory": false,
+            "size": 525,
+            "modifiedTime": 1555096271203,
+            "changeTime": 1555096271203,
+            "contentHash": "9ffac3c8ae482487af7b922e72230bad43d33000",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteTemplate.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\SiteTemplate.page",
+            "isDirectory": false,
+            "size": 363,
+            "modifiedTime": 1555096271206,
+            "changeTime": 1555096271206,
+            "contentHash": "0795cba97d90e8e6f4511bdc6845b4f6ba593a49",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\IdeasHome.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\IdeasHome.page-meta.xml",
+            "isDirectory": false,
+            "size": 524,
+            "modifiedTime": 1555096271209,
+            "changeTime": 1555096271209,
+            "contentHash": "58e59dfb5cd0c8b66863ddd3ad38175534d08e30",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\IdeasHome.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\IdeasHome.page",
+            "isDirectory": false,
+            "size": 56,
+            "modifiedTime": 1555096271212,
+            "changeTime": 1555096271212,
+            "contentHash": "321994aef1dc6905bd2f9ea1275cef640575796a",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\AnswersHome.page-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\AnswersHome.page-meta.xml",
+            "isDirectory": false,
+            "size": 528,
+            "modifiedTime": 1555096271217,
+            "changeTime": 1555096271217,
+            "contentHash": "9a9919cad1343b8b328f62723e11bf984ec9f74f",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\AnswersHome.page",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\pages\\AnswersHome.page",
+            "isDirectory": false,
+            "size": 61,
+            "modifiedTime": 1555096271219,
+            "changeTime": 1555096271219,
+            "contentHash": "a82a578935f0381f7ce194fc36f422775d6ab707",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteLoginControllerTest.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteLoginControllerTest.cls-meta.xml",
+            "isDirectory": false,
+            "size": 174,
+            "modifiedTime": 1555096271223,
+            "changeTime": 1555096271223,
+            "contentHash": "ab3ac94968e57930b88820ab5438fa820ed36730",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteLoginControllerTest.cls",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteLoginControllerTest.cls",
+            "isDirectory": false,
+            "size": 558,
+            "modifiedTime": 1555096271226,
+            "changeTime": 1555096271226,
+            "contentHash": "676ee62c09240e726b685da56266e2201bf46664",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteLoginController.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteLoginController.cls-meta.xml",
+            "isDirectory": false,
+            "size": 174,
+            "modifiedTime": 1555096271229,
+            "changeTime": 1555096271229,
+            "contentHash": "ab3ac94968e57930b88820ab5438fa820ed36730",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteLoginController.cls",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteLoginController.cls",
+            "isDirectory": false,
+            "size": 434,
+            "modifiedTime": 1555096271232,
+            "changeTime": 1555096271232,
+            "contentHash": "45bce0841ca7e53e9891170118879727980b051a",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteRegisterControllerTest.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteRegisterControllerTest.cls-meta.xml",
+            "isDirectory": false,
+            "size": 174,
+            "modifiedTime": 1555096271235,
+            "changeTime": 1555096271235,
+            "contentHash": "ab3ac94968e57930b88820ab5438fa820ed36730",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteRegisterControllerTest.cls",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteRegisterControllerTest.cls",
+            "isDirectory": false,
+            "size": 721,
+            "modifiedTime": 1555096271238,
+            "changeTime": 1555096271238,
+            "contentHash": "00a06a0620a60d0ee0118431a169b4ec3ba79891",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteRegisterController.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteRegisterController.cls-meta.xml",
+            "isDirectory": false,
+            "size": 174,
+            "modifiedTime": 1555096271241,
+            "changeTime": 1555096271241,
+            "contentHash": "ab3ac94968e57930b88820ab5438fa820ed36730",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteRegisterController.cls",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\SiteRegisterController.cls",
+            "isDirectory": false,
+            "size": 2077,
+            "modifiedTime": 1555096271248,
+            "changeTime": 1555096271248,
+            "contentHash": "19e473741cd0e4047e59345c952d815aa05e1ac2",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ChangePasswordControllerTest.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ChangePasswordControllerTest.cls-meta.xml",
+            "isDirectory": false,
+            "size": 174,
+            "modifiedTime": 1555096271252,
+            "changeTime": 1555096271252,
+            "contentHash": "ab3ac94968e57930b88820ab5438fa820ed36730",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ChangePasswordControllerTest.cls",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ChangePasswordControllerTest.cls",
+            "isDirectory": false,
+            "size": 642,
+            "modifiedTime": 1555096271254,
+            "changeTime": 1555096271254,
+            "contentHash": "0bb3c4ec096aa5dd33d79abbb693eb98b3e899a0",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ChangePasswordController.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ChangePasswordController.cls-meta.xml",
+            "isDirectory": false,
+            "size": 174,
+            "modifiedTime": 1555096271258,
+            "changeTime": 1555096271258,
+            "contentHash": "ab3ac94968e57930b88820ab5438fa820ed36730",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ChangePasswordController.cls",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ChangePasswordController.cls",
+            "isDirectory": false,
+            "size": 467,
+            "modifiedTime": 1555096271260,
+            "changeTime": 1555096271260,
+            "contentHash": "769eaed52f3c934b7ad9b57adcb55a922c257168",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ForgotPasswordControllerTest.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ForgotPasswordControllerTest.cls-meta.xml",
+            "isDirectory": false,
+            "size": 174,
+            "modifiedTime": 1555096271264,
+            "changeTime": 1555096271264,
+            "contentHash": "ab3ac94968e57930b88820ab5438fa820ed36730",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ForgotPasswordControllerTest.cls",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ForgotPasswordControllerTest.cls",
+            "isDirectory": false,
+            "size": 506,
+            "modifiedTime": 1555096271266,
+            "changeTime": 1555096271266,
+            "contentHash": "66dcdb35e263e3858438516c272143f39594ab6b",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ForgotPasswordController.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ForgotPasswordController.cls-meta.xml",
+            "isDirectory": false,
+            "size": 174,
+            "modifiedTime": 1555096271270,
+            "changeTime": 1555096271270,
+            "contentHash": "ab3ac94968e57930b88820ab5438fa820ed36730",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ForgotPasswordController.cls",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\ForgotPasswordController.cls",
+            "isDirectory": false,
+            "size": 480,
+            "modifiedTime": 1555096271272,
+            "changeTime": 1555096271272,
+            "contentHash": "f90081d88c1b56f4db006bf0c9022a1b23126145",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\MyProfilePageControllerTest.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\MyProfilePageControllerTest.cls-meta.xml",
+            "isDirectory": false,
+            "size": 174,
+            "modifiedTime": 1555096271275,
+            "changeTime": 1555096271275,
+            "contentHash": "ab3ac94968e57930b88820ab5438fa820ed36730",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\MyProfilePageControllerTest.cls",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\MyProfilePageControllerTest.cls",
+            "isDirectory": false,
+            "size": 2792,
+            "modifiedTime": 1555096271278,
+            "changeTime": 1555096271278,
+            "contentHash": "3dad7650b8dd8e6e57710fec687bf1bb5eff80bd",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\MyProfilePageController.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\MyProfilePageController.cls-meta.xml",
+            "isDirectory": false,
+            "size": 174,
+            "modifiedTime": 1555096271281,
+            "changeTime": 1555096271281,
+            "contentHash": "ab3ac94968e57930b88820ab5438fa820ed36730",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\MyProfilePageController.cls",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\classes\\MyProfilePageController.cls",
+            "isDirectory": false,
+            "size": 1584,
+            "modifiedTime": 1555096271284,
+            "changeTime": 1555096271284,
+            "contentHash": "2e72ea98db541366419984e2a8878f467de5a3e5",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profilePasswordPolicies\\USTEvent_Guest_profilePasswordPolicy1555095703183.profilePasswordPolicy-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profilePasswordPolicies\\USTEvent_Guest_profilePasswordPolicy1555095703183.profilePasswordPolicy-meta.xml",
+            "isDirectory": false,
+            "size": 642,
+            "modifiedTime": 1555096974890,
+            "changeTime": 1555096974890,
+            "contentHash": "ee3dab8fa8b5ed6b9f035c2a45aa808070a6e1c0",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profileSessionSettings\\USTEvent_Guest_profileSessionSetting1555095703289.profileSessionSetting-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profileSessionSettings\\USTEvent_Guest_profileSessionSetting1555095703289.profileSessionSetting-meta.xml",
+            "isDirectory": false,
+            "size": 442,
+            "modifiedTime": 1555096974893,
+            "changeTime": 1555096974893,
+            "contentHash": "ac445387260acc8462f3163db4c7860684362ba3",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\sites\\USTEvent.site-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\sites\\USTEvent.site-meta.xml",
+            "isDirectory": false,
+            "size": 1559,
+            "modifiedTime": 1555097580665,
+            "changeTime": 1555097580665,
+            "contentHash": "e87e719e37fb96b94f65ee0b126d6ebe19757d0c",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples\\img",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1555096271069,
+            "changeTime": 1555096271069,
+            "contentHash": "ca36f65b7f8888bd595c26bba98c091a986284ab",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\staticresources\\SiteSamples",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1555096271071,
+            "changeTime": 1555096271071,
+            "contentHash": "bfc7b578cefd1230c8d14deafa0e6ea3053edc7e",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\sites",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\sites",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1555096271450,
+            "changeTime": 1555096271450,
+            "contentHash": "79e3734fc7b6f1beeba6dd4e49f5b70292004fbb",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profiles\\USTEvent Public.profile-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\profiles\\USTEvent Public.profile-meta.xml",
+            "isDirectory": false,
+            "size": 66845,
+            "modifiedTime": 1555097580659,
+            "changeTime": 1555097580659,
+            "contentHash": "9fc30634d3779ac600c7cfaf5289413038ee2355",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\contentassets\\USTEVENT_App_logo1.asset-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\contentassets\\USTEVENT_App_logo1.asset-meta.xml",
+            "isDirectory": false,
+            "size": 548,
+            "modifiedTime": 1555099889511,
+            "changeTime": 1555099889511,
+            "contentHash": "ab7c9a55a508aa3e0aaf3667b4b23fee7e860988",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\contentassets\\USTEVENT_App_logo1.asset",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\contentassets\\USTEVENT_App_logo1.asset",
+            "isDirectory": false,
+            "size": 6291,
+            "modifiedTime": 1555099889514,
+            "changeTime": 1555099889514,
+            "contentHash": "081200b4b37308245b14956b133112f86ab63a84",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\contentassets\\USTEVENT_App_logo.asset-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\contentassets\\USTEVENT_App_logo.asset-meta.xml",
+            "isDirectory": false,
+            "size": 547,
+            "modifiedTime": 1555099889518,
+            "changeTime": 1555099889518,
+            "contentHash": "6498e9fb44c815ef727125143d8ad0cd4b941438",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\contentassets\\USTEVENT_App_logo.asset",
+        {
+            "sourcePath": "C:\\Users\\dahl3702\\Documents\\projects\\USTEventsDX\\force-app\\main\\default\\contentassets\\USTEVENT_App_logo.asset",
+            "isDirectory": false,
+            "size": 6291,
+            "modifiedTime": 1555099889521,
+            "changeTime": 1555099889521,
+            "contentHash": "52ca60434bfcb99be73e765472a4009b6a8f55c5",
+            "isMetadataFile": false,
+            "state": "u"
         }
     ]
 ]

@@ -74,7 +74,7 @@ public with sharing class USTEventShared {
 
         List<UST_Event_Instance__c> recTypeInfo = [SELECT Event__r.RecordType.Name, Id FROM UST_Event_Instance__c WHERE ID = :evtInfo.instanceID];
 
-        if (recTypeInfo.size() > 0) {
+        if (recTypeInfo.size() > 0 ) {
             if (String.isBlank(recTypeInfo[0].event__r.RecordType.Name)) {
                 evtInfo.recordTypeName = 'Undergraduate';
             } else {
@@ -106,18 +106,15 @@ public with sharing class USTEventShared {
         evt = getUSTEventInfo();
         SYSTEM.debug('!!!!!!!!!!!!!!!  EVENT ID : ' + evt.evtId + ' , INSTANCE ID : ' + evt.instanceID + ' , EVENT REG ID : ' + evt.evtRegId);
 
-//        UST_Event_Settings__c orgDefault = UST_Event_Settings__c.getOrgDefaults();
-//        UST_Event_Settings__c myProfileSetting = UST_Event_Settings__c.getInstance(UserInfo.getProfileId());
-
+        // UST_Event_Settings__c orgDefault = UST_Event_Settings__c.getOrgDefaults();
+        // UST_Event_Settings__c myProfileSetting = UST_Event_Settings__c.getInstance(UserInfo.getProfileId());
         UST_Event_Settings__c myUserSetting = UST_Event_Settings__c.getInstance(UserInfo.getUserId());
         String communityBaseURL = myUserSetting.Community_Base_URL__c;
 
         //System.Debug('COMMUNITY URL: ' + communityBaseURL);
 
         //String ustEventSettings = UST_Event_Settings__c.getValues('Community_Base_URL__c');
-        String currentURL = ApexPages.currentPage().getUrl();
-        if (String.isBlank(currentURL)){currentURL='';}
-        if ((String.isBlank(evt.evtRegId) && !currentURL.containsIgnoreCase('USTEventRegister')) || String.isBlank(evt.instanceID)) {
+        if ((String.isBlank(evt.evtRegId) && !ApexPages.currentPage().getUrl().containsIgnoreCase('USTEventRegister')) || String.isBlank(evt.instanceID)) {
             //Reset the cookie to prevent loop on registration page
             Cookie deleteCookie = new Cookie('USTEvent', '', null, 0, false); // Note the 0 to delete the cookie
             ApexPages.currentPage().setCookies(new Cookie[]{
@@ -128,7 +125,7 @@ public with sharing class USTEventShared {
                 UST_Event__c eventPage = [SELECT Event_Home_Link_URL__c FROM UST_Event__c WHERE Id = :evt.evtId][0];
                 if (!String.isBlank(eventPage.Event_Home_Link_URL__c)) {
                     myVFPage = new PageReference(eventPage.Event_Home_Link_URL__c);
-                } else if (String.isNotBlank(evt.instanceID) && !currentURL.containsIgnoreCase('USTEventRegister')) {
+                } else if (String.isNotBlank(evt.instanceID) && !ApexPages.currentPage().getUrl().containsIgnoreCase('USTEventRegister')) {
                     myVFPage = new PageReference(communityBaseURL + 'USTEventRegister?instanceID=' + evt.instanceID);
                 } else {
                     myVFPage = new PageReference(communityBaseURL + 'USTEvent');

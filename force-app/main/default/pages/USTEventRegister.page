@@ -11,6 +11,13 @@
         </apex:define>
         <apex:define name="pageTitle"><a href="{!eventPage.Event_home_Link_URL__c}">{!eventPage.Event_Home_Link_Title__c}</a></apex:define>
         <apex:define name="afterJquery">
+            <script>
+                dataLayer = [{
+                    <!--'school': '{!eventPage.School__r.Name}',-->
+                    'recordType': '{!eventPage.RecordType.Name}',
+                    'eventlabel':'{!eventPage.Event_Name__c}'
+                }];
+            </script>
             <link href="{!URLFOR($Resource.USTEventAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
             <link href="{!URLFOR($Resource.USTEventAssets, '/chosen/chosen-ust.css')}" rel="stylesheet" type="text/css"/>
             <script src="{!URLFOR($Resource.USTEventAssets, '/js/register.js')}" type="text/javascript"/>
@@ -115,7 +122,7 @@
                             <apex:outputLabel value="Last Name" for="lastName" styleClass="required"/>
                             <apex:inputText value="{!newEvtReg.Registrant_Last_Name__c}" id="lastName" required="true" styleClass="{!IF(!contactSet,'required requiredText', '')}" disabled="{!contactSet}" maxLength="80" onKeyPress="return isNumberKey(event)"></apex:inputText>
                         </div>
-                        <apex:outputPanel layout="block" styleClass="columns small-12 medium-6" rendered="{!IF(evtInfo.recordTypeName = 'Undergraduate', true, false)}">
+                        <apex:outputPanel layout="block" styleClass="columns small-12 medium-6" rendered="{!IF(evtInfo.recordTypeName = 'Undergraduate' || evtInfo.recordTypeName = 'Graduate', true, false)}">
                             <apex:outputLabel value="Email" for="email" styleClass="required"/>
                             <apex:inputText value="{!newEvtReg.Registrant_Email__c}" id="email" required="true" styleClass="{!IF(!contactSet,'required requiredText validEmail', '')}" disabled="{!contactSet}" maxLength="80" onKeyPress="return isNumberKey(event)"></apex:inputText>
                         </apex:outputPanel>
@@ -166,7 +173,7 @@
 
                         <apex:outputPanel layout="block" styleClass="column small-12 large-6 medium-6" rendered="{!eventPage.Ask_Phone__c}">
                             <apex:inputCheckbox value="{!newEvtReg.Registrant_Receive_Texts__c}" id="AcceptTextMessage" disabled="{!contactSet}"/>
-                            <apex:outputLabel value="I am willing to receive text messages about this event" for="AcceptTextMessage"  style="padding-top:1.5em;"/>
+                            <apex:outputLabel value="I am willing to receive text messages about this event" for="AcceptTextMessage" style="padding-top:1.5em;"/>
                         </apex:outputPanel>
 
                         <apex:outputPanel layout="block" styleClass="columns small-12 medium-12" rendered="{!IF(evtInfo.recordTypeName = 'UDAR', true, false)}">
@@ -221,11 +228,8 @@
 
                     <!-- Ask High School or College (optional) -->
                     <apex:outputPanel layout="none"
-                                      rendered="{!If((eventPage.College_High_School_Ask__c == 'HS Only'
-                                          || eventPage.College_High_School_Ask__c == 'Both College and HS'
-                                          || eventPage.College_High_School_Ask__c == 'Auto Select on Audience')
-                                          && NOT CONTAINS(evtInfo.audience, 'Transfer')
-                                          && NOT CONTAINS(evtInfo.audience, 'Graduate')
+                                      rendered="{!If((eventPage.College_High_School_Ask__c == 'HS Only' || eventPage.College_High_School_Ask__c == 'Both College and HS')
+                                          || (eventPage.College_High_School_Ask__c == 'Auto Select on Audience' && NOT CONTAINS(evtInfo.audience, 'Transfer') && NOT CONTAINS(evtInfo.audience, 'Graduate'))
                                           && !contactSet
                                           , true, false)}">
                         <div class="row">
@@ -258,10 +262,8 @@
 
                     <apex:outputPanel layout="none"
                                       rendered="{!If(
-                                          (eventPage.College_High_School_Ask__c = 'College Only')
-                                                  || (eventPage.College_High_School_Ask__c = 'Both College and HS')
-                                                  || (eventPage.College_High_School_Ask__c = 'Auto Select on Audience' && evtInfo.audience = 'Transfer')
-                                                  || (eventPage.College_High_School_Ask__c = 'Auto Select on Audience' && CONTAINS(evtInfo.audience, 'Graduate'))
+                                          (eventPage.College_High_School_Ask__c = 'College Only' || eventPage.College_High_School_Ask__c = 'Both College and HS')
+                                                  || (eventPage.College_High_School_Ask__c = 'Auto Select on Audience' && (evtInfo.audience = 'Transfer' || evtInfo.audience ='Graduate'))
                                           , true, false)}">
                         <div class="row">
                             <div class="column small-12 large-12 medium-12">

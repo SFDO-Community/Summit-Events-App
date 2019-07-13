@@ -3,6 +3,38 @@
 #
 
 package.xml
+force-app/main/default/classes/ChangePasswordController
+force-app/main/default/classes/ChangePasswordController.cls-meta.xml
+force-app/main/default/classes/ChangePasswordControllerTest
+force-app/main/default/classes/ChangePasswordControllerTest.cls-meta.xml
+force-app/main/default/classes/ForgotPasswordControllerTest.cls
+force-app/main/default/classes/ForgotPasswordControllerTest.cls-meta.xml
+force-app/main/default/classes/MyProfilePageController.cls
+force-app/main/default/classes/MyProfilePageController.cls-meta.xml
+force-app/main/default/classes/MyProfilePageControllerTest.cls
+force-app/main/default/classes/MyProfilePageControllerTest.cls-meta.xml
+force-app/main/default/classes/SiteLoginController.cls
+force-app/main/default/classes/SiteLoginController.cls-meta.xml
+force-app/main/default/classes/SiteLoginControllerTest.cls
+force-app/main/default/classes/SiteLoginControllerTest.cls-meta.xml
+force-app/main/default/classes/SiteRegisterController.cls
+force-app/main/default/classes/SiteRegisterController.cls-meta.xml
+force-app/main/default/classes/SiteRegisterControllerTest.cls
+force-app/main/default/classes/SiteRegisterControllerTest.cls-meta.xml
+force-app/main/default/classes/SiteFooter.component
+force-app/main/default/classes/SiteFooter.component-meta.xml
+force-app/main/default/classes/SiteHeader.component
+force-app/main/default/classes/SiteHeader.component-meta.xml
+force-app/main/default/classes/SiteLogin.component
+force-app/main/default/classes/SiteLogin.component-meta.xml
+force-app/main/default/classes/SitePoweredBy.component
+force-app/main/default/classes/SitePoweredBy.component-meta.xml
+
+force-app/main/default/profiles/Custom%3A Marketing Profile.profile-meta.xml
+force-app/main/default/profiles/Custom%3A Sales Profile.profile-meta.xml
+force-app/main/default/profiles/Custom%3A Support Profile.profile-meta.xml
+
+force-app/main/default/staticresources/SiteSamples.resource-meta.xml
 
 # LWC configuration files
 **/jsconfig.json

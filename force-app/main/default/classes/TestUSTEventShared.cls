@@ -33,6 +33,8 @@ public with sharing class TestUSTEventShared {
         USTShared.createEncryptedCookie(eventForCookie, 'USTEvent');
         USTShared.getUSTEventInfo();
         registerCtrl = new USTEventRegisterController();
+        PageReference pageRef = Page.USTEventCancelReview;
+        Test.setCurrentPage(pageRef);
         registerCtrl.checkEventDetails();
         registerCtrl.checkEventDetails();
         Test.stopTest();
@@ -138,7 +140,13 @@ public with sharing class TestUSTEventShared {
         registerCtrl.saveContactRegistration();
 
         //Run same registration again for reg Id match
+        PageReference newpg = registerCtrl.saveContactRegistration();
+        Test.setCurrentPage(newpg);
+
+        pageRef = Page.USTEventRegister;
+        Test.setCurrentPage(pageRef);
         registerCtrl.saveContactRegistration();
+
 
         Test.stopTest();
     }
@@ -265,12 +273,15 @@ public with sharing class TestUSTEventShared {
     @isTest static void testParkingPass() {
         UST_Event_Instance__c evtInst = TestUSTEventSharedDataFactory.createTestEvent('Undergraduate', 'Test Event', '', true, true);
         UST_Event_Registration__c evtReg = TestUSTEventSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012');
+        evtReg.Status__c = 'Requested';
+        update evtReg;
 
         Test.startTest();
         USTEventParkingPassController parkingCtrl = new USTEventParkingPassController();
         ApexPages.currentPage().getParameters().put('regId', evtReg.Id);
         parkingCtrl = new USTEventParkingPassController();
-        evtReg.Date__c = evtInst.Start_Date_Time__c.date();
+
+        evtReg.Date__c = evtInst.Start_Date_Time__c.date().addDays(-1);
         upsert evtReg;
         parkingCtrl = new USTEventParkingPassController();
         Test.stopTest();
@@ -388,13 +399,29 @@ public with sharing class TestUSTEventShared {
         Test.stopTest();
     }
 
-    @isTest static void testUSTEventTiggers() {
+    @isTest static void testUSTEventTriggers() {
+
+        // first retrieve default EDA trigger handlers
+        List<hed.TDTM_Global_API.TdtmToken> tokens = hed.TDTM_Global_API.getTdtmConfig();
+
+        // Create our trigger handler using the constructor
+        tokens.add(new hed.TDTM_Global_API.TdtmToken('USTEventAppointmentItinerary_TDTM', 'UST_Event_Appointments__c', 'AfterInsert;AfterUpdate;AfterDelete;AfterUndelete', 2.00));
+        tokens.add(new hed.TDTM_Global_API.TdtmToken('USTEventRegistration_TDTM', 'UST_Event_Registration__c', 'AfterInsert;AfterUpdate', 2.00));
+        
+        // Pass trigger handler config to set method for this test run
+        hed.TDTM_Global_API.setTdtmConfig(tokens);
+
+
         UST_Event_Instance__c evtInst = TestUSTEventSharedDataFactory.createTestEvent('Undergraduate', 'Test Event', '', true, true);
         UST_Event_Email__c testEvtEmail = TestUSTEventSharedDataFactory.createTestTransactionEmail(evtInst, 'Started','');
         UST_Event_Email__c testEvtEmail2 = TestUSTEventSharedDataFactory.createTestTransactionEmail(evtInst, 'Requested','');
         UST_Event_Email__c testEvtEmail3 = TestUSTEventSharedDataFactory.createTestTransactionEmail(evtInst, 'Requested','On Hold');
         //Email must be added before registration is created
         UST_Event_Registration__c evtReg = TestUSTEventSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012');
+
+        Contact evtContact = TestUSTEventSharedDataFactory.createContact('TestFirst', 'T', 'TestLast', 'test@valleyhill.net','55418', '', '1971-03-22', '2012');
+        evtReg.Contact__c = evtContact.Id;
+        upsert evtReg;
 
         //UST_Event_Appointments__c addingAppointment = new UST_Event_Appointments__c(Event_Registration__c = testRegistration, Appointment_Type__c);
         Test.startTest();
@@ -435,19 +462,28 @@ public with sharing class TestUSTEventShared {
         evtReg.Substatus__c = 'On Hold';
         update evtReg;
 
+        // Triggers foot on campus look up
+        evtReg.Status__c = 'Confirmed';
+        evtReg.Substatus__c = 'Attended';
+        update evtReg;
+
         TestUSTEventSharedDataFactory.createEventRegistration(evtInst, 'TestFirst2', 'TestLast2', 'test2@valleyhill.net', '55412', '1971-02-22', '2022');
 
         Test.stopTest();
     }
 
-//    @isTest static void testRegistrationTrigger() {
-//        UST_Event_Instance__c evtInst = TestUSTEventSharedDataFactory.createTestEvent('Undergraduate', 'Test Event', '', true, true);
-//        UST_Event_Registration__c evtReg = TestUSTEventSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012');
-//        UST_Event_Email__c testEvtEmail = TestUSTEventSharedDataFactory.createTestTransactionEmail(evtInst.Event__c, 'Requested');
-//
-//    }
+    @isTest static void testUSTApptConfirmTriggerOvernight() {
 
-    @isTest static void testUSTApptConfirmTiggerOvernight() {
+        // first retrieve default EDA trigger handlers
+        List<hed.TDTM_Global_API.TdtmToken> tokens = hed.TDTM_Global_API.getTdtmConfig();
+
+        // Create our trigger handler using the constructor
+        tokens.add(new hed.TDTM_Global_API.TdtmToken('USTEventAppointmentItinerary_TDTM', 'UST_Event_Appointments__c', 'AfterInsert;AfterUpdate;AfterDelete;AfterUndelete', 2.00));
+        tokens.add(new hed.TDTM_Global_API.TdtmToken('USTEventRegistration_TDTM', 'UST_Event_Registration__c', 'AfterInsert;AfterUpdate', 2.00));
+
+        // Pass trigger handler config to set method for this test run
+        hed.TDTM_Global_API.setTdtmConfig(tokens);
+
         UST_Event_Instance__c evtInst = TestUSTEventSharedDataFactory.createTestEvent('Undergraduate', 'Overnight Event', '', true, true);
         UST_Event_Registration__c evtReg = TestUSTEventSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012');
 

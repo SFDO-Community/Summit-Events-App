@@ -33,21 +33,21 @@
 
             .backImg {
                 z-index: 0;
-                left: .9in;
-                top: 2.5in;
-                width: 7.14in;
-                height: 7.977in;
+                left: .5in;
+                top: .5in;
+                width: 7.5in;
+                height: 9.95in;
             }
 
             #coupon {
                 position: absolute;
-                top: .75in;
-                left: .5in;
+                top: .97in;
+                left: .51in;
                 font-size: 11pt;
                 line-height: 14pt;
                 border: dashed purple 1px;
                 padding: .125in;
-                width: 3in;
+                width: 3.28in;
             }
 
             .purpleText {
@@ -55,7 +55,7 @@
             }
 
             p {
-                margin: 0in 0in .19in 0in;
+                margin: 0in 0in .15in 0in;
                 padding: 0in;
             }
 
@@ -78,23 +78,24 @@
             }
 
             #welcomeText {
+                font-size: 11pt;
                 position: absolute;
-                top: .7660in;
-                left: 4.27in;
+                top: .6in;
+                left: 4.25in;
                 width: 3.5in;
             }
         </style>
     </head>
     <apex:outputPanel layout="block" id="pdfWrap" styleClass="pdfWrap" rendered="{!IF(warning == '', true, false)}">
-        <apex:image value="{!URLFOR($Resource.USTEventAssets, '/img/UGParkingPass.gif')}" styleClass="backImg"/>
+        <apex:image value="{!URLFOR($Resource.USTEventAssets, '/img/UGParkingPassSummer2019.gif')}" styleClass="backImg"/>
         <div class="textReference">
             <div id="coupon">
                 <apex:outputText value="{!couponOut}" escape="false" styleClass="firstNameGreeting"></apex:outputText>
-                <p>VALID IN LOT:&nbsp; G</p>
-                <p class="reg purpleText"><strong>If parking lot G is full</strong>, please exit by turning right
-                    (south) on Cleveland Avenue. Then turn right (west)
-                    onto Grand Avenue. After you cross Cretin Avenue,
-                    the Anderson Parking Facility will be on your left.
+                <p>VALID IN LOT:&nbsp; B</p>
+                <p class="reg purpleText"><strong>If parking lot B is full</strong>, please exit the campus by turning left
+                    (west) on Selby Avenue. Then turn left (south)
+                    onto Cretin Avenue. After you cross Summit Avenue,
+                    the Anderson Parking Facility will be on your right.
                     When you enter the parking facility, <strong>please take a
                         ticket</strong>. Admissions will validate the ticket when you
                     check in for your visit.</p>
@@ -104,7 +105,6 @@
                 <table>
                     <th colspan="2">Contact Information:</th>
                     <tr>
-
                         <td>
                             Office of Admissions<br/>
                             (651) 962-6150
@@ -127,7 +127,7 @@
             <div id="welcomeText">
                 <p>Hi {!firstName},</p>
                 <p>Thank you for visiting the University of St. Thomas. Please
-                    use the map below to park in either Lot G or the Anderson
+                    use the map below to park in either Lot B or the Anderson
                     Parking Facility. Please also print this page and leave it in
                     your vehicle as your parking permit for the day.</p>
             </div>

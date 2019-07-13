@@ -10,6 +10,18 @@
         </apex:define>
         <apex:define name="pageTitle"><a href="{!eventPage.Event_Home_Link_URL__c}">{!eventPage.Event_Home_Link_Title__c}</a></apex:define>
         <apex:define name="afterJquery">
+
+            <script>
+                dataLayer = [{
+                    <!--'school': '{!eventPage.School__r.Name}',-->
+                    'recordType': '{!eventPage.RecordType.Name}',
+                    'eventlabel':'{!eventPage.Event_Name__c}'
+                    //'startDate': '{!evtInstance.Start_Date_Time__c}',
+                   // 'location':'{}'
+
+                }];
+            </script>
+
             <link href="{!URLFOR($Resource.USTEventAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
         </apex:define>
         <apex:define name="sectionNav"/>
@@ -23,6 +35,7 @@
                 <div class="row">
                     <div class="columns eventCrumb">
                         <span class="eventName">{!eventPage.Event_Name__c}</span>
+                        <span class="bc-spacer"><span>»</span></span>
                         <apex:outputPanel layout="none" rendered="{!!ISBLANK(evtInstance.Instance_Title__c)}">
                             <span class="eventInstance">{!evtInstance.Instance_Title__c}</span>
                         </apex:outputPanel>

@@ -34,6 +34,7 @@ public with sharing class USTEventRegisterController {
     public String eventStartDateTimeCrumb { get; set; }
     public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
+    public String dataLayerLocationType {get;set;}
 
 
     public USTEventRegisterController() {
@@ -68,7 +69,7 @@ public with sharing class USTEventRegisterController {
         }
 
         //Get Instance information
-        if (!String.isBlank(evtInfo.instanceID) && evtInstance == null) {
+        if (String.isNotBlank(evtInfo.instanceID)) {
             evtInstance = [
                     SELECT Id, Name, Event__r.Name, Event__r.Event_Name__c, Event__r.Id, Instance_Title__c, Active_Status__c, Capacity__c,
                             Event__r.Event_description__c, Event__r.Audience__c, Start_Date_Time__c, End_Date_Time__c, Current_Available_Capacity__c,
@@ -77,7 +78,7 @@ public with sharing class USTEventRegisterController {
                     WHERE Id = :evtInfo.instanceID
                     LIMIT 1
             ][0];
-            System.Debug('EVENT INSTANCE LOADED UP!!');
+
             //define Event ID from instanceInfo data
             evtInfo.evtId = evtInstance.Event__r.Id;
             instanceName = evtInstance.Name;
@@ -88,21 +89,18 @@ public with sharing class USTEventRegisterController {
             }
 
             if (evtInstance.Current_Available_Capacity__c <= 0 || evtInstance.Active_Status__c != 'Active' || evtInstance.End_Date_Time__c <= currentDT) {
-                System.Debug('111111111111111111111 Current Capacity: ' + evtInstance.Current_Available_Capacity__c + ', Status: ' + evtInstance.Active_Status__c + ', End Date: ' + evtInstance.End_Date_Time__c + ' current Date: ' + currentDT);
                 eventIsClosed = true;
             }
 
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
                 Boolean adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-                if (adminOpen) {
-                    eventIsClosed = false;
-                }
+                eventIsClosed = adminOpen;
             }
 
         }
 
         //Get Event Info off of instance master detail id
-        if (!String.isBlank(evtInfo.evtId) && eventPage == null) {
+        if (!String.isBlank(evtInfo.evtId)) {
             eventPage = [
                     SELECT Name, Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Full_Text__c, Audience__c,Include_Time_frame_List__c,
                             Max_Other_Attendees__c, Allow_Other_Attendees__c, College_High_School_Ask__c, Ask_Gender__c, Template__c,
@@ -116,7 +114,7 @@ public with sharing class USTEventRegisterController {
                             // School not in this ORG
                             // Academic_Program_List__c, School__c, Ask_Mailing_Address__c, Ask_Phone__c, Event_Sponsor__c,
                             Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
-                            Tracking_Event_Registration__c, Ask_Date_Of_Birth__c
+                            Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, RecordType.Name
                     FROM UST_Event__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1
@@ -160,6 +158,7 @@ public with sharing class USTEventRegisterController {
             } else if (!String.isBlank(eventPage.Location_Title__c)) {
                 locationAddress = eventPage.Location_Title__c;
             }
+            dataLayerLocationType = locationAddress;
 
             if (!String.isBlank(locationTitle)) {
                 locationCrumb = locationTitle + '<br/>';
@@ -224,12 +223,9 @@ public with sharing class USTEventRegisterController {
         }
 
         //If the user is logged in use that data
-
         if ((!String.isBlank(EvtUserType) && EvtUserType != 'Guest' && EvtUserType != 'Standard') || (!String.isBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING')) {
             //Fill in contact information
             Contact userContact = new Contact();
-
-            System.Debug('REG ID FROM COOKIE ' + evtINfo.evtRegId);
             if (String.isBlank(evtInfo.evtRegId) || evtInfo.evtRegId == 'COMING') {
                 hed__Address__c userAddress = new hed__Address__c();
                 List<hed__Address__c> userAddressList = [
@@ -520,7 +516,6 @@ public with sharing class USTEventRegisterController {
             contactId = newEvtReg.Contact__r.Id;
         } else {
             //pass record type and event reg to matcher helper class
-            System.Debug(' RECOROD TYPE NAME ++++ ' + evtInfo.recordTypeName);
             matched = matcher.USTEventContactMatching(evtInfo.recordTypeName, newEvtReg);
             //Populate matching results into data
             contactId = (Id) matched.get('contactId');

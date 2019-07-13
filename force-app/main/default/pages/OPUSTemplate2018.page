@@ -1,0 +1,1283 @@
+<apex:page id="OPUSTemplate2018" sidebar="false" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" xmlns:v-on="http://fake.org/fake" xmlns:v-bind="http://fake.org/fake">
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+        <meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+        <title>
+            <apex:insert name="metaPageTitle"/>
+        </title>
+        <meta content="At the Opus College of Business, our mission is to unlock the talent of future problem solvers and prepare students to be highly principled, global business leaders." name="description"/>
+        <link href="https://s3.amazonaws.com/orion-static-files/css/app.css" rel="stylesheet"/>
+        <link href="https://fast.fonts.net/t/1.css?apiType=css&amp;projectid=0c20a741-3f4c-46c8-a6fa-debbf6951b8a" rel="stylesheet" type="text/css"/>
+        <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,polyfill.ioArray.prototype.includes,Symbol"></script>
+        <script src="https://static.stthomas.edu/ust-style/dist2/js/ust-full.min.js" type="text/javascript"></script>
+        <apex:insert name="afterJquery"/>
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-KHFMKX');</script>
+        <!-- End Google Tag Manager -->
+
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-5RDGQ79');</script>
+        <!-- End Google Tag Manager -->
+
+
+        <script type="text/javascript">
+            $(document).ready(() => {
+                const dropdownArrow = '<svg viewBox="0 0 16 9.1" class="select-down-arrow"><polygon points="16,1.1 14.9,0 8,6.9 1.1,0 0,1.1 8,9.1 9.1,8 9.1,8"></polygon></svg>';
+
+                /* Add the dropdown arrow to all elements that require it */
+                $('input[type=file], input[type=radio], select').each(function () {
+                    $(this).after(dropdownArrow);
+                    $(this).nextAll('label')
+                        .css('transform', 'translate(-18px,-24px) scale(.8)');
+                });
+
+                /* On focus, move the label to the top-left corner */
+                $(document).on('focus', 'input:not([type=checkbox]), textarea', function () {
+                    $(this).next('label')
+                        .css('transform', 'translate(-18px,-24px) scale(.8)');
+                });
+
+                /* On blur, move the label back to the center */
+                $(document).on('blur', 'input:not([type=checkbox]), textarea', function () {
+                    if ($(this).val() !== '') return;
+                    $(this).next('label')
+                        .css('transform', 'none');
+                });
+
+                /* Change any placeholders to inputs */
+                $('input[placeholder]').each(function () {
+                    if ($(this).hasClass('search__input')) return;
+
+                    let placeholder = $(this).attr('placeholder');
+
+                    let $label = $('<label />')
+                        .text(placeholder);
+
+                    $(this)
+                        .removeAttr('placeholder')
+                        .after($label);
+                });
+
+                /* Move any labels before inputs to after the input */
+                $('label ~ input, label ~ select, label ~ textarea').each(function () {
+                    let $label = $(this).prev('label');
+                    $label.remove();
+
+                    $(this).after($label);
+                })
+                    .promise()
+                    .done(function () {
+                        /* Deletes any stray labels and their empty container */
+                        $('label[for]').each(function () {
+                            let $label = $(this);
+
+                            if ($label.nextAll('input').length || $label.prevAll('input').length
+                                || $label.nextAll('select').length || $label.prevAll('select').length
+                                || $label.nextAll('textarea').length || $label.prevAll('textarea').length
+                                || $label.nextAll('legend').length || $label.prevAll('legend').length) {
+                                return;
+                            }
+
+                            let $container = $label.parent();
+
+                            $label.remove();
+
+                            if ($container.is(':empty')) $container.remove();
+                        });
+                    });
+
+                /*
+                 * ===================
+                 *  Grid system fixes
+                 * ===================
+                 */
+
+                /* Replace all instances of class .row with class .grid-x */
+                $('.row').each(function () {
+                    $(this).toggleClass('grid-x grid-margin-x row');
+                });
+
+                /* Replace all instances of class .column with class .cell */
+                $('.column, .columns').each(function () {
+                    if ($(this).hasClass('columns')) $(this).toggleClass('cell columns');
+                    if ($(this).hasClass('column')) $(this).toggleClass('cell column');
+                });
+
+                /*
+                 * =======================
+                 *  Expandable form fixes
+                 * =======================
+                 */
+
+                $('.form-expandable').each(function () {
+                    let $form = $(this).find('.form');
+                    if (!$form.length) $form = $(this).find('form');
+
+                    if ($form.length) {
+                        $form
+                            .data('height', $form.height())
+                            .data('padding', $form.css('padding'))
+                            .css({
+                                'max-height': 0,
+                                'padding': 0
+                            })
+                            .addClass('form-expandable__form');
+                    }
+                });
+
+                $('.form-expandable__expand-button').on('click', function () {
+                    let $form = $(this).parent().nextAll('.form');
+                    if (!$form.length) $form = $(this).parent().nextAll('form');
+
+                    if ($form.length) {
+                        if ($form.css('max-height') === '0px') {
+                            $form.css({
+                                'max-height': $form.data('height'),
+                                'padding': $form.data('padding')
+                            });
+                        } else {
+                            $form.css({
+                                'max-height': 0,
+                                'padding': 0
+                            })
+                        }
+                    }
+                });
+            })
+            ;
+        </script>
+        <style>
+            form {
+                padding: 1.5rem 1rem;
+            }
+
+            @media print, screen and (min-width: 64em) {
+                form {
+                    padding: 3rem 15rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KHFMKX"
+                      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5RDGQ79" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+
+    <div id="app">
+        <global-header v-bind:home-page="null">
+            <div slot-scope="header">
+                <header class="header" v-bind:class="{ purple: header.purple && header.hovered === false, fixed: header.menuFixed }">
+                    <div class="header__container">
+                        <div class="header__top">
+                            <a href="https://business.stthomas.edu/index.html" target="_parent">
+                                <svg class="header__logo" viewBox="0 0 356.09 11.9">
+                                    <g>
+                                        <g>
+                                            <path d="M354.36,3.06a1.74,1.74,0,0,0-.82-.57,3.08,3.08,0,0,0-1-.19,2.77,2.77,0,0,0-.56.07,2.06,2.06,0,0,0-.54.2,1.22,1.22,0,0,0-.42.36,1,1,0,0,0-.16.54.92.92,0,0,0,.39.79,3.58,3.58,0,0,0,1,.46c.39.13.81.26,1.26.38a5.07,5.07,0,0,1,1.26.55,2.72,2.72,0,0,1,1.35,2.53,3.67,3.67,0,0,1-.35,1.64,3.43,3.43,0,0,1-1,1.17,4,4,0,0,1-1.39.69,6.07,6.07,0,0,1-1.67.22,6.16,6.16,0,0,1-2.05-.33,5.31,5.31,0,0,1-1.76-1.09l1.78-2a2.59,2.59,0,0,0,1,.79,2.7,2.7,0,0,0,1.2.28,2.62,2.62,0,0,0,.62-.07,2,2,0,0,0,.56-.22,1.1,1.1,0,0,0,.4-.37.91.91,0,0,0,.15-.52,1,1,0,0,0-.39-.81,3.6,3.6,0,0,0-1-.51l-1.28-.41a5.91,5.91,0,0,1-1.28-.56,3.14,3.14,0,0,1-1-.93,2.66,2.66,0,0,1-.39-1.52,3.4,3.4,0,0,1,.36-1.6,3.46,3.46,0,0,1,1-1.15A4.28,4.28,0,0,1,351,.23,5.93,5.93,0,0,1,352.6,0a6.44,6.44,0,0,1,1.86.27,4.38,4.38,0,0,1,1.61.91Zm-14.58,0a1.77,1.77,0,0,0-.83-.57,3,3,0,0,0-1-.19,2.77,2.77,0,0,0-.56.07,2.13,2.13,0,0,0-.55.2,1.1,1.1,0,0,0-.41.36.89.89,0,0,0-.16.54.94.94,0,0,0,.38.79,3.81,3.81,0,0,0,1,.46c.39.13.81.26,1.26.38a5.17,5.17,0,0,1,1.25.55,3,3,0,0,1,1,.94,2.86,2.86,0,0,1,.38,1.59,3.54,3.54,0,0,1-.35,1.64A3.3,3.3,0,0,1,340.2,11a4,4,0,0,1-1.39.69,6.49,6.49,0,0,1-3.72-.11,5.21,5.21,0,0,1-1.76-1.09l1.77-2a2.67,2.67,0,0,0,1,.79,2.72,2.72,0,0,0,1.21.28,2.68,2.68,0,0,0,.62-.07,2.11,2.11,0,0,0,.56-.22,1.28,1.28,0,0,0,.4-.37.91.91,0,0,0,.15-.52,1,1,0,0,0-.39-.81,3.67,3.67,0,0,0-1-.51l-1.28-.41a6.13,6.13,0,0,1-1.28-.56,3.22,3.22,0,0,1-1-.93,2.66,2.66,0,0,1-.39-1.52,3.4,3.4,0,0,1,.36-1.6,3.46,3.46,0,0,1,1-1.15,4.28,4.28,0,0,1,1.38-.7A5.82,5.82,0,0,1,338,0a6.37,6.37,0,0,1,1.85.27,4.34,4.34,0,0,1,1.62.91Zm-21-2.77h7.7v2.3h-5.2V4.7h4.91V7h-4.91v2.3h5.49v2.31h-8Zm-18.53,0h3.39l4.81,7.87h0V.29H311V11.62h-3.26l-5-8.07h0v8.07h-2.49Zm-10.17,0h2.49V11.62h-2.49Zm-8.95,2.77a1.77,1.77,0,0,0-.83-.57,3,3,0,0,0-1-.19,2.77,2.77,0,0,0-.56.07,2.13,2.13,0,0,0-.55.2,1.1,1.1,0,0,0-.41.36.89.89,0,0,0-.16.54.94.94,0,0,0,.38.79,3.81,3.81,0,0,0,1,.46c.39.13.81.26,1.26.38a5.17,5.17,0,0,1,1.25.55,3,3,0,0,1,1,.94,2.86,2.86,0,0,1,.38,1.59,3.54,3.54,0,0,1-.35,1.64,3.3,3.3,0,0,1-.95,1.17,4,4,0,0,1-1.39.69,6.49,6.49,0,0,1-3.72-.11,5.21,5.21,0,0,1-1.76-1.09l1.77-2a2.67,2.67,0,0,0,1,.79,2.72,2.72,0,0,0,1.21.28,2.68,2.68,0,0,0,.62-.07,2.11,2.11,0,0,0,.56-.22,1.28,1.28,0,0,0,.4-.37.91.91,0,0,0,.15-.52,1,1,0,0,0-.39-.81,3.67,3.67,0,0,0-1-.51l-1.28-.41a6.13,6.13,0,0,1-1.28-.56,3.22,3.22,0,0,1-1-.93,2.66,2.66,0,0,1-.39-1.52,3.4,3.4,0,0,1,.36-1.6,3.46,3.46,0,0,1,1-1.15,4.28,4.28,0,0,1,1.38-.7A5.82,5.82,0,0,1,279.38,0a6.37,6.37,0,0,1,1.85.27,4.34,4.34,0,0,1,1.62.91ZM267.83,7.25a5.48,5.48,0,0,1-.3,1.85,4,4,0,0,1-2.4,2.45,6.33,6.33,0,0,1-4.15,0,4.19,4.19,0,0,1-1.49-1,4.23,4.23,0,0,1-.91-1.48,5.48,5.48,0,0,1-.3-1.85v-7h2.5V7.15a2.84,2.84,0,0,0,.16,1,2.33,2.33,0,0,0,1.2,1.29,2.36,2.36,0,0,0,.92.18,2.32,2.32,0,0,0,.92-.18,2.45,2.45,0,0,0,.72-.52,2.21,2.21,0,0,0,.47-.77,2.84,2.84,0,0,0,.17-1V.29h2.49ZM245,9.5h2.24a2.93,2.93,0,0,0,.58-.06,1.62,1.62,0,0,0,.54-.22,1.31,1.31,0,0,0,.39-.42,1.21,1.21,0,0,0,.15-.62,1,1,0,0,0-.2-.65,1.26,1.26,0,0,0-.5-.38,2.66,2.66,0,0,0-.66-.17,3.77,3.77,0,0,0-.65-.05H245Zm0-4.68h1.81a2.6,2.6,0,0,0,.56-.07,1.45,1.45,0,0,0,.51-.21,1,1,0,0,0,.36-.38,1.16,1.16,0,0,0,.13-.58,1,1,0,0,0-.15-.58,1.12,1.12,0,0,0-.39-.36,1.56,1.56,0,0,0-.54-.18,3.13,3.13,0,0,0-.6-.06H245ZM242.51.29h4.23a10.62,10.62,0,0,1,1.48.1,4,4,0,0,1,1.33.42,2.52,2.52,0,0,1,1,.87,2.63,2.63,0,0,1,.37,1.49,2.36,2.36,0,0,1-.54,1.59,2.92,2.92,0,0,1-1.41.9v0a3,3,0,0,1,1,.31,2.6,2.6,0,0,1,.79.59,2.53,2.53,0,0,1,.5.84,2.88,2.88,0,0,1,.18,1A2.7,2.7,0,0,1,251,10a3,3,0,0,1-1,1,4.5,4.5,0,0,1-1.37.53,7.75,7.75,0,0,1-1.51.16h-4.64Zm-24.93,0h7.6v2.3h-5.1V4.9h4.72V7.2h-4.72v4.42h-2.5ZM200.76,6A4.09,4.09,0,0,0,201,7.42a3.25,3.25,0,0,0,1.82,1.91,4,4,0,0,0,2.9,0,3.25,3.25,0,0,0,1.82-1.91A4.09,4.09,0,0,0,207.8,6a4,4,0,0,0-.25-1.45,3.24,3.24,0,0,0-1.82-1.92,3.89,3.89,0,0,0-2.9,0A3.24,3.24,0,0,0,201,4.5,4,4,0,0,0,200.76,6Zm-2.59,0a6.45,6.45,0,0,1,.45-2.46A5.44,5.44,0,0,1,201.83.42a7.36,7.36,0,0,1,4.9,0,5.44,5.44,0,0,1,3.21,3.07A6.45,6.45,0,0,1,210.39,6a6.51,6.51,0,0,1-.45,2.47,5.51,5.51,0,0,1-1.28,1.88,5.75,5.75,0,0,1-1.93,1.19,7.53,7.53,0,0,1-4.9,0,5.75,5.75,0,0,1-1.93-1.19,5.51,5.51,0,0,1-1.28-1.88A6.51,6.51,0,0,1,198.17,6ZM173.26.29H181v2.3h-5.2V4.7h4.91V7h-4.91v2.3h5.49v2.31h-8Zm-7.69,10.53a9.26,9.26,0,0,1-2.31.83,11.68,11.68,0,0,1-2.44.25,6.89,6.89,0,0,1-2.45-.41,5.8,5.8,0,0,1-1.94-1.19,5.48,5.48,0,0,1-1.27-1.88A6.51,6.51,0,0,1,154.7,6a6.46,6.46,0,0,1,.46-2.46,5.39,5.39,0,0,1,1.27-1.88A5.49,5.49,0,0,1,158.37.42,6.89,6.89,0,0,1,160.82,0a9,9,0,0,1,2.5.33,4.9,4.9,0,0,1,2,1.13l-1.76,1.92a3.42,3.42,0,0,0-1.15-.8,4,4,0,0,0-1.6-.28,3.54,3.54,0,0,0-1.45.28,3.18,3.18,0,0,0-1.11.76,3.35,3.35,0,0,0-.72,1.16A4.24,4.24,0,0,0,157.3,6a4.32,4.32,0,0,0,.24,1.47,3.5,3.5,0,0,0,.72,1.15,3.32,3.32,0,0,0,1.11.76,3.71,3.71,0,0,0,1.45.27,4.81,4.81,0,0,0,1.4-.18,5.81,5.81,0,0,0,.95-.38V7.2h-2V4.9h4.43ZM139.93.29h7.69v2.3h-5.2V4.7h4.92V7h-4.92v2.3h5.49v2.31h-8Zm-14,0h2.49v9h4.63v2.31h-7.12Zm-14,0h2.5v9h4.62v2.31h-7.12ZM95.12,6a4.09,4.09,0,0,0,.25,1.47,3.25,3.25,0,0,0,1.82,1.91,4,4,0,0,0,2.9,0,3.25,3.25,0,0,0,1.82-1.91A4.09,4.09,0,0,0,102.16,6a4,4,0,0,0-.25-1.45,3.24,3.24,0,0,0-1.82-1.92,3.89,3.89,0,0,0-2.9,0A3.24,3.24,0,0,0,95.37,4.5,4,4,0,0,0,95.12,6ZM92.53,6A6.45,6.45,0,0,1,93,3.49,5.44,5.44,0,0,1,96.19.42a7.36,7.36,0,0,1,4.9,0,5.44,5.44,0,0,1,3.21,3.07A6.45,6.45,0,0,1,104.75,6a6.51,6.51,0,0,1-.45,2.47A5.51,5.51,0,0,1,103,10.3a5.75,5.75,0,0,1-1.93,1.19,7.53,7.53,0,0,1-4.9,0,5.75,5.75,0,0,1-1.93-1.19A5.51,5.51,0,0,1,93,8.42,6.51,6.51,0,0,1,92.53,6ZM84.18,3.23a2.36,2.36,0,0,0-.9-.69A3,3,0,0,0,82,2.3a3,3,0,0,0-1.3.28,3,3,0,0,0-1,.76A3.28,3.28,0,0,0,79,4.5,4,4,0,0,0,78.76,6,4.09,4.09,0,0,0,79,7.42a3.57,3.57,0,0,0,.68,1.15,3.13,3.13,0,0,0,1,.76A3,3,0,0,0,82,9.6a2.85,2.85,0,0,0,1.36-.32,2.72,2.72,0,0,0,1-.9l2.08,1.56a4.32,4.32,0,0,1-1.83,1.48,5.61,5.61,0,0,1-2.27.48,6.92,6.92,0,0,1-2.45-.41A5.75,5.75,0,0,1,77.9,10.3a5.51,5.51,0,0,1-1.28-1.88A6.51,6.51,0,0,1,76.17,6a6.45,6.45,0,0,1,.45-2.46A5.44,5.44,0,0,1,79.83.42,6.93,6.93,0,0,1,82.28,0a5.89,5.89,0,0,1,1,.09,5.14,5.14,0,0,1,1,.28,4.74,4.74,0,0,1,1,.51,3.6,3.6,0,0,1,.83.78ZM57.66,3.06a1.77,1.77,0,0,0-.83-.57,3,3,0,0,0-1-.19,2.77,2.77,0,0,0-.56.07,2.13,2.13,0,0,0-.55.2,1.1,1.1,0,0,0-.41.36.89.89,0,0,0-.16.54.94.94,0,0,0,.38.79,3.81,3.81,0,0,0,1,.46c.39.13.81.26,1.26.38A5.17,5.17,0,0,1,58,5.65a3,3,0,0,1,1,.94,2.86,2.86,0,0,1,.38,1.59A3.54,3.54,0,0,1,59,9.82a3.3,3.3,0,0,1-1,1.17,4,4,0,0,1-1.39.69A6.49,6.49,0,0,1,53,11.57a5.21,5.21,0,0,1-1.76-1.09l1.77-2a2.67,2.67,0,0,0,1,.79,2.72,2.72,0,0,0,1.21.28,2.68,2.68,0,0,0,.62-.07,2.11,2.11,0,0,0,.56-.22,1.28,1.28,0,0,0,.4-.37.91.91,0,0,0,.15-.52,1,1,0,0,0-.39-.81,3.67,3.67,0,0,0-1-.51l-1.28-.41A6.13,6.13,0,0,1,53,6.13a3.22,3.22,0,0,1-1-.93,2.66,2.66,0,0,1-.39-1.52,3.4,3.4,0,0,1,.36-1.6,3.46,3.46,0,0,1,1-1.15,4.28,4.28,0,0,1,1.38-.7A5.82,5.82,0,0,1,55.9,0a6.37,6.37,0,0,1,1.85.27,4.34,4.34,0,0,1,1.62.91ZM44.35,7.25a5.48,5.48,0,0,1-.3,1.85,4,4,0,0,1-2.4,2.45,6.33,6.33,0,0,1-4.15,0,4.19,4.19,0,0,1-1.49-1A4.23,4.23,0,0,1,35.1,9.1a5.48,5.48,0,0,1-.3-1.85v-7h2.5V7.15a2.84,2.84,0,0,0,.16,1,2.33,2.33,0,0,0,1.2,1.29,2.36,2.36,0,0,0,.92.18,2.32,2.32,0,0,0,.92-.18,2.45,2.45,0,0,0,.72-.52,2.21,2.21,0,0,0,.47-.77,2.84,2.84,0,0,0,.17-1V.29h2.49ZM21.82,5.09h1.66A2.81,2.81,0,0,0,24.13,5a1.71,1.71,0,0,0,.56-.21,1.16,1.16,0,0,0,.4-.42,1.32,1.32,0,0,0,.15-.66A1.16,1.16,0,0,0,25,3a1.38,1.38,0,0,0-.51-.41,2.48,2.48,0,0,0-.7-.18,6.18,6.18,0,0,0-.73,0H21.82ZM19.32.29h4.21a8.06,8.06,0,0,1,1.66.16A3.72,3.72,0,0,1,26.56,1a2.74,2.74,0,0,1,.93,1.06,3.6,3.6,0,0,1,.34,1.67,3.75,3.75,0,0,1-.32,1.66,2.59,2.59,0,0,1-.88,1.07A3.42,3.42,0,0,1,25.3,7a7.84,7.84,0,0,1-1.66.17H21.82v4.42h-2.5ZM2.59,6a4.09,4.09,0,0,0,.25,1.47,3.47,3.47,0,0,0,.71,1.15,3.32,3.32,0,0,0,1.11.76,3.78,3.78,0,0,0,1.45.27,3.71,3.71,0,0,0,1.45-.27A3.25,3.25,0,0,0,9.38,7.42,4.09,4.09,0,0,0,9.63,6,4,4,0,0,0,9.38,4.5,3.24,3.24,0,0,0,7.56,2.58,3.54,3.54,0,0,0,6.11,2.3a3.61,3.61,0,0,0-1.45.28,3.18,3.18,0,0,0-1.11.76A3.33,3.33,0,0,0,2.84,4.5,4,4,0,0,0,2.59,6ZM0,6A6.27,6.27,0,0,1,.46,3.49,5.26,5.26,0,0,1,1.73,1.61,5.45,5.45,0,0,1,3.66.42,7,7,0,0,1,6.11,0,6.93,6.93,0,0,1,8.56.42a5.37,5.37,0,0,1,3.21,3.07A6.45,6.45,0,0,1,12.22,6a6.51,6.51,0,0,1-.45,2.47A5.62,5.62,0,0,1,10.5,10.3a5.8,5.8,0,0,1-1.94,1.19,6.92,6.92,0,0,1-2.45.41,7,7,0,0,1-2.45-.41A5.75,5.75,0,0,1,1.73,10.3,5.34,5.34,0,0,1,.46,8.42,6.32,6.32,0,0,1,0,6Z"
+                                                  fill-rule="evenodd"/>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </a>
+                            <div class="header__action-nav__wrap">
+                                <ul class="header__action-nav">
+                                    <li class="header__action-nav__item">
+                                        <a class="header__action-nav__link" href="https://stthomas.force.com/applicantportal/Portal_Site_Registration?_ga=2.263505487.2142899341.1543849311-1537090506.1537823615">Apply</a>
+                                    </li>
+                                    <li class="header__action-nav__item">
+                                        <a class="header__action-nav__link" href="https://www.stthomas.edu/give/">Give</a>
+                                    </li>
+                                    <li class="header__action-nav__item">
+                                        <a class="header__action-nav__link" href="https://business.stthomas.edu/opus-advantage/visit-opus/index.html">Visit</a>
+                                    </li>
+                                    <li class="header__action-nav__item">
+                                        <a class="header__action-nav__link arrowed" href="https://business.stthomas.edu/info/prospective-students/index.html">
+                                            Info For
+                                            <svg class="header__arrow-icon" viewbox="0 0 16 9.1">
+                                                <polygon points="16,1.1 14.9,0 8,6.9 1.1,0 0,1.1 8,9.1 9.1,8 9.1,8 "/>
+                                            </svg>
+                                        </a>
+                                        <ul class="header__dropdown small">
+                                            <li class="header__drop-nav__item">
+                                                <a class="header__drop-nav__link" href="https://business.stthomas.edu/info/prospective-students/index.html">Prospective Students</a>
+                                            </li>
+                                            <li class="header__drop-nav__item">
+                                                <a class="header__drop-nav__link" href="https://business.stthomas.edu/info/current-students/index.html">Current Students</a>
+                                            </li>
+                                            <li class="header__drop-nav__item">
+                                                <a class="header__drop-nav__link" href="https://business.stthomas.edu/info/alumni/index.html">Alumni</a>
+                                            </li>
+                                            <li class="header__drop-nav__item">
+                                                <a class="header__drop-nav__link" href="https://business.stthomas.edu/info/donors/index.html">Donors</a>
+                                            </li>
+                                            <li class="header__drop-nav__item">
+                                                <a class="header__drop-nav__link" href="https://business.stthomas.edu/info/recruiters-companies/index.html">Recruiters / Companies</a>
+                                            </li>
+                                            <li class="header__drop-nav__item">
+                                                <a class="header__drop-nav__link" href="https://business.stthomas.edu/info/media/index.html">Media</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <a href="https://www.stthomas.edu/" target="_parent">
+                                    <svg class="header__action-nav__logo" viewBox="0 0 120.24 24">
+                                        <g>
+                                            <g>
+                                                <path class="group1"
+                                                      d="M119.94,14.35a5.66,5.66,0,0,0-4.55-2c-2.71,0-4.86,1.09-4.86,3.57,0,4.17,6.8,2.62,6.8,4.49,0,.59-.87,1.29-2.13,1.29A3.67,3.67,0,0,1,112,20.33l-2,1.54a6.86,6.86,0,0,0,5.32,2c2.52,0,4.89-1.19,4.89-3.85,0-4.15-6.93-2.52-6.93-4.43,0-.65.78-1.09,2-1.07a2.89,2.89,0,0,1,2.76,1.57Zm-13.63,5.33c0,1.41-1.58,2-2.83,2-1,0-1.71-.55-1.71-1.37,0-1,.83-1.33,1.82-1.52l1.46-.31a4.34,4.34,0,0,0,1.26-.39ZM109,16c0-3.13-2.37-3.61-4.74-3.61s-4.69,1-4.69,3.59l2.65.11c0-1.2.5-1.66,2-1.66,1.16,0,2.09.31,2.09,1.4v.32a25.48,25.48,0,0,1-2.87.65l-1.11.22c-1.63.33-3.34,1.28-3.34,3.43a3.46,3.46,0,0,0,3.73,3.46,5.59,5.59,0,0,0,3.59-1.26,2.13,2.13,0,0,0,.26,1h2.8a3.22,3.22,0,0,1-.41-1.85ZM81.3,23.61H84v-5.8c0-1.57.89-3,2.33-3,1.28,0,1.84.89,1.84,2.15v6.67h2.65v-5.8c0-1.57.89-3,2.37-3,1.24,0,1.8.89,1.8,2.15v6.67h2.65V15.87c0-2.37-1.45-3.52-3.84-3.52A4,4,0,0,0,90.36,14a3.36,3.36,0,0,0-3.24-1.65A4.13,4.13,0,0,0,84,13.7V12.61H81.3Zm-6.67-8.82c1.89,0,2.84,1.61,2.84,3.32s-1,3.32-2.84,3.32-2.85-1.6-2.85-3.32S72.74,14.79,74.63,14.79Zm0-2.44c-3.57,0-5.63,2.48-5.63,5.76s2.06,5.76,5.63,5.76,5.63-2.48,5.63-5.76S78.19,12.35,74.63,12.35Zm-17,11.26h2.66V18c0-1.35.6-3,2.6-3,1.35,0,2,.65,2,2.17v6.52h2.65V16.33c0-3.2-2.15-4-4-4a3.86,3.86,0,0,0-3.15,1.35h0V8.13H57.65Zm-8.17,0H52.4V10.83h4.23V8.13H45.25v2.7h4.23Zm-7.56,0h2.91v-3H41.92Zm-6.25-11H34.06v1.91h1.61v6.57c0,1.67.73,2.65,2.91,2.65a9.79,9.79,0,0,0,2.1-.26V21.31c-.39,0-.8.12-1.17.12-1,0-1.19-.47-1.19-1.34V14.52h2.36V12.61H38.32V8.72H35.67ZM20.3,20.74A8.12,8.12,0,0,0,27,24c3.22,0,6.78-1.31,6.78-5.09,0-2.93-2.17-3.87-4.47-4.36l-1.89-.42c-1.74-.39-3.2-.69-3.2-2,0-1.09,1.26-1.72,2.93-1.72a4.32,4.32,0,0,1,4.07,2.24l2.41-1.83a7.65,7.65,0,0,0-6.45-3.1c-2.89,0-6,1.56-6,4.82,0,2.85,2.17,3.76,4.65,4.32l1.72.39c2.06.48,3.19.83,3.19,2,0,1.5-1.87,2-3.28,2A5.39,5.39,0,0,1,22.78,19Z"
+                                                      fill-rule="evenodd"/>
+                                                <path class="group2"
+                                                      d="M73.12,4.72H74V2.78h1.89V2H74V.92h2.16V.12h-3ZM69.34,0a2.24,2.24,0,0,0-2.21,2.42,2.21,2.21,0,1,0,4.41,0A2.24,2.24,0,0,0,69.34,0Zm0,.8c.91,0,1.3.82,1.3,1.62S70.25,4,69.34,4,68,3.22,68,2.42,68.42.8,69.34.8ZM62.22,4.72h.86V2.93L64.61.12h-1l-1,1.9-1-1.9h-1l1.54,2.81Zm-4.69,0h.86V.92h1.27V.12H56.27v.8h1.26ZM54,4.72h.87V.12H54Zm-5.57-.85a2.42,2.42,0,0,0,2,1c1,0,2-.39,2-1.51,0-.88-.65-1.16-1.34-1.31l-.56-.12c-.52-.11-1-.2-1-.59S50,.8,50.45.8a1.29,1.29,0,0,1,1.21.67l.72-.54A2.27,2.27,0,0,0,50.46,0a1.6,1.6,0,0,0-1.79,1.44c0,.85.65,1.12,1.39,1.28l.51.12c.62.14,1,.25,1,.61S51,4,50.54,4a1.61,1.61,0,0,1-1.39-.7Zm-3.69-3h.81c.6,0,.89.27.89.69a.69.69,0,0,1-.76.7h-.94Zm-.87,3.84h.87V3h.83l.89,1.69h1l-1-1.85a1.32,1.32,0,0,0,.91-1.36A1.39,1.39,0,0,0,45.77.12H43.85ZM39,4.72h3.43v-.8H39.86V2.73h2.2V2h-2.2v-1h2.39V.12H39Zm-3.83,0h1.16L37.67.12h-.91l-1,3.67h0l-1-3.67h-.91Zm-3.58,0h.86V.12h-.86Zm-5.36,0H27V1.44h0L29,4.72h.79V.12H29V3.4h0L27,.12h-.79ZM24.44.12h-.87v3c0,.56-.24.92-1,.92s-1-.36-1-.92v-3h-.87V3.31c0,.94.75,1.53,1.86,1.53s1.86-.59,1.86-1.53Z"
+                                                      fill-rule="evenodd"/>
+                                                <path class="group2"
+                                                      d="M17,9.33a1.08,1.08,0,0,0-.42.19,1.51,1.51,0,0,1-1,.35,1.53,1.53,0,0,1-1-.35,1.3,1.3,0,0,0-1.53,0,1.51,1.51,0,0,1-1,.35,1.55,1.55,0,0,1-1-.35,1.12,1.12,0,0,0-.76-.25,1.14,1.14,0,0,0-.76.25,1.4,1.4,0,0,1-.5.26v3.34a3.57,3.57,0,0,0-.47,0,3.27,3.27,0,0,0-.45,0V9.78a1.25,1.25,0,0,1-.5-.26,1.14,1.14,0,0,0-.76-.25A1.16,1.16,0,0,0,6,9.52a1.51,1.51,0,0,1-1,.35,1.51,1.51,0,0,1-1-.35,1.16,1.16,0,0,0-.76-.25,1.17,1.17,0,0,0-.77.25,1.51,1.51,0,0,1-1,.35,1.5,1.5,0,0,1-1-.35A1.08,1.08,0,0,0,0,9.33a16,16,0,0,0,.71,5.85H6a2.31,2.31,0,0,0-.05.46,2.73,2.73,0,0,0,.05.5H1.09a14.83,14.83,0,0,0,7,7.74V18.16a3.27,3.27,0,0,0,.45,0A2.42,2.42,0,0,0,9,18.15v5.73a14.9,14.9,0,0,0,7-7.74H11a2.73,2.73,0,0,0,.05-.5,2.32,2.32,0,0,0,0-.46h5.24A15.88,15.88,0,0,0,17,9.33M5.68,11a2.29,2.29,0,0,0,.94.82,2.17,2.17,0,0,1,1.15,1.1,1.24,1.24,0,0,0,.18.25,2.56,2.56,0,0,0-1.16.59,2.2,2.2,0,0,1-.12-.41A2.16,2.16,0,0,0,6,12a1.75,1.75,0,0,1-.36-1m0,3.61a2.16,2.16,0,0,0-1-1,1.73,1.73,0,0,1-.69-.86,2.19,2.19,0,0,0,1.16.45,2.22,2.22,0,0,1,1.46.65l.1.07A2.6,2.6,0,0,0,6,15a1.72,1.72,0,0,1-.35-.45m-1.85,4a2.21,2.21,0,0,0,.83-.93,2.14,2.14,0,0,1,1.11-1.14A1.09,1.09,0,0,0,6,16.27a2.53,2.53,0,0,0,.64,1.14,2.39,2.39,0,0,1-.47.14,2.24,2.24,0,0,0-1.32.62,1.77,1.77,0,0,1-1.05.36m3.65,0a2.19,2.19,0,0,0-1,1,1.8,1.8,0,0,1-.86.69A2.25,2.25,0,0,0,6,19.13a2.13,2.13,0,0,1,.65-1.45l.1-.14a2.5,2.5,0,0,0,1.19.6,1.86,1.86,0,0,1-.51.41m2.09-5.82a2.15,2.15,0,0,0,1-1,1.74,1.74,0,0,1,.87-.69A2.25,2.25,0,0,0,11,12.16a2.1,2.1,0,0,1-.65,1.44,1.53,1.53,0,0,0-.11.16A2.59,2.59,0,0,0,9,13.14a2.1,2.1,0,0,1,.51-.41m1.76,7.58a2.24,2.24,0,0,0-.93-.81,2.19,2.19,0,0,1-1.16-1.1A1.08,1.08,0,0,0,9,18.14a2.56,2.56,0,0,0,1.16-.59,2.1,2.1,0,0,1,.12.42,2.13,2.13,0,0,0,.63,1.3,1.75,1.75,0,0,1,.36,1m0-3.61a2.15,2.15,0,0,0,1.05,1,1.74,1.74,0,0,1,.69.87,2.25,2.25,0,0,0-1.15-.46,2.21,2.21,0,0,1-1.47-.64.35.35,0,0,0-.1-.08A2.6,2.6,0,0,0,11,16.25a2,2,0,0,1,.35.45m1-3a2.14,2.14,0,0,1-1.11,1.14A2.1,2.1,0,0,0,11,15a2.56,2.56,0,0,0-.59-1.07l-.05-.06a1.83,1.83,0,0,1,.48-.14,2.13,2.13,0,0,0,1.31-.63,1.81,1.81,0,0,1,1.06-.36,2.29,2.29,0,0,0-.83.93"
+                                                      fill-rule="evenodd"/>
+                                                <path class="group2"
+                                                      d="M1.56,8.52a1.13,1.13,0,0,0,.75-.25,1.47,1.47,0,0,1,1-.34,1.52,1.52,0,0,1,1,.34A1.08,1.08,0,0,0,5,8.52a1.13,1.13,0,0,0,.75-.25,1.47,1.47,0,0,1,1-.34,1.52,1.52,0,0,1,1,.34,1.08,1.08,0,0,0,.74.25h0a1.13,1.13,0,0,0,.75-.25,1.47,1.47,0,0,1,1-.34,1.52,1.52,0,0,1,1,.34,1.08,1.08,0,0,0,.74.25,1.13,1.13,0,0,0,.75-.25,1.47,1.47,0,0,1,1-.34,1.52,1.52,0,0,1,1,.34,1.08,1.08,0,0,0,.74.25,1.13,1.13,0,0,0,.75-.25A1.41,1.41,0,0,1,16.86,8L14.14,2.53a1.66,1.66,0,0,1-1.33.41c-.88,0-1-.42-2.32-.42a2.51,2.51,0,0,0-2,.64h0a2.51,2.51,0,0,0-2-.64c-1.38,0-1.45.42-2.32.42a1.67,1.67,0,0,1-1.34-.41L.14,8a1.45,1.45,0,0,1,.68.29A1.08,1.08,0,0,0,1.56,8.52Zm9.06-5c1.26,0,1.47.39,2.29.39a2.56,2.56,0,0,0,1.14-.19l1.5,3.12s-.19.24-1.46.24-1.47-.71-3.41-.72a2.11,2.11,0,0,0-1.49.58L8.54,4.16A2.69,2.69,0,0,1,10.62,3.5ZM3,3.7a2.5,2.5,0,0,0,1.13.19c.82,0,1-.39,2.3-.39a2.67,2.67,0,0,1,2.07.66L7.8,6.92a2.09,2.09,0,0,0-1.49-.58c-1.93,0-2.13.72-3.41.72s-1.46-.24-1.46-.24Z"
+                                                      fill-rule="evenodd"/>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="header__bottom">
+                            <ul class="header__main-nav">
+                                <li class="header__main-nav__item">
+                                    <a class="header__main-nav__link" href="https://business.stthomas.edu/opus-advantage/index.html">OPUS Advantage</a>
+                                    <div class="header__dropdown">
+                                        <div class="header__dropdown__content">
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/opus-advantage/index.html">Opus Advantage</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/opus-advantage/principled-leadership/index.html">Principled Leadership</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/opus-advantage/health-care/index.html">Health Care</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/index.html">Entrepreneurship</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/opus-advantage/facts-figures/index.html">Facts &amp; Figures</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/opus-advantage/leadership-dean/index.html">Leadership &amp; Dean</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/opus-advantage/leadership-dean/about-dean/index.html">About the Dean</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/opus-advantage/visit-opus/index.html">VISIT OPUS</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/opus-advantage/visit-opus/twin-cities/index.html">The Twin Cities</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/opus-advantage/news/index.html">NEWS</a>
+                                                <ul class="header__drop-nav">
+                                                </ul>
+                                            </div>
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/opus-advantage/events/index.html">EVENTS</a>
+                                                <ul class="header__drop-nav">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="header__main-nav__item">
+                                    <a class="header__main-nav__link" href="https://business.stthomas.edu/degrees-programs/index.html">Degrees &amp; Programs</a>
+                                    <div class="header__dropdown">
+                                        <div class="header__dropdown__content">
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/degrees-programs/mba/index.html">MBA Programs</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/mba/part-time/index.html">Part-time Flex MBA</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/mba/online/index.html">Online MBA</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/mba/full-time/index.html">Full-time MBA</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/mba/health-care/index.html">Health Care MBA</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/mba/executive/index.html">Executive MBA</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/degrees-programs/specialized-masters/index.html">Specialized Masters</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/specialized-masters/ms-business-analytics/index.html">Business Analytics</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/specialized-masters/ms-health-care-innovation/index.html">Health Care Innovation</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/specialized-masters/ms-health-care-communication/index.html">Health Care Communication</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/specialized-masters/ms-accountancy/index.html">Accountancy</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/specialized-masters/msl-organizational-ethics-and-compliance/index.html">Organizational Ethics &amp; Compliance</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/index.html">Graduate Certificates</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/business-analytics/index.html">Business Analytics</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/digital-exp-certificates/index.html">Digital Experience</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/transformational-change-and-organization-development/index.html">Transformational Change &amp; Organization Development</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/global-business-certificates/index.html">Global Business</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/integrated-marketing-comm-certificate/index.html">Integrated Marketing Communication</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/strategic-growth-certificate/index.html">Strategic Growth</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/strategic-risk-certificate/index.html">Strategic Risk &amp; Responsibility</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/executive-coaching/index.html">Executive Coaching</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/degrees-programs/undergraduate/index.html">Undergraduate BA/BS</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/undergraduate/majors/index.html">Majors &amp; Concentrations</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/undergraduate/academic-career-services/index.html">Academic &amp; Career Services</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/undergraduate/scholarships/index.html">Scholarships</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/degrees-programs/undergraduate/student-experience/index.html">Student Experience</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="header__main-nav__item">
+                                    <a class="header__main-nav__link" href="https://business.stthomas.edu/executive-education/index.html">Executive Education</a>
+                                    <div class="header__dropdown">
+                                        <div class="header__dropdown__content">
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/executive-education/index.html">Executive Education</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/index.html">Program Finder</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/business-acumen/index.html">Business Acumen</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/communication/index.html">Communication</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/marketing/index.html">Digital Marketing</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/finance/index.html">Finance</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/health-care/index.html">Health Care</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/leadership-management/index.html">Leadership &amp; Management</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/nonprofit-management/index.html">Nonprofit Management</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/operations/index.html">Operations</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/project-management/index.html">Project Management</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/executive-education/individuals/index.html">FOR INDIVIDUALS</a>
+                                                <ul class="header__drop-nav">
+                                                </ul>
+                                            </div>
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/executive-education/organization/index.html">FOR ORGANIZATIONS</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/executive-education/organization/customized-programs/index.html">Customized Programs</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/executive-education/organization/team-talent-development/index.html">Teams &amp; Talent Development</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/executive-education/staff-directory/index.html">DIRECTORIES</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/executive-education/staff-directory/index.html">Staff Directory </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="header__main-nav__item">
+                                    <a class="header__main-nav__link" href="https://business.stthomas.edu/faculty-research/index.html">Faculty &amp; Research</a>
+                                    <div class="header__dropdown">
+                                        <div class="header__dropdown__content">
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/faculty-research/faculty/index.html">OUR FACULTY</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/faculty-research/faculty-bios/index.html">A – Z Directory</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://ir.stthomas.edu/ocb/">Articles &amp; Publications</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/faculty-research/faculty-awards/index.html">Faculty Awards</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/faculty-research/departments/index.html">Academic Departments</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/faculty-research/departments/accounting/index.html">Accounting</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/faculty-research/departments/entrepreneurship/index.html">Entrepreneurship</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/faculty-research/departments/ethics-business-law/index.html">Ethics &amp; Business Law</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/faculty-research/departments/finance/index.html">Finance</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/faculty-research/departments/management/index.html">Management</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/faculty-research/departments/marketing/index.html">Marketing </a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/faculty-research/departments/operations-supply-management1/index.html">Operations &amp; Supply Chain Management</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/faculty-research/research-project-facilities/index.html">Research Projects &amp; Facilities</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/faculty-research/research-project-facilities/behavioral-center/index.html">Behavioral Research Center</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="header__main-nav__item">
+                                    <a class="header__main-nav__link" href="https://business.stthomas.edu/centers-institutes/index.html">Centers &amp; Institutes</a>
+                                    <div class="header__dropdown">
+                                        <div class="header__dropdown__content">
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/centers-institutes/schulze-school/index.html">Schulze School of Entrepreneurship</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/academic-programs/index.html">Academic Programs</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/academic-programs/schulze-scholars/index.html">Schulze Innovation Scholarship Program</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/student-engagement/index.html">Student Engagement</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/career-development/index.html">Career Development</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/about-schulze/index.html">About Schulze</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="header__dropdown__col">
+                                                <a class="header__dropdown__title" href="https://business.stthomas.edu/centers-institutes/index.html">Centers &amp; Institutes</a>
+                                                <ul class="header__drop-nav">
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/centers-institutes/health-care-business-innovation-center/index.html">Center for Innovation in the Business of Health Care</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/about-schulze/family-business-center/index.html">Family Business Center</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/about-schulze/norris-institute/index.html">Norris Institute</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/about-schulze/small-business-dev-center/index.html">Small Business Development Center</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/centers-institutes/small-business-institute/index.html">Small Business Institute</a>
+                                                    </li>
+                                                    <li class="header__drop-nav__item">
+                                                        <a class="header__drop-nav__link" href="https://business.stthomas.edu/centers-institutes/veritas-institute/index.html">Veritas Institute</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <disclosure-button class="header__search-btn" controls="search">
+                                <svg class="header__search-btn__svg" viewBox="0 0 20.9 19.9">
+                                    <path d="M20.9,18.8l-5.1-5.1c1-1.4,1.7-3.2,1.7-5.1c0-4.8-3.9-8.8-8.8-8.8S0,3.8,0,8.7c0,4.8,3.9,8.7,8.8,8.7c2.4,0,4.5-0.9,6.1-2.4 l5,5L20.9,18.8z M8.8,15.9c-4,0-7.2-3.2-7.2-7.2c0,0,0,0,0,0c0-4,3.3-7.2,7.2-7.2c0,0,0,0,0,0c4,0,7.2,3.2,7.2,7.2C16,12.7,12.8,15.9,8.8,15.9z"/>
+                                </svg>
+                            </disclosure-button>
+                        </div>
+                        <ul class="header__breadcrumbs">
+                            <li class="header__breadcrumbs__item">
+                                <a class="header__breadcrumbs__link" href="https://www.stthomas.edu/">University of St. Thomas</a>
+                            </li>
+                            <li class="header__breadcrumbs__item">
+                                <a class="header__breadcrumbs__link" href="https://business.stthomas.edu/index.html">Opus College of Business</a>
+                            </li>
+                            <li class="header__breadcrumbs__item">
+                                <a class="header__breadcrumbs__link" href="https://business.stthomas.edu/opus-advantage/">OPUS Advantage</a>
+                            </li>
+                            <li class="header__breadcrumbs__item">
+                                <a class="header__breadcrumbs__link" href="https://business.stthomas.edu/opus-advantage/events/">Events</a>
+                            </li>
+                        </ul>
+                    </div>
+                </header>
+                <div class="header_mobile" v-bind:class="{ purple: header.purple && header.hovered === false, fixed: header.menuFixed || header.drawerActive }">
+                    <div class="header_mobile__inner">
+                        <a href="https://business.stthomas.edu/index.html">
+                            <svg class="header_mobile__logo" viewBox="0 0 159.43 32.42">
+                                <path d="M0,5.21A5.58,5.58,0,0,1,.4,3.05,4.85,4.85,0,0,1,1.51,1.41a4.92,4.92,0,0,1,1.7-1A6.12,6.12,0,0,1,5.35,0,6.16,6.16,0,0,1,7.49.36a4.88,4.88,0,0,1,1.69,1A4.74,4.74,0,0,1,10.3,3.05a5.77,5.77,0,0,1,.4,2.16,5.68,5.68,0,0,1-.4,2.15A4.69,4.69,0,0,1,9.18,9a4.85,4.85,0,0,1-1.69,1,6.16,6.16,0,0,1-2.14.37,6.12,6.12,0,0,1-2.14-.37,4.9,4.9,0,0,1-1.7-1A4.8,4.8,0,0,1,.4,7.36,5.49,5.49,0,0,1,0,5.21Zm2.27,0a3.78,3.78,0,0,0,.21,1.28,3.08,3.08,0,0,0,.63,1,2.88,2.88,0,0,0,1,.66,3.23,3.23,0,0,0,1.27.24,3.18,3.18,0,0,0,1.26-.24,2.79,2.79,0,0,0,1.6-1.67,3.55,3.55,0,0,0,.22-1.28,3.59,3.59,0,0,0-.22-1.28,2.84,2.84,0,0,0-1.6-1.68A3.37,3.37,0,0,0,5.35,2a3.42,3.42,0,0,0-1.27.23,2.76,2.76,0,0,0-1,.67,3,3,0,0,0-.63,1A3.82,3.82,0,0,0,2.27,5.21Z"/>
+                                <path d="M17,.25h3.68a7.54,7.54,0,0,1,1.46.14,3.41,3.41,0,0,1,1.2.49,2.34,2.34,0,0,1,.81.92,3.16,3.16,0,0,1,.3,1.46,3.34,3.34,0,0,1-.28,1.46,2.46,2.46,0,0,1-.77.94,3.2,3.2,0,0,1-1.16.49,6.75,6.75,0,0,1-1.46.15H19.17v3.86H17Zm2.19,4.2h1.45a3.45,3.45,0,0,0,.57,0,1.61,1.61,0,0,0,.49-.19A1,1,0,0,0,22,3.84a1.11,1.11,0,0,0,.13-.58A1,1,0,0,0,22,2.65a1.19,1.19,0,0,0-.45-.35,2,2,0,0,0-.61-.17l-.64,0H19.17Z"/>
+                                <path d="M39,6.34A5,5,0,0,1,38.7,8a3.61,3.61,0,0,1-2.1,2.14,5.47,5.47,0,0,1-3.63,0,3.65,3.65,0,0,1-1.31-.86A3.58,3.58,0,0,1,30.87,8a4.76,4.76,0,0,1-.27-1.63V.25h2.19v6a2.57,2.57,0,0,0,.14.85,2,2,0,0,0,.42.68,1.91,1.91,0,0,0,.63.45,2,2,0,0,0,.81.16,1.94,1.94,0,0,0,.8-.16,1.94,1.94,0,0,0,1-1.13,2.34,2.34,0,0,0,.15-.85v-6H39Z"/>
+                                <path d="M50.68,2.67A1.55,1.55,0,0,0,50,2.18,2.5,2.5,0,0,0,49.1,2a2.81,2.81,0,0,0-.49,0,2,2,0,0,0-.48.18,1,1,0,0,0-.36.31.76.76,0,0,0-.14.48.77.77,0,0,0,.33.68,3.2,3.2,0,0,0,.85.41l1.1.34a4.68,4.68,0,0,1,1.1.47,2.69,2.69,0,0,1,.85.83,2.54,2.54,0,0,1,.33,1.38,3.13,3.13,0,0,1-.31,1.45,2.85,2.85,0,0,1-.83,1,3.48,3.48,0,0,1-1.22.6,5.36,5.36,0,0,1-1.46.2,5.21,5.21,0,0,1-1.79-.3A4.33,4.33,0,0,1,45,9.17l1.55-1.71a2.41,2.41,0,0,0,.85.7A2.43,2.43,0,0,0,49,8.34a2,2,0,0,0,.49-.19,1,1,0,0,0,.35-.32A.82.82,0,0,0,50,7.36a.84.84,0,0,0-.35-.7,2.77,2.77,0,0,0-.86-.44c-.34-.13-.71-.25-1.12-.37a4.88,4.88,0,0,1-1.12-.49,2.66,2.66,0,0,1-.86-.81,2.32,2.32,0,0,1-.34-1.33,3,3,0,0,1,.32-1.4,2.94,2.94,0,0,1,.84-1A3.63,3.63,0,0,1,47.73.2,5.06,5.06,0,0,1,49.14,0a5.48,5.48,0,0,1,1.62.24,3.65,3.65,0,0,1,1.42.8Z"/>
+                                <path d="M74.05,2.83a2.17,2.17,0,0,0-.8-.6A2.6,2.6,0,0,0,72.17,2,2.87,2.87,0,0,0,71,2.25a2.63,2.63,0,0,0-.91.67,2.92,2.92,0,0,0-.6,1,3.59,3.59,0,0,0-.22,1.28,3.55,3.55,0,0,0,.22,1.28,3.16,3.16,0,0,0,.59,1,2.76,2.76,0,0,0,.89.66,2.56,2.56,0,0,0,1.1.24,2.35,2.35,0,0,0,2-1.06L76,8.69A3.8,3.8,0,0,1,74.37,10a5,5,0,0,1-2,.42,6.12,6.12,0,0,1-2.14-.37,4.9,4.9,0,0,1-1.7-1,4.8,4.8,0,0,1-1.11-1.65A5.49,5.49,0,0,1,67,5.21a5.58,5.58,0,0,1,.4-2.16,4.85,4.85,0,0,1,1.11-1.64,4.92,4.92,0,0,1,1.7-1A6.12,6.12,0,0,1,72.38,0a5.31,5.31,0,0,1,.87.08,4.59,4.59,0,0,1,.9.24A3.87,3.87,0,0,1,75,.77a3.65,3.65,0,0,1,.73.69Z"/>
+                                <path d="M81.42,5.21a5.77,5.77,0,0,1,.4-2.16,4.74,4.74,0,0,1,1.12-1.64,4.88,4.88,0,0,1,1.69-1,6.54,6.54,0,0,1,4.28,0,4.92,4.92,0,0,1,1.7,1,4.85,4.85,0,0,1,1.11,1.64,5.58,5.58,0,0,1,.4,2.16,5.49,5.49,0,0,1-.4,2.15A4.8,4.8,0,0,1,90.61,9a4.9,4.9,0,0,1-1.7,1,6.37,6.37,0,0,1-4.28,0,4.85,4.85,0,0,1-1.69-1,4.69,4.69,0,0,1-1.12-1.65A5.68,5.68,0,0,1,81.42,5.21Zm2.27,0a3.55,3.55,0,0,0,.22,1.28,2.9,2.9,0,0,0,.62,1,3,3,0,0,0,1,.66,3.48,3.48,0,0,0,2.54,0,2.81,2.81,0,0,0,1.59-1.67,3.55,3.55,0,0,0,.22-1.28,3.59,3.59,0,0,0-.22-1.28,2.81,2.81,0,0,0-.62-1,2.76,2.76,0,0,0-1-.67,3.62,3.62,0,0,0-2.54,0,2.86,2.86,0,0,0-1,.67,2.81,2.81,0,0,0-.62,1A3.59,3.59,0,0,0,83.69,5.21Z"/>
+                                <path d="M98.49.25h2.18v7.9h4v2H98.49Z"/>
+                                <path d="M110.81.25H113v7.9H117v2h-6.23Z"/>
+                                <path d="M123.13.25h6.73v2h-4.55V4.12h4.3v2h-4.3v2h4.8v2h-7Z"/>
+                                <path d="M145.64,9.46a7.76,7.76,0,0,1-2,.73,10.16,10.16,0,0,1-2.14.23,6.16,6.16,0,0,1-2.14-.37,4.85,4.85,0,0,1-1.69-1,4.69,4.69,0,0,1-1.12-1.65,5.68,5.68,0,0,1-.4-2.15,5.77,5.77,0,0,1,.4-2.16,4.74,4.74,0,0,1,1.12-1.64,4.88,4.88,0,0,1,1.69-1A6.16,6.16,0,0,1,141.48,0a7.9,7.9,0,0,1,2.19.29,4.31,4.31,0,0,1,1.76,1L143.89,3a3.16,3.16,0,0,0-1-.7,3.76,3.76,0,0,0-1.4-.23,3.37,3.37,0,0,0-1.26.23,2.84,2.84,0,0,0-1.6,1.68,3.82,3.82,0,0,0-.22,1.28,3.78,3.78,0,0,0,.22,1.28,2.79,2.79,0,0,0,1.6,1.67,3.18,3.18,0,0,0,1.26.24,4,4,0,0,0,1.23-.16,4.74,4.74,0,0,0,.83-.33V6.3h-1.78v-2h3.88Z"/>
+                                <path d="M152.44.25h6.74v2h-4.55V4.12h4.3v2h-4.3v2h4.8v2h-7Z"/>
+                                <path d="M0,27.21a5.58,5.58,0,0,1,.4-2.16,4.85,4.85,0,0,1,1.11-1.64,5.07,5.07,0,0,1,1.7-1.05A6.12,6.12,0,0,1,5.35,22a6.16,6.16,0,0,1,2.14.36,5,5,0,0,1,1.69,1.05,4.74,4.74,0,0,1,1.12,1.64,5.77,5.77,0,0,1,.4,2.16,5.68,5.68,0,0,1-.4,2.15A4.69,4.69,0,0,1,9.18,31a4.85,4.85,0,0,1-1.69,1,6.16,6.16,0,0,1-2.14.37,6.12,6.12,0,0,1-2.14-.37,4.9,4.9,0,0,1-1.7-1A4.8,4.8,0,0,1,.4,29.36,5.49,5.49,0,0,1,0,27.21Zm2.27,0a3.78,3.78,0,0,0,.21,1.28,3.08,3.08,0,0,0,.63,1,2.88,2.88,0,0,0,1,.66,3.23,3.23,0,0,0,1.27.24,3.18,3.18,0,0,0,1.26-.24,2.79,2.79,0,0,0,1.6-1.67,3.55,3.55,0,0,0,.22-1.28,3.59,3.59,0,0,0-.22-1.28,2.84,2.84,0,0,0-1.6-1.68A3.37,3.37,0,0,0,5.35,24a3.42,3.42,0,0,0-1.27.23,2.76,2.76,0,0,0-1,.67,3,3,0,0,0-.63,1A3.82,3.82,0,0,0,2.27,27.21Z"/>
+                                <path d="M17.07,22.25h6.65v2H19.25v2h4.13v2H19.25v3.86H17.07Z"/>
+                                <path d="M39,22.25h3.7a9.32,9.32,0,0,1,1.29.09,3.49,3.49,0,0,1,1.17.37,2.12,2.12,0,0,1,.84.76,2.3,2.3,0,0,1,.32,1.3,2.11,2.11,0,0,1-.46,1.4,2.71,2.71,0,0,1-1.24.79v0a2.75,2.75,0,0,1,.88.28,2.1,2.1,0,0,1,.69.52,2.07,2.07,0,0,1,.44.73,2.66,2.66,0,0,1,.15.9,2.37,2.37,0,0,1-.33,1.3,2.53,2.53,0,0,1-.87.85,3.53,3.53,0,0,1-1.2.46,5.92,5.92,0,0,1-1.32.14H39Zm2.19,4H42.8a2.12,2.12,0,0,0,.5-.05,1.5,1.5,0,0,0,.43-.18,1,1,0,0,0,.32-.34,1,1,0,0,0,.12-.5.93.93,0,0,0-.13-.52,1,1,0,0,0-.35-.31,1.63,1.63,0,0,0-.47-.16,3.15,3.15,0,0,0-.52,0H41.22Zm0,4.11h2a2.35,2.35,0,0,0,.51-.06,1.19,1.19,0,0,0,.46-.2,1,1,0,0,0,.35-.36,1,1,0,0,0,.13-.55.89.89,0,0,0-.17-.56,1.09,1.09,0,0,0-.44-.33,2.16,2.16,0,0,0-.58-.16c-.2,0-.39,0-.57,0H41.22Z"/>
+                                <path d="M61.26,28.34A5,5,0,0,1,61,30a3.58,3.58,0,0,1-.79,1.28,3.65,3.65,0,0,1-1.31.86,5.47,5.47,0,0,1-3.63,0A3.65,3.65,0,0,1,54,31.25,3.58,3.58,0,0,1,53.17,30a4.76,4.76,0,0,1-.27-1.63V22.25h2.19v6a2.34,2.34,0,0,0,.15.85,1.88,1.88,0,0,0,.41.68,2,2,0,0,0,.64.45,2.08,2.08,0,0,0,1.6,0,1.94,1.94,0,0,0,1-1.13,2.34,2.34,0,0,0,.15-.85v-6h2.18Z"/>
+                                <path d="M73,24.67a1.62,1.62,0,0,0-.72-.49A2.5,2.5,0,0,0,71.4,24a2.81,2.81,0,0,0-.49.05,2,2,0,0,0-.48.18,1,1,0,0,0-.36.31.83.83,0,0,0-.14.48.76.76,0,0,0,.34.68,3,3,0,0,0,.84.41l1.1.34a4.68,4.68,0,0,1,1.1.47,2.69,2.69,0,0,1,.85.83,2.54,2.54,0,0,1,.33,1.38,3.26,3.26,0,0,1-.3,1.45,3,3,0,0,1-.84,1,3.48,3.48,0,0,1-1.22.6,5.31,5.31,0,0,1-1.46.2,5.21,5.21,0,0,1-1.79-.3,4.42,4.42,0,0,1-1.54-.95l1.55-1.71a2.41,2.41,0,0,0,.85.7,2.45,2.45,0,0,0,1.06.24,2.55,2.55,0,0,0,.54-.06,2.38,2.38,0,0,0,.49-.19,1.2,1.2,0,0,0,.35-.32.81.81,0,0,0,.13-.47.83.83,0,0,0-.34-.7,3,3,0,0,0-.86-.44c-.35-.13-.72-.25-1.12-.37a4.53,4.53,0,0,1-1.12-.49,2.59,2.59,0,0,1-.87-.81,2.4,2.4,0,0,1-.34-1.33,3,3,0,0,1,.32-1.4,3.05,3.05,0,0,1,.84-1A3.73,3.73,0,0,1,70,22.2a5.11,5.11,0,0,1,1.41-.2,5.59,5.59,0,0,1,1.63.24,3.68,3.68,0,0,1,1.41.8Z"/>
+                                <path d="M80.89,22.25h2.19v9.91H80.89Z"/>
+                                <path d="M89.86,22.25h3l4.22,6.89h0V22.25h2.19v9.91H96.4l-4.32-7h0v7H89.86Z"/>
+                                <path d="M106.16,22.25h6.74v2h-4.55v1.85h4.29v2h-4.29v2h4.8v2h-7Z"/>
+                                <path d="M124.6,24.67a1.62,1.62,0,0,0-.72-.49A2.54,2.54,0,0,0,123,24a2.72,2.72,0,0,0-.49.05,2,2,0,0,0-.48.18,1,1,0,0,0-.36.31.76.76,0,0,0-.14.48.77.77,0,0,0,.33.68,3.2,3.2,0,0,0,.85.41l1.1.34a4.68,4.68,0,0,1,1.1.47,2.56,2.56,0,0,1,.84.83,2.45,2.45,0,0,1,.34,1.38,3.13,3.13,0,0,1-.31,1.45,2.85,2.85,0,0,1-.83,1,3.57,3.57,0,0,1-1.22.6,5.36,5.36,0,0,1-1.46.2,5.21,5.21,0,0,1-1.79-.3,4.33,4.33,0,0,1-1.54-.95l1.55-1.71a2.32,2.32,0,0,0,.85.7,2.44,2.44,0,0,0,1,.24,2.48,2.48,0,0,0,.54-.06,2,2,0,0,0,.49-.19,1,1,0,0,0,.35-.32.82.82,0,0,0,.14-.47.84.84,0,0,0-.35-.7,2.89,2.89,0,0,0-.86-.44c-.34-.13-.72-.25-1.12-.37a4.88,4.88,0,0,1-1.12-.49,2.66,2.66,0,0,1-.86-.81,2.32,2.32,0,0,1-.34-1.33,3,3,0,0,1,.31-1.4,3.05,3.05,0,0,1,.84-1,3.78,3.78,0,0,1,1.22-.61,5.06,5.06,0,0,1,1.41-.2,5.48,5.48,0,0,1,1.62.24,3.65,3.65,0,0,1,1.42.8Z"/>
+                                <path d="M137.44,24.67a1.62,1.62,0,0,0-.72-.49,2.55,2.55,0,0,0-.87-.16,2.91,2.91,0,0,0-.49.05,2.07,2.07,0,0,0-.47.18,1.12,1.12,0,0,0-.37.31.82.82,0,0,0-.13.48.77.77,0,0,0,.33.68,3.06,3.06,0,0,0,.85.41l1.1.34a4.68,4.68,0,0,1,1.1.47,2.56,2.56,0,0,1,.84.83,2.45,2.45,0,0,1,.34,1.38,3.13,3.13,0,0,1-.31,1.45,2.85,2.85,0,0,1-.83,1,3.57,3.57,0,0,1-1.22.6,5.36,5.36,0,0,1-1.46.2,5.27,5.27,0,0,1-1.8-.3,4.42,4.42,0,0,1-1.54-.95l1.56-1.71a2.24,2.24,0,0,0,.85.7,2.44,2.44,0,0,0,1.05.24,2.48,2.48,0,0,0,.54-.06,2.17,2.17,0,0,0,.49-.19,1.08,1.08,0,0,0,.35-.32.82.82,0,0,0,.14-.47.84.84,0,0,0-.35-.7,2.89,2.89,0,0,0-.86-.44c-.34-.13-.72-.25-1.12-.37a4.88,4.88,0,0,1-1.12-.49,2.66,2.66,0,0,1-.86-.81,2.32,2.32,0,0,1-.34-1.33,3,3,0,0,1,.31-1.4,3.05,3.05,0,0,1,.84-1,3.83,3.83,0,0,1,1.21-.61,5.18,5.18,0,0,1,1.42-.2,5.48,5.48,0,0,1,1.62.24,3.72,3.72,0,0,1,1.42.8Z"/>
+                            </svg>
+                        </a>
+                        <ul class="header_mobile__nav">
+                            <li class="header_mobile__nav__item">
+                                <button class="header_mobile__search-btn" v-on:click="header.currentDrawerToggle('search')">
+                                    <svg class="header_mobile__search-btn__svg" viewBox="0 0 20.9 19.9">
+                                        <path d="M20.9,18.8l-5.1-5.1c1-1.4,1.7-3.2,1.7-5.1c0-4.8-3.9-8.8-8.8-8.8S0,3.8,0,8.7c0,4.8,3.9,8.7,8.8,8.7c2.4,0,4.5-0.9,6.1-2.4 l5,5L20.9,18.8z M8.8,15.9c-4,0-7.2-3.2-7.2-7.2c0,0,0,0,0,0c0-4,3.3-7.2,7.2-7.2c0,0,0,0,0,0c4,0,7.2,3.2,7.2,7.2C16,12.7,12.8,15.9,8.8,15.9z"/>
+                                    </svg>
+                                </button>
+                            </li>
+                            <li class="header_mobile__nav__item">
+                                <button class="header_mobile__hamburger" v-on:click="header.currentDrawerToggle('menu')"><span></span></button>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul class="header__breadcrumbs">
+                        <div class="header__breadcrumbs__inner-wrap">
+                            <li class="header__breadcrumbs__item">
+                                <a class="header__breadcrumbs__link" href="https://www.stthomas.edu/">University of St. Thomas</a>
+                            </li>
+                            <li class="header__breadcrumbs__item">
+                                <a class="header__breadcrumbs__link" href="https://business.stthomas.edu/index.html">Opus College of Business</a>
+                            </li>
+                            <li class="header__breadcrumbs__item">
+                                <a class="header__breadcrumbs__link" href="index.html">Executive Education</a>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+                <disclosure-container class="header_mobile__drawer" id="hamburger" v-bind:class="{'expanded': header.currentDrawer === 'menu'}">
+                    <ul>
+                        <li class="header_mobile__drawer__item">
+                            <a class="header_mobile__drawer__link" href="https://business.stthomas.edu/opus-advantage/index.html">OPUS Advantage</a>
+                            <disclosure-button class="header_mobile__arrow-btn" controls="Opus Advantage-1">
+                                <svg class="header_mobile__arrow-btn__svg" viewBox="0 0 16 9.1">
+                                    <polygon points="16,1.1 14.9,0 8,6.9 1.1,0 0,1.1 8,9.1 9.1,8 9.1,8"/>
+                                </svg>
+                            </disclosure-button>
+                            <disclosure-container class="header_mobile__sub-group" id="Opus Advantage-1">
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/opus-advantage/index.html">Opus Advantage</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/opus-advantage/principled-leadership/index.html">Principled Leadership</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/opus-advantage/health-care/index.html">Health Care</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/index.html">Entrepreneurship</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/opus-advantage/facts-figures/index.html">Facts &amp; Figures</a>
+                                    </li>
+                                </ul>
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/opus-advantage/leadership-dean/index.html">Leadership &amp; Dean</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/opus-advantage/leadership-dean/about-dean/index.html">About the Dean</a>
+                                    </li>
+                                </ul>
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/opus-advantage/visit-opus/index.html">VISIT OPUS</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/opus-advantage/visit-opus/twin-cities/index.html">The Twin Cities</a>
+                                    </li>
+                                </ul>
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/opus-advantage/news/index.html">NEWS</a>
+                                <ul class="header_mobile__sub-nav">
+                                </ul>
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/opus-advantage/events/index.html">EVENTS</a>
+                                <ul class="header_mobile__sub-nav">
+                                </ul>
+                            </disclosure-container>
+                        </li>
+                        <li class="header_mobile__drawer__item">
+                            <a class="header_mobile__drawer__link" href="https://business.stthomas.edu/degrees-programs/index.html">Degrees &amp; Programs</a>
+                            <disclosure-button class="header_mobile__arrow-btn" controls="MBA Programs-2">
+                                <svg class="header_mobile__arrow-btn__svg" viewBox="0 0 16 9.1">
+                                    <polygon points="16,1.1 14.9,0 8,6.9 1.1,0 0,1.1 8,9.1 9.1,8 9.1,8"/>
+                                </svg>
+                            </disclosure-button>
+                            <disclosure-container class="header_mobile__sub-group" id="MBA Programs-2">
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/degrees-programs/mba/index.html">MBA Programs</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/mba/part-time/index.html">Part-time Flex MBA</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/mba/online/index.html">Online MBA</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/mba/full-time/index.html">Full-time MBA</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/mba/health-care/index.html">Health Care MBA</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/mba/executive/index.html">Executive MBA</a>
+                                    </li>
+                                </ul>
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/degrees-programs/specialized-masters/index.html">Specialized Masters</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/specialized-masters/ms-business-analytics/index.html">Business Analytics</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/specialized-masters/ms-health-care-innovation/index.html">Health Care Innovation</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/specialized-masters/ms-health-care-communication/index.html">Health Care Communication</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/specialized-masters/ms-accountancy/index.html">Accountancy</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/specialized-masters/msl-organizational-ethics-and-compliance/index.html">Organizational Ethics &amp; Compliance</a>
+                                    </li>
+                                </ul>
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/index.html">Graduate Certificates</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/business-analytics/index.html">Business Analytics</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/digital-exp-certificates/index.html">Digital Experience</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/transformational-change-and-organization-development/index.html">Transformational Change &amp; Organization Development</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/global-business-certificates/index.html">Global Business</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/integrated-marketing-comm-certificate/index.html">Integrated Marketing Communication</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/strategic-growth-certificate/index.html">Strategic Growth</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/strategic-risk-certificate/index.html">Strategic Risk &amp; Responsibility</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/executive-coaching/index.html">Executive Coaching</a>
+                                    </li>
+                                </ul>
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/degrees-programs/undergraduate/index.html">Undergraduate BA/BS</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/undergraduate/majors/index.html">Majors &amp; Concentrations</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/undergraduate/academic-career-services/index.html">Academic &amp; Career Services</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/undergraduate/scholarships/index.html">Scholarships</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/degrees-programs/undergraduate/student-experience/index.html">Student Experience</a>
+                                    </li>
+                                </ul>
+                            </disclosure-container>
+                        </li>
+                        <li class="header_mobile__drawer__item">
+                            <a class="header_mobile__drawer__link" href="https://business.stthomas.edu/executive-education/index.html">Executive Education</a>
+                            <disclosure-button class="header_mobile__arrow-btn" controls="Executive Education-3">
+                                <svg class="header_mobile__arrow-btn__svg" viewBox="0 0 16 9.1">
+                                    <polygon points="16,1.1 14.9,0 8,6.9 1.1,0 0,1.1 8,9.1 9.1,8 9.1,8"/>
+                                </svg>
+                            </disclosure-button>
+                            <disclosure-container class="header_mobile__sub-group" id="Executive Education-3">
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/executive-education/index.html">Executive Education</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/index.html">Program Finder</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/business-acumen/index.html">Business Acumen</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/communication/index.html">Communication</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/marketing/index.html">Digital Marketing</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/finance/index.html">Finance</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/health-care/index.html">Health Care</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/leadership-management/index.html">Leadership &amp; Management</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/nonprofit-management/index.html">Nonprofit Management</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/operations/index.html">Operations</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/executive-education/individuals/program-finder/project-management/index.html">Project Management</a>
+                                    </li>
+                                </ul>
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/executive-education/individuals/index.html">FOR INDIVIDUALS</a>
+                                <ul class="header_mobile__sub-nav">
+                                </ul>
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/executive-education/organization/index.html">FOR ORGANIZATIONS</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/executive-education/organization/customized-programs/index.html">Customized Programs</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/executive-education/organization/team-talent-development/index.html">Teams &amp; Talent Development</a>
+                                    </li>
+                                </ul>
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/executive-education/staff-directory/index.html">DIRECTORIES</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/executive-education/staff-directory/index.html">Staff Directory </a>
+                                    </li>
+                                </ul>
+                            </disclosure-container>
+                        </li>
+                        <li class="header_mobile__drawer__item">
+                            <a class="header_mobile__drawer__link" href="https://business.stthomas.edu/faculty-research/index.html">Faculty &amp; Research</a>
+                            <disclosure-button class="header_mobile__arrow-btn" controls="OUR FACULTY-4">
+                                <svg class="header_mobile__arrow-btn__svg" viewBox="0 0 16 9.1">
+                                    <polygon points="16,1.1 14.9,0 8,6.9 1.1,0 0,1.1 8,9.1 9.1,8 9.1,8"/>
+                                </svg>
+                            </disclosure-button>
+                            <disclosure-container class="header_mobile__sub-group" id="OUR FACULTY-4">
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/faculty-research/faculty/index.html">OUR FACULTY</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/faculty-research/faculty-bios/index.html">A – Z Directory</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://ir.stthomas.edu/ocb/">Articles &amp; Publications</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/faculty-research/faculty-awards/index.html">Faculty Awards</a>
+                                    </li>
+                                </ul>
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/faculty-research/departments/index.html">Academic Departments</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/faculty-research/departments/accounting/index.html">Accounting</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/faculty-research/departments/entrepreneurship/index.html">Entrepreneurship</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/faculty-research/departments/ethics-business-law/index.html">Ethics &amp; Business Law</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/faculty-research/departments/finance/index.html">Finance</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/faculty-research/departments/management/index.html">Management</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/faculty-research/departments/marketing/index.html">Marketing </a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/faculty-research/departments/operations-supply-management1/index.html">Operations &amp; Supply Chain Management</a>
+                                    </li>
+                                </ul>
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/faculty-research/research-project-facilities/index.html">Research Projects &amp; Facilities</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/faculty-research/research-project-facilities/behavioral-center/index.html">Behavioral Research Center</a>
+                                    </li>
+                                </ul>
+                            </disclosure-container>
+                        </li>
+                        <li class="header_mobile__drawer__item">
+                            <a class="header_mobile__drawer__link" href="https://business.stthomas.edu/centers-institutes/index.html">Centers &amp; Institutes</a>
+                            <disclosure-button class="header_mobile__arrow-btn" controls="Schulze School of Entrepreneurship-5">
+                                <svg class="header_mobile__arrow-btn__svg" viewBox="0 0 16 9.1">
+                                    <polygon points="16,1.1 14.9,0 8,6.9 1.1,0 0,1.1 8,9.1 9.1,8 9.1,8"/>
+                                </svg>
+                            </disclosure-button>
+                            <disclosure-container class="header_mobile__sub-group" id="Schulze School of Entrepreneurship-5">
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/centers-institutes/schulze-school/index.html">Schulze School of Entrepreneurship</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/academic-programs/index.html">Academic Programs</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/academic-programs/schulze-scholars/index.html">Schulze Innovation Scholarship Program</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/student-engagement/index.html">Student Engagement</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/career-development/index.html">Career Development</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/about-schulze/index.html">About Schulze</a>
+                                    </li>
+                                </ul>
+                                <a class="header_mobile__sub-nav__title" href="https://business.stthomas.edu/centers-institutes/index.html">Centers &amp; Institutes</a>
+                                <ul class="header_mobile__sub-nav">
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/centers-institutes/health-care-business-innovation-center/index.html">Center for Innovation in the Business of Health Care</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/about-schulze/family-business-center/index.html">Family Business Center</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/about-schulze/norris-institute/index.html">Norris Institute</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/centers-institutes/schulze-school/about-schulze/small-business-dev-center/index.html">Small Business Development Center</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/centers-institutes/small-business-institute/index.html">Small Business Institute</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/centers-institutes/veritas-institute/index.html">Veritas Institute</a>
+                                    </li>
+                                </ul>
+                            </disclosure-container>
+                        </li>
+                        <li class="header_mobile__drawer__item">
+                            <a class="header_mobile__drawer__link" href="https://business.stthomas.edu/info/prospective-students/index.html">Info For</a>
+                            <disclosure-button class="header_mobile__arrow-btn" controls="Info For-123">
+                                <svg class="header_mobile__arrow-btn__svg" viewBox="0 0 16 9.1">
+                                    <polygon points="16,1.1 14.9,0 8,6.9 1.1,0 0,1.1 8,9.1 9.1,8 9.1,8"/>
+                                </svg>
+                            </disclosure-button>
+                            <disclosure-container class="header_mobile__sub-group" id="Info For-123">
+                                <ul>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/info/prospective-students/index.html">Prospective Students</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/info/current-students/index.html">Current Students</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/info/alumni/index.html">Alumni</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/info/donors/index.html">Donors</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/info/recruiters-companies/index.html">Recruiters / Companies</a>
+                                    </li>
+                                    <li class="header_mobile__sub-nav__item">
+                                        <a class="header_mobile__sub-nav__link" href="https://business.stthomas.edu/info/media/index.html">Media</a>
+                                    </li>
+                                </ul>
+                            </disclosure-container>
+                        </li>
+                    </ul>
+                    <ul class="header_mobile__action-nav">
+                        <li class="header_mobile__action-nav__item">
+                            <a class="header_mobile__action-nav__link" href="https://stthomas.force.com/applicantportal/Portal_Site_Registration?_ga=2.263505487.2142899341.1543849311-1537090506.1537823615">Apply</a>
+                        </li>
+                        <li class="header_mobile__action-nav__item">
+                            <a class="header_mobile__action-nav__link" href="https://www.stthomas.edu/give/">Give</a>
+                        </li>
+                        <li class="header_mobile__action-nav__item">
+                            <a class="header_mobile__action-nav__link" href="https://business.stthomas.edu/opus-advantage/visit-opus/index.html">Visit</a>
+                        </li>
+                    </ul>
+                </disclosure-container>
+                <script>
+                    (function () {
+                        var cx = '008053949193587582737:esuh5s3o3p4';
+                        var gcse = document.createElement('script');
+                        gcse.type = 'text/javascript';
+                        gcse.async = true;
+                        gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+                        var s = document.getElementsByTagName('script')[0];
+                        s.parentNode.insertBefore(gcse, s);
+                    })();
+                </script>
+                <disclosure-container id="search" class="search__modal" v-bind:class="{ fixed: header.menuFixed || header.drawerActive, 'expanded': header.currentDrawer === 'search' }" v-bind:transition-props="{ name: 'search' }">
+                    <div class="search__content">
+                        <div class="search__col">
+                            <label class="search__wrap">
+                                <span class="access-hidden">Search Input</span>
+                                <form action="https://business.stthomas.edu/search/index.html">
+                                    <input name="cx" type="hidden" value="008053949193587582737:esuh5s3o3p4"/>
+                                    <input name="cof" type="hidden" value="FORID:11"/>
+                                    <input name="ie" type="hidden" value="UTF-8"/>
+                                    <input aria-label="Search Input" class="search__input" name="q" placeholder="Search" type="text"/>
+                                    <button class="search__button">
+                                        <svg class="search__button__svg" viewBox="0 0 20.9 19.9">
+                                            <path d="M20.9,18.8l-5.1-5.1c1-1.4,1.7-3.2,1.7-5.1c0-4.8-3.9-8.8-8.8-8.8S0,3.8,0,8.7c0,4.8,3.9,8.7,8.8,8.7c2.4,0,4.5-0.9,6.1-2.4 l5,5L20.9,18.8z M8.8,15.9c-4,0-7.2-3.2-7.2-7.2c0,0,0,0,0,0c0-4,3.3-7.2,7.2-7.2c0,0,0,0,0,0c4,0,7.2,3.2,7.2,7.2C16,12.7,12.8,15.9,8.8,15.9z"/>
+                                        </svg>
+                                        <svg class="search__button__svg-arrow" viewBox="0 0 32.1 23.4">
+                                            <path d="M32.1,11.8c0,0,0-0.1,0-0.1c0,0,0-0.1,0-0.1c0,0,0-0.1,0-0.1c0,0,0-0.1-0.1-0.1c0,0,0-0.1,0-0.1L22.5,0.3c-0.3-0.3-0.7-0.3-1.1-0.1c-0.3,0.3-0.4,0.7-0.1,1.1l8.2,9.6H0v1.5h29.8l-8.4,9.8c-0.3,0.3-0.2,0.8,0.1,1.1c0.1,0.1,0.3,0.2,0.5,0.2c0.2,0,0.4-0.1,0.6-0.3l9.4-10.9c0,0,0-0.1,0-0.1c0,0,0.1-0.1,0.1-0.1C32,11.9,32,11.9,32.1,11.8z"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </label>
+                        </div>
+                    </div>
+                </disclosure-container>
+                <disclosure-container id="favorites" class="header__favorites" v-bind:class="{ fixed: header.menuFixed || header.drawerActive }">
+                    <disclosure-button id="header__favorites-btn" controls="favorites" class="header__favorites-btn header__favorites-btn_black">
+                        <svg class="header__favorites-btn__heart" viewBox="0 0 15 13">
+                            <path d="M11,0C9.5,0,8.2,0.8,7.5,2.2C6.4,0.2,4-0.5,2.1,0.6C0.8,1.3,0.1,2.5,0,3.9C0,8,6.7,13,7.5,13S15,8.1,15,3.9
+                                    C15,1.7,13.2,0,11,0z"/>
+                        </svg>
+                        Favorites (<span v-text="header.favsList.length"></span>)
+                    </disclosure-button>
+                    <transition-group class="header__favorites__list" tag="div" name="fade">
+                        <div v-for="item in header.favsList" v-bind:key="item.id" class="header__favorites__item">
+                            <div class="header__favorites__item__cell">
+                                <div class="header__favorites__title" v-text="item.name"></div>
+                                <div class="header__favorites__category" v-text="item.category"></div>
+                                <div class="header__favorites__dates" v-text="item.dates"></div>
+                            </div>
+                            <div class="header__favorites__item__cell">
+                                <a class="header__favorites__button header__favorites__button_normal" v-bind:href="item.url">
+                                    Apply
+                                </a>
+                                <button class="header__favorites__button header__favorites__button_text" v-on:click="header.removeFavorite(item.name)">
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                    </transition-group>
+                </disclosure-container>
+            </div>
+        </global-header>
+        <main class="the-main">
+            <apex:insert name="body"/>
+        </main>
+        <footer class="footer">
+            <svg viewBox="0 0 412.94 52.99" class="footer__accent">
+                <rect x="368.47" y="8.16" width="36" height="36" transform="translate(94.7 280.94) rotate(-45)" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></rect>
+                <rect x="317.47" y="8.16" width="36" height="36" transform="translate(79.76 244.88) rotate(-45)" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></rect>
+                <rect x="317.47" y="8.16" width="36" height="36" transform="translate(79.76 244.88) rotate(-45)" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></rect>
+                <polyline points="412.59 0.66 360.97 52.28 309.35 0.66" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></polyline>
+                <rect x="162.47" y="8.16" width="36" height="36" transform="translate(34.36 135.28) rotate(-45)" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></rect>
+                <rect x="111.47" y="8.16" width="36" height="36" transform="translate(19.42 99.21) rotate(-45)" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></rect>
+                <rect x="111.47" y="8.16" width="36" height="36" transform="translate(19.42 99.21) rotate(-45)" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></rect>
+                <polyline points="206.59 0.66 154.97 52.28 103.35 0.66" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></polyline>
+                <rect x="59.47" y="8.16" width="36" height="36" transform="translate(4.19 62.44) rotate(-45)" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></rect>
+                <rect x="8.47" y="8.16" width="36" height="36" transform="translate(-10.75 26.38) rotate(-45)" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></rect>
+                <rect x="8.47" y="8.16" width="36" height="36" transform="translate(-10.75 26.38) rotate(-45)" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></rect>
+                <polyline points="103.59 0.66 51.97 52.28 0.35 0.66" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></polyline>
+                <rect x="265.47" y="8.16" width="36" height="36" transform="translate(64.53 208.11) rotate(-45)" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></rect>
+                <rect x="214.47" y="8.16" width="36" height="36" transform="translate(49.59 172.05) rotate(-45)" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></rect>
+                <rect x="214.47" y="8.16" width="36" height="36" transform="translate(49.59 172.05) rotate(-45)" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></rect>
+                <polyline points="309.59 0.66 257.97 52.28 206.35 0.66" fill="none" stroke="#4d4d4d" stroke-miterlimit="10"></polyline>
+            </svg>
+            <div class="footer__content">
+                <div class="footer__logo__wrap">
+                    <div class="footer__logo__opus">Opus College of Business</div>
+                    <svg viewBox="0 0 300.8 27.6" class="footer__logo__svg">
+                        <path d="M137.7,22.3c0-0.6,0.5-1,1-1c0.6,0,1,0.5,1,1c0,0.6-0.5,1-1,1c0,0,0,0,0,0C138.1,23.3,137.7,22.9,137.7,22.3
+                                M137.7,18.1c0-0.6,0.4-1,1-1c0.6,0,1,0.4,1,1s-0.4,1-1,1c0,0,0,0,0,0C138.1,19.1,137.7,18.6,137.7,18.1 M137.7,13.8
+                                c0-0.6,0.5-1,1-1s1,0.5,1,1s-0.5,1-1,1C138.1,14.8,137.7,14.3,137.7,13.8C137.7,13.8,137.7,13.8,137.7,13.8 M137.7,9.5
+                                c0-0.6,0.5-1,1-1c0.6,0,1,0.5,1,1c0,0.6-0.5,1-1,1c0,0,0,0,0,0C138.1,10.5,137.7,10.1,137.7,9.5C137.7,9.5,137.7,9.5,137.7,9.5
+                                M137.7,5.3c0-0.6,0.5-1,1-1c0.6,0,1,0.5,1,1s-0.5,1-1,1c0,0,0,0,0,0C138.1,6.3,137.7,5.8,137.7,5.3
+                                C137.7,5.3,137.7,5.3,137.7,5.3"></path>
+                        <path d="M125,16.2c-1.2-1.4-2.9-2.2-4.7-2.1c-2.8,0-5.1,1.1-5.1,3.7c0,4.3,7.1,2.7,7.1,4.7c0,0.6-0.9,1.3-2.2,1.3
+                                c-1.3,0.1-2.5-0.4-3.3-1.4l-2.1,1.6c1.5,1.5,3.5,2.2,5.5,2.1c2.6,0,5.1-1.2,5.1-4c0-4.3-7.2-2.6-7.2-4.6c0-0.7,0.8-1.1,2.1-1.1
+                                c1.2-0.1,2.3,0.6,2.9,1.6L125,16.2z M110.8,21.8c0,1.5-1.7,2.1-2.9,2.1c-1,0-1.8-0.6-1.8-1.4c0-1.1,0.9-1.4,1.9-1.6l1.5-0.3
+                                c0.5-0.1,0.9-0.2,1.3-0.4V21.8z M113.5,17.9c0-3.3-2.5-3.8-4.9-3.8c-2.5,0-4.9,1-4.9,3.7l2.8,0.1c0-1.2,0.5-1.7,2.1-1.7
+                                c1.2,0,2.2,0.3,2.2,1.5v0.3c-1,0.3-2,0.5-3,0.7l-1.2,0.2c-1.7,0.3-3.5,1.3-3.5,3.6c0,2,1.6,3.6,3.6,3.6c0.1,0,0.2,0,0.3,0
+                                c1.4,0,2.7-0.5,3.7-1.3c0,0.4,0.1,0.7,0.3,1h2.9c-0.3-0.6-0.5-1.3-0.4-1.9V17.9z M84.7,25.9h2.8v-6c0-1.6,0.9-3.1,2.4-3.1
+                                c1.3,0,1.9,0.9,1.9,2.2v7h2.8v-6c0-1.6,0.9-3.1,2.5-3.1c1.3,0,1.9,0.9,1.9,2.2v7h2.8v-8.1c0-2.5-1.5-3.7-4-3.7
+                                c-1.4,0-2.7,0.6-3.5,1.7c-0.7-1.2-2-1.9-3.4-1.7c-1.3,0-2.5,0.5-3.3,1.4v-1.1h-2.8V25.9z M77.8,16.7c2,0,3,1.7,3,3.5s-1,3.5-3,3.5
+                                s-3-1.7-3-3.5S75.8,16.7,77.8,16.7z M77.8,14.2c-3.7,0-5.9,2.6-5.9,6s2.2,6,5.9,6s5.9-2.6,5.9-6S81.5,14.2,77.8,14.2z M60.1,25.9
+                                h2.8V20c0-1.4,0.6-3.2,2.7-3.2c1.4,0,2,0.7,2,2.3v6.8h2.8v-7.6c0-3.3-2.2-4.1-4.2-4.1c-1.3-0.1-2.5,0.4-3.3,1.4h0V9.8h-2.8V25.9z
+                                M51.6,25.9h3V12.6H59V9.8H47.1v2.8h4.4L51.6,25.9z M43.7,25.9h3v-3.1h-3V25.9z M37.2,14.4h-1.7v2h1.7v6.8c0,1.7,0.8,2.8,3,2.8
+                                c0.7,0,1.5-0.1,2.2-0.3v-2.3c-0.4,0.1-0.8,0.1-1.2,0.1c-1.1,0-1.2-0.5-1.2-1.4v-5.8h2.5v-2h-2.5v-4.1h-2.8V14.4z M21.2,22.9
+                                c1.6,2.2,4.2,3.5,7,3.4c3.4,0,7.1-1.4,7.1-5.3c0-3.1-2.3-4-4.7-4.6l-2-0.4c-1.8-0.4-3.3-0.7-3.3-2.1c0-1.1,1.3-1.8,3.1-1.8
+                                c1.7-0.1,3.4,0.8,4.2,2.3l2.5-1.9c-1.6-2.1-4.1-3.3-6.7-3.2c-3,0-6.3,1.6-6.3,5c0,3,2.3,3.9,4.8,4.5l1.8,0.4
+                                c2.1,0.5,3.3,0.9,3.3,2.1c0,1.6-1.9,2.1-3.4,2.1c-1.9,0.1-3.8-0.8-4.9-2.4L21.2,22.9z"></path>
+                        <path d="M76.2,6.2h0.9v-2h2V3.4h-2V2.2h2.3V1.4h-3.2V6.2z M72.3,1.3c-1.3,0-2.3,1.1-2.3,2.4c0,0.1,0,0.1,0,0.2
+                                c-0.1,1.3,0.8,2.4,2.1,2.5c1.3,0.1,2.4-0.8,2.5-2.1c0-0.1,0-0.3,0-0.4c0.1-1.3-0.9-2.4-2.1-2.5C72.4,1.3,72.3,1.3,72.3,1.3z
+                                M72.3,2.1c1,0,1.4,0.8,1.4,1.7s-0.4,1.7-1.4,1.7s-1.4-0.8-1.4-1.7S71.3,2.1,72.3,2.1z M64.8,6.2h0.9V4.3l1.6-2.9h-1l-1,2l-1-2h-1
+                                l1.6,2.9L64.8,6.2z M59.9,6.2h0.9v-4h1.3V1.4h-3.5v0.8h1.3L59.9,6.2z M56.2,6.2h0.9V1.4h-0.9V6.2z M50.4,5.3c0.5,0.7,1.3,1,2.1,1
+                                c1,0,2.1-0.4,2.1-1.6c0-0.9-0.7-1.2-1.4-1.4l-0.6-0.1c-0.5-0.1-1-0.2-1-0.6c0-0.3,0.4-0.5,0.9-0.5c0.5,0,1,0.2,1.3,0.7l0.7-0.6
+                                c-0.5-0.6-1.2-1-2-1c-0.9,0-1.9,0.5-1.9,1.5c0,0.9,0.7,1.2,1.4,1.3l0.5,0.1c0.6,0.1,1,0.3,1,0.6c0,0.5-0.6,0.6-1,0.6
+                                c-0.6,0-1.1-0.3-1.5-0.7L50.4,5.3z M46.6,2.2h0.8c0.6,0,0.9,0.3,0.9,0.7c0,0.4-0.3,0.7-0.7,0.7c0,0-0.1,0-0.1,0h-1V2.2z M45.7,6.2
+                                h0.9V4.4h0.9l0.9,1.8h1l-1.1-1.9c0.6-0.2,1-0.8,1-1.4c0-0.8-0.6-1.5-1.4-1.5c-0.1,0-0.1,0-0.2,0h-2L45.7,6.2z M40.6,6.2h3.6V5.4
+                                h-2.7V4.1h2.3V3.3h-2.3V2.2H44V1.4h-3.4L40.6,6.2z M36.6,6.2h1.2l1.4-4.8h-0.9l-1.1,3.8h0l-1.1-3.8h-0.9L36.6,6.2z M32.9,6.2h0.9
+                                V1.4h-0.9V6.2z M27.3,6.2h0.8V2.8h0l2,3.4H31V1.4h-0.8v3.4h0l-2-3.4h-0.8L27.3,6.2z M25.5,1.4h-0.9v3.1c0,0.6-0.2,1-1,1
+                                s-1-0.4-1-1V1.4h-0.9v3.3c0,1,0.8,1.6,1.9,1.6s1.9-0.6,1.9-1.6L25.5,1.4z"></path>
+                        <path d="M17.7,11c-0.2,0-0.3,0.1-0.4,0.2c-0.6,0.5-1.5,0.5-2.1,0c-0.5-0.3-1.1-0.3-1.6,0c-0.6,0.5-1.5,0.5-2.1,0
+                                c-0.5-0.3-1.1-0.3-1.6,0c-0.2,0.1-0.3,0.2-0.5,0.3V15c-0.2,0-0.3,0-0.5,0c-0.2,0-0.3,0-0.5,0v-3.5c-0.2,0-0.4-0.1-0.5-0.3
+                                c-0.2-0.2-0.5-0.3-0.8-0.3c-0.3,0-0.6,0.1-0.8,0.3c-0.3,0.2-0.7,0.4-1.1,0.4c-0.4,0-0.8-0.1-1.1-0.4C4,11,3.7,10.9,3.4,10.9
+                                c-0.3,0-0.6,0.1-0.8,0.3c-0.3,0.2-0.7,0.4-1.1,0.4c-0.4,0-0.8-0.1-1-0.4C0.3,11.1,0.2,11,0,11c-0.1,2.1,0.1,4.1,0.7,6.1h5.4
+                                c0,0.2,0,0.3,0,0.5c0,0.2,0,0.4,0.1,0.5H1.1c1.4,3.5,3.9,6.3,7.2,8.1v-6c0.2,0,0.3,0,0.5,0c0.2,0,0.3,0,0.5,0v6
+                                c3.3-1.7,5.9-4.6,7.2-8.1h-5.1c0-0.2,0.1-0.3,0.1-0.5c0-0.2,0-0.3,0-0.5h5.5C17.6,15.1,17.8,13.1,17.7,11 M5.9,12.7
+                                c0.2,0.4,0.6,0.7,1,0.9c0.5,0.2,1,0.6,1.2,1.1c0.1,0.1,0.1,0.2,0.2,0.3c-0.4,0.1-0.9,0.3-1.2,0.6C7,15.5,7,15.3,7,15.2
+                                c-0.1-0.5-0.3-1-0.7-1.4C6.1,13.5,5.9,13.1,5.9,12.7 M5.9,16.5c-0.2-0.5-0.6-0.8-1.1-1.1c-0.3-0.2-0.6-0.5-0.7-0.9
+                                C4.4,14.8,4.9,15,5.3,15c0.6,0,1.1,0.3,1.5,0.7c0,0,0.1,0.1,0.1,0.1c-0.3,0.3-0.5,0.8-0.7,1.2C6.1,16.8,6,16.7,5.9,16.5 M4,20.6
+                                c0.4-0.2,0.7-0.6,0.9-1c0.2-0.5,0.6-1,1.2-1.2c0.1-0.1,0.2-0.1,0.3-0.2c0.1,0.4,0.3,0.9,0.7,1.2c-0.2,0.1-0.3,0.1-0.5,0.1
+                                c-0.5,0.1-1,0.3-1.4,0.7C4.7,20.5,4.4,20.6,4,20.6 M7.8,20.6c-0.5,0.2-0.8,0.6-1.1,1.1c-0.2,0.3-0.5,0.6-0.9,0.7
+                                c0.3-0.3,0.4-0.8,0.5-1.2c0-0.6,0.3-1.1,0.7-1.5c0,0,0.1-0.1,0.1-0.1c0.3,0.3,0.8,0.5,1.2,0.6C8.1,20.4,8,20.5,7.8,20.6 M9.9,14.5
+                                c0.5-0.2,0.8-0.6,1.1-1.1c0.2-0.3,0.5-0.6,0.9-0.7c-0.3,0.3-0.4,0.8-0.5,1.2c0,0.6-0.3,1.1-0.7,1.5c0,0-0.1,0.1-0.1,0.2
+                                c-0.3-0.3-0.8-0.5-1.2-0.6C9.6,14.8,9.7,14.7,9.9,14.5 M11.8,22.5c-0.2-0.4-0.6-0.7-1-0.9c-0.5-0.2-1-0.6-1.2-1.1
+                                c-0.1-0.1-0.1-0.2-0.2-0.3c0.4-0.1,0.9-0.3,1.2-0.6c0.1,0.1,0.1,0.3,0.1,0.4c0.1,0.5,0.3,1,0.7,1.4C11.6,21.7,11.8,22.1,11.8,22.5
+                                M11.8,18.7c0.2,0.5,0.6,0.8,1.1,1.1c0.3,0.2,0.6,0.5,0.7,0.9c-0.4-0.3-0.8-0.4-1.2-0.5c-0.6,0-1.1-0.3-1.5-0.7
+                                c0,0-0.1-0.1-0.1-0.1c0.3-0.3,0.5-0.7,0.7-1.2C11.6,18.4,11.7,18.5,11.8,18.7 M12.9,15.5c-0.2,0.5-0.6,1-1.2,1.2
+                                c-0.1,0.1-0.2,0.1-0.3,0.2c-0.1-0.4-0.3-0.8-0.6-1.1l-0.1-0.1c0.2-0.1,0.3-0.1,0.5-0.1c0.5,0,1-0.3,1.4-0.7
+                                c0.3-0.2,0.7-0.4,1.1-0.4C13.4,14.8,13.1,15.1,12.9,15.5"></path>
+                        <path d="M1.6,10.2c0.3,0,0.6-0.1,0.8-0.3c0.3-0.2,0.7-0.4,1-0.3c0.4,0,0.7,0.1,1,0.3c0.2,0.2,0.5,0.3,0.8,0.3
+                                c0.3,0,0.6-0.1,0.8-0.3c0.3-0.2,0.7-0.4,1-0.4c0.4,0,0.7,0.1,1,0.4c0.2,0.2,0.5,0.3,0.8,0.3h0h0c0.3,0,0.6-0.1,0.8-0.3
+                                c0.6-0.5,1.4-0.5,2.1,0c0.5,0.3,1.1,0.3,1.6,0c0.6-0.5,1.4-0.5,2.1,0c0.5,0.3,1.1,0.3,1.6,0c0.2-0.2,0.4-0.3,0.7-0.3l-2.8-5.7
+                                c-0.4,0.3-0.9,0.5-1.4,0.4c-0.9,0-1-0.4-2.4-0.4c-0.8-0.1-1.5,0.2-2.1,0.7l0,0C8.3,4.1,7.5,3.8,6.8,3.9c-1.4,0-1.5,0.4-2.4,0.4
+                                C3.9,4.4,3.4,4.3,3,3.9L0.1,9.6c0.3,0,0.5,0.1,0.7,0.3C1.1,10.1,1.3,10.2,1.6,10.2z M11.1,4.9c1.3,0,1.5,0.4,2.4,0.4
+                                c0.4,0,0.8,0,1.2-0.2l1.6,3.2c0,0-0.2,0.2-1.5,0.2s-1.5-0.7-3.6-0.7c-0.6,0-1.1,0.2-1.6,0.6L8.9,5.6C9.5,5.1,10.3,4.8,11.1,4.9z
+                                M3.1,5.1c0.4,0.2,0.8,0.2,1.2,0.2c0.9,0,1.1-0.4,2.4-0.4c0.8-0.1,1.6,0.2,2.2,0.7L8.1,8.5c-0.4-0.4-1-0.6-1.6-0.6
+                                c-2,0-2.2,0.7-3.6,0.7S1.5,8.4,1.5,8.4L3.1,5.1z"></path>
+                        <path d="M137.7,1c0-0.6,0.5-1,1-1s1,0.5,1,1c0,0.6-0.5,1-1,1C138.1,2,137.7,1.6,137.7,1C137.7,1,137.7,1,137.7,1"></path>
+                        <path d="M137.7,26.6c0-0.6,0.5-1,1-1c0.6,0,1,0.5,1,1c0,0.6-0.5,1-1,1c0,0,0,0,0,0C138.1,27.6,137.7,27.1,137.7,26.6
+                                C137.7,26.6,137.7,26.6,137.7,26.6"></path>
+                        <path d="M150.6,19.2h-1l3.8-8.9h0.9l3.8,8.9h-1l-1-2.3h-4.6L150.6,19.2z M151.9,16.1h3.9l-2-4.7L151.9,16.1z"></path>
+                        <rect x="159.2" y="9.8" width="0.9" height="9.5"></rect>
+                        <rect x="162.1" y="9.8" width="0.9" height="9.5"></rect>
+                        <path d="M170.3,14.1h-1.4v5.1h-0.9v-5.1h-1.2v-0.7h1.2v-1.6c0-1.3,0.7-2.2,2-2.2c0.2,0,0.5,0,0.7,0.1l-0.1,0.8
+                                c-0.2-0.1-0.4-0.1-0.6-0.1c-0.9,0-1.1,0.6-1.1,1.5v1.5h1.4L170.3,14.1z"></path>
+                        <path d="M174,19.4c-1.7,0-3.1-1.4-3-3.1c0-1.7,1.4-3.1,3.1-3c1.7,0,3,1.4,3,3.1c0,1.7-1.3,3-2.9,3.1
+                                C174.1,19.4,174,19.4,174,19.4 M174,14c-1.2,0-2.2,1-2.2,2.2c0,0.1,0,0.1,0,0.2c-0.1,1.2,0.9,2.3,2.1,2.4c1.2,0.1,2.3-0.9,2.4-2.1
+                                c0-0.1,0-0.2,0-0.3c0.1-1.2-0.8-2.3-2.1-2.4C174.1,14,174,14,174,14"></path>
+                        <path d="M178.6,13.4h0.8c0,0.3,0.1,0.8,0.1,1h0c0.4-0.7,1.1-1.2,1.9-1.2c0.2,0,0.4,0,0.6,0.1l-0.1,0.8
+                                c-0.2-0.1-0.4-0.1-0.6-0.1c-0.9,0-1.7,0.7-1.7,2.2v3h-0.9v-4.6C178.7,14.4,178.7,13.8,178.6,13.4"></path>
+                        <path d="M188.4,14.1h-1.7v3.4c0,0.9,0.4,1.1,0.9,1.1c0.3,0,0.5-0.1,0.7-0.2l0,0.7c-0.3,0.1-0.7,0.2-1,0.2
+                                c-0.8,0.1-1.4-0.5-1.5-1.3c0-0.1,0-0.2,0-0.3v-3.7h-1.2v-0.7h1.2v-1.6h0.9v1.7h1.7V14.1z"></path>
+                        <path d="M190.4,14.4c0.4-0.7,1.2-1.1,2-1.1c1.2-0.1,2.2,0.8,2.2,2c0,0.1,0,0.3,0,0.4v3.6h-0.9V16
+                                c0-1.2-0.4-2.1-1.6-2.1c-0.9,0-1.8,0.7-1.8,2.3v3h-0.9V9.8h0.9L190.4,14.4L190.4,14.4z"></path>
+                        <path d="M201.9,16.5H197c0,1.2,1,2.1,2.1,2.1c0.8,0,1.5-0.4,1.9-1l0.6,0.5c-0.6,0.8-1.5,1.3-2.5,1.2
+                                c-1.6,0-3-1.3-3-2.9c0-0.1,0-0.1,0-0.2c-0.1-1.6,1.2-3,2.8-3.1c0,0,0.1,0,0.1,0c1.5-0.1,2.7,1.1,2.8,2.6c0,0.1,0,0.2,0,0.3
+                                C201.9,16.3,201.9,16.4,201.9,16.5z M201,15.9c0-1-0.8-1.9-1.8-1.9c-0.1,0-0.1,0-0.2,0c-1.1,0-2,0.8-2.1,1.9L201,15.9z"></path>
+                        <path d="M213.8,17.8c-0.8,1.1-2,1.7-3.3,1.7c-2.5,0.1-4.5-1.9-4.6-4.3c0-0.1,0-0.2,0-0.3c-0.1-2.5,1.9-4.6,4.4-4.7
+                                c0.1,0,0.2,0,0.3,0c1.2,0,2.4,0.5,3.2,1.4l-0.8,0.6c-0.6-0.8-1.5-1.2-2.4-1.2c-2,0-3.7,1.6-3.7,3.6c0,0.1,0,0.2,0,0.2
+                                c-0.1,2,1.4,3.8,3.5,3.9c0.1,0,0.1,0,0.2,0c1,0,2-0.5,2.6-1.3L213.8,17.8z"></path>
+                        <path d="M217.6,19.4c-1.7,0-3.1-1.4-3-3.1s1.4-3.1,3.1-3c1.7,0,3,1.4,3,3.1c0,1.7-1.3,3-2.9,3.1
+                                C217.8,19.4,217.7,19.4,217.6,19.4 M217.6,14c-1.2,0-2.2,1-2.2,2.2c0,0.1,0,0.1,0,0.2c-0.1,1.2,0.9,2.3,2.1,2.3
+                                c1.2,0.1,2.3-0.9,2.3-2.1c0-0.1,0-0.2,0-0.2c0.1-1.2-0.8-2.3-2.1-2.4C217.8,14,217.7,14,217.6,14"></path>
+                        <path d="M225.1,13.2c0.8,0,1.5,0.5,1.8,1.2c0.4-0.8,1.2-1.3,2.1-1.2c1.2-0.1,2.2,0.8,2.2,2c0,0.1,0,0.3,0,0.4v3.6
+                                h-0.9V16c0-1.2-0.4-2.1-1.5-2.1c-1.2,0-1.7,1.1-1.7,2.2v3.1h-0.9v-3.4c0-1.1-0.3-1.9-1.4-1.9c-0.8,0-1.7,0.7-1.7,2.3v3h-0.9v-4.6
+                                c0-0.3,0-0.9-0.1-1.3h0.8c0,0.3,0.1,0.7,0.1,1h0C223.6,13.7,224.3,13.2,225.1,13.2"></path>
+                        <path d="M235.9,13.2c0.8,0,1.5,0.5,1.8,1.2c0.4-0.8,1.2-1.3,2.1-1.2c1.2-0.1,2.2,0.8,2.2,2c0,0.1,0,0.3,0,0.4v3.6
+                                h-0.9V16c0-1.2-0.4-2.1-1.5-2.1c-1.2,0-1.7,1.1-1.7,2.2v3.1h-0.9v-3.4c0-1.1-0.3-1.9-1.4-1.9c-0.8,0-1.7,0.7-1.7,2.3v3h-0.9v-4.6
+                                c0-0.3,0-0.9-0.1-1.3h0.8c0,0.3,0.1,0.7,0.1,1h0C234.4,13.7,235.1,13.2,235.9,13.2"></path>
+                        <path d="M246.6,19.4c-1.7,0-3.1-1.4-3-3.1c0-1.7,1.4-3.1,3.1-3c1.7,0,3,1.4,3,3.1c0,1.7-1.3,3-2.9,3.1
+                                C246.8,19.4,246.7,19.4,246.6,19.4 M246.6,14c-1.2,0-2.2,1-2.2,2.2c0,0.1,0,0.1,0,0.2c-0.1,1.2,0.9,2.3,2.1,2.3
+                                c1.2,0.1,2.3-0.9,2.3-2.1c0-0.1,0-0.2,0-0.2c0.1-1.2-0.8-2.3-2.1-2.4C246.7,14,246.7,14,246.6,14"></path>
+                        <path d="M252.1,13.4c0,0.3,0.1,0.8,0.1,1h0c0.4-0.7,1.2-1.2,2-1.2c1.2-0.1,2.2,0.8,2.2,2c0,0.1,0,0.3,0,0.4v3.6h-0.9
+                                V16c0-1.2-0.4-2.1-1.6-2.1c-0.9,0-1.8,0.7-1.8,2.3v3h-0.9v-4.6c0-0.3,0-0.9-0.1-1.3H252.1z"></path>
+                        <path d="M268,12c-0.7-0.7-1.6-1.1-2.6-1c-2,0-3.7,1.6-3.7,3.6c0,0.1,0,0.1,0,0.2c-0.1,2,1.4,3.7,3.4,3.8
+                                c0.1,0,0.2,0,0.2,0c0.8,0,1.7-0.2,2.4-0.6v-2.7h-2.1v-0.8h3v4c-1,0.6-2.1,0.9-3.3,0.9c-2.5,0.1-4.5-1.9-4.6-4.3c0-0.1,0-0.2,0-0.3
+                                c-0.1-2.5,1.9-4.6,4.4-4.7c0.1,0,0.2,0,0.3,0c1.2-0.1,2.3,0.4,3.2,1.2L268,12z"></path>
+                        <path d="M273.4,19.4c-1.7,0-3.1-1.4-3-3.1s1.4-3.1,3.1-3c1.7,0,3,1.4,3,3.1c0,1.7-1.3,3-2.9,3.1
+                                C273.6,19.4,273.5,19.4,273.4,19.4 M273.4,14c-1.2,0-2.2,1-2.2,2.2c0,0.1,0,0.1,0,0.2c-0.1,1.2,0.9,2.3,2.1,2.4s2.3-0.9,2.4-2.1
+                                c0-0.1,0-0.2,0-0.3c0.1-1.2-0.8-2.3-2.1-2.4C273.5,14,273.5,14,273.4,14"></path>
+                        <path d="M280.8,19.4c-1.7,0-3.1-1.4-3-3.1s1.4-3.1,3.1-3c1.7,0,3,1.4,3,3.1c0,1.7-1.3,3-2.9,3.1
+                                C281,19.4,280.9,19.4,280.8,19.4 M280.8,14c-1.2,0-2.2,1-2.2,2.2c0,0.1,0,0.1,0,0.2c-0.1,1.2,0.9,2.3,2.1,2.4s2.3-0.9,2.4-2.1
+                                c0-0.1,0-0.2,0-0.3c0.1-1.2-0.8-2.3-2.1-2.4C280.9,14,280.9,14,280.8,14"></path>
+                        <path d="M288.1,19.4c-1.6,0-3-1.2-3-2.9c0-0.1,0-0.1,0-0.2c-0.1-1.6,1.2-3,2.8-3.1c0.1,0,0.1,0,0.2,0
+                                c0.9,0,1.7,0.4,2.2,1.2h0V9.8h0.9v9.5h-0.9v-1h0C289.8,19,289,19.4,288.1,19.4 M288.2,18.7c1.2,0,2.2-1,2.3-2.2c0,0,0-0.1,0-0.1
+                                c0.1-1.2-0.9-2.3-2.1-2.4c0,0-0.1,0-0.1,0c-1.2,0-2.2,0.9-2.2,2.1c0,0.1,0,0.1,0,0.2c-0.1,1.2,0.8,2.2,2,2.3
+                                C288.1,18.7,288.1,18.7,288.2,18.7"></path>
+                        <polygon points="295.9,12.8 295.5,12.8 295.5,9.7 294.4,9.7 294.4,9.4 297,9.4 297,9.7 295.9,9.7"></polygon>
+                        <polygon points="299.1,12.3 299.1,12.3 300.2,9.4 300.8,9.4 300.8,12.8 300.4,12.8 300.4,9.9 300.4,9.9 299.2,12.8
+                                299,12.8 297.8,9.9 297.8,9.9 297.8,12.8 297.4,12.8 297.4,9.4 297.9,9.4"></polygon>
+                    </svg>
+                </div>
+                <div class="footer__nav-group    ">
+                    <div class="footer__nav-top-level"><a class="footer__nav__title" href="https://business.stthomas.edu/degrees-programs/index.html">Degrees &amp; Programs</a> <span class="footer__nav__rule"></span></div>
+                    <ul class="footer__nav">
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="https://business.stthomas.edu/degrees-programs/mba/index.html">MBA Programs</a></li>
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="https://business.stthomas.edu/degrees-programs/specialized-masters/index.html">Specialized Masters</a></li>
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="https://business.stthomas.edu/degrees-programs/graduate-certificate-program/index.html">Graduate Certificates</a></li>
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="https://business.stthomas.edu/executive-education/index.html">Executive Education</a></li>
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="https://business.stthomas.edu/degrees-programs/undergraduate/index.html">Undergraduate BA/BS</a></li>
+                    </ul>
+                </div>
+                <div class="footer__nav-group    footer__nav-group__info">
+                    <div class="footer__nav-top-level"><a class="footer__nav__title">Info For</a> <span class="footer__nav__rule"></span></div>
+                    <ul class="footer__nav">
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="https://business.stthomas.edu/info/prospective-students/index.html">Prospective Students</a></li>
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="https://business.stthomas.edu/info/current-students/index.html">Current Students</a></li>
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="https://business.stthomas.edu/info/alumni/index.html">Alumni</a></li>
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="https://business.stthomas.edu/info/donors/index.html">Donors</a></li>
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="https://business.stthomas.edu/info/recruiters-companies/index.html">Recruiters &amp; Companies</a></li>
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="https://business.stthomas.edu/info/media/index.html">Media</a></li>
+                    </ul>
+                </div>
+                <div class="footer__nav-group    ">
+                    <div class="footer__nav-top-level"><a class="footer__nav__title">Visit</a> <span class="footer__nav__rule"></span></div>
+                    <ul class="footer__nav">
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="visit-opus/index.html">Location</a></li>
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="https://campusmap.stthomas.edu/">Campus Map &amp; Directions</a></li>
+                    </ul>
+                </div>
+                <div class="footer__nav-group    ">
+                    <div class="footer__nav-top-level"><a class="footer__nav__title">News &amp; Events</a> <span class="footer__nav__rule"></span></div>
+                    <ul class="footer__nav">
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="https://business.stthomas.edu/opus-advantage/news/index.html">News</a></li>
+                        <li class="footer__nav__item"><a class="footer__nav__link" href="https://business.stthomas.edu/opus-advantage/events/index.html">Events</a></li>
+                    </ul>
+                </div>
+                <ul class="footer__externals">
+                    <li class="footer__externals__item"><a class="footer__externals__link" href="https://www.stthomas.edu/">University of St. Thomas</a></li>
+                    <li class="footer__externals__item"><a class="footer__externals__link" href="https://one.stthomas.edu">OneStThomas</a></li>
+                    <li class="footer__externals__item"><a class="footer__externals__link" href="https://www.stthomas.edu/officeofgc/universitypolicies/universitypolicyrepository/?utm_source=ustredirect&amp;utm_medium=Policies">Privacy Policy</a></li>
+                    <li class="footer__externals__item"><a class="footer__externals__link" href="https://www.stthomas.edu/ustcares/">Emergency</a></li>
+                </ul>
+                <ul class="footer__social">
+                    <li class="footer__social__item">
+                        <a class="footer__social__cta" href="https://www.facebook.com/USTBusiness/" rel="noopener" target="_blank">
+                            <svg class="footer__social__svg" viewBox="0 0 30 30">
+                                <path d="M17.5,9.7H19V7h-2.4c-2.9,0-3.9,1.3-3.9,3.6v1.6H11V15h1.8v8h3.5v-8h2.4l0.3-2.8h-2.7v-1.4C16.3,10.1,16.4,9.7,17.5,9.7z"/>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="footer__social__item">
+                        <a class="footer__social__cta" href="https://twitter.com/USTbusiness" rel="noopener" target="_blank">
+                            <svg class="footer__social__svg" viewBox="0 0 30 30">
+                                <path d="M8.7,20.4c-0.3,0-0.6,0-0.9,0.1c0.6,0.4,1.3,0.7,2,0.9c2.3,0.7,4.8,0.4,6.9-0.8c1.5-1,2.8-2.4,3.5-4.1c0.4-1,0.6-2.1,0.7-3.2c0-0.5,0-0.6,0.6-1.1c0.3-0.3,0.5-0.5,0.7-0.8c0.1-0.2,0.1-0.2-0.4,0c-0.9,0.3-1,0.3-0.6-0.2c0.3-0.3,0.6-0.7,0.7-1.1c0,0-0.1,0-0.3,0.1c-0.3,0.1-0.6,0.3-0.9,0.4l-0.6,0.2l-0.5-0.4c-0.3-0.2-0.6-0.4-0.9-0.5c-0.4,0.1-1,0.1-1.6,0.2c-1.3,0.4-2.1,1.7-2,3v0.5l-0.5-0.1c-1.9-0.2-3.7-1.1-5-2.5l-0.7-0.7L8.7,11c-0.4,1.1-0.1,2.3,0.6,3.1c0.4,0.4,0.3,0.5-0.4,0.2c-0.2-0.1-0.3-0.1-0.5-0.1c0,0.5,0.2,1,0.4,1.4c0.3,0.6,0.8,1.1,1.4,1.4l0.5,0.2h-0.6c-0.6,0-0.6,0-0.6,0.2c0.4,0.8,1.1,1.5,2,1.7l0.6,0.2l-0.6,0.3C10.6,20.1,9.7,20.4,8.7,20.4z"/>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="footer__social__item">
+                        <a class="footer__social__cta" href="https://www.youtube.com/playlist?list=PL79B6B371ED754E07" rel="noopener" target="_blank">
+                            <svg class="footer__social__svg" viewBox="0 0 30 30">
+                                <path d="M22.5,11.5c-0.1-0.9-0.8-1.6-1.6-1.8c0,0-2.7-0.2-5.8-0.2S9.1,9.7,9.1,9.7h0c-0.7,0-1.6,1.1-1.6,1.8c-0.1,1.1-0.2,2.2-0.2,3.3c0,1.1,0.1,2.2,0.2,3.2c0,1.1,0.8,2,1.8,2.2c0,0,2.9,0.2,5.8,0.2s5.7-0.2,5.7-0.2c0.9-0.2,1.6-0.9,1.7-1.9c0.2-1.3,0.3-2.5,0.2-3.8C22.7,12.8,22.5,11.5,22.5,11.5z M13.7,17.1v-4.3l3.9,2.1L13.7,17.1z"/>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="footer__social__item">
+                        <a class="footer__social__cta" href="https://www.linkedin.com/school/university-of-st.-thomas---opus-college-of-business/" rel="noopener" target="_blank">
+                            <svg class="footer__social__svg" viewBox="-200 -150 900 900">
+                                <rect y="160" width="114.496" height="352"/>
+                                <path d="M426.368,164.128c-1.216-0.384-2.368-0.8-3.648-1.152c-1.536-0.352-3.072-0.64-4.64-0.896c-6.08-1.216-12.736-2.08-20.544-2.08c-66.752,0-109.088,48.544-123.04,67.296V160H160v352h114.496V320c0,0,86.528-120.512,123.04-32c0,79.008,0,224,0,224H512V274.464C512,221.28,475.552,176.96,426.368,164.128z"/>
+                                <circle cx="56" cy="56" r="56"/>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="footer__social__item">
+                        <a class="footer__social__cta" href="https://www.instagram.com/ustbusiness/" rel="noopener" target="_blank">
+                            <svg class="footer__social__svg" viewBox="0 0 30 30">
+                                <path d="M15.4,11.2c-2.3,0-4.2,1.9-4.2,4.2c0,2.3,1.9,4.2,4.2,4.2c2.3,0,4.2-1.9,4.2-4.2C19.6,13.1,17.7,11.2,15.4,11.2zM15.4,18.2c-1.6,0-2.8-1.3-2.8-2.8c0-1.6,1.3-2.8,2.8-2.8s2.8,1.2,2.8,2.8C18.2,17,16.9,18.2,15.4,18.2z"/>
+                                <path d="M19.2,7h-7.7C9,7,7,9,7,11.5v7.7c0,2.6,2,4.6,4.5,4.6h7.7c2.6,0,4.6-2.1,4.6-4.6v-7.7C23.7,9,21.7,7,19.2,7z M22.4,19.2c0,1.8-1.5,3.2-3.2,3.2h-7.7c-1.7-0.1-3.1-1.5-3.1-3.2v-7.7c0-1.7,1.4-3.1,3.1-3.1h7.7c1.8,0,3.2,1.4,3.2,3.1V19.2z"/>
+                                <circle cx="19.8" cy="11" r="1"/>
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+    <script src="{!URLFOR($Resource.USTEventAssets, '/js/loading.js')}" type="text/javascript"/>
+    </body>
+    </html>
+</apex:page>
