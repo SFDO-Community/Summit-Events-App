@@ -1,0 +1,16 @@
+{
+  "orgName": "University of St. Thomas Events",
+  "username": "dahl3702_sfdx@stthomas.edu",
+  "adminEmail": "dahl3702@stthomas.edu",
+  "edition": "Developer",
+  "features": [
+    "API",
+    "AuthorApex",
+    "Communities",
+    "DebugApex"
+  ],
+  "orgPreferences": {
+    "enabled": [],
+    "disabled": []
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "orgName": "USTEventsDX - Beta Test Org",
+  "edition": "Developer",
+  "settings": {
+    "orgPreferenceSettings": {
+      "s1DesktopEnabled": true
+      , "chatterEnabled": true
+    }
+  }
+}

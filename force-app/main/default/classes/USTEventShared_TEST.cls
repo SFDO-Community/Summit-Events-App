@@ -3,7 +3,7 @@
  */
 
 @isTest
-public with sharing class TestUSTEventShared {
+public with sharing class USTEventShared_TEST {
 
     /**
 

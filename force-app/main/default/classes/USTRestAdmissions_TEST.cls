@@ -2,7 +2,7 @@
  * Created by dahl3702 on 6/19/2018.
  */
 @isTest
-public with sharing class TestUSTRestAdmissions {
+public with sharing class USTRestAdmissions_TEST {
 /*    @testSetup static void insertCertainBaselineDataForTestsIfNotPresent() {
         Util.insertCertainBaselineDataForTestsIfNotPresent();
     }*/

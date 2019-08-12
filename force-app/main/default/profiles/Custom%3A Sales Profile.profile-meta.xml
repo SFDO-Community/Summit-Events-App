@@ -75,7 +75,7 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>TestUSTEventShared</apexClass>
+        <apexClass>USTEventShared_TEST</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -83,7 +83,7 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>TestUSTRestAdmissions</apexClass>
+        <apexClass>USTRestAdmissions_TEST</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

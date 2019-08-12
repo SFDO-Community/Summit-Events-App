@@ -1,59 +1,23 @@
+# Salesforce / SFDX / CCI
+.cci
+.sfdx
+/src.orig
+/src
 
-# Created by https://www.gitignore.io/api/salesforce
+# Python
+*.pyc
+__pycache__
 
-### Salesforce ###
-# GitIgnore for Salesforce Projects
-# Project Settings and MetaData
-.project
-.settings/
-.metadata
-build.properties
-config
+# Robot Framework results
+robot/USTEventsDX/results/
 
-# Apex Log as optional
-apex-scripts/log
-
-# Eclipse specific
-salesforce.schema
-Referenced Packages
-bin/
-tmp/
-config/
-*.tmp
-*.bak
-local.properties
-.settings
-.loadpath
-.classpath
-*.cache
-
-# Illuminated Cloud (IntelliJ IDEA)
-IlluminatedCloud
-out
-.idea
-*.iml
-
-# Mavensmate
+# Editors
 *.sublime-project
-*.sublime-settings
 *.sublime-workspace
-mm.log
+.vscode
+.idea
+.project
+.settings
 
-# Haoide SublimeText
-.config
-.deploy
-.history
-
-# OSX-specific exclusions
-.[dD][sS]_[sS]tore
-
-# The Welkin Suite specific
-**/.localHistory
-
-*.sfuo
-
-TestCache.xml
-
-TestsResultsCache.xml
-
-# End of https://www.gitignore.io/api/salesforce
+# Misc
+.DS_Store
