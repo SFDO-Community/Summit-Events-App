@@ -9,10 +9,6 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventAppointmentTriggerHandler</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>USTEventCancelReviewController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -54,14 +50,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>USTEventRegistrationOptionsController</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>USTEventRegistrationTriggerHandler</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>USTEventReparentController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -1514,10 +1502,6 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>USTEventRegistrationOptions</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>USTEventReparent</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
