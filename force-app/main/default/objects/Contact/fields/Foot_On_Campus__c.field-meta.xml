@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Last_Time_on_Campus__c</fullName>
+    <description>Populated/updated when the Contact last attended an event on campus</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Populated/updated when the Contact last attended an event on campus</inlineHelpText>
+    <label>Last Time on Campus</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Date</type>
+</CustomField>
