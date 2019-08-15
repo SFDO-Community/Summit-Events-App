@@ -3,8 +3,8 @@
   <component name="FacetManager">
     <facet type="IlluminatedCloud" name="Illuminated Cloud">
       <configuration>
-        <option name="connectionName" value="DevHub" />
-        <option name="connectionType" value="OAUTH" />
+        <option name="connectionName" value="USTEventsDX__dev" />
+        <option name="connectionType" value="SFDX" />
       </configuration>
     </facet>
   </component>
@@ -14,7 +14,7 @@
       <sourceFolder url="file://$MODULE_DIR$/force-app/main/default" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/config" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="IlluminatedCloud (USTEventDx/DevHub)" jdkType="IlluminatedCloud" />
+    <orderEntry type="jdk" jdkName="IlluminatedCloud (USTEventDx/USTEventsDX__dev)" jdkType="IlluminatedCloud" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
