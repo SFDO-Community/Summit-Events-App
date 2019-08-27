@@ -5,6 +5,7 @@
       <configuration>
         <option name="connectionName" value="USTEventsDX__dev" />
         <option name="connectionType" value="SFDX" />
+        <option name="defaultSourceRootUrl" value="file://$MODULE_DIR$/force-app/main/default" />
       </configuration>
     </facet>
   </component>
