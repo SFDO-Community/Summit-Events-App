@@ -87,4 +87,4 @@ public with sharing class USTEventAddToCalendarController {
 }
 
 
-//http://dev-stthomas.cs65.force.com/applicantportal/usteventaddtocalendar?instanceID=a320m0000001I34
+//http://dev-stthomas.cs65.force.comusteventaddtocalendar?instanceID=a320m0000001I34

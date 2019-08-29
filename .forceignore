@@ -36,6 +36,14 @@ force-app/main/default/profiles/Custom%3A Support Profile.profile-meta.xml
 
 force-app/main/default/staticresources/SiteSamples.resource-meta.xml
 
+# Pages to ignore
+SiteRegister.page
+SiteRegister.page-meta.xml
+force-app/main/default/pages/SiteLogin.page
+force-app/main/default/pages/SiteLogin.page-meta.xml
+
+
+
 # LWC configuration files
 **/jsconfig.json
 **/.eslintrc.json

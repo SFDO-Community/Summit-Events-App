@@ -33,63 +33,63 @@ global with sharing class USTRestAdmissions {
         String feedType = RestContext.request.params.get('type');
         if (!String.isBlank(feedType)) {
             if (feedType.toLowerCase() == 'highschool') {
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=highschool
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=highschool
                 serializedJSON = JSON.serialize(getSchools('High School'));
 
             } else if (feedType.toLowerCase() == 'college') {
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=college
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=college
                 serializedJSON = JSON.serialize(getSchools('College'));
 
             } else if (feedType.toLowerCase() == 'states') {
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=states
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=states
                 serializedJSON = JSON.serialize(getObjDefMap(Contact.MailingState.getDescribe()));
 
             } else if (feedType.toLowerCase() == 'cities') {
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=cities
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=cities
                 serializedJSON = JSON.serialize(getCityList());
 
             } else if (feedType.toLowerCase() == 'countries') {
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/ustadmissionsrest.json?type=countries
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/ustadmissionsrest.json?type=countries
                 serializedJSON = JSON.serialize(getObjDefMap(Contact.MailingCountry.getDescribe()));
 
             } else if (feedType.toLowerCase() == 'gradschools') {
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=gradschools
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=gradschools
                 serializedJSON = JSON.serialize(getUSTSchools());
 
             } else if (feedType.toLowerCase() == 'gradprograms') {
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=gradprograms
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=gradprograms
                 serializedJSON = JSON.serialize(getGradPrograms());
 
             } else if (feedType.toLowerCase() == 'ugmajors') {
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=ugmajors
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=ugmajors
                 serializedJSON = JSON.serialize(getUGMajors());
 
             } else if (feedType.toLowerCase() == 'ugactivities') {
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=ugmajors
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=ugmajors
                 serializedJSON = JSON.serialize(getActivities('Clubs and Organizations'));
 
             } else if (feedType.toLowerCase() == 'ugclubsports') {
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=ugclubsports
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=ugclubsports
                 serializedJSON = JSON.serialize(getActivities('Intramurals/Club Sports'));
 
             } else if (feedType.toLowerCase() == 'ugvarsitysports') {
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=ugvarsitysports
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=ugvarsitysports
                 serializedJSON = JSON.serialize(getActivities('Varsity Sports'));
 
             } else if (feedType.toLowerCase() == 'ugmusic') {
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=ugmusic
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=ugmusic
                 serializedJSON = JSON.serialize(getActivities('Music'));
 
             } else if (feedType.toLowerCase() == 'areaofinterest') {
                 /*serializedJSON = JSON.serialize(getObjDefMap(Major__c.Areas_of_Interest_for_program_finder__c.getDescribe()));*/
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=areaofinterest
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=areaofinterest
 
             } else if (feedType.toLowerCase() == 'degree') {
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=degree
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=degree
                /* serializedJSON = JSON.serialize(getObjDefMap(EnrollmentrxRx__Program_Offered__c.Degree_Level__c.getDescribe()));*/
 
             } else if (feedType.toLowerCase() == 'learningstyle') {
-                // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=degree
+                // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=degree
                 /*serializedJSON = JSON.serialize(getObjDefMap(Major__c.Learning_Style_for_program_finder__c.getDescribe()));*/
             } else if (feedType.toLowerCase() == 'programfinder') {
                 serializedJSON = JSON.serialize(programFinder());
@@ -114,7 +114,7 @@ global with sharing class USTRestAdmissions {
         majorQuery += ' WHERE Display_on_Program_Finder__c = true AND';
 
         // Possible URL variables
-        // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=programfinder
+        // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=programfinder
         // any combination of the following parameters can be sent to the API request
         // &interest=  <- program of intereest  (Education,Engineering, etc)
         // &degree= <- Master of Science, Certificate,etc
@@ -122,7 +122,7 @@ global with sharing class USTRestAdmissions {
         // &school= <- Name of the school (College of Arts and Sciences, Opus College of Business, etc)
         // &schoolId= <- Salesforce ID for a school
         // &filter= <- comma separate list of text that the query will test against the name of the program, major, degree, learning style, and area of interest
-        // https://COMMUNITY_SUB_DOMAIN.force.com/applicantportal/services/apexrest/ustadmissionsrest.json?type=programfinder&interest=&degree=&style=&schoolId=&filter=
+        // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=programfinder&interest=&degree=&style=&schoolId=&filter=
 
 
         if (!String.isBlank(RestContext.request.params.get('interest'))) {
