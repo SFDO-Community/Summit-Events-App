@@ -67,7 +67,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>Primary_Confirmed_Atendees__c</field>
+                <field>Primary_Confirmed_Attendees__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>

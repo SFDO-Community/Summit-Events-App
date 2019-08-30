@@ -577,7 +577,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Primary_Confirmed_Atendees__c</field>
+        <field>UST_Event_Instance__c.Primary_Confirmed_Attendees__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
