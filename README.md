@@ -1,12 +1,16 @@
 # USTEventsDX
 
-Add a brief description of this project here, in Markdown format.
-It will be shown on the main page of the project's GitHub repository.
+UST Events is an open source event management system for Salesforce. It was initially developed at the University of St. Thomas in St. Paul, MN to facilitate admission events.
 
-## Development
+[1]: <docs/install.md> "Installation Documentation"
+[2]: <docs/set-up.md> "How to set up UST Events in Salesforce"
+[3]: <docs/CumulusCI-notes.md> "Notes on using Cumulus CI"
+[4]: <docs/GIT-notes.md> "Notes on using GIT"
+[5]: <LICENSE.md> "License"
 
-To work on this project in a scratch org:
-
-1. [Set up CumulusCI](https://cumulusci.readthedocs.io/en/latest/tutorial.html)
-2. Run `cci flow run dev_org --org dev` to deploy this project.
-3. Run `cci org browser dev` to open the org in your browser.
+## Documentation
+* [Installation][1]
+* [Set up in Salesforce][2]
+* [CumulusCI Notes][3]
+* [GIT Notes][4]
+* [License][5]
