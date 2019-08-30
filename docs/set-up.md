@@ -181,7 +181,7 @@ Why is there so many permissions to set? After setting up the Salesforce Site a 
 8. Find the "Field-Level Security" header and then find the **UST Event Registration** object. Set the following field level permissions:
 
  | Field Name                             |  Field Type    | Read | Edit |
- |----------------------------------------|:--------------:|:----:|-----:|
+ |----------------------------------------|:--------------:|:----:|:----:|
  | Actual Number of Guests                | Number         | X    | X    |
  | Add Info Answer 1                      | Long Text Area | X    | X    |
  | Add Info Answer 2                      | Long Text Area | X    | X    |
