@@ -22,7 +22,7 @@ After the subdomain is finished registering create a new site record, by clickin
 5. Click the "Active" link under Action next to the site you just created
 6. Right click on the site URL and copy the URL to your clipboard. You will need it in the next stage of installation.
 
-## Setting custom configurations
+## Set Custom Settings
 
 Since each installation can have a different site URL we need to define that URL for the event application to use as it's root web presence. This is used for feed URLs for external sites to access and a host of other things.
 
@@ -154,7 +154,7 @@ Why is there so many permissions to set? After setting up the Salesforce Site a 
     | Attendee List                          | Checkbox      | X    |      |
     | Banner Event Code                      | Text          |      |      |
     | Banner Event Function Code             | Text          |      |      |
-    | Building Override                      | Picklist      |      |      |
+    | Building Override                      | Picklist      | X    |      |
     | Capacity                               | Number        | X    |      |
     | Category                               | Multi-Select  | X    |      |
     | Confirmed Attendees                    | Number        |      |      |
@@ -177,3 +177,103 @@ Why is there so many permissions to set? After setting up the Salesforce Site a 
     | Primary Confirmed Attendees            | Number        |      |      |
     | Registration Link                      | Text          | X    |      |
     | Start Date/Time                        | Date/Time     | X    |      |
+
+8. Find the "Field-Level Security" header and then find the **UST Event Registration** object. Set the following field level permissions:
+
+ | Field Name                             |  Field Type    | Read | Edit |
+ |----------------------------------------|:--------------:|:----:|-----:|
+ | Actual Number of Guests                | Number         | X    | X    |
+ | Add Info Answer 1                      | Long Text Area | X    | X    |
+ | Add Info Answer 2                      | Long Text Area | X    | X    |
+ | Add Info Answer 3                      | Long Text Area | X    | X    |
+ | Add Info Answer 4                      | Long Text Area | X    | X    |
+ | Add Info Answer 5                      | Long Text Area | X    | X    |
+ | Add Info Question 1                    | Text           | X    | X    |
+ | Add Info Question 2                    | Text           | X    | X    |
+ | Add Info Question 3                    | Text           | X    | X    |
+ | Add Info Question 4                    | Text           | X    | X    |
+ | Add Info Question 5                    | Text           | X    | X    |
+ | Add To Calendar Link                   | Text           | X    | X    |
+ | Appointment Table                      | Long Text Area | X    |      |
+ | Campus Event Registration              | Auto Number    | X    | X    |
+ | Campus Tour Location                   | Picklist       |      |      |
+ | Campus Tour Time                       | Text           |      |      |
+ | Confirmation Call Result               | Picklist       |      |      |
+ | Contact                                | Lookup         |      |      |
+ | Contact Name                           | Text           |      |      |
+ | Contact PIDM                           | Number         |      |      |
+ | Contact Soft Match Email               | Text           |      |      |
+ | Contact Soft Match First Last Zip      | Text           |      |      |
+ | Created By                             | Lookup         | X    |      |
+ | Date                                   | Date           | X    |      |
+ | Date/Time Text                         | Text           | X    |      |
+ | Date All Appointments Confirmed        | Date           |      |      |
+ | Display Attendance Publicly            | Checkbox       | X    |      |
+ | End Time Text                          | Text           | X    |      |
+ | Event                                  | Lookup         | X    |      |
+ | Event Instance                         | Lookup         | X    |      |
+ | Event Instance Date                    | Date           | X    |      |
+ | Event Instance Name                    | Text           | X    |      |
+ | Event Instance Title                   | Text           | X    |      |
+ | Event Name                             | Text           | X    |      |
+ | Event Registration Cancel Link         | Text           | X    |      |
+ | Generated Itinerary                    | Long Text Area | X    |      |
+ | Generated Requested Appointments       | Long Text Area | X    |      |
+ | Instance                               | Picklist       | X    |      |
+ | Instance Title                         | Text           | X    |      |
+ | Last Modified By                       | Lookup         | X    |      |
+ | Last Name as Student                   | Text           | X    | X    |
+ | Location Address                       | Text           | X    |      |
+ | Location Map Link                      | Text           | X    |      |
+ | Location Title                         | Text           | X    |      |
+ | Matching Log                           | Rich Text Area |      |      |
+ | New Contact Created                    | Checkbox       | X    |      |
+ | Number of Guests                       | Number         | X    | X    |
+ | Participation Type                     | Multi-Select   |      |      |
+ | Preferred First Name Formatted         | Text           | X    |      |
+ | Preferred St. Thomas Class Year        | Text           | X    | X    |
+ | Preferred Visit Time                   | Picklist       | X    | X    |
+ | Presentation Location                  | Picklist       | X    | X    |
+ | Presentation Time                      | Text           | X    |      |
+ | Registrant Applicant Type              | Picklist       | X    | X    |
+ | Registrant City                        | Text           | X    | X    |
+ | Registrant College                     | Text           | X    | X    |
+ | Registrant College Code                | Text           | X    | X    |
+ | Registrant College Not Found           | Text           | X    | X    |
+ | Registrant College Year                | Text           | X    | X    |
+ | Registrant Date of Birth               | Date           | X    | X    |
+ | Registrant Do Not Call                 | Checkbox       | X    | X    |
+ | Registrant Email                       | Email          | X    | X    |
+ | Registrant First Name                  | Text           | X    | X    |
+ | Registrant Gender                      | Picklist       | X    | X    |
+ | Registrant High School                 | Text           | X    | X    |
+ | Registrant High School Code            | Text           | X    | X    |
+ | Registrant High School Grad Year       | Text           | X    | X    |
+ | Registrant High School Not Found       | Text           | X    | X    |
+ | Registrant Last Name                   | Text           | X    | X    |
+ | Registrant Mobile Phone                | Phone          | X    | X    |
+ | Registrant Parent Email                | Email          | X    | X    |
+ | Registrant Parent First Name           | Text           | X    | X    |
+ | Registrant Parent Last Name            | Text           | X    | X    |
+ | Registrant Parent Phone                | Phone          | X    | X    |
+ | Registrant Parent Status               | Picklist       | X    | X    |
+ | Registrant Phone                       | Phone          | X    | X    |
+ | Registrant Preferred First Name        | Text Area      | X    | X    |
+ | Registrant Program Interest            | Multi-Select   | X    | X    |
+ | Registrant Receive Texts               | Checkbox       | X    | X    |
+ | Registrant State                       | Text           | X    | X    |
+ | Registrant Street 1                    | Text           | X    | X    |
+ | Registrant Street 2                    | Text           | X    | X    |
+ | Registrant Zip                         | Text           | X    | X    |
+ | Relationship to St. Thomas             | Multi-Select   | X    | X    |
+ | Reminder Call Complete?                | Checkbox       | X    | X    |
+ | Session                                | Picklist       | X    | X    |
+ | Start Time Text                        | Text           | X    |      |
+ | Status                                 | Picklist       |      |      |
+ | Substatus                              | Picklist       |      |      |
+ | Total Appointments                     | Number         |      |      |
+ | Total Confirmed Appointments           | Number         |      |      |
+ | Total Number of Guests                 | Number         |      |      |
+ | UG Parking Pass Link                   | Text           | X    |      |
+
+
