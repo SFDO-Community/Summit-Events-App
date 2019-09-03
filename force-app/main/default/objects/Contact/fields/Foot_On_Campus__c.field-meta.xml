@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Last_Time_on_Campus__c</fullName>
-    <description>Populated/updated when the Contact last attended an event on campus</description>
+    <fullName>Foot_On_Campus__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Manually populated field to identify who has stepped on campus in an easy way to capture and report. If checked (Yes), this contact has been on campus through the admissions office at some point. This field only gets checked once and does not change for the number of visits. The student&#39;s record should show only &#39;Yes/Checked&#39; for &quot;foot on campus&quot; or &#39;No/Unchecked&quot; for &quot;foot on campus.</description>
     <externalId>false</externalId>
-    <inlineHelpText>Populated/updated when the Contact last attended an event on campus</inlineHelpText>
-    <label>Last Time on Campus</label>
-    <required>false</required>
+    <inlineHelpText>Manually populated field to identify who has stepped on campus in an easy way to capture and report. If checked (Yes), this contact has been on campus through the admissions office at some point. This field only gets checked once and does not change for t</inlineHelpText>
+    <label>Foot On Campus?</label>
     <trackFeedHistory>false</trackFeedHistory>
-    <trackHistory>false</trackHistory>
-    <type>Date</type>
+    <type>Checkbox</type>
 </CustomField>

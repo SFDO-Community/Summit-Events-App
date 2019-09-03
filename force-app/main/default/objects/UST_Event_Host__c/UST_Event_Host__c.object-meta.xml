@@ -54,7 +54,6 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <externalSharingModel>ControlledByParent</externalSharingModel>
     <label>UST Event Host</label>
     <nameField>
         <displayFormat>HOST-{0000}</displayFormat>

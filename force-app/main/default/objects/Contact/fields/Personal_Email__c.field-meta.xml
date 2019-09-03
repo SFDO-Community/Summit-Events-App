@@ -5,7 +5,6 @@
     <label>Personal Email</label>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
-    <trackHistory>false</trackHistory>
     <type>Email</type>
     <unique>false</unique>
 </CustomField>
