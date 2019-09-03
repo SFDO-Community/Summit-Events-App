@@ -36,7 +36,7 @@ force-app/main/default/profiles/Custom%3A Support Profile.profile-meta.xml
 
 force-app/main/default/staticresources/SiteSamples.resource-meta.xml
 
-# Pages to ignore
+# Things to ignore after a site is created in a scratch org
 force-app/main/default/pages/AnswersHome.page
 force-app/main/default/pages/AnswersHome.page-meta.xml
 force-app/main/default/pages/BandwidthExceeded.page
@@ -71,6 +71,34 @@ force-app/main/default/pages/SiteRegister.page
 force-app/main/default/pages/SiteRegister.page-meta.xml
 force-app/main/default/pages/SiteLogin.page
 force-app/main/default/pages/SiteLogin.page-meta.xml
+force-app/main/default/components/SitePoweredBy.component-meta.xml
+force-app/main/default/components/SitePoweredBy.component
+force-app/main/default/components/SiteHeader.component-meta.xml
+force-app/main/default/components/SiteHeader.component
+force-app/main/default/components/SiteFooter.component-meta.xml
+force-app/main/default/components/SiteFooter.component
+force-app/main/default/components/SiteLogin.component-meta.xml
+force-app/main/default/components/SiteLogin.component
+force-app/main/default/classes/ForgotPasswordController.cls-meta.xml
+force-app/main/default/classes/ForgotPasswordController.cls
+
+
+#EDA things to ignore
+force-app/main/default/objects/Account/compactLayouts/hed__HEDA_Account_Compact_Layout.compactLayout-meta.xml
+force-app/main/default/objects/Account/fields/hed__*
+force-app/main/default/objects/Account/recordTypes/Academic_Program.recordType-meta.xml
+force-app/main/default/objects/Account/recordTypes/Administrative.recordType-meta.xml
+force-app/main/default/objects/Account/recordTypes/Business_Organization.recordType-meta.xml
+force-app/main/default/objects/Account/recordTypes/Educational_Institution.recordType-meta.xml
+force-app/main/default/objects/Account/recordTypes/HH_Account.recordType-meta.xml
+force-app/main/default/objects/Account/recordTypes/Sports_Organization.recordType-meta.xml
+force-app/main/default/objects/Account/recordTypes/University_Department.recordType-meta.xml
+force-app/main/default/objects/Contact/compactLayouts/hed__*
+force-app/main/default/objects/Contact/fields/Primary_Academic_Program__c.field-meta.xml
+force-app/main/default/objects/Contact/fields/Primary_Department__c.field-meta.xml
+force-app/main/default/objects/Contact/fields/Primary_Educational_Institution__c.field-meta.xml
+force-app/main/default/objects/Contact/fields/Primary_Sports_Organization__c.field-meta.xml
+force-app/main/default/objects/Contact/fields/hed__*
 
 
 
