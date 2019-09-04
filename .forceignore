@@ -85,17 +85,14 @@ force-app/main/default/classes/ForgotPasswordController.cls
 
 
 #EDA things to ignore
-Account.compactLayouts.hed__*
-Account.hed__*
-Account.recordTypes
-Administrative.recordType
+Account
 Contact.compactLayouts.hed__*
 Contact.Primary_Academic_Program__c
 Contact.Primary_Department__c
 Contact.Primary_Educational_Institution__c
 Contact.Primary_Sports_Organization__c
 Contact.hed__*
-
+Profile
 
 
 # LWC configuration files
