@@ -74,7 +74,7 @@ public with sharing class USTEventShared {
 
         List<UST_Event_Instance__c> recTypeInfo = [SELECT Event__r.RecordType.Name, Id FROM UST_Event_Instance__c WHERE ID = :evtInfo.instanceID];
 
-        if (recTypeInfo.size() > 0 ) {
+        if (recTypeInfo.size() > 0) {
             if (String.isBlank(recTypeInfo[0].event__r.RecordType.Name)) {
                 evtInfo.recordTypeName = 'Undergraduate';
             } else {
@@ -184,6 +184,11 @@ public with sharing class USTEventShared {
     public Map<String, String> getDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName, String parentValue) {
         Map<String, String> dependentItems = new Map<String, String>();
         if (null != parentObjName && null != parentFieldName && null != dependentFieldName && null != parentValue) {
+            String namespace = USTEvent_Namespace.getNamespace();
+            if (String.isNotBlank(namespace)) {
+                parentObjName = namespace + '__' + parentObjName;
+            }
+
             Schema.DescribeFieldResult dependentField;
             Integer parentValueIndex = -1;
 
