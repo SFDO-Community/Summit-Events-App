@@ -95,7 +95,10 @@ Contact.hed__**
 force-app/main/default/profiles/**
 Profiles
 Admin.profile
-
+Campaign
+force-app/main/default/objects/Campaign/**
+Opportunity
+force-app/main/default/objects/Opportunity/**
 
 # LWC configuration files
 **/jsconfig.json
