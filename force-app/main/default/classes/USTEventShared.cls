@@ -194,7 +194,7 @@ public with sharing class USTEventShared {
 
             //FIRST get the Parent PL's index value
             Schema.DescribeSObjectResult objectMeta = Schema.describeSObjects(new String[]{
-                    namespace  _ parentObjName
+                    namespace + parentObjName
             })[0];
             Schema.SObjectField[] fields = objectMeta.fields.getMap().values();
             for (Schema.SObjectField f : fields) {
