@@ -425,7 +425,12 @@ public with sharing class USTEventRegisterController {
 
     public List<SelectOption> PickThePicklist(string YourObjectName, string YourFieldName, Boolean includeSelect) {
         List<SelectOption> picklists = new List<SelectOption>();
-        List<Schema.PicklistEntry> PicklistValues = Schema.getGlobalDescribe().get(YourObjectName).getDescribe().fields.getMap().get(YourFieldName).getDescribe().getPicklistValues();
+        String namespace = USTEvent_Namespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace.toLowerCase() + '__';
+        }
+
+        List<Schema.PicklistEntry> PicklistValues = Schema.getGlobalDescribe().get(namespace + YourObjectName).getDescribe().fields.getMap().get(namespace + YourFieldName).getDescribe().getPicklistValues();
 
         for (Schema.PicklistEntry PicklistValue : PicklistValues) {
             picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));

@@ -186,7 +186,7 @@ public with sharing class USTEventShared {
         if (null != parentObjName && null != parentFieldName && null != dependentFieldName && null != parentValue) {
             String namespace = USTEvent_Namespace.getNamespace();
             if (String.isNotBlank(namespace)) {
-                parentObjName = namespace + '__' + parentObjName;
+                namespace = namespace + '__';
             }
 
             Schema.DescribeFieldResult dependentField;
@@ -194,14 +194,14 @@ public with sharing class USTEventShared {
 
             //FIRST get the Parent PL's index value
             Schema.DescribeSObjectResult objectMeta = Schema.describeSObjects(new String[]{
-                    parentObjName
+                    namespace  _ parentObjName
             })[0];
             Schema.SObjectField[] fields = objectMeta.fields.getMap().values();
             for (Schema.SObjectField f : fields) {
                 Schema.DescribeFieldResult d = f.getDescribe();
                 String fieldname = d.getName().toLowerCase();
                 String ftype = String.valueOf(d.getType()).toLowerCase();
-                if (fieldname.equals(parentFieldName.toLowerCase()) && ('picklist'.equals(ftype) || 'multipicklist'.equals(ftype))) {
+                if (fieldname.equals(namespace + parentFieldName.toLowerCase()) && ('picklist'.equals(ftype) || 'multipicklist'.equals(ftype))) {
                     Schema.PicklistEntry[] pplvalues = d.getPicklistValues();
                     for (Integer i = 0; i < pplvalues.size(); i++) {
                         if (parentValue.equals(pplvalues[i].getValue())) {
@@ -210,7 +210,7 @@ public with sharing class USTEventShared {
                         }
                     }
                 }
-                if (fieldname.equals(dependentFieldName.toLowerCase()) && ('picklist'.equals(ftype) || 'multipicklist'.equals(ftype))) {
+                if (fieldname.equals(namespace + dependentFieldName.toLowerCase()) && ('picklist'.equals(ftype) || 'multipicklist'.equals(ftype))) {
                     dependentField = d;
                 }
             }
