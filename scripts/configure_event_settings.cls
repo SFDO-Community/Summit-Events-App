@@ -18,4 +18,7 @@ public static void initializeEventSampleData(){
     );
     insert testEventInstance;
 
+    UST_Event_Settings__c eventSettings = UST_Event_Settings__c.getOrgDefaults();
+    insert eventSettings;
+
 }

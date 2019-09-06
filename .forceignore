@@ -34,6 +34,7 @@ force-app/main/default/profiles/Custom%3A Marketing Profile.profile-meta.xml
 force-app/main/default/profiles/Custom%3A Sales Profile.profile-meta.xml
 force-app/main/default/profiles/Custom%3A Support Profile.profile-meta.xml
 
+force-app/main/default/staticresources/SiteSamples
 force-app/main/default/staticresources/SiteSamples.resource-meta.xml
 
 # LWC configuration files
