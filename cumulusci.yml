@@ -9,6 +9,14 @@ project:
     source_format: sfdx
 
 tasks:
+
+    deploy_event_records:
+        description: Configure sample records for the Event app
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            path: scripts/configure_event_settings.cls
+            apex: initializeEventSampleData();
+
     robot:
         options:
             suites: robot/USTEventsDX/tests
@@ -22,5 +30,10 @@ tasks:
 
 flows:
     config_qa:
-        1.1:
-            task: deploy_qa_config
+        steps:
+            1.1:
+                task: deploy_qa_config
+    config_dev:
+        steps:
+            3: 
+                task: deploy_event_records
