@@ -1,5 +1,64 @@
 # CumulusCI - ***Notes***
 
+## Manage Packaging
+
+Before packaging make sure your master branch has everything in it you want to include in the package for installation. 
+
+1. Deploy to scratch org. This will create a dev scratch org that installs all dependencies (EDA in this case).
+
+    ```bash
+    cci flow run dev_org
+    ```
+
+2. Check your dev org and make sure the app works
+
+    ```bash
+    cci org browser dev
+    ```
+   
+3. Deploy your master to the packaging org
+
+    ```bash
+    cci flow run ci_master --org packaging
+    ```
+   
+4. Release production in the packaging org
+
+    ```bash
+    cci flow run release_production --org packaging
+    ```
+5. Initially you will have to upload via the packaging org upload button to get your install link. This appears to only have to be done once and is a step I missed.
+
+
+## Deploy meta data code - not managed or unmanaged
+
+1. Connect the org you want to deploy to:
+
+    ```bash
+    cci org connect <org_name>
+    ```
+   
+    Example staging:
+    ```bash
+    cci org connect staging
+    ```
+   
+   Example production:
+   
+   ```bash
+   cci org connect production
+   ```
+
+2. Deploy code straight to the defined org
+
+   ```bash
+   cci task run deploy --org <org_name>
+   ```
+
+## Deploy Data to scratch of and set up sites
+    
+Anonymous Apex in run cci to add settings / data ? 
+
 ## Commands I keep using
 
 List all orgs currently running:
@@ -10,7 +69,7 @@ cci org list
 
 Delete a scratch org (in this cas the dev):
 
-```bash
+```bashcci 
 cci org scratch_delete dev
 ```
 
