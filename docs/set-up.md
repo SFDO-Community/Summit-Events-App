@@ -6,6 +6,10 @@
 2. Select a subdomain that is available. Since you are spinning up scratch orgs you may want to start incrementing a subdomain on a theme (myevents0001...myevents0002).
 3. Click "Register My Salesforce Site Domain"
 
+## Automate the rest of setup
+
+1. Run `cci flow run config_site --org <org_name>` to automate the rest of the setup steps.
+
 ## Create a site record
 
 After the subdomain is finished registering create a new site record, by clicking the "New" button next to the site header. Fill in the following data and then click "Save."
