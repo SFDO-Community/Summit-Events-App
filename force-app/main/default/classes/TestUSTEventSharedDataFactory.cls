@@ -214,7 +214,7 @@ public with sharing class TestUSTEventSharedDataFactory {
                 Email = Email,
                 MailingStreet = '123 Flinstone Ave',
                 MailingCity = 'Bedrock',
-                MailingState = 'Minnesota',
+                MailingState = 'MN',
                 MailingPostalCode = Zip,
                 Phone = Phone,
                 Birthdate = Date.valueOf(DOB),
