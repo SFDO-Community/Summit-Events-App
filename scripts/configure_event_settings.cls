@@ -18,7 +18,26 @@ public static void initializeEventSampleData(){
     );
     insert testEventInstance;
 
-    UST_Event_Settings__c eventSettings = UST_Event_Settings__c.getOrgDefaults();
-    insert eventSettings;
+}
 
+public static void setSiteURL(){
+
+    String siteName = 'UST_Events';
+
+    Site site = [
+        SELECT GuestUserId
+        FROM Site
+        WHERE Name = :siteName
+    ];
+
+    String path = '/sites/servlet.SiteDebugMode';
+    PageReference pr = new PageReference(path);
+    pr.getParameters().put('guid', site.GuestUserId);
+    pr.getParameters().put('sitedebugmode', 'x');
+    String url = pr.getContent().toString().substringAfter('URL=').substringBefore(path);
+
+    UST_Event_Settings__c eventSettings = UST_Event_Settings__c.getOrgDefaults();    
+    eventSettings.Community_Base_URL__c = url;
+    upsert eventSettings;
+    
 }

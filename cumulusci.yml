@@ -27,6 +27,13 @@ tasks:
             path: unpackaged/config/profile
             unmanaged: True
 
+    deploy_site_settings:
+        description: Setup the Custom Settings for the Event Site
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            path: scripts/configure_event_settings.cls
+            apex: setSiteURL();
+
     deploy_event_records:
         description: Configure sample records for the Event app
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
@@ -61,3 +68,5 @@ flows:
                 task: deploy_site_config
             2:
                 task: deploy_site_profile
+            3: 
+                task: deploy_site_settings

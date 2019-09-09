@@ -80,7 +80,7 @@
     </classAccesses>
     <classAccesses>
         <apexClass>USTEventFeed</apexClass>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
         <apexClass>USTEventHostAssignmentExtension</apexClass>
@@ -128,7 +128,7 @@
     </classAccesses>
     <classAccesses>
         <apexClass>USTRestAdmissions</apexClass>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
         <apexClass>USTRestAdmissions_TEST</apexClass>
@@ -1816,15 +1816,15 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>USTEventAddToCalendar</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>USTEventCancelReview</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>USTEventConfirmation</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>USTEventHostAssignment</apexPage>
@@ -1836,7 +1836,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>USTEventParkingPass</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>USTEventPrintItineraries</apexPage>
@@ -1848,11 +1848,11 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>USTEventRegister</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>USTEventRegistrationOptions</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>USTEventReparent</apexPage>
@@ -1860,7 +1860,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>USTEventSubmit</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>USTGeneratedItineraries</apexPage>
