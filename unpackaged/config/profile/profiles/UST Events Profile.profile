@@ -867,7 +867,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Primary_Confirmed_Atendees__c</field>
+        <field>UST_Event_Instance__c.Primary_Confirmed_Attendees__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1902,11 +1902,6 @@
     <recordTypeVisibilities>
         <default>false</default>
         <recordType>Account.Sports_Organization</recordType>
-        <visible>false</visible>
-    </recordTypeVisibilities>
-    <recordTypeVisibilities>
-        <default>false</default>
-        <recordType>Account.Test</recordType>
         <visible>false</visible>
     </recordTypeVisibilities>
     <recordTypeVisibilities>
