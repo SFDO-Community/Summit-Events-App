@@ -3,9 +3,10 @@ project:
     name: USTEventsDX
     package:
         name:  USTEventsDX
+        namespace:  ustevent
         api_version: '46.0'
     dependencies:
-        - github: 'https://github.com/SalesforceFoundation/EDA'
+        - github: 'https://github.com/SalesforceFoundation/EDA/tree/rel/1.81'
     source_format: sfdx
 
 tasks:

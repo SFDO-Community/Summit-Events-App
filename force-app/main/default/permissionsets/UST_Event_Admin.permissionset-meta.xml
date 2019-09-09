@@ -72,6 +72,26 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Contact.Foot_On_Campus__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Contact.Initial_Foot_on_Campus__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Contact.Last_Time_on_Campus__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Contact.Personal_Email__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Contact.Preferred_Class_Year__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -577,7 +597,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Primary_Confirmed_Atendees__c</field>
+        <field>UST_Event_Instance__c.Primary_Confirmed_Attendees__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

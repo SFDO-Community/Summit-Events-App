@@ -54,7 +54,6 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <externalSharingModel>ControlledByParent</externalSharingModel>
     <label>UST Event Appointment</label>
     <nameField>
         <displayFormat>APPT-{000000}</displayFormat>

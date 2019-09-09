@@ -4,4 +4,9 @@
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>USTEventPrintItineraries</label>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>81</minorNumber>
+        <namespace>hed</namespace>
+    </packageVersions>
 </ApexPage>

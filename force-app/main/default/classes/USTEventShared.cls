@@ -4,7 +4,7 @@
 
 public with sharing class USTEventShared {
     //private key for encryption
-    Private Blob key = Blob.valueOf('TmC%2%4&X9fzG2PrtP7f&6acnc#y7@vW');
+    Private Blob key = Blob.valueOf('TmC%2%1119fzG2PrtP7f&6acnc#y8@vr');
     Public String defaultTemplate = 'CastorTemplate2017';
 
     public class USTEventInfo {
@@ -74,7 +74,7 @@ public with sharing class USTEventShared {
 
         List<UST_Event_Instance__c> recTypeInfo = [SELECT Event__r.RecordType.Name, Id FROM UST_Event_Instance__c WHERE ID = :evtInfo.instanceID];
 
-        if (recTypeInfo.size() > 0 ) {
+        if (recTypeInfo.size() > 0) {
             if (String.isBlank(recTypeInfo[0].event__r.RecordType.Name)) {
                 evtInfo.recordTypeName = 'Undergraduate';
             } else {
@@ -184,19 +184,24 @@ public with sharing class USTEventShared {
     public Map<String, String> getDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName, String parentValue) {
         Map<String, String> dependentItems = new Map<String, String>();
         if (null != parentObjName && null != parentFieldName && null != dependentFieldName && null != parentValue) {
+            String namespace = USTEvent_Namespace.getNamespace();
+            if (String.isNotBlank(namespace)) {
+                namespace = namespace + '__';
+            }
+
             Schema.DescribeFieldResult dependentField;
             Integer parentValueIndex = -1;
 
             //FIRST get the Parent PL's index value
             Schema.DescribeSObjectResult objectMeta = Schema.describeSObjects(new String[]{
-                    parentObjName
+                    namespace + parentObjName
             })[0];
             Schema.SObjectField[] fields = objectMeta.fields.getMap().values();
             for (Schema.SObjectField f : fields) {
                 Schema.DescribeFieldResult d = f.getDescribe();
                 String fieldname = d.getName().toLowerCase();
                 String ftype = String.valueOf(d.getType()).toLowerCase();
-                if (fieldname.equals(parentFieldName.toLowerCase()) && ('picklist'.equals(ftype) || 'multipicklist'.equals(ftype))) {
+                if (fieldname.equals(namespace + parentFieldName.toLowerCase()) && ('picklist'.equals(ftype) || 'multipicklist'.equals(ftype))) {
                     Schema.PicklistEntry[] pplvalues = d.getPicklistValues();
                     for (Integer i = 0; i < pplvalues.size(); i++) {
                         if (parentValue.equals(pplvalues[i].getValue())) {
@@ -205,7 +210,7 @@ public with sharing class USTEventShared {
                         }
                     }
                 }
-                if (fieldname.equals(dependentFieldName.toLowerCase()) && ('picklist'.equals(ftype) || 'multipicklist'.equals(ftype))) {
+                if (fieldname.equals(namespace + dependentFieldName.toLowerCase()) && ('picklist'.equals(ftype) || 'multipicklist'.equals(ftype))) {
                     dependentField = d;
                 }
             }

@@ -58,7 +58,6 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <externalSharingModel>ControlledByParent</externalSharingModel>
     <label>UST Event Instance</label>
     <nameField>
         <displayFormat>S-{000000}</displayFormat>

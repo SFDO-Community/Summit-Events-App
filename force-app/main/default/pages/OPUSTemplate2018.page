@@ -200,7 +200,7 @@
                             <div class="header__action-nav__wrap">
                                 <ul class="header__action-nav">
                                     <li class="header__action-nav__item">
-                                        <a class="header__action-nav__link" href="https://stthomas.force.com/applicantportal/Portal_Site_Registration?_ga=2.263505487.2142899341.1543849311-1537090506.1537823615">Apply</a>
+                                        <a class="header__action-nav__link" href="https://stthomas.force.comPortal_Site_Registration?_ga=2.263505487.2142899341.1543849311-1537090506.1537823615">Apply</a>
                                     </li>
                                     <li class="header__action-nav__item">
                                         <a class="header__action-nav__link" href="https://www.stthomas.edu/give/">Give</a>
@@ -980,7 +980,7 @@
                     </ul>
                     <ul class="header_mobile__action-nav">
                         <li class="header_mobile__action-nav__item">
-                            <a class="header_mobile__action-nav__link" href="https://stthomas.force.com/applicantportal/Portal_Site_Registration?_ga=2.263505487.2142899341.1543849311-1537090506.1537823615">Apply</a>
+                            <a class="header_mobile__action-nav__link" href="https://stthomas.force.comPortal_Site_Registration?_ga=2.263505487.2142899341.1543849311-1537090506.1537823615">Apply</a>
                         </li>
                         <li class="header_mobile__action-nav__item">
                             <a class="header_mobile__action-nav__link" href="https://www.stthomas.edu/give/">Give</a>

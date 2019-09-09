@@ -21,3 +21,9 @@ robot/USTEventsDX/results/
 
 # Misc
 .DS_Store
+
+# Illuminated Cloud (IntelliJ IDEA)
+IlluminatedCloud
+out
+.idea
+*.iml
