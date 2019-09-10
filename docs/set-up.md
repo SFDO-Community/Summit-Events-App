@@ -2,6 +2,8 @@
 
 ## Create a site
 
+If your org does not already have a site to display public visual force pages you will need to set one up.
+
 1. Open the org you are working on in the browser
 
    ```bash 
@@ -51,17 +53,21 @@ Since each installation can have a different site URL we need to define that URL
 
 5. Click "Save"
 
+6. Once you hit "Save" the "New" button will be replaced with "Edit." This is what you will need to hit to make future adjustments to this setting.
+
 ## Setting up site permissions
 
 Why is there so many permissions to set? After setting up the Salesforce Site a public profile is created for that site to moderate all access by users not logged into a community (The guest public). Unfortunately, it is [not possible to apply a permission set to a public user](https://success.salesforce.com/ideaView?id=08730000000akDJAAY). If this were possible much of the headache below could be mitigated so up-vote the previous link.
 
 1. In Setup go to User Interface -> Sites and Domains -> Sites
 
-2. Click on the site label "UST Events"
+2. Click on the site label of the active site you defined earlier and using as the base for the Event App. (example: "UST Events")
 
 3. Click on the "Public Access Settings" button at the top of the record.
 
-4. Go to the "Enabled Visual Force Pages" heading and click on the "Edit" button. Make sure the following pages are enabled and then click "Save":
+### Setup Visualforce Page and Apex Classes Public Access
+
+1. Go to the "Enabled Visual Force Pages" (or Visualforce Page Access depending on your Admin view) heading and click on the "Edit" button. Make sure the following pages are enabled and then click "Save":
     > USTEvent
     > USTEventAddToCalendar
     > USTEventCancelReview
@@ -71,11 +77,15 @@ Why is there so many permissions to set? After setting up the Salesforce Site a 
     > USTEventRegistrationOptions
     > USTEventSubmit
 
-5. Got to the "Enabled Apex Class Access" heading and click on the "Edit" button. Make sure the following Apex Classes are in the "Enabled Apex Classes" list and then click "Save":
+2. Got to the "Enabled Apex Class Access" heading and click on the "Edit" button. Make sure the following Apex Classes are in the "Enabled Apex Classes" list and then click "Save":
     > USTEventFeed
     > USTRestAdmissions
 
-6. Find the "Field-Level Security" header and then find the **UST Event** object. You will need to set up permissions for each field in the object to allow public users (non-logged in) to be able to register and see events. Set the following field level permissions:
+### Setup Object Field Permissions for Public Access
+
+1. Find the "Field-Level Security" header and then find the **UST Event** object. You will need to set up permissions for each field in the object to allow public users (non-logged in) to be able to register and see events. Set the following field level permissions:
+
+    Object permissions should have "Read" and "View All" enabled.
 
     | Field Name                         |  Field Type      | Read | Edit |
     |------------------------------------|:----------------:|:----:|-----:|
@@ -158,8 +168,10 @@ Why is there so many permissions to set? After setting up the Salesforce Site a 
     | Tracking Options Registration      | Long Text Area   | X    |      |
     | Tracking Submit Registration       | Long Text Area   | X    |      |
 
-7. Find the "Field-Level Security" header and then find the **UST Event Instance** object. Set the following field level permissions:
-
+2. Find the "Field-Level Security" header and then find the **UST Event Instance** object. Set the following field level permissions:
+    
+    Object permissions should have "Read" and "View All" enabled.
+    
     | Field Name                             |  Field Type   | Read | Edit |
     |----------------------------------------|:-------------:|:----:|-----:|
     | Active Status                          | Picklist      | X    |      |
@@ -193,7 +205,9 @@ Why is there so many permissions to set? After setting up the Salesforce Site a 
     | Registration Link                      | Text          | X    |      |
     | Start Date/Time                        | Date/Time     | X    |      |
 
-8. Find the "Field-Level Security" header and then find the **UST Event Registration** object. Set the following field level permissions:
+3. Find the "Field-Level Security" header and then find the **UST Event Registration** object. Set the following field level permissions
+
+    Object permissions should have "Read," "Create," and "Edit" enabled.
 
     | Field Name                             |  Field Type    | Read | Edit |
     |----------------------------------------|:--------------:|:----:|:----:|
@@ -242,7 +256,7 @@ Why is there so many permissions to set? After setting up the Salesforce Site a 
     | Location Map Link                      | Text           | X    |      |
     | Location Title                         | Text           | X    |      |
     | Matching Log                           | Rich Text Area |      |      |
-    | New Contact Created                    | Checkbox       | X    |      |
+    | New Contact Created                    | Checkbox       |      |      |
     | Number of Guests                       | Number         | X    | X    |
     | Participation Type                     | Multi-Select   |      |      |
     | Preferred First Name Formatted         | Text           | X    |      |
@@ -291,4 +305,126 @@ Why is there so many permissions to set? After setting up the Salesforce Site a 
     | Total Number of Guests                 | Number         |      |      |
     | UG Parking Pass Link                   | Text           | X    |      |
 
+4. Find the "Field-Level Security" header and then find the **UST Event Appointments** object. Set the following field level permissions:
 
+    Object permissions should have "Read," "Create," "Edit," and "Delete" enabled.
+    
+    | Field Name                       |  Field Type    | Read | Edit |
+    |----------------------------------|:--------------:|:----:|:----:|
+    | Appointment Category             | Picklist       | X    | X    |
+    | Appointment Contact Email        | Email          | X    | X    |
+    | Appointment Contact Name         | Text           | X    | X    |
+    | Appointment Date                 | Date           | X    | X    |
+    | Appointment Date/Time            | Date/Time      | X    | X    |
+    | Appointment Detail               | Long Text Area | X    | X    |
+    | Appointment Status               | Picklist       | X    | X    |
+    | Appointment Time                 | Time           | X    | X    |
+    | Appointment Time Formatted       | Text           | X    | X    |
+    | Appointment Time Options         | Multi-Select   | X    | X    |
+    | Appointment Title                | Text           | X    | X    |
+    | Appointment Type                 | Picklist       | X    | X    |
+    | Building                         | Picklist       | X    | X    |
+    | Chosen State                     | Picklist       | X    | X    |
+    | Class Title                      | Text           | X    | X    |
+    | Client Created Appointment       | Checkbox       | X    | X    |
+    | Contact                          | Text           | X    |      |
+    | Created By                       | Lookup         | X    |      |
+    | Description                      | Rich Text Area | X    | X    |
+    | Do Not Show Time                 | Checkbox       | X    | X    |
+    | Event Appointments Name          | Auto Number    | X    | X    |
+    | Event Appointment Type           | Lookup         | X    | X    |
+    | Event Host                       | Lookup         | X    |      |
+    | Event Reg ID                     | Text           | X    |      |
+    | Event Registration               | Lookup         | X    | X    |
+    | Event Registration Date          | Text           | X    |      |
+    | Faculty/Staff Member             | Text           | X    |      |
+    | Host Location                    | Text           | X    |      |
+    | Host Name                        | Text           | X    |      |
+    | Last Modified By                 | Lookup         | X    |      |
+    | Record Type                      | Record Type    | X    | X    |
+    | Registrant Input                 | Text           | X    | X    |
+    | Room                             | Text           | X    |      |
+    | Sort Order                       | Number         | X    | X    |
+    | UG Appointment Category Order    | Number         | X    |      |
+
+5. Find the "Field-Level Security" header and then find the **UST Event Appointment Types** object. Set the following field level permissions:
+    
+    Object permissions should have "Read" and "View All" enabled.
+    
+    | Field Name                 |  Field Type    | Read | Edit |
+    |----------------------------|:--------------:|:----:|:----:|
+    | Appointment Category       | Picklist       | X    |      |
+    | Appointment Limits         | Picklist       | X    |      |
+    | Appointment Type           | Picklist       | X    |      |
+    | Appointment Type Status    | Picklist       | X    |      |
+    | Auto add building          | Picklist       | X    |      |
+    | Auto Add Time              | Time           | X    |      |
+    | Auto Confirm Appointment   | Checkbox       | X    |      |
+    | Chosen State               | Picklist       | X    |      |
+    | Created By                 | Lookup         | X    |      |
+    | Custom Picklist            | Long Text Area | X    |      |
+    | Date Available End         | Date/Time      | X    |      |
+    | Date Available Start       | Date/Time      | X    |      |
+    | Day of Week Availability   | Multi-Select   | X    |      |
+    | Description                | Rich Text Area | X    |      |
+    | Do Not Show Time           | Checkbox       | X    |      |
+    | Event	                     | Lookup         | X    |      |
+    | Last Modified By           | Lookup         | X    |      |
+    | Registrant Input           | Picklist       | X    |      |
+    | Required Appointment       | Checkbox       | X    |      |
+    | Restrict To Instance Title | Lookup         | X    |      |
+    | Sort Order                 | Number         | X    |      |
+    | Title                      | Text           | X    |      |
+    | UG Event Appointment Type  | Auto Number    | X    |      |
+    
+6. Find the "Field-Level Security" header and then find the **UST Event Emails** object. Set the following field level permissions:
+
+    Object permissions should have "Read" and "View All" enabled.
+    
+    | Field Name                 |  Field Type    | Read | Edit |
+    |----------------------------|:--------------:|:----:|:----:|
+    | Action Status              | Picklist       | X    |      |
+    | Action Sub status          | Picklist       | X    |      |
+    | BCC Email                  | Long Text Area | X    |      |
+    | Created By                 | Lookup         | X    |      |
+    | Email Content              | Rich Text Area | X    |      |
+    | Email Content Instructions | Long Text Area | X    |      |
+    | Email From                 | Text           | X    |      |
+    | Email Subject              | Text           | X    |      |
+    | Event                      | Lookup         | X    | X    |
+    | Last Modified By           | Lookup         | X    |      |
+    | Letterhead                 | Picklist       | X    |      |
+    | Letterhead HTML            | Long Text Area | X    |      |
+    | Letterhead Id              | Text           | X    |      |
+    | Letterhead Name            | Text           | X    |      |
+    | Org Email                  | Email          | X    |      |
+    | Org Email Id               | Text           | X    |      |
+    | UST Event Email Name       | Auto Number    | X    |      |
+    
+7. Find the "Field-Level Security" header and then find the **UST Event Hosts** object. Set the following field level permissions:
+
+    Object permissions should have "Read" and "View All" enabled.
+    
+    | Field Name             |  Field Type | Read | Edit |
+    |------------------------|:-----------:|:----:|:----:|
+    | Additional Comments    | Text Area   | X    |      |
+    | Assigned               | Number      | X    | X    |
+    | Building               | Picklist    | X    |      |
+    | Contact                | Lookup      | X    |      |
+    | Course Name            | Text        | X    |      |
+    | Created By             | Lookup      | X    |      |
+    | Department             | Text        | X    |      |
+    | First Name             | Text        | X    |      |
+    | Formatted Time         | Text        | X    |      |
+    | Gender                 | Picklist    | X    |      |
+    | Last Modified By       | Lookup      | X    |      |
+    | Last Name              | Text        | X    |      |
+    | Location               | Text        | X    |      |
+    | Max Available          | Number      | X    |      |
+    | Preferred Title        | Text        | X    |      |
+    | Record Type            | Record Type | X    | X    |
+    | Remaining              | Number      | X    |      |
+    | Time                   | Time        | X    |      |
+    | Undergrad Major        | Picklist    | X    |      |
+    | UST Event Host Name    | Auto Number | X    |      |
+    | UST Event Instance     | Lookup      | X    | X    |
