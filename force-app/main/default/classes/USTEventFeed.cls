@@ -41,12 +41,14 @@ global with sharing class USTEventFeed {
             }
         }
         RestResponse res = RestContext.response;
-        res.addHeader('Content-Type', 'application/json');
         String callback = RestContext.request.params.get('callback');
         String serializedJSON = '';
 
         if (String.isBlank(callback)) {
+            res.addHeader('Content-Type', 'application/json');
             callback = '';
+        } else {
+            res.addHeader('Content-Type', 'application/javascript');
         }
 
 
