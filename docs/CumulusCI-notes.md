@@ -49,11 +49,19 @@ Before packaging make sure your master branch has everything in it you want to i
    cci org connect production
    ```
 
-2. Deploy code straight to the defined org
+2. Deploy code straight to a defined org
 
-   ```bash
-   cci task run deploy --org <org_name>
-   ```
+    First rebuild the root src so it reflects any changes made. Note: The src directory should have been rebuilt if you have deployed to a scratch org like you should have.
+
+    ```bash
+   cci task run dx_convert_from
+    ```
+   
+   Now deploy the src directory to the org of your choice.
+   
+    ```bash
+    cci task run deploy --org <org_name>
+    ```
 
 ## Deploy Data to scratch of and set up sites
     
