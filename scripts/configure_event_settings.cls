@@ -52,89 +52,14 @@ public static void addingAdminPermissionSet() {
     }
 }
 
-public static void setPublicEventPermissions() {
-    List<PermissionSet> guestPermissionSets = [SELECT Name, id, Profile.Name, Profile.UserLicense.Name FROM PermissionSet WHERE IsOwnedByProfile = true AND Profile.UserLicense.Name = 'Guest' AND (NOT Profile.Name LIKE 'Standard %')];
-
-    List<String> EventObjectNames = new List<string>{
-            'UST_Event__c', 'UST_Event_Appointments__c', 'UST_Event_Appointment_Type__c', 'UST_Event_Email__c', 'UST_Event_Host__c', 'UST_Event_Instance__c', 'UST_Event_Registration__c'
-    };
-
-    List<String> restrictedFields = new List<String>{
-            'id', 'ownerid', 'isdeleted', 'name', 'recordtypeid', 'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid', 'systemmodstamp', 'lastactivitydate', 'lastvieweddate', 'lastreferenceddate'
-    };
-
-    List<String> apexPageNames = new List<String>{
-            'CastorTemplate2017', 'OPUSTemplate2018','USTEvent', 'USTEventCancelReview', 'USTEventConfirmation', 'USTEventParkingPass', 'USTEventRegister', 'USTEventRegistrationOptions', 'USTEventSubmit'
-    };
-
-    List<String> apexClassNames = new List<String>{
-            'USTEventFeed'
-    };
-
-    List<FieldPermissions> fieldPermissions = new List<FieldPermissions>();
-    List<ObjectPermissions> objPermissions = new List<ObjectPermissions>();
-    ///List<ProfileApexClassAccess> apexPermissions = new ProfileApexClassAccess();
-
-    Boolean canEdit = false;
-    for (PermissionSet gSet : guestPermissionSets) {
-        Profile currentProfile = new Profile(
-                Id = gSet.ProfileId
-        );
-
-
-
-        for (String objName : EventObjectNames) {
-            canEdit = false;
-            if (objName == 'UST_Event_Registration__c' || objName == 'UST_Event_Appointments__c') {
-                canEdit = true;
-            }
-            objPermissions.add(new ObjectPermissions(
-                    SObjectType = objName,
-                    ParentId = gSet.Id,
-                    PermissionsRead = true,
-                    PermissionsViewAllRecords = false,
-                    PermissionsCreate = canEdit,
-                    PermissionsDelete = false,
-                    PermissionsEdit = canEdit,
-                    PermissionsModifyAllRecords = false
-            ));
-
-
-            SObjectType accountType = Schema.getGlobalDescribe().get(objName);
-            Map<String, Schema.SObjectField> mfields = accountType.getDescribe().fields.getMap();
-            for (String mf : mfields.keySet()) {
-                if (!restrictedFields.contains(mf.toLowerCase())) {
-                    System.Debug(objName + '.' + mf);
-                    fieldPermissions.add(
-                            new FieldPermissions(
-                                    Field = objName + '.' + mf,
-                                    SObjectType = objName,
-                                    ParentId = guestPermissionSets[0].Id,
-                                    PermissionsRead = true,
-                                    PermissionsEdit = canEdit
-                            ));
-                }
-            }
-        }
-
-        upsert objPermissions;
-    }
-}
-
 public static void setSiteURL() {
 
-//    String siteName = 'UST_Events';
-
-//    Site site = [
-//            SELECT GuestUserId
-//            FROM Site
-//            WHERE Name = :siteName
-//    ];
+    String siteName = 'UST_Events';
 
     Site site = [
             SELECT GuestUserId
             FROM Site
-            LIMIT 1
+            WHERE Name = :siteName
     ];
 
     String path = '/sites/servlet.SiteDebugMode';
