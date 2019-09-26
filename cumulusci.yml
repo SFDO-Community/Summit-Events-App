@@ -34,6 +34,20 @@ tasks:
             path: scripts/configure_event_settings.cls
             apex: setSiteURL();
 
+    deploy_permission_sets:
+        description: Give System Admins Event Admin Permission Set
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            path: scripts/configure_event_settings.cls
+            apex: addingAdminPermissionSet();
+
+    deploy_event_public_permissions:
+        description: Configure sample records for the Event app
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            path: scripts/configure_event_settings.cls
+            apex: setPublicEventPermissions();
+
     deploy_event_records:
         description: Configure sample records for the Event app
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
@@ -61,6 +75,8 @@ flows:
         steps:
             3: 
                 task: deploy_event_records
+            4:
+                task: deploy_permission_sets
 
     config_site:
         steps:
@@ -68,5 +84,7 @@ flows:
                 task: deploy_site_config
             2:
                 task: deploy_site_profile
-            3: 
+            3:
                 task: deploy_site_settings
+            4:
+                task: deploy_event_public_permissions

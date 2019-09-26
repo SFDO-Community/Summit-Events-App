@@ -10,6 +10,13 @@ git reset --hard origin/master
 git clean -f
 ```
 
+Connecting to remote
+
+```git
+
+```
+
+
 Getting new .gitignore entries to work ***Make sure you have committed all other changes before doing this***:
 
 ```git

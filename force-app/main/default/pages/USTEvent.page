@@ -4,7 +4,7 @@
 
 <apex:page id="USTEvent" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" cache="false" docType="html-5.0">
     <apex:composition template="CastorTemplate2017">
-        <apex:define name="metaPageTitle">University of St. Thomas Events</apex:define>
+        <apex:define name="metaPageTitle">UST Event</apex:define>
         <apex:define name="pageTitle"><a href="/USTEvent">Events</a></apex:define>
         <apex:define name="afterJquery">
             <link href="{!URLFOR($Resource.USTEventAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
