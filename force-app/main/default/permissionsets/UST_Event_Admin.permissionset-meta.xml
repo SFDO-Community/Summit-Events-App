@@ -887,6 +887,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>UST_Event_Registration__c.Registrant_Country__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>UST_Event_Registration__c.Registrant_Date_of_Birth__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -983,6 +988,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>UST_Event_Registration__c.Registrant_Receive_Texts__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>UST_Event_Registration__c.Registrant_State_Global__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

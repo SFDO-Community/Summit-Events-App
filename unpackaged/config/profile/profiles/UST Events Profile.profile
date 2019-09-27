@@ -1262,6 +1262,16 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>UST_Event_Registration__c.Registrant_State_Global__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>UST_Event_Registration__c.Registrant_Country__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>UST_Event_Registration__c.Registrant_Street_1__c</field>
         <readable>true</readable>
     </fieldPermissions>
