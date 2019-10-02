@@ -1,10 +1,11 @@
 public static void initializeEventSampleData() {
 
-    UST_Event__c testEvent = new UST_Event__c (
+    UST_Event__c demoEvent = new UST_Event__c (
             Name = 'Test Event',
             Event_Name__c = 'Test Event',
             Event_Type__c = 'Admissions Event',
             Event_Status__c = 'Active',
+            Audience__c = 'High School Senior',
             Template__c = 'CastorTemplate2017',
             Event_description__c = '<p><strong>Rich Text</strong> description of the event that appears on the first registration page.</p>',
             Event_Short_Listing_Description__c = 'This description appears in feed and should be concise',
@@ -25,16 +26,62 @@ public static void initializeEventSampleData() {
             Start_Date__c = System.Today().addDays(-1),
             End_Date__c = System.Today().addDays(30)
     );
-    insert testEvent;
+    insert demoEvent;
 
-    UST_Event_Instance__c testEventInstance = new UST_Event_Instance__c (
-            Event__c = testEvent.Id,
+    UST_Event_Instance__c demoEventInstance = new UST_Event_Instance__c (
+            Event__c = demoEvent.Id,
             Active_Status__c = 'Active',
             Start_Date_Time__c = System.Today().addDays(4),
             End_Date_Time__c = System.Today().addDays(4),
             Capacity__c = 100
     );
-    insert testEventInstance;
+    insert demoEventInstance;
+
+    List<UST_Event_Appointment_Type__c> demoAppointmentTypes = new List<UST_Event_Appointment_Type__c>();
+    demoAppointmentTypes.add(new UST_Event_Appointment_Type__c(
+            Appointment_Type_Status__c = 'Active',
+            UST_Event__c = demoEvent.Id,
+            Title__c = 'Demo Appointment 1 - Ice Cream with Counselor',
+            Description__c = 'Choose the ice cream you could prefer to consume during your visit',
+            Appointment_Limits__c = '1',
+            Chosen_State__c = '',
+            Sort_Order__c = 10,
+            Registrant_Input__c = 'Custom pick list',
+            Custom_Picklist__c = 'Chocolate\nVanilla\nStrawberry\nLactose Free'
+    ));
+    demoAppointmentTypes.add(new UST_Event_Appointment_Type__c(
+            Appointment_Type_Status__c = 'Active',
+            UST_Event__c = demoEvent.Id,
+            Title__c = 'Demo Appointment 2 - Meaning of life',
+            Description__c = 'What is your definition of the meaning of life?',
+            Appointment_Limits__c = '2',
+            Chosen_State__c = '',
+            Sort_Order__c = 20,
+            Registrant_Input__c = 'Required text box'
+    ));
+    demoAppointmentTypes.add(new UST_Event_Appointment_Type__c(
+            Appointment_Type_Status__c = 'Active',
+            UST_Event__c = demoEvent.Id,
+            Title__c = 'Demo Appointment 0 - Quite time',
+            Description__c = 'Get yourself some quite time in our library.',
+            Appointment_Limits__c = '1',
+            Chosen_State__c = '',
+            Sort_Order__c = 1,
+            Registrant_Input__c = ''
+    ));
+    demoAppointmentTypes.add(new UST_Event_Appointment_Type__c(
+            Appointment_Type_Status__c = 'Active',
+            UST_Event__c = demoEvent.Id,
+            Title__c = 'Demo Appointment 3 - Free Lunch',
+            Description__c = 'There is such a thing!',
+            Appointment_Limits__c = '1',
+            Chosen_State__c = '',
+            Sort_Order__c = 30,
+            Registrant_Input__c = '',
+            Auto_Confirm_Appointment__c = true
+    ));
+
+    insert demoAppointmentTypes;
 }
 
 public static void addingAdminPermissionSet() {

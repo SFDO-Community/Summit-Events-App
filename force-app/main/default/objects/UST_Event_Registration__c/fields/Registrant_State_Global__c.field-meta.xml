@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Registrant_State_Global__c</fullName>
+    <description>Registrant&#39;s State value. The list is controlled by a Picklist value set.</description>
+    <externalId>false</externalId>
+    <label>Registrant State</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Registrant_Country__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetName>State</valueSetName>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>AA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>AE</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>AK</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>AL</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>AP</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>AR</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>AS</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>AZ</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>CA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>CO</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>CT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>DC</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>DE</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>FL</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>FM</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>GA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>GU</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>HI</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>IA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>ID</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>IL</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>IN</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>KS</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>KY</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>LA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>MA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>MD</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>ME</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>MH</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>MI</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>MN</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>MO</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>MP</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>MS</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>MT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>NC</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>ND</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>NE</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>NH</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>NJ</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>NM</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>NV</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>NY</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>OH</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>OK</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>OR</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>PA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>PR</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>PW</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>RI</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>SC</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>SD</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>TN</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>TX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>UM</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>UT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>VA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>VI</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>VT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>WA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>WI</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>WV</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>United States</controllingFieldValue>
+            <valueName>WY</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Canada</controllingFieldValue>
+            <valueName>AB</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Canada</controllingFieldValue>
+            <valueName>BC</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Canada</controllingFieldValue>
+            <valueName>MB</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Canada</controllingFieldValue>
+            <valueName>NB</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Canada</controllingFieldValue>
+            <valueName>NL</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Canada</controllingFieldValue>
+            <valueName>NS</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Canada</controllingFieldValue>
+            <valueName>NT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Canada</controllingFieldValue>
+            <valueName>NU</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Canada</controllingFieldValue>
+            <valueName>ON</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Canada</controllingFieldValue>
+            <valueName>PE</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Canada</controllingFieldValue>
+            <valueName>QC</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Canada</controllingFieldValue>
+            <valueName>SK</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Canada</controllingFieldValue>
+            <valueName>YT</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

@@ -9,23 +9,24 @@ public with sharing class USTEventContactMatching {
 
     }
 
-    public Map<String, String> USTEventContactMatching(String matchingType, UST_Event_Registration__c evt) {
-
+    public Map<String, String> USTEventContactMatching(String matchingType, UST_Event_Registration__c evt, String matchingScope) {
+        Map<String, String> matchingResult = new Map<String, String>();
         //Direct to correct matching method
-        if (matchingType.equalsIgnoreCase('Undergraduate')) {
-            return UG_Matching(evt);
-        } else if (matchingType.equalsIgnoreCase('UDAR')) {
-            return UDAR_matching(evt);
-        } else if (matchingType.equalsIgnoreCase('Graduate')) {
-            //Using Undergrad matching for now
-            return UG_Matching(evt);
-        } else {
-            return UG_Matching(evt);
+        if (!matchingScope.startsWith('No matching')) {
+            if (matchingType.equalsIgnoreCase('Undergraduate')) {
+                matchingResult = UG_Matching(evt, matchingScope);
+            } else if (matchingType.equalsIgnoreCase('UDAR')) {
+                matchingResult = UDAR_matching(evt, matchingScope);
+            } else if (matchingType.equalsIgnoreCase('Graduate')) {
+                //Using Undergrad matching for now
+                matchingResult = UG_Matching(evt, matchingScope);
+            }
         }
+        return matchingResult;
     }
 
     //Check for Matches
-    private Map<String, String> UDAR_matching(UST_Event_Registration__c evt) {
+    private Map<String, String> UDAR_matching(UST_Event_Registration__c evt, String matchingScope) {
         Id ContactId = null;
         String matchLog = '';
         Boolean newContactCreated = false;
@@ -150,6 +151,7 @@ public with sharing class USTEventContactMatching {
 
         query = '';
         orStat = '';
+
         /** Hard test on LAST NAME, CLASS, FIRST NAME, PHONE **/
         if (
                 (hardContactFound == null && String.isNotBlank(evt.Registrant_Last_Name__c) || String.isNotBlank(evt.Last_Name_as_Student__c))
@@ -268,9 +270,10 @@ public with sharing class USTEventContactMatching {
             contactId = hardContactFound.Id;
         }
 
+        /**** SOFT MATCH TESTING ****/
         query = '';
         orStat = '';
-        if (hardContactFound == null) {
+        if (hardContactFound == null && (matchingScope.startsWith('Full matching') || String.isBlank(matchingScope))) {
             //SOFT MATCHES BEGIN
             Boolean queryComplete = true;
             query += querySelect;
@@ -323,22 +326,25 @@ public with sharing class USTEventContactMatching {
                 }
                 matchLog += '</tbody></table>';
             }
-        }
 
-        //if no contact ID was found create a new contact
-        if (hardContactFound == null) {
-            Contact newCreatedContact = createNewContact(evt);
-            contactId = newCreatedContact.Id;
-            matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">New Contact Created</div>';
-            matchLog += matchLogHead;
-            matchLog += '<tbody>';
-            matchLog += UDARMatchTD(contactId, evt.Registrant_Last_Name__c, '', evt.Registrant_First_Name__c, evt.Preferred_St_Thomas_Class_Year__c, newCreatedContact.Email, '', evt.Registrant_Phone__c, '', false);
-            matchLog += '</tbody></table>';
-            newContactCreated = true;
+            //if no contact ID was found create a new contact
+            if (hardContactFound == null) {
+                Contact newCreatedContact = createNewContact(evt);
+                contactId = newCreatedContact.Id;
+                matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">New Contact Created</div>';
+                matchLog += matchLogHead;
+                matchLog += '<tbody>';
+                matchLog += UDARMatchTD(contactId, evt.Registrant_Last_Name__c, '', evt.Registrant_First_Name__c, evt.Preferred_St_Thomas_Class_Year__c, newCreatedContact.Email, '', evt.Registrant_Phone__c, '', false);
+                matchLog += '</tbody></table>';
+                newContactCreated = true;
+            }
+
         }
 
         return new Map<String, String>{
-                'contactId' => contactId, 'matchLog' => matchLog, 'newContactCreated' => String.valueOf(newContactCreated)
+                'contactId' => contactId,
+                'matchLog' => matchLog,
+                'newContactCreated' => String.valueOf(newContactCreated)
         };
     }
 
@@ -385,7 +391,7 @@ public with sharing class USTEventContactMatching {
         return mOut;
     }
 
-    private Map<String, String> UG_Matching(UST_Event_Registration__c evt) {
+    private Map<String, String> UG_Matching(UST_Event_Registration__c evt, String matchingScope) {
         String contactId = '';
         String softEmailMatches = '';
         String softFirstLastZipMatches = '';
@@ -463,7 +469,7 @@ public with sharing class USTEventContactMatching {
         }
 
         //Check for already made DUPLICATE emails and attach to matching
-        if (String.isBlank(contactId)) {
+        if (String.isBlank(contactId) && (matchingScope.startsWith('Full matching') || String.isBlank(matchingScope))) {
             String[] possibleEmails = new List<String>();
             possibleEmails.add(evt.Registrant_Email__c);
             for (Integer x = 1; x <= 10; x++) {
@@ -481,7 +487,7 @@ public with sharing class USTEventContactMatching {
             }
         }
 
-        if (String.isBlank(contactId)) {
+        if (String.isBlank(contactId) && (matchingScope.startsWith('Full matching') || String.isBlank(matchingScope))) {
             //Check if first name last name zip match
             List<Contact> zipContactTest = [
                     SELECT Id, LastName, FirstName, Email, MailingPostalCode

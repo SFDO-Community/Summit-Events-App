@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Men&apos;s Baseball</fullName>
+        <default>false</default>
+        <label>Men&apos;s Baseball</label>
+    </customValue>
+    <customValue>
+        <fullName>Men&apos;s Basketball</fullName>
+        <default>false</default>
+        <label>Men&apos;s Basketball</label>
+    </customValue>
+    <customValue>
+        <fullName>Men&apos;s Cross Country</fullName>
+        <default>false</default>
+        <label>Men&apos;s Cross Country</label>
+    </customValue>
+    <customValue>
+        <fullName>Men&apos;s Football</fullName>
+        <default>false</default>
+        <label>Men&apos;s Football</label>
+    </customValue>
+    <customValue>
+        <fullName>Men&apos;s Golf</fullName>
+        <default>false</default>
+        <label>Men&apos;s Golf</label>
+    </customValue>
+    <customValue>
+        <fullName>Men&apos;s Hockey</fullName>
+        <default>false</default>
+        <label>Men&apos;s Hockey</label>
+    </customValue>
+    <customValue>
+        <fullName>Men&apos;s Soccer</fullName>
+        <default>false</default>
+        <label>Men&apos;s Soccer</label>
+    </customValue>
+    <customValue>
+        <fullName>Men&apos;s Swimming &amp; Diving</fullName>
+        <default>false</default>
+        <label>Men&apos;s Swimming &amp; Diving</label>
+    </customValue>
+    <customValue>
+        <fullName>Men&apos;s Tennis</fullName>
+        <default>false</default>
+        <label>Men&apos;s Tennis</label>
+    </customValue>
+    <customValue>
+        <fullName>Men&apos;s Track &amp; Field</fullName>
+        <default>false</default>
+        <label>Men&apos;s Track &amp; Field</label>
+    </customValue>
+    <customValue>
+        <fullName>Women&apos;s Basketball</fullName>
+        <default>false</default>
+        <label>Women&apos;s Basketball</label>
+    </customValue>
+    <customValue>
+        <fullName>Women&apos;s Cross Country</fullName>
+        <default>false</default>
+        <label>Women&apos;s Cross Country</label>
+    </customValue>
+    <customValue>
+        <fullName>Women&apos;s Golf</fullName>
+        <default>false</default>
+        <label>Women&apos;s Golf</label>
+    </customValue>
+    <customValue>
+        <fullName>Women&apos;s Hockey</fullName>
+        <default>false</default>
+        <label>Women&apos;s Hockey</label>
+    </customValue>
+    <customValue>
+        <fullName>Women&apos;s Soccer</fullName>
+        <default>false</default>
+        <label>Women&apos;s Soccer</label>
+    </customValue>
+    <customValue>
+        <fullName>Women&apos;s Softball</fullName>
+        <default>false</default>
+        <label>Women&apos;s Softball</label>
+    </customValue>
+    <customValue>
+        <fullName>Women&apos;s Swimming &amp; Diving</fullName>
+        <default>false</default>
+        <label>Women&apos;s Swimming &amp; Diving</label>
+    </customValue>
+    <customValue>
+        <fullName>Women&apos;s Tennis</fullName>
+        <default>false</default>
+        <label>Women&apos;s Tennis</label>
+    </customValue>
+    <customValue>
+        <fullName>Women&apos;s Track &amp; Field</fullName>
+        <default>false</default>
+        <label>Women&apos;s Track &amp; Field</label>
+    </customValue>
+    <customValue>
+        <fullName>Women&apos;s Volleyball</fullName>
+        <default>false</default>
+        <label>Women&apos;s Volleyball</label>
+    </customValue>
+    <masterLabel>Varsity Sports List</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

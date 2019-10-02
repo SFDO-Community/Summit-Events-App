@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Registrant_Other_Email__c</fullName>
+    <description>If registrant type is other for student registration this is their email.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If registrant type is other for student registration this is their email.</inlineHelpText>
+    <label>Registrant Other Email</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Email</type>
+    <unique>false</unique>
+</CustomField>

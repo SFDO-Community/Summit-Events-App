@@ -1262,6 +1262,16 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>UST_Event_Registration__c.Registrant_State_Global__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>UST_Event_Registration__c.Registrant_Country__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>UST_Event_Registration__c.Registrant_Street_1__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1273,6 +1283,41 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>UST_Event_Registration__c.Registrant_Zip__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>UST_Event_Registration__c.Registrant_Other_Email__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>UST_Event_Registration__c.Registrant_Other_First_Name__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>UST_Event_Registration__c.Registrant_Other_Last_Name__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>UST_Event_Registration__c.Registrant_Other_Phone__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>UST_Event_Registration__c.Registrant_Other_Relationship__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>UST_Event_Registration__c.Registrant_State_Province__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>UST_Event_Registration__c.Registrant_Postal_Code__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

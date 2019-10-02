@@ -449,6 +449,21 @@
         </values>
     </picklistValues>
     <picklistValues>
+        <picklist>Contact_Creation__c</picklist>
+        <values>
+            <fullName>Full matching contact creation with duplicate management</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hard matching contact creation and with no duplicate management</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No matching or contact creation</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
         <picklist>Event_Sponsor__c</picklist>
         <values>
             <fullName>Center for Ethical Organizations</fullName>
@@ -546,6 +561,17 @@
         </values>
         <values>
             <fullName>Prospecting</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Hand_Raise_Action__c</picklist>
+        <values>
+            <fullName>None</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Touchpoint</fullName>
             <default>false</default>
         </values>
     </picklistValues>

@@ -6,7 +6,7 @@
     <label>USTEventProgramLookup</label>
     <packageVersions>
         <majorNumber>1</majorNumber>
-        <minorNumber>81</minorNumber>
+        <minorNumber>84</minorNumber>
         <namespace>hed</namespace>
     </packageVersions>
 </ApexPage>

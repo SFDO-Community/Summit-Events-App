@@ -258,7 +258,7 @@ public with sharing class TestUSTEventSharedDataFactory {
 //        return null;
 //    }
 
-    public static UST_Event_Registration__c createEventRegistration(UST_Event_Instance__c evtI, String firstName, String lastName, String Email, String Zip, String DOB, String ClassYear) {
+    public static UST_Event_Registration__c createEventRegistration(UST_Event_Instance__c evtI, String firstName, String lastName, String Email, String Zip, String DOB, String ClassYear, Id optionalContactLinkId) {
 
         UST_Event_Registration__c testRegistration = new UST_Event_Registration__c(
                 Event__c = evtI.Event__c,
@@ -275,10 +275,26 @@ public with sharing class TestUSTEventSharedDataFactory {
 
         insert testRegistration;
 
+        if (optionalContactLinkId != null) {
+            testRegistration.Contact__c = optionalContactLinkId;
+            upsert testRegistration;
+        }
+
         List<UST_Event_Appointments__c> addToRegAppt = new List<UST_Event_Appointments__c>();
         Integer aptNum = 0;
+
+        //Add athletic appointment
+        addToRegAppt.add(new UST_Event_Appointments__c(
+                Event_Registration__c = testRegistration.Id,
+                Description__c = 'Athletic Appointment',
+                Appointment_Category__c = 'Athletic Visit',
+                Appointment_Type__c = 'Men\'s Golf',
+                Appointment_Status__c = 'Registered'
+        ));
+
+        //Represent all other appointment types
         List<UST_Event_Appointment_Type__c> newApptTypes = [SELECT Id FROM UST_Event_Appointment_Type__c WHERE UST_event__c = :evtI.Event__c];
-        System.Debug(' APPT SIZE : ' + newApptTypes.size());
+
         for (UST_Event_Appointment_Type__c nat : newApptTypes) {
             UST_Event_Appointments__c addThisAppt = new UST_Event_Appointments__c (
                     Event_Appointment_Type__c = nat.Id,
