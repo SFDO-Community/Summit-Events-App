@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Registrant_Postal_Code__c</fullName>
+    <description>Registrant Postal Code populated by international event registration.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Registrant Postal Code populated by international event registration.</inlineHelpText>
+    <label>Registrant Postal Code</label>
+    <length>100</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

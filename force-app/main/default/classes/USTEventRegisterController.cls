@@ -114,7 +114,7 @@ public with sharing class USTEventRegisterController {
                             // School not in this ORG
                             // Academic_Program_List__c, School__c, Ask_Mailing_Address__c, Ask_Phone__c, Event_Sponsor__c,
                             Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
-                            Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, RecordType.Name
+                            Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, RecordType.Name, Contact_Creation__c
                     FROM UST_Event__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1
@@ -290,7 +290,8 @@ public with sharing class USTEventRegisterController {
                                 Registrant_High_School__c, Registrant_High_School_Code__c, Registrant_Receive_Texts__c, Registrant_High_School_Grad_Year__c, Registrant_High_School_Not_Found__c,
                                 Registrant_College_Not_Found__c, Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c, Registrant_Parent_Phone__c, Registrant_Parent_Status__c,
                                 Add_Info_Answer_1__c, Add_Info_Answer_2__c, Add_Info_Answer_3__c, Add_Info_Answer_4__c, Add_Info_Answer_5__c, Registrant_Program_Interest__c, Registrant_Preferred_First_Name__c,
-                                Registrant_date_of_Birth__c, Last_Name_as_Student__c, Preferred_St_Thomas_Class_Year__c, Relationship_to_St_Thomas__c
+                                Registrant_date_of_Birth__c, Last_Name_as_Student__c, Preferred_St_Thomas_Class_Year__c, Relationship_to_St_Thomas__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c, Registrant_Other_Phone__c, Registrant_Other_Relationship__c,
+                                Registrant_Country__c, Registrant_State_Province__c
                         FROM UST_Event_Registration__c
                         WHERE id = :evtInfo.evtRegId
                 ][0];
@@ -308,6 +309,10 @@ public with sharing class USTEventRegisterController {
             }
         }
 
+        if (String.isBlank(newEvtReg.Registrant_Country__c)) {
+            newEvtReg.Registrant_Country__c = 'United States';
+        }
+
     }
 
     public PageReference setParentInfo(String n) {
@@ -323,7 +328,11 @@ public with sharing class USTEventRegisterController {
     }
 
     public List<SelectOption> getStateDD() {
-        return PickThePicklist('hed__Address__c', 'hed__MailingState__c', true);
+        return PickThePicklist('UST_Event_Registration__c', 'Registrant_State_Global__c', true);
+    }
+
+    public List<SelectOption> getCountryDD() {
+        return PickThePicklist('UST_Event_Registration__c', 'Registrant_Country__c', true);
     }
 
     public List<SelectOption> getTimeFrame() {
@@ -521,35 +530,46 @@ public with sharing class USTEventRegisterController {
             contactId = newEvtReg.Contact__r.Id;
         } else {
             //pass record type and event reg to matcher helper class
-            matched = matcher.USTEventContactMatching(evtInfo.recordTypeName, newEvtReg);
-            //Populate matching results into data
-            contactId = (Id) matched.get('contactId');
-            newContactCreated = Boolean.valueOf(matched.get('newContactCreated'));
-            newEvtReg.Contact_Soft_Match_Email__c = String.valueOf(matched.get('softEmailMatches'));
-            newEvtReg.Contact_Soft_Match_First_Last_Zip__c = String.valueOf(matched.get('softFirstLastZipMatches'));
-            newEvtReg.Matching_Log__c = String.valueOf(matched.get('matchLog'));
+            String matchingScope = '';
+            if (String.isNotBlank(eventPage.Contact_Creation__c)) {
+                matchingScope = eventPage.Contact_Creation__c;
+            } else {
+                matchingScope = 'Full matching contact creation with duplicate management';
+            }
+            if (!matchingScope.startsWith('No matching')) {
+                System.debug('PASSING TO MATCHING METHOD');
+                matched = matcher.USTEventContactMatching(evtInfo.recordTypeName, newEvtReg, matchingScope);
+                //Populate matching results into data - matched may be blank depending on the Contact_Creation__c setting
+                if (matched.size() > 0) {
+                    contactId = (Id) matched.get('contactId');
+                    newContactCreated = Boolean.valueOf(matched.get('newContactCreated'));
+                    newEvtReg.Contact_Soft_Match_Email__c = String.valueOf(matched.get('softEmailMatches'));
+                    newEvtReg.Contact_Soft_Match_First_Last_Zip__c = String.valueOf(matched.get('softFirstLastZipMatches'));
+                    newEvtReg.Matching_Log__c = String.valueOf(matched.get('matchLog'));
+                }
+            }
         }
 
         //Create registration if event Registration does not exist
-        if (String.isNotBlank(contactId)) {
-            if (String.isBlank(evtInfo.evtRegId) || evtInfo.evtRegId == 'COMING') {
-                newEvtReg.Status__c = 'Started';
-                newEvtReg.Date__c = Date.valueof(evtInstance.Start_Date_Time__c);
-                newEvtReg.Event__c = evtInfo.evtId;
-                newEvtReg.Event_Instance__c = evtInfo.instanceID;
-                newEvtReg.Contact__c = contactId;
-                if (newContactCreated) {
-                    newEvtReg.New_Contact_Created__c = true;
-                }
-                try {
-                    insert newEvtReg;
-                    newEvtReg.Matching_Log__c = newEvtReg.Matching_Log__c.replaceAll('\\[\\[REGID\\]\\]', newEvtReg.Id);
-                    upsert newEvtReg;
-                } catch (Exception ex) {
-                    ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
-                    ApexPages.addMessage(myMsg);
-                }
-                evtInfo.evtRegId = newEvtReg.Id;
+
+        if (String.isBlank(evtInfo.evtRegId) || evtInfo.evtRegId == 'COMING') {
+            newEvtReg.Status__c = 'Started';
+            newEvtReg.Date__c = Date.valueof(evtInstance.Start_Date_Time__c);
+            newEvtReg.Event__c = evtInfo.evtId;
+            newEvtReg.Event_Instance__c = evtInfo.instanceID;
+            newEvtReg.Contact__c = contactId;
+            if (newContactCreated) {
+                newEvtReg.New_Contact_Created__c = true;
+            }
+            try {
+                insert newEvtReg;
+                newEvtReg.Matching_Log__c = newEvtReg.Matching_Log__c.replaceAll('\\[\\[REGID\\]\\]', newEvtReg.Id);
+                upsert newEvtReg;
+            } catch (Exception ex) {
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
+                ApexPages.addMessage(myMsg);
+            }
+            evtInfo.evtRegId = newEvtReg.Id;
 
                 //make matching log functional for reparenting
 
@@ -563,7 +583,6 @@ public with sharing class USTEventRegisterController {
                     ApexPages.addMessage(myMsg);
                 }
 
-            }
         }
 
         if (String.isNotBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING') {

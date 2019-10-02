@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Open_Registration__c</fullName>
+    <description>Registration is open to users</description>
+    <externalId>false</externalId>
+    <formula>IF( ISPICKVAL(Active_Status__c, &quot;Active&quot;) &amp;&amp; Registration_Close_Date__c &gt;= Today() &amp;&amp; Current_Available_Capacity__c &gt; 0, TRUE, Null)</formula>
+    <label>Open Registration</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
