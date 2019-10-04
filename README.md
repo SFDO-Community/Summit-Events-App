@@ -10,7 +10,7 @@ UST Events is an open source event management system for Salesforce. It was init
 
 ## Documentation
 * [Developement Scratch Org Installation][1]
-* [Installation in org][2]
+* [Installation in Production Orgs][2]
 * [CumulusCI Notes][3]
 * [GIT Notes][4]
 * [License][5]
