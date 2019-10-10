@@ -291,7 +291,7 @@ public with sharing class USTEventRegisterController {
                                 Registrant_College_Not_Found__c, Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c, Registrant_Parent_Phone__c, Registrant_Parent_Status__c,
                                 Add_Info_Answer_1__c, Add_Info_Answer_2__c, Add_Info_Answer_3__c, Add_Info_Answer_4__c, Add_Info_Answer_5__c, Registrant_Program_Interest__c, Registrant_Preferred_First_Name__c,
                                 Registrant_date_of_Birth__c, Last_Name_as_Student__c, Preferred_St_Thomas_Class_Year__c, Relationship_to_St_Thomas__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c, Registrant_Other_Phone__c, Registrant_Other_Relationship__c,
-                                Registrant_Country__c, Registrant_State_Province__c
+                                Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c
                         FROM UST_Event_Registration__c
                         WHERE id = :evtInfo.evtRegId
                 ][0];
