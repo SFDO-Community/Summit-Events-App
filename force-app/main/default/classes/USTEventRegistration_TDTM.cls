@@ -1,6 +1,7 @@
-/**
- * Created by dahl3702 on 4/29/2019.
- */
+// Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
+// Use of this source code is governed by a BSD Revised
+// license that can be found in the LICENSE file.
+// Created by Thaddaeus Dahlberg on 4/29/2019.
 
 global class USTEventRegistration_TDTM extends hed.TDTM_Runnable {
 

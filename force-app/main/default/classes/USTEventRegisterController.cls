@@ -441,6 +441,10 @@ public with sharing class USTEventRegisterController {
 
         List<Schema.PicklistEntry> PicklistValues = Schema.getGlobalDescribe().get(namespace + YourObjectName).getDescribe().fields.getMap().get(namespace + YourFieldName).getDescribe().getPicklistValues();
 
+        if(includeSelect) {
+            picklists.add(new SelectOption('','Select...'));
+        }
+
         for (Schema.PicklistEntry PicklistValue : PicklistValues) {
             picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));
         }

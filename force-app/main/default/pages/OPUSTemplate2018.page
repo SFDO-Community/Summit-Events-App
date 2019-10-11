@@ -1,3 +1,9 @@
+<!--
+Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
+Use of this source code is governed by a BSD Revised
+license that can be found in the LICENSE file.
+Created by Thaddaeus Dahlberg on 10/25/2017.
+-->
 <apex:page id="OPUSTemplate2018" sidebar="false" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" xmlns:v-on="http://fake.org/fake" xmlns:v-bind="http://fake.org/fake">
     <head>
