@@ -54,7 +54,7 @@ For **production environments** you will want to manually set up your org to fin
 Deploy sping up and install dependencies and code into your scratch org
 
 ```bash 
-cci flow run dev_org --org <org_name>` to deploy this project.
+cci flow run dev_org --org <org_name>
 ```
 
 Normally you would be done with a project at this point, but the Event app requires a salesforce site domain

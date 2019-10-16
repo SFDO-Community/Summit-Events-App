@@ -1,6 +1,7 @@
-/**
- * Created by dahl3702 on 11/28/2018.
- */
+// Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
+// Use of this source code is governed by a BSD Revised
+// license that can be found in the LICENSE file.
+// Created by Thaddaeus Dahlberg on 11/28/2018.
 
 public with sharing class USTEventPrintItinerariesExtension {
     public UST_Event_Instance__c USTi;

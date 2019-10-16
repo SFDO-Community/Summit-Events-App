@@ -1,6 +1,10 @@
 <!--
- - Created by dahl3702 on 10/25/2017.
- -->
+Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
+Use of this source code is governed by a BSD Revised
+license that can be found in the LICENSE file.
+Created by Thaddaeus Dahlberg on 10/25/2017.
+-->
+
 <apex:page id="CastorTemplate2017" sidebar="false" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
     <html>
     <head>
