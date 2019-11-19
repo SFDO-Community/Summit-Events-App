@@ -6,7 +6,7 @@ project:
         namespace:  ustevent
         api_version: '46.0'
     dependencies:
-        - github: 'https://github.com/SalesforceFoundation/EDA/tree/rel/1.81'
+        - github: 'https://github.com/SalesforceFoundation/EDA'
     source_format: sfdx
 
 tasks:
