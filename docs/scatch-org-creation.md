@@ -76,7 +76,7 @@ be set up. You will need to do this in the next step and then run one final comm
 4. Click "Register My Salesforce Site Domain"
 
 ## Automate the Rest of the Site Setup
-If you are spinning up a **scratch org for development** setup just became easy for you. Just enter the following command:
+If you are spinning up a **scratch org for development purposes** then setup just got easier for you. Just enter the following command:
 
 ```bash
 cci flow run config_site --org <org_name>
