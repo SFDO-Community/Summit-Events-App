@@ -69,55 +69,65 @@ Anonymous Apex in run cci to add settings / data ?
 
 ## Commands I keep using
 
-List all orgs currently running:
+**Run this command to list all orgs currently running:**
 
 ```bash
 cci org list
 ```
 
-Delete a scratch org (in this cas the dev):
+**Run this command to delete a scratch org (in this case the dev org)**
+<br>_Note: Deleting a scratch org will still leave the lazy configuration in the keychain so the scratch org can easily be created again by running the `dev_org` flow._
 
 ```bashcci 
 cci org scratch_delete dev
 ```
 
-Build a new dev org from local repository. This cci command is a flow. A flow is a combination of tasks run in order. This flow will install all dependencies as well as your local repositories code.
+**Run this command to remove a scratch org from the org listing (in this case the dev org)**
+
+```bash
+cci org remove dev
+```
+
+**Run this command to build a new dev org from your local repository**
+<br>This cci command is a flow. A flow is a combination of tasks run in order. This flow will install all dependencies as well as your local repositories code.
 
 ```bash
 cci flow run dev_org
 ```
 
-It is probably best practice to update your package before running the dev_org flow. I ran into issues with the flow erroring out when I didn't do it. I ended up having to delete the dev org and running the following to update the package. Then it all worked:
+**Run this command to update your package before running the dev_org flow**
+<br> I ran into issues with the flow erroring out when I didn't do it. I ended up having to delete the dev org and running the following to update the package. Then it all worked!
 
 ```bash
 cci task run update_package_xml
 ```
 
-Furthermore, on running the flow once my package didn't install for some reason and I had to run the deploy task:
+**Run this command if your package didn't install after running the `dev_org` flow**
 
 ```bash
 cci task run deploy
 ```
 
-Open a scrach org in a browser (in this case dev). If you did the above your application should be installed:
+**Run this command to open a scrach org in a browser (in this case dev)**
+<br>If you did the above your application should be installed:
 
 ```bash
 cci org browser dev
 ```
 
-After you complete building your dev org take a snapshot of the changes (there should be none at this point):
+**Run this command after you complete building your dev org take a snapshot of the changes (there should be none at this point)**
 
 ```bash
 cci task run list_changes -o snapshot True
 ```
 
-Here is how you list any new changes to your project:
+**Run this command to list out any new changes to your project**
 
 ```bash
 cci task run list_changes
 ```
 
-Then when you are ready you can pull down new changes like this:
+**Run this command when you are ready to pull down new changes**
 
 ```bash
 cci task run retrieve_changes

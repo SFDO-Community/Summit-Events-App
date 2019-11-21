@@ -14,8 +14,8 @@ If your org does not already have a site to display public visual force pages yo
 3. Select a subdomain that is available. Since you are spinning up scratch orgs you may want to start incrementing a subdomain on a theme (myevents0001...myevents0002).
 4. Click "Register My Salesforce Site Domain"
 
-## Automate the rest of setup
-If you are spinning up a **scratch org for development** setup just became easy for you. Just enter the following command:
+## Automate the Rest of the Site Setup
+If you are spinning up a **scratch org for development purposes** then setup just got easier for you. Just enter the following command:
 
 ```bash
 cci flow run config_site --org <org_name>

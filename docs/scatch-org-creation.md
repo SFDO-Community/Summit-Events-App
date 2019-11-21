@@ -51,7 +51,15 @@ set up with CumulusCI:
 
 For **production environments** you will want to manually set up your org to finely tune your permissions and sites. Use the following instructions for [installation in production Orgs](set-up.md).
 
-Deploy sping up and install dependencies and code into your scratch org
+### Create a dev configured scratch org for 7 days
+```bash 
+cci org scratch dev <org_name> --days 7
+```
+### Confirm your dev configured scratch org was created
+```bash 
+cci org list
+```
+### Run a flow to deploy the project and install dependencies into your dev configured scratch org
 
 ```bash 
 cci flow run dev_org --org <org_name>
@@ -76,7 +84,7 @@ be set up. You will need to do this in the next step and then run one final comm
 4. Click "Register My Salesforce Site Domain"
 
 ## Automate the Rest of the Site Setup
-If you are spinning up a **scratch org for development** setup just became easy for you. Just enter the following command:
+If you are spinning up a **scratch org for development purposes** then setup just got easier for you. Just enter the following command:
 
 ```bash
 cci flow run config_site --org <org_name>
