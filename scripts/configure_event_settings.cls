@@ -28,14 +28,24 @@ public static void initializeEventSampleData() {
     );
     insert demoEvent;
 
-    UST_Event_Instance__c demoEventInstance = new UST_Event_Instance__c (
+    List<UST_Event_Instance__c> demoEventInstances = new List<UST_Event_Instance__c>();
+    demoEventInstances.add(new UST_Event_Instance__c (
             Event__c = demoEvent.Id,
             Active_Status__c = 'Active',
-            Start_Date_Time__c = System.Today().addDays(4),
-            End_Date_Time__c = System.Today().addDays(4),
+            Start_Date_Time__c = System.Today().addDays(7),
+            End_Date_Time__c = System.Today().addDays(7),
             Capacity__c = 100
-    );
-    insert demoEventInstance;
+    ));
+
+    demoEventInstances.add(new UST_Event_Instance__c (
+            Event__c = demoEvent.Id,
+            Active_Status__c = 'Active',
+            Start_Date_Time__c = System.Today().addDays(10),
+            End_Date_Time__c = System.Today().addDays(10),
+            Capacity__c = 100
+    ));
+
+    insert demoEventInstances;
 
     List<UST_Event_Appointment_Type__c> demoAppointmentTypes = new List<UST_Event_Appointment_Type__c>();
     demoAppointmentTypes.add(new UST_Event_Appointment_Type__c(
@@ -82,6 +92,35 @@ public static void initializeEventSampleData() {
     ));
 
     insert demoAppointmentTypes;
+
+    List<hed__Trigger_Handler__c> tdtm = new List<hed__Trigger_Handler__c>();
+
+    tdtm.add(new hed__Trigger_Handler__c(
+            Name = 'USTEvent Transnational Email Foot',
+            hed__Class__c = 'USTEventRegistration_TDTM',
+            hed__Object__c = 'UST_Event_Registration__c',
+            hed__Trigger_Action__c = 'AfterInsert;AfterUpdate',
+            hed__Active__c = true
+    ));
+
+    tdtm.add(new hed__Trigger_Handler__c(
+            Name = 'USTEvent Appointment Itinerary',
+            hed__Class__c = 'USTEventAppointmentItinerary_TDTM',
+            hed__Object__c = 'UST_Event_Appointments__c',
+            hed__Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete;AfterUndelete',
+            hed__Active__c = true
+    ));
+
+    tdtm.add(new hed__Trigger_Handler__c(
+            Name = 'USTEvent Appointment for Sports Contact Receipt',
+            hed__Class__c = 'USTEventAppointmentSports_TDTM',
+            hed__Object__c = 'UST_Event_Appointments__c',
+            hed__Trigger_Action__c = 'AfterInsert;',
+            hed__Active__c = true
+    ));
+
+    insert tdtm;
+
 }
 
 public static void addingAdminPermissionSet() {
