@@ -19,6 +19,8 @@ different Web front ends, and Triggers
 [3]: <docs/CumulusCI-notes.md> "Notes on using Cumulus CI"
 [4]: <docs/GIT-notes.md> "Notes on using GIT"
 [5]: <LICENSE.md> "License"
+[6]: <https://www.stthomas.edu> "University of St. Thomas"
+[7]: <https://uofstthomasmn-my.sharepoint.com/:u:/g/personal/dahl3702_stthomas_edu/EYMciabg2sZJulM8U6iJEecBURjWpscm2yeHTbIda5YkbA?e=yuEjjU> "Old Event Documentation"
 
 ## Getting Started
 * [Developement Scratch Org Installation][1]
@@ -27,8 +29,13 @@ different Web front ends, and Triggers
 * [GIT Notes][4]
 * [License][5]
 
-## Working Togeter
+## Legacy documentation
 
+The [University of St. Thomas][6] has been running the UST Events application in it's production org since September 6th, 2018. This running version is heavily integrated with their current admission application solution so diverges some in functionality from what you see in this repository. Part of the work to be done here is to bring back functionality that had to be cut and integrate the missing features with EDA and/or NPSP. All that being said, St. Thomas' running application has quite a bit of documentation (we're going to call it legacy documentation) that largely overlaps with this repository and could be helpful.
+
+* [Legacy documentation (zip)][7]
+
+## Working Togeter
 
 *Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
 Use of this source code is governed by a BSD Revised
