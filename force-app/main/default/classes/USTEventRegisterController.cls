@@ -606,10 +606,8 @@ public with sharing class USTEventRegisterController {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
                 ApexPages.addMessage(myMsg);
             }
-
             return newEvtReg;
         }
-
 
     }
 }
