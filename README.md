@@ -23,7 +23,10 @@ different Web front ends, and Triggers
 [7]: <https://uofstthomasmn-my.sharepoint.com/:u:/g/personal/dahl3702_stthomas_edu/EYMciabg2sZJulM8U6iJEecBURjWpscm2yeHTbIda5YkbA?e=yuEjjU> "Old Event Documentation"
 
 ## Getting Started
-* [Developement Scratch Org Installation][1]
+
+*Note: In the Salesforce Winter '20 release Guest User access is severely restricted. There are new instructions in the "Scratch Org Installation"
+to address this new security.*
+* [Scratch Org Installation][1]
 * [Installation in Production Orgs][2]
 * [CumulusCI Notes][3]
 * [GIT Notes][4]
