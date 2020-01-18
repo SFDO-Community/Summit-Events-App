@@ -32,16 +32,16 @@ public static void initializeEventSampleData() {
     demoEventInstances.add(new UST_Event_Instance__c (
             Event__c = demoEvent.Id,
             Active_Status__c = 'Active',
-            Start_Date_Time__c = System.Today().addDays(7),
-            End_Date_Time__c = System.Today().addDays(7),
+            Start_Date_Time__c = System.now().addDays(7).addSeconds(-60),
+            End_Date_Time__c = System.now().addDays(7).addSeconds(60),
             Capacity__c = 100
     ));
 
     demoEventInstances.add(new UST_Event_Instance__c (
             Event__c = demoEvent.Id,
             Active_Status__c = 'Active',
-            Start_Date_Time__c = System.Today().addDays(10),
-            End_Date_Time__c = System.Today().addDays(10),
+            Start_Date_Time__c = System.now().addDays(10).addSeconds(-60),
+            End_Date_Time__c = System.now().addDays(10).addSeconds(60),
             Capacity__c = 100
     ));
 
@@ -157,5 +157,27 @@ public static void setSiteURL() {
     UST_Event_Settings__c eventSettings = UST_Event_Settings__c.getOrgDefaults();
     eventSettings.Community_Base_URL__c = url;
     upsert eventSettings;
+
+}
+
+public static void setGuestPermissionSet() {
+    String siteName = 'UST_Events';
+
+    Site site = [
+            SELECT GuestUserId
+            FROM Site
+            WHERE Name = :siteName
+    ];
+
+    //Add Permission set to all Admins
+    List<PermissionSet> eventPermissionSets = [SELECT Name, Id FROM PermissionSet WHERE Name = 'UST_Event_Registrant'];
+
+    List<PermissionSetAssignment> permissionSetList = new List<PermissionSetAssignment>();
+    if (!eventPermissionSets.isEmpty()) {
+            permissionSetList.add(new PermissionSetAssignment(PermissionSetId = eventPermissionSets[0].Id, AssigneeId = site.GuestUserId));
+    }
+    if (!permissionSetList.isEmpty()) {
+        upsert permissionSetList;
+    }
 
 }
