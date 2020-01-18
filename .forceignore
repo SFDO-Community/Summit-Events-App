@@ -39,6 +39,8 @@ force-app/main/default/staticresources/SiteSamples.resource-meta.xml
 
 # Things to ignore after a site is created in a scratch org
 force-app/main/default/sites/
+force-app/main/default/profilePasswordPolicies/
+force-app/main/default/profilePasswordSettings/
 force-app/main/default/pages/AnswersHome.page
 force-app/main/default/pages/AnswersHome.page-meta.xml
 force-app/main/default/pages/BandwidthExceeded.page
