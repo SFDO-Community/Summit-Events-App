@@ -112,6 +112,7 @@ be set up. You will need to do this in the next step and then run one final comm
 4. Click "Register My Salesforce Site Domain"
 
 ## Automated site set-up
+
 Back in the command line. Use the following command to allow CumulusCI to complete the set-up of the public site:
 ```bash
 cci flow run config_site --org <org_name>
@@ -119,7 +120,7 @@ cci flow run config_site --org <org_name>
 
 *<org_name> for development is dev*
 
-##Set Sharing Rules
+## Set Sharing Rules
 
 Salesforce winter '20 and Spring '20 releases will begin to severely limit Guest User access to objects.
 Sharing rules will limit the Guest User to insert access only by default. The UST Event application requires
@@ -128,7 +129,7 @@ the new security rules we need to set a sharing rule to allow the application to
 been adjust to allow for the required upserts. The following instructions will help you set up the required sharing rules.
 Unfortunately, we are not able to automate these steps yet due to limitations in SFDX.
 
-###Set Sharing Object Access
+### Set Sharing Object Access
 
 1. Open your new scratch org you are working on in the browser (if it is not already open)
 
@@ -168,8 +169,6 @@ Unfortunately, we are not able to automate these steps yet due to limitations in
 8. Set Access Level to "Read Only"
 
 9. Click "Save"
-
-
 
 ## Your org is ready!
 
