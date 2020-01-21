@@ -1,4 +1,6 @@
-# UST Events
+# Summit Events App
+
+UST Event app is in the process of being renamed to Summit Events App. Please forgive any confusion this may cause.
 
 UST Events for the connected campus is an open source event management system for Salesforce. It was initially developed at the University of St. Thomas - Minnesota to facilitate admission events.
 
