@@ -34,7 +34,7 @@ public with sharing class USTEventRegisterController {
     public String eventStartDateTimeCrumb { get; set; }
     public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
-    public String dataLayerLocationType {get;set;}
+    public String dataLayerLocationType { get; set; }
 
 
     public USTEventRegisterController() {
@@ -441,8 +441,8 @@ public with sharing class USTEventRegisterController {
 
         List<Schema.PicklistEntry> PicklistValues = Schema.getGlobalDescribe().get(namespace + YourObjectName).getDescribe().fields.getMap().get(namespace + YourFieldName).getDescribe().getPicklistValues();
 
-        if(includeSelect) {
-            picklists.add(new SelectOption('','Select...'));
+        if (includeSelect) {
+            picklists.add(new SelectOption('', 'Select...'));
         }
 
         for (Schema.PicklistEntry PicklistValue : PicklistValues) {
@@ -555,7 +555,7 @@ public with sharing class USTEventRegisterController {
         }
 
         //Create registration if event Registration does not exist
-
+        registrationCRUD rCRUD = new registrationCRUD();
         if (String.isBlank(evtInfo.evtRegId) || evtInfo.evtRegId == 'COMING') {
             newEvtReg.Status__c = 'Started';
             newEvtReg.Date__c = Date.valueof(evtInstance.Start_Date_Time__c);
@@ -566,28 +566,20 @@ public with sharing class USTEventRegisterController {
                 newEvtReg.New_Contact_Created__c = true;
             }
             try {
-                insert newEvtReg;
+                newEvtReg = rCRUD.updateRegistration(newEvtReg);
+                //Update matching log with new ID
                 newEvtReg.Matching_Log__c = newEvtReg.Matching_Log__c.replaceAll('\\[\\[REGID\\]\\]', newEvtReg.Id);
-                upsert newEvtReg;
             } catch (Exception ex) {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
                 ApexPages.addMessage(myMsg);
             }
             evtInfo.evtRegId = newEvtReg.Id;
-
-                //make matching log functional for reparenting
-
-
-            } else {
-                //update registration if Registration exists
-                try {
-                    upsert newEvtReg;
-                } catch (Exception ex) {
-                    ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
-                    ApexPages.addMessage(myMsg);
-                }
-
+            //make matching log functional for reparenting
         }
+
+        //update registration it may already exist, and matching log has to be updated on new registration inserts
+        newEvtReg = rCRUD.updateRegistration(newEvtReg);
+
 
         if (String.isNotBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING') {
             if (evtHasAppointments) {
@@ -603,5 +595,19 @@ public with sharing class USTEventRegisterController {
         }
 
         return null;
+    }
+
+    private without sharing class registrationCRUD {
+
+        public UST_Event_Registration__c updateRegistration(UST_Event_Registration__c newEvtReg) {
+            try {
+                upsert newEvtReg;
+            } catch (Exception ex) {
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
+                ApexPages.addMessage(myMsg);
+            }
+            return newEvtReg;
+        }
+
     }
 }

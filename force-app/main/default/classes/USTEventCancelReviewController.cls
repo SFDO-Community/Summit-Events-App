@@ -48,14 +48,29 @@ public with sharing class USTEventCancelReviewController {
     }
 
     public PageReference cancelRegistration() {
+        registrationCRUD regCrud = new registrationCRUD();
         if (evt != null) {
             evt.Status__c = 'Cancelled';
-            upsert evt;
+            evt = regCrud.updateRegistration(evt);
         }
         pageReference pg = new pageReference(ApexPages.currentPage().getURL());
         pg.getParameters().put('regid',evt.id);
         pg.setRedirect(TRUE);
         return pg;
+    }
+
+    private without sharing class registrationCRUD {
+
+        public UST_Event_Registration__c updateRegistration(UST_Event_Registration__c newEvtReg) {
+            try {
+                upsert newEvtReg;
+            } catch (Exception ex) {
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
+                ApexPages.addMessage(myMsg);
+            }
+            return newEvtReg;
+        }
+
     }
 
 }

@@ -19,14 +19,6 @@ tasks:
             path: unpackaged/config/site
             unmanaged: True
 
-    deploy_site_profile:
-        description: Deploys configuration for Development.
-        class_path: cumulusci.tasks.salesforce.Deploy
-        options:
-            namespace_inject: $project_config.project__package__namespace
-            path: unpackaged/config/profile
-            unmanaged: True
-
     deploy_site_settings:
         description: Setup the Custom Settings for the Event Site
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
@@ -34,12 +26,19 @@ tasks:
             path: scripts/configure_event_settings.cls
             apex: setSiteURL();
 
-    deploy_permission_sets:
+    deploy_permission_set:
         description: Give System Admins Event Admin Permission Set
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         options:
             path: scripts/configure_event_settings.cls
             apex: addingAdminPermissionSet();
+
+    deploy_guest_permission_set:
+        description: Give System Admins Event Admin Permission Set
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            path: scripts/configure_event_settings.cls
+            apex: setGuestPermissionSet();
 
     deploy_event_records:
         description: Configure sample records for the Event app
@@ -69,13 +68,13 @@ flows:
             3: 
                 task: deploy_event_records
             4:
-                task: deploy_permission_sets
+                task: deploy_permission_set
 
     config_site:
         steps:
             1:
                 task: deploy_site_config
             2:
-                task: deploy_site_profile
-            3:
                 task: deploy_site_settings
+            3:
+                task: deploy_guest_permission_set

@@ -7,15 +7,48 @@ This project is designed to use CumulusCI. So your first job is to make sure tha
 3. [Salesforce Command Line Interface (CLI)](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm#sfdx_setup_install_cli)
 4. [CumulusCI](https://cumulusci.readthedocs.io/en/latest/install.html#installing-cumulusci)
 
-## Setting up CumulusCI
+A complete set of general instructions on setting up CumulusCI can be found in the [CumulusCI Documentation](https://cumulusci.readthedocs.io/en/latest/tutorial.html).
 
-A complete set of general instructions on setting up CumulusCI can be found in the [CumulusCI Documentation](https://cumulusci.readthedocs.io/en/latest/tutorial.html)
+## Conect a dev hub
+
+1. [Enable Dev Hub in Your Org](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_enable_devhub.htm). This is used to authenticate your rights to spin up scratch orgs.
+This should not effect anything in your org.
+
+2.  Connect your command line to the dev org you turned on. This will require you to log in to the org you identify as your dev hub. Use the following command to initiate this authentication:
+
+```bash
+sfdx force:auth:web:login --setdefaultdevhubusername --setalias my-hub-org
+```
+
+*"my-hub-org" above is an alias. You can choose whatever alias you wish as it is used to identify this
+particular dev hub if you have multiple*
+
+## Gitting the code (Get it?)
+
+1. Log in to GitHub.
+
+2. Go to the [Summit Events repository](https://summitevt.org).
+
+3. Fork a copy of the repository to your own account by clicking the "Fork" button at the top of the
+GitHub page. This will copy all the code from the repository into your personal account. Code in your
+own repository will not affect the main repository in any way.
+
+4. Navigate to your forked copy of the repository. The path at the top of the page should include your
+GitHub username in it.
+
+5. Click on the "Clone or download" green drop-down near the top left of the page. Copy the URL to clone
+your forked repository.
+
+6. On your computer navigate to the folder that you wish to put your cloned code in. Remember that
+cloning will create a directory for the code for you. You may also wish to use GitHub desktop to 
+make this whole process prettier and less intimidating. This documentation will outline command 
+line usage of git, but both are acceptable.
 
 1. Get a copy of the Event App code from GIT. If you are not directly collaborating with the 
  project you may want to fork the project into your own GIT repository:
 
     ```git
-    git clone https://github.com/tcdahlberg/USTEventsDX.git
+    git clone <the URL you copied from your forked repository>
     ```
 
 2. In your terminal, in the code directory check and see if the project is already 
@@ -43,34 +76,29 @@ set up with CumulusCI:
    cci service connect github
    ```
 
-## Set up Saleforce DX Scratch Orgs
-1. [Enable Dev Hub in Your Org](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_enable_devhub.htm)
-2. [Connect SFDX to Your Dev Hub Org](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_web_flow.htm>) (be sure to use the ``--setdefaultdevhubusername`` option).
+## Spinning up a scratch or with the events app installed
 
-## Spinning Up A Scratch Dev Org
+1. Create a dev configured scratch org for 7 days
+    ```bash 
+    cci org scratch dev <org_name> --days 7
+    ```
 
-For **production environments** you will want to manually set up your org to finely tune your permissions and sites. Use the following instructions for [installation in production Orgs](set-up.md).
+2. Confirm your dev configured scratch org was created
+    ```bash 
+    cci org list
+    ```
 
-### Create a dev configured scratch org for 7 days
-```bash 
-cci org scratch dev <org_name> --days 7
-```
-### Confirm your dev configured scratch org was created
-```bash 
-cci org list
-```
-### Run a flow to deploy the project and install dependencies into your dev configured scratch org
+3. Run a flow to deploy the project and install dependencies into your dev configured scratch org
+    ```bash 
+    cci flow run dev_org --org <org_name>
+    ```
 
-```bash 
-cci flow run dev_org --org <org_name>
-```
-
-Normally you would be done with a project at this point, but the Event app requires a salesforce site domain
+Normally you would be done with a cumulusCI project scratch org at this point, but the Event app requires a salesforce site domain
 be set up. You will need to do this in the next step and then run one final command to complete the site set up.
 
 ## Create a site
 
-1. Open the org you are working on in the browser
+1. Open your new scratch org you are working on in the browser
 
    ```bash 
    cci org browser <org_name> 
@@ -83,19 +111,70 @@ be set up. You will need to do this in the next step and then run one final comm
 
 4. Click "Register My Salesforce Site Domain"
 
-## Automate the Rest of the Site Setup
-If you are spinning up a **scratch org for development purposes** then setup just got easier for you. Just enter the following command:
-
+## Automated site set-up
+Back in the command line. Use the following command to allow CumulusCI to complete the set-up of the public site:
 ```bash
 cci flow run config_site --org <org_name>
 ```
 
 *<org_name> for development is dev*
 
-## Open Up Your Newly Created Dev Scratch Org
+##Set Sharing Rules
 
-Your new scratch org is created and ready for you to develop against!
+Salesforce winter '20 and Spring '20 releases will begin to severely limit Guest User access to objects.
+Sharing rules will limit the Guest User to insert access only by default. The UST Event application requires
+that the Guest user be able to read, and upsert to it's custom objects. In order to align this application with 
+the new security rules we need to set a sharing rule to allow the application to read it's objects. Code has also
+been adjust to allow for the required upserts. The following instructions will help you set up the required sharing rules.
+Unfortunately, we are not able to automate these steps yet due to limitations in SFDX.
+
+###Set Sharing Object Access
+
+1. Open your new scratch org you are working on in the browser (if it is not already open)
+
+   ```bash 
+   cci org browser <org_name> 
+   ```
+   *<org_name> for development is dev*
+   
+2. Go to Setup in your scratch org 
+
+3. Type "Sharing" in the quick-find box and click on "Sharing Settings".
+
+4. Click "Edit" to expose sharing option settings for editing
+
+5. Set the UST Event object and make sure it is set to "Public Read/Write"
+
+6. Make sure the "Secure guest user record access" is also checked. This will be checked by default in the future and will soon not be optional.
+
+7. Click "Save" (You will get an alert. Click "Ok")
+
+### Set UST Event Sharing Rule
+
+1. Follow setups 1-3 in the instructions above to get into "Sharing Settings"
+
+2. Find the "UST Event Sharing Rules" section of the page (you can use the "Manage sharing settings for" dropdown on the top or scroll to it)
+
+3. Click the "New" button in the "UST Event Sharing Rules" section
+
+4. Label your rule "Guest User Read Access" with rule name "Guest_User_Read_Access"
+
+5. Set the radio button for "Rule Type" to "Guest user access, based on criteria"
+
+6. Set "Criteria" to Field => Event Name, Operator => "not equal to", Value => null  (type the world null for the value)
+
+7. Share with can only be set to "UST Event Site Guest User"
+
+8. Set Access Level to "Read Only"
+
+9. Click "Save"
+
+
+
+## Your org is ready!
+
+Your new scratch org is created and ready for you to develop against/with/for! Remember you can open your org with this command once it has been created:
 
 ```bash
-cci org browser <org_name>` to open the org in your browser.
+cci org browser <org_name>
 ```
