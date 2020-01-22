@@ -49,7 +49,7 @@ Since each installation can have a different site URL we need to define that URL
 
 6. Once you hit "Save" the "New" button will be replaced with "Edit." This is what you will need to hit to make future adjustments to this setting.
 
-##Set Sharing Rules
+## Set Sharing Rules
 
 Salesforce winter '20 and Spring '20 releases will begin to severely limit Guest User access to objects.
 Sharing rules will limit the Guest User to insert access only by default. The UST Event application requires
@@ -99,7 +99,7 @@ Unfortunately, we are not able to automate these steps yet due to limitations in
 
 9. Click "Save"
 
-##Apply Permission Sets
+## Apply Permission Sets
 
 There are two permission sets tracked in this application. These permission sets can be applied 
 
@@ -109,7 +109,7 @@ Apply to admin users that need to create and maintain events.
 **UST Event Registrant**: Needs to be applied to the Guest User of your site for public access to registration forms.
 
 
-####Apply UST Event Registrant premission set to the Guest User of your site
+#### Apply UST Event Registrant premission set to the Guest User of your site
 
 1. Go to Sites in Setup
 
