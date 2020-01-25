@@ -1,4 +1,4 @@
-# Setting up UST Event App for Scratch org Development
+# Setting up Summit Events App for Scratch org Development
 
 This project is designed to use CumulusCI. So your first job is to make sure that you have the following installed on your development computer:
 
@@ -123,7 +123,7 @@ cci flow run config_site --org <org_name>
 ## Set Sharing Rules
 
 Salesforce winter '20 and Spring '20 releases will begin to severely limit Guest User access to objects.
-Sharing rules will limit the Guest User to insert access only by default. The UST Event application requires
+Sharing rules will limit the Guest User to insert access only by default. The Summit Events application requires
 that the Guest user be able to read, and upsert to it's custom objects. In order to align this application with 
 the new security rules we need to set a sharing rule to allow the application to read it's objects. Code has also
 been adjust to allow for the required upserts. The following instructions will help you set up the required sharing rules.
@@ -144,19 +144,19 @@ Unfortunately, we are not able to automate these steps yet due to limitations in
 
 4. Click "Edit" to expose sharing option settings for editing
 
-5. Set the UST Event object and make sure it is set to "Public Read/Write"
+5. Set the Summit Events object and make sure it is set to "Public Read/Write"
 
 6. Make sure the "Secure guest user record access" is also checked. This will be checked by default in the future and will soon not be optional.
 
 7. Click "Save" (You will get an alert. Click "Ok")
 
-### Set UST Event Sharing Rule
+### Set Summit Events Sharing Rule
 
 1. Follow setups 1-3 in the instructions above to get into "Sharing Settings"
 
-2. Find the "UST Event Sharing Rules" section of the page (you can use the "Manage sharing settings for" dropdown on the top or scroll to it)
+2. Find the "Summit Events Sharing Rules" section of the page (you can use the "Manage sharing settings for" dropdown on the top or scroll to it)
 
-3. Click the "New" button in the "UST Event Sharing Rules" section
+3. Click the "New" button in the "Summit Events Sharing Rules" section
 
 4. Label your rule "Guest User Read Access" with rule name "Guest_User_Read_Access"
 
@@ -164,7 +164,7 @@ Unfortunately, we are not able to automate these steps yet due to limitations in
 
 6. Set "Criteria" to Field => Event Name, Operator => "not equal to", Value => null  (type the world null for the value)
 
-7. Share with can only be set to "UST Event Site Guest User"
+7. Share with can only be set to "Summit Events Site Guest User"
 
 8. Set Access Level to "Read Only"
 

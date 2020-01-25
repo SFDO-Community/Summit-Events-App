@@ -1,8 +1,8 @@
 minimum_cumulusci_version: '2.5.5'
 project:
-    name: USTEventsDX
+    name: SummitEventsDX
     package:
-        name:  USTEventsDX
+        name:  SummitEventsDX
         namespace:  ustevent
         api_version: '46.0'
     dependencies:
@@ -49,14 +49,14 @@ tasks:
 
     robot:
         options:
-            suites: robot/USTEventsDX/tests
+            suites: robot/SummitEventsDX/tests
             options:
-                outputdir: robot/USTEventsDX/results
+                outputdir: robot/SummitEventsDX/results
 
     robot_testdoc:
         options:
-            path: robot/USTEventsDX/tests
-            output: robot/USTEventsDX/doc/USTEventsDX_tests.html
+            path: robot/SummitEventsDX/tests
+            output: robot/SummitEventsDX/doc/SummitEventsDX_tests.html
 
 flows:
     config_qa:

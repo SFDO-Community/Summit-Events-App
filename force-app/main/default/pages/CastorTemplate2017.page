@@ -207,7 +207,7 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
             <site:googleAnalyticsTracking />
         </apex:insert>
     </footer>
-    <script src="{!URLFOR($Resource.USTEventAssets, '/js/loading.js')}" type="text/javascript"/>
+    <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/loading.js')}" type="text/javascript"/>
     </body>
     </html>
 </apex:page>

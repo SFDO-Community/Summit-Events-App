@@ -1,0 +1,97 @@
+<!--
+Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
+Use of this source code is governed by a BSD Revised
+license that can be found in the LICENSE file.
+Created by Thaddaeus Dahlberg on 5/1/2018.
+-->
+
+<apex:page id="SummitEventsCancelReview" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" docType="html-5.0" cache="false" controller="SummitEventsCancelReviewController">
+    <apex:composition template="{!templateSelected}">
+        <apex:define name="metaPageTitle">
+            {!evtInstance.Event__r.Event_Name__c}
+            <apex:outputText rendered="{!!ISBLANK(evtInstance.Instance_Title__c)}" value="{! ' - ' + evtInstance.Instance_Title__c}"/>
+            - Cancel
+        </apex:define>
+        <apex:define name="pageTitle"><a href="{!evt.Event__r.Event_Home_Link_URL__c}">{!evt.Event__r.Event_Home_Link_Title__c}</a></apex:define>
+        <apex:define name="afterJquery">
+            <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
+        </apex:define>
+        <apex:define name="sectionNav"/>
+        <apex:define name="body">
+            <div class="row">
+                <div class="columns errorMessages">
+                    <apex:messages />
+                </div>
+            </div>
+            <apex:form id="SummitEventsRegistrationCancelReview" html-data-abide="ajax" html-novalidate="novalidate" rendered="{!!eventOver && !eventNotFound}">
+                <div class="row">
+                    <div class="columns eventCrumb">
+                        <span class="eventName">{!evt.Event__r.Event_Name__c}</span>
+                        <span class="bc-spacer"><span>»</span></span>
+                        <apex:outputPanel layout="none" rendered="{!!ISBLANK(evt.Event_Instance__r.Instance_Title__c)}">
+                            <span class="eventInstance">{!evt.Event_Instance__r.Instance_Title__c}</span>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="inline" styleClass="eventDate" rendered="{!IF(!ISBLANK(evt.Event_Instance__r.Start_Date_Time__c) && !ISBLANK(evt.Event_Instance__r.Start_Date_Time__c),true,false)}">
+                            <span class="bc-spacer"><span>»</span></span>
+                            {!eventStartDateTimeCrumb}
+                        </apex:outputPanel>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <h2>
+                            <apex:outputText value="{!evt.Event__r.Event_Cancel_Review_Title__c}" escape="false"></apex:outputText>
+                        </h2>
+                        <p>
+                            <apex:outputText value="{!evt.Event__r.Event_Cancel_Review_Description__c}" escape="false"></apex:outputText>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <div id="reviewWrapper">
+                            <h3>
+                                <apex:outputText value="{!evt.Event__r.Name}"></apex:outputText>
+                            </h3>
+                            <p>
+                                <apex:outputText escape="false" value="{!evt.Event__r.Event_description__c}"></apex:outputText>
+                            </p>
+                            <ul>
+                                <apex:repeat value="{!appt}" var="ap">
+                                    <li>
+                                        <apex:outputText value="{!ap.Appointment_Title__c}" escape="false"></apex:outputText>
+                                        <apex:outputText value="{!ap.Appointment_Category__c}" escape="false" rendered="{!IF(!ISBLANK(ap.Appointment_Category__c), true, false)}"></apex:outputText>
+                                        <apex:outputText value="<br/><em>{!ap.Appointment_Type__c}</em>" escape="false"></apex:outputText>
+                                    </li>
+                                </apex:repeat>
+                            </ul>
+                            <apex:outputPanel layout="block" rendered="{!IF (evt.Status__c != 'Cancelled', true, false)}">
+                                <p>
+                                    <apex:commandLink action="{!cancelRegistration}" Value="Cancel Regisistration" id="cancelReg" onClick="return confirm('Are you sure you want to cancel this registration?');" styleClass="button confirmContinue"/>
+                                </p>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="block" rendered="{!IF (evt.Status__c = 'Cancelled', true, false)}">
+                                <p class="warning">
+                                    <apex:outputText escape="false" value="{!evt.Event__r.Event_Cancelled_Notification_Text__c}"/>
+                                </p>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </div>
+            </apex:form>
+            <apex:outputPanel layout="block" styleClass="row" rendered="{!eventNotFound && !eventOver}">
+                <div class="column">
+                    <h2>No event found</h2>
+                    <p>The link you followed doesn't contain information to any registration we have on file.</p>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel layout="block" styleClass="row" rendered="{!eventOver}">
+                <div class="column">
+                    <h2>Event over</h2>
+                    <p>We're sorry, the event {!evt.Event_Name__c} {!IF(!ISBLANK(evt.Event_Instance_Title__c), ' - ' + evt.Event_Instance_Title__c, '')} has already occured and your registration can not be cancelled.</p>
+                </div>
+            </apex:outputPanel>
+            <apex:outputText escape="false" value="{!evt.Event__r.Tracking_Cancel_Registration__c}"></apex:outputText>
+        </apex:define>
+    </apex:composition>
+</apex:page>

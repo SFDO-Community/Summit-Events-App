@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Profile xmlns="http://soap.sforce.com/2006/04/metadata">
     <applicationVisibilities>
-        <application>UST_Events</application>
+        <application>Summit_Events</application>
         <default>false</default>
         <visible>false</visible>
     </applicationVisibilities>
     <applicationVisibilities>
-        <application>UST_Events_Lightning</application>
+        <application>Summit_Events_Lightning</application>
         <default>false</default>
         <visible>false</visible>
     </applicationVisibilities>
@@ -55,83 +55,83 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>TestUSTEventSharedDataFactory</apexClass>
+        <apexClass>TestSummitEventsSharedDataFactory</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventAddToCalendarController</apexClass>
+        <apexClass>SummitEventsAddToCalendarController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventAppointmentItinerary_TDTM</apexClass>
+        <apexClass>SummitEventsAppointmentItinerary_TDTM</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventCancelReviewController</apexClass>
+        <apexClass>SummitEventsCancelReviewController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventConfirmationController</apexClass>
+        <apexClass>SummitEventsConfirmationController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventContactMatching</apexClass>
+        <apexClass>SummitEventsContactMatching</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventFeed</apexClass>
+        <apexClass>SummitEventsFeed</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventHostAssignmentExtension</apexClass>
+        <apexClass>SummitEventsHostAssignmentExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventLetterheadLookupExtension</apexClass>
+        <apexClass>SummitEventsLetterheadLookupExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventParkingPassController</apexClass>
+        <apexClass>SummitEventsParkingPassController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventPrintItinerariesExtension</apexClass>
+        <apexClass>SummitEventsPrintItinerariesExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventProgramLookupExtension</apexClass>
+        <apexClass>SummitEventsProgramLookupExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventRegisterController</apexClass>
+        <apexClass>SummitEventsRegisterController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventRegistrationOptionsController</apexClass>
+        <apexClass>SummitEventsRegisterAppointmentsController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventRegistration_TDTM</apexClass>
+        <apexClass>SummitEventsRegistration_TDTM</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventShared</apexClass>
+        <apexClass>SummitEventsShared</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventShared_TEST</apexClass>
+        <apexClass>SummitEventsShared_TEST</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTEventSubmitController</apexClass>
+        <apexClass>SummitEventsSubmitController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTRestAdmissions</apexClass>
+        <apexClass>SummitEventsRestAdmissions</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>USTRestAdmissions_TEST</apexClass>
+        <apexClass>SummitEventsRestAdmissions_TEST</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <custom>true</custom>
@@ -382,1410 +382,1410 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Appointment_Category__c</field>
+        <field>Summit_Events_Appointment_Type__c.Appointment_Category__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Appointment_Limits__c</field>
+        <field>Summit_Events_Appointment_Type__c.Appointment_Limits__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Appointment_Type__c</field>
+        <field>Summit_Events_Appointment_Type__c.Appointment_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Auto_Add_Time__c</field>
+        <field>Summit_Events_Appointment_Type__c.Auto_Add_Time__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Auto_Confirm_Appointment__c</field>
+        <field>Summit_Events_Appointment_Type__c.Auto_Confirm_Appointment__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Auto_add_building__c</field>
+        <field>Summit_Events_Appointment_Type__c.Auto_add_building__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Chosen_State__c</field>
+        <field>Summit_Events_Appointment_Type__c.Chosen_State__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Custom_Picklist__c</field>
+        <field>Summit_Events_Appointment_Type__c.Custom_Picklist__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Date_Available_End__c</field>
+        <field>Summit_Events_Appointment_Type__c.Date_Available_End__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Date_Available_Start__c</field>
+        <field>Summit_Events_Appointment_Type__c.Date_Available_Start__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Day_of_Week_Availability__c</field>
+        <field>Summit_Events_Appointment_Type__c.Day_of_Week_Availability__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Description__c</field>
+        <field>Summit_Events_Appointment_Type__c.Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Do_Not_Show_Time__c</field>
+        <field>Summit_Events_Appointment_Type__c.Do_Not_Show_Time__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Registrant_Input__c</field>
+        <field>Summit_Events_Appointment_Type__c.Registrant_Input__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Required_Appointment__c</field>
+        <field>Summit_Events_Appointment_Type__c.Required_Appointment__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointment_Type__c.Restrict_To_Instance_Title__c</field>
+        <field>Summit_Events_Appointment_Type__c.Restrict_To_Instance_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Appointment_Category__c</field>
+        <field>Summit_Events_Appointments__c.Appointment_Category__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Appointment_Contact_Email__c</field>
+        <field>Summit_Events_Appointments__c.Appointment_Contact_Email__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Appointment_Contact_Name__c</field>
+        <field>Summit_Events_Appointments__c.Appointment_Contact_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Appointment_Date_Time__c</field>
+        <field>Summit_Events_Appointments__c.Appointment_Date_Time__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Appointment_Date__c</field>
+        <field>Summit_Events_Appointments__c.Appointment_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Appointment_Detail__c</field>
+        <field>Summit_Events_Appointments__c.Appointment_Detail__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Appointment_Status__c</field>
+        <field>Summit_Events_Appointments__c.Appointment_Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Appointments__c.Appointment_Time_Formatted__c</field>
+        <field>Summit_Events_Appointments__c.Appointment_Time_Formatted__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Appointment_Time_Options__c</field>
+        <field>Summit_Events_Appointments__c.Appointment_Time_Options__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Appointment_Time__c</field>
+        <field>Summit_Events_Appointments__c.Appointment_Time__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Appointment_Title__c</field>
+        <field>Summit_Events_Appointments__c.Appointment_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Appointment_Type__c</field>
+        <field>Summit_Events_Appointments__c.Appointment_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Building__c</field>
+        <field>Summit_Events_Appointments__c.Building__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Chosen_State__c</field>
+        <field>Summit_Events_Appointments__c.Chosen_State__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Class_Title__c</field>
+        <field>Summit_Events_Appointments__c.Class_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Client_Created_Appointment__c</field>
+        <field>Summit_Events_Appointments__c.Client_Created_Appointment__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Contact__c</field>
+        <field>Summit_Events_Appointments__c.Contact__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Description__c</field>
+        <field>Summit_Events_Appointments__c.Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Do_Not_Show_Time__c</field>
+        <field>Summit_Events_Appointments__c.Do_Not_Show_Time__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Event_Appointment_Type__c</field>
+        <field>Summit_Events_Appointments__c.Event_Appointment_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Event_Host__c</field>
+        <field>Summit_Events_Appointments__c.Event_Host__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Event_Reg_ID__c</field>
+        <field>Summit_Events_Appointments__c.Event_Reg_ID__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Event_Registration_Date__c</field>
+        <field>Summit_Events_Appointments__c.Event_Registration_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Faculty_Staff_Member__c</field>
+        <field>Summit_Events_Appointments__c.Faculty_Staff_Member__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Host_Location__c</field>
+        <field>Summit_Events_Appointments__c.Host_Location__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Host_Name__c</field>
+        <field>Summit_Events_Appointments__c.Host_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Registrant_Input__c</field>
+        <field>Summit_Events_Appointments__c.Registrant_Input__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Room__c</field>
+        <field>Summit_Events_Appointments__c.Room__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.Sort_Order__c</field>
+        <field>Summit_Events_Appointments__c.Sort_Order__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Appointments__c.UG_Appointment_Category_Order__c</field>
+        <field>Summit_Events_Appointments__c.UG_Appointment_Category_Order__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Email__c.Action_Status__c</field>
+        <field>Summit_Events_Email__c.Action_Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Email__c.Action_Sub_status__c</field>
+        <field>Summit_Events_Email__c.Action_Sub_status__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Email__c.BCC_Email__c</field>
+        <field>Summit_Events_Email__c.BCC_Email__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Email__c.Email_Content_Instructions__c</field>
+        <field>Summit_Events_Email__c.Email_Content_Instructions__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Email__c.Email_Content__c</field>
+        <field>Summit_Events_Email__c.Email_Content__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Email__c.Email_From__c</field>
+        <field>Summit_Events_Email__c.Email_From__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Email__c.Email_Subject__c</field>
+        <field>Summit_Events_Email__c.Email_Subject__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Email__c.Letterhead_HTML__c</field>
+        <field>Summit_Events_Email__c.Letterhead_HTML__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Email__c.Letterhead_Id__c</field>
+        <field>Summit_Events_Email__c.Letterhead_Id__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Email__c.Letterhead_Name__c</field>
+        <field>Summit_Events_Email__c.Letterhead_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Email__c.Letterhead__c</field>
+        <field>Summit_Events_Email__c.Letterhead__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Email__c.Org_Email_Id__c</field>
+        <field>Summit_Events_Email__c.Org_Email_Id__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Email__c.Org_Email__c</field>
+        <field>Summit_Events_Email__c.Org_Email__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.Additional_Comments__c</field>
+        <field>Summit_Events_Host__c.Additional_Comments__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.Building__c</field>
+        <field>Summit_Events_Host__c.Building__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.Contact__c</field>
+        <field>Summit_Events_Host__c.Contact__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.Course_Name__c</field>
+        <field>Summit_Events_Host__c.Course_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.Department__c</field>
+        <field>Summit_Events_Host__c.Department__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.First_Name__c</field>
+        <field>Summit_Events_Host__c.First_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.Formatted_Time__c</field>
+        <field>Summit_Events_Host__c.Formatted_Time__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.Gender__c</field>
+        <field>Summit_Events_Host__c.Gender__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.Last_Name__c</field>
+        <field>Summit_Events_Host__c.Last_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.Location__c</field>
+        <field>Summit_Events_Host__c.Location__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.Max_Available__c</field>
+        <field>Summit_Events_Host__c.Max_Available__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.Preferred_Title__c</field>
+        <field>Summit_Events_Host__c.Preferred_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.Remaining__c</field>
+        <field>Summit_Events_Host__c.Remaining__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.Time__c</field>
+        <field>Summit_Events_Host__c.Time__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Host__c.Undergrad_Major__c</field>
+        <field>Summit_Events_Host__c.Undergrad_Major__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Active_Status__c</field>
+        <field>Summit_Events_Instance__c.Active_Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Admin_Open_Registration_Link__c</field>
+        <field>Summit_Events_Instance__c.Admin_Open_Registration_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Admin_Open_Registration__c</field>
+        <field>Summit_Events_Instance__c.Admin_Open_Registration__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Alternate_Registration_URL_Override__c</field>
+        <field>Summit_Events_Instance__c.Alternate_Registration_URL_Override__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Attendee_List__c</field>
+        <field>Summit_Events_Instance__c.Attendee_List__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Banner_Event_Code__c</field>
+        <field>Summit_Events_Instance__c.Banner_Event_Code__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Banner_Event_Function_Code__c</field>
+        <field>Summit_Events_Instance__c.Banner_Event_Function_Code__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Building_Override__c</field>
+        <field>Summit_Events_Instance__c.Building_Override__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Capacity__c</field>
+        <field>Summit_Events_Instance__c.Capacity__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Category__c</field>
+        <field>Summit_Events_Instance__c.Category__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Confirmed_Attendees__c</field>
+        <field>Summit_Events_Instance__c.Confirmed_Attendees__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Count_of_Attendees__c</field>
+        <field>Summit_Events_Instance__c.Count_of_Attendees__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Current_Available_Capacity__c</field>
+        <field>Summit_Events_Instance__c.Current_Available_Capacity__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.End_Date_Time__c</field>
+        <field>Summit_Events_Instance__c.End_Date_Time__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Event_Name__c</field>
+        <field>Summit_Events_Instance__c.Event_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Feed_Registration_Button_Text_Override__c</field>
+        <field>Summit_Events_Instance__c.Feed_Registration_Button_Text_Override__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Instance_Short_Description__c</field>
+        <field>Summit_Events_Instance__c.Instance_Short_Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Instance_Title__c</field>
+        <field>Summit_Events_Instance__c.Instance_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Location_Address_Override__c</field>
+        <field>Summit_Events_Instance__c.Location_Address_Override__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Location_Map_Link_Override__c</field>
+        <field>Summit_Events_Instance__c.Location_Map_Link_Override__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Location_Title_Override__c</field>
+        <field>Summit_Events_Instance__c.Location_Title_Override__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Location_Type_Override__c</field>
+        <field>Summit_Events_Instance__c.Location_Type_Override__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Primary_Attendees__c</field>
+        <field>Summit_Events_Instance__c.Primary_Attendees__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Primary_Confirmed_Attendees__c</field>
+        <field>Summit_Events_Instance__c.Primary_Confirmed_Attendees__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Registration_Link__c</field>
+        <field>Summit_Events_Instance__c.Registration_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Instance__c.Start_Date_Time__c</field>
+        <field>Summit_Events_Instance__c.Start_Date_Time__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Actual_Number_of_Guests__c</field>
+        <field>Summit_Events_Registration__c.Actual_Number_of_Guests__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Add_Info_Answer_1__c</field>
+        <field>Summit_Events_Registration__c.Add_Info_Answer_1__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Add_Info_Answer_2__c</field>
+        <field>Summit_Events_Registration__c.Add_Info_Answer_2__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Add_Info_Answer_3__c</field>
+        <field>Summit_Events_Registration__c.Add_Info_Answer_3__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Add_Info_Answer_4__c</field>
+        <field>Summit_Events_Registration__c.Add_Info_Answer_4__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Add_Info_Answer_5__c</field>
+        <field>Summit_Events_Registration__c.Add_Info_Answer_5__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Add_Info_Question_1__c</field>
+        <field>Summit_Events_Registration__c.Add_Info_Question_1__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Add_Info_Question_2__c</field>
+        <field>Summit_Events_Registration__c.Add_Info_Question_2__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Add_Info_Question_3__c</field>
+        <field>Summit_Events_Registration__c.Add_Info_Question_3__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Add_Info_Question_4__c</field>
+        <field>Summit_Events_Registration__c.Add_Info_Question_4__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Add_Info_Question_5__c</field>
+        <field>Summit_Events_Registration__c.Add_Info_Question_5__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Add_To_Calendar_Link__c</field>
+        <field>Summit_Events_Registration__c.Add_To_Calendar_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Appointment_Table__c</field>
+        <field>Summit_Events_Registration__c.Appointment_Table__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Campus_Tour_Location__c</field>
+        <field>Summit_Events_Registration__c.Campus_Tour_Location__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Campus_Tour_Time__c</field>
+        <field>Summit_Events_Registration__c.Campus_Tour_Time__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Confirmation_Call_Result__c</field>
+        <field>Summit_Events_Registration__c.Confirmation_Call_Result__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Contact_Name__c</field>
+        <field>Summit_Events_Registration__c.Contact_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Contact_PIDM__c</field>
+        <field>Summit_Events_Registration__c.Contact_PIDM__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Contact_Soft_Match_Email__c</field>
+        <field>Summit_Events_Registration__c.Contact_Soft_Match_Email__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Contact_Soft_Match_First_Last_Zip__c</field>
+        <field>Summit_Events_Registration__c.Contact_Soft_Match_First_Last_Zip__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Contact__c</field>
+        <field>Summit_Events_Registration__c.Contact__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Date_All_Appointments_Confirmed_del__c</field>
+        <field>Summit_Events_Registration__c.Date_All_Appointments_Confirmed_del__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Date_Time_Text__c</field>
+        <field>Summit_Events_Registration__c.Date_Time_Text__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Date__c</field>
+        <field>Summit_Events_Registration__c.Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Display_Attendance_Publicly__c</field>
+        <field>Summit_Events_Registration__c.Display_Attendance_Publicly__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.End_Time_Text__c</field>
+        <field>Summit_Events_Registration__c.End_Time_Text__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Event_Instance_Date__c</field>
+        <field>Summit_Events_Registration__c.Event_Instance_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Event_Instance_Name__c</field>
+        <field>Summit_Events_Registration__c.Event_Instance_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Event_Instance_Title__c</field>
+        <field>Summit_Events_Registration__c.Event_Instance_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Event_Name__c</field>
+        <field>Summit_Events_Registration__c.Event_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Event_Registration_Cancel_Link__c</field>
+        <field>Summit_Events_Registration__c.Event_Registration_Cancel_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Event__c</field>
+        <field>Summit_Events_Registration__c.Event__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Generated_Itinerary__c</field>
+        <field>Summit_Events_Registration__c.Generated_Itinerary__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Generated_Requested_Appointments__c</field>
+        <field>Summit_Events_Registration__c.Generated_Requested_Appointments__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Instance_Title__c</field>
+        <field>Summit_Events_Registration__c.Instance_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Instance__c</field>
+        <field>Summit_Events_Registration__c.Instance__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Last_Name_as_Student__c</field>
+        <field>Summit_Events_Registration__c.Last_Name_as_Student__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Location_Address__c</field>
+        <field>Summit_Events_Registration__c.Location_Address__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Location_Map_Link__c</field>
+        <field>Summit_Events_Registration__c.Location_Map_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Location_Title__c</field>
+        <field>Summit_Events_Registration__c.Location_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Matching_Log__c</field>
+        <field>Summit_Events_Registration__c.Matching_Log__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.New_Contact_Created__c</field>
+        <field>Summit_Events_Registration__c.New_Contact_Created__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Number_of_Guests__c</field>
+        <field>Summit_Events_Registration__c.Number_of_Guests__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Participation_Type__c</field>
+        <field>Summit_Events_Registration__c.Participation_Type__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Preferred_First_Name_Formatted__c</field>
+        <field>Summit_Events_Registration__c.Preferred_First_Name_Formatted__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Preferred_St_Thomas_Class_Year__c</field>
+        <field>Summit_Events_Registration__c.Preferred_St_Thomas_Class_Year__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Preferred_Visit_Time__c</field>
+        <field>Summit_Events_Registration__c.Preferred_Visit_Time__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Presentation_Location__c</field>
+        <field>Summit_Events_Registration__c.Presentation_Location__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.Presentation_Time__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Applicant_Type__c</field>
+        <field>Summit_Events_Registration__c.Presentation_Time__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_City__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Applicant_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_College_Code__c</field>
+        <field>Summit_Events_Registration__c.Registrant_City__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_College_Not_Found__c</field>
+        <field>Summit_Events_Registration__c.Registrant_College_Code__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_College_Year__c</field>
+        <field>Summit_Events_Registration__c.Registrant_College_Not_Found__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_College__c</field>
+        <field>Summit_Events_Registration__c.Registrant_College_Year__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Date_of_Birth__c</field>
+        <field>Summit_Events_Registration__c.Registrant_College__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Do_Not_Call__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Date_of_Birth__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Email__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Do_Not_Call__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_First_Name__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Email__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Gender__c</field>
+        <field>Summit_Events_Registration__c.Registrant_First_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_High_School_Code__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Gender__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_High_School_Grad_Year__c</field>
+        <field>Summit_Events_Registration__c.Registrant_High_School_Code__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_High_School_Not_Found__c</field>
+        <field>Summit_Events_Registration__c.Registrant_High_School_Grad_Year__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_High_School__c</field>
+        <field>Summit_Events_Registration__c.Registrant_High_School_Not_Found__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Last_Name__c</field>
+        <field>Summit_Events_Registration__c.Registrant_High_School__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Mobile_Phone__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Last_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Parent_Email__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Mobile_Phone__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Parent_First_Name__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Parent_Email__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Parent_Last_Name__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Parent_First_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Parent_Phone__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Parent_Last_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Parent_Status__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Parent_Phone__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Phone__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Parent_Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Preferred_First_Name__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Phone__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Program_Interest__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Preferred_First_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Receive_Texts__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Program_Interest__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_State__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Receive_Texts__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_State_Global__c</field>
+        <field>Summit_Events_Registration__c.Registrant_State__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Country__c</field>
+        <field>Summit_Events_Registration__c.Registrant_State_Global__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Street_1__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Country__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Street_2__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Street_1__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Zip__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Street_2__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Other_Email__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Zip__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Other_First_Name__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Other_Email__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Other_Last_Name__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Other_First_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Other_Phone__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Other_Last_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Other_Relationship__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Other_Phone__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_State_Province__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Other_Relationship__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Registrant_Postal_Code__c</field>
+        <field>Summit_Events_Registration__c.Registrant_State_Province__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Relationship_to_St_Thomas__c</field>
+        <field>Summit_Events_Registration__c.Registrant_Postal_Code__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Reminder_Call_Complete__c</field>
+        <field>Summit_Events_Registration__c.Relationship_to_St_Thomas__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Session__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>UST_Event_Registration__c.Start_Time_Text__c</field>
+        <field>Summit_Events_Registration__c.Reminder_Call_Complete__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Status__c</field>
+        <field>Summit_Events_Registration__c.Session__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Registration__c.Start_Time_Text__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Substatus__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>UST_Event_Registration__c.Total_Appointments__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>UST_Event_Registration__c.Total_Confirmed_Appointments__c</field>
+        <field>Summit_Events_Registration__c.Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event_Registration__c.Total_Number_of_Guests__c</field>
+        <field>Summit_Events_Registration__c.Substatus__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event_Registration__c.UG_Parking_Pass_Link__c</field>
+        <field>Summit_Events_Registration__c.Total_Appointments__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Registration__c.Total_Confirmed_Appointments__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event__c.Academic_Program_List_Selected__c</field>
+        <field>Summit_Events_Registration__c.Total_Number_of_Guests__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Registration__c.UG_Parking_Pass_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>UST_Event__c.Academic_Program_List__c</field>
+        <field>Summit_Events__c.Academic_Program_List_Selected__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Academic_Program_List__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Academic_Program_Selected__c</field>
+        <field>Summit_Events__c.Academic_Program_Selected__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Pick_List_1__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Pick_List_1__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Pick_List_2__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Pick_List_2__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Pick_List_3__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Pick_List_3__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Pick_List_4__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Pick_List_4__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Pick_List_5__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Pick_List_5__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Text_1__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Text_1__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Text_2__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Text_2__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Text_3__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Text_3__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Text_4__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Text_4__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Text_5__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Text_5__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Type_1__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Type_1__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Type_2__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Type_2__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Type_3__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Type_3__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Type_4__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Type_4__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Add_Info_Question_Type_5__c</field>
+        <field>Summit_Events__c.Add_Info_Question_Type_5__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Allow_Other_Attendees__c</field>
+        <field>Summit_Events__c.Allow_Other_Attendees__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Alternate_Registration_URL__c</field>
+        <field>Summit_Events__c.Alternate_Registration_URL__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Applicant_Type__c</field>
+        <field>Summit_Events__c.Applicant_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Ask_Date_Of_Birth__c</field>
+        <field>Summit_Events__c.Ask_Date_Of_Birth__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Ask_Gender__c</field>
+        <field>Summit_Events__c.Ask_Gender__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Ask_If_Parent__c</field>
+        <field>Summit_Events__c.Ask_If_Parent__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Ask_Mailing_Address__c</field>
+        <field>Summit_Events__c.Ask_Mailing_Address__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Ask_Phone__c</field>
+        <field>Summit_Events__c.Ask_Phone__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Ask_Program_Interest__c</field>
+        <field>Summit_Events__c.Ask_Program_Interest__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Ask_Registrant_Program_Of_Interest__c</field>
+        <field>Summit_Events__c.Ask_Registrant_Program_Of_Interest__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Audience__c</field>
+        <field>Summit_Events__c.Audience__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Building__c</field>
+        <field>Summit_Events__c.Building__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Close_Event_Days_Before__c</field>
+        <field>Summit_Events__c.Close_Event_Days_Before__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.College_High_School_Ask__c</field>
+        <field>Summit_Events__c.College_High_School_Ask__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Community_Base_URL__c</field>
+        <field>Summit_Events__c.Community_Base_URL__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.End_Date__c</field>
+        <field>Summit_Events__c.End_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Appointment_Description__c</field>
+        <field>Summit_Events__c.Event_Appointment_Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Appointment_Title__c</field>
+        <field>Summit_Events__c.Event_Appointment_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Cancel_Review_Description__c</field>
+        <field>Summit_Events__c.Event_Cancel_Review_Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Cancel_Review_Title__c</field>
+        <field>Summit_Events__c.Event_Cancel_Review_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Cancelled_Notification_Text__c</field>
+        <field>Summit_Events__c.Event_Cancelled_Notification_Text__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Confirmation_Description__c</field>
+        <field>Summit_Events__c.Event_Confirmation_Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Confirmation_Title__c</field>
+        <field>Summit_Events__c.Event_Confirmation_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Footer__c</field>
+        <field>Summit_Events__c.Event_Footer__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Full_Text__c</field>
+        <field>Summit_Events__c.Event_Full_Text__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Home_Link_Title__c</field>
+        <field>Summit_Events__c.Event_Home_Link_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Home_Link_URL__c</field>
+        <field>Summit_Events__c.Event_Home_Link_URL__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Instance_Feed_URL__c</field>
+        <field>Summit_Events__c.Event_Instance_Feed_URL__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Name__c</field>
+        <field>Summit_Events__c.Event_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Short_Listing_Description__c</field>
+        <field>Summit_Events__c.Event_Short_Listing_Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Sponsor__c</field>
+        <field>Summit_Events__c.Event_Sponsor__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Status__c</field>
+        <field>Summit_Events__c.Event_Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Submit_Description__c</field>
+        <field>Summit_Events__c.Event_Submit_Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Submit_Title__c</field>
+        <field>Summit_Events__c.Event_Submit_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_Type__c</field>
+        <field>Summit_Events__c.Event_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Event_description__c</field>
+        <field>Summit_Events__c.Event_description__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Feed_Registration_Button_Text__c</field>
+        <field>Summit_Events__c.Feed_Registration_Button_Text__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Include_Time_frame_List__c</field>
+        <field>Summit_Events__c.Include_Time_frame_List__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Location_Address__c</field>
+        <field>Summit_Events__c.Location_Address__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Location_Map_Link__c</field>
+        <field>Summit_Events__c.Location_Map_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Location_Title__c</field>
+        <field>Summit_Events__c.Location_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Location_Type__c</field>
+        <field>Summit_Events__c.Location_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Max_Other_Attendees__c</field>
+        <field>Summit_Events__c.Max_Other_Attendees__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Portal_Login_Required__c</field>
+        <field>Summit_Events__c.Portal_Login_Required__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Private_Event__c</field>
+        <field>Summit_Events__c.Private_Event__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Program_Filter_2__c</field>
+        <field>Summit_Events__c.Program_Filter_2__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Program_Filter_3__c</field>
+        <field>Summit_Events__c.Program_Filter_3__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Program_Filter__c</field>
+        <field>Summit_Events__c.Program_Filter__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Start_Date__c</field>
+        <field>Summit_Events__c.Start_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Tracking_Cancel_Registration__c</field>
+        <field>Summit_Events__c.Tracking_Cancel_Registration__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Tracking_Confirmation_Registration__c</field>
+        <field>Summit_Events__c.Tracking_Confirmation_Registration__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Tracking_Event_Registration__c</field>
+        <field>Summit_Events__c.Tracking_Event_Registration__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Tracking_Options_Registration__c</field>
+        <field>Summit_Events__c.Tracking_Options_Registration__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>UST_Event__c.Tracking_Submit_Registration__c</field>
+        <field>Summit_Events__c.Tracking_Submit_Registration__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <layoutAssignments>
-        <layout>UST_Event_Appointment_Type__c-UG Event Appointment Type Layout</layout>
+        <layout>Summit_Events_Appointment_Type__c-UG Event Appointment Type Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event_Appointments__c-UG Visit Appointment Layout</layout>
+        <layout>Summit_Events_Appointments__c-UG Visit Appointment Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event_Appointments__c-UG Visit Appointment Layout</layout>
-        <recordType>UST_Event_Appointments__c.Daily_Visit</recordType>
+        <layout>Summit_Events_Appointments__c-UG Visit Appointment Layout</layout>
+        <recordType>Summit_Events_Appointments__c.Daily_Visit</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event_Email__c-UG Event Email Layout</layout>
+        <layout>Summit_Events_Email__c-UG Event Email Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event_Host__c-Class Layout</layout>
+        <layout>Summit_Events_Host__c-Class Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event_Host__c-Class Layout</layout>
-        <recordType>UST_Event_Host__c.Class</recordType>
+        <layout>Summit_Events_Host__c-Class Layout</layout>
+        <recordType>Summit_Events_Host__c.Class</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event_Host__c-Class Layout</layout>
-        <recordType>UST_Event_Host__c.Coach</recordType>
+        <layout>Summit_Events_Host__c-Class Layout</layout>
+        <recordType>Summit_Events_Host__c.Coach</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event_Host__c-Class Layout</layout>
-        <recordType>UST_Event_Host__c.Counselor</recordType>
+        <layout>Summit_Events_Host__c-Class Layout</layout>
+        <recordType>Summit_Events_Host__c.Counselor</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event_Host__c-Class Layout</layout>
-        <recordType>UST_Event_Host__c.Faculty</recordType>
+        <layout>Summit_Events_Host__c-Class Layout</layout>
+        <recordType>Summit_Events_Host__c.Faculty</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event_Host__c-Class Layout</layout>
-        <recordType>UST_Event_Host__c.Housing</recordType>
+        <layout>Summit_Events_Host__c-Class Layout</layout>
+        <recordType>Summit_Events_Host__c.Housing</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event_Instance__c-UDAR Event Instance Layout</layout>
+        <layout>Summit_Events_Instance__c-UDAR Event Instance Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event_Registration__c-UDAR Event Registration Layout</layout>
+        <layout>Summit_Events_Registration__c-UDAR Event Registration Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event__c-Graduate Event Layout</layout>
+        <layout>Summit_Events__c-Graduate Event Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event__c-Graduate Event Layout</layout>
-        <recordType>UST_Event__c.Graduate</recordType>
+        <layout>Summit_Events__c-Graduate Event Layout</layout>
+        <recordType>Summit_Events__c.Graduate</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event__c-Graduate Event Layout</layout>
-        <recordType>UST_Event__c.UDAR</recordType>
+        <layout>Summit_Events__c-Graduate Event Layout</layout>
+        <recordType>Summit_Events__c.UDAR</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>UST_Event__c-Graduate Event Layout</layout>
-        <recordType>UST_Event__c.Undergraduate</recordType>
+        <layout>Summit_Events__c-Graduate Event Layout</layout>
+        <recordType>Summit_Events__c.Undergraduate</recordType>
     </layoutAssignments>
     <objectPermissions>
         <allowCreate>false</allowCreate>
@@ -1793,7 +1793,7 @@
         <allowEdit>false</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>UST_Event_Appointment_Type__c</object>
+        <object>Summit_Events_Appointment_Type__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -1802,7 +1802,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>UST_Event_Appointments__c</object>
+        <object>Summit_Events_Appointments__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -1811,7 +1811,7 @@
         <allowEdit>false</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>UST_Event_Email__c</object>
+        <object>Summit_Events_Email__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -1820,7 +1820,7 @@
         <allowEdit>false</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>UST_Event_Host__c</object>
+        <object>Summit_Events_Host__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -1829,7 +1829,7 @@
         <allowEdit>false</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>UST_Event_Instance__c</object>
+        <object>Summit_Events_Instance__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -1838,7 +1838,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>UST_Event_Registration__c</object>
+        <object>Summit_Events_Registration__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -1847,7 +1847,7 @@
         <allowEdit>false</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>UST_Event__c</object>
+        <object>Summit_Events__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <pageAccesses>
@@ -1919,59 +1919,59 @@
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>USTEvent</apexPage>
+        <apexPage>SummitEvents</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>USTEventAddToCalendar</apexPage>
+        <apexPage>SummitEventsAddToCalendar</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>USTEventCancelReview</apexPage>
+        <apexPage>SummitEventsCancelReview</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>USTEventConfirmation</apexPage>
+        <apexPage>SummitEventsConfirmation</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>USTEventHostAssignment</apexPage>
+        <apexPage>SummitEventsHostAssignment</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>USTEventLetterheadLookup</apexPage>
+        <apexPage>SummitEventsLetterheadLookup</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>USTEventParkingPass</apexPage>
+        <apexPage>SummitEventsParkingPass</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>USTEventPrintItineraries</apexPage>
+        <apexPage>SummitEventsPrintItineraries</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>USTEventProgramLookup</apexPage>
+        <apexPage>SummitEventsProgramLookup</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>USTEventRegister</apexPage>
+        <apexPage>SummitEventsRegister</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>USTEventRegistrationOptions</apexPage>
+        <apexPage>SummitEventsRegisterAppointments</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>USTEventReparent</apexPage>
+        <apexPage>SummitEventsReparent</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>USTEventSubmit</apexPage>
+        <apexPage>SummitEventsSubmit</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>USTGeneratedItineraries</apexPage>
+        <apexPage>SummitEventsGeneratedItineraries</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -2019,75 +2019,75 @@
     </recordTypeVisibilities>
     <recordTypeVisibilities>
         <default>false</default>
-        <recordType>UST_Event_Appointments__c.Daily_Visit</recordType>
+        <recordType>Summit_Events_Appointments__c.Daily_Visit</recordType>
         <visible>false</visible>
     </recordTypeVisibilities>
     <recordTypeVisibilities>
         <default>false</default>
-        <recordType>UST_Event_Host__c.Class</recordType>
+        <recordType>Summit_Events_Host__c.Class</recordType>
         <visible>false</visible>
     </recordTypeVisibilities>
     <recordTypeVisibilities>
         <default>false</default>
-        <recordType>UST_Event_Host__c.Coach</recordType>
+        <recordType>Summit_Events_Host__c.Coach</recordType>
         <visible>false</visible>
     </recordTypeVisibilities>
     <recordTypeVisibilities>
         <default>false</default>
-        <recordType>UST_Event_Host__c.Counselor</recordType>
+        <recordType>Summit_Events_Host__c.Counselor</recordType>
         <visible>false</visible>
     </recordTypeVisibilities>
     <recordTypeVisibilities>
         <default>false</default>
-        <recordType>UST_Event_Host__c.Faculty</recordType>
+        <recordType>Summit_Events_Host__c.Faculty</recordType>
         <visible>false</visible>
     </recordTypeVisibilities>
     <recordTypeVisibilities>
         <default>false</default>
-        <recordType>UST_Event_Host__c.Housing</recordType>
+        <recordType>Summit_Events_Host__c.Housing</recordType>
         <visible>false</visible>
     </recordTypeVisibilities>
     <recordTypeVisibilities>
         <default>false</default>
-        <recordType>UST_Event__c.Graduate</recordType>
+        <recordType>Summit_Events__c.Graduate</recordType>
         <visible>false</visible>
     </recordTypeVisibilities>
     <recordTypeVisibilities>
         <default>false</default>
-        <recordType>UST_Event__c.UDAR</recordType>
+        <recordType>Summit_Events__c.UDAR</recordType>
         <visible>false</visible>
     </recordTypeVisibilities>
     <recordTypeVisibilities>
         <default>false</default>
-        <recordType>UST_Event__c.Undergraduate</recordType>
+        <recordType>Summit_Events__c.Undergraduate</recordType>
         <visible>false</visible>
     </recordTypeVisibilities>
     <tabVisibilities>
-        <tab>UST_Event_Appointment_Type__c</tab>
+        <tab>Summit_Events_Appointment_Type__c</tab>
         <visibility>Hidden</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>UST_Event_Appointments__c</tab>
+        <tab>Summit_Events_Appointments__c</tab>
         <visibility>Hidden</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>UST_Event_Email__c</tab>
+        <tab>Summit_Events_Email__c</tab>
         <visibility>Hidden</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>UST_Event_Host__c</tab>
+        <tab>Summit_Events_Host__c</tab>
         <visibility>Hidden</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>UST_Event_Instance__c</tab>
+        <tab>Summit_Events_Instance__c</tab>
         <visibility>Hidden</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>UST_Event_Registration__c</tab>
+        <tab>Summit_Events_Registration__c</tab>
         <visibility>Hidden</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>UST_Event__c</tab>
+        <tab>Summit_Events__c</tab>
         <visibility>Hidden</visibility>
     </tabVisibilities>
     <userLicense>Guest</userLicense>

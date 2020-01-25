@@ -1,0 +1,75 @@
+<!--
+Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
+Use of this source code is governed by a BSD Revised
+license that can be found in the LICENSE file.
+Created by Thaddaeus Dahlberg on 10/30/2018.
+-->
+
+<apex:page id="SummitEventsHostAssignment" showHeader="false" sideBar="false" standardController="Summit_Events_Appointments__c" extensions="SummitEventsHostAssignmentExtension">
+
+    <script>
+        function CloseAndRefresh() {
+            window.opener.location.href = "/{!Summit_Events_Appointments__c.Id}";
+            self.close();
+        }
+    </script>
+
+    <apex:form id="assignHost">
+        <apex:actionFunction name="changeType" rerender="theHostList"/>
+        <apex:pageBlock title="Assign Hosts">
+
+            <apex:pageMessages id="errorMessages"/>
+
+            <apex:pageBlockSection title="Event and appointment information" columns="1" collapsible="false">
+                <apex:outputText escape="false" value="{!Summit_Events_Appointments__c.Event_Registration__r.Event_Instance__r.Event_Name__c}" rendered="{!IF(!ISBLANK(Summit_Events_Appointments__c.Event_Registration__r.Event_Instance__r.Event_Name__c),true, false)}"></apex:outputText>
+                <apex:outputText escape="false" value="{!Summit_Events_Appointments__c.Appointment_Title__c}" rendered="{!IF(!ISBLANK(Summit_Events_Appointments__c.Appointment_Title__c),true, false)}"></apex:outputText>
+                <apex:outputText escape="false" value="{!Summit_Events_Appointments__c.Appointment_Category__c}" rendered="{!IF(!ISBLANK(Summit_Events_Appointments__c.Appointment_Category__c),true, false)}"></apex:outputText>
+                <apex:outputText escape="false" value="{!Summit_Events_Appointments__c.Appointment_Type__c}" rendered="{!IF(!ISBLANK(Summit_Events_Appointments__c.Appointment_Type__c),true, false)}"></apex:outputText>
+                <apex:selectList label="Host type" id="typeSelector" value="{!recordTypeId}" onChange="changeType()" multiSelect="false" size="1" rendered="{!IF(ISBLANK(Summit_Events_Appointments__c.Event_Host__c), true, false)}">
+                    <apex:selectOptions value="{!RecordTypes}"/>
+                </apex:selectList>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Host List" id="hostList" collapsible="false" columns="1">
+                <apex:outputPanel id="theHostList">
+                    <apex:dataTable cellPadding="7" border="1" width="100%" value="{!listHost}" var="host" id="theTable" rowClasses="odd,even" styleClass="tableClass" rendered="{!listHost.size > 0}">
+                        <apex:column rendered="{!IF(ISBLANK(Summit_Events_Appointments__c.Event_Host__c), true, false)}">
+                            <apex:facet name="header">Assign</apex:facet>
+                            <apex:commandButton value="Assign {!host.RecordType.Name}" action="{!assignHost}" onComplete="CloseAndRefresh();">
+                                <apex:param name="assignedHostId" value="{!host.id}" assignTo="{!hostId}"/>
+                                <apex:param name="action" value="assign" assignTo="{!hostAction}"/>
+                            </apex:commandButton>
+                        </apex:column>
+
+                        <apex:column rendered="{!IF(!ISBLANK(Summit_Events_Appointments__c.Event_Host__c), true, false)}">
+                            <apex:facet name="header">Unassign</apex:facet>
+                            <apex:commandButton value="Unassign {!host.RecordType.Name}" action="{!assignHost}" onComplete="CloseAndRefresh();">
+                                <apex:param name="unAssignedHostId" value="{!host.id}" assignTo="{!hostId}"/>
+                                <apex:param name="action" value="unassign" assignTo="{!hostAction}"/>
+                            </apex:commandButton>
+                        </apex:column>
+
+                        <apex:column headerValue="First Name" headerClass="TableTitle" value="{!host.First_Name__c}"/>
+
+                        <apex:column headerValue="Last Name" headerClass="TableTitle" value="{!host.Last_Name__c}"/>
+
+                        <apex:column headerValue="Course" headerClass="TableTitle" value="{!host.Course_Name__c}" />
+
+                        <apex:column headerValue="Type" headerClass="TableTitle" value="{!host.RecordType.Name}"/>
+
+                        <apex:column headerValue="Remaining" headerClass="TableTitle" value="{!host.Remaining__c}"/>
+
+                        <apex:column headerValue="Location" headerClass="TableTitle" value="{!host.Location__c}"/>
+
+                        <apex:column headerValue="Building" headerClass="TableTitle" value="{!host.Building__c}"/>
+
+                        <apex:column headerValue="Dept" headerClass="TableTitle" value="{!host.Department__c}"/>
+
+                        <apex:column headerValue="Comments" headerClass="TableTitle" value="{!host.Additional_Comments__c}"/>
+
+                    </apex:dataTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

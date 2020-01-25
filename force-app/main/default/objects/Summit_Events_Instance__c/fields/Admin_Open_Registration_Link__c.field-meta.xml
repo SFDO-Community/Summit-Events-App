@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Admin_Open_Registration_Link__c</fullName>
+    <externalId>false</externalId>
+    <formula>HYPERLINK(
+Event__r.Community_Base_URL__c
+&amp; &quot;SummitEventsRegister?instanceID=&quot;
+&amp; Id
+&amp; &quot;&amp;adminopen=1&quot;
+,&quot;Admin Open Registration&quot;)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Admin Open Registration Link</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
