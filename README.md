@@ -22,7 +22,7 @@ different Web front ends, and Triggers
 [4]: <docs/GIT-notes.md> "Notes on using GIT"
 [5]: <LICENSE.md> "License"
 [6]: <https://www.stthomas.edu> "University of St. Thomas"
-[7]: <https://uofstthomasmn-my.sharepoint.com/:u:/g/personal/dahl3702_stthomas_edu/EYMciabg2sZJulM8U6iJEecBURjWpscm2yeHTbIda5YkbA?e=yuEjjU> "Old Event Documentation"
+[7]: <docs/files/USTEvent_DOCS.zip> "Old Event Documentation"
 
 ## Getting Started
 
