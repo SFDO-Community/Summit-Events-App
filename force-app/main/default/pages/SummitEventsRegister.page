@@ -65,6 +65,11 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     <div class="row">
                         <div class="columns">
                             <apex:outputText escape="false" value="{!eventPage.Event_description__c}"></apex:outputText>
+                            <apex:outputPanel layout="none" rendered="{!IF(totalEventCost!= 0,true,false)}">
+                                <h3>Event Cost</h3>
+                                <p>$<apex:outputText value="{!totalEventCost}"></apex:outputText>
+                                </p>
+                            </apex:outputPanel>
                             <apex:outputText escape="false" value="{!locationCrumb}" rendered="{!IF(!ISBLANK(locationCrumb), true, false)}"/>
                         </div>
                     </div>

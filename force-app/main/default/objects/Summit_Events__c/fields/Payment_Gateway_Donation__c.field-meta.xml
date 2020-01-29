@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Gateway_Donation__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Ask for a donation in the payment gateway (not in the event registration)</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Ask for a donation in the payment gateway (not in the event registration)</inlineHelpText>
+    <label>Payment Gateway Donation</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

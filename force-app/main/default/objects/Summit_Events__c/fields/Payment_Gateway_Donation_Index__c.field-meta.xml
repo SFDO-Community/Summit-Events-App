@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Gateway_Donation_Index__c</fullName>
+    <description>Budget code for donation ask.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Budget code for donation ask.</inlineHelpText>
+    <label>Payment Gateway Donation Index</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
