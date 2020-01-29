@@ -1,5 +1,8 @@
 # Summit Events App
 
+**IMPORTANT NOTICE:**
+*On 1/29/2020 UST Events application was refactored to Summit Events App. This means all classes, objects, visualfoce pages, and text have been refactored to reflect the new name. Previous installed version of the application will need to be reinstalled to proceed with this update. This is a turning point in the project and it is our intention that this be the last of drastic architecture changes that is made.*
+
 Summit Events for the connected campus is an open source event management system for Salesforce. It was initially developed at the University of St. Thomas - Minnesota to facilitate admission events.
 
 * The Events App focuses on providing an educational institution with a dynamic and 
