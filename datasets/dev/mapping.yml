@@ -419,12 +419,12 @@ Insert Summit_Events_Appointments__c:
       table: Summit_Events_Registration__c
 Insert hed__Trigger_Handler__c:
   sf_object: hed__Trigger_Handler__c
-  table: hed__Language__c
+  table: hed__Trigger_Handler__c
   fields:
     Id: sf_id
     Name: Name
     hed__Active__c: hed__Active__c
-    Asynchronous: Asynchronous
+    hed__Asynchronous__c: hed__Asynchronous__c
     hed__Class__c: hed__Class__c
     hed__Filter_Field__c: hed__Filter_Field__c
     hed__Filter_Value__c: hed__Filter_Value__c
