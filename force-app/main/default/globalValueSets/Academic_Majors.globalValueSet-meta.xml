@@ -415,7 +415,7 @@
         <default>false</default>
         <label>Women&#39;s Studies (WMST)</label>
     </customValue>
-    <description>A list of academic majors at St. Thomas</description>
+    <description>A list of academic majors</description>
     <masterLabel>Academic Majors</masterLabel>
     <sorted>false</sorted>
 </GlobalValueSet>

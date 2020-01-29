@@ -148,7 +148,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         <div class="columns">
                             <h3>{!If(eventPage.Ask_If_Parent__c, 'Student', 'Registrant')} Information</h3>
                             <apex:outputText rendered="{!If(EvtUserType != 'Guest',true,false)}" escape="false">
-                                <p class="errorMessage">You are currently logged into a St. Thomas Portal and therefore your portal information is pre-filled below and cannot be changed.
+                                <p class="errorMessage">You are currently logged into a Portal and therefore your portal information is pre-filled below and cannot be changed.
                                 </p>
                             </apex:outputText>
                         </div>
@@ -193,7 +193,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </apex:outputPanel>
 
                         <apex:outputPanel layout="block" styleClass="columns small-12 medium-6 large-6" rendered="{!IF(evtInfo.recordTypeName = 'UDAR', true, false)}">
-                            <apex:outputLabel value="Preferred St. Thomas Class Year" for="preferredClassYear" styleClass="required"/>
+                            <apex:outputLabel value="Preferred Class Year" for="preferredClassYear" styleClass="required"/>
                             <apex:inputText value="{!newEvtReg.Preferred_St_Thomas_Class_Year__c}" id="preferredClassYear" styleClass="{!IF(!contactSet,'required requiredText', '')} validYear" disabled="{!contactSet}" maxLength="80" required="true"></apex:inputText>
                         </apex:outputPanel>
 
@@ -219,7 +219,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </apex:outputPanel>
 
                         <apex:outputPanel layout="block" styleClass="columns small-12 medium-12" rendered="{!IF(evtInfo.recordTypeName = 'UDAR', true, false)}">
-                            <apex:outputLabel for="relationshipToUST" styleClass="required">Relationship to St. Thomas (select all that apply):</apex:outputLabel>
+                            <apex:outputLabel for="relationshipToUST" styleClass="required">Relationship (select all that apply):</apex:outputLabel>
                             <apex:inputHidden value="{!newEvtReg.Relationship_to_St_Thomas__c}" id="relationshipToUST" required="true"/>
                             <ol class="selectableOL" id="rel2UST" data-hiddendataid="relationshipToUST" required="true">
                                 <apex:repeat value="{!relationshipDD}" var="account">

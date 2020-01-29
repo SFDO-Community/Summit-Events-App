@@ -129,7 +129,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
             </div>
             <div id="welcomeText">
                 <p>Hi {!firstName},</p>
-                <p>Thank you for visiting the University of St. Thomas. Please
+                <p>Thank you for visiting! Please
                     use the map below to park in either Lot B or the Anderson
                     Parking Facility. Please also print this page and leave it in
                     your vehicle as your parking permit for the day.</p>

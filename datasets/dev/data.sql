@@ -98,13 +98,13 @@ CREATE TABLE "Summit_Events_Appointment_Type__c" (
 	summit_events__c VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0T3F000001w2q1UAA','','1','Active','','','false','','','Chocolate
+INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0T0R000005I9QlUAK','','1','Active','','','false','','','Chocolate
 Vanilla
 Strawberry
-Lactose Free','','','','Choose the ice cream you could prefer to consume during your visit','false','Custom pick list','false','10.0','Demo Appointment 1 - Ice Cream with Counselor','','a0a3F000003A7FgQAK');
-INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0T3F000001w2q2UAA','','2','Active','','','false','','','','','','','What is your definition of the meaning of life?','false','Required text box','false','20.0','Demo Appointment 2 - Meaning of life','','a0a3F000003A7FgQAK');
-INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0T3F000001w2q3UAA','','1','Active','','','false','','','','','','','Get yourself some quite time in our library.','false','','false','1.0','Demo Appointment 0 - Quite time','','a0a3F000003A7FgQAK');
-INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0T3F000001w2q4UAA','','1','Active','','','true','','','','','','','There is such a thing!','false','','false','30.0','Demo Appointment 3 - Free Lunch','','a0a3F000003A7FgQAK');
+Lactose Free','','','','Choose the ice cream you could prefer to consume during your visit','false','Custom pick list','false','10.0','Demo Appointment 1 - Ice Cream with Counselor','','a0a0R000003cOh9QAE');
+INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0T0R000005I9QmUAK','','2','Active','','','false','','','','','','','What is your definition of the meaning of life?','false','Required text box','false','20.0','Demo Appointment 2 - Meaning of life','','a0a0R000003cOh9QAE');
+INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0T0R000005I9QnUAK','','1','Active','','','false','','','','','','','Get yourself some quite time in our library.','false','','false','1.0','Demo Appointment 0 - Quite time','','a0a0R000003cOh9QAE');
+INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0T0R000005I9QoUAK','','1','Active','','','true','','','','','','','There is such a thing!','false','','false','30.0','Demo Appointment 3 - Free Lunch','','a0a0R000003cOh9QAE');
 CREATE TABLE "Summit_Events_Appointments__c" (
 	sf_id VARCHAR(255) NOT NULL, 
 	"Appointment_Category__c" VARCHAR(255), 
@@ -204,8 +204,8 @@ CREATE TABLE "Summit_Events_Instance__c" (
 	event__c VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "Summit_Events_Instance__c" VALUES('a0X3F000004llRZUAY','Active','','false','','','','100.0','','2020-02-03T19:11:04.000Z','','','','','','','','2020-02-03T19:09:04.000Z','a0a3F000003A7FgQAK');
-INSERT INTO "Summit_Events_Instance__c" VALUES('a0X3F000004llRaUAI','Active','','false','','','','100.0','','2020-02-06T19:11:04.000Z','','','','','','','','2020-02-06T19:09:04.000Z','a0a3F000003A7FgQAK');
+INSERT INTO "Summit_Events_Instance__c" VALUES('a0X0R000001j40vUAA','Active','','false','','','','100.0','','2020-02-03T19:11:04.000Z','','','','','','','','2020-02-03T19:09:04.000Z','a0a0R000003cOh9QAE');
+INSERT INTO "Summit_Events_Instance__c" VALUES('a0X0R000001j40wUAA','Active','','false','','','','100.0','','2020-02-06T19:11:04.000Z','','','','','','','','2020-02-06T19:09:04.000Z','a0a0R000003cOh9QAE');
 CREATE TABLE "Summit_Events_Registration__c" (
 	sf_id VARCHAR(255) NOT NULL, 
 	"Actual_Number_of_Guests__c" VARCHAR(255), 
@@ -363,7 +363,7 @@ CREATE TABLE "Summit_Events__c" (
 	"Tracking_Submit_Registration__c" VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "Summit_Events__c" VALUES('a0a3F000003A7FgQAK','Test Event','','','','Red
+INSERT INTO "Summit_Events__c" VALUES('a0a0R000003cOh9QAE','Test Event','','','','Red
 Yellow
 Green
 Blue','','','','','What is your favorite color?','','','','','Pick-list','','','','','false','','','false','','false','true','true','false','','High School Senior','','0.0','','Full matching contact creation with duplicate management','2020-02-26','Body text for the appointment/options page explains what these appointments are about.','This is the header of the appointment/options page.','What does it mean to cancel a event.','Online Cancel of Registration Heading','The event has been cancelled.','Explain the registration has been received from the client at this point and is complete','Registration has been received title.','This footer appears on every event registration page in the footer.','Explain here that the event has reached capacity and is closed.','Event Home','','Test Event','This description appears in feed and should be concise','','Active','Description of submission being the final act in the registration play.','Heading for the Submit Page','Admissions Event','<p><strong>Rich Text</strong> description of the event that appears on the first registration page.</p>','Register','Touchpoint','false','','','','','','false','false','','','','','2020-01-26','CastorTemplate2017','','','','','');
@@ -372,9 +372,9 @@ CREATE TABLE "Summit_Events__c_rt_mapping" (
 	developer_name VARCHAR(255), 
 	PRIMARY KEY (record_type_id)
 );
-INSERT INTO "Summit_Events__c_rt_mapping" VALUES('0123F000001LDaBQAW','Graduate');
-INSERT INTO "Summit_Events__c_rt_mapping" VALUES('0123F000001LDaCQAW','UDAR');
-INSERT INTO "Summit_Events__c_rt_mapping" VALUES('0123F000001LDaDQAW','Undergraduate');
+INSERT INTO "Summit_Events__c_rt_mapping" VALUES('0120R000001Se2aQAC','Graduate');
+INSERT INTO "Summit_Events__c_rt_mapping" VALUES('0120R000001Se2bQAC','UDAR');
+INSERT INTO "Summit_Events__c_rt_mapping" VALUES('0120R000001Se2cQAC','Undergraduate');
 CREATE TABLE "hed__Address__c" (
 	sf_id VARCHAR(255) NOT NULL, 
 	"hed__Address_Type__c" VARCHAR(255), 
@@ -402,4 +402,23 @@ CREATE TABLE "hed__Language__c" (
 	"Name" VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
+CREATE TABLE "hed__Trigger_Handler__c" (
+	sf_id VARCHAR(255) NOT NULL, 
+	"Name" VARCHAR(255), 
+	"hed__Active__c" VARCHAR(255), 
+	"hed__Asynchronous__c" VARCHAR(255), 
+	"hed__Class__c" VARCHAR(255), 
+	"hed__Filter_Field__c" VARCHAR(255), 
+	"hed__Filter_Value__c" VARCHAR(255), 
+	"hed__Load_Order__c" VARCHAR(255), 
+	"hed__Object__c" VARCHAR(255), 
+	"hed__Owned_by_Namespace__c" VARCHAR(255), 
+	"hed__Trigger_Action__c" VARCHAR(255), 
+	"hed__User_Managed__c" VARCHAR(255), 
+	"hed__Usernames_to_Exclude__c" VARCHAR(255), 
+	PRIMARY KEY (sf_id)
+);
+INSERT INTO "hed__Trigger_Handler__c" VALUES('a0S0R000001ygZDUAY','Summit Events Appointment for Sports Contact Receipt','true','false','SummitEventsAppointmentSports_TDTM','','','','Summit_Events_Appointments__c','','BeforeInsert','false','');
+INSERT INTO "hed__Trigger_Handler__c" VALUES('a0S0R000001ygZ8UAI','Summit Events Transactional Emails','true','false','SummitEventsRegistration_TDTM','','','','Summit_Events_Registration__c','','AfterInsert;AfterUpdate','false','');
+INSERT INTO "hed__Trigger_Handler__c" VALUES('a0S0R000001ygZ9UAI','Summit Events Appointment Itinerary','true','false','SummitEventsAppointmentItinerary_TDTM','','','','Summit_Events_Appointments__c','','AfterInsert;AfterUpdate;AfterDelete;AfterUndelete','false','');
 COMMIT;
