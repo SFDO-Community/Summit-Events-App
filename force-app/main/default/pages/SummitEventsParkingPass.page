@@ -1,0 +1,167 @@
+<!--
+Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
+Use of this source code is governed by a BSD Revised
+license that can be found in the LICENSE file.
+Created by Thaddaeus Dahlberg on 5/1/2018.
+-->
+
+<apex:page id="SummitEventsParkingPass" showHeader="false" applyHtmlTag="false" renderAs="pdf" controller="SummitEventsParkingPassController">
+    <head>
+        <style>
+            @import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed');
+
+            body, html, .pdfWrap {
+                margin: 0in !important;
+                padding: 0in !important;
+                width: 8.5in;
+                height: 11in;
+                font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
+                color: #212121;
+            }
+
+            @page {
+                margin: 0in;
+            }
+
+            .backImg, .textReference {
+                position: absolute;
+                overflow: hidden;
+            }
+
+            .textReference {
+                width: 8.5in;
+                height: 11in;
+                z-index: 10;
+            }
+
+            .backImg {
+                z-index: 0;
+                left: .5in;
+                top: .5in;
+                width: 7.5in;
+                height: 9.95in;
+            }
+
+            #coupon {
+                position: absolute;
+                top: .97in;
+                left: .51in;
+                font-size: 11pt;
+                line-height: 14pt;
+                border: dashed purple 1px;
+                padding: .125in;
+                width: 3.28in;
+            }
+
+            .purpleText {
+                color: #510C76;
+            }
+
+            p {
+                margin: 0in 0in .15in 0in;
+                padding: 0in;
+            }
+
+            #coupon td {
+                font-size: 9.5pt;
+                line-height: 11.5pt;
+                padding-right: .25in;
+                padding-bottom: .1in;
+            }
+
+            #coupon th {
+                font-size: 9.5pt;
+                color: #510C76;
+                padding: 0in;
+            }
+
+            .reg {
+                font-size: 11pt;
+                line-height: 13pt;
+            }
+
+            #welcomeText {
+                font-size: 11pt;
+                position: absolute;
+                top: .6in;
+                left: 4.25in;
+                width: 3.5in;
+            }
+        </style>
+    </head>
+    <apex:outputPanel layout="block" id="pdfWrap" styleClass="pdfWrap" rendered="{!IF(warning == '', true, false)}">
+        <apex:image value="{!URLFOR($Resource.SummitEventsAssets, '/img/UGParkingPassSummer2019.gif')}" styleClass="backImg"/>
+        <div class="textReference">
+            <div id="coupon">
+                <apex:outputText value="{!couponOut}" escape="false" styleClass="firstNameGreeting"></apex:outputText>
+                <p>VALID IN LOT:&nbsp; B</p>
+                <p class="reg purpleText"><strong>If parking lot B is full</strong>, please exit the campus by turning left
+                    (west) on Selby Avenue. Then turn left (south)
+                    onto Cretin Avenue. After you cross Summit Avenue,
+                    the Anderson Parking Facility will be on your right.
+                    When you enter the parking facility, <strong>please take a
+                        ticket</strong>. Admissions will validate the ticket when you
+                    check in for your visit.</p>
+                <p class="reg">If you park off campus, please pay careful attention
+                    to parking signs; UST is not responsible for tickets
+                    received from the City of St. Paul.</p>
+                <table>
+                    <th colspan="2">Contact Information:</th>
+                    <tr>
+                        <td>
+                            Office of Admissions<br/>
+                            (651) 962-6150
+                        </td>
+                        <td>
+                            Public Safety<br/>
+                            (651) 962-5100
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Campus Emergencies<br/>
+                            (651) 962-5555
+                        </td>
+                        <td>Parking Services<br/>
+                            (651) 962-7275
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="welcomeText">
+                <p>Hi {!firstName},</p>
+                <p>Thank you for visiting! Please
+                    use the map below to park in either Lot B or the Anderson
+                    Parking Facility. Please also print this page and leave it in
+                    your vehicle as your parking permit for the day.</p>
+            </div>
+        </div>
+    </apex:outputPanel>
+    <apex:outputPanel layout="block" id="pdfWrapWarning" styleClass="pdfWrap" rendered="{!IF(warning != '', true, false)}">
+        <div id="coupon">
+            <h1>Parking pass error</h1>
+            <apex:outputText escape="false" value="{!warning}"></apex:outputText>
+            <table>
+                <th colspan="2">Contact Information:</th>
+                <tr>
+
+                    <td>
+                        Office of Admissions<br/>
+                        (651) 962-6150
+                    </td>
+                    <td>
+                        Public Safety<br/>
+                        (651) 962-5100
+                    </td>
+                </tr>
+                <tr>
+                    <td>Campus Emergencies<br/>
+                        (651) 962-5555
+                    </td>
+                    <td>Parking Services<br/>
+                        (651) 962-7275
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </apex:outputPanel>
+</apex:page>

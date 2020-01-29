@@ -1,8 +1,6 @@
 # Summit Events App
 
-UST Event app is in the process of being renamed to Summit Events App. Please forgive any confusion this may cause.
-
-UST Events for the connected campus is an open source event management system for Salesforce. It was initially developed at the University of St. Thomas - Minnesota to facilitate admission events.
+Summit Events for the connected campus is an open source event management system for Salesforce. It was initially developed at the University of St. Thomas - Minnesota to facilitate admission events.
 
 * The Events App focuses on providing an educational institution with a dynamic and 
 configurable Event registration solution
@@ -16,8 +14,8 @@ feed for use with dynamic updates to different web front ends)
 different Web front ends, and Triggers
 
 
-[1]: <docs/scatch-org-creation.md> "Setting up UST Event App for Scratch org Development"
-[2]: <docs/set-up.md> "How to set up UST Events in Salesforce"
+[1]: <docs/scatch-org-creation.md> "Setting up Summit Events App for Scratch org Development"
+[2]: <docs/set-up.md> "How to set up Summit Events in Salesforce"
 [3]: <docs/CumulusCI-notes.md> "Notes on using Cumulus CI"
 [4]: <docs/GIT-notes.md> "Notes on using GIT"
 [5]: <LICENSE.md> "License"
@@ -36,7 +34,7 @@ to address this new security.*
 
 ## Legacy documentation
 
-The [University of St. Thomas][6] has been running the UST Events application in it's production org since September 6th, 2018. This running version is heavily integrated with their current admission application solution so diverges some in functionality from what you see in this repository. Part of the work to be done here is to bring back functionality that had to be cut and integrate the missing features with EDA and/or NPSP. All that being said, St. Thomas' running application has quite a bit of documentation (we're going to call it legacy documentation) that largely overlaps with this repository and could be helpful.
+The [University of St. Thomas][6] has been running the Summit Events application (*under its former name UST Events*) in it's production org since September 6th, 2018. This running version is heavily integrated with their current admission application solution so diverges some in functionality from what you see in this repository. Part of the work to be done here is to bring back functionality that had to be cut and integrate the missing features with EDA and/or NPSP. All that being said, St. Thomas' running application has quite a bit of documentation (we're going to call it legacy documentation) that largely overlaps with this repository and could be helpful.
 
 * [Legacy documentation (zip)][7]
 

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Relationship_to_St_Thomas__c</fullName>
+    <externalId>false</externalId>
+    <label>Relationship to institution</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Alumni</fullName>
+                <default>false</default>
+                <label>Alumni</label>
+            </value>
+            <value>
+                <fullName>Current Student</fullName>
+                <default>false</default>
+                <label>Current Student</label>
+            </value>
+            <value>
+                <fullName>Parent</fullName>
+                <default>false</default>
+                <label>Parent</label>
+            </value>
+            <value>
+                <fullName>Prospective Student</fullName>
+                <default>false</default>
+                <label>Prospective Student</label>
+            </value>
+            <value>
+                <fullName>Friend</fullName>
+                <default>false</default>
+                <label>Friend</label>
+            </value>
+            <value>
+                <fullName>Faculty/Staff</fullName>
+                <default>false</default>
+                <label>Faculty/Staff</label>
+            </value>
+            <value>
+                <fullName>Family</fullName>
+                <default>false</default>
+                <label>Family</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

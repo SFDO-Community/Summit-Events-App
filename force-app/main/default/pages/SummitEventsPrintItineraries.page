@@ -1,0 +1,47 @@
+<!--
+Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
+Use of this source code is governed by a BSD Revised
+license that can be found in the LICENSE file.
+Created by Thaddaeus Dahlberg on 11/28/2018.
+-->
+
+<apex:page id="SummitEventsPrintItineraries" showHeader="false" applyHtmlTag="false" renderAs="{!chooseRender}" contentType="{!isItWord}" standardController="Summit_Events_Instance__c" extensions="SummitEventsPrintItinerariesExtension">
+
+    <apex:form rendered="{!If(ISBLANK(docName), true, false)}">
+        <apex:messages />
+        <apex:pageBlock title="Assign Hosts">
+            <apex:pageBlockSection title="Choose what document to generate" columns="2" collapsible="false">
+                <apex:selectList value="{!docName}" multiselect="false" size="1" required="true">
+                    <apex:selectOption itemValue="" itemLabel="Select..."/>
+                    <apex:selectOption itemValue="admissOvernight" itemLabel="Admissions Overnight Itineraries"/>
+                </apex:selectList>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!generatePDF}" value="Generate PDF"></apex:commandButton>
+                <apex:commandButton action="{!generateDoc}" value="Generate Word"></apex:commandButton>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+
+    <apex:outputPanel layout="none" rendered="{!If(docName== 'admissOvernight', true, false)}">
+        <apex:messages />
+        <apex:stylesheet value="{!URLFOR($Resource.SummitEventsAssets, '/css/admissOvernight.css')}"/>
+        <div class="Section1">
+            <apex:repeat value="{!eventRegs}" var="reg">
+                <apex:outputPanel layout="block" rendered="{!!ISBLANK(reg.Generated_Itinerary__c)}" style="page-break-after: always" styleClass="itWrap">
+                    <h2>{!reg.Preferred_First_Name_Formatted__c}</h2>
+                    <apex:outputText escape="false" value="{!reg.Generated_Itinerary__c}"></apex:outputText>
+                    <!--<apex:outputPanel layout="none" rendered="{!If(CONTAINS(reg.Generated_Itinerary__c, 'Stay Overnight'), true, false)}">-->
+                        <!--<table>-->
+                            <!--<tr>-->
+                                <!--<td style="width:.75in;">Saturday 9:00-<br/> 9:30 AM</td>-->
+                                <!--<td>Check-out and depart campus at Koch Commons</td>-->
+                            <!--</tr>-->
+                        <!--</table>-->
+                    <!--</apex:outputPanel>-->
+                    <br clear="all" style="mso-special-character:line-break;page-break-before:always;"/>
+                </apex:outputPanel>
+            </apex:repeat>
+        </div>
+    </apex:outputPanel>
+</apex:page>

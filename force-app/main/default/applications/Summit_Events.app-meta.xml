@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>standard-home</defaultLandingTab>
+    <description>The open source community events app for EDUs and NGOs</description>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <label>Summit Events</label>
+    <tabs>Summit_Events__c</tabs>
+    <tabs>Summit_Events_Email__c</tabs>
+    <tabs>Summit_Events_Appointment_Type__c</tabs>
+    <tabs>Summit_Events_Instance__c</tabs>
+    <tabs>Summit_Events_Registration__c</tabs>
+    <tabs>Summit_Events_Appointments__c</tabs>
+    <tabs>Summit_Events_Host__c</tabs>
+    <tabs>standard-report</tabs>
+</CustomApplication>

@@ -1,0 +1,74 @@
+<!--
+Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
+Use of this source code is governed by a BSD Revised
+license that can be found in the LICENSE file.
+Created by Thaddaeus Dahlberg on 5/1/2018.
+-->
+
+<apex:page id="SummitEventsSubmit" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" docType="html-5.0" cache="false" controller="SummitEventsSubmitController" action="{!checkEventDetails}">
+    <apex:composition template="{!templateSelected}">
+        <apex:define name="metaPageTitle">
+            {!eventPage.Event_Name__c}
+            <apex:outputText rendered="{!!ISBLANK(evtInstance.Instance_Title__c)}" value="{! ' - ' + evtInstance.Instance_Title__c}"/>
+            - Submit
+        </apex:define>
+        <apex:define name="pageTitle"><a href="{!eventPage.Event_Home_Link_URL__c}">{!eventPage.Event_Home_Link_Title__c}</a></apex:define>
+        <apex:define name="afterJquery">
+            <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
+        </apex:define>
+        <apex:define name="sectionNav"/>
+        <apex:define name="body">
+            <div class="row">
+                <div class="columns errorMessages">
+                    <apex:messages />
+                </div>
+            </div>
+            <apex:form id="SummitEventsRegisterSubmitForm" html-data-abide="ajax" html-novalidate="novalidate">
+                <div class="row">
+                    <div class="columns eventCrumb">
+                        <span class="eventName">{!eventPage.Event_Name__c}</span>
+                        <span class="bc-spacer"><span>»</span></span>
+                        <apex:outputPanel layout="none" rendered="{!!ISBLANK(evtInstance.Instance_Title__c)}">
+                            <span class="eventInstance">{!evtInstance.Instance_Title__c}</span>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="inline" styleClass="eventDate" rendered="{!IF(!ISBLANK(evtInstance.Start_Date_Time__c) && !ISBLANK(evtInstance.Start_Date_Time__c),true,false)}">
+                            <span class="bc-spacer"><span>»</span></span>
+                            {!eventStartDateTimeCrumb}
+                        </apex:outputPanel>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <h2>
+                            <apex:outputText escape="false" value="{!eventPage.Event_Submit_Title__c}"/>
+                        </h2>
+                        <p>
+                            <apex:outputText escape="false" value="{!eventPage.Event_Submit_Description__c}"/>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <apex:outputText escape="false" value="{!chosenFormatted}"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <p>
+                            <apex:commandLink action="{!submitRegistration}" onClick="fadeout();" Value="Submit Registration" id="submitOptions" styleClass="button confirmContinue"/>
+                            <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="button previous"/>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <p>
+                            <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"></apex:outputText>
+                        </p>
+                    </div>
+                </div>
+            </apex:form>
+            <apex:outputText escape="false" value="{!eventPage.Tracking_Submit_Registration__c}"></apex:outputText>
+        </apex:define>
+    </apex:composition>
+</apex:page>

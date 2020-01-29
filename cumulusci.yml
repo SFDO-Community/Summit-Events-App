@@ -1,10 +1,10 @@
 minimum_cumulusci_version: '2.5.5'
 project:
-    name: USTEventsDX
+    name: SummitEventsDX
     package:
-        name:  USTEventsDX
+        name:  SummitEventsDX
         namespace:  ustevent
-        api_version: '46.0'
+        api_version: '47.0'
     dependencies:
         - github: 'https://github.com/SalesforceFoundation/EDA'
     source_format: sfdx
@@ -40,23 +40,23 @@ tasks:
             path: scripts/configure_event_settings.cls
             apex: setGuestPermissionSet();
 
-    deploy_event_records:
+    deploy_dev_event_records:
         description: Configure sample records for the Event app
-        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        class_path: cumulusci.tasks.bulkdata.load.LoadData
         options:
-            path: scripts/configure_event_settings.cls
-            apex: initializeEventSampleData();
+            mapping: datasets/dev/mapping.yml
+            sql_path: datasets/dev/data.sql
 
     robot:
         options:
-            suites: robot/USTEventsDX/tests
+            suites: robot/SummitEventsDX/tests
             options:
-                outputdir: robot/USTEventsDX/results
+                outputdir: robot/SummitEventsDX/results
 
     robot_testdoc:
         options:
-            path: robot/USTEventsDX/tests
-            output: robot/USTEventsDX/doc/USTEventsDX_tests.html
+            path: robot/SummitEventsDX/tests
+            output: robot/SummitEventsDX/doc/SummitEventsDX_tests.html
 
 flows:
     config_qa:
@@ -66,7 +66,7 @@ flows:
     config_dev:
         steps:
             3: 
-                task: deploy_event_records
+                task: deploy_dev_event_records
             4:
                 task: deploy_permission_set
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Appointment_Type__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <inlineHelpText>Thad Appointment Definition</inlineHelpText>
+    <label>Event Appointment Type</label>
+    <referenceTo>Summit_Events_Appointment_Type__c</referenceTo>
+    <relationshipLabel>Summit Events Appointments</relationshipLabel>
+    <relationshipName>UG_Visit_Appointments</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>
