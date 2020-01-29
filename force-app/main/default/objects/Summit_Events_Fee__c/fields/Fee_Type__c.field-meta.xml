@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Fee_Type__c</fullName>
+    <description>The type of object that field that generated this fee.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The type of object that field that generated this fee.</inlineHelpText>
+    <label>Fee Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Event</fullName>
+                <default>false</default>
+                <label>Event</label>
+            </value>
+            <value>
+                <fullName>Event Additional</fullName>
+                <default>false</default>
+                <label>Event Additional</label>
+            </value>
+            <value>
+                <fullName>Event Instance</fullName>
+                <default>false</default>
+                <label>Event Instance</label>
+            </value>
+            <value>
+                <fullName>Event Instance Additional</fullName>
+                <default>false</default>
+                <label>Event Instance Additional</label>
+            </value>
+            <value>
+                <fullName>Appointment</fullName>
+                <default>false</default>
+                <label>Appointment</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Fee_Index__c</fullName>
+    <description>The index code for the business office to track this fee.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The index code for the business office to track this fee.</inlineHelpText>
+    <label>Fee Index</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
