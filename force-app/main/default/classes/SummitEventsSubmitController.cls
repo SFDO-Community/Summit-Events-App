@@ -160,7 +160,7 @@ public with sharing class SummitEventsSubmitController {
 
     public void displayTestingHeaders() {
         /** OPTIONAL METHOD - Display headers and parameters for testing **/
-        headers = '';
+        //headers = '';
 
         MAP<string, string> hdrs = ApexPages.currentPage().getheaders();
         for (string key : hdrs.keySet()) {
@@ -242,7 +242,7 @@ public with sharing class SummitEventsSubmitController {
 
     /******* Below is used to generating ticket for Touchnet ********/
     public void generateTicket() {
-        system.debug('paymentAmount' + paymentAmount);
+
         ticketName = 'ThomasTicket';
 
         String envelop = '';
@@ -429,8 +429,6 @@ public with sharing class SummitEventsSubmitController {
         // Get ride of multiples spaces maintained for readability above
         envelop = envelop.normalizeSpace();
 
-        System.debug(envelop);
-
         try {
             HTTP h = new HTTP();
             HTTPRequest r = new HTTPRequest();
@@ -444,7 +442,6 @@ public with sharing class SummitEventsSubmitController {
             DOM.XMLNode root = doc.getRootElement();
             walkThrough(root);
             ticket = mapResponse.get('ticket');
-            system.debug('ticket' + ticket);
         } catch (Exception ex) {
             Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL, 'Error connecting payment gateway, please try later!!' + ex.getMessage()));
         }
@@ -525,9 +522,6 @@ public with sharing class SummitEventsSubmitController {
                 DOM.Document doc = resp.getBodyDocument();
                 DOM.XMLNode root = doc.getRootElement();
                 walkThrough(root);
-                system.debug('###3' + root);
-                system.debug('###4' + mapResponse);
-                system.debug('###5' + mapResponse.get('pmt_status'));
 
                 if (mapResponse.containskey('receiptNumber') && mapResponse.get('receiptNumber') != '') {
                     //feeTypeInfo = getTransactionFeeName();
