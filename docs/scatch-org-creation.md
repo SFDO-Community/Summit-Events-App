@@ -9,7 +9,7 @@ This project is designed to use CumulusCI. So your first job is to make sure tha
 
 A complete set of general instructions on setting up CumulusCI can be found in the [CumulusCI Documentation](https://cumulusci.readthedocs.io/en/latest/tutorial.html).
 
-## Conect a dev hub
+## Connect a dev hub
 
 1. [Enable Dev Hub in Your Org](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_enable_devhub.htm). This is used to authenticate your rights to spin up scratch orgs.
 This should not effect anything in your org.
