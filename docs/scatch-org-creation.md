@@ -122,7 +122,7 @@ cci flow run config_site --org <org_name>
 
 ## Set Sharing Rules
 
-Salesforce winter '20 and Spring '20 releases will begin to severely limit Guest User access to objects.
+Salesforce Winter '20 and Spring '20 releases will begin to severely limit Guest User access to objects.
 Sharing rules will limit the Guest User to insert access only by default. The Summit Events application requires
 that the Guest user be able to read, and upsert to it's custom objects. In order to align this application with 
 the new security rules we need to set a sharing rule to allow the application to read it's objects. Code has also
