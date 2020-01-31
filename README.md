@@ -7,7 +7,7 @@ The Summit Events App is a sustainable open source community events app that ser
 
 ## Project information
 
-* [V2MOM statement](https://github.com/tcdahlberg/Summit-Events-App/wiki/V2MOM) (Vision, Value, Method, Obstacles, Measures)
+* [V2MOM statement](https://github.com/tcdahlberg/Summit-Events-App/wiki/V2MOM) (Vision, Values, Methods, Obstacles, Measures)
 * [Project Roadmap](https://github.com/tcdahlberg/Summit-Events-App/wiki/Road-Map)
 
 [1]: <docs/scatch-org-creation.md> "Setting up Summit Events App for Scratch org Development"
