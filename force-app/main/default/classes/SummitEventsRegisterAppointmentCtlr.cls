@@ -4,7 +4,7 @@
 // Created by Thaddaeus Dahlberg on 5/1/2018.
 
 public with sharing class SummitEventsRegisterAppointmentCtlr {
-    public SummitEventsShared SEShared = new SummitEventsShared();
+    public SummitEventsShared USTShared = new SummitEventsShared();
     public String test { get; set; }
     public SummitEventsShared.SummitEventsInfo evtInfo { get; set; }
     public Map<Id, Summit_Events_Appointment_Type__c> appts { get; set; }
@@ -61,9 +61,9 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
     public SummitEventsRegisterAppointmentCtlr() {
         test = '';
-        templateSelected = SEShared.defaultTemplate;
+        templateSelected = USTShared.defaultTemplate;
         //Get cookie or URL string variable
-        evtInfo = SEShared.getSummitEventsInfo();
+        evtInfo = USTShared.getSummitEventsInfo();
         apptFormatted = '';
         chosenFormatted = '';
         noOptionalAppointments = true;
@@ -95,7 +95,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Appointment_Limits__c, Chosen_State__c,
                                     Registrant_Input__c, Custom_Picklist__c, Sort_Order__c, Auto_Confirm_Appointment__c, Auto_add_building__c, Auto_Add_Time__c, Do_Not_Show_Time__c,
                                     Date_Available_Start__c, Date_Available_End__c, Day_of_Week_Availability__c, Required_Appointment__c, Appointment_Type_Status__c,
-                                    Appointment_Fee__c, Appointment_Fee_Index__c, Appointment_Fee_Additional__c, Appointment_Fee_Additional_Index__c, Appointment_Group__c
+                                    Appointment_Fee__c, Appointment_Fee_Attribute__c, Appointment_Fee_Additional__c, Appointment_Fee_Additional_Attribute__c, Appointment_Group__c
                             FROM Summit_Events_Appointment_Type__c
                             WHERE Summit_Events__c = :evtinfo.evtId
                             AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
@@ -186,7 +186,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         if (appointmentList.Appointment_Category__c != null) {
                             //getDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName, String parentValue)
                             appointmentIn.inputType = 'categoryPicklist';
-                            Map<String, String> dependencies = SEShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', appointmentList.Appointment_Category__c);
+                            Map<String, String> dependencies = USTShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', appointmentList.Appointment_Category__c);
                             appointmentIn.picklist = String.join(dependencies.values(), ';');
                         } else if (String.isNotBlank(appointmentList.Custom_Picklist__c)) {
                             appointmentIn.picklist = appointmentList.Custom_Picklist__c.replaceAll('\\r\\n', ';');
@@ -405,11 +405,11 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     }
 
     public PageReference checkEventDetails() {
-        PageReference eventActivePg = SEShared.checkForEvent();
+        PageReference eventActivePg = USTShared.checkForEvent();
 
         if (eventActivePg == null) {
 //Get event into
-            evtInfo = SEShared.getSummitEventsInfo();
+            evtInfo = USTShared.getSummitEventsInfo();
             Boolean addedAppts = false;
             Id RegId = evtinfo.evtRegId;
             evtInstance = [SELECT Instance_Title__c, Start_Date_Time__c, End_Date_Time__c FROM Summit_Events_Instance__c WHERE Id = :evtinfo.instanceID LIMIT 1];

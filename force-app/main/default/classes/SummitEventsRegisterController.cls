@@ -75,7 +75,7 @@ public with sharing class SummitEventsRegisterController {
                     SELECT Id, Name, Event__r.Name, Event__r.Event_Name__c, Event__r.Id, Instance_Title__c, Active_Status__c, Capacity__c,
                             Event__r.Event_description__c, Event__r.Audience__c, Start_Date_Time__c, End_Date_Time__c, Current_Available_Capacity__c,
                             Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c,
-                            Event_Instance_Fee__c, Event_Instance_Fee_Index__c, Event_Instance_Fee_Additional__c, Event_Instance_Fee_Additional_Index__c
+                            Event_Instance_Fee__c, Event_Instance_Fee_Attribute__c, Event_Instance_Fee_Additional__c, Event_Instance_Fee_Additional_Attribute__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :evtInfo.instanceID
                     LIMIT 1
@@ -117,7 +117,7 @@ public with sharing class SummitEventsRegisterController {
                             // Academic_Program_List__c, School__c, Ask_Mailing_Address__c, Ask_Phone__c, Event_Sponsor__c,
                             Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, RecordType.Name, Contact_Creation__c,
-                            Event_Fee__c, Event_Fee_Index__c, Event_Fee_Additional__c, Event_Fee_Additional_Index__c
+                            Event_Fee__c, Event_Fee_Attribute__c, Event_Fee_Additional__c, Event_Fee_Additional_Attribute__c
                     FROM Summit_Events__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1
@@ -231,7 +231,7 @@ public with sharing class SummitEventsRegisterController {
                 totalEventCost += eventPage.Event_Fee__c;
                 eventFeeList.add(new Summit_Events_Fee__c(
                         Event_Fee__c = eventPage.Event_Fee__c,
-                        Fee_Index__c = eventPage.Event_Fee_Index__c,
+                        Event_Fee_Attribute__c = eventPage.Event_Fee_Attribute__c,
                         Fee_Type__c = 'Event'
                 ));
             }
@@ -239,7 +239,7 @@ public with sharing class SummitEventsRegisterController {
                 totalEventCost += eventPage.Event_Fee_Additional__c;
                 eventFeeList.add(new Summit_Events_Fee__c(
                         Event_Fee__c = eventPage.Event_Fee_Additional__c,
-                        Fee_Index__c = eventPage.Event_Fee_Additional_Index__c,
+                        Event_Fee_Attribute__c = eventPage.Event_Fee_Additional_Attribute__c,
                         Fee_Type__c = 'Event Additional'
                 ));
             }
@@ -247,7 +247,7 @@ public with sharing class SummitEventsRegisterController {
                 totalEventCost += evtInstance.Event_Instance_Fee__c;
                 eventFeeList.add(new Summit_Events_Fee__c(
                         Event_Fee__c = evtInstance.Event_Instance_Fee__c,
-                        Fee_Index__c = evtInstance.Event_Instance_Fee_Index__c,
+                        Event_Fee_Attribute__c = evtInstance.Event_Instance_Fee_Attribute__c,
                         Fee_Type__c = 'Event Instance'
                 ));
             }
@@ -255,7 +255,7 @@ public with sharing class SummitEventsRegisterController {
                 totalEventCost += evtInstance.Event_Instance_fee_additional__c;
                 eventFeeList.add(new Summit_Events_Fee__c(
                         Event_Fee__c = evtInstance.Event_Instance_fee_additional__c,
-                        Fee_Index__c = evtInstance.Event_Instance_fee_additional_Index__c,
+                        Event_Fee_Attribute__c = evtInstance.Event_Instance_Fee_Additional_Attribute__c,
                         Fee_Type__c = 'Event Instance Additional'
                 ));
             }
@@ -618,7 +618,7 @@ public with sharing class SummitEventsRegisterController {
 
         //Check and create fees and save on registration
         List<Summit_Events_Fee__c> recordedEventFeeList = [
-                SELECT Id, Fee_Type__c, Fee_Index__c, Event_Fee__c
+                SELECT Id, Fee_Type__c, Event_Fee_Attribute__c, Event_Fee__c
                 FROM Summit_Events_Fee__c
                 WHERE Fee_Type__c != 'Appointment'
                 AND Fee_Type__c != 'Appointment Additional'
@@ -639,7 +639,7 @@ public with sharing class SummitEventsRegisterController {
                 }
             }
             List<Summit_Events_Fee__c> deleteEventFees = [
-                    SELECT Id, Fee_Type__c, Fee_Index__c, Event_Fee__c
+                    SELECT Id, Fee_Type__c, Event_Fee_Attribute__c, Event_Fee__c
                     FROM Summit_Events_Fee__c
                     WHERE Fee_Type__c != 'Appointment'
                     AND Fee_Type__c != 'Appointment Additional'
