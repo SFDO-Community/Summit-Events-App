@@ -62,8 +62,7 @@ public with sharing class SummitEventsSubmitController {
         if (!String.isEmpty(evtInfo.evtId)) {
             eventPage = [
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c,
-                            Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Submit_Registration__c, Payment_Gateway_Donation__c,
-                            Payment_Gateway_Donation_Index__c
+                            Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Submit_Registration__c
                     FROM Summit_Events__c
                     WHERE Id = :evtinfo.evtId
             ][0];
@@ -127,22 +126,22 @@ public with sharing class SummitEventsSubmitController {
             }
 
             /** Collect Fees **/
-            eventFees = [SELECT Name, Event_Fee__c, Fee_Index__c, Description__c, Fee_Type__c, Summit_Events__c, Event_Appointment_Type__c FROM Summit_Events_Fee__c WHERE Event_Registration__c = :evtInfo.EvtRegId];
+            eventFees = [SELECT Name, Event_Fee__c, Event_Fee_Attribute__c, Description__c, Fee_Type__c, Summit_Events__c, Event_Appointment_Type__c FROM Summit_Events_Fee__c WHERE Event_Registration__c = :evtInfo.EvtRegId];
             feesByIndex = new Map<String, String>();
             for (Summit_Events_Fee__c fee : eventFees) {
                 if (fee.Event_Fee__c != null && fee.Event_Fee__c > 0) {
                     paymentAmount += fee.Event_Fee__c;
                     if (feesByIndex.size() > 0) {
-                        if (feesByIndex.containsKey(fee.Fee_Index__c)) {
-                            Decimal newFee = Decimal.valueOf(feesByIndex.get(fee.Fee_Index__c));
+                        if (feesByIndex.containsKey(fee.Event_Fee_Attribute__c)) {
+                            Decimal newFee = Decimal.valueOf(feesByIndex.get(fee.Event_Fee_Attribute__c));
                             newFee = newFee + fee.Event_Fee__c;
                             newFee = newFee.setScale(2);
-                            feesByIndex.put(fee.Fee_Index__c, String.valueOf(newFee));
+                            feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(newFee));
                         } else {
-                            feesByIndex.put(fee.Fee_Index__c, String.valueOf(fee.Event_Fee__c));
+                            feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(fee.Event_Fee__c));
                         }
                     } else {
-                        feesByIndex.put(fee.Fee_Index__c, String.valueOf(fee.Event_Fee__c));
+                        feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(fee.Event_Fee__c));
                     }
                 }
             }
@@ -397,24 +396,6 @@ public with sharing class SummitEventsSubmitController {
             envelop += '        <typ:nameValuePairs>';
             envelop += '            <typ:name>EXT_TRANS_ID_LABEL</typ:name>';
             envelop += '            <typ:value>' + String.join(eventLabel, ' - ') + '</typ:value>';
-            envelop += '        </typ:nameValuePairs>';
-        }
-
-        /** Additional Donation settings **/
-        envelop += '        <typ:nameValuePairs>';
-        envelop += '            <typ:name>ADD_ON_OFFER_DISABLED</typ:name>';
-        if (eventPage.Payment_Gateway_Donation__c) {
-            envelop += '            <typ:value>false</typ:value>';
-        } else {
-            envelop += '            <typ:value>true</typ:value>';
-        }
-        envelop += '        </typ:nameValuePairs>';
-
-
-        if (String.isNotBlank(eventPage.Payment_Gateway_Donation_Index__c)) {
-            envelop += '        <typ:nameValuePairs>';
-            envelop += '            <typ:name>ADD_ON_OFFER_CREDIT_ACCT_CODE</typ:name>';
-            envelop += '            <typ:value>' + eventPage.Payment_Gateway_Donation_Index__c + '</typ:value>';
             envelop += '        </typ:nameValuePairs>';
         }
 

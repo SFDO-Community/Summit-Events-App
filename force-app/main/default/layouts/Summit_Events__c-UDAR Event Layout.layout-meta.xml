@@ -135,7 +135,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Event_Fee_Index__c</field>
+                <field>Event_Fee_Attribute__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -145,7 +145,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Event_Fee_Additional_Index__c</field>
+                <field>Event_Fee_Additional_Attribute__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -491,7 +491,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h3F000001rRRK</masterLabel>
+        <masterLabel>00h3D00000116rV</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
