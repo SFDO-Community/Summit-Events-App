@@ -418,7 +418,7 @@ CREATE TABLE "hed__Trigger_Handler__c" (
 	"hed__Usernames_to_Exclude__c" VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "hed__Trigger_Handler__c" VALUES('a0S0R000001ygZDUAY','Summit Events Appointment for Sports Contact Receipt','true','false','SummitEventsAppointmentSports_TDTM','','','','Summit_Events_Appointments__c','','BeforeInsert','false','');
+INSERT INTO "hed__Trigger_Handler__c" VALUES('a0S0R000001ygZDUAY','Summit Events Appointment for Sports Contact Receipt','true','false','SummitEventsAppointmentSports_TDTM','','','','Summit_Events_Appointments__c','','AfterInsert','false','');
 INSERT INTO "hed__Trigger_Handler__c" VALUES('a0S0R000001ygZ8UAI','Summit Events Transactional Emails','true','false','SummitEventsRegistration_TDTM','','','','Summit_Events_Registration__c','','AfterInsert;AfterUpdate','false','');
 INSERT INTO "hed__Trigger_Handler__c" VALUES('a0S0R000001ygZ9UAI','Summit Events Appointment Itinerary','true','false','SummitEventsAppointmentItinerary_TDTM','','','','Summit_Events_Appointments__c','','AfterInsert;AfterUpdate;AfterDelete;AfterUndelete','false','');
 COMMIT;
