@@ -31,6 +31,8 @@ public with sharing class SummitEventsContactMatching {
         String matchLog = '';
         Boolean newContactCreated = false;
         String hardMatchHeading = '';
+        doCRUD CRUDtoDo = new doCRUD();
+
         /* These fields may be depreciated witht he matching log
         String softEmailMatches = '';
         String softFirstLastZipMatches = '';
@@ -90,7 +92,7 @@ public with sharing class SummitEventsContactMatching {
 
             query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_St_Thomas_Class_Year__c) + '\' ';
 
-            List<Contact> hardContactTestEmail = database.query(query);
+            List<Contact> hardContactTestEmail = CRUDtoDo.findContacts(query);
 
             if (hardContactTestEmail.size() == 1) {
                 hardContactFound = hardContactTestEmail[0];
@@ -141,7 +143,8 @@ public with sharing class SummitEventsContactMatching {
             query += ' OR hed__WorkEmail__c = \'' + String.escapeSingleQuotes(evt.Registrant_Email__c) + '\' ';
             query += ' ) ';
 
-            List<Contact> hardContactTestFirst = database.query(query);
+            List<Contact> hardContactTestFirst = CRUDtoDo.findContacts(query);
+
             if (hardContactTestFirst.size() == 1) {
                 hardContactFound = hardContactTestFirst[0];
                 hardMatchHeading = 'Hard match on LAST NAME, FIRST NAME and EMAIL';
@@ -195,7 +198,8 @@ public with sharing class SummitEventsContactMatching {
             query += ' )';
             query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_St_Thomas_Class_Year__c) + '\' ';
 
-            List<Contact> hardContactTestNamePhoneClass = database.query(query);
+            List<Contact> hardContactTestNamePhoneClass = CRUDtoDo.findContacts(query);
+
             if (hardContactTestNamePhoneClass.size() == 1) {
                 hardContactFound = hardContactTestNamePhoneClass[0];
                 hardMatchHeading = 'Hard match on LAST NAME, FIRST NAME and PHONE';
@@ -253,8 +257,8 @@ public with sharing class SummitEventsContactMatching {
 
             query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_St_Thomas_Class_Year__c) + '\' ';
 
-            System.Debug(query);
-            List<Contact> hardContactTestNameFirstThreeClass = database.query(query);
+            List<Contact> hardContactTestNameFirstThreeClass = CRUDtoDo.findContacts(query);
+
             if (hardContactTestNameFirstThreeClass.size() == 1) {
                 hardContactFound = hardContactTestNameFirstThreeClass[0];
                 hardMatchHeading = 'Hard match on LAST NAME, FIRST 3 LETTERS OF FIRST NAME and CLASS';
@@ -314,7 +318,7 @@ public with sharing class SummitEventsContactMatching {
 
             List<Contact> softContactTestNamePhoneClass = new List<Contact>();
             if (queryComplete) {
-                softContactTestNamePhoneClass = database.query(query);
+                softContactTestNamePhoneClass = CRUDtoDo.findContacts(query);
             }
 
             if (softContactTestNamePhoneClass.size() > 0) {
@@ -397,6 +401,7 @@ public with sharing class SummitEventsContactMatching {
         String softFirstLastZipMatches = '';
         boolean newContactCreated = false;
         String query = '';
+        doCRUD CRUDtoDo = new doCRUD();
 
         /* Start the the matching log HTML table */
         String matchLog = '';
@@ -442,8 +447,9 @@ public with sharing class SummitEventsContactMatching {
             query += ' ) ';
             query += ' AND LastName = \'' + evt.Registrant_Last_Name__c + '\' ';
             query += ' AND Birthdate = ' + String.valueOf(evt.Registrant_Date_of_Birth__c).removeEnd(' 00:00:00');
-            System.Debug(query);
-            List<Contact> hardContactTest1 = database.query(query);
+
+            List<Contact> hardContactTest1 = CRUDtoDo.findContacts(query);
+
             if (hardContactTest1.size() > 0) {
                 contactId = hardContactTest1[0].Id;
 
@@ -457,7 +463,7 @@ public with sharing class SummitEventsContactMatching {
 
         //Test to find if contact already exists - HARD TEST last name and email match
         if (String.isBlank(contactId)) {
-            List<Contact> hardContactTest2 = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :lastName AND Email = :email];
+            List<Contact> hardContactTest2 = CRUDtoDo.emailLastMatch(email, lastName);
             if (hardContactTest2.size() > 0) {
                 contactId = hardContactTest2[0].Id;
                 matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Hard match on LAST NAME, EMAIL!</div>';
@@ -475,7 +481,7 @@ public with sharing class SummitEventsContactMatching {
             for (Integer x = 1; x <= 10; x++) {
                 possibleEmails.add('Event_Dup_' + String.valueOf(x) + '_' + evt.Registrant_Email__c);
             }
-            List<Contact> hardContactTest3 = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :lastName AND Email IN :possibleEmails];
+            List<Contact> hardContactTest3 = CRUDtoDo.possibleEmailLastMatches(lastName, possibleEmails);
             if (hardContactTest3.size() > 0) {
                 //hard match on first DUP email found.
                 contactId = hardContactTest3[0].Id;
@@ -489,13 +495,7 @@ public with sharing class SummitEventsContactMatching {
 
         if (String.isBlank(contactId) && (matchingScope.startsWith('Full matching') || String.isBlank(matchingScope))) {
             //Check if first name last name zip match
-            List<Contact> zipContactTest = [
-                    SELECT Id, LastName, FirstName, Email, MailingPostalCode
-                    FROM Contact
-                    WHERE FirstName = :evt.Registrant_First_Name__c
-                    AND LastName = :evt.Registrant_Last_Name__c
-                    AND MailingPostalCode = :evt.Registrant_Zip__c
-            ];
+            List<Contact> zipContactTest = CRUDtoDo.zipFirstLastMatch(evt.Registrant_Zip__c,evt.Registrant_Last_Name__c, evt.Registrant_First_Name__c );
             if (zipContactTest.size() > 0) {
                 //Soft Match found with zip
                 matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Soft Match on Zip, Last Name, First Name</div>';
@@ -507,11 +507,7 @@ public with sharing class SummitEventsContactMatching {
                 }
                 matchLog += '</tbody></table>';
             }
-            List<Contact> emailContactTest = [
-                    SELECT Id, LastName, FirstName, Email, MailingPostalCode
-                    FROM Contact
-                    WHERE Email = :evt.Registrant_Email__c
-            ];
+            List<Contact> emailContactTest = CRUDtoDo.emailOnlyMatch(evt.Registrant_Email__c);
             if (emailContactTest.size() > 0) {
                 //Soft Match found with email
                 matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Soft Match on Email</div>';
@@ -562,6 +558,7 @@ public with sharing class SummitEventsContactMatching {
 
     private Contact createNewContact(Summit_Events_Registration__c evt) {
         //Create a HEDA address for new contact to be applied after insert
+        doCRUD CRUDtoDo = new doCRUD();
         hed__Address__c newAddress = new hed__Address__c();
         newAddress.hed__Address_Type__c = 'Home';
         newAddress.hed__MailingStreet__c = evt.Registrant_Street_1__c;
@@ -583,11 +580,7 @@ public with sharing class SummitEventsContactMatching {
         }
 
         //Check for all possible email matches including dupes
-        List<Contact> emailContactTest = [
-                SELECT Id, Email
-                FROM Contact
-                WHERE Email IN :possibleEmails
-        ];
+        List<Contact> emailContactTest = CRUDtoDo.possibleEmailMatches(possibleEmails);
 
         //If query is empty then we are free to use the email provided else we have to creat/check for dup emails
         if (emailContactTest.size() == 0) {
@@ -636,10 +629,10 @@ public with sharing class SummitEventsContactMatching {
             newEvtContact.Do_Not_Text__c = false;
         }
         try {
-            upsert newEvtContact;
+            newEvtContact = CRUDtoDo.addContact(newEvtContact);
             //HEDA address
             newAddress.hed__Parent_Contact__c = newEvtContact.Id;
-            upsert newAddress;
+            newAddress = CRUDtoDo.addAddress(newAddress);
         } catch (Exception ex) {
             ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
             ApexPages.addMessage(myMsg);
@@ -648,6 +641,74 @@ public with sharing class SummitEventsContactMatching {
         //Flag registration to show new contact was created
         evt.New_Contact_Created__c = true;
         return newEvtContact;
+
+    }
+
+    private without sharing class doCRUD {
+
+        public List<Contact> findContacts(string query) {
+            try {
+                List<Contact> contactsFound = database.query(query);
+                return contactsFound;
+            } catch (Exception ex) {
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
+                ApexPages.addMessage(myMsg);
+            }
+            return null;
+        }
+
+        public Contact addContact(Contact contactToAdd) {
+            try {
+                upsert contactToAdd;
+                return contactToAdd;
+            } catch (Exception ex) {
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
+                ApexPages.addMessage(myMsg);
+            }
+            return null;
+        }
+
+        public hed__Address__c addAddress(hed__Address__c addressToAdd) {
+            try {
+                upsert addressToAdd;
+                return addressToAdd;
+            } catch (Exception ex) {
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
+                ApexPages.addMessage(myMsg);
+            }
+            return null;
+        }
+
+        Public List<Contact> emailLastMatch(String email, String last) {
+            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :last AND Email = :email];
+            return foundContacts;
+        }
+
+        Public List<Contact> possibleEmailLastMatches(String last, List<String> possibleEmails) {
+            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :last AND Email IN :possibleEmails];
+            return foundContacts;
+        }
+
+        Public List<Contact> possibleEmailMatches(String[] possibleEmails) {
+            List<Contact> foundContacts = [SELECT Id, Email FROM Contact WHERE Email IN :possibleEmails];
+            return foundContacts;
+        }
+
+        public List<Contact> emailOnlyMatch(string email) {
+            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE Email = :email];
+            return foundContacts;
+        }
+
+        public List<Contact> zipFirstLastMatch(String zip, String last, String first) {
+            List<Contact> foundContacts = [
+                    SELECT Id, LastName, FirstName, Email, MailingPostalCode
+                    FROM Contact
+                    WHERE FirstName = :first
+                    AND LastName = :last
+                    AND MailingPostalCode = :zip
+            ];
+            return foundContacts;
+        }
 
     }
 
