@@ -204,8 +204,8 @@ CREATE TABLE "Summit_Events_Instance__c" (
 	event__c VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "Summit_Events_Instance__c" VALUES('a0X0R000001j40vUAA','Active','','false','','','','100.0','','2020-02-03T19:11:04.000Z','','','','','','','','2020-02-03T19:09:04.000Z','a0a0R000003cOh9QAE');
-INSERT INTO "Summit_Events_Instance__c" VALUES('a0X0R000001j40wUAA','Active','','false','','','','100.0','','2020-02-06T19:11:04.000Z','','','','','','','','2020-02-06T19:09:04.000Z','a0a0R000003cOh9QAE');
+INSERT INTO "Summit_Events_Instance__c" VALUES('a0X0R000001j40vUAA','Active','','false','','','','100.0','',strftime('%Y-%m-%dT%H:%M:%SZ',datetime('now', 'start of day', '+8 hour', '+7 day')),'','','','','','','',strftime('%Y-%m-%dT%H:%M:%SZ',datetime('now', 'start of day', '+12 hour', '+7 day')),'a0a0R000003cOh9QAE');
+INSERT INTO "Summit_Events_Instance__c" VALUES('a0X0R000001j40wUAA','Active','','false','','','','100.0','',strftime('%Y-%m-%dT%H:%M:%SZ',datetime('now', 'start of day', '+8 hour', '+14 day')),'','','','','','','',strftime('%Y-%m-%dT%H:%M:%SZ',datetime('now', 'start of day', '+12 hour', '+14 day')),'a0a0R000003cOh9QAE');
 CREATE TABLE "Summit_Events_Registration__c" (
 	sf_id VARCHAR(255) NOT NULL, 
 	"Actual_Number_of_Guests__c" VARCHAR(255), 
@@ -366,10 +366,10 @@ CREATE TABLE "Summit_Events__c" (
 INSERT INTO "Summit_Events__c" VALUES('a0a0R000003cOh9QAE','Test Event','','','','Red
 Yellow
 Green
-Blue','','','','','What is your favorite color?','','','','','Pick-list','','','','','false','','','false','','false','true','true','false','','High School Senior','','0.0','','Full matching contact creation with duplicate management','2020-02-26','Body text for the appointment/options page explains what these appointments are about.','This is the header of the appointment/options page.','What does it mean to cancel a event.','Online Cancel of Registration Heading','The event has been cancelled.','Explain the registration has been received from the client at this point and is complete','Registration has been received title.','This footer appears on every event registration page in the footer.','Explain here that the event has reached capacity and is closed.','Event Home','','Test Event','This description appears in feed and should be concise','','Active','Description of submission being the final act in the registration play.','Heading for the Submit Page','Admissions Event','<p><strong>Rich Text</strong> description of the event that appears on the first registration page.</p>','Register','Touchpoint','false','','','','','','false','false','','','','','2020-01-26','CastorTemplate2017','','','','','');
+Blue','','','','','What is your favorite color?','','','','','Pick-list','','','','','false','','','false','','false','true','true','false','','High School Senior','','0.0','','Full matching contact creation with duplicate management',date('now', 'start of day', '+30 day'),'Body text for the appointment/options page explains what these appointments are about.','This is the header of the appointment/options page.','What does it mean to cancel a event.','Online Cancel of Registration Heading','The event has been cancelled.','Explain the registration has been received from the client at this point and is complete','Registration has been received title.','This footer appears on every event registration page in the footer.','Explain here that the event has reached capacity and is closed.','Event Home','','Test Event','This description appears in feed and should be concise','','Active','Description of submission being the final act in the registration play.','Heading for the Submit Page','Admissions Event','<p><strong>Rich Text</strong> description of the event that appears on the first registration page.</p>','Register','Touchpoint','false','','','','','','false','false','','','','',date('now', 'start of day', '-30 day'),'CastorTemplate2017','','','','','');
 CREATE TABLE "Summit_Events__c_rt_mapping" (
-	record_type_id VARCHAR(18) NOT NULL, 
-	developer_name VARCHAR(255), 
+	record_type_id VARCHAR(18) NOT NULL,
+	developer_name VARCHAR(255),
 	PRIMARY KEY (record_type_id)
 );
 INSERT INTO "Summit_Events__c_rt_mapping" VALUES('0120R000001Se2aQAC','Graduate');
