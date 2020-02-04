@@ -463,7 +463,7 @@ public with sharing class SummitEventsContactMatching {
 
         //Test to find if contact already exists - HARD TEST last name and email match
         if (String.isBlank(contactId)) {
-            List<Contact> hardContactTest2 = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :lastName AND Email = :email];
+            List<Contact> hardContactTest2 = CRUDtoDo.emailLastMatch(email, lastName);
             if (hardContactTest2.size() > 0) {
                 contactId = hardContactTest2[0].Id;
                 matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Hard match on LAST NAME, EMAIL!</div>';
@@ -481,7 +481,7 @@ public with sharing class SummitEventsContactMatching {
             for (Integer x = 1; x <= 10; x++) {
                 possibleEmails.add('Event_Dup_' + String.valueOf(x) + '_' + evt.Registrant_Email__c);
             }
-            List<Contact> hardContactTest3 = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :lastName AND Email IN :possibleEmails];
+            List<Contact> hardContactTest3 = CRUDtoDo.possibleEmailLastMatches(lastName, possibleEmails);
             if (hardContactTest3.size() > 0) {
                 //hard match on first DUP email found.
                 contactId = hardContactTest3[0].Id;
@@ -495,13 +495,7 @@ public with sharing class SummitEventsContactMatching {
 
         if (String.isBlank(contactId) && (matchingScope.startsWith('Full matching') || String.isBlank(matchingScope))) {
             //Check if first name last name zip match
-            List<Contact> zipContactTest = [
-                    SELECT Id, LastName, FirstName, Email, MailingPostalCode
-                    FROM Contact
-                    WHERE FirstName = :evt.Registrant_First_Name__c
-                    AND LastName = :evt.Registrant_Last_Name__c
-                    AND MailingPostalCode = :evt.Registrant_Zip__c
-            ];
+            List<Contact> zipContactTest = CRUDtoDo.zipFirstLastMatch(evt.Registrant_Zip__c,evt.Registrant_Last_Name__c, evt.Registrant_First_Name__c );
             if (zipContactTest.size() > 0) {
                 //Soft Match found with zip
                 matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Soft Match on Zip, Last Name, First Name</div>';
@@ -513,11 +507,7 @@ public with sharing class SummitEventsContactMatching {
                 }
                 matchLog += '</tbody></table>';
             }
-            List<Contact> emailContactTest = [
-                    SELECT Id, LastName, FirstName, Email, MailingPostalCode
-                    FROM Contact
-                    WHERE Email = :evt.Registrant_Email__c
-            ];
+            List<Contact> emailContactTest = CRUDtoDo.emailOnlyMatch(evt.Registrant_Email__c);
             if (emailContactTest.size() > 0) {
                 //Soft Match found with email
                 matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Soft Match on Email</div>';
@@ -590,11 +580,7 @@ public with sharing class SummitEventsContactMatching {
         }
 
         //Check for all possible email matches including dupes
-        List<Contact> emailContactTest = [
-                SELECT Id, Email
-                FROM Contact
-                WHERE Email IN :possibleEmails
-        ];
+        List<Contact> emailContactTest = CRUDtoDo.possibleEmailMatches(possibleEmails);
 
         //If query is empty then we are free to use the email provided else we have to creat/check for dup emails
         if (emailContactTest.size() == 0) {
@@ -691,6 +677,37 @@ public with sharing class SummitEventsContactMatching {
                 ApexPages.addMessage(myMsg);
             }
             return null;
+        }
+
+        Public List<Contact> emailLastMatch(String email, String last) {
+            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :last AND Email = :email];
+            return foundContacts;
+        }
+
+        Public List<Contact> possibleEmailLastMatches(String last, List<String> possibleEmails) {
+            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :last AND Email IN :possibleEmails];
+            return foundContacts;
+        }
+
+        Public List<Contact> possibleEmailMatches(String[] possibleEmails) {
+            List<Contact> foundContacts = [SELECT Id, Email FROM Contact WHERE Email IN :possibleEmails];
+            return foundContacts;
+        }
+
+        public List<Contact> emailOnlyMatch(string email) {
+            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE Email = :email];
+            return foundContacts;
+        }
+
+        public List<Contact> zipFirstLastMatch(String zip, String last, String first) {
+            List<Contact> foundContacts = [
+                    SELECT Id, LastName, FirstName, Email, MailingPostalCode
+                    FROM Contact
+                    WHERE FirstName = :first
+                    AND LastName = :last
+                    AND MailingPostalCode = :zip
+            ];
+            return foundContacts;
         }
 
     }
