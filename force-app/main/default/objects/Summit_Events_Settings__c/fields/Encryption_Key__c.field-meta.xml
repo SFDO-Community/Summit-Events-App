@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Encryption_Key__c</fullName>
+    <description>Key used for encrypting and decrypting data within Summit Events app. Must be 32 random characters.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Key used for encrypting and decrypting data within Summit Events app. Must be 32 random characters.</inlineHelpText>
+    <label>Encryption Key</label>
+    <length>32</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

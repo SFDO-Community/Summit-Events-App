@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Instance_Fee_Additional__c</fullName>
+    <description>Additional fee associated with this event instance. Can be combined with event fee if it is present, or stand alone. Can be useful for splitting fees between donation and event costs.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Additional fee associated with this event instance. Can be combined with event fee if it is present, or stand alone. Can be useful for splitting fees between donation and event costs.</inlineHelpText>
+    <label>Event Instance Fee Additional</label>
+    <precision>8</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>
