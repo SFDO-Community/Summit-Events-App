@@ -158,12 +158,22 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>Display_Optional_Donation__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>Donation_Recipient_1__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Donation_Recipient_2__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Donation_Suggested_Amount_List__c</field>
+            </layoutItems>
+        </layoutColumns>
+        <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Donation_Recipient_3__c</field>
@@ -175,12 +185,6 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Donation_Recipient_5__c</field>
-            </layoutItems>
-        </layoutColumns>
-        <layoutColumns>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Donation_Suggested_Amount_List__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>

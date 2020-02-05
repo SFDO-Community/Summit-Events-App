@@ -36,7 +36,7 @@ public with sharing class SummitEventsSubmitController {
     public Double paymentAmount { get; set; }
     public Double existingPaymentAmount { get; set; }
     public Boolean showPaymentButton { get; set; }
-
+    public Map<String,String> donationPicklist {get; set;}
     public string headers { get; set; }
 
     public SummitEventsSubmitController() {
@@ -62,7 +62,11 @@ public with sharing class SummitEventsSubmitController {
         if (!String.isEmpty(evtInfo.evtId)) {
             eventPage = [
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c,
-                            Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Submit_Registration__c
+                            Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Submit_Registration__c,
+                            Donation_Description__c, Donation_Recipient_1__r.Name, Donation_Recipient_2__r.Name,
+                            Donation_Recipient_3__r.Name, Donation_Recipient_4__r.Name, Donation_Recipient_5__r.Name,
+                            Donation_Suggested_Amount_List__c, Donation_Recipient_1__c, Donation_Recipient_2__c,
+                            Donation_Recipient_3__c, Donation_Recipient_4__c, Donation_Recipient_5__c
                     FROM Summit_Events__c
                     WHERE Id = :evtinfo.evtId
             ][0];
