@@ -1176,6 +1176,41 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Donation_Description__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Donation_Recipient_1__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Donation_Recipient_2__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Donation_Recipient_3__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Donation_Recipient_4__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Donation_Recipient_5__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Donation_Suggested_Amount_List__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.End_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1216,7 +1251,17 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Event_Fee_Additional_Attribute__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.Event_Fee_Additional__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Event_Fee_Attribute__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
