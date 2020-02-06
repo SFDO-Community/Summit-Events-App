@@ -34,7 +34,7 @@ The [University of St. Thomas][6] has been running the Summit Events application
 
 * [Legacy documentation (zip)][7]
 
-## Working Togeter
+## Working Together
 
 *Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
 Use of this source code is governed by a BSD Revised
