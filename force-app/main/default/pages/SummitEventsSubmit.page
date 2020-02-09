@@ -57,6 +57,26 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     <apex:outputText escape="false" value="{!chosenFormatted}"/>
                 </div>
             </apex:outputPanel>
+            <apex:outputPanel layout="block" rendered="{!eventPage.Display_Optional_Donation__c}" styleClass="row">
+                <apex:form>
+                    <div class="column">
+                        <apex:outputText escape="false" value="{!eventPage.Donation_Description__c}"></apex:outputText>
+                    </div>
+                    <div class="column small-12 medium-6 large-6">
+                        <apex:outputLabel for="donationAmmount" value="Donation Amount"></apex:outputLabel>
+                        <apex:selectList multiSelect="false" value="{!donationAmount}" id="donationAmmount" size="1" styleClass="required requiredText" required="true">
+                            <apex:selectOptions value="{!suggestedDonation}"/>
+                        </apex:selectList>
+                    </div>
+                    <div class="column small-12 medium-6 large-6">
+                        <apex:outputLabel for="donationFund" value="Donation Designation"></apex:outputLabel>
+                        <apex:selectList multiSelect="false" value="{!donationRecipient}" id="donationFund" size="1" styleClass="required requiredText" required="true">
+                            <apex:selectOptions value="{!donationRecipientList}"/>
+                        </apex:selectList>
+                    </div>
+
+                </apex:form>
+            </apex:outputPanel>
             <apex:outputPanel layout="block" rendered="{!showPaymentButton}" styleClass="row">
                 <div class="column">
                     <h2>Cost</h2>

@@ -18,6 +18,8 @@ public with sharing class SummitEventsSubmitController {
     public String communityBaseURL { get; set; }
     public Map <String, String> feesByIndex { get; set; }
     public Boolean eventHasOptions { get; set; }
+    public String[] donationRecipient { get; set; }
+    public String[] donationAmount { get; set; }
 
     /*Below are all private attribute*/
     private String touchNetService;
@@ -36,15 +38,17 @@ public with sharing class SummitEventsSubmitController {
     public Double paymentAmount { get; set; }
     public Double existingPaymentAmount { get; set; }
     public Boolean showPaymentButton { get; set; }
-    public Map<String,String> donationPicklist {get; set;}
+
     public string headers { get; set; }
 
     public SummitEventsSubmitController() {
         test = '';
+        donationRecipient = new String[]{
+        };
         eventHasOptions = false;
         templateSelected = SEShared.defaultTemplate;
 
-        /** Get custom settings for SummitEventss **/
+        /** Get custom settings for Summit Events **/
         Summit_Events_Settings__c custSetting = Summit_Events_Settings__c.getOrgDefaults();
         communityBaseURL = custSetting.Community_Base_URL__c;
         communityBaseURL = communityBaseURL.replace('http://', 'https://');
@@ -63,7 +67,7 @@ public with sharing class SummitEventsSubmitController {
             eventPage = [
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c,
                             Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Submit_Registration__c,
-                            Donation_Description__c, Donation_Recipient_1__r.Name, Donation_Recipient_2__r.Name,
+                            Donation_Description__c,Display_Optional_Donation__c, Donation_Recipient_1__r.Name, Donation_Recipient_2__r.Name,
                             Donation_Recipient_3__r.Name, Donation_Recipient_4__r.Name, Donation_Recipient_5__r.Name,
                             Donation_Suggested_Amount_List__c, Donation_Recipient_1__c, Donation_Recipient_2__c,
                             Donation_Recipient_3__c, Donation_Recipient_4__c, Donation_Recipient_5__c
@@ -159,6 +163,44 @@ public with sharing class SummitEventsSubmitController {
             }
         }
 
+    }
+
+    public List<SelectOption> getDonationRecipientList() {
+        List<SelectOption> options = new List<SelectOption>();
+        options.add(new SelectOption('', 'Select...'));
+
+        for (Integer xx = 1; xx < 6; xx++) {
+            if (String.isNotBlank(String.valueOf(eventPage.get('Donation_Recipient_' + xx + '__c')))) {
+                options.add(
+                        new SelectOption(
+                                String.valueOf(eventPage.get('Donation_Recipient_' + xx + '__c')),
+                                String.valueOf(eventPage.getSObject('Donation_Recipient_' + xx + '__r').get('Name'))
+                        )
+                );
+            }
+        }
+        return options;
+    }
+
+    public List<SelectOption> getSuggestedDonation() {
+        List<SelectOption> cpl = new List<SelectOption>();
+        String suggested = '';
+        if (!String.isBlank(eventPage.Donation_Suggested_Amount_List__c)) {
+            suggested = eventPage.Donation_Suggested_Amount_List__c;
+            cpl.add(new SelectOption('', 'Select...'));
+            suggested = suggested.Trim();
+            suggested = suggested.replace('\n\n', '\n');
+            String[] splitList = suggested.split('\n');
+            for (String p : splitList) {
+                p = p.replaceAll('[^0-9.]', '');
+                Integer numberIn = Integer.valueOf(p);
+                List<String> args = new String[]{'0','number','###,###,##0.00'};
+                string numberFormatted = String.format(numberIn.format(), args);
+                cpl.add(new SelectOption(p, '$' + numberFormatted));
+            }
+            cpl.add(new SelectOption('Other Amount', 'Other Amount'));
+        }
+        return cpl;
     }
 
     public void displayTestingHeaders() {
