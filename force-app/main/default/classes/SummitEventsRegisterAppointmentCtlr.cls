@@ -44,7 +44,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         if (!String.isBlank(evtinfo.evtId)) {
             eventPage = [
                     SELECT Event_Name__c, Event_description__c, Event_Appointment_Title__c, Event_Appointment_Description__c, Event_Footer__c,
-                            Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Options_Registration__c
+                            Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Options_Registration__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
                     WHERE Id = :evtinfo.evtId
             ][0];
@@ -284,7 +284,12 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     public PageReference saveOptions() {
         //remove old client created appointments
         appointmentsCRUD apptCrud = new appointmentsCRUD();
-        PageReference submitPage = Page.SummitEventsSubmit;
+        PageReference submitPage = null;
+        if (eventPage.Display_Optional_Donation__c) {
+            submitPage = Page.SummitEventsDonation;
+        } else {
+            submitPage = Page.SummitEventsSubmit;
+        }
 
         Summit_Events_Appointments__c[] deleteAppt = [
                 SELECT Id, Event_Registration__c, Client_Created_Appointment__c, Chosen_State__c, Do_Not_Show_Time__c
@@ -345,9 +350,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     }
 
     public PageReference previousPage() {
-//if (!String.isBlank(eventRegId)) {
         PageReference registerPage = Page.SummitEventsRegister;
-
         return registerPage;
     }
 

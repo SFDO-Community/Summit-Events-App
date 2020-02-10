@@ -382,12 +382,22 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Fee__c.Event_Fee_Attribute__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Fee__c.Event_Fee__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Fee__c.Fee_Type__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events_Fee__c.Is_Optional_Donation__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1786,6 +1796,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>SummitEventsConfirmation</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>SummitEventsDonation</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

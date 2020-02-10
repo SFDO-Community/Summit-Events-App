@@ -117,7 +117,7 @@ public with sharing class SummitEventsRegisterController {
                             // Academic_Program_List__c, School__c, Ask_Mailing_Address__c, Ask_Phone__c, Event_Sponsor__c,
                             Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, RecordType.Name, Contact_Creation__c,
-                            Event_Fee__c, Event_Fee_Attribute__c, Event_Fee_Additional__c, Event_Fee_Additional_Attribute__c
+                            Event_Fee__c, Event_Fee_Attribute__c, Event_Fee_Additional__c, Event_Fee_Additional_Attribute__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1
@@ -195,6 +195,7 @@ public with sharing class SummitEventsRegisterController {
                     From Summit_Events_Appointment_Type__c
                     WHERE Summit_Events__c = :evtInfo.evtId
                     AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
+                    AND Appointment_Type_Status__c = 'Active'
             ];
             if (apptTypes.size() > 0) {
                 evtHasAppointments = true;
@@ -665,6 +666,8 @@ public with sharing class SummitEventsRegisterController {
         if (String.isNotBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING') {
             if (evtHasAppointments) {
                 optionPage = Page.SummitEventsRegisterAppointments;
+            } else if (eventPage.Display_Optional_Donation__c) {
+                optionPage = Page.SummitEventsDonation;
             } else if (eventFeeList.size() > 0) {
                 optionPage = Page.SummitEventsSubmit;
             } else {

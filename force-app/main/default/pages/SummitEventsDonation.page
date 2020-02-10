@@ -1,0 +1,51 @@
+<!--
+Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
+Use of this source code is governed by a BSD Revised
+license that can be found in the LICENSE file.
+Created by Thaddaeus Dahlberg on 2/10/2020.
+ -->
+
+<apex:page id="SummitEventsDonation" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" docType="html-5.0" cache="false" controller="SummitEventsDonationController" action="{!checkEventDetails}">
+    <apex:composition template="{!templateSelected}">
+        <apex:define name="metaPageTitle">
+            {!eventInstance.Event__r.Event_Name__c}
+            <apex:outputText rendered="{!!ISBLANK(eventInstance.Instance_Title__c)}" value="{! ' - ' + eventInstance.Instance_Title__c}"/>
+            - Donation
+        </apex:define>
+        <apex:define name="pageTitle"><a href="{!eventInstance.Event__r.Event_Home_Link_URL__c}">{!eventInstance.Event__r.Event_Home_Link_Title__c}</a></apex:define>
+        <apex:define name="afterJquery">
+            <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
+        </apex:define>
+        <apex:define name="sectionNav"/>
+        <apex:define name="body">
+            <apex:form id="OptionalDonation">
+                <apex:outputPanel layout="block" rendered="{!eventInstance.Event__r.Display_Optional_Donation__c}" styleClass="row">
+                    <div class="column">
+                        <apex:outputText escape="false" value="{!eventInstance.Event__r.Donation_Description__c}"></apex:outputText>
+                    </div>
+                    <div class="column small-12 medium-6 large-6">
+                        <apex:outputLabel for="donationAmountSel" value="Amount"></apex:outputLabel>
+                        <apex:selectList multiSelect="false" value="{!donationAmountSelect}" id="donationAmountSel" size="1" required="false">
+                            <apex:selectOptions value="{!suggestedDonation}"/>
+                        </apex:selectList>
+                        <apex:inputText value="{!donationAmount}" style="display:none;" id="donationAmount"></apex:inputText>
+                    </div>
+                    <div class="column small-12 medium-6 large-6">
+                        <apex:outputLabel for="donationFund" value="Designation"></apex:outputLabel>
+                        <apex:selectList multiSelect="false" value="{!donationRecipient}" id="donationFund" size="1" required="false">
+                            <apex:selectOptions value="{!donationRecipientList}"/>
+                        </apex:selectList>
+                    </div>
+                </apex:outputPanel>
+                <div class="row">
+                    <div class="column">
+                        <p>
+                            <apex:commandLink action="{!submitDonation}" onClick="fadeout();" Value="Next" id="submitOptions" styleClass="button confirmContinue"/>
+                            <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="button previous"/>
+                        </p>
+                    </div>
+                </div>
+            </apex:form>
+        </apex:define>
+    </apex:composition>
+</apex:page>

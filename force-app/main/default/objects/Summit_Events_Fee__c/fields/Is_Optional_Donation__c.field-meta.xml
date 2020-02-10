@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Optional_Donation__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Fee is an optional donation ask. Currently only one optional donation per event so this should appear only once in the fee list if it exists.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Fee is an optional donation ask. Currently only one optional donation per event so this should appear only once in the fee list if it exists.</inlineHelpText>
+    <label>Is Optional Donation</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

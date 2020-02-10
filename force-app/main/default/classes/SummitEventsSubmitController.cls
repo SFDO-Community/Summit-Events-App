@@ -18,14 +18,11 @@ public with sharing class SummitEventsSubmitController {
     public String communityBaseURL { get; set; }
     public Map <String, String> feesByIndex { get; set; }
     public Boolean eventHasOptions { get; set; }
-    public String[] donationRecipient { get; set; }
-    public String[] donationAmount { get; set; }
 
     /*Below are all private attribute*/
     private String touchNetService;
     private String gatewayOrigin;
     private Map<String, String> mapResponse = new Map<String, String>();
-    private String contactName;
     private Map<String, String> params;
     private List<Summit_Events_Fee__c> eventFees { get; set; }
 
@@ -43,8 +40,6 @@ public with sharing class SummitEventsSubmitController {
 
     public SummitEventsSubmitController() {
         test = '';
-        donationRecipient = new String[]{
-        };
         eventHasOptions = false;
         templateSelected = SEShared.defaultTemplate;
 
@@ -67,10 +62,7 @@ public with sharing class SummitEventsSubmitController {
             eventPage = [
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c,
                             Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Submit_Registration__c,
-                            Donation_Description__c,Display_Optional_Donation__c, Donation_Recipient_1__r.Name, Donation_Recipient_2__r.Name,
-                            Donation_Recipient_3__r.Name, Donation_Recipient_4__r.Name, Donation_Recipient_5__r.Name,
-                            Donation_Suggested_Amount_List__c, Donation_Recipient_1__c, Donation_Recipient_2__c,
-                            Donation_Recipient_3__c, Donation_Recipient_4__c, Donation_Recipient_5__c
+                            Donation_Description__c,Display_Optional_Donation__c
                     FROM Summit_Events__c
                     WHERE Id = :evtinfo.evtId
             ][0];
@@ -165,44 +157,6 @@ public with sharing class SummitEventsSubmitController {
 
     }
 
-    public List<SelectOption> getDonationRecipientList() {
-        List<SelectOption> options = new List<SelectOption>();
-        options.add(new SelectOption('', 'Select...'));
-
-        for (Integer xx = 1; xx < 6; xx++) {
-            if (String.isNotBlank(String.valueOf(eventPage.get('Donation_Recipient_' + xx + '__c')))) {
-                options.add(
-                        new SelectOption(
-                                String.valueOf(eventPage.get('Donation_Recipient_' + xx + '__c')),
-                                String.valueOf(eventPage.getSObject('Donation_Recipient_' + xx + '__r').get('Name'))
-                        )
-                );
-            }
-        }
-        return options;
-    }
-
-    public List<SelectOption> getSuggestedDonation() {
-        List<SelectOption> cpl = new List<SelectOption>();
-        String suggested = '';
-        if (!String.isBlank(eventPage.Donation_Suggested_Amount_List__c)) {
-            suggested = eventPage.Donation_Suggested_Amount_List__c;
-            cpl.add(new SelectOption('', 'Select...'));
-            suggested = suggested.Trim();
-            suggested = suggested.replace('\n\n', '\n');
-            String[] splitList = suggested.split('\n');
-            for (String p : splitList) {
-                p = p.replaceAll('[^0-9.]', '');
-                Integer numberIn = Integer.valueOf(p);
-                List<String> args = new String[]{'0','number','###,###,##0.00'};
-                string numberFormatted = String.format(numberIn.format(), args);
-                cpl.add(new SelectOption(p, '$' + numberFormatted));
-            }
-            cpl.add(new SelectOption('Other Amount', 'Other Amount'));
-        }
-        return cpl;
-    }
-
     public void displayTestingHeaders() {
         /** OPTIONAL METHOD - Display headers and parameters for testing **/
         //headers = '';
@@ -268,18 +222,24 @@ public with sharing class SummitEventsSubmitController {
     }
 
     public PageReference previousPage() {
-        List<Summit_Events_Appointment_Type__c> apptTypes = [
-                SELECT Id
-                From Summit_Events_Appointment_Type__c
-                WHERE Summit_Events__c = :evtInfo.evtId
-                AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
-        ];
         PageReference lastPage;
-        if (apptTypes.size() == 0) {
-            //If no options skip that step
-            lastPage = Page.SummitEventsRegister;
+        if (eventPage.Display_Optional_Donation__c) {
+            lastPage = Page.SummitEventsDonation;
         } else {
-            lastPage = Page.SummitEventsRegisterAppointments;
+            List<Summit_Events_Appointment_Type__c> apptTypes = [
+                    SELECT Id
+                    From Summit_Events_Appointment_Type__c
+                    WHERE Summit_Events__c = :evtInfo.evtId
+                    AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
+                    AND Appointment_Type_Status__c = 'Active'
+            ];
+
+            if (apptTypes.size() == 0) {
+                //If no options skip that step
+                lastPage = Page.SummitEventsRegister;
+            } else {
+                lastPage = Page.SummitEventsRegisterAppointments;
+            }
         }
         return lastPage;
     }
