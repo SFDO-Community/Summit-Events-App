@@ -123,8 +123,8 @@ public with sharing class SummitEventsDonationController {
             }
         }
 
-        PageReference confirmPage = Page.SummitEventsConfirmation;
-        return confirmPage;
+        PageReference submitPage = Page.SummitEventsSubmit;
+        return submitPage;
     }
 
     public PageReference previousPage() {
