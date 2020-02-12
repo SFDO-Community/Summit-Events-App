@@ -18,6 +18,7 @@ public with sharing class SummitEventsSubmitController {
     public String communityBaseURL { get; set; }
     public Map <String, String> feesByIndex { get; set; }
     public Boolean eventHasOptions { get; set; }
+    public String previousPageURL {get;set;}
 
     /*Below are all private attribute*/
     private String touchNetService;
@@ -68,7 +69,12 @@ public with sharing class SummitEventsSubmitController {
             ][0];
             templateSelected = eventPage.Template__c;
 
-            evtInstance = [SELECT Instance_Title__c, Start_Date_Time__c, End_Date_Time__c FROM Summit_Events_Instance__c WHERE Id = :evtinfo.instanceID LIMIT 1];
+            evtInstance = [
+                    SELECT Instance_Title__c, Start_Date_Time__c, End_Date_Time__c
+                    FROM Summit_Events_Instance__c
+                    WHERE Id = :evtinfo.instanceID
+                    LIMIT 1
+            ];
 
             if (evtInstance.Start_Date_Time__c != null && evtInstance.End_Date_Time__c != null) {
                 eventStartDateTimeCrumb = evtInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + evtInstance.End_Date_Time__c.format('h:mm a');
@@ -84,6 +90,8 @@ public with sharing class SummitEventsSubmitController {
             if (apptTypes.size() > 0) {
                 eventHasOptions = true;
             }
+
+            previousPageURL = previousPage().getUrl();
         }
 
 
@@ -222,7 +230,7 @@ public with sharing class SummitEventsSubmitController {
     }
 
     public PageReference previousPage() {
-        PageReference lastPage;
+        PageReference lastPage = Page.SummitEventsRegister;
         if (eventPage.Display_Optional_Donation__c) {
             lastPage = Page.SummitEventsDonation;
         } else {
@@ -234,10 +242,8 @@ public with sharing class SummitEventsSubmitController {
                     AND Appointment_Type_Status__c = 'Active'
             ];
 
-            if (apptTypes.size() == 0) {
+            if (apptTypes.size() > 0) {
                 //If no options skip that step
-                lastPage = Page.SummitEventsRegister;
-            } else {
                 lastPage = Page.SummitEventsRegisterAppointments;
             }
         }
