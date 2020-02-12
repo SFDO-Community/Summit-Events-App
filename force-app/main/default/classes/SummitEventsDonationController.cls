@@ -72,7 +72,7 @@ public with sharing class SummitEventsDonationController {
             suggested = suggested.replace('\n\n', '\n');
             String[] splitList = suggested.split('\n');
             for (String p : splitList) {
-                Decimal numberIn = cleanFeeStringToDecimal(p);
+                Decimal numberIn = cleanFeeStringToDecimal(p).setScale(2);
                 cpl.add(new SelectOption(String.valueOf(numberIn), prettyCurrencyString(numberIn)));
             }
             cpl.add(new SelectOption('Other Amount', 'Other Amount'));
@@ -103,6 +103,7 @@ public with sharing class SummitEventsDonationController {
     public PageReference submitDonation() {
 
         doCRUD CRUDToDo = new doCRUD();
+        System.debug('Donation Ammount' + donationAmount);
         if (String.isNotBlank(donationAmount)) {
             //Build fee on what we have for donation information
             Summit_events_fee__c newFee = new Summit_Events_Fee__c();
@@ -115,6 +116,7 @@ public with sharing class SummitEventsDonationController {
             if (incomingFee != null) {
                 newFee.Id = incomingFee.Id;
             }
+            System.debug('Incoming Fee: ' + JSON.serializePretty(incomingFee));
             CRUDToDo.upsertFee(newFee);
         } else {
             //If there is no amount and a fee exists than delete it.
@@ -128,7 +130,6 @@ public with sharing class SummitEventsDonationController {
     }
 
     public PageReference previousPage() {
-        System.debug('PREVIOUS PAGE!!!');
         PageReference prevPage = Page.SummitEventsRegister;
         List<Summit_Events_Appointment_Type__c> apptTypes = [
                 SELECT Id
@@ -137,9 +138,7 @@ public with sharing class SummitEventsDonationController {
                 AND (Restrict_To_Instance_Title__r.Instance_Title__c = :eventInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
                 AND Appointment_Type_Status__c = 'Active'
         ];
-        System.Debug('APPT SIZE : ' + apptTypes.size());
         if (apptTypes.size() > 0) {
-            //If no options skip that step
             prevPage = Page.SummitEventsRegisterAppointments;
         }
         return prevPage;

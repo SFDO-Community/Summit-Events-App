@@ -15,6 +15,7 @@ Created by Thaddaeus Dahlberg on 2/10/2020.
         <apex:define name="pageTitle"><a href="{!eventInstance.Event__r.Event_Home_Link_URL__c}">{!eventInstance.Event__r.Event_Home_Link_Title__c}</a></apex:define>
         <apex:define name="afterJquery">
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
+            <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/donation.js')}" type="text/javascript"/>
         </apex:define>
         <apex:define name="sectionNav"/>
         <apex:define name="body">
