@@ -1,6 +1,8 @@
-/**
- * Created by dahl3702 on 2/10/2020.
- */
+// Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
+// Use of this source code is governed by a BSD Revised
+// license that can be found in the LICENSE file.
+// Created by Thaddaeus Dahlberg on 2/10/2020.
+
 
 public with sharing class SummitEventsDonationController {
     public SummitEventsShared SEShared = new SummitEventsShared();
@@ -35,12 +37,15 @@ public with sharing class SummitEventsDonationController {
                     SELECT Id, Event_Registration__c, Event_Fee__c, Event_Fee_Attribute__c
                     FROM Summit_Events_Fee__c
                     WHERE Event_Registration__c = :eventInfo.evtRegId
-                    AND Is_Optional_Donation__c = true
+                    AND Fee_Type__c = 'Optional Donation'
             ];
 
             if (previousDonationFees.size() > 0) {
                 incomingFee = previousDonationFees[0];
+                System.debug('INCOMING FEE: ' + incomingFee);
                 donationRecipient = incomingFee.Event_Fee_Attribute__c;
+                donationAmount = String.valueOf(incomingFee.Event_Fee__c);
+                donationAmountSelect = String.valueOf(incomingFee.Event_Fee__c);
             }
         }
     }
@@ -80,7 +85,7 @@ public with sharing class SummitEventsDonationController {
         return cpl;
     }
 
-    public Decimal cleanFeeStringToDecimal (String currencyString) {
+    public Decimal cleanFeeStringToDecimal(String currencyString) {
         currencyString = currencyString.replaceAll('[^0-9.]', '');
         Decimal d = Decimal.valueOf(!String.isEmpty(currencyString) ? currencyString : '0');
         d = d.setScale(8, RoundingMode.HALF_EVEN);
@@ -109,9 +114,9 @@ public with sharing class SummitEventsDonationController {
             Summit_events_fee__c newFee = new Summit_Events_Fee__c();
             newFee.Event_Fee_Attribute__c = donationRecipient;
             newFee.Event_Fee__c = cleanFeeStringToDecimal(donationAmount);
-            newFee.Is_Optional_Donation__c = true;
             newFee.Event_Registration__c = eventInfo.evtRegId;
             newFee.Summit_Events__c = eventInfo.evtId;
+            newFee.Fee_Type__c = 'Optional Donation';
             //If there is an incoming fee already for a donation just update it by applying the id
             if (incomingFee != null) {
                 newFee.Id = incomingFee.Id;

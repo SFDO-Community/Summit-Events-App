@@ -37,6 +37,11 @@
                 <default>false</default>
                 <label>Appointment</label>
             </value>
+            <value>
+                <fullName>Optional Donation</fullName>
+                <default>false</default>
+                <label>Optional Donation</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
