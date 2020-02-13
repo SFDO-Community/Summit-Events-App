@@ -88,7 +88,6 @@ force-app/main/default/classes/ForgotPasswordController.cls
 
 
 #EDA things to ignore
-Account
 Contact.compactLayouts.hed__**
 Contact.Primary_Academic_Program__c
 Contact.Primary_Department__c

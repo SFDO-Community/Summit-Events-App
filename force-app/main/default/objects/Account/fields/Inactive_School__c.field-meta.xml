@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Inactive_School__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>School is closed</description>
+    <externalId>false</externalId>
+    <inlineHelpText>School is closed</inlineHelpText>
+    <label>Inactive School</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>
