@@ -134,7 +134,7 @@ public with sharing class SummitEventsSubmitController {
             }
 
             /** Collect Fees **/
-            eventFees = [SELECT Name, Event_Fee__c, Event_Fee_Attribute__c, Description__c, Fee_Type__c, Summit_Events__c, Event_Appointment_Type__c FROM Summit_Events_Fee__c WHERE Event_Registration__c = :evtInfo.EvtRegId];
+            eventFees = [SELECT Name, Event_Fee__c, Event_Fee_Attribute__c, Description__c, Event_Fee_Type__c, Summit_Events__c, Event_Appointment_Type__c FROM Summit_Events_Fee__c WHERE Event_Registration__c = :evtInfo.EvtRegId];
             feesByIndex = new Map<String, String>();
             for (Summit_Events_Fee__c fee : eventFees) {
                 if (fee.Event_Fee__c != null && fee.Event_Fee__c > 0) {

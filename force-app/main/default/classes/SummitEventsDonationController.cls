@@ -37,7 +37,7 @@ public with sharing class SummitEventsDonationController {
                     SELECT Id, Event_Registration__c, Event_Fee__c, Event_Fee_Attribute__c
                     FROM Summit_Events_Fee__c
                     WHERE Event_Registration__c = :eventInfo.evtRegId
-                    AND Fee_Type__c = 'Optional Donation'
+                    AND Event_Fee_Type__c = 'Optional Donation'
             ];
 
             if (previousDonationFees.size() > 0) {
@@ -116,7 +116,7 @@ public with sharing class SummitEventsDonationController {
             newFee.Event_Fee__c = cleanFeeStringToDecimal(donationAmount);
             newFee.Event_Registration__c = eventInfo.evtRegId;
             newFee.Summit_Events__c = eventInfo.evtId;
-            newFee.Fee_Type__c = 'Optional Donation';
+            newFee.Event_Fee_Type__c = 'Optional Donation';
             //If there is an incoming fee already for a donation just update it by applying the id
             if (incomingFee != null) {
                 newFee.Id = incomingFee.Id;

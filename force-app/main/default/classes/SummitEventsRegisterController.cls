@@ -75,7 +75,8 @@ public with sharing class SummitEventsRegisterController {
                     SELECT Id, Name, Event__r.Name, Event__r.Event_Name__c, Event__r.Id, Instance_Title__c, Active_Status__c, Capacity__c,
                             Event__r.Event_description__c, Event__r.Audience__c, Start_Date_Time__c, End_Date_Time__c, Current_Available_Capacity__c,
                             Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c,
-                            Event_Instance_Fee__c, Event_Instance_Fee_Attribute__c, Event_Instance_Fee_Additional__c, Event_Instance_Fee_Additional_Attribute__c
+                            Event_Fee_Additional_Attribute_Override__c, Event_Fee_Additional_Override__c, Event_Fee_Override__c, Event_Fee_Attribute_Override__c
+
                     FROM Summit_Events_Instance__c
                     WHERE Id = :evtInfo.instanceID
                     LIMIT 1
@@ -228,38 +229,39 @@ public with sharing class SummitEventsRegisterController {
             //Calculate event cost by Instance and Event fees and add to list of fees for upsert
             eventFeeList = new List<Summit_Events_Fee__c>();
             totalEventCost = 0;
-            if (eventPage.Event_Fee__c != null) {
+
+            if (evtInstance.Event_Fee_Override__c != null) {
+                totalEventCost += evtInstance.Event_Fee_Override__c;
+                eventFeeList.add(new Summit_Events_Fee__c(
+                        Event_Fee__c = evtInstance.Event_Fee_Override__c,
+                        Event_Fee_Attribute__c = evtInstance.Event_Fee_Attribute_Override__c,
+                        Event_Fee_Type__c = 'Event'
+                ));
+            } else if (eventPage.Event_Fee__c != null) {
                 totalEventCost += eventPage.Event_Fee__c;
                 eventFeeList.add(new Summit_Events_Fee__c(
                         Event_Fee__c = eventPage.Event_Fee__c,
                         Event_Fee_Attribute__c = eventPage.Event_Fee_Attribute__c,
-                        Fee_Type__c = 'Event'
+                        Event_Fee_Type__c = 'Event'
                 ));
             }
-            if (eventPage.Event_Fee_Additional__c != null) {
+
+            if (evtInstance.Event_Fee_Additional_Override__c != null) {
+                totalEventCost += evtInstance.Event_Fee_Additional_Override__c;
+                eventFeeList.add(new Summit_Events_Fee__c(
+                        Event_Fee__c = evtInstance.Event_Fee_Additional_Override__c,
+                        Event_Fee_Attribute__c = evtInstance.Event_Fee_Additional_Attribute_Override__c,
+                        Event_Fee_Type__c = 'Event Additional'
+                ));
+            } else if (eventPage.Event_Fee_Additional__c != null) {
                 totalEventCost += eventPage.Event_Fee_Additional__c;
                 eventFeeList.add(new Summit_Events_Fee__c(
                         Event_Fee__c = eventPage.Event_Fee_Additional__c,
                         Event_Fee_Attribute__c = eventPage.Event_Fee_Additional_Attribute__c,
-                        Fee_Type__c = 'Event Additional'
+                        Event_Fee_Type__c = 'Event Additional'
                 ));
             }
-            if (evtInstance.Event_Instance_Fee__c != null) {
-                totalEventCost += evtInstance.Event_Instance_Fee__c;
-                eventFeeList.add(new Summit_Events_Fee__c(
-                        Event_Fee__c = evtInstance.Event_Instance_Fee__c,
-                        Event_Fee_Attribute__c = evtInstance.Event_Instance_Fee_Attribute__c,
-                        Fee_Type__c = 'Event Instance'
-                ));
-            }
-            if (evtInstance.Event_Instance_fee_additional__c != null) {
-                totalEventCost += evtInstance.Event_Instance_fee_additional__c;
-                eventFeeList.add(new Summit_Events_Fee__c(
-                        Event_Fee__c = evtInstance.Event_Instance_fee_additional__c,
-                        Event_Fee_Attribute__c = evtInstance.Event_Instance_Fee_Additional_Attribute__c,
-                        Fee_Type__c = 'Event Instance Additional'
-                ));
-            }
+
         }
 
         //If the user is logged in use that data
@@ -619,10 +621,10 @@ public with sharing class SummitEventsRegisterController {
 
         //Check and create fees and save on registration
         List<Summit_Events_Fee__c> recordedEventFeeList = [
-                SELECT Id, Fee_Type__c, Event_Fee_Attribute__c, Event_Fee__c
+                SELECT Id, Event_Fee_Type__c, Event_Fee_Attribute__c, Event_Fee__c
                 FROM Summit_Events_Fee__c
-                WHERE Fee_Type__c != 'Appointment'
-                AND Fee_Type__c != 'Appointment Additional'
+                WHERE Event_Fee_Type__c != 'Appointment'
+                AND Event_Fee_Type__c != 'Appointment Additional'
                 AND Event_Registration__c = :evtInfo.evtRegId
         ];
         if (recordedEventFeeList.size() > 0) {
@@ -630,7 +632,7 @@ public with sharing class SummitEventsRegisterController {
             List<Id> recordedUsedIds = new list<Id>();
             for (Integer ff = 0; ff < eventFeeList.size(); ff++) {
                 for (Summit_Events_Fee__c recordedFees : recordedEventFeeList) {
-                    if (eventFeeList[ff].Fee_Type__c == recordedFees.Fee_Type__c) {
+                    if (eventFeeList[ff].Event_Fee_Type__c == recordedFees.Event_Fee_Type__c) {
                         eventFeeList[ff].Id = recordedFees.Id;
                         recordedUsedIds.add(recordedFees.Id);
                     }
@@ -640,10 +642,10 @@ public with sharing class SummitEventsRegisterController {
                 }
             }
             List<Summit_Events_Fee__c> deleteEventFees = [
-                    SELECT Id, Fee_Type__c, Event_Fee_Attribute__c, Event_Fee__c
+                    SELECT Id, Event_Fee_Type__c, Event_Fee_Attribute__c, Event_Fee__c
                     FROM Summit_Events_Fee__c
-                    WHERE Fee_Type__c != 'Appointment'
-                    AND Fee_Type__c != 'Appointment Additional'
+                    WHERE Event_Fee_Type__c != 'Appointment'
+                    AND Event_Fee_Type__c != 'Appointment Additional'
                     AND Event_Registration__c = :evtInfo.evtRegId
                     AND Id NOT IN :recordedUsedIds
             ];
