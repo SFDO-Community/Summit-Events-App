@@ -10,7 +10,6 @@ public with sharing class SummitEventsSubmitController {
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
     public Summit_Events_Instance__c evtInstance { get; set; }
-    public List<Summit_Events_Appointment_Type__c> appts { get; set; }
     public List<Summit_Events_Appointments__c> chosenAppts { get; set; }
     public String chosenFormatted { get; set; }
     public String templateSelected { get; set; }
@@ -18,7 +17,7 @@ public with sharing class SummitEventsSubmitController {
     public String communityBaseURL { get; set; }
     public Map <String, String> feesByIndex { get; set; }
     public Boolean eventHasOptions { get; set; }
-    public String previousPageURL {get;set;}
+    public String previousPageURL { get; set; }
 
     /*Below are all private attribute*/
     private String touchNetService;
@@ -33,8 +32,11 @@ public with sharing class SummitEventsSubmitController {
     public Boolean successReturnFromGateway { get; set; }
     public String ticket { get; set; }
     public String ticketName { get; set; }
-    public Double paymentAmount { get; set; }
+    public Double totalPaymentAmount { get; set; }
     public Double existingPaymentAmount { get; set; }
+    public Double eventOnlyPaymentAmount { get; set; }
+    public String paymentItemized { get; set; }
+
     public Boolean showPaymentButton { get; set; }
 
     public string headers { get; set; }
@@ -54,7 +56,7 @@ public with sharing class SummitEventsSubmitController {
         gatewayOrigin = custSetting.Gateway_Origin__c;
 
         /** Code for Custom Payment Setting End from here **/
-        paymentAmount = 0;
+        totalPaymentAmount = 0;
         existingPaymentAmount = 0;
         //Get cookie or URL string variable
         evtInfo = SEShared.getSummitEventsInfo();
@@ -134,12 +136,38 @@ public with sharing class SummitEventsSubmitController {
             }
 
             /** Collect Fees **/
-            eventFees = [SELECT Name, Event_Fee__c, Event_Fee_Attribute__c, Description__c, Event_Fee_Type__c, Summit_Events__c, Event_Appointment_Type__c FROM Summit_Events_Fee__c WHERE Event_Registration__c = :evtInfo.EvtRegId];
+            eventFees = [
+                    SELECT Name, Event_Fee__c, Event_Fee_Attribute__c, Description__c, Event_Fee_Type__c, Summit_Events__c, Event_Appointment_Type__c,
+                            Event_Appointment_Type__r.Title__c, Event_Fee_Attribute__r.Name
+                    FROM Summit_Events_Fee__c
+                    WHERE Event_Registration__c = :evtInfo.EvtRegId
+            ];
             feesByIndex = new Map<String, String>();
+            paymentItemized = '';
+            eventOnlyPaymentAmount = 0;
             for (Summit_Events_Fee__c fee : eventFees) {
                 if (fee.Event_Fee__c != null && fee.Event_Fee__c > 0) {
-                    paymentAmount += fee.Event_Fee__c;
+                    totalPaymentAmount += fee.Event_Fee__c;
                     if (feesByIndex.size() > 0) {
+                        if (!fee.Event_Fee_Type__c.equalsIgnoreCase('Event') || !fee.Event_Fee_Type__c.equalsIgnoreCase('Event Additional')) {
+                            if (fee.Event_Fee_Type__c.equalsIgnoreCase('Appointment')) {
+                                paymentItemized += '<tr class="eventAppointmentCost">';
+                                paymentItemized += '<td>' + fee.Event_Appointment_Type__r.Title__c + '</td>';
+                                paymentItemized += '<td>' + prettyCurrencyString(fee.Event_fee__c) + '</td>';
+                                paymentItemized += '</tr>';
+                            } else if (fee.Event_Fee_Type__c.equalsIgnoreCase('Optional Donation')) {
+                                paymentItemized += '<tr class="eventDonation">';
+                                paymentItemized += '<td>' + fee.Event_Fee_Type__c;
+                                if (String.isNotBlank(fee.Event_Fee_Attribute__r.Name)) {
+                                    paymentItemized += ' - ' + fee.Event_Fee_Attribute__r.Name;
+                                }
+                                paymentItemized += '</td>';
+                                paymentItemized += '<td>' + prettyCurrencyString(fee.Event_fee__c) + '</td>';
+                                paymentItemized += '</tr>';
+                            } else {
+                                eventOnlyPaymentAmount += fee.Event_Fee__c;
+                            }
+                        }
                         if (feesByIndex.containsKey(fee.Event_Fee_Attribute__c)) {
                             Decimal newFee = Decimal.valueOf(feesByIndex.get(fee.Event_Fee_Attribute__c));
                             newFee = newFee + fee.Event_Fee__c;
@@ -153,16 +181,40 @@ public with sharing class SummitEventsSubmitController {
                     }
                 }
             }
+
+
             if (existingPaymentAmount > 0) {
-                paymentAmount = paymentAmount - existingPaymentAmount;
+                totalPaymentAmount = totalPaymentAmount - existingPaymentAmount;
             }
 
-            if (paymentAmount > 0) {
+            paymentItemized += '<tr class="eventOnlyCost">';
+            paymentItemized += '<td>General Event</td>';
+            paymentItemized += '<td>' + prettyCurrencyString(eventOnlyPaymentAmount) + '</td>';
+            paymentItemized += '</tr>';
+
+            paymentItemized += '<tr class="eventTotalCost">';
+            paymentItemized += '<td><strong>Total Cost</strong></td>';
+            paymentItemized += '<td><strong>' + prettyCurrencyString(totalPaymentAmount) + '</strong></td>';
+            paymentItemized += '</tr>';
+
+            paymentItemized = '<table class="eventItemizedFees">' + paymentItemized + '</table>';
+
+            System.debug(paymentItemized);
+            if (totalPaymentAmount > 0) {
                 showPaymentButton = true;
                 generateTicket();
             }
         }
 
+    }
+
+    public String prettyCurrencyString(Decimal numberIn) {
+        String numberOut = '';
+        List<String> args = new String[]{
+                '0', 'number', '###,###,##0.00'
+        };
+        numberOut = '$' + String.format(numberIn.format(), args);
+        return numberOut;
     }
 
     public void displayTestingHeaders() {
@@ -180,7 +232,7 @@ public with sharing class SummitEventsSubmitController {
         }
 
         showPaymentButton = false;
-        if (paymentAmount != null && paymentAmount > 0) {
+        if (totalPaymentAmount != null && totalPaymentAmount > 0) {
             showPaymentButton = true;
             generateTicket();
         }
@@ -265,7 +317,7 @@ public with sharing class SummitEventsSubmitController {
         envelop += '        <typ:ticketName>' + ticketName + '</typ:ticketName>';
         envelop += '        <typ:nameValuePairs>';
         envelop += '            <typ:name>AMT</typ:name>';
-        envelop += '            <typ:value>' + paymentAmount + '</typ:value>';
+        envelop += '            <typ:value>' + totalPaymentAmount + '</typ:value>';
         envelop += '        </typ:nameValuePairs>';
 
         /** Add fees by index code **/

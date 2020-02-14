@@ -28,6 +28,11 @@
                 <label>Appointment</label>
             </value>
             <value>
+                <fullName>Appointment Additional</fullName>
+                <default>false</default>
+                <label>Appointment Additional</label>
+            </value>
+            <value>
                 <fullName>Optional Donation</fullName>
                 <default>false</default>
                 <label>Optional Donation</label>

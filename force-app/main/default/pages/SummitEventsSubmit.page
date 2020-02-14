@@ -59,12 +59,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
             </apex:outputPanel>
             <apex:outputPanel layout="block" rendered="{!showPaymentButton}" styleClass="row">
                 <div class="column">
-                    <h2>Cost</h2>
-                    <p>
-                        <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                            <apex:param value="{!paymentAmount}"/>
-                        </apex:outputText>
-                    </p>
+                    <h3>Event Cost</h3>
+                    <apex:outputText escape="false" value="{!paymentItemized}"/>
                 </div>
             </apex:outputPanel>
             <apex:form id="USTRegistraterSubmitForm" html-data-abide="ajax" html-novalidate="novalidate" rendered="{!!showPaymentButton}">
@@ -79,7 +75,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
             </apex:form>
 
             <!--Payment Gateway if needed-->
-            <apex:outputPanel rendered="{!showPaymentButton && paymentAmount != null && paymentAmount > 0}">
+            <apex:outputPanel rendered="{!showPaymentButton && totalPaymentAmount != null && totalPaymentAmount > 0}">
                 <form id="upayForm" action="{!upayURL}" method="post">
                     <div class="row">
                         <div class="column">
