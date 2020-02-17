@@ -1151,11 +1151,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Portal_Login_Required__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Summit_Events__c.Private_Event__c</field>
         <readable>true</readable>
     </fieldPermissions>

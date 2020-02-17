@@ -1182,11 +1182,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Summit_Events__c.Ask_Program_Interest__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
         <field>Summit_Events__c.Ask_Registrant_Program_Of_Interest__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1372,11 +1367,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Summit_Events__c.Portal_Login_Required__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
         <field>Summit_Events__c.Private_Event__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1542,14 +1532,6 @@
         <apexPage>SummitEventsSubmit</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
-    <recordTypeVisibilities>
-        <recordType>Summit_Events__c.Graduate</recordType>
-        <visible>true</visible>
-    </recordTypeVisibilities>
-    <recordTypeVisibilities>
-        <recordType>Summit_Events__c.UDAR</recordType>
-        <visible>true</visible>
-    </recordTypeVisibilities>
     <recordTypeVisibilities>
         <recordType>Summit_Events__c.Undergraduate</recordType>
         <visible>true</visible>
