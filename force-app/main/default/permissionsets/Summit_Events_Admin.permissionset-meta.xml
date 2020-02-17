@@ -45,11 +45,15 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>SummitEventsRegisterAppointmentCtlr</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>SummitEventsRegisterController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SummitEventsRegisterAppointmentCtlr</apexClass>
+        <apexClass>SummitEventsRestAdmissions</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -58,10 +62,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>SummitEventsSubmitController</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>SummitEventsRestAdmissions</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <description>Full access to the Summit Events App</description>
@@ -1192,6 +1192,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events__c.Ask_Relationship_To_Institution__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events__c.Audience__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1502,6 +1507,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>SummitEventsGeneratedItineraries</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>SummitEventsHostAssignment</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -1531,10 +1540,6 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>SummitEventsSubmit</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>SummitEventsGeneratedItineraries</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <recordTypeVisibilities>

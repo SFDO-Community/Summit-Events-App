@@ -192,6 +192,21 @@
         </values>
     </picklistValues>
     <picklistValues>
+        <picklist>Ask_Relationship_To_Institution__c</picklist>
+        <values>
+            <fullName>Ask</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ask and require</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Do not ask</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
         <picklist>Audience__c</picklist>
         <values>
             <fullName>Dougherty Family College %282-Year%29</fullName>
@@ -566,6 +581,10 @@
         <picklist>Template__c</picklist>
         <values>
             <fullName>CastorTemplate2017</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GeneralSLDS</fullName>
             <default>false</default>
         </values>
         <values>

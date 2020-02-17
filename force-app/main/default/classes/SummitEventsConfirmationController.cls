@@ -9,10 +9,8 @@ public with sharing class SummitEventsConfirmationController {
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c evtInstance { get; set; }
     public String templateSelected { get; set; }
-    public String rName { get; set; }
     public String eventStartDateTimeCrumb {get;set;}
     public String locationCrumb { get; set; }
-    public String dataLayerLocationType {get;set;}
 
     public SummitEventsConfirmationController() {
 
@@ -22,7 +20,7 @@ public with sharing class SummitEventsConfirmationController {
         if (!String.isEmpty(evtInfo.evtId)) {
             eventPage = [
                     SELECT Event_Confirmation_Title__c, Event_Name__c, Template__c, Event_Confirmation_Description__c, Event_Footer__c,
-                            Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Confirmation_Registration__c,RecordType.Name,
+                            Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Confirmation_Registration__c,
                             Hand_Raise_Action__c
                     FROM Summit_Events__c
                     WHERE Id = :evtinfo.evtId

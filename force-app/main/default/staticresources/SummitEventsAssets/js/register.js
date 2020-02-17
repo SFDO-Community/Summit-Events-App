@@ -179,6 +179,7 @@ function populateschSel(data, selector, keyAsText) {
 
 //Validation for the page
 function checkForm() {
+    alert('checking form!');
     console.log('Check the form begins.....')
     populateHiddenSchoolValue();
     var error_count = 0;

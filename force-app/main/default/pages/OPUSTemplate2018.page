@@ -18,7 +18,7 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
         <link href="https://fast.fonts.net/t/1.css?apiType=css&amp;projectid=0c20a741-3f4c-46c8-a6fa-debbf6951b8a" rel="stylesheet" type="text/css"/>
         <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,polyfill.ioArray.prototype.includes,Symbol"></script>
         <script src="https://static.stthomas.edu/ust-style/dist2/js/ust-full.min.js" type="text/javascript"></script>
-        <apex:insert name="afterJquery"/>
+        <apex:insert name="scriptsHead"/>
         <!-- Google Tag Manager -->
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
                     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],

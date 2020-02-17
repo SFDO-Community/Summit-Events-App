@@ -13,7 +13,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
             - Cancel
         </apex:define>
         <apex:define name="pageTitle"><a href="{!evt.Event__r.Event_Home_Link_URL__c}">{!evt.Event__r.Event_Home_Link_Title__c}</a></apex:define>
-        <apex:define name="afterJquery">
+        <apex:define name="scriptsHead">
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
         </apex:define>
         <apex:define name="sectionNav"/>
