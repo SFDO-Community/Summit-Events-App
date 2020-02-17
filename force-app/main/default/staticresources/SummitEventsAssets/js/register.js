@@ -7,7 +7,12 @@ var ChosenProcessActive = {};
 var SESettings = JSON.parse(readCookie('SummitEvents'));
 var audience;
 
-$(document).ready(function () {
+var ready = (callback) => {
+    if (document.readyState != "loading") callback();
+    else document.addEventListener("DOMContentLoaded", callback);
+}
+
+ready(() => {
     $("input[type=hidden]").bind("change", function () {
         console.log($(this).val());
     });
@@ -78,11 +83,6 @@ $(document).ready(function () {
     ChosenCollegeFilter = $("#collegeSelector").next('.chosen-container').find('.chosen-search-input');
 
 
-    //activate zip fill in for city state
-    $('[id$=zip]').on("change", function () {
-        fillInCityStateOnZip($(this));
-    });
-
     //make sure phone is formated correctly
     dynamicValidation();
 
@@ -126,6 +126,9 @@ $(document).ready(function () {
 function dynamicValidation() {
     $('[id$=phone], [id$=mobile], .validPhone').on('change', function () {
         formatPhone($(this));
+    });
+    $('[id$=zip]').on("change", function () {
+        fillInCityStateOnZip($(this));
     });
 }
 
@@ -179,64 +182,49 @@ function populateschSel(data, selector, keyAsText) {
 
 //Validation for the page
 function checkForm() {
-    alert('checking form!');
     console.log('Check the form begins.....')
     populateHiddenSchoolValue();
     var error_count = 0;
     var emailReg = /^([a-zA-Z0-9_.\-.'.+])+@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
-    $.each($('[id$=SummitEventRegisterForm] input, [id$=SummitEventRegisterForm] select'), function (i, v) {
-        if ($(this).hasClass("required") && !$(this).val()) {
-            $(this).addClass("validationError");
-            $('label[for="' + $(this).attr("id") + '"]').addClass("validationError");
-            //console.log('THIS ERRORED:' + $(this).attr('id'));
+    $.each($('.slds-is-required input, .slds-is-required select'), function (i, v) {
+        let inputRequired = $(this).closest('.slds-form-element').hasClass('slds-is-required');
+        let inputType = this.type.toLowerCase();
+        if (inputRequired && !$(this).val()) {
+            $(this).closest('.slds-form-element').addClass("slds-has-error").find('.slds-form-element__help').toggle();
             error_count++;
         }
-        if ($(this).hasClass("validEmail")) {
+        if (inputType == 'email' && inputRequired || inputType == 'email' && $(this).val()) {
             if (!emailReg.test($(this).val())) {
-                $(this).addClass("validationError");
-                $('label[for="' + $(this).attr("id") + '"]').addClass("validationError");
+                $(this).closest('.slds-form-element').addClass("slds-has-error");
                 error_count++;
-                //console.log('THIS EMAIL ERRORED:' + $(this).attr('id'));
             }
         }
     });
 
     $.each($(".selectableOL"), function () {
-        if ($(this).attr("required") == "required") {
+        if ($(this).closest('.slds-form-element').hasClass('slds-is-required')) {
             var sOLId = $(this).data("hiddendataid");
             sOLId = $("[id$=" + sOLId + "]");
             if (!sOLId.val()) {
-                $('label[for="' + sOLId.attr("id") + '"]').addClass("validationError");
-                sOLId.addClass("validationError");
+                $(this).closest('.slds-form-element').addClass("slds-has-error");
                 error_count++;
             }
         }
-
     });
+
     // require school be filled in.
     if ($("[id$=collegeAsk]").length > 0) {
         if (!$("[id$=college]").val() && !$("[id$=CollegeAltInput]").val()) {
             error_count++;
-            $(this).addClass("validationError");
-            if ($("[id$=CollegeAltInput]").val()) {
-                $("#collegeSelector").addClass("validationError");
-            } else {
-                $("[id$=CollegeAltInput]").addClass("validationError");
-            }
-            $('label[for="collegeSelector"]').addClass("validationError");
+            $(this).closest('.slds-form-element').addClass("slds-has-error");
         }
     }
 
     if ($("[id$=hsAsk]").length > 0) {
         if (!$("[id$=school]").val() && !$("[id$=HSAltInput]").val()) {
             error_count++;
-            if ($("[id$=HSAltInput]").val()) {
-                $("#schoolSelector").addClass("validationError");
-            } else {
-                $("[id$=HSAltInput]").addClass("validationError");
-            }
-            $('label[for="schoolSelector"]').addClass("validationError");
+            $(this).closest('.slds-form-element').addClass("slds-has-error");
         }
     }
 
@@ -245,7 +233,7 @@ function checkForm() {
         fadein();
         validationErrorAction();
         //Scroll to first error
-        var firstInvalid = $(".validationError:first");
+        var firstInvalid = $(".slds-has-error:first");
         $([document.documentElement, document.body]).animate({
             scrollTop: firstInvalid.offset().top - 10
         }, 200);
@@ -256,17 +244,8 @@ function checkForm() {
 }
 
 function validationErrorAction() {
-    $(".validationError").on("change", function () {
-        // alert();
-        $('label[for="' + $(this).attr("id") + '"]').removeClass("validationError");
-        $('label[for="' + $(this).attr("id") + '"]').removeClass("validationError");
-        if ($(this).hasClass("HSAltInput")) {
-            $('label[for="schoolSelector"]').removeClass("validationError");
-        }
-        if ($(this).hasClass("CollegeAltInput")) {
-            $('label[for="collegeSelector"]').removeClass("validationError");
-        }
-        $(this).removeClass("validationError");
+    $(".slds-form-element.slds-has-error").on("change", function () {
+        $(this).removeClass("slds-has-error").find('.slds-form-element__help').toggle();
     });
 
 }
@@ -462,47 +441,38 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
-/* isNumberKey
-    Only allows NUMBERS to be keyed into a text field.
-    @environment ALL
-    @param evt - The specified EVENT that happens on the element.
-    @return True if number, false otherwise.
-*/
-function isNumberKey(evt) {
 
-    return true;
-} // isNumberKey
-
-$(document).ready(function () {
-    $.each($(".selectableOL"), function () {
+ready(() => {
+    document.querySelectorAll(".selectableOL").forEach(selOl => {
         //get the id of of the hidden value field in ol tag data of the selectable list
-        var data2Id = $(this).data("hiddendataid");
-        //get the hidden data and split it into an array
-        var oldSelections = $("[id$=" + data2Id + "]").val().split(';');
+        let data2Id = selOl.dataset.hiddendataid;
         //iterate over all the li in the current ol and if the value is in the array make it selected on load
-        $.each($(this).children("li"), function () {
-            if ($.inArray($(this).html(), oldSelections) > -1) {
-                $(this).addClass('ui-selected');
+        let selOlSelected = document.querySelector("[id$=" + data2Id + "]");
+        let oldSelArray = selOlSelected.value.split(';');
+
+        selOl.querySelectorAll('li').forEach(selLi => {
+            selLi.addEventListener("click", (e) => {
+                let selArray = selOlSelected.value.split(';');
+                if (selLi.classList.contains('selOl-selected')) {
+                    selLi.classList.remove('selOl-selected');
+                    selArray = arrayRemove(selArray, selLi.textContent);
+                } else {
+                    selLi.classList.add('selOl-selected');
+                    selArray.push(selLi.textContent);
+                }
+                selOlSelected.value = selArray.join(';');
+            });
+
+            if(oldSelArray.includes(selLi.textContent)) {
+                selLi.classList.add('selOl-selected');
             }
         });
 
-        $("#" + $(this).attr("id")).bind("mousedown", function (e) {
-            e.metaKey = true;
-        }).selectable({
-            //load all selected items of each list into an array
-            stop: function () {
-                var selectList = [];
-                $.each(
-                    $(this).children("li.ui-selected"),
-                    function () {
-                        selectList.push($(this).html())
-                    });
-                //populate the hidden data field to transfer to SF on submit
-                $("[id$=" + data2Id + "]").val(selectList.join(';'));
-                //remove any validation errors that might exist from previous submit
-                $("[id$=" + data2Id + "]").removeClass('validationError');
-                $('label[for="' + $("[id$=" + data2Id + "]").attr("id") + '"]').removeClass('validationError');
-            }
-        });
     });
 });
+
+function arrayRemove(arr, value) {
+    return arr.filter(function(ele){
+        return ele != value;
+    });
+}
