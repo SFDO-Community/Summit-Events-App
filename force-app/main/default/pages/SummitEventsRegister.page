@@ -28,8 +28,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         </apex:define>
 
         <apex:define name="body">
-            <div xmlns="http://www.w3.org/2000/svg" version="1.1">
-
+            <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                     <apex:messages/>
                 </div>

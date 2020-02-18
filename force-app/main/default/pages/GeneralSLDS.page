@@ -7,6 +7,7 @@ Created by Thaddaeus Dahlberg on 2/15/2020.
 
 <apex:page id="GeneralSLDS" sidebar="false" lightningStyleSheets="true" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
     <apex:slds/>
+    <aura:GenralSLDSTokens></aura:GenralSLDSTokens>
     <html class="no-js" lang="" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <head>
         <meta charset="utf-8"/>
@@ -20,14 +21,12 @@ Created by Thaddaeus Dahlberg on 2/15/2020.
     <div class="slds-scope">
         <div class="slds-grid slds-grid_align-center">
             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-6 slds-medium-size_5-of-6" style="border:solid 1px red;">
-                <div class="slds-grid slds-wrap">
                 <!--[if IE]>
                 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
                 <![endif]-->
                 <apex:insert name="sectionNav"/>
                 <apex:insert name="body"/>
                 <apex:insert name="footer"/>
-                </div>
             </div>
         </div>
     </div>

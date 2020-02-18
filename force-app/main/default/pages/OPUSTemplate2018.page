@@ -4,7 +4,8 @@ Use of this source code is governed by a BSD Revised
 license that can be found in the LICENSE file.
 Created by Thaddaeus Dahlberg on 10/25/2017.
 -->
-<apex:page id="OPUSTemplate2018" sidebar="false" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
+<apex:page id="OPUSTemplate2018" sidebar="false" lightningStyleSheets="true" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
+    <apex:slds/>
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" xmlns:v-on="http://fake.org/fake" xmlns:v-bind="http://fake.org/fake">
     <head>
         <meta charset="utf-8"/>
@@ -20,19 +21,35 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
         <script src="https://static.stthomas.edu/ust-style/dist2/js/ust-full.min.js" type="text/javascript"></script>
         <apex:insert name="scriptsHead"/>
         <!-- Google Tag Manager -->
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-KHFMKX');</script>
+        <script>(function (w, d, s, l, i) {
+                w[l] = w[l] || [];
+                w[l].push({
+                    'gtm.start':
+                        new Date().getTime(), event: 'gtm.js'
+                });
+                var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+                j.async = true;
+                j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-KHFMKX');</script>
         <!-- End Google Tag Manager -->
 
         <!-- Google Tag Manager -->
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-5RDGQ79');</script>
+        <script>(function (w, d, s, l, i) {
+                w[l] = w[l] || [];
+                w[l].push({
+                    'gtm.start':
+                        new Date().getTime(), event: 'gtm.js'
+                });
+                var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+                j.async = true;
+                j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-5RDGQ79');</script>
         <!-- End Google Tag Manager -->
 
 
@@ -177,13 +194,17 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
     <body>
 
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KHFMKX"
-                      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KHFMKX"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
     <!-- End Google Tag Manager (noscript) -->
 
 
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5RDGQ79" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5RDGQ79" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
     <!-- End Google Tag Manager (noscript) -->
 
 
@@ -1059,7 +1080,9 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
             </div>
         </global-header>
         <main class="the-main">
-            <apex:insert name="body"/>
+            <div class="slds-scope">
+                <apex:insert name="body"/>
+            </div>
         </main>
         <footer class="footer">
             <svg viewBox="0 0 412.94 52.99" class="footer__accent">
@@ -1282,8 +1305,8 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
                 </ul>
             </div>
         </footer>
+        <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/loading.js')}" type="text/javascript"/>
     </div>
-    <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/loading.js')}" type="text/javascript"/>
     </body>
     </html>
 </apex:page>
