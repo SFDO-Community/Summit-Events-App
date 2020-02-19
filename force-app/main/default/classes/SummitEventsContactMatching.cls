@@ -102,6 +102,7 @@ public with sharing class SummitEventsContactMatching {
 
         query = '';
         orStat = '';
+
         /** Hard test on LAST NAME, FIRST NAME, EMAIL **/
         if (
                 (hardContactFound == null && String.isNotBlank(evt.Registrant_Last_Name__c) || String.isNotBlank(evt.Last_Name_as_Student__c))

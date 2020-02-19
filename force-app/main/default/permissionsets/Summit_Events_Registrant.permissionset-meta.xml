@@ -1006,6 +1006,16 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Contact_Matching_Rule_Description__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Contact_Matching_Rules__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.End_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1287,8 +1297,4 @@
         <apexPage>SummitEventsSubmit</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
-    <recordTypeVisibilities>
-        <recordType>Summit_Events__c.Undergraduate</recordType>
-        <visible>true</visible>
-    </recordTypeVisibilities>
 </PermissionSet>
