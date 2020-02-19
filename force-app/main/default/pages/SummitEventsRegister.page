@@ -17,7 +17,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
             <script>
                 dataLayer = [{
                     <!--'school': '{!eventPage.School__r.Name}',-->
-                    'recordType': '{!eventPage.RecordType.Name}',
+                    <!--'recordType': '{!eventPage.RecordType.Name}',-->
                     'eventlabel': '{!eventPage.Event_Name__c}'
                 }];
             </script>
@@ -258,7 +258,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </div>
                         </div>
 
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!IF(evtInfo.recordTypeName = 'Undergraduate' || evtInfo.recordTypeName = 'Graduate', true, false)}">
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" >
                             <div class="slds-form-element slds-is-required">
                                 <apex:outputLabel for="email" styleClass="required slds-form-element__label">
                                     Email <abbr class="slds-required" title="required">*</abbr>
@@ -271,7 +271,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </apex:outputPanel>
 
                         <!-- Undergrad bare minimums beyond first, last, email-->
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!IF(evtInfo.recordTypeName = 'Undergraduate' && ISBLANK(applicantType), true, false)}">
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6">
                             <div class="slds-form-element slds-is-required">
                                 <apex:outputLabel for="applicantType" styleClass="slds-form-element__label">
                                     Application Type <abbr class="slds-required" title="required">*</abbr>
@@ -285,7 +285,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </div>
                         </apex:outputPanel>
 
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!IF(evtInfo.recordTypeName = 'Undergraduate' || evtInfo.recordTypeName = 'UDAR', true, false)}">
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6">
                             <div class="slds-form-element slds-is-required">
                                 <apex:outputLabel for="preferredFirstName" styleClass="slds-form-element__label">
                                     Preferred First Name <abbr class="slds-required" title="required">*</abbr>
@@ -336,14 +336,14 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         <!-- Phone number registration (optional) -->
                         <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!eventPage.Ask_Phone__c}">
                             <div class="slds-form-element">
-                                <apex:outputLabel styleClass="slds-form-element__label" value="{!If(evtInfo.recordTypeName == 'UDAR', 'Phone', 'Home Phone')}" for="phone"/>
+                                <apex:outputLabel styleClass="slds-form-element__label" value="Home Phone" for="phone"/>
                                 <div class="slds-form-element__control">
                                     <apex:input type="tel" value="{!newEvtReg.Registrant_Phone__c}" id="phone" disabled="{!contactSet}" styleClass="slds-input"/>
                                 </div>
                             </div>
                         </apex:outputPanel>
 
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!evtInfo.recordTypeName != 'UDAR' && eventPage.Ask_Phone__c}">
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!eventPage.Ask_Phone__c}">
                             <div class="slds-form-element">
                                 <apex:outputLabel styleClass="slds-form-element__label" value="Mobile Phone" for="mobile"/>
                                 <div class="slds-form-element__control">

@@ -13,7 +13,6 @@ public with sharing class SummitEventsShared {
         public String instanceID { get; set; }
         public String evtRegId { get; set; }
         public String evtId { get; set; }
-        public String recordTypeName { get; set; }
     }
 
     public SummitEventsShared() {
@@ -21,7 +20,7 @@ public with sharing class SummitEventsShared {
     }
 
     public SummitEventsInfo getSummitEventsInfo() {
-        //{"audience":"High School Senior","instanceID":"a320m000000A5fOAAS","evtRegId":"a350m0000008q63AAA,"evtId":"a330m0000001SOrAAM", "recordTypeName" :"Undergraduate"}
+        //{"audience":"High School Senior","instanceID":"a320m000000A5fOAAS","evtRegId":"a350m0000008q63AAA,"evtId":"a330m0000001SOrAAM"}
         String jsonInput = '';
         SummitEventsInfo evtInfo = new SummitEventsInfo();
         String URLaudience = ApexPages.currentPage().getParameters().get('audience');
@@ -54,35 +53,11 @@ public with sharing class SummitEventsShared {
                     if (!String.isBlank(URLaudience)) {
                         evtInfo.audience = URLaudience;
                     }
-                    try {
-                        Summit_Events_Instance__c instanceInfo = [SELECT Event__c, Event__r.RecordType.Name FROM Summit_Events_Instance__c WHERE ID = :evtInfo.instanceID][0];
-                        evtInfo.evtId = instanceInfo.Event__c;
-                        if (String.isBlank(instanceInfo.event__r.RecordType.Name)) {
-                            evtInfo.recordTypeName = 'Undergraduate';
-                        } else {
-                            evtInfo.recordTypeName = instanceInfo.event__r.RecordType.Name;
-                        }
-                    } catch (Exception e) {
-
-                    }
-                    String eventCookie = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"COMING","evtId":"' + evtInfo.evtId + '","recordTypeName","' + evtInfo.recordTypeName + '"}';
+                    String eventCookie = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"COMING","evtId":"' + evtInfo.evtId + '"}';
                     System.Debug('COOKIE 1: ' + eventCookie);
                     createEncryptedCookie(eventCookie, 'SummitEvents');
                 }
             }
-        }
-        //Get record type
-
-        List<Summit_Events_Instance__c> recTypeInfo = [SELECT Event__r.RecordType.Name, Id FROM Summit_Events_Instance__c WHERE ID = :evtInfo.instanceID];
-
-        if (recTypeInfo.size() > 0) {
-            if (String.isBlank(recTypeInfo[0].event__r.RecordType.Name)) {
-                evtInfo.recordTypeName = 'Undergraduate';
-            } else {
-                evtInfo.recordTypeName = recTypeInfo[0].event__r.RecordType.Name;
-            }
-        } else {
-            evtInfo.recordTypeName = 'Undergraduate';
         }
 
         //check if regid is there  and whether status it is set to registered. IF so reset cookie if it is.
@@ -90,7 +65,7 @@ public with sharing class SummitEventsShared {
             Summit_Events_Registration__c evtReg = [SELECT Status__c FROM Summit_Events_Registration__c WHERE ID = :evtInfo.evtRegId][0];
             if (evtReg.Status__c != 'Started') {
                 //Registration is complete and a new form should be generated.
-                String eventCookie2 = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"","evtId":"' + evtInfo.evtId + '","recordTypeName","' + evtInfo.recordTypeName + '"}';
+                String eventCookie2 = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"","evtId":"' + evtInfo.evtId + '"}';
                 System.Debug('COOKIE 1: ' + eventCookie2);
                 createEncryptedCookie(eventCookie2, 'SummitEvents');
             }

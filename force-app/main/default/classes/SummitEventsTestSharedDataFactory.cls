@@ -12,16 +12,8 @@ public with sharing class SummitEventsTestSharedDataFactory {
 
         System.Debug('|---------->> USER:' + UserInfo.getUserName());
 
-        Id EvtRecType;
-        if (String.isNotBlank(recType)) {
-            EvtRecType = [Select Name, Id From RecordType WHERE Name = :recType LIMIT 1].Id;
-        } else {
-            EvtRecType = [Select Name, Id From RecordType WHERE Name = 'Undergraduate' LIMIT 1].Id;
-        }
-
         //Create event
         testEvent = new Summit_Events__c(
-                RecordtypeId = EvtRecType,
                 Name = testEventName,
                 Event_Status__c = 'Active',
                 Event_Name__c = testEventName,

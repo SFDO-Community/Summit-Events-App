@@ -114,7 +114,7 @@ public with sharing class SummitEventsRegisterController {
                             // School not in this ORG
                             // Academic_Program_List__c, School__c, Ask_Mailing_Address__c, Ask_Phone__c, Event_Sponsor__c,
                             Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
-                            Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, RecordType.Name, Contact_Creation__c
+                            Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c
                     FROM Summit_Events__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1
@@ -542,7 +542,7 @@ public with sharing class SummitEventsRegisterController {
             }
             if (!matchingScope.startsWith('No matching')) {
                 System.debug('PASSING TO MATCHING METHOD');
-                matched = matcher.SummitEventsContactMatching(evtInfo.recordTypeName, newEvtReg, matchingScope);
+                matched = matcher.SummitEventsContactMatching('Undergraduate', newEvtReg, matchingScope);
                 //Populate matching results into data - matched may be blank depending on the Contact_Creation__c setting
                 if (matched.size() > 0) {
                     contactId = (Id) matched.get('contactId');
