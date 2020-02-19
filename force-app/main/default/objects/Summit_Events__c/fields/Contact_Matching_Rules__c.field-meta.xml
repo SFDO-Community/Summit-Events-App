@@ -23,11 +23,6 @@
                 <default>false</default>
                 <label>Matching rules 2</label>
             </value>
-            <value>
-                <fullName>Matching rules 3</fullName>
-                <default>false</default>
-                <label>Matching rules 3</label>
-            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
