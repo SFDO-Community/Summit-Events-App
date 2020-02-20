@@ -26,7 +26,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Ask_Gender__c = 'Ask and require',
                 Include_Time_frame_List__c = true,
                 Allow_Other_Attendees__c = true,
-                Ask_Mailing_Address__c = true,
+                Ask_Mailing_Address__c = 'Ask',
                 Ask_Phone__c = true,
                 Ask_Date_Of_Birth__c = true,
                 Max_Other_Attendees__c = 5,
@@ -263,7 +263,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Registrant_Zip__c = Zip,
                 Registrant_High_School_Code__c = '000000',
                 Registrant_Date_of_Birth__c = Date.valueOf(DOB),
-                Preferred_St_Thomas_Class_Year__c = ClassYear,
+                Preferred_Class_Year__c = ClassYear,
                 Status__c = 'Started'
         );
 
@@ -327,7 +327,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Registrant_Email__c = Email,
                 Registrant_Zip__c = Zip,
                 Registrant_Phone__c = Phone,
-                Preferred_St_Thomas_Class_Year__c = ClassYear
+                Preferred_Class_Year__c = ClassYear
         );
         if (String.isNotBlank(DOB)) {
             eReg.Registrant_Date_of_Birth__c = Date.valueOf(DOB);

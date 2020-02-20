@@ -276,11 +276,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Preferred_St_Thomas_Class_Year__c</field>
+                <field>Preferred_Class_Year__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Relationship_to_St_Thomas__c</field>
+                <field>Relationship_To_Institution__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>

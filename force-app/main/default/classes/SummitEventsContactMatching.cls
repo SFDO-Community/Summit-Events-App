@@ -52,7 +52,7 @@ public with sharing class SummitEventsContactMatching {
         matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Original Registration Information</div>';
         matchLog += matchLogHead;
         matchLog += '<tbody>';
-        matchLog += UDARMatchTD('javascript();', evt.Registrant_Last_Name__c, evt.Last_Name_as_Student__c, evt.Registrant_First_Name__c, evt.Preferred_St_Thomas_Class_Year__c, evt.Registrant_Email__c, '', evt.Registrant_Phone__c, '', false);
+        matchLog += UDARMatchTD('javascript();', evt.Registrant_Last_Name__c, evt.Last_Name_as_Student__c, evt.Registrant_First_Name__c, evt.Preferred_Class_Year__c, evt.Registrant_Email__c, '', evt.Registrant_Phone__c, '', false);
         matchLog += '</tbody></table>';
 
         /**** HARD MATCH TESTING ****/
@@ -66,7 +66,7 @@ public with sharing class SummitEventsContactMatching {
         if (
                 (String.isNotBlank(evt.Registrant_Last_Name__c) || String.isNotBlank(evt.Last_Name_as_Student__c))
                         && String.isNotBlank(evt.Registrant_Email__c)
-                        && String.isNotBlank(evt.Preferred_St_Thomas_Class_Year__c)) {
+                        && String.isNotBlank(evt.Preferred_Class_Year__c)) {
             query += querySelect;
 
             /** Test on Last Name name Match **/
@@ -90,7 +90,7 @@ public with sharing class SummitEventsContactMatching {
             query += ' OR hed__WorkEmail__c = \'' + String.escapeSingleQuotes(evt.Registrant_Email__c) + '\' ';
             query += ' ) ';
 
-            query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_St_Thomas_Class_Year__c) + '\' ';
+            query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_Class_Year__c) + '\' ';
 
             List<Contact> hardContactTestEmail = CRUDtoDo.findContacts(query);
 
@@ -161,7 +161,7 @@ public with sharing class SummitEventsContactMatching {
                 (hardContactFound == null && String.isNotBlank(evt.Registrant_Last_Name__c) || String.isNotBlank(evt.Last_Name_as_Student__c))
                         && String.isNotBlank(evt.Registrant_Phone__c)
                         && (String.isNotBlank(evt.Registrant_First_Name__c) || String.isNotBlank(evt.Registrant_Preferred_First_Name__c))
-                        && String.isNotBlank(evt.Preferred_St_Thomas_Class_Year__c)) {
+                        && String.isNotBlank(evt.Preferred_Class_Year__c)) {
             query += querySelect;
             /** Test on Last Name name Match **/
             if (String.isNotBlank(evt.Registrant_Last_Name__c)) {
@@ -197,7 +197,7 @@ public with sharing class SummitEventsContactMatching {
             query += ' OR HomePhone =  \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
             query += ' OR hed__WorkPhone__c =  \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
             query += ' )';
-            query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_St_Thomas_Class_Year__c) + '\' ';
+            query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_Class_Year__c) + '\' ';
 
             List<Contact> hardContactTestNamePhoneClass = CRUDtoDo.findContacts(query);
 
@@ -212,7 +212,7 @@ public with sharing class SummitEventsContactMatching {
         if (
                 (hardContactFound == null && String.isNotBlank(evt.Registrant_Last_Name__c) || String.isNotBlank(evt.Last_Name_as_Student__c))
                         && (String.isNotBlank(evt.Registrant_First_Name__c) || String.isNotBlank(evt.Registrant_Preferred_First_Name__c))
-                        && String.isNotBlank(evt.Preferred_St_Thomas_Class_Year__c)) {
+                        && String.isNotBlank(evt.Preferred_Class_Year__c)) {
 
             /* Get the first three characters of name and preferred name */
             String firstThree = evt.Registrant_First_Name__c;
@@ -256,7 +256,7 @@ public with sharing class SummitEventsContactMatching {
             }
             orStat = '';
 
-            query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_St_Thomas_Class_Year__c) + '\' ';
+            query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_Class_Year__c) + '\' ';
 
             List<Contact> hardContactTestNameFirstThreeClass = CRUDtoDo.findContacts(query);
 
@@ -311,8 +311,8 @@ public with sharing class SummitEventsContactMatching {
                 queryComplete = false;
             }
 
-            if (String.isNotBlank(evt.Preferred_St_Thomas_Class_Year__c)) {
-                query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_St_Thomas_Class_Year__c) + '\' ';
+            if (String.isNotBlank(evt.Preferred_Class_Year__c)) {
+                query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_Class_Year__c) + '\' ';
             } else {
                 queryComplete = false;
             }
@@ -339,7 +339,7 @@ public with sharing class SummitEventsContactMatching {
                 matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">New Contact Created</div>';
                 matchLog += matchLogHead;
                 matchLog += '<tbody>';
-                matchLog += UDARMatchTD(contactId, evt.Registrant_Last_Name__c, '', evt.Registrant_First_Name__c, evt.Preferred_St_Thomas_Class_Year__c, newCreatedContact.Email, '', evt.Registrant_Phone__c, '', false);
+                matchLog += UDARMatchTD(contactId, evt.Registrant_Last_Name__c, '', evt.Registrant_First_Name__c, evt.Preferred_Class_Year__c, newCreatedContact.Email, '', evt.Registrant_Phone__c, '', false);
                 matchLog += '</tbody></table>';
                 newContactCreated = true;
             }
@@ -611,7 +611,7 @@ public with sharing class SummitEventsContactMatching {
         newEvtContact.MobilePhone = evt.Registrant_Mobile_Phone__c;
         newEvtContact.HomePhone = evt.Registrant_Phone__c;
         newEvtContact.Previous_Last_Name__c = evt.Last_Name_as_Student__c;
-        newEvtContact.Preferred_Class_Year__c = evt.Preferred_St_Thomas_Class_Year__c;
+        newEvtContact.Preferred_Class_Year__c = evt.Preferred_Class_Year__c;
         //newEvtContact.High_School_Expected_Graduation_Year__c = evt.Registrant_High_School_Grad_Year__c;
         newEvtContact.LeadSource = 'Event';
 

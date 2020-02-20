@@ -102,6 +102,7 @@ Campaign
 force-app/main/default/objects/Campaign/**
 Opportunity
 force-app/main/default/objects/Opportunity/**
+force-app/main/default/featureParameters/hed__**
 
 # LWC configuration files
 **/jsconfig.json

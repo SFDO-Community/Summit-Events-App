@@ -111,6 +111,7 @@ public with sharing class SummitEventsRegisterController {
                             Add_Info_Question_Pick_List_4__c, Add_Info_Question_Text_4__c, Add_Info_Question_Type_4__c,
                             Add_Info_Question_Pick_List_5__c, Add_Info_Question_Text_5__c, Add_Info_Question_Type_5__c,
                             Academic_Program_List__c, Ask_Mailing_Address__c, Ask_Phone__c, Event_Sponsor__c, Ask_Relationship_To_Institution__c,
+                            Ask_Last_Name_As_Student__c, Ask_Preferred_Class_Year__c, Ask_Preferred_First_Name__c,
                             // School not in this ORG
                             // Academic_Program_List__c, School__c, Ask_Mailing_Address__c, Ask_Phone__c, Event_Sponsor__c,
                             Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
@@ -290,7 +291,7 @@ public with sharing class SummitEventsRegisterController {
                                 Registrant_High_School__c, Registrant_High_School_Code__c, Registrant_Receive_Texts__c, Registrant_High_School_Grad_Year__c, Registrant_High_School_Not_Found__c,
                                 Registrant_College_Not_Found__c, Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c, Registrant_Parent_Phone__c, Registrant_Parent_Status__c,
                                 Add_Info_Answer_1__c, Add_Info_Answer_2__c, Add_Info_Answer_3__c, Add_Info_Answer_4__c, Add_Info_Answer_5__c, Registrant_Program_Interest__c, Registrant_Preferred_First_Name__c,
-                                Registrant_date_of_Birth__c, Last_Name_as_Student__c, Preferred_St_Thomas_Class_Year__c, Relationship_to_St_Thomas__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c, Registrant_Other_Phone__c, Registrant_Other_Relationship__c,
+                                Registrant_date_of_Birth__c, Last_Name_as_Student__c, Preferred_Class_Year__c, Relationship_To_Institution__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c, Registrant_Other_Phone__c, Registrant_Other_Relationship__c,
                                 Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c
                         FROM Summit_Events_Registration__c
                         WHERE id = :evtInfo.evtRegId
@@ -348,7 +349,7 @@ public with sharing class SummitEventsRegisterController {
     }
 
     public List<SelectOption> getRelationshipDD() {
-        return PickThePicklist('Summit_Events_Registration__c', 'Relationship_to_St_Thomas__c', false);
+        return PickThePicklist('Summit_Events_Registration__c', 'Relationship_To_Institution__c', false);
     }
 
     public List<SelectOption> getProgramsAvailable() {

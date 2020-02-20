@@ -172,7 +172,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6">
                                         <div class="slds-form-element slds-is-required">
-                                            <apex:outputLabel for="otherLastName" styleClass="slds-form-element__label required">
+                                            <apex:outputLabel for="otherLastName" styleClass="slds-form-element__label">
                                                 Last Name <abbr class="slds-required" title="required">*</abbr>
                                             </apex:outputLabel>
                                             <div class="slds-form-element__control">
@@ -184,7 +184,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6">
                                         <div class="slds-form-element slds-is-required">
-                                            <apex:outputLabel for="otherEmail" styleClass="slds-form-element__label required">
+                                            <apex:outputLabel for="otherEmail" styleClass="slds-form-element__label">
                                                 Email <abbr class="slds-required" title="required">*</abbr>
                                             </apex:outputLabel>
                                             <div class="slds-form-element__control">
@@ -258,7 +258,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </div>
                         </div>
 
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" >
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6">
                             <div class="slds-form-element slds-is-required">
                                 <apex:outputLabel for="email" styleClass="required slds-form-element__label">
                                     Email <abbr class="slds-required" title="required">*</abbr>
@@ -297,29 +297,36 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </div>
                         </apex:outputPanel>
 
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="true">
-                            <div class="slds-form-element">
-                                <apex:outputLabel value="Last Names as Student" for="lastNameAsStudent" styleClass="slds-form-element__label"/>
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!IF(eventPage.Ask_Last_Name_As_Student__c != 'Do not ask' && eventPage.Ask_Last_Name_As_Student__c != null, true, false)}">
+                            <div class="slds-form-element {!IF(eventPage.Ask_Last_Name_As_Student__c == 'Ask and require', 'slds-is-required', '')}">
+                                <apex:outputLabel for="lastNameAsStudent" styleClass="slds-form-element__label">
+                                    Last Name as Student
+                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Last_Name_As_Student__c == 'Ask and require', true, false)}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </apex:outputText>
+                                </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:inputText value="{!newEvtReg.Last_Name_as_Student__c}" id="lastNameAsStudent" disabled="{!contactSet}" maxLength="80" styleClass="slds-input"/>
+                                    <apex:inputText value="{!newEvtReg.Last_Name_as_Student__c}" html-aria-describedby="lastNameAsStudent-required" id="lastNameAsStudent" disabled="{!contactSet}" maxLength="80" styleClass="slds-input"/>
+                                </div>
+                                <div class="slds-form-element__help" id="lastNameAsStudent-required">
+                                    {!IF(eventPage.Ask_Last_Name_As_Student__c == 'Ask and require', 'This field is required', '')}
                                 </div>
                             </div>
                         </apex:outputPanel>
 
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="true">
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!IF(eventPage.Ask_Preferred_Class_Year__c != 'Do not ask' && eventPage.Ask_Preferred_Class_Year__c != null, true, false)}">
                             <div class="slds-form-element">
-                                <apex:outputLabel value="Email" for="emailUDAR" styleClass="required slds-form-element__label"/>
+                                <apex:outputLabel for="preferredClassYear" styleClass="required slds-form-element__label">
+                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Preferred_Class_Year__c == 'Ask and require', true, false)}">
+                                        Preferred Class Year
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </apex:outputText>
+                                </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:input type="email" value="{!newEvtReg.Registrant_Email__c}" id="emailUDAR" required="true" styleClass="slds-input" disabled="{!contactSet}"/>
+                                    <apex:inputText value="{!newEvtReg.Preferred_Class_Year__c}" html-aria-describedby="preferredClassYear-required" id="preferredClassYear" styleClass="slds-input validYear" disabled="{!contactSet}" maxLength="80" required="true"/>
                                 </div>
-                            </div>
-                        </apex:outputPanel>
-
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="true">
-                            <div class="slds-form-element">
-                                <apex:outputLabel value="Preferred Class Year" for="preferredClassYear" styleClass="required slds-form-element__label"/>
-                                <div class="slds-form-element__control">
-                                    <apex:inputText value="{!newEvtReg.Preferred_St_Thomas_Class_Year__c}" id="preferredClassYear" styleClass="slds-input validYear" disabled="{!contactSet}" maxLength="80" required="true"/>
+                                <div class="slds-form-element__help" id="preferredClassYear-required-required">
+                                    {!IF(eventPage.Preferred_Class_Year__c == 'Ask and require', 'This field is required', '')}
                                 </div>
                             </div>
                         </apex:outputPanel>
@@ -372,7 +379,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     Relationship (select all that apply):
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:inputHidden value="{!newEvtReg.Relationship_to_St_Thomas__c}" id="relationshipToInstitution" required="true"/>
+                                    <apex:inputHidden value="{!newEvtReg.Relationship_to_Institution__c}" id="relationshipToInstitution" required="true"/>
                                     <ol class="selectableOL" id="rel2UST" data-hiddendataid="relationshipToInstitution" required="{!IF(eventPage.Ask_Relationship_To_Institution__c == 'Ask and require',true, false)}">
                                         <apex:repeat value="{!relationshipDD}" var="account">
                                             <apex:outputText escape="false" value="<li>{!account.value}</li>"/>
@@ -384,17 +391,17 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
 
                         <!-- Mailing Address registration (optional)-->
-                        <apex:outputPanel layout="none" rendered="{!eventPage.Ask_Mailing_Address__c}">
+                        <apex:outputPanel layout="none" rendered="{!eventPage.Ask_Mailing_Address__c != 'Do not ask' && eventPage.Ask_Mailing_Address__c != null}">
 
                             <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                                 <h4 class="slds-text-heading_small">Address</h4>
                             </div>
 
                             <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                                <div class="slds-form-element">
-                                    <apex:outputLabel value="Street" for="street" styleClass="slds-form-element__label required"/>
+                                <div class="slds-form-element {!IF(eventPage.Ask_Mailing_Address__c == 'Ask and require', 'slds-is-required', '')}">
+                                    <apex:outputLabel value="Street" for="street" styleClass="slds-form-element__label"/>
                                     <div class="slds-form-element__control">
-                                        <apex:inputText value="{!newEvtReg.Registrant_Street_1__c}" id="street" required="true" styleClass="slds-input {!IF(!contactSet,'required requiredText', '')}" disabled="{!contactSet}" maxLength="95"/>
+                                        <apex:inputText value="{!newEvtReg.Registrant_Street_1__c}" id="street" required="true" styleClass="slds-input" disabled="{!contactSet}" maxLength="95"/>
                                     </div>
                                 </div>
                             </div>
@@ -409,8 +416,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </div>
 
                             <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                                <div class="slds-form-element">
-                                    <apex:outputLabel value="Country" for="country" styleClass="slds-form-element__label required"/>
+                                <div class="slds-form-element {!IF(eventPage.Ask_Mailing_Address__c == 'Ask and require', 'slds-is-required', '')}">
+                                    <apex:outputLabel value="Country" for="country" styleClass="slds-form-element__label"/>
                                     <div class="slds-form-element__control">
                                         <div class="slds-select_container">
                                             <apex:selectList value="{!newEvtReg.Registrant_Country__c}" size="1" id="country" multiselect="false" required="true" styleClass="slds-select" disabled="{!contactSet}" onChange="setCountrySetting(this.value)">
@@ -426,8 +433,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 <apex:outputPanel layout="none" rendered="{!IF(newEvtReg.Registrant_Country__c == 'United States' || newEvtReg.Registrant_Country__c == 'Canada', true, false)}">
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_2-of-6 slds-large-size_2-of-6">
-                                        <div class="slds-form-element">
-                                            <apex:outputLabel value="{!(IF(newEvtReg.Registrant_Country__c == 'United States', 'Zip', 'Postal Code'))}" for="zip" styleClass="slds-form-element__label required"/>
+                                        <div class="slds-form-element {!IF(eventPage.Ask_Mailing_Address__c == 'Ask and require', 'slds-is-required', '')}">
+                                            <apex:outputLabel value="{!(IF(newEvtReg.Registrant_Country__c == 'United States', 'Zip', 'Postal Code'))}" for="zip" styleClass="slds-form-element__label"/>
                                             <div class="slds-form-element__control">
                                                 <apex:inputText value="{!newEvtReg.Registrant_Zip__c}" id="zip" required="true" styleClass="slds-input {!IF(!contactSet,'required requiredText', '')}" disabled="{!contactSet}" maxLength="10"/>
                                             </div>
@@ -435,8 +442,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </div>
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_2-of-6 slds-large-size_2-of-6">
-                                        <div class="slds-form-element">
-                                            <apex:outputLabel value="City" for="city" styleClass="slds-form-element__label required"/>
+                                        <div class="slds-form-element {!IF(eventPage.Ask_Mailing_Address__c == 'Ask and require', 'slds-is-required', '')}">
+                                            <apex:outputLabel value="City" for="city" styleClass="slds-form-element__label"/>
                                             <div class="slds-form-element__control">
                                                 <apex:inputText value="{!newEvtReg.Registrant_City__c}" id="city" required="true" styleClass="slds-input {!IF(!contactSet,'required requiredText', '')}" disabled="{!contactSet}" maxLength="100"/>
                                             </div>
@@ -444,8 +451,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </div>
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_2-of-6 slds-large-size_2-of-6">
-                                        <div class="slds-form-element">
-                                            <apex:outputLabel value="State" for="state" styleClass="slds-form-element__label required"/>
+                                        <div class="slds-form-element {!IF(eventPage.Ask_Mailing_Address__c == 'Ask and require', 'slds-is-required', '')}">
+                                            <apex:outputLabel value="State" for="state" styleClass="slds-form-element__label"/>
                                             <div class="slds-form-element__control">
                                                 <div class="slds-select_container">
                                                     <apex:selectList value="{!newEvtReg.Registrant_State__c}" size="1" id="state" multiselect="false" required="true" styleClass="slds-select {!IF(!contactSet,'required requiredText', '')}" disabled="{!contactSet}">
@@ -461,8 +468,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 <apex:outputPanel layout="none" rendered="{!IF(newEvtReg.Registrant_Country__c != 'United States' && newEvtReg.Registrant_Country__c != 'Canada', true, false)}" styleClass="slds-grid slds-wrap">
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_2-of-6 slds-large-size_2-of-6">
-                                        <div class="slds-form-element">
-                                            <apex:outputLabel value="City" for="city2" styleClass="slds-form-element__label required"/>
+                                        <div class="slds-form-element {!IF(eventPage.Ask_Mailing_Address__c == 'Ask and require', 'slds-is-required', '')}">
+                                            <apex:outputLabel value="City" for="city2" styleClass="slds-form-element__label"/>
                                             <div class="slds-form-element__control">
                                                 <apex:inputText value="{!newEvtReg.Registrant_City__c}" id="city2" required="true" styleClass="slds-input {!IF(!contactSet,'required requiredText', '')}" disabled="{!contactSet}" maxLength="100"/>
                                             </div>
@@ -470,7 +477,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </div>
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_2-of-6 slds-large-size_2-of-6">
-                                        <div class="slds-form-element">
+                                        <div class="slds-form-element {!IF(eventPage.Ask_Mailing_Address__c == 'Ask and require', 'slds-is-required', '')}">
                                             <apex:outputLabel value="State/Province" for="stateProvince" styleClass="slds-form-element__label"/>
                                             <div class="slds-form-element__control">
                                                 <apex:inputText value="{!newEvtReg.Registrant_State_Province__c}" id="stateProvince" required="false" disabled="{!contactSet}" maxLength="100" styleClass="slds-input"/>
@@ -517,9 +524,9 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 </div>
                                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_2-of-6 slds-large-size_2-of-6">
                                     <div class="slds-form-element">
-                                        <apex:outputLabel value="Graduation Year" for="hsGradYear" styleClass="slds-form-element__label required"/>
+                                        <apex:outputLabel value="Graduation Year" for="hsGradYear" styleClass="slds-form-element__label"/>
                                         <div class="slds-form-element__control">
-                                            <apex:inputText value="{!newEvtReg.Registrant_High_School_Grad_Year__c}" id="hsGradYear" disabled="{!If((EvtUserType != 'Guest' && newEvtReg.Registrant_High_School_Grad_Year__c != null),true,false)}" styleClass="slds-input validYear required" required="true"/>
+                                            <apex:inputText value="{!newEvtReg.Registrant_High_School_Grad_Year__c}" id="hsGradYear" disabled="{!If((EvtUserType != 'Guest' && newEvtReg.Registrant_High_School_Grad_Year__c != null),true,false)}" styleClass="slds-input validYear" required="true"/>
                                         </div>
                                     </div>
                                 </div>
@@ -551,7 +558,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             <div id="collegeAsk" class="slds-grid slds-wrap slds-size_1-of-1">
                                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_4-of-6 slds-large-size_4-of-6">
                                     <div class="slds-form-element">
-                                        <label for="collegeSelector" class="slds-form-element__label required">School recently attended</label>
+                                        <label for="collegeSelector" class="slds-form-element__label">School recently attended</label>
                                         <div class="slds-form-element__control">
                                             <select data-placeholder="Begin typing your school name" class="slds-input chosen-select-no-results schoolSelector" tabindex="10" id="collegeSelector">
                                                 <option value=""></option>
