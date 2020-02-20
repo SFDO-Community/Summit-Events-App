@@ -59,7 +59,6 @@ public with sharing class SummitEventsRegisterController {
         evtInfo = SEShared.getSummitEventsInfo();
 
         //Set applicant type if audience is passed
-        //System.debug(JSON.serializePretty(evtInfo));
         if (!String.isBlank(evtInfo.audience)) {
             if (evtInfo.audience == 'Transfer' || evtInfo.audience == 'Transfer International') {
                 applicantType = 'Transfer';
@@ -207,7 +206,6 @@ public with sharing class SummitEventsRegisterController {
                 guestAmt = new List<SelectOption>();
                 if (Integer.valueOf(eventPage.Max_Other_Attendees__c) > 0) {
                     for (Integer ma = 0; ma <= Integer.valueOf(eventPage.Max_Other_Attendees__c); ma++) {
-                        System.debug(ma);
                         guestAmt.add(new SelectOption(String.valueOf(ma), String.valueOf(ma)));
                     }
                 }
@@ -542,9 +540,10 @@ public with sharing class SummitEventsRegisterController {
                 matchingScope = 'Full matching contact creation with duplicate management';
             }
             if (!matchingScope.startsWith('No matching')) {
-                System.debug('PASSING TO MATCHING METHOD');
                 String matchingRule = eventPage.Contact_Matching_Rules__c;
-                if (String.isBlank(matchingRule)) { matchingRule = 'Matching rules 1';}
+                if (String.isBlank(matchingRule)) {
+                    matchingRule = 'Matching rules 1';
+                }
                 matched = matcher.SummitEventsContactMatching(matchingRule, newEvtReg, matchingScope);
                 //Populate matching results into data - matched may be blank depending on the Contact_Creation__c setting
                 if (matched.size() > 0) {
@@ -568,14 +567,9 @@ public with sharing class SummitEventsRegisterController {
             if (newContactCreated) {
                 newEvtReg.New_Contact_Created__c = true;
             }
-            try {
-                newEvtReg = rCRUD.updateRegistration(newEvtReg);
-                //Update matching log with new ID
-                newEvtReg.Matching_Log__c = newEvtReg.Matching_Log__c.replaceAll('\\[\\[REGID\\]\\]', newEvtReg.Id);
-            } catch (Exception ex) {
-                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
-                ApexPages.addMessage(myMsg);
-            }
+            newEvtReg = rCRUD.updateRegistration(newEvtReg);
+            //Update matching log with new ID
+            newEvtReg.Matching_Log__c = newEvtReg.Matching_Log__c.replaceAll('\\[\\[REGID\\]\\]', newEvtReg.Id);
             evtInfo.evtRegId = newEvtReg.Id;
             //make matching log functional for reparenting
         }
@@ -606,8 +600,7 @@ public with sharing class SummitEventsRegisterController {
             try {
                 upsert newEvtReg;
             } catch (Exception ex) {
-                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
-                ApexPages.addMessage(myMsg);
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
             return newEvtReg;
         }

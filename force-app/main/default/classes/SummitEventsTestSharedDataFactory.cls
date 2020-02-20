@@ -6,7 +6,7 @@
 @isTest
 public with sharing class SummitEventsTestSharedDataFactory {
 
-    public static Summit_Events_Instance__c createTestEvent(String recType, String testEventName, String audience, Boolean includeAppt, Boolean includeAddQuestions) {
+    public static Summit_Events_Instance__c createTestEvent(String matchingRules, String testEventName, String audience, Boolean includeAppt, Boolean includeAddQuestions) {
 
         Summit_Events__c testEvent = new Summit_Events__c();
 
@@ -35,7 +35,8 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Location_Title__c = 'A location',
                 Location_Map_Link__c = 'Map Link 1',
                 Location_Address__c = '123 Electric Ave.',
-                Location_Type__c = 'Minneapolis'
+                Location_Type__c = 'Minneapolis',
+                Contact_Matching_Rules__c = matchingRules
 
         );
 
