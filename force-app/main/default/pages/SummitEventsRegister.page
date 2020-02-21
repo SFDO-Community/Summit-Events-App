@@ -35,8 +35,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                 <apex:form id="SummitEventRegisterForm" styleClass="slds-grid slds-wrap">
 
-                    <apex:actionFunction name="setParentSetting" immediate="true" onComplete="dynamicValidation();fadein();" reRender="parentAskSection">
-                        <apex:param name="parentType" value="" assignTo="{!newEvtReg.Registrant_Parent_Status__c}"></apex:param>
+                    <apex:actionFunction name="setParentSetting" immediate="true" onComplete="dynamicValidation();fadein();" reRender="thirdPartyRegistrant">
+                        <apex:param name="parentType" value="" assignTo="{!newEvtReg.Registrant_Third_Party_Status__c}"></apex:param>
                     </apex:actionFunction>
                     <apex:actionFunction name="setCountrySetting" immediate="true" onComplete="dynamicValidation();fadein();" reRender="countryInfo">
                         <apex:param name="countrySetting" value="" assignTo="{!newEvtReg.Registrant_Country__c}"></apex:param>
@@ -62,13 +62,15 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </h2>
                     </div>
 
-                    <!-- Event is closed message-->
+                    <!-- EVENT CLOSED MESSAGE -->
                     <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
                         <p class="slds-text-body">
                             <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"></apex:outputText>
                         </p>
                     </apex:outputPanel>
 
+
+                    <!-- REGISTRATION QUESTIONS BEGIN  -->
                     <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
 
                         <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
@@ -76,15 +78,24 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             <apex:outputText escape="false" value="{!locationCrumb}" rendered="{!IF(!ISBLANK(locationCrumb), true, false)}"/>
                         </div>
 
-                        <apex:outputPanel layout="block" id="parentAskSection" styleClass="slds-col slds-size_1-of-1" rendered="{!eventPage.Ask_If_Parent__c && !contactSet}">
+                        <!-- LOGGED IN TO PORTAL MESSAGE -->
+                        <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
+                            <apex:outputText rendered="{!If(EvtUserType != 'Guest',true,false)}" escape="false">
+                                <p class="errorMessage">You are currently logged into a Portal and therefore your portal information is pre-filled below and cannot be changed.
+                                </p>
+                            </apex:outputText>
+                        </div>
+
+                        <!-- THIRD PARTY REGISTRANTS -->
+                        <apex:outputPanel layout="block" id="thirdPartyRegistrant" styleClass="slds-col slds-size_1-of-1" rendered="{!eventPage.Ask_Third_Party_Registrant__c != null}">
 
                             <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                                 <div class="slds-form-element slds-is-required">
                                     <apex:outputLabel for="iamthe" styleClass="slds-form-element__label">I am... <abbr class="slds-required" title="required"> * </abbr></apex:outputLabel>
                                     <div class="slds-form-element__control">
                                         <div class="slds-select_container">
-                                            <apex:selectList multiSelect="false" value="{!newEvtReg.Registrant_Parent_Status__c}" size="1" id="iamthe" styleClass="slds-select" required="true" onchange="setParentSetting(this.value);" html-aria-describedby="iamthe-required">
-                                                <apex:selectOptions value="{!parentStatus}"/>
+                                            <apex:selectList multiSelect="false" value="{!newEvtReg.Registrant_Third_Party_Status__c}" size="1" id="iamthe" styleClass="slds-select" required="true" onchange="setParentSetting(this.value);" html-aria-describedby="iamthe-required">
+                                                <apex:selectOptions value="{!thirdPartyStatus}"/>
                                             </apex:selectList>
                                         </div>
                                     </div>
@@ -93,10 +104,10 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </div>
 
                             <!-- If applicant is not the student then display these questions-->
-                            <apex:outputPanel layout="none" rendered="{!IF(newEvtReg.Registrant_Parent_Status__c == 'The student' || newEvtReg.Registrant_Parent_Status__c == '' , false, true)}">
+                            <apex:outputPanel layout="none" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Primary Registrant' || newEvtReg.Registrant_Third_Party_Status__c == '', false, true)}">
 
                                 <!-- Parent questions -->
-                                <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" id="parentInfo" rendered="{!IF(newEvtReg.Registrant_Parent_Status__c == 'Other', false, true)}">
+                                <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" id="parentInfo" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Other', false, true)}">
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                                         <h3 class="slds-text-heading_medium">Parent Information</h3>
@@ -152,7 +163,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 </apex:outputPanel>
 
                                 <!-- OTHER QUESTIONS -->
-                                <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" rendered="{!IF(newEvtReg.Registrant_Parent_Status__c == 'Other', true, false)}">
+                                <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Other', true, false)}">
 
                                     <div class="cslds-col slds-p-around_x-small slds-size_1-of-1">
                                         <h3 class="slds-text-heading_medium">Your Information</h3>
@@ -222,16 +233,11 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </apex:outputPanel>
                         </apex:outputPanel>
 
-                        <!-- LOGGED IN TO PORTAL MESSAGE -->
-                        <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                            <h3 class="slds-text-heading_medium">{!If(eventPage.Ask_If_Parent__c, 'Student', 'Registrant')} Information</h3>
-                            <apex:outputText rendered="{!If(EvtUserType != 'Guest',true,false)}" escape="false">
-                                <p class="errorMessage">You are currently logged into a Portal and therefore your portal information is pre-filled below and cannot be changed.
-                                </p>
-                            </apex:outputText>
-                        </div>
-
                         <!-- REGISTRANT FIRST NAME -->
+                        <apex:outputPanel rendered="{!eventPage.Ask_Third_Party_Registrant__c != null}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" layout="block">
+                            <h3 class="slds-text-heading_medium">Primary Registrant</h3>
+                        </apex:outputPanel>
+
                         <div class="slds-col slds-p-around_x-small slds-small-size_6-of-6 slds-medium-size_3-of-6 slds-large-size_3-of-6">
                             <div class="slds-form-element slds-is-required">
                                 <apex:outputLabel for="firstName" styleClass="required slds-form-element__label">

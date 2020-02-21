@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Registrant_Parent_Status__c</fullName>
+    <fullName>Registrant_Third_Party_Status__c</fullName>
     <description>Determines if the registrant is a student or a parent.</description>
     <externalId>false</externalId>
     <inlineHelpText>Determines if the registrant is a student or a parent.</inlineHelpText>
-    <label>Registrant Parent Status</label>
+    <label>Registrant Third Party Status</label>
     <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
@@ -14,19 +14,24 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>The student</fullName>
+                <fullName>Primary Registrant</fullName>
                 <default>false</default>
-                <label>The student</label>
+                <label>Primary Registrant</label>
             </value>
             <value>
-                <fullName>A student&#39;s parent/guardian</fullName>
+                <fullName>Parent/Guardian</fullName>
                 <default>false</default>
-                <label>A student&#39;s parent/guardian</label>
+                <label>Parent/Guardian</label>
             </value>
             <value>
                 <fullName>Other</fullName>
                 <default>false</default>
                 <label>Other</label>
+            </value>
+            <value>
+                <fullName>Company Representative</fullName>
+                <default>false</default>
+                <label>Company Representative</label>
             </value>
         </valueSetDefinition>
     </valueSet>

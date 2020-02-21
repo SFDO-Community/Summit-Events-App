@@ -158,7 +158,7 @@ public with sharing class SummitEventsShared_TEST {
         registerCtrl.GetStateDD();
         registerCtrl.getCountryDD();
         registerCtrl.getTimeFrame();
-        registerCtrl.getParentStatus();
+        registerCtrl.getThirdPartyStatus();
         registerCtrl.getApplicantTypeDD();
         registerCtrl.getRelationshipDD();
         registerCtrl.getProgramsAvailable();

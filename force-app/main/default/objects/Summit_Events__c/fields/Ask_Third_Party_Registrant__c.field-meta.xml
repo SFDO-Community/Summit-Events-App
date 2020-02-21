@@ -12,9 +12,9 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Parent</fullName>
+                <fullName>Parent/Guardian</fullName>
                 <default>false</default>
-                <label>Parent</label>
+                <label>Parent/Guardian</label>
             </value>
             <value>
                 <fullName>Other</fullName>
@@ -22,9 +22,9 @@
                 <label>Other</label>
             </value>
             <value>
-                <fullName>Company</fullName>
+                <fullName>Company Representative</fullName>
                 <default>false</default>
-                <label>Company</label>
+                <label>Company Representative</label>
             </value>
         </valueSetDefinition>
     </valueSet>

@@ -111,10 +111,9 @@ public with sharing class SummitEventsRegisterController {
                             Add_Info_Question_Pick_List_5__c, Add_Info_Question_Text_5__c, Add_Info_Question_Type_5__c,
                             Academic_Program_List__c, Ask_Mailing_Address__c, Ask_Phone__c, Event_Sponsor__c, Ask_Relationship_To_Institution__c,
                             Ask_Last_Name_As_Student__c, Ask_Preferred_Class_Year__c, Ask_Preferred_First_Name__c,
-                            // School not in this ORG
-                            // Academic_Program_List__c, School__c, Ask_Mailing_Address__c, Ask_Phone__c, Event_Sponsor__c,
                             Ask_Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
-                            Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c
+                            Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c,
+                            Ask_Third_Party_Registrant__c
                     FROM Summit_Events__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1
@@ -290,7 +289,7 @@ public with sharing class SummitEventsRegisterController {
                                 Registrant_Gender__c, Registrant_Street_1__c, Registrant_Street_2__c, Registrant_State__c, Registrant_City__c, Preferred_Visit_Time__c,
                                 Registrant_Zip__c, Registrant_Phone__c, Registrant_Mobile_Phone__c, Registrant_College__c, Registrant_College_Code__c, Registrant_College_Year__c,
                                 Registrant_High_School__c, Registrant_High_School_Code__c, Registrant_Receive_Texts__c, Registrant_High_School_Grad_Year__c, Registrant_High_School_Not_Found__c,
-                                Registrant_College_Not_Found__c, Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c, Registrant_Parent_Phone__c, Registrant_Parent_Status__c,
+                                Registrant_College_Not_Found__c, Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c, Registrant_Parent_Phone__c,
                                 Add_Info_Answer_1__c, Add_Info_Answer_2__c, Add_Info_Answer_3__c, Add_Info_Answer_4__c, Add_Info_Answer_5__c, Registrant_Program_Interest__c, Registrant_Preferred_First_Name__c,
                                 Registrant_date_of_Birth__c, Last_Name_as_Student__c, Preferred_Class_Year__c, Relationship_To_Institution__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c, Registrant_Other_Phone__c, Registrant_Other_Relationship__c,
                                 Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c
@@ -341,8 +340,8 @@ public with sharing class SummitEventsRegisterController {
         return PickThePicklist('Summit_Events_Registration__c', 'Preferred_Visit_Time__c', true);
     }
 
-    public List<SelectOption> getParentStatus() {
-        return PickThePicklist('Summit_Events_Registration__c', 'Registrant_Parent_Status__c', true);
+    public List<SelectOption> getThirdPartyStatus() {
+        return PickThePicklist('Summit_Events_Registration__c', 'Registrant_Third_Party_Status__c', true);
     }
 
     public List<SelectOption> getApplicantTypeDD() {
@@ -448,7 +447,14 @@ public with sharing class SummitEventsRegisterController {
         }
 
         for (Schema.PicklistEntry PicklistValue : PicklistValues) {
-            picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));
+            if (YourFieldName == 'Registrant_Third_Party_Status__c') {
+                if (eventPage.Ask_Third_Party_Registrant__c.contains(PicklistValue.getValue())) {
+                    picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));
+                }
+            } else {
+                picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));
+            }
+
         }
         return picklists;
     }

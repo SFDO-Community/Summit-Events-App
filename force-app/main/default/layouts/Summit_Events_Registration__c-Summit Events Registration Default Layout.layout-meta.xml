@@ -318,7 +318,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Registrant_Parent_Status__c</field>
+                <field>Registrant_Third_Party_Status__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>

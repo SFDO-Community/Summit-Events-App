@@ -565,13 +565,13 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events_Registration__c.Preferred_First_Name_Formatted__c</field>
+        <editable>true</editable>
+        <field>Summit_Events_Registration__c.Preferred_Class_Year__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
-        <field>Summit_Events_Registration__c.Preferred_St_Thomas_Class_Year__c</field>
+        <editable>false</editable>
+        <field>Summit_Events_Registration__c.Preferred_First_Name_Formatted__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -726,11 +726,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Summit_Events_Registration__c.Registrant_Parent_Status__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
         <field>Summit_Events_Registration__c.Registrant_Phone__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -781,12 +776,17 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.Registrant_Third_Party_Status__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Registrant_Zip__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Summit_Events_Registration__c.Relationship_to_St_Thomas__c</field>
+        <field>Summit_Events_Registration__c.Relationship_To_Institution__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -936,7 +936,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Applicant_Type__c</field>
+        <field>Summit_Events__c.Ask_Applicant_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -987,6 +987,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Ask_Relationship_To_Institution__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Ask_Third_Party_Registrant__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
