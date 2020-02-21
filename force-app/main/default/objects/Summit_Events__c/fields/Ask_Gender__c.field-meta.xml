@@ -18,9 +18,9 @@
                 <label>Do not ask</label>
             </value>
             <value>
-                <fullName>Ask but do not require</fullName>
+                <fullName>Ask</fullName>
                 <default>false</default>
-                <label>Ask but do not require</label>
+                <label>Ask</label>
             </value>
             <value>
                 <fullName>Ask and require</fullName>

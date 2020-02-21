@@ -147,6 +147,10 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>Private_Instance__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>Alternate_Registration_URL_Override__c</field>
             </layoutItems>
             <layoutItems>

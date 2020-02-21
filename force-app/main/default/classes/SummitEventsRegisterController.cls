@@ -513,6 +513,12 @@ public with sharing class SummitEventsRegisterController {
 
         if (!String.isBlank(applicantType)) {
             newEvtReg.Registrant_Applicant_Type__c = applicantType;
+        } else if (eventPage.Ask_Applicant_Type__c == 'Do not ask but assign First-Year') {
+            newEvtReg.Registrant_Applicant_Type__c = 'First-Year';
+        } else if (eventPage.Ask_Applicant_Type__c == 'Do not ask but assign Transfer') {
+            newEvtReg.Registrant_Applicant_Type__c = 'Transfer';
+        } else if (eventPage.Ask_Applicant_Type__c == 'Do not ask but assign Graduate') {
+            newEvtReg.Registrant_Applicant_Type__c = 'Graduate';
         }
 
         //Begin matching based on event record type to get contact ID or create a new contact ID

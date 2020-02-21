@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Private_Instance__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>This instance will not appear on any RSS feeds for external dispay.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This instance will not appear on any RSS feeds for external dispay.</inlineHelpText>
+    <label>Private Instance</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

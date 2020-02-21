@@ -675,7 +675,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                             <!-- Program of interest question -->
                             <apex:outputPanel layout="none"
-                                              rendered="{!IF((eventPage.Ask_Registrant_Program_Of_Interest__c == 'Ask but do not require' || eventPage.Ask_Registrant_Program_Of_Interest__c == 'Ask and require'),
+                                              rendered="{!IF((eventPage.Ask_Registrant_Program_Of_Interest__c == 'Ask' || eventPage.Ask_Registrant_Program_Of_Interest__c == 'Ask and require'),
                                       true, false)}">
                                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                                     <div class="slds-form-element">
