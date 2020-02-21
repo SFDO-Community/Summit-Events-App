@@ -113,15 +113,18 @@ public with sharing class SummitEventsRegisterController {
                             Ask_Last_Name_As_Student__c, Ask_Preferred_Class_Year__c, Ask_Preferred_First_Name__c,
                             // School not in this ORG
                             // Academic_Program_List__c, School__c, Ask_Mailing_Address__c, Ask_Phone__c, Event_Sponsor__c,
-                            Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
+                            Ask_Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c
                     FROM Summit_Events__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1
             ][0];
 
-            if (!String.isBlank(eventPage.Applicant_Type__c)) {
-                applicantType = eventPage.Applicant_Type__c;
+            if (!String.isBlank(eventPage.Ask_Applicant_Type__c)) {
+                //Important to start all of this with exact "Do not ask but assign " to assign correctly
+                if (eventPage.Ask_Applicant_Type__c.startsWith('Do not ask but assign ')) {
+                    applicantType = eventPage.Ask_Applicant_Type__c.replace('Do not ask but assign ', '');
+                }
             }
 
             if (

@@ -448,7 +448,10 @@ ready(() => {
         let data2Id = selOl.dataset.hiddendataid;
         //iterate over all the li in the current ol and if the value is in the array make it selected on load
         let selOlSelected = document.querySelector("[id$=" + data2Id + "]");
-        let oldSelArray = selOlSelected.value.split(';');
+        let oldSelArray = '';
+        if (selOlSelected.value != null) {
+            selOlSelected.value.split(';');
+        }
 
         selOl.querySelectorAll('li').forEach(selLi => {
             selLi.addEventListener("click", (e) => {

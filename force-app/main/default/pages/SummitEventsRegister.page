@@ -151,7 +151,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                 </apex:outputPanel>
 
-                                <!-- Other Questions -->
+                                <!-- OTHER QUESTIONS -->
                                 <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" rendered="{!IF(newEvtReg.Registrant_Parent_Status__c == 'Other', true, false)}">
 
                                     <div class="cslds-col slds-p-around_x-small slds-size_1-of-1">
@@ -222,8 +222,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </apex:outputPanel>
                         </apex:outputPanel>
 
-
-                        <!-- User logged in to portal message -->
+                        <!-- LOGGED IN TO PORTAL MESSAGE -->
                         <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                             <h3 class="slds-text-heading_medium">{!If(eventPage.Ask_If_Parent__c, 'Student', 'Registrant')} Information</h3>
                             <apex:outputText rendered="{!If(EvtUserType != 'Guest',true,false)}" escape="false">
@@ -232,8 +231,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </apex:outputText>
                         </div>
 
-
-                        <!-- Bare minimum event registration questions: First, Last, Email -->
+                        <!-- REGISTRANT FIRST NAME -->
                         <div class="slds-col slds-p-around_x-small slds-small-size_6-of-6 slds-medium-size_3-of-6 slds-large-size_3-of-6">
                             <div class="slds-form-element slds-is-required">
                                 <apex:outputLabel for="firstName" styleClass="required slds-form-element__label">
@@ -246,6 +244,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </div>
                         </div>
 
+                        <!-- REGISTRANT LAST NAME -->
                         <div class="slds-col slds-p-around_x-small slds-small-size_6-of-6 slds-medium-size_3-of-6 slds-large-size_3-of-6">
                             <div class="slds-form-element slds-is-required">
                                 <apex:outputLabel for="lastName" styleClass="required slds-form-element__label">
@@ -258,6 +257,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </div>
                         </div>
 
+                        <!-- REGISTRANT EMAIL -->
                         <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6">
                             <div class="slds-form-element slds-is-required">
                                 <apex:outputLabel for="email" styleClass="required slds-form-element__label">
@@ -270,33 +270,25 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </div>
                         </apex:outputPanel>
 
-                        <!-- Undergrad bare minimums beyond first, last, email-->
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6">
-                            <div class="slds-form-element slds-is-required">
-                                <apex:outputLabel for="applicantType" styleClass="slds-form-element__label">
-                                    Application Type <abbr class="slds-required" title="required">*</abbr>
-                                </apex:outputLabel>
-                                <div class="slds-form-element__control">
-                                    <apex:selectList multiSelect="false" value="{!ApplicantType}" id="applicantType" html-aria-describedby="applicantType-required" size="1" styleClass="slds-select" required="true">
-                                        <apex:selectOptions value="{!ApplicantTypeDD}"/>
-                                    </apex:selectList>
-                                </div>
-                                <div class="slds-form-element__help" id="applicantType-required">This field is required</div>
-                            </div>
-                        </apex:outputPanel>
-
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6">
-                            <div class="slds-form-element slds-is-required">
+                        <!-- PREFERRED FIRST NAME -->
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!IF(eventPage.Ask_Preferred_First_Name__c != 'Do not ask' && eventPage.Ask_Preferred_First_Name__c != null, true, false)}">
+                            <div class="slds-form-element {!IF(eventPage.Ask_Preferred_First_Name__c == 'Ask and require', 'slds-is-required', '')}">
                                 <apex:outputLabel for="preferredFirstName" styleClass="slds-form-element__label">
-                                    Preferred First Name <abbr class="slds-required" title="required">*</abbr>
+                                    Preferred First Name
+                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Preferred_First_Name__c == 'Ask and require', true, false)}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </apex:outputText>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:inputText value="{!newEvtReg.Registrant_Preferred_First_Name__c}" id="preferredFirstName" html-aria-describedby="preferredFirstName-required" required="true" styleClass="slds-input" disabled="{!contactSet}" maxLength="80"/>
+                                    <apex:inputText value="{!newEvtReg.Registrant_Preferred_First_Name__c}" id="preferredFirstName" html-aria-describedby="preferredFirstName-required" required="{!IF(eventPage.Ask_Preferred_First_Name__c == 'Ask and require', true, false)}" styleClass="slds-input" disabled="{!contactSet}" maxLength="80"/>
                                 </div>
-                                <div class="slds-form-element__help" id="preferredFirstName-required">This field is required</div>
+                                <div class="slds-form-element__help" id="preferredFirstName-required">
+                                    {!IF(eventPage.Ask_Preferred_First_Name__c == 'Ask and require', 'This field is required', '')}
+                                </div>
                             </div>
                         </apex:outputPanel>
 
+                        <!-- REGISTRANT PREVIOUS LAST NAME -->
                         <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!IF(eventPage.Ask_Last_Name_As_Student__c != 'Do not ask' && eventPage.Ask_Last_Name_As_Student__c != null, true, false)}">
                             <div class="slds-form-element {!IF(eventPage.Ask_Last_Name_As_Student__c == 'Ask and require', 'slds-is-required', '')}">
                                 <apex:outputLabel for="lastNameAsStudent" styleClass="slds-form-element__label">
@@ -306,7 +298,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </apex:outputText>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:inputText value="{!newEvtReg.Last_Name_as_Student__c}" html-aria-describedby="lastNameAsStudent-required" id="lastNameAsStudent" disabled="{!contactSet}" maxLength="80" styleClass="slds-input"/>
+                                    <apex:inputText value="{!newEvtReg.Last_Name_as_Student__c}" html-aria-describedby="lastNameAsStudent-required" id="lastNameAsStudent" disabled="{!contactSet}" maxLength="80" styleClass="slds-input" required="{!IF(eventPage.Ask_Last_Name_As_Student__c == 'Ask and require', true, false)}"/>
                                 </div>
                                 <div class="slds-form-element__help" id="lastNameAsStudent-required">
                                     {!IF(eventPage.Ask_Last_Name_As_Student__c == 'Ask and require', 'This field is required', '')}
@@ -314,33 +306,64 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </div>
                         </apex:outputPanel>
 
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!IF(eventPage.Ask_Preferred_Class_Year__c != 'Do not ask' && eventPage.Ask_Preferred_Class_Year__c != null, true, false)}">
-                            <div class="slds-form-element">
-                                <apex:outputLabel for="preferredClassYear" styleClass="required slds-form-element__label">
-                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Preferred_Class_Year__c == 'Ask and require', true, false)}">
-                                        Preferred Class Year
+                        <!-- APPLICANT TYPE -->
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!IF(eventPage.Ask_Applicant_Type__c != 'Do not ask' && eventPage.Ask_Applicant_Type__c != null && !BEGINS(eventPage.Ask_Applicant_Type__c, 'Do not ask but assign '), true, false)}">
+                            <div class="slds-form-element {!IF(eventPage.Ask_Applicant_Type__c == 'Ask and require', 'slds-is-required', '')}">
+                                <apex:outputLabel for="applicantType" styleClass="slds-form-element__label">
+                                    Application Type
+                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Applicant_Type__c == 'Ask and require', true, false)}">
                                         <abbr class="slds-required" title="required">*</abbr>
                                     </apex:outputText>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:inputText value="{!newEvtReg.Preferred_Class_Year__c}" html-aria-describedby="preferredClassYear-required" id="preferredClassYear" styleClass="slds-input validYear" disabled="{!contactSet}" maxLength="80" required="true"/>
+                                    <apex:selectList multiSelect="false" value="{!ApplicantType}" id="applicantType" html-aria-describedby="applicantType-required" size="1" styleClass="slds-select" required="{!IF(eventPage.Ask_Applicant_Type__c == 'Ask and require', true, false)}">
+                                        <apex:selectOptions value="{!ApplicantTypeDD}"/>
+                                    </apex:selectList>
                                 </div>
-                                <div class="slds-form-element__help" id="preferredClassYear-required-required">
-                                    {!IF(eventPage.Preferred_Class_Year__c == 'Ask and require', 'This field is required', '')}
+                                <div class="slds-form-element__help" id="applicantType-required">
+                                    {!IF(eventPage.Ask_Last_Name_As_Student__c == 'Ask and require', 'This field is required', '')}
                                 </div>
+                                <div class="slds-form-element__help" id="applicantType-required">This field is required</div>
                             </div>
                         </apex:outputPanel>
 
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!eventPage.Ask_Date_Of_Birth__c}">
-                            <div class="slds-form-element">
-                                <apex:outputLabel value="Date of birth" for="dateofbirth" styleClass="required slds-form-element__label"/>
+                        <!-- REGISTRANT PREFERRED CLASS YEAR -->
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!IF(eventPage.Ask_Preferred_Class_Year__c != 'Do not ask' && eventPage.Ask_Preferred_Class_Year__c != null, true, false)}">
+                            <div class="slds-form-element {!IF(eventPage.Ask_Preferred_Class_Year__c == 'Ask and require', 'slds-is-required', '')}">
+                                <apex:outputLabel for="preferredClassYear" styleClass="slds-form-element__label">
+                                    Preferred Class Year
+                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Preferred_Class_Year__c == 'Ask and require', true, false)}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </apex:outputText>
+                                </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:input type="date" value="{!birthDateString}" id="dateofbirth" styleClass=" slds-input {!IF(!contactSet,'required requiredText', '')} mmddyyyy" disabled="{!contactSet}" required="true" html-placeholder="MM/DD/YYYY"/>
+                                    <apex:inputText value="{!newEvtReg.Preferred_Class_Year__c}" html-aria-describedby="preferredClassYear-required" id="preferredClassYear" styleClass="slds-input validYear" disabled="{!contactSet}" maxLength="80" required="{!IF(eventPage.Ask_Preferred_Class_Year__c == 'Ask and require', true, false)}"/>
+                                </div>
+                                <div class="slds-form-element__help" id="preferredClassYear-required">
+                                    {!IF(eventPage.Ask_Preferred_Class_Year__c == 'Ask and require', 'This field is required', '')}
                                 </div>
                             </div>
                         </apex:outputPanel>
 
-                        <!-- Phone number registration (optional) -->
+                        <!-- REGISTRANT DATE OF BIRTH -->
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!IF(eventPage.Ask_Date_Of_Birth__c != 'Do not ask' && eventPage.Ask_Date_Of_Birth__c != null, true, false)}">
+                            <div class="slds-form-element {!IF(eventPage.Ask_Date_Of_Birth__c == 'Ask and require', 'slds-is-required', '')}">
+                                <apex:outputLabel for="dateofbirth" styleClass="slds-form-element__label">
+                                    Date of Birth
+                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Date_Of_Birth__c == 'Ask and require', true, false)}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </apex:outputText>
+                                </apex:outputLabel>
+                                <div class="slds-form-element__control">
+                                    <apex:input type="date" value="{!birthDateString}" id="dateOfBirth" html-aria-describedby="dateOfBirth-required" styleClass=" slds-input {!IF(!contactSet,'required requiredText', '')} mmddyyyy" disabled="{!contactSet}" required="{!IF(eventPage.Ask_Date_Of_Birth__c == 'Ask and require', true, false)}" html-placeholder="MM/DD/YYYY"/>
+                                </div>
+                                <div class="slds-form-element__help" id="dateOfBirth-required">
+                                    {!IF(eventPage.Ask_Date_Of_Birth__c == 'Ask and require', 'This field is required', '')}
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+
+                        <!-- REGISTRANT PHONE NUMBER -->
                         <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!eventPage.Ask_Phone__c}">
                             <div class="slds-form-element">
                                 <apex:outputLabel styleClass="slds-form-element__label" value="Home Phone" for="phone"/>
@@ -373,18 +396,25 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </div>
                         </apex:outputPanel>
 
+                        <!-- REGISTRANT RELATIONSHIP TO INSTITUTION -->
                         <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!IF((eventPage.Ask_Relationship_To_Institution__c != 'Do not ask') && (eventPage.Ask_Relationship_To_Institution__c != null), true, false)}">
                             <div class="slds-form-element">
                                 <apex:outputLabel for="relationshipToInstitution" styleClass="slds-form-element__label {!IF(eventPage.Ask_Relationship_To_Institution__c == 'Ask and require','required', '')}">
-                                    Relationship (select all that apply):
+                                    Relationship (select all that apply)
+                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Relationship_To_Institution__c == 'Ask and require', true, false)}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </apex:outputText>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
                                     <apex:inputHidden value="{!newEvtReg.Relationship_to_Institution__c}" id="relationshipToInstitution" required="true"/>
-                                    <ol class="selectableOL" id="rel2UST" data-hiddendataid="relationshipToInstitution" required="{!IF(eventPage.Ask_Relationship_To_Institution__c == 'Ask and require',true, false)}">
+                                    <ol class="selectableOL" id="rel2UST" data-hiddendataid="relationshipToInstitution" html-aria-describedby="relationshipToInstitution-required" required="{!IF(eventPage.Ask_Relationship_To_Institution__c == 'Ask and require',true, false)}">
                                         <apex:repeat value="{!relationshipDD}" var="account">
                                             <apex:outputText escape="false" value="<li>{!account.value}</li>"/>
                                         </apex:repeat>
                                     </ol>
+                                </div>
+                                <div class="slds-form-element__help" id="relationshipToInstitution-required">
+                                    {!IF(eventPage.Ask_Relationship_To_Institution__c == 'Ask and require', 'This field is required', '')}
                                 </div>
                             </div>
                         </apex:outputPanel>

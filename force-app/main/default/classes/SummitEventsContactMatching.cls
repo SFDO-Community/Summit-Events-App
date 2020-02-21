@@ -67,10 +67,10 @@ public with sharing class SummitEventsContactMatching {
 
             query = ' SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE (';
             if (String.isNotBlank(firstThree)) {
-                query += ' firstName LIKE \'' + firstThree + '%\' OR';
+                query += ' firstName LIKE \'' + String.escapeSingleQuotes(firstThree) + '%\' OR';
             }
             if (String.isNotBlank(prefFirstThree)) {
-                query += ' Preferred_First_Name__c LIKE \'' + prefFirstThree + '%\' OR';
+                query += ' Preferred_First_Name__c LIKE \'' + String.escapeSingleQuotes(prefFirstThree) + '%\' OR';
             }
             query = query.removeEnd(' OR');
             query += ' ) ';
@@ -489,10 +489,10 @@ public with sharing class SummitEventsContactMatching {
 
             If (String.IsNotBlank(firstThree)) {
                 orStat += ' FirstName LIKE \'' + firstThree + '%\' OR ';
-                orStat += ' Preferred_First_Name__c LIKE \'' + firstThree + '%\' OR ';
+                orStat += ' Preferred_First_Name__c LIKE \'' + String.escapeSingleQuotes(firstThree) + '%\' OR ';
             }
             if (String.IsNotBlank(prefFirstThree)) {
-                orStat += ' Preferred_First_Name__c LIKE \'' + prefFirstThree + '%\' OR ';
+                orStat += ' Preferred_First_Name__c LIKE \'' +  String.escapeSingleQuotes(prefFirstThree) + '%\' OR ';
             }
             orStat = orStat.removeEnd(' OR ');
             if (String.isNotBlank(orStat)) {
