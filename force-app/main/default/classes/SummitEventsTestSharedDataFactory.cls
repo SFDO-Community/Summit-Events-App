@@ -27,7 +27,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Include_Time_frame_List__c = true,
                 Allow_Other_Attendees__c = true,
                 Ask_Mailing_Address__c = 'Ask',
-                Ask_Phone__c = true,
+                Ask_Phone__c = 'Ask',
                 Ask_Date_Of_Birth__c = 'Ask',
                 Max_Other_Attendees__c = 5,
                 Close_Event_Days_Before__c = 0,
