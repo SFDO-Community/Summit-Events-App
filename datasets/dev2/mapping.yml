@@ -1,0 +1,437 @@
+Insert Summit_Events__c:
+  sf_object: Summit_Events__c
+  table: Summit_Events__c
+  fields:
+    Id: sf_id
+    Name: Name
+    Academic_Program_List_Selected__c: Academic_Program_List_Selected__c
+    Academic_Program_List__c: Academic_Program_List__c
+    Academic_Program_Selected__c: Academic_Program_Selected__c
+    Add_Info_Question_Pick_List_1__c: Add_Info_Question_Pick_List_1__c
+    Add_Info_Question_Pick_List_2__c: Add_Info_Question_Pick_List_2__c
+    Add_Info_Question_Pick_List_3__c: Add_Info_Question_Pick_List_3__c
+    Add_Info_Question_Pick_List_4__c: Add_Info_Question_Pick_List_4__c
+    Add_Info_Question_Pick_List_5__c: Add_Info_Question_Pick_List_5__c
+    Add_Info_Question_Text_1__c: Add_Info_Question_Text_1__c
+    Add_Info_Question_Text_2__c: Add_Info_Question_Text_2__c
+    Add_Info_Question_Text_3__c: Add_Info_Question_Text_3__c
+    Add_Info_Question_Text_4__c: Add_Info_Question_Text_4__c
+    Add_Info_Question_Text_5__c: Add_Info_Question_Text_5__c
+    Add_Info_Question_Type_1__c: Add_Info_Question_Type_1__c
+    Add_Info_Question_Type_2__c: Add_Info_Question_Type_2__c
+    Add_Info_Question_Type_3__c: Add_Info_Question_Type_3__c
+    Add_Info_Question_Type_4__c: Add_Info_Question_Type_4__c
+    Add_Info_Question_Type_5__c: Add_Info_Question_Type_5__c
+    Allow_Other_Attendees__c: Allow_Other_Attendees__c
+    Alternate_Registration_URL__c: Alternate_Registration_URL__c
+    Ask_Applicant_Type__c: Ask_Applicant_Type__c
+    Ask_Date_Of_Birth__c: Ask_Date_Of_Birth__c
+    Ask_Gender__c: Ask_Gender__c
+    Ask_If_Parent__c: Ask_If_Parent__c
+    Ask_Last_Name_As_Student__c: Ask_Last_Name_As_Student__c
+    Ask_Mailing_Address__c: Ask_Mailing_Address__c
+    Ask_Phone__c: Ask_Phone__c
+    Ask_Preferred_Class_Year__c: Ask_Preferred_Class_Year__c
+    Ask_Preferred_First_Name__c: Ask_Preferred_First_Name__c
+    Ask_Registrant_Program_Of_Interest__c: Ask_Registrant_Program_Of_Interest__c
+    Ask_Relationship_To_Institution__c: Ask_Relationship_To_Institution__c
+    Ask_Third_Party_Registrant__c: Ask_Third_Party_Registrant__c
+    Audience__c: Audience__c
+    Building__c: Building__c
+    Close_Event_Days_Before__c: Close_Event_Days_Before__c
+    College_High_School_Ask__c: College_High_School_Ask__c
+    Contact_Creation__c: Contact_Creation__c
+    Contact_Matching_Rules__c: Contact_Matching_Rules__c
+    End_Date__c: End_Date__c
+    Event_Appointment_Description__c: Event_Appointment_Description__c
+    Event_Appointment_Title__c: Event_Appointment_Title__c
+    Event_Cancel_Review_Description__c: Event_Cancel_Review_Description__c
+    Event_Cancel_Review_Title__c: Event_Cancel_Review_Title__c
+    Event_Cancelled_Notification_Text__c: Event_Cancelled_Notification_Text__c
+    Event_Confirmation_Description__c: Event_Confirmation_Description__c
+    Event_Confirmation_Title__c: Event_Confirmation_Title__c
+    Event_Footer__c: Event_Footer__c
+    Event_Full_Text__c: Event_Full_Text__c
+    Event_Home_Link_Title__c: Event_Home_Link_Title__c
+    Event_Home_Link_URL__c: Event_Home_Link_URL__c
+    Event_Name__c: Event_Name__c
+    Event_Short_Listing_Description__c: Event_Short_Listing_Description__c
+    Event_Sponsor__c: Event_Sponsor__c
+    Event_Status__c: Event_Status__c
+    Event_Submit_Description__c: Event_Submit_Description__c
+    Event_Submit_Title__c: Event_Submit_Title__c
+    Event_Type__c: Event_Type__c
+    Event_description__c: Event_description__c
+    Feed_Registration_Button_Text__c: Feed_Registration_Button_Text__c
+    Hand_Raise_Action__c: Hand_Raise_Action__c
+    Include_Time_frame_List__c: Include_Time_frame_List__c
+    Location_Address__c: Location_Address__c
+    Location_Map_Link__c: Location_Map_Link__c
+    Location_Title__c: Location_Title__c
+    Location_Type__c: Location_Type__c
+    Max_Other_Attendees__c: Max_Other_Attendees__c
+    Private_Event__c: Private_Event__c
+    Program_Filter_2__c: Program_Filter_2__c
+    Program_Filter_3__c: Program_Filter_3__c
+    Program_Filter__c: Program_Filter__c
+    Start_Date__c: Start_Date__c
+    Template__c: Template__c
+    Tracking_Cancel_Registration__c: Tracking_Cancel_Registration__c
+    Tracking_Confirmation_Registration__c: Tracking_Confirmation_Registration__c
+    Tracking_Event_Registration__c: Tracking_Event_Registration__c
+    Tracking_Options_Registration__c: Tracking_Options_Registration__c
+    Tracking_Submit_Registration__c: Tracking_Submit_Registration__c
+Insert hed__Language__c:
+  sf_object: hed__Language__c
+  table: hed__Language__c
+  fields:
+    Id: sf_id
+    Name: Name
+Insert Summit_Events_Email__c:
+  sf_object: Summit_Events_Email__c
+  table: Summit_Events_Email__c
+  fields:
+    Id: sf_id
+    Action_Status__c: Action_Status__c
+    Action_Sub_status__c: Action_Sub_status__c
+    BCC_Email__c: BCC_Email__c
+    Email_Content_Instructions__c: Email_Content_Instructions__c
+    Email_Content__c: Email_Content__c
+    Email_From__c: Email_From__c
+    Email_Subject__c: Email_Subject__c
+    Letterhead_HTML__c: Letterhead_HTML__c
+    Letterhead_Id__c: Letterhead_Id__c
+    Letterhead_Name__c: Letterhead_Name__c
+    Letterhead__c: Letterhead__c
+    Org_Email_Id__c: Org_Email_Id__c
+    Org_Email__c: Org_Email__c
+  lookups:
+    Event__c:
+      table: Summit_Events__c
+Insert Summit_Events_Instance__c:
+  sf_object: Summit_Events_Instance__c
+  table: Summit_Events_Instance__c
+  fields:
+    Id: sf_id
+    Active_Status__c: Active_Status__c
+    Alternate_Registration_URL_Override__c: Alternate_Registration_URL_Override__c
+    Attendee_List__c: Attendee_List__c
+    Banner_Event_Code__c: Banner_Event_Code__c
+    Banner_Event_Function_Code__c: Banner_Event_Function_Code__c
+    Building_Override__c: Building_Override__c
+    Capacity__c: Capacity__c
+    Category__c: Category__c
+    End_Date_Time__c: End_Date_Time__c
+    Feed_Registration_Button_Text_Override__c: Feed_Registration_Button_Text_Override__c
+    Instance_Short_Description__c: Instance_Short_Description__c
+    Instance_Title__c: Instance_Title__c
+    Location_Address_Override__c: Location_Address_Override__c
+    Location_Map_Link_Override__c: Location_Map_Link_Override__c
+    Location_Title_Override__c: Location_Title_Override__c
+    Location_Type_Override__c: Location_Type_Override__c
+    Private_Instance__c: Private_Instance__c
+    Start_Date_Time__c: Start_Date_Time__c
+  lookups:
+    Event__c:
+      table: Summit_Events__c
+Insert Summit_Events_Appointment_Type__c:
+  sf_object: Summit_Events_Appointment_Type__c
+  table: Summit_Events_Appointment_Type__c
+  fields:
+    Id: sf_id
+    Appointment_Category__c: Appointment_Category__c
+    Appointment_Limits__c: Appointment_Limits__c
+    Appointment_Type_Status__c: Appointment_Type_Status__c
+    Appointment_Type__c: Appointment_Type__c
+    Auto_Add_Time__c: Auto_Add_Time__c
+    Auto_Confirm_Appointment__c: Auto_Confirm_Appointment__c
+    Auto_add_building__c: Auto_add_building__c
+    Chosen_State__c: Chosen_State__c
+    Custom_Picklist__c: Custom_Picklist__c
+    Date_Available_End__c: Date_Available_End__c
+    Date_Available_Start__c: Date_Available_Start__c
+    Day_of_Week_Availability__c: Day_of_Week_Availability__c
+    Description__c: Description__c
+    Do_Not_Show_Time__c: Do_Not_Show_Time__c
+    Registrant_Input__c: Registrant_Input__c
+    Required_Appointment__c: Required_Appointment__c
+    Sort_Order__c: Sort_Order__c
+    Title__c: Title__c
+  lookups:
+    Restrict_To_Instance_Title__c:
+      table: Summit_Events_Instance__c
+    Summit_Events__c:
+      table: Summit_Events__c
+Insert Account:
+  sf_object: Account
+  table: Account
+  fields:
+    Id: sf_id
+    Name: Name
+    RecordTypeId: RecordTypeId
+  lookups:
+    ParentId:
+      table: Account
+      after: Insert Account
+    hed__Current_Address__c:
+      table: hed__Address__c
+      after: Insert hed__Address__c
+    hed__Primary_Contact__c:
+      table: Contact
+      after: Insert Contact
+Insert hed__Facility__c:
+  sf_object: hed__Facility__c
+  table: hed__Facility__c
+  fields:
+    Id: sf_id
+    Name: Name
+    hed__Capacity__c: hed__Capacity__c
+    hed__Description__c: hed__Description__c
+    hed__Facility_Type__c: hed__Facility_Type__c
+  lookups:
+    hed__Account__c:
+      table: Account
+    hed__Parent_Facility__c:
+      table: hed__Facility__c
+      after: Insert hed__Facility__c
+Insert Contact:
+  sf_object: Contact
+  table: Contact
+  fields:
+    Id: sf_id
+    FirstName: FirstName
+    LastName: LastName
+    DoNotCall: DoNotCall
+    Do_Not_Text__c: Do_Not_Text__c
+    Foot_On_Campus__c: Foot_On_Campus__c
+    HasOptedOutOfEmail: HasOptedOutOfEmail
+    HasOptedOutOfFax: HasOptedOutOfFax
+    Initial_Foot_on_Campus__c: Initial_Foot_on_Campus__c
+    Last_Time_on_Campus__c: Last_Time_on_Campus__c
+    Personal_Email__c: Personal_Email__c
+    Preferred_Class_Year__c: Preferred_Class_Year__c
+    Preferred_First_Name__c: Preferred_First_Name__c
+    Previous_Last_Name__c: Previous_Last_Name__c
+    Special_Athlete_Sport_1__c: Special_Athlete_Sport_1__c
+    Special_Athlete_Sport_2__c: Special_Athlete_Sport_2__c
+    Special_Athlete_Sport_3__c: Special_Athlete_Sport_3__c
+    University_Banner_PIDM__c: University_Banner_PIDM__c
+    hed__AlternateEmail__c: hed__AlternateEmail__c
+    hed__Chosen_Full_Name__c: hed__Chosen_Full_Name__c
+    hed__Citizenship__c: hed__Citizenship__c
+    hed__Country_of_Origin__c: hed__Country_of_Origin__c
+    hed__Deceased__c: hed__Deceased__c
+    hed__Do_Not_Contact__c: hed__Do_Not_Contact__c
+    hed__Dual_Citizenship__c: hed__Dual_Citizenship__c
+    hed__Ethnicity__c: hed__Ethnicity__c
+    hed__Exclude_from_Household_Formal_Greeting__c: hed__Exclude_from_Household_Formal_Greeting__c
+    hed__Exclude_from_Household_Informal_Greeting__c: hed__Exclude_from_Household_Informal_Greeting__c
+    hed__Exclude_from_Household_Name__c: hed__Exclude_from_Household_Name__c
+    hed__FERPA__c: hed__FERPA__c
+    hed__Financial_Aid_Applicant__c: hed__Financial_Aid_Applicant__c
+    hed__Gender__c: hed__Gender__c
+    hed__HIPAA_Detail__c: hed__HIPAA_Detail__c
+    hed__HIPAA__c: hed__HIPAA__c
+    hed__Military_Background__c: hed__Military_Background__c
+    hed__Military_Service__c: hed__Military_Service__c
+    hed__Naming_Exclusions__c: hed__Naming_Exclusions__c
+    hed__PreferredPhone__c: hed__PreferredPhone__c
+    hed__Preferred_Email__c: hed__Preferred_Email__c
+    hed__Primary_Address_Type__c: hed__Primary_Address_Type__c
+    hed__Race__c: hed__Race__c
+    hed__Religion__c: hed__Religion__c
+    hed__Secondary_Address_Type__c: hed__Secondary_Address_Type__c
+    hed__Social_Security_Number__c: hed__Social_Security_Number__c
+    hed__UniversityEmail__c: hed__UniversityEmail__c
+    hed__WorkEmail__c: hed__WorkEmail__c
+    hed__WorkPhone__c: hed__WorkPhone__c
+    hed__is_Address_Override__c: hed__is_Address_Override__c
+  lookups:
+    AccountId:
+      table: Account
+    Primary_Academic_Program__c:
+      table: Account
+    Primary_Department__c:
+      table: Account
+    Primary_Educational_Institution__c:
+      table: Account
+    Primary_Sports_Organization__c:
+      table: Account
+    ReportsToId:
+      table: Contact
+      after: Insert Contact
+    hed__Current_Address__c:
+      table: hed__Address__c
+      after: Insert hed__Address__c
+    hed__Primary_Household__c:
+      table: Account
+    hed__Primary_Language__c:
+      table: hed__Language__c
+    hed__Primary_Organization__c:
+      table: Account
+Insert Summit_Events_Registration__c:
+  sf_object: Summit_Events_Registration__c
+  table: Summit_Events_Registration__c
+  fields:
+    Id: sf_id
+    Actual_Number_of_Guests__c: Actual_Number_of_Guests__c
+    Add_Info_Answer_1__c: Add_Info_Answer_1__c
+    Add_Info_Answer_2__c: Add_Info_Answer_2__c
+    Add_Info_Answer_3__c: Add_Info_Answer_3__c
+    Add_Info_Answer_4__c: Add_Info_Answer_4__c
+    Add_Info_Answer_5__c: Add_Info_Answer_5__c
+    Appointment_Table__c: Appointment_Table__c
+    Campus_Tour_Location__c: Campus_Tour_Location__c
+    Campus_Tour_Time__c: Campus_Tour_Time__c
+    Confirmation_Call_Result__c: Confirmation_Call_Result__c
+    Contact_Soft_Match_Email__c: Contact_Soft_Match_Email__c
+    Contact_Soft_Match_First_Last_Zip__c: Contact_Soft_Match_First_Last_Zip__c
+    Date_All_Appointments_Confirmed_del__c: Date_All_Appointments_Confirmed_del__c
+    Date__c: Date__c
+    Display_Attendance_Publicly__c: Display_Attendance_Publicly__c
+    Generated_Itinerary__c: Generated_Itinerary__c
+    Generated_Requested_Appointments__c: Generated_Requested_Appointments__c
+    Instance__c: Instance__c
+    Last_Name_as_Student__c: Last_Name_as_Student__c
+    Matching_Log__c: Matching_Log__c
+    New_Contact_Created__c: New_Contact_Created__c
+    Number_of_Guests__c: Number_of_Guests__c
+    Participation_Type__c: Participation_Type__c
+    Preferred_Class_Year__c: Preferred_Class_Year__c
+    Preferred_Visit_Time__c: Preferred_Visit_Time__c
+    Presentation_Location__c: Presentation_Location__c
+    Presentation_Time__c: Presentation_Time__c
+    Registrant_Applicant_Type__c: Registrant_Applicant_Type__c
+    Registrant_City__c: Registrant_City__c
+    Registrant_College_Code__c: Registrant_College_Code__c
+    Registrant_College_Not_Found__c: Registrant_College_Not_Found__c
+    Registrant_College_Year__c: Registrant_College_Year__c
+    Registrant_College__c: Registrant_College__c
+    Registrant_Country__c: Registrant_Country__c
+    Registrant_Date_of_Birth__c: Registrant_Date_of_Birth__c
+    Registrant_Do_Not_Call__c: Registrant_Do_Not_Call__c
+    Registrant_Email__c: Registrant_Email__c
+    Registrant_First_Name__c: Registrant_First_Name__c
+    Registrant_Gender__c: Registrant_Gender__c
+    Registrant_High_School_Code__c: Registrant_High_School_Code__c
+    Registrant_High_School_Grad_Year__c: Registrant_High_School_Grad_Year__c
+    Registrant_High_School_Not_Found__c: Registrant_High_School_Not_Found__c
+    Registrant_High_School__c: Registrant_High_School__c
+    Registrant_Last_Name__c: Registrant_Last_Name__c
+    Registrant_Mobile_Phone__c: Registrant_Mobile_Phone__c
+    Registrant_Other_Email__c: Registrant_Other_Email__c
+    Registrant_Other_First_Name__c: Registrant_Other_First_Name__c
+    Registrant_Other_Last_Name__c: Registrant_Other_Last_Name__c
+    Registrant_Other_Phone__c: Registrant_Other_Phone__c
+    Registrant_Other_Relationship__c: Registrant_Other_Relationship__c
+    Registrant_Parent_Email__c: Registrant_Parent_Email__c
+    Registrant_Parent_First_Name__c: Registrant_Parent_First_Name__c
+    Registrant_Parent_Last_Name__c: Registrant_Parent_Last_Name__c
+    Registrant_Parent_Phone__c: Registrant_Parent_Phone__c
+    Registrant_Phone__c: Registrant_Phone__c
+    Registrant_Postal_Code__c: Registrant_Postal_Code__c
+    Registrant_Preferred_First_Name__c: Registrant_Preferred_First_Name__c
+    Registrant_Program_Interest__c: Registrant_Program_Interest__c
+    Registrant_Receive_Texts__c: Registrant_Receive_Texts__c
+    Registrant_State_Global__c: Registrant_State_Global__c
+    Registrant_State_Province__c: Registrant_State_Province__c
+    Registrant_State__c: Registrant_State__c
+    Registrant_Street_1__c: Registrant_Street_1__c
+    Registrant_Street_2__c: Registrant_Street_2__c
+    Registrant_Third_Party_Status__c: Registrant_Third_Party_Status__c
+    Registrant_Zip__c: Registrant_Zip__c
+    Relationship_To_Institution__c: Relationship_To_Institution__c
+    Reminder_Call_Complete__c: Reminder_Call_Complete__c
+    Session__c: Session__c
+    Status__c: Status__c
+    Substatus__c: Substatus__c
+  lookups:
+    Contact__c:
+      table: Contact
+    Event_Instance__c:
+      table: Summit_Events_Instance__c
+    Event__c:
+      table: Summit_Events__c
+Insert Summit_Events_Host__c:
+  sf_object: Summit_Events_Host__c
+  table: Summit_Events_Host__c
+  fields:
+    Id: sf_id
+    Additional_Comments__c: Additional_Comments__c
+    Assigned__c: Assigned__c
+    Building__c: Building__c
+    Course_Name__c: Course_Name__c
+    Department__c: Department__c
+    First_Name__c: First_Name__c
+    Gender__c: Gender__c
+    Last_Name__c: Last_Name__c
+    Location__c: Location__c
+    Max_Available__c: Max_Available__c
+    Preferred_Title__c: Preferred_Title__c
+    RecordTypeId: RecordTypeId
+    Time__c: Time__c
+    Undergrad_Major__c: Undergrad_Major__c
+  lookups:
+    Contact__c:
+      table: Contact
+    Event_Instance__c:
+      table: Summit_Events_Instance__c
+Insert hed__Address__c:
+  sf_object: hed__Address__c
+  table: hed__Address__c
+  fields:
+    Id: sf_id
+    hed__Address_Type__c: hed__Address_Type__c
+    hed__Default_Address__c: hed__Default_Address__c
+    hed__Latest_End_Date__c: hed__Latest_End_Date__c
+    hed__Latest_Start_Date__c: hed__Latest_Start_Date__c
+    hed__MailingCity__c: hed__MailingCity__c
+    hed__MailingCountry__c: hed__MailingCountry__c
+    hed__MailingPostalCode__c: hed__MailingPostalCode__c
+    hed__MailingState__c: hed__MailingState__c
+    hed__MailingStreet2__c: hed__MailingStreet2__c
+    hed__MailingStreet__c: hed__MailingStreet__c
+    hed__Seasonal_End_Day__c: hed__Seasonal_End_Day__c
+    hed__Seasonal_End_Month__c: hed__Seasonal_End_Month__c
+    hed__Seasonal_End_Year__c: hed__Seasonal_End_Year__c
+    hed__Seasonal_Start_Day__c: hed__Seasonal_Start_Day__c
+    hed__Seasonal_Start_Month__c: hed__Seasonal_Start_Month__c
+    hed__Seasonal_Start_Year__c: hed__Seasonal_Start_Year__c
+  lookups:
+    hed__Parent_Account__c:
+      table: Account
+    hed__Parent_Contact__c:
+      table: Contact
+Insert Summit_Events_Appointments__c:
+  sf_object: Summit_Events_Appointments__c
+  table: Summit_Events_Appointments__c
+  fields:
+    Id: sf_id
+    Appointment_Category__c: Appointment_Category__c
+    Appointment_Contact_Email__c: Appointment_Contact_Email__c
+    Appointment_Contact_Name__c: Appointment_Contact_Name__c
+    Appointment_Date_Time__c: Appointment_Date_Time__c
+    Appointment_Date__c: Appointment_Date__c
+    Appointment_Detail__c: Appointment_Detail__c
+    Appointment_Status__c: Appointment_Status__c
+    Appointment_Time_Options__c: Appointment_Time_Options__c
+    Appointment_Time__c: Appointment_Time__c
+    Appointment_Title__c: Appointment_Title__c
+    Appointment_Type__c: Appointment_Type__c
+    Building__c: Building__c
+    Chosen_State__c: Chosen_State__c
+    Class_Title__c: Class_Title__c
+    Client_Created_Appointment__c: Client_Created_Appointment__c
+    Description__c: Description__c
+    Do_Not_Show_Time__c: Do_Not_Show_Time__c
+    Faculty_Staff_Member__c: Faculty_Staff_Member__c
+    Registrant_Input__c: Registrant_Input__c
+    Room__c: Room__c
+    Sort_Order__c: Sort_Order__c
+  lookups:
+    Event_Appointment_Type__c:
+      table: Summit_Events_Appointment_Type__c
+    Event_Host__c:
+      table: Summit_Events_Host__c
+    Event_Registration__c:
+      table: Summit_Events_Registration__c
