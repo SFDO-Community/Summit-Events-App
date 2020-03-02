@@ -220,7 +220,12 @@ label.required {
 }
 
 .selectableOL li.selOl-selected {
-    background-color: pink;
+    background-color: #4f4f4f;
+    color:#fff;
+}
+
+.slds-has-error .selectableOL li {
+    border: solid 1px red;
 }
 
 /*Loading image*/

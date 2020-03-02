@@ -41,8 +41,11 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     <apex:actionFunction name="setCountrySetting" immediate="true" onComplete="dynamicValidation();fadein();" reRender="countryInfo">
                         <apex:param name="countrySetting" value="" assignTo="{!newEvtReg.Registrant_Country__c}"></apex:param>
                     </apex:actionFunction>
+                    <apex:actionFunction name="setPhoneSetting" immediate="true" onComplete="setOldPhoneValue();dynamicValidation();" reRender="phoneBlock">
+                        <apex:param name="phoneSetting" value="" assignTo="{!phoneType}"></apex:param>
+                    </apex:actionFunction>
 
-                    <!-- Event Description -->
+                    <!-- EVENT DESCRIPTION -->
                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                         <nav role="navigation" aria-label="Breadcrumbs">
                             <ol class="slds-breadcrumb slds-list--horizontal">
@@ -370,42 +373,78 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </apex:outputPanel>
 
                         <!-- REGISTRANT PHONE NUMBER -->
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!eventPage.Ask_Phone__c}">
-                            <div class="slds-form-element">
-                                <apex:outputLabel styleClass="slds-form-element__label" value="Home Phone" for="phone"/>
-                                <div class="slds-form-element__control">
-                                    <apex:input type="tel" value="{!newEvtReg.Registrant_Phone__c}" id="phone" disabled="{!contactSet}" styleClass="slds-input"/>
-                                </div>
-                            </div>
-                        </apex:outputPanel>
+                        <apex:outputPanel layout="block" id="phoneBlock" styleClass="slds-grid slds-wrap slds-size_1-of-1 {!IF(CONTAINS(eventPage.Ask_Phone__c, 'require one'), ' phone-require-one ','')}" rendered="{!IF(BEGINS(eventPage.Ask_Phone__c, 'Do not ') || eventPage.Ask_Phone__c == null, false, true) }">
 
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!eventPage.Ask_Phone__c}">
-                            <div class="slds-form-element">
-                                <apex:outputLabel styleClass="slds-form-element__label" value="Mobile Phone" for="mobile"/>
-                                <div class="slds-form-element__control">
-                                    <apex:input type="tel" value="{!newEvtReg.Registrant_Mobile_Phone__c}" id="mobile" disabled="{!contactSet}" styleClass="slds-input"/>
-                                </div>
-                            </div>
-                        </apex:outputPanel>
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!IF(CONTAINS(eventPage.Ask_Phone__c, 'require one'),true,false)}">
+                                <p class="slds-is-required"><strong>Please provide either a home or mobile number</strong></p>
+                            </apex:outputPanel>
 
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!eventPage.Ask_Phone__c}">
-                            <div class="slds-form-element">
-                                <div class="slds-form-element__control">
-                                    <div class="slds-checkbox">
-                                        <apex:inputCheckbox value="{!newEvtReg.Registrant_Receive_Texts__c}" id="AcceptTextMessage" disabled="{!contactSet}"/>
-                                        <apex:outputLabel for="AcceptTextMessage" styleClass="slds-checkbox__label">
-                                            <span class="slds-checkbox_faux"></span>
-                                            <span class="slds-form-element__label">I am willing to receive text messages about this event</span>
-                                        </apex:outputLabel>
+                            <!-- HOME PHONE NUMBER -->
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!IF(CONTAINS(eventPage.Ask_Phone__c, 'home and mobile') || phoneType == 'home', true, false)}">
+                                <div class="slds-form-element {!If(eventPage.Ask_Phone__c = 'Ask with type require'|| eventPage.Ask_Phone__c = 'Ask home and mobile require both', 'slds-is-required', '')}">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="{!IF((CONTAINS(eventPage.Ask_Phone__c, 'with type') && phoneType == ''),'', 'Home ')}Phone" for="phone"/>
+                                    <div class="slds-form-element__control">
+                                        <apex:input type="tel" value="{!newEvtReg.Registrant_Phone__c}" id="phone" html-aria-describedby="phone-required" disabled="{!contactSet}" styleClass="slds-input"/>
+                                    </div>
+                                    <div class="slds-form-element__help" id="phone-required">
+                                        Phone required
                                     </div>
                                 </div>
-                            </div>
+                            </apex:outputPanel>
+
+                            <!-- MOBILE PHONE NUMBER -->
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" rendered="{!IF(CONTAINS(eventPage.Ask_Phone__c, 'home and mobile') || phoneType == 'mobile' || (phoneType= '' && CONTAINS(eventPage.Ask_Phone__c, 'with type')), true, false)}">
+                                <div class="slds-form-element {!If(eventPage.Ask_Phone__c = 'Ask with type require' || eventPage.Ask_Phone__c = 'Ask home and mobile require both', 'slds-is-required', '')}">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="{!IF((CONTAINS(eventPage.Ask_Phone__c, 'with type') && phoneType == ''),'', 'Mobile ')}Phone" for="mobile"/>
+                                    <div class="slds-form-element__control">
+                                        <apex:input type="tel" value="{!newEvtReg.Registrant_Mobile_Phone__c}" id="mobile" html-aria-describedby="mobile-required" disabled="{!contactSet}" styleClass="slds-input"/>
+                                    </div>
+                                    <div class="slds-form-element__help" id="mobile-required">
+                                        {!IF(CONTAINS(eventPage.Ask_Phone__c, 'with type'),'', 'Mobile ')}phone required
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+
+                            <!-- PHONE TYPE NUMBER -->
+                            <apex:outputPanel rendered="{!IF(CONTAINS(eventPage.Ask_Phone__c, 'with type'), true, false)}" layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6">
+                                <div class="slds-form-element {!If(eventPage.Ask_Phone__c = 'Ask with type require', 'slds-is-required', '')}">
+                                    <apex:outputLabel styleClass="slds-form-element__label" for="phoneType">Type</apex:outputLabel>
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-select_container">
+                                            <apex:selectList multiselect="false" size="1" value="{!phoneType}" required="false" id="phoneType" html-aria-describedby="phoneType-required" styleClass="slds-select" onChange="phoneTypeToggle(this.value)">
+                                                <apex:selectOption itemLabel="Select..." itemValue=""/>
+                                                <apex:selectOption itemLabel="Mobile" itemValue="mobile"/>
+                                                <apex:selectOption itemLabel="Home" itemValue="home"/>
+                                            </apex:selectList>
+                                        </div>
+                                    </div>
+                                    <div class="slds-form-element__help" id="phoneType-required">
+                                        Select a type of phone
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+
+                            <!-- TEXT MESSAGE ASK -->
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!IF(CONTAINS(eventPage.Ask_Phone__c, 'mobile') || phoneType='mobile', true, false)}">
+                                <div class="slds-form-element slds-is-required">
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-checkbox">
+                                            <apex:inputCheckbox value="{!newEvtReg.Registrant_Receive_Texts__c}" id="AcceptTextMessage" disabled="{!contactSet}"/>
+                                            <apex:outputLabel for="AcceptTextMessage" styleClass="slds-checkbox__label">
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span class="slds-form-element__label">I am willing to receive text messages on my mobile phone about this event</span>
+                                            </apex:outputLabel>
+                                        </div>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+
                         </apex:outputPanel>
 
                         <!-- REGISTRANT RELATIONSHIP TO INSTITUTION -->
                         <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!IF((eventPage.Ask_Relationship_To_Institution__c != 'Do not ask') && (eventPage.Ask_Relationship_To_Institution__c != null), true, false)}">
-                            <div class="slds-form-element">
-                                <apex:outputLabel for="relationshipToInstitution" styleClass="slds-form-element__label {!IF(eventPage.Ask_Relationship_To_Institution__c == 'Ask and require','required', '')}">
+                            <div class="slds-form-element {!IF(eventPage.Ask_Relationship_To_Institution__c == 'Ask and require','slds-is-required', '')}">
+                                <apex:outputLabel for="relationshipToInstitution" styleClass="slds-form-element__label">
                                     Relationship (select all that apply)
                                     <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Relationship_To_Institution__c == 'Ask and require', true, false)}">
                                         <abbr class="slds-required" title="required">*</abbr>
@@ -420,7 +459,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </ol>
                                 </div>
                                 <div class="slds-form-element__help" id="relationshipToInstitution-required">
-                                    {!IF(eventPage.Ask_Relationship_To_Institution__c == 'Ask and require', 'This field is required', '')}
+                                    {!IF(eventPage.Ask_Relationship_To_Institution__c == 'Ask and require', 'Please select a relationship you have to the institution.', '')}
                                 </div>
                             </div>
                         </apex:outputPanel>

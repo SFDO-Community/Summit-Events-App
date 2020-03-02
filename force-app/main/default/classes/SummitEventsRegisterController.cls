@@ -35,6 +35,7 @@ public with sharing class SummitEventsRegisterController {
     public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
     public String dataLayerLocationType { get; set; }
+    public String phoneType {get;set;}
 
 
     public SummitEventsRegisterController() {
@@ -312,6 +313,7 @@ public with sharing class SummitEventsRegisterController {
 
         if (String.isBlank(newEvtReg.Registrant_Country__c)) {
             newEvtReg.Registrant_Country__c = 'United States';
+
         }
 
     }
@@ -446,6 +448,9 @@ public with sharing class SummitEventsRegisterController {
             picklists.add(new SelectOption('', 'Select...'));
         }
 
+        if (YourFieldName == 'Registrant_Third_Party_Status__c') {
+            picklists.add(new SelectOption('Primary Registrant', 'Primary Registrant'));
+        }
         for (Schema.PicklistEntry PicklistValue : PicklistValues) {
             if (YourFieldName == 'Registrant_Third_Party_Status__c') {
                 if (eventPage.Ask_Third_Party_Registrant__c.contains(PicklistValue.getValue())) {

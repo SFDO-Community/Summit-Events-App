@@ -19,16 +19,6 @@
                 <label>Do not ask</label>
             </value>
             <value>
-                <fullName>Ask</fullName>
-                <default>false</default>
-                <label>Ask</label>
-            </value>
-            <value>
-                <fullName>Ask and require</fullName>
-                <default>false</default>
-                <label>Ask and require</label>
-            </value>
-            <value>
                 <fullName>Ask with type</fullName>
                 <default>false</default>
                 <label>Ask with type</label>

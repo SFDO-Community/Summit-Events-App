@@ -132,6 +132,28 @@ function dynamicValidation() {
     });
 }
 
+//Carries over number values when toggling between type of mobile and home
+var phoneCarryover;
+var newPhoneType;
+
+function phoneTypeToggle(phoneType) {
+    if ($('[id$=mobile]').val()) {
+        phoneCarryover = $('[id$=mobile]').val();
+    } else if ($('[id$=phone]').val()) {
+        phoneCarryover = $('[id$=phone]').val();
+    }
+    newPhoneType = phoneType;
+    setPhoneSetting(phoneType);
+}
+
+function setOldPhoneValue() {
+    if (newPhoneType == 'home') {
+        $('[id$=phone]').val(phoneCarryover)
+    } else {
+        $('[id$=mobile]').val(phoneCarryover)
+    }
+}
+
 function populateHiddenSchoolValue() {
     if ($("[id$=school]").length > 0) {
         $("[id$=school]").val($("#schoolSelector option:selected").text());
@@ -182,72 +204,80 @@ function populateschSel(data, selector, keyAsText) {
 
 //Validation for the page
 function checkForm() {
-    console.log('Check the form begins.....')
+
     populateHiddenSchoolValue();
     var error_count = 0;
     var emailReg = /^([a-zA-Z0-9_.\-.'.+])+@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
-    $.each($('.slds-is-required input, .slds-is-required select'), function (i, v) {
-        let inputRequired = $(this).closest('.slds-form-element').hasClass('slds-is-required');
-        let inputType = this.type.toLowerCase();
-        if (inputRequired && !$(this).val()) {
-            $(this).closest('.slds-form-element').addClass("slds-has-error").find('.slds-form-element__help').toggle();
+    document.querySelectorAll(".slds-is-required input, .slds-is-required select").forEach(item => {
+        let inputWrap = item.closest('.slds-form-element');
+        let inputRequired = inputWrap.classList.contains('slds-is-required');
+        let inputType = item.type.toLowerCase();
+        if (inputRequired && !item.value) {
+            inputWrap.classList.add("slds-has-error");
+            inputWrap.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
+                errorHelp.style.display = "block"
+            });
+            addErrorFixerListener(item,inputWrap);
             error_count++;
         }
-        if (inputType == 'email' && inputRequired || inputType == 'email' && $(this).val()) {
-            if (!emailReg.test($(this).val())) {
-                $(this).closest('.slds-form-element').addClass("slds-has-error");
+        if (inputType == 'email' && inputRequired || inputType == 'email' && item.value) {
+            if (!emailReg.test(item.value)) {
+                inputWrap.classList.add("slds-has-error");
+                addErrorFixerListener(item,inputWrap);
                 error_count++;
             }
         }
     });
 
-    $.each($(".selectableOL"), function () {
-        if ($(this).closest('.slds-form-element').hasClass('slds-is-required')) {
-            var sOLId = $(this).data("hiddendataid");
-            sOLId = $("[id$=" + sOLId + "]");
-            if (!sOLId.val()) {
-                $(this).closest('.slds-form-element').addClass("slds-has-error");
+    document.querySelectorAll(".selectableOL").forEach(sel => {
+        let selWrap = sel.closest('.slds-form-element');
+        let hiddenData = document.querySelector('[id$="' + sel.dataset.hiddendataid + '"]').id;
+        if (selWrap.classList.contains("slds-is-required")) {
+            if (!document.getElementById(hiddenData).value) {
+                selWrap.classList.add("slds-has-error");
+                addErrorFixerListener(selWrap,selWrap);
                 error_count++;
             }
         }
     });
 
     // require school be filled in.
-    if ($("[id$=collegeAsk]").length > 0) {
-        if (!$("[id$=college]").val() && !$("[id$=CollegeAltInput]").val()) {
-            error_count++;
-            $(this).closest('.slds-form-element').addClass("slds-has-error");
-        }
-    }
+    // if ($("[id$=collegeAsk]").length > 0) {
+    //     if (!$("[id$=college]").val() && !$("[id$=CollegeAltInput]").val()) {
+    //         error_count++;
+    //         $(this).closest('.slds-form-element').addClass("slds-has-error");
+    //     }
+    // }
+    //
+    // if ($("[id$=hsAsk]").length > 0) {
+    //     if (!$("[id$=school]").val() && !$("[id$=HSAltInput]").val()) {
+    //         error_count++;
+    //         $(this).closest('.slds-form-element').addClass("slds-has-error");
+    //     }
+    // }
 
-    if ($("[id$=hsAsk]").length > 0) {
-        if (!$("[id$=school]").val() && !$("[id$=HSAltInput]").val()) {
-            error_count++;
-            $(this).closest('.slds-form-element').addClass("slds-has-error");
-        }
-    }
-
-    console.log(error_count);
     if (error_count > 0) {
         fadein();
-        validationErrorAction();
+        alert(error_count);
         //Scroll to first error
-        var firstInvalid = $(".slds-has-error:first");
-        $([document.documentElement, document.body]).animate({
-            scrollTop: firstInvalid.offset().top - 10
-        }, 200);
+        // var firstInvalid = $(".slds-has-error:first");
+        // $([document.documentElement, document.body]).animate({
+        //     scrollTop: firstInvalid.offset().top - 10
+        // }, 200);
         return false;
     }
 
     return true;
 }
 
-function validationErrorAction() {
-    $(".slds-form-element.slds-has-error").on("change", function () {
-        $(this).removeClass("slds-has-error").find('.slds-form-element__help').toggle();
+function addErrorFixerListener (inpt, wrp) {
+    inpt.addEventListener("click", (e) => {
+        wrp.classList.remove("slds-has-error");
+        wrp.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
+            errorHelp.style.display = "none";
+        });
     });
-
 }
 
 function fillInCityStateOnZip(zipObj) {
@@ -259,7 +289,7 @@ function fillInCityStateOnZip(zipObj) {
         url = url + zip;
     }
 
-    $('[id$=city], [id$=state]').closest(".columns").prepend(overlay)
+    $('[id$=city], [id$=state]').closest(".slds-form-element").prepend(overlay)
     $.getJSON(url, function (result) {
         if (result.length > 0) {
             var city = result[0].address.city;
@@ -466,7 +496,7 @@ ready(() => {
                 selOlSelected.value = selArray.join(';');
             });
 
-            if(oldSelArray.includes(selLi.textContent)) {
+            if (oldSelArray.includes(selLi.textContent)) {
                 selLi.classList.add('selOl-selected');
             }
         });
@@ -475,7 +505,7 @@ ready(() => {
 });
 
 function arrayRemove(arr, value) {
-    return arr.filter(function(ele){
+    return arr.filter(function (ele) {
         return ele != value;
     });
 }

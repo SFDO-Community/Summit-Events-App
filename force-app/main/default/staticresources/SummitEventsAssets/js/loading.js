@@ -1,16 +1,36 @@
-$(document).ready(function () {
-    var loadingImg = '<div id="backpage" class="popupBackground">';
-    loadingImg += '<div id="loading" class="PopupPanel">';
-    loadingImg += '<div class="background"></div>';
-    loadingImg += '<span>Please Wait..</span>';
-    loadingImg += '</div></div>';
-    $('body').append(loadingImg);
+var loadReady = (callback) => {
+    if (document.readyState != "loading") callback();
+    else document.addEventListener("DOMContentLoaded", callback);
+}
+
+loadReady(() => {
+    let backpage = document.createElement("DIV");
+    backpage.setAttribute("id","backpage");
+    backpage.classList.add("popupBackground");
+
+    let loadingPanel = document.createElement("DIV");
+    loadingPanel.setAttribute("id","loading");
+    loadingPanel.classList.add("PopupPanel");
+
+    let background = document.createElement("DIV");
+    background.classList.add("background");
+
+    let pleaseWait = document.createElement("SPAN");
+    pleaseWait.innerHTML = "Please Wait..";
+
+    loadingPanel.appendChild(background);
+    loadingPanel.appendChild(pleaseWait);
+    backpage.appendChild(loadingPanel);
+    document.body.appendChild(backpage);
 });
 
+
 function fadein() {
-    $('#backpage').hide();
+    let fadeWrapper = document.getElementById('backpage');
+    fadeWrapper.style.display = "none";
 }
 
 function fadeout() {
-    $('#backpage').show();
+    let fadeWrapper = document.getElementById('backpage');
+    fadeWrapper.style.display = "block";
 }
