@@ -6,7 +6,7 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
 -->
 
 <apex:page id="CastorTemplate2017" lightningStyleSheets="true" sidebar="false" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
-    <apex:slds/>
+    <apex:slds />
     <html>
     <head>
         <title>
@@ -210,7 +210,7 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
                     </div>
                 </div>
             </div>
-            <site:googleAnalyticsTracking/>
+            <site:googleAnalyticsTracking />
         </apex:insert>
     </footer>
     <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/loading.js')}" type="text/javascript"/>
