@@ -259,15 +259,10 @@ function checkForm() {
 
     if (error_count > 0) {
         fadein();
-        alert(error_count);
-        //Scroll to first error
-        // var firstInvalid = $(".slds-has-error:first");
-        // $([document.documentElement, document.body]).animate({
-        //     scrollTop: firstInvalid.offset().top - 10
-        // }, 200);
+        let foundErrors = document.querySelectorAll(".slds-has-error");
+        window.scrollTo(0, foundErrors[0].offsetTop);
         return false;
     }
-
     return true;
 }
 

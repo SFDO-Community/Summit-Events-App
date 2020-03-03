@@ -82,14 +82,9 @@ public with sharing class SummitEventsShared {
         evt = getSummitEventsInfo();
         SYSTEM.debug('!!!!!!!!!!!!!!!  EVENT ID : ' + evt.evtId + ' , INSTANCE ID : ' + evt.instanceID + ' , EVENT REG ID : ' + evt.evtRegId);
 
-        // Summit_Events_Settings__c orgDefault = Summit_Events_Settings__c.getOrgDefaults();
-        // Summit_Events_Settings__c myProfileSetting = Summit_Events_Settings__c.getInstance(UserInfo.getProfileId());
         Summit_Events_Settings__c myUserSetting = Summit_Events_Settings__c.getInstance(UserInfo.getUserId());
         String communityBaseURL = myUserSetting.Community_Base_URL__c;
 
-        //System.Debug('COMMUNITY URL: ' + communityBaseURL);
-
-        //String ustEventSettings = Summit_Events_Settings__c.getValues('Community_Base_URL__c');
         if ((String.isBlank(evt.evtRegId) && !ApexPages.currentPage().getUrl().containsIgnoreCase('SummitEventsRegister')) || String.isBlank(evt.instanceID)) {
             //Reset the cookie to prevent loop on registration page
             Cookie deleteCookie = new Cookie('SummitEvents', '', null, 0, false); // Note the 0 to delete the cookie

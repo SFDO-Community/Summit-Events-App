@@ -35,7 +35,7 @@ public with sharing class SummitEventsRegisterController {
     public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
     public String dataLayerLocationType { get; set; }
-    public String phoneType {get;set;}
+    public String phoneType { get; set; }
 
 
     public SummitEventsRegisterController() {
@@ -47,6 +47,7 @@ public with sharing class SummitEventsRegisterController {
         };
 
         newEvtReg = new Summit_Events_Registration__c();
+        newEvtReg.Add_Info_Answer_1__c = '';
         templateSelected = SEShared.defaultTemplate;
         test = '';
         contactSet = false;
@@ -293,7 +294,7 @@ public with sharing class SummitEventsRegisterController {
                                 Registrant_College_Not_Found__c, Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c, Registrant_Parent_Phone__c,
                                 Add_Info_Answer_1__c, Add_Info_Answer_2__c, Add_Info_Answer_3__c, Add_Info_Answer_4__c, Add_Info_Answer_5__c, Registrant_Program_Interest__c, Registrant_Preferred_First_Name__c,
                                 Registrant_date_of_Birth__c, Last_Name_as_Student__c, Preferred_Class_Year__c, Relationship_To_Institution__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c, Registrant_Other_Phone__c, Registrant_Other_Relationship__c,
-                                Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c
+                                Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c
                         FROM Summit_Events_Registration__c
                         WHERE id = :evtInfo.evtRegId
                 ][0];
@@ -465,6 +466,7 @@ public with sharing class SummitEventsRegisterController {
     }
 
     public PageReference saveContactRegistration() {
+        System.debug(LoggingLevel.Info, ' HEY WE ARE SAVING HERE!');
         boolean newContactCreated = false;
         PageReference optionPage;
 
@@ -596,7 +598,7 @@ public with sharing class SummitEventsRegisterController {
 
         //update registration it may already exist, and matching log has to be updated on new registration inserts
         newEvtReg = rCRUD.updateRegistration(newEvtReg);
-
+        System.debug(JSON.serializePretty(newEvtReg));
 
         if (String.isNotBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING') {
             if (evtHasAppointments) {
@@ -607,7 +609,6 @@ public with sharing class SummitEventsRegisterController {
             // create cookie to pass on to next page
             //Posting along everything we need to build the next page
             String encrytpString = SEShared.createEncryptedCookie('{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"' + evtInfo.evtRegId + '","evtId":"' + evtInfo.evtId + '"}', 'SummitEvents');
-            //optionPage.getParameters().put('evt', encrytpString);
             return optionPage;
         }
 
@@ -620,7 +621,7 @@ public with sharing class SummitEventsRegisterController {
             try {
                 upsert newEvtReg;
             } catch (Exception ex) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'HELLO: ' +  ex.getMessage()));
             }
             return newEvtReg;
         }
