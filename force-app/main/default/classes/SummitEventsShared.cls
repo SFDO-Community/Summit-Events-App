@@ -141,6 +141,24 @@ public with sharing class SummitEventsShared {
         return '';
     }
 
+    public String navBreadcrumbBuilder(String eventTitle, String instanceTitle, String instanceDate) {
+        String crumb = '';
+        crumb+= '<nav role="navigation" aria-label="Breadcrumbs">';
+        crumb+= '   <ol class="slds-breadcrumb slds-list--horizontal">';
+        if (String.isNotBlank(eventTitle)) {
+            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventTitle + '</a></li>';
+        }
+        if (String.isNotBlank(instanceTitle)) {
+            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + instanceTitle + '</a></li>';
+        }
+        if (String.isNotBlank(instanceDate)) {
+            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + instanceDate + '</a></li>';
+        }
+        crumb+= '   </ol>';
+        crumb+= '</nav>';
+        return crumb;
+    }
+
     public DateTime adjustForCentralTime(Datetime dt) {
         //Get the current GMT time and adjust for our timezone
         //tz = TimeZone.getTimeZone('America/Chicago');
@@ -222,6 +240,8 @@ public with sharing class SummitEventsShared {
         }
         return retVal;
     }
+
+
 
 
 }

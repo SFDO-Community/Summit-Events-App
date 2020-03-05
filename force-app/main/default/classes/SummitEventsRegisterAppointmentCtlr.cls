@@ -10,7 +10,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     public Map<Id, Summit_Events_Appointment_Type__c> appts { get; set; }
     public List<Summit_Events_Appointments__c> chosenAppts { get; set; }
     public Summit_Events_Instance__c evtInstance { get; set; }
-    public String apptFormatted { get; set; }
+    public String appointments { get; set; }
     public String chosenFormatted { get; set; }
     public String incomingApptJSon { get; set; }
     public Summit_Events__c eventPage { get; set; }
@@ -18,6 +18,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     public Boolean noOptionalAppointments { get; set; }
     public Boolean requiredAppt { get; set; }
     public String eventStartDateTimeCrumb { get; set; }
+    public String navBreadCrumb { get; set; }
 
     public class incomingAppt {
         String apptId;
@@ -35,7 +36,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         templateSelected = SEShared.defaultTemplate;
         //Get cookie or URL string variable
         evtInfo = SEShared.getSummitEventsInfo();
-        apptFormatted = '';
+        appointments = '';
         chosenFormatted = '';
         noOptionalAppointments = true;
 
@@ -53,9 +54,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             if (!String.isBlank(evtinfo.evtRegId)) {
                 evtInstance = [SELECT Instance_Title__c, Start_Date_Time__c, End_Date_Time__c FROM Summit_Events_Instance__c WHERE Id = :evtinfo.instanceID LIMIT 1];
 
-                if (evtInstance.Start_Date_Time__c != null && evtInstance.End_Date_Time__c != null) {
-                    eventStartDateTimeCrumb = evtInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + evtInstance.End_Date_Time__c.format('h:mm a');
-                }
 
                 if (evtInstance != null) {
                     //Datetime rightNow = SEShared.adjustForCentralTime(Datetime.now());
@@ -75,6 +73,11 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             AND (Appointment_Type_Status__c = 'Active' OR Appointment_Type_Status__c = NULL)
                             ORDER BY Sort_Order__c ASC NULLS LAST
                     ]);
+
+                    if (evtInstance.Start_Date_Time__c != null && evtInstance.End_Date_Time__c != null) {
+                        eventStartDateTimeCrumb = evtInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + evtInstance.End_Date_Time__c.format('h:mm a');
+                    }
+                    navBreadCrumb = SEShared.navBreadcrumbBuilder(eventPage.Event_Name__c, evtInstance.Instance_Title__c, eventStartDateTimeCrumb);
 
                     //Check if the user gets to select any appointments or they are all auto added
                     for (Summit_Events_Appointment_Type__c chosenCheck : appts.values()) {
@@ -144,68 +147,96 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                 if (apptCount.containsKey(apt.Id)) {
                     apptLimit = apptLimit - (Integer.valueOf(apptCount.get(apt.Id)));
                 }
-                apptFormatted += '<div id="' + apt.Id + '"';
-                apptFormatted += ' data-apptid="' + apt.Id + '"';
-                apptFormatted += ' data-apptcat="' + apt.Appointment_Category__c + '"';
-                apptFormatted += ' data-appttype="' + apt.Appointment_Type__c + '"';
-                apptFormatted += ' data-appttitle="' + apt.Title__c + '"';
-                apptFormatted += ' data-appchosenstate="' + apt.Chosen_State__c + '"';
-                apptFormatted += ' data-appsort="' + apt.Sort_Order__c + '"';
-                apptFormatted += ' data-appinput="' + apt.Registrant_Input__c + '"';
-                apptFormatted += ' data-limit=' + String.valueOf(apptLimit) + ' ';
+
+                appointments += '<section  id="' + apt.Id + '"';
+                appointments += ' name="' + apt.Id + '"';
+                appointments += ' data-apptid="' + apt.Id + '"';
+                appointments += ' data-apptcat="' + apt.Appointment_Category__c + '"';
+                appointments += ' data-appttype="' + apt.Appointment_Type__c + '"';
+                appointments += ' data-appttitle="' + apt.Title__c + '"';
+                appointments += ' data-appchosenstate="' + apt.Chosen_State__c + '"';
+                appointments += ' data-appsort="' + apt.Sort_Order__c + '"';
+                appointments += ' data-appinput="' + apt.Registrant_Input__c + '"';
+                appointments += ' data-limit=' + String.valueOf(apptLimit) + ' ';
+
                 if (apptLimit <= 0) {
-                    apptFormatted += ' style="display:none;" ';
+                    appointments += ' style="display:none;" ';
                 } else {
-                    apptFormatted += ' data-limit="1" ';
+                    appointments += ' data-limit="1" ';
                 }
-                apptFormatted += ' class="appointment';
+                appointments += ' class="slds-accordion__section appointment slds-box slds-box_small slds-m-vertical_x-small';
                 if (apt.Required_Appointment__c) {
-                    apptFormatted += ' appointmentRequired';
+                    appointments += ' appointmentRequired';
                 }
-                apptFormatted += '">';
-                apptFormatted += '<p class="appointmentTitle"><a href="javascript:;" class="optionToggler"><span>' + apt.Title__c;
+                appointments += '">';
+
+                //Heading
+                appointments += '<div class="slds-accordion__summary">';
+                appointments += '<h3 class="slds-accordion__summary-heading">';
+                appointments += '<button aria-controls="accordion-details-01" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action">';
+                appointments += '<svg class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true">';
+                appointments += '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#switch"></use>';
+                appointments += '</svg>';
+                appointments += '<span class="slds-truncate appointmentTitle" title="' + apt.Title__c + '">';
+                appointments += apt.Title__c;
                 if (apt.Required_Appointment__c) {
                     requiredAppt = true;
-                    apptFormatted += ' *';
+                    appointments += ' *';
                 }
-                apptFormatted += '</span><i class="fa fa-chevron-down" aria-hidden="true"></i></a></p>';
-                apptFormatted += '<div class="apptmentDetail">';
+                appointments += '</span>';
+                appointments += '</button>';
+                appointments += '</h3>';
+                appointments += '</div>';
+
+
+                appointments += '<div class="slds-accordion__content" id="accordion-details-01">';
+
+                appointments += '<div class="slds-form-element">';
                 if (!String.isBlank(apt.Description__c)) {
-                    apptFormatted += '<p class="appointmentDesc">' + apt.Description__c + '</p>';
+                    appointments += '<label class="slds-form-element__label slds-text-body_regular slds-p-vertical_x-small" for="input' + apt.Id + '">';
+                    appointments += apt.Description__c;
+                    appointments += '</label>';
                 }
+
+                appointments += '<div class="slds-form-element__control slds-p-vertical_x-small">';
+
                 if (apt.Appointment_Category__c != null) {
                     //getDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName, String parentValue)
                     Map<String, String> dependencies = SEShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', apt.Appointment_Category__c);
                     if (dependencies.size() > 1) {
-                        apptFormatted += '<select class="appointmentType required">';
-                        apptFormatted += '<option value="">Select...</option>';
+                        appointments += '<div class="slds-select_container">';
+                        appointments += '<select class="appointmentType required slds-select" id="input' + apt.Id + '" name="input' + apt.Id + '">';
+                        appointments += '<option value="">Select...</option>';
                         for (String thing : dependencies.keySet()) {
-                            apptFormatted += '<option value="' + thing + '">' + dependencies.get(thing) + '</option>';
+                            appointments += '<option value="' + thing + '">' + dependencies.get(thing) + '</option>';
                         }
+                        appointments += '</select>';
+                        appointments += '</div>';
+                    }
+                }
 
-                        apptFormatted += '</select>';
-                    }
-                }
                 if (apt.Registrant_Input__c == 'Text box' || apt.Registrant_Input__c == 'Required text box') {
-                    apptFormatted += '<textarea rows="4" cols="50"';
+                    appointments += '<textarea rows="4" cols="50"';
                     if (apt.Registrant_Input__c == 'Required text box') {
-                        apptFormatted += ' required="required" class="appointmentCustomInput required" ';
+                        appointments += ' required="required" class="appointmentCustomInput required slds-textarea" ';
                     } else {
-                        apptFormatted += ' class="appointmentCustomInput" ';
+                        appointments += ' class="appointmentCustomInput" ';
                     }
-                    apptFormatted += '>';
-                    apptFormatted += '</textarea>';
+                    appointments += '>';
+                    appointments += '</textarea>';
                 }
+
                 if (apt.Registrant_Input__c == 'Custom pick list' || apt.Registrant_Input__c == 'Required custom pick list') {
                     if (!String.isBlank(apt.Custom_Picklist__c)) {
-                        apptFormatted += '<select';
+                        appointments += '<div class="slds-select_container">';
+                        appointments += '<select id="input' + apt.Id + '" name="input' + apt.Id + '"';
                         if (apt.Registrant_Input__c == 'Required custom pick list') {
-                            apptFormatted += ' required="required" class="appointmentCustomInput required" ';
+                            appointments += ' required="required" class="appointmentType required slds-select appointmentCustomInput required" ';
                         } else {
-                            apptFormatted += ' class="appointmentCustomInput" ';
+                            appointments += ' class="appointmentType required slds-select appointmentCustomInput" ';
                         }
-                        apptFormatted += '>';
-                        apptFormatted += '<option value="">Select...</option>';
+                        appointments += '>';
+                        appointments += '<option value="">Select...</option>';
                         String custPickListText = apt.Custom_Picklist__c;
                         custPickListText = custPickListText.Trim();
                         custPickListText = custPickListText.replace('\n\n', '\n');
@@ -213,18 +244,25 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                         for (String cp : custPckListList) {
                             cp = cp.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', '');
-                            apptFormatted += '<option value="' + cp + '">' + cp + '</option>';
+                            appointments += '<option value="' + cp + '">' + cp + '</option>';
                         }
-                        apptFormatted += '</select>';
+                        appointments += '</select>';
+                        appointments += '</div>';
                     } else {
-                        apptFormatted += 'MISSING PICKLIST VALUES';
+                        appointments += 'MISSING PICKLIST VALUES';
                     }
 
-                }
+                    appointments += '</div>';
 
-                apptFormatted += '<a href="javascript:;" class="appointmentAdd"><span><i class="fa fa-plus" aria-hidden="true"></i> Add appointment</span></a>';
-                apptFormatted += '</div>';
-                apptFormatted += '</div>';
+                }
+                appointments += '<button class="appointmentAdd slds-button slds-button_brand slds-align_absolute-center slds-not-selected slds-p-horizontal_xx-large slds-p-vertical_xx-small" aria-live="assertive">';
+                appointments += '<svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">';
+                appointments += '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#add"></use>';
+                appointments += '</svg>Add';
+                appointments += '</button>';
+
+                appointments += '</div>';
+                appointments += '</section>';
             }
         }
     }
@@ -269,7 +307,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                 apptToAdd.add(addAppt);
             }
 
-            if (apptToAdd.size() > 0 ) {
+            if (apptToAdd.size() > 0) {
                 apptCRUD.updateAppointments(apptToAdd);
                 addedAppts = true;
             }

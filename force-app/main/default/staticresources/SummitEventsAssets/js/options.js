@@ -1,117 +1,108 @@
 // SummitEventsRegistrationOptionScripts
-$(document).ready(function () {
-    $("#chooser .appointmentAdd").on("click", function () {
-        var addAppt;
-        var Appt = $(this).closest(".appointment");
-        var requiredSel = Appt.find('.required');
-        var error = false;
+
+var appointmentsReady = (callback) => {
+    if (document.readyState != "loading") callback();
+    else document.addEventListener("DOMContentLoaded", callback);
+}
+
+appointmentsReady(() => {
+    document.querySelectorAll("#chooser .appointmentAdd").forEach( apptClick => {
+
+        let addAppt;
+        let Appt = apptClick.closest(".appointment");
+        let requiredSel = Appt.querySelectorAll('.required');
+        let error = false;
         if (requiredSel.length > 0) {
-            if (requiredSel.val() == '') {
+            if (requiredSel.value === '') {
                 error = true;
-                requiredSel.addClass('aptError').on('select, click, change', function () {
-                    $(this).removeClass("aptError");
+                requiredSel.classList.add('aptError');
+                requiredSel.addEventListener('change', (err) => {
+                    err.classList.remove("aptError");
                 });
             }
         }
+
         if (!error) {
 
-            //build a box
-            var ApptOffset = Appt.offset();
-            var lc;
-            var movingBox = $("<div/>", {id: 'movingBox' + Appt.attr("id"), class: 'movingBox'});
-            movingBox.css({
-                "width": (Appt.width() + 1) + 'px',
-                "height": (Appt.height() + 1) + 'px',
-                "left": ApptOffset.left + 'px',
-                "top": ApptOffset.top + 'px',
-            });
-            movingBox.html('<p><i class="fa fa-plus" aria-hidden="true"></i> Adding Appointment...</p>')
-            $('body').before(movingBox);
-            if ($("#choosen .appointmentChoosen:last-child").length > 0) {
-                lc = $("#choosen .appointmentChoosen:last-child");
-            } else {
-                lc = $("#choosen");
-            }
-            var lcOffset = lc.offset();
-            movingBox.delay(300).animate({'top': (lcOffset.top + lc.height() + 10) + 'px', 'left': lcOffset.left + 'px', "height": "0px", "opacity": 0}, 300).fadeOut(100, function () {
-                $(this).remove();
-            });
+            // //build a box
+            // var ApptOffset = Appt.offset();
+            // var lc;
+            // var movingBox = $("<div/>", {id: 'movingBox' + Appt.attr("id"), class: 'slds-box slds-box_small slds-theme_shade'});
+            // movingBox.css({
+            //     "width": (Appt.width() + 1) + 'px',
+            //     "height": (Appt.height() + 1) + 'px',
+            //     "left": ApptOffset.left + 'px',
+            //     "top": ApptOffset.top + 'px',
+            //     "position": "absolute"
+            // });
+            // movingBox.html('<p>Adding Appointment...</p>')
+            // $('body').before(movingBox);
+            // if ($("#choosen .appointmentChoosen:last-child").length > 0) {
+            //     lc = $("#choosen .appointmentChoosen:last-child");
+            // } else {
+            //     lc = $("#choosen");
+            // }
+            // var lcOffset = lc.offset();
+            // movingBox.delay(300).animate({'top': (lcOffset.top + lc.height() + 10) + 'px', 'left': lcOffset.left + 'px', "height": "0px", "opacity": 0}, 300).fadeOut(100, function () {
+            //     $(this).remove();
+            // });
 
             //move and adjust data
-            var limit = Appt.data("limit");
-            limit--;
-            //build appointment list
-            var apptcat = '', apptid = '', appttype = '', appttitle = '', appChosenState = '', appSort = '', appDesc = '', appInput = '';
-            apptid = Appt.attr('id');
-            if (Appt.data('apptcat')) {
-                apptcat = Appt.data('apptcat');
-            }
-            if (Appt.find(".appointmentType").val()) {
-                appttype = Appt.find(".appointmentType").val();
-            }
-            if (Appt.data('appchosenstate')) {
-                appChosenState = Appt.data('appchosenstate')
-            }
-            if (Appt.data('appsort')) {
-                appSort = Appt.data('appsort')
-            }
-            if (Appt.data('appdesc')) {
-                appDesc = Appt.data('appdesc')
-            }
-            if (Appt.data('appinput')) {
-                appInput = Appt.data('appinput')
-            }
-            appttitle = Appt.data('appttitle');
+            var limit = Appt.dataset.limit;
 
-            addAppt = $('<div/>', {
-                //'id' : 'appt-' + appid,
-                'data-apptid': apptid,
-                'data-apptcat': apptcat,
-                'data-appttype': appttype,
-                'data-appttitle': appttitle,
-                'data-appchosenstate': appChosenState,
-                'data-appsort': appSort,
-                'data-appdesc': appDesc,
-                'data-appinput': appInput,
-                'class': 'appointmentChoosen'
-            });
-            addAppt.append('<p class="appointmentTitle">' + Appt.find(".appointmentTitle a").html() + '</p>');
-            addAppt.find('i').remove();
-            if (Appt.find(".appointmentType").length > 0) {
-                addAppt.append('<p class="appointmentDesc">' + Appt.find(".appointmentType").val() + '</p>');
+            limit--;
+
+            addAppt = document.createElement('div');
+            addAppt.classList.add('slds-box', 'slds-box_small', 'slds-m-vertical_x-small');
+
+            let appTitle = document.createElement('p');
+            addAppt.classList.add('appointmentTitle');
+            let findTitle = Appt.querySelector(".appointmentTitle");
+            appTitle.textContent = findTitle.textContent;
+            addAppt.append(appTitle);
+
+            if (Appt.querySelectorAll(".appointmentType").length > 0) {
+                let apptType = document.createElement('p');
+                apptType.classList.add('appointmentType');
+                let selType = Appt.querySelector(".appointmentType");
+                apptType.textContent = selType.options[selType.selectedIndex].value;
+                addAppt.append(apptType);
             }
-            if (Appt.find(".appointmentCustomInput").length > 0) {
-                addAppt.append('<p class="appointmentDesc">' + Appt.find(".appointmentCustomInput").val() + '</p>');
+
+            if (Appt.querySelectorAll(".appointmentCustomInput").length > 0) {
+                let apptDesc = document.createElement('p');
+                apptDesc.classList.add('appointmentDesc');
+                apptDesc.textContent = Appt.querySelector(".appointmentCustomInput").value;
+                addAppt.append(apptDesc);
             }
+
             addAppt.append(
                 $('<a/>', {class: "appointmentRemove"})
-                    .html('<i class="fa fa-times-circle" aria-hidden="true"></i><span> Remove</span></span>')
+                    .html(' Remove ')
                     .on("click", function () {
                         removeAppt($(this));
                     })
             );
 
-            Appt.data("limit", limit);
-            if (limit <= 0) {
-                Appt.delay(300).fadeOut("fast", function () {
-                    $("#choosen").append(addAppt);
-                });
-            } else {
-                $("#choosen").append(addAppt);
-                requiredSel.val('');
-            }
+            Appt.dataset.limit = limit;
+
+            addAppt.dataset = Appt.dataset;
+            addAppt.id = 'appt-' + Appt.id;
+
+            let choosenArea = document.getElementById("choosen");
+            choosenArea.append(addAppt)
 
         }
     });
 
 
-    $(".appointmentTitle a").on("click", function () {
-        if ($(this).find("i").hasClass("fa-chevron-down")) {
-            $(this).find("i").removeClass("fa-chevron-down").addClass("fa-chevron-up");
+    $(".slds-accordion__summary-heading").on("click", function () {
+        let section = $(this).closest('section');
+        if (section.hasClass('slds-is-open')) {
+            section.removeClass('slds-is-open')
         } else {
-            $(this).find("i").removeClass("fa-chevron-up").addClass("fa-chevron-down");
+            section.addClass('slds-is-open')
         }
-        $(this).closest(".appointment").find(".apptmentDetail").slideToggle("fast");
     });
 
 });
@@ -147,20 +138,20 @@ function populateApptJSON() {
 
 function checkForRequiredAppointments() {
     allApptGood = true;
-    $.each($('#chooser .appointmentRequired'), function() {
-        if($(this).is(':visible')) {
+    $.each($('#chooser .appointmentRequired'), function () {
+        if ($(this).is(':visible')) {
             allApptGood = false;
             fadein();
-            if($(this).find("i.fa").hasClass('fa-chevron-down')) {
+            if ($(this).find("i.fa").hasClass('fa-chevron-down')) {
                 $(this).find("a.optionToggler").click();
             }
-            $(this).css({borderColor:'red'});
-            $(".requiredSelectionLabel").css({'color':'black', 'opacity' : .5});
+            $(this).css({borderColor: 'red'});
+            $(".requiredSelectionLabel").css({'color': 'black', 'opacity': .5});
             $(".requiredSelectionLabel").animate({
                 opacity: 1,
                 color: 'red',
-                fontWeight : 'bold'
-            }, 1000, function() {
+                fontWeight: 'bold'
+            }, 1000, function () {
                 // Animation complete.
             });
         }

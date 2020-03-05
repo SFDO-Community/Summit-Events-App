@@ -218,13 +218,13 @@ function checkForm() {
             inputWrap.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
                 errorHelp.style.display = "block"
             });
-            addErrorFixerListener(item,inputWrap);
+            addErrorFixerListener(item,inputWrap,'change');
             error_count++;
         }
         if (inputType == 'email' && inputRequired || inputType == 'email' && item.value) {
             if (!emailReg.test(item.value)) {
                 inputWrap.classList.add("slds-has-error");
-                addErrorFixerListener(item,inputWrap);
+                addErrorFixerListener(item,inputWrap, 'change');
                 error_count++;
             }
         }
@@ -236,7 +236,7 @@ function checkForm() {
         if (selWrap.classList.contains("slds-is-required")) {
             if (!document.getElementById(hiddenData).value) {
                 selWrap.classList.add("slds-has-error");
-                addErrorFixerListener(selWrap,selWrap);
+                addErrorFixerListener(selWrap,selWrap,'click');
                 error_count++;
             }
         }
@@ -266,8 +266,8 @@ function checkForm() {
     return true;
 }
 
-function addErrorFixerListener (inpt, wrp) {
-    inpt.addEventListener("click", (e) => {
+function addErrorFixerListener (inpt, wrp, evtType) {
+    inpt.addEventListener(evtType, (e) => {
         wrp.classList.remove("slds-has-error");
         wrp.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
             errorHelp.style.display = "none";
@@ -475,7 +475,7 @@ ready(() => {
         let selOlSelected = document.querySelector("[id$=" + data2Id + "]");
         let oldSelArray = '';
         if (selOlSelected.value != null) {
-            selOlSelected.value.split(';');
+            oldSelArray = selOlSelected.value.split(';');
         }
 
         selOl.querySelectorAll('li').forEach(selLi => {

@@ -46,12 +46,7 @@ label.required {
 
 /*Chooser*/
 .appointment {
-    border: solid 1px #999999;
-    position: relative;
-    float: left;
-    clear: both;
-    width: 100%;
-    margin: 5px 10px 10px 0px;
+
 }
 
 .apptmentDetail {
@@ -62,24 +57,6 @@ label.required {
     display: none;
 }
 
-#chooser .appointmentTitle a {
-    background: #8546B1;
-    position: relative;
-    float: left;
-    width: 100%;
-    color: #fff;
-    padding: 10px 15px;
-}
-
-#chooser .appointmentTitle {
-    margin: 0px !important;
-}
-
-#chooser .appointmentTitle i {
-    position: absolute;
-    right: 14px;
-    top: 14px;
-}
 
 /*Choosen*/
 #choosen .appointmentTitle {
@@ -124,46 +101,27 @@ label.required {
     background: #eeeeef;
 }
 
-.appointmentDesc {
-    margin: 15px 0px 5px 0px !important;
-}
-
-/*Floating Add box*/
-.appointmentAdd {
-    position: relative;
-    float: left;
-    text-align: center;
-    background: #c8c8c9;
-    padding: 2% 3%;
-    margin: 0px 0px 0px 0px;
-    color: #000;
-    font-weight: bold;
-    width: 100%;
-}
-
 .appointmentAdd:hover {
     background: #8546B1;
     color: #fff;
     text-decoration: none;
 }
 
-.movingBox {
-    background-color: #976dad;
-    position: absolute;
-    z-index: 100;
-    color: #fff;
-    display: table;
-    opacity: 0.7;
-    filter: alpha(opacity=70);
-}
+/*.movingBox {*/
+/*    background-color: #976dad;*/
+/*    position: absolute;*/
+/*    z-index: 100;*/
+/*    opacity: 0.7;*/
+/*    filter: alpha(opacity=70);*/
+/*}*/
 
-.movingBox p {
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-    font-family: truenosemibold, Arial, sans-serif;
-    font-size: 20px;
-}
+/*.movingBox p {*/
+/*    display: table-cell;*/
+/*    vertical-align: middle;*/
+/*    text-align: center;*/
+/*    font-family: truenosemibold, Arial, sans-serif;*/
+/*    font-size: 20px;*/
+/*}*/
 
 .aptError {
     border: solid 1px red;

@@ -36,6 +36,7 @@ public with sharing class SummitEventsRegisterController {
     public String birthDateString { get; set; }
     public String dataLayerLocationType { get; set; }
     public String phoneType { get; set; }
+    public String navBreadCrumb { get; set; }
 
 
     public SummitEventsRegisterController() {
@@ -188,6 +189,8 @@ public with sharing class SummitEventsRegisterController {
                 locationCrumb = eventTime + locationCrumb;
                 locationCrumb = '<h3>Event Details</h3> <p>' + locationCrumb + '</p>';
             }
+
+            navBreadCrumb = SEShared.navBreadcrumbBuilder(eventPage.Event_Name__c, evtInstance.Instance_Title__c, eventStartDateTimeCrumb);
 
             //Check if the Event has appointments and therefore we have to redirect to the appointment page.
             evtHasAppointments = false;
@@ -621,7 +624,7 @@ public with sharing class SummitEventsRegisterController {
             try {
                 upsert newEvtReg;
             } catch (Exception ex) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'HELLO: ' +  ex.getMessage()));
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'HELLO: ' + ex.getMessage()));
             }
             return newEvtReg;
         }
