@@ -20,7 +20,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="body">
             <div class="row">
                 <div class="columns errorMessages">
-                    <apex:messages/>
+                    <apex:messages />
                     <apex:outputText escape="false" value="{!headers}"></apex:outputText>
                 </div>
             </div>

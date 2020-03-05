@@ -192,15 +192,35 @@
             <default>false</default>
         </values>
     </picklistValues>
-<!--    <picklistValues>-->
-<!--        <picklist>Type</picklist>-->
-<!--        <values>-->
-<!--            <fullName>College</fullName>-->
-<!--            <default>false</default>-->
-<!--        </values>-->
-<!--        <values>-->
-<!--            <fullName>High School</fullName>-->
-<!--            <default>false</default>-->
-<!--        </values>-->
-<!--    </picklistValues>-->
+    <picklistValues>
+        <picklist>Type</picklist>
+        <values>
+            <fullName>Channel Partner %2F Reseller</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Customer - Channel</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Customer - Direct</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Installation Partner</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Prospect</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Technology Partner</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
 </RecordType>
