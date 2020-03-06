@@ -572,8 +572,10 @@ public with sharing class SummitEventsRegisterController {
                 matched = matcher.SummitEventsContactMatching(matchingRule, newEvtReg, matchingScope);
                 //Populate matching results into data - matched may be blank depending on the Contact_Creation__c setting
                 if (matched.size() > 0) {
-                    contactId = (Id) matched.get('contactId');
-                    newContactCreated = Boolean.valueOf(matched.get('newContactCreated'));
+                    if (String.isNotBlank(matched.get('contactId'))) {
+                        contactId = (Id) matched.get('contactId');
+                        newContactCreated = Boolean.valueOf(matched.get('newContactCreated'));
+                    }
                     newEvtReg.Contact_Soft_Match_Email__c = String.valueOf(matched.get('softEmailMatches'));
                     newEvtReg.Contact_Soft_Match_First_Last_Zip__c = String.valueOf(matched.get('softFirstLastZipMatches'));
                     newEvtReg.Matching_Log__c = String.valueOf(matched.get('matchLog'));
