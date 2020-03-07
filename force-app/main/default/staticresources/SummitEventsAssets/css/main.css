@@ -44,68 +44,10 @@ label.required {
     color: gray !important;
 }
 
-/*Chooser*/
-.appointment {
-
-}
-
-.apptmentDetail {
-    position: relative;
-    float: left;
-    width: 100%;
-    padding: 10px 15px;
-    display: none;
-}
 
 
 /*Choosen*/
-#choosen .appointmentTitle {
-    font-weight: bold;
-    margin: 4px 40px 3px 0px
-}
 
-.appointmentChoosen {
-    border: solid 1px #e1e1e1;
-    position: relative;
-    float: left;
-    clear: both;
-    width: 100%;
-    margin: 8px 0px 8px 0px;
-    padding: 5px 10px;
-}
-
-.appointmentRemove {
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    background: gray;
-    color: #fff;
-    text-align: center;
-    padding-top: 8px;
-    width: 40px;
-    height: 41px;
-}
-
-.appointmentRemove:hover {
-    background: #000;
-    color: #fff;
-    text-decoration: none;
-}
-
-.appointmentRemove span {
-    display: none;
-}
-
-/*.appointmentRequired {border-color:red!important;}*/
-.appointmentChoosen:nth-child(even) {
-    background: #eeeeef;
-}
-
-.appointmentAdd:hover {
-    background: #8546B1;
-    color: #fff;
-    text-decoration: none;
-}
 
 /*.movingBox {*/
 /*    background-color: #976dad;*/

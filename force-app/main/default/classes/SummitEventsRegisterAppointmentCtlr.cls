@@ -109,6 +109,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         }
 
                         //build chosen appointments for list
+
                         chosenFormatted += '<div id="appt-' + cappt.Id + '"';
                         chosenFormatted += ' data-apptid="' + cappt.Event_Appointment_Type__c + '"';
                         chosenFormatted += ' data-apptcat="' + cappt.Appointment_Category__c + '"';
@@ -117,7 +118,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         chosenFormatted += ' data-appchosenstate="' + cappt.Chosen_State__c + '"';
                         chosenFormatted += ' data-appsort="' + cappt.Sort_Order__c + '"';
                         chosenFormatted += ' data-appreginput="' + cappt.Registrant_Input__c + '"';
-                        chosenFormatted += ' class="appointmentChoosen"';
+                        chosenFormatted += ' class="appointmentChosen slds-box slds-box_small slds-m-vertical_x-small"';
                         if (cappt.Chosen_State__c == 'Added but not shown') {
                             chosenFormatted += ' style="display:none" ';
                         }
@@ -129,7 +130,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             chosenFormatted += '<p class="appointmentDesc">' + cappt.Description__c + '</p>';
                         }
                         IF (cappt.Chosen_State__c != 'Added and Required' && cappt.Chosen_State__c != 'Added but not shown') {
-                            chosenFormatted += '<a href="javascript:;" onclick="removeAppt($(this))" class="appointmentRemove" title="Remove Appointment"><i class="fa fa-times-circle" aria-hidden="true"></i><span> Remove</span></span></a>';
+                            chosenFormatted += '<a href="javascript:;" class="appointmentRemove" title="Remove Appointment">Remove</a>';
                         }
 
                         chosenFormatted += '</div>';
@@ -144,6 +145,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                 if (!String.isBlank(apt.Appointment_Limits__c)) {
                     apptLimit = Integer.valueOf(apt.Appointment_Limits__c);
                 }
+                if (apptCount.containsKey(apt.Id)) {
                 if (apptCount.containsKey(apt.Id)) {
                     apptLimit = apptLimit - (Integer.valueOf(apptCount.get(apt.Id)));
                 }
@@ -191,7 +193,12 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                 appointments += '<div class="slds-accordion__content" id="accordion-details-01">';
 
-                appointments += '<div class="slds-form-element">';
+                if (String.isNotBlank(apt.Registrant_Input__c) && apt.Registrant_Input__c.toLowerCase().contains('required')) {
+                    appointments += '<div class="slds-form-element slds-is-required">';
+                } else {
+                    appointments += '<div class="slds-form-element">';
+                }
+
                 if (!String.isBlank(apt.Description__c)) {
                     appointments += '<label class="slds-form-element__label slds-text-body_regular slds-p-vertical_x-small" for="input' + apt.Id + '">';
                     appointments += apt.Description__c;
@@ -216,11 +223,11 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                 }
 
                 if (apt.Registrant_Input__c == 'Text box' || apt.Registrant_Input__c == 'Required text box') {
-                    appointments += '<textarea rows="4" cols="50"';
+                    appointments += '<textarea';
                     if (apt.Registrant_Input__c == 'Required text box') {
                         appointments += ' required="required" class="appointmentCustomInput required slds-textarea" ';
                     } else {
-                        appointments += ' class="appointmentCustomInput" ';
+                        appointments += ' class="appointmentCustomInput slds-textarea" ';
                     }
                     appointments += '>';
                     appointments += '</textarea>';
@@ -231,9 +238,9 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         appointments += '<div class="slds-select_container">';
                         appointments += '<select id="input' + apt.Id + '" name="input' + apt.Id + '"';
                         if (apt.Registrant_Input__c == 'Required custom pick list') {
-                            appointments += ' required="required" class="appointmentType required slds-select appointmentCustomInput required" ';
+                            appointments += ' required="required" class="appointmentType required slds-select required" ';
                         } else {
-                            appointments += ' class="appointmentType required slds-select appointmentCustomInput" ';
+                            appointments += ' class="appointmentType slds-select" ';
                         }
                         appointments += '>';
                         appointments += '<option value="">Select...</option>';

@@ -16,7 +16,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="scriptsHead">
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
             <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/options.js')}" type="text/javascript"/>
-            <script src="{!URLFOR($Resource.SummitEventsAssets, '/chosen/chosen.ust.jquery.min.js')}" type="text/javascript"/>
         </apex:define>
         <apex:define name="sectionNav"/>
         <apex:define name="body">
@@ -45,7 +44,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     </apex:outputPanel>
                     <apex:outputPanel layout="block" styleClass="slds-col slds-size_1-of-1 {!IF(!noOptionalAppointments, 'slds-medium-size_1-of-2 slds-large-size_1-of-2', '')} slds-p-vertical_x-small slds-p-vertical_xx-small">
                         <h4 class="slds-text-heading_medium slds-p-vertical_xx-small">Selected options</h4>
-                        <div id="choosen">
+                        <div id="chosen">
                             <apex:outputText escape="false" value="{!chosenFormatted}"/>
                         </div>
                     </apex:outputPanel>
