@@ -146,7 +146,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     apptLimit = Integer.valueOf(apt.Appointment_Limits__c);
                 }
                 if (apptCount.containsKey(apt.Id)) {
-                if (apptCount.containsKey(apt.Id)) {
                     apptLimit = apptLimit - (Integer.valueOf(apptCount.get(apt.Id)));
                 }
 

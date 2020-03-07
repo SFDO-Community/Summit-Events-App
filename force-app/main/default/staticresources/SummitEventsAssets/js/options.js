@@ -112,7 +112,6 @@ appointmentsReady(() => {
 
                 //remove all values from hidden appointments.
                 if (Appt.classList.contains('slds-has-error')) {
-                    alert();
                     Appt.classList.remove('slds-has-error');
                 }
 
@@ -179,9 +178,13 @@ function checkForRequiredAppointments() {
     let requiredAppointments = chooser.querySelectorAll('.appointmentRequired');
     let allApptGood = true;
     requiredAppointments.forEach(function (appt) {
-        if (appt.onfullscreenchange !== null) {
-            allApptGood = false;
-            alert('required appointment found!');
+        if (window.getComputedStyle(appt).display !== "none") {
+            allApptGood =  false;
+            appt.classList.add('slds-has-error');
+            if (!appt.classList.contains('slds-is-open')) {
+                appt.classList.add('slds-is-open');
+            }
+            fadein();
         }
     });
     return allApptGood;
