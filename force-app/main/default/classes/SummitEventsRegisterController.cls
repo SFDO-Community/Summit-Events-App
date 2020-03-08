@@ -190,7 +190,7 @@ public with sharing class SummitEventsRegisterController {
                 locationCrumb = '<h3>Event Details</h3> <p>' + locationCrumb + '</p>';
             }
 
-            navBreadCrumb = SEShared.navBreadcrumbBuilder(eventPage.Event_Name__c, evtInstance.Instance_Title__c, eventStartDateTimeCrumb);
+            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance);
 
             //Check if the Event has appointments and therefore we have to redirect to the appointment page.
             evtHasAppointments = false;

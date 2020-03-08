@@ -14,6 +14,7 @@ public with sharing class SummitEventsSubmitController {
     public String chosenFormatted { get; set; }
     public String templateSelected { get; set; }
     public String eventStartDateTimeCrumb {get;set;}
+    public String navBreadCrumb {get;set;}
 
     public SummitEventsSubmitController() {
         test = '';
@@ -29,13 +30,14 @@ public with sharing class SummitEventsSubmitController {
                     WHERE Id = :evtinfo.evtId][0];
             templateSelected = eventPage.Template__c;
 
-            evtInstance = [SELECT Instance_Title__c, Start_Date_Time__c, End_Date_Time__c FROM Summit_Events_Instance__c WHERE Id = :evtinfo.instanceID LIMIT 1];
+            evtInstance = [SELECT Instance_Title__c, Event__r.Event_Name__c, Start_Date_Time__c, End_Date_Time__c FROM Summit_Events_Instance__c WHERE Id = :evtinfo.instanceID LIMIT 1];
 
             if(evtInstance.Start_Date_Time__c != null && evtInstance.End_Date_Time__c != null ) {
                 eventStartDateTimeCrumb = evtInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + evtInstance.End_Date_Time__c.format('h:mm a');
             }
-        }
 
+            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance);
+        }
 
         if (!String.isBlank(evtinfo.evtRegId)) {
             chosenAppts = [
@@ -46,7 +48,7 @@ public with sharing class SummitEventsSubmitController {
                     ORDER BY Appointment_Title__c
             ];
             if (chosenAppts.size() > 0) {
-                chosenFormatted += '<ul id="choosenAppointments">';
+                chosenFormatted += '<ul id="choosenAppointments" class="slds-list_dotted">';
                 for (Summit_Events_Appointments__c cappt : chosenAppts) {
                     chosenFormatted += '<li>';
                     chosenFormatted += cappt.Appointment_Title__c;

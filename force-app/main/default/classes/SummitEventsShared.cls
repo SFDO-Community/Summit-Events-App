@@ -141,15 +141,20 @@ public with sharing class SummitEventsShared {
         return '';
     }
 
-    public String navBreadcrumbBuilder(String eventTitle, String instanceTitle, String instanceDate) {
+    public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance) {
+        String instanceDate = '';
+        if (eventInstance.Start_Date_Time__c != null && eventInstance.End_Date_Time__c != null) {
+            instanceDate = eventInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + eventInstance.End_Date_Time__c.format('h:mm a');
+        }
+
         String crumb = '';
         crumb+= '<nav role="navigation" aria-label="Breadcrumbs">';
         crumb+= '   <ol class="slds-breadcrumb slds-list--horizontal">';
-        if (String.isNotBlank(eventTitle)) {
-            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventTitle + '</a></li>';
+        if (String.isNotBlank(eventInstance.Event__r.Event_Name__c)) {
+            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Event__r.Event_Name__c + '</a></li>';
         }
-        if (String.isNotBlank(instanceTitle)) {
-            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + instanceTitle + '</a></li>';
+        if (String.isNotBlank(eventInstance.Instance_Title__c)) {
+            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Instance_Title__c + '</a></li>';
         }
         if (String.isNotBlank(instanceDate)) {
             crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + instanceDate + '</a></li>';

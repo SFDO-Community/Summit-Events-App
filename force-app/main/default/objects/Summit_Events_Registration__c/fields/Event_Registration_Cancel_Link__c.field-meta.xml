@@ -4,7 +4,7 @@
     <externalId>false</externalId>
     <formula>HYPERLINK(
 Event__r.Community_Base_URL__c
-&amp; &quot;usteventcancelreview?regId=&quot;
+&amp; &quot;summiteventscancelreview?regId=&quot;
 &amp; Id
 ,&quot;Cancel Registration&quot;)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>

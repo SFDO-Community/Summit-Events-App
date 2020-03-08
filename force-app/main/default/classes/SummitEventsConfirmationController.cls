@@ -9,8 +9,9 @@ public with sharing class SummitEventsConfirmationController {
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c evtInstance { get; set; }
     public String templateSelected { get; set; }
-    public String eventStartDateTimeCrumb {get;set;}
+    public String eventStartDateTimeCrumb { get; set; }
     public String locationCrumb { get; set; }
+    public String navBreadCrumb { get; set; }
 
     public SummitEventsConfirmationController() {
 
@@ -34,9 +35,11 @@ public with sharing class SummitEventsConfirmationController {
                     LIMIT 1
             ];
 
-            if(evtInstance.Start_Date_Time__c != null && evtInstance.End_Date_Time__c != null ) {
+            if (evtInstance.Start_Date_Time__c != null && evtInstance.End_Date_Time__c != null) {
                 eventStartDateTimeCrumb = evtInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + evtInstance.End_Date_Time__c.format('h:mm a');
             }
+
+            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance);
 
         }
 

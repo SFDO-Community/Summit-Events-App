@@ -18,78 +18,57 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         </apex:define>
         <apex:define name="sectionNav"/>
         <apex:define name="body">
-            <div class="row">
-                <div class="columns errorMessages">
-                    <apex:messages />
-                </div>
+            <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                <apex:messages/>
             </div>
-            <apex:form id="SummitEventsRegistrationCancelReview" html-data-abide="ajax" html-novalidate="novalidate" rendered="{!!eventOver && !eventNotFound}">
-                <div class="row">
-                    <div class="columns eventCrumb">
-                        <span class="eventName">{!evt.Event__r.Event_Name__c}</span>
-                        <span class="bc-spacer"><span>»</span></span>
-                        <apex:outputPanel layout="none" rendered="{!!ISBLANK(evt.Event_Instance__r.Instance_Title__c)}">
-                            <span class="eventInstance">{!evt.Event_Instance__r.Instance_Title__c}</span>
-                        </apex:outputPanel>
-                        <apex:outputPanel layout="inline" styleClass="eventDate" rendered="{!IF(!ISBLANK(evt.Event_Instance__r.Start_Date_Time__c) && !ISBLANK(evt.Event_Instance__r.Start_Date_Time__c),true,false)}">
-                            <span class="bc-spacer"><span>»</span></span>
-                            {!eventStartDateTimeCrumb}
-                        </apex:outputPanel>
-                    </div>
+            <apex:form id="SummitEventsRegistrationCancelReview" rendered="{!!eventOver && !eventNotFound}" styleClass="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                    <apex:outputText escape="false" value="{!navBreadCrumb}"/>
                 </div>
-                <div class="row">
-                    <div class="column">
-                        <h2>
-                            <apex:outputText value="{!evt.Event__r.Event_Cancel_Review_Title__c}" escape="false"></apex:outputText>
-                        </h2>
-                        <p>
-                            <apex:outputText value="{!evt.Event__r.Event_Cancel_Review_Description__c}" escape="false"></apex:outputText>
+                <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                    <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
+                        <apex:outputText value="{!evt.Event__r.Event_Cancel_Review_Title__c}" escape="false"></apex:outputText>
+                    </h2>
+                    <p class="slds-text-body slds-p-vertical_xx-small">
+                        <apex:outputText value="{!evt.Event__r.Event_Cancel_Review_Description__c}" escape="false"></apex:outputText>
+                    </p>
+                </div>
+                <div id="reviewWrapper" class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                    <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">
+                        <apex:outputText value="{!evt.Event__r.Name}"></apex:outputText>
+                    </h3>
+                    <p class="slds-text-body slds-p-vertical_xx-small">
+                        <apex:outputText escape="false" value="{!evt.Event__r.Event_description__c}"></apex:outputText>
+                    </p>
+                    <ul class="slds-list_dotted">
+                        <apex:repeat value="{!appt}" var="ap">
+                            <li>
+                                <apex:outputText value="{!ap.Appointment_Title__c}" escape="false"></apex:outputText>
+                                <apex:outputText value="{!ap.Appointment_Category__c}" escape="false" rendered="{!IF(!ISBLANK(ap.Appointment_Category__c), true, false)}"></apex:outputText>
+                                <apex:outputText value="<br/><em>{!ap.Appointment_Type__c}</em>" escape="false"></apex:outputText>
+                            </li>
+                        </apex:repeat>
+                    </ul>
+                    <apex:outputPanel layout="block" rendered="{!IF (evt.Status__c != 'Cancelled', true, false)}">
+                        <p class="slds-text-body slds-p-vertical_xx-small">
+                            <apex:commandLink action="{!cancelRegistration}" Value="Cancel Regisistration" id="cancelReg" onClick="return confirm('Are you sure you want to cancel this registration?');" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                         </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <div id="reviewWrapper">
-                            <h3>
-                                <apex:outputText value="{!evt.Event__r.Name}"></apex:outputText>
-                            </h3>
-                            <p>
-                                <apex:outputText escape="false" value="{!evt.Event__r.Event_description__c}"></apex:outputText>
-                            </p>
-                            <ul>
-                                <apex:repeat value="{!appt}" var="ap">
-                                    <li>
-                                        <apex:outputText value="{!ap.Appointment_Title__c}" escape="false"></apex:outputText>
-                                        <apex:outputText value="{!ap.Appointment_Category__c}" escape="false" rendered="{!IF(!ISBLANK(ap.Appointment_Category__c), true, false)}"></apex:outputText>
-                                        <apex:outputText value="<br/><em>{!ap.Appointment_Type__c}</em>" escape="false"></apex:outputText>
-                                    </li>
-                                </apex:repeat>
-                            </ul>
-                            <apex:outputPanel layout="block" rendered="{!IF (evt.Status__c != 'Cancelled', true, false)}">
-                                <p>
-                                    <apex:commandLink action="{!cancelRegistration}" Value="Cancel Regisistration" id="cancelReg" onClick="return confirm('Are you sure you want to cancel this registration?');" styleClass="button confirmContinue"/>
-                                </p>
-                            </apex:outputPanel>
-                            <apex:outputPanel layout="block" rendered="{!IF (evt.Status__c = 'Cancelled', true, false)}">
-                                <p class="warning">
-                                    <apex:outputText escape="false" value="{!evt.Event__r.Event_Cancelled_Notification_Text__c}"/>
-                                </p>
-                            </apex:outputPanel>
-                        </div>
-                    </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel layout="block" rendered="{!IF (evt.Status__c = 'Cancelled', true, false)}">
+                        <p class="slds-text-body slds-p-vertical_xx-small warning">
+                            <apex:outputText escape="false" value="{!evt.Event__r.Event_Cancelled_Notification_Text__c}"/>
+                        </p>
+                    </apex:outputPanel>
+
                 </div>
             </apex:form>
-            <apex:outputPanel layout="block" styleClass="row" rendered="{!eventNotFound && !eventOver}">
-                <div class="column">
-                    <h2>No event found</h2>
-                    <p>The link you followed doesn't contain information to any registration we have on file.</p>
-                </div>
+            <apex:outputPanel layout="block" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small" rendered="{!eventNotFound && !eventOver}">
+                <h2 class="slds-text-heading_large slds-p-vertical_xx-small">No event found</h2>
+                <p class="slds-text-body slds-p-vertical_xx-small">The link you followed doesn't contain information to any registration we have on file.</p>
             </apex:outputPanel>
-            <apex:outputPanel layout="block" styleClass="row" rendered="{!eventOver}">
-                <div class="column">
-                    <h2>Event over</h2>
-                    <p>We're sorry, the event {!evt.Event_Name__c} {!IF(!ISBLANK(evt.Event_Instance_Title__c), ' - ' + evt.Event_Instance_Title__c, '')} has already occured and your registration can not be cancelled.</p>
-                </div>
+            <apex:outputPanel layout="block" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small" rendered="{!eventOver}">
+                <h2 class="slds-text-heading_large slds-p-vertical_xx-small">Event over</h2>
+                <p class="slds-text-body slds-p-vertical_xx-small">We're sorry, the event {!evt.Event_Name__c} {!IF(!ISBLANK(evt.Event_Instance_Title__c), ' - ' + evt.Event_Instance_Title__c, '')} has already occured and your registration can not be cancelled.</p>
             </apex:outputPanel>
             <apex:outputText escape="false" value="{!evt.Event__r.Tracking_Cancel_Registration__c}"></apex:outputText>
         </apex:define>

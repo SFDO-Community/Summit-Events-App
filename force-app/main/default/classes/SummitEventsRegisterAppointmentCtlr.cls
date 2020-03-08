@@ -52,7 +52,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             templateSelected = eventPage.Template__c;
 
             if (!String.isBlank(evtinfo.evtRegId)) {
-                evtInstance = [SELECT Instance_Title__c, Start_Date_Time__c, End_Date_Time__c FROM Summit_Events_Instance__c WHERE Id = :evtinfo.instanceID LIMIT 1];
+                evtInstance = [SELECT Instance_Title__c, Event__r.Event_Name__c, Start_Date_Time__c, End_Date_Time__c FROM Summit_Events_Instance__c WHERE Id = :evtinfo.instanceID LIMIT 1];
 
 
                 if (evtInstance != null) {
@@ -77,7 +77,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     if (evtInstance.Start_Date_Time__c != null && evtInstance.End_Date_Time__c != null) {
                         eventStartDateTimeCrumb = evtInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + evtInstance.End_Date_Time__c.format('h:mm a');
                     }
-                    navBreadCrumb = SEShared.navBreadcrumbBuilder(eventPage.Event_Name__c, evtInstance.Instance_Title__c, eventStartDateTimeCrumb);
+                    navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance);
 
                     //Check if the user gets to select any appointments or they are all auto added
                     for (Summit_Events_Appointment_Type__c chosenCheck : appts.values()) {
