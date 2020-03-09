@@ -103,9 +103,9 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
             </div>
         </div>
         <script>
-            // $(document).ready(function () {
-            //     ust.init();
-            // });
+            $(document).ready(function () {
+                ust.init();
+            });
         </script>
     </header>
     <header>
@@ -113,9 +113,6 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
             <div class="purple-bar pb-one-level ">
                 <div class="white-bar-wrap row">
                     <div class="white-bar">
-                        <h1>
-                            <apex:insert name="pageTitle"/>
-                        </h1>
                     </div>
                 </div>
             </div>

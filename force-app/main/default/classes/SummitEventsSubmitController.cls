@@ -252,7 +252,7 @@ public with sharing class SummitEventsSubmitController {
             if (returnHeaders.get('Referer') != null) {
                 String returnedReferrer = returnHeaders.get('Referer').toLowerCase();
                 if (String.isNotBlank(returnedReferrer)) {
-                    if (String.isBlank(gatewayOrigin)) {
+                    if (String.isBlank(gatewayOrigin) && showPaymentButton) {
                         Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Set your orgs gateway settings or fees will not be collected.'));
                     } else {
                         if (returnedReferrer.trim().contains(gatewayOrigin)) {
