@@ -48,18 +48,6 @@ label.required {
     border: solid 1px red;
     color: #a70000;
 }
-
-.previous {
-    background-color: #dededf;
-    color: #807e7e;
-    margin-left: 15px;
-}
-
-.button.confirmContinue {
-    padding-left: 50px;
-    padding-right: 50px;
-}
-
 #reviewWrapper {
     background-color: #fdfdfd;
     padding: 3px 20px;

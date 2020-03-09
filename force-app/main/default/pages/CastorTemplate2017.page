@@ -19,7 +19,7 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
         <link class="user" href="https://static.stthomas.edu/ust-style/dist2/style-sheets/ust.min.css" rel="stylesheet" type="text/css"/>
         <link class="user" href="https://static.stthomas.edu/ust-style/dist-castor3/style-sheets/castor-full.min.css" rel="stylesheet" type="text/css"/>
         <link class="user" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-        <link class="user" href="https://static.stthomas.edu/undergraduate-admissions/js/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+<!--        <link class="user" href="https://static.stthomas.edu/undergraduate-admissions/js/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css"/>-->
         <link class="user" href="{!$Resource.CastorScripts2017}" rel="stylesheet" type="text/css"/>
         <link rel="apple-touch-icon" sizes="57x57" href="//www.stthomas.edu/apple-icon-57x57.png"/>
         <link rel="apple-touch-icon" sizes="60x60" href="//www.stthomas.edu/apple-icon-60x60.png"/>
@@ -85,7 +85,6 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-
     <!-- Google Tag Manager (noscript) -->
     <noscript>
         <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TJ6DZKM" height="0" width="0" style="display:none;visibility:hidden"></iframe>
@@ -105,9 +104,9 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
             </div>
         </div>
         <script>
-            // $(document).ready(function () {
-            //     ust.init();
-            // });
+            $(document).ready(function () {
+                ust.init();
+            });
         </script>
     </header>
     <header>
@@ -115,7 +114,7 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
             <div class="purple-bar pb-one-level ">
                 <div class="white-bar-wrap row">
                     <div class="white-bar">
-                        <h1>
+                        <h1 style="display:none;">
                             <apex:insert name="pageTitle"/>
                         </h1>
                     </div>
@@ -147,7 +146,7 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
     <main id="content">
         <div class="castor-top">
             <div class="row">
-                <div class="main-body column">
+                <div class="column">
                     <div class="slds-scope">
                         <apex:insert name="body"/>
                     </div>
