@@ -589,10 +589,13 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 </div>
                                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_2-of-6 slds-large-size_2-of-6">
                                     <div class="slds-form-element">
-                                        <apex:outputLabel value="Graduation Year" for="hsGradYear" styleClass="slds-form-element__label"/>
+                                        <apex:outputLabel for="hsGradYear" styleClass="slds-form-element__label">
+                                            Graduation Year
+                                        </apex:outputLabel>
                                         <div class="slds-form-element__control">
-                                            <apex:inputText value="{!newEvtReg.Registrant_High_School_Grad_Year__c}" id="hsGradYear" disabled="{!If((EvtUserType != 'Guest' && newEvtReg.Registrant_High_School_Grad_Year__c != null),true,false)}" styleClass="slds-input validYear" required="true"/>
+                                            <apex:inputText value="{!newEvtReg.Registrant_High_School_Grad_Year__c}" id="hsGradYear" html-aria-describedby="hsGradYear-required" disabled="{!If((EvtUserType != 'Guest' && newEvtReg.Registrant_High_School_Grad_Year__c != null),true,false)}" styleClass="slds-input validYear" required="true"/>
                                         </div>
+                                        <div class="slds-form-element__help" id="hsGradYear-required">Enter a valid graduation year.</div>
                                     </div>
                                 </div>
                             </div>

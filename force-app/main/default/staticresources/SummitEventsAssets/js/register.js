@@ -1,21 +1,20 @@
 // SummitEventsRegisterScripts
-var overlay = '<div class="waiting-overlay"></div>';
-var ChosenSchoolFilter;
-var ChosenCollegeFilter;
-var ChosenProcess = {};
-var ChosenProcessActive = {};
-var SESettings = JSON.parse(readCookie('SummitEvents'));
-var audience;
+let ChosenSchoolFilter;
+let ChosenCollegeFilter;
+let ChosenProcess = {};
+let ChosenProcessActive = {};
+let SESettings = JSON.parse(readCookie('SummitEvents'));
+let audience;
 
-var ready = (callback) => {
+//create spinner
+const overlay = createSpinner();
+
+let ready = (callback) => {
     if (document.readyState != "loading") callback();
     else document.addEventListener("DOMContentLoaded", callback);
 }
 
 ready(() => {
-    $("input[type=hidden]").bind("change", function () {
-        console.log($(this).val());
-    });
     // get audience
     audience = getUrlParameter('audience');
     if (!audience) {
@@ -29,37 +28,44 @@ ready(() => {
         audience = "High School";
     }
 
-    $("input, textarea").each(function () {
-        $(this).blur();
-    });
-    $("input, textarea").first().blur();
+    //make sure phone is formated correctly
+    dynamicValidation();
+    validYear();
 
+    let cantFindHS = document.getElementById('cantFindHS');
+    let cantFindCollege = document.getElementById('cantFindCollege');
 
-    window.scrollTo(0, 0);
+    if (cantFindHS) {
+        cantFindHS.addEventListener("click", (e) => {
+            let chosenField = document.getElementById('schoolSelector_chosen');
+            let HSAltInput = document.querySelector("[id$=HSAltInput]");
+            if (cantFindHS.checked) {
+                chosenField.style.display = 'none';
+                HSAltInput.style.display = 'block';
+                //$("#schoolSelector").val('').trigger('chosen:updated');
+                populateHiddenSchoolValue();
+            } else {
+                chosenField.style.display = 'block';
+                HSAltInput.style.display = 'none';
+            }
+        });
+    }
 
-    $("#cantFindHS").on("change", function () {
-        if ($(this).is(":checked")) {
-            $("#schoolSelector").val('').trigger('chosen:updated');
-            populateHiddenSchoolValue();
-            $("#schoolSelector_chosen").hide();
-            $("[id$=HSAltInput]").show();
-        } else {
-            $("[id$=HSAltInput]").val('').hide();
-            $("#schoolSelector_chosen").show();
-        }
-    });
-
-    $("#cantFindCollege").on("change", function () {
-        if ($(this).is(":checked")) {
-            $("#collegeSelector").val('').trigger('chosen:updated');
-            populateHiddenSchoolValue();
-            $("#collegeSelector_chosen").hide();
-            $("[id$=CollegeAltInput]").show();
-        } else {
-            $("[id$=CollegeAltInput]").val('').hide();
-            $("#collegeSelector_chosen").show();
-        }
-    });
+    if (cantFindCollege) {
+        cantFindCollege.addEventListener("click", (e) => {
+            let collegeChosenField = document.getElementById('collegeSelector_chosen');
+            let CollegeAltInput = document.querySelector("[id$=CollegeAltInput]");
+            if (cantFindCollege.checked) {
+                //$("#collegeSelector").val('').trigger('chosen:updated');
+                populateHiddenSchoolValue();
+                collegeChosenField.style.display = 'none';
+                CollegeAltInput.style.display = 'block';
+            } else {
+                collegeChosenField.style.display = 'block';
+                CollegeAltInput.style.display = 'none';
+            }
+        });
+    }
 
     //Set up both school selectors
     //check if selection has already been made
@@ -81,12 +87,6 @@ ready(() => {
 
     ChosenSchoolFilter = $("#schoolSelector").next('.chosen-container').find('.chosen-search-input');
     ChosenCollegeFilter = $("#collegeSelector").next('.chosen-container').find('.chosen-search-input');
-
-
-    //make sure phone is formated correctly
-    dynamicValidation();
-
-    validYear();
 
     ChosenSchoolFilter.on("keyup", function (e) {
         var code = (e.keyCode || e.which);
@@ -124,11 +124,21 @@ ready(() => {
 });
 
 function dynamicValidation() {
-    $('[id$=phone], [id$=mobile], .validPhone').on('change', function () {
-        formatPhone($(this));
+
+    //Validate and format phone numbers on change
+    let allPhones = document.querySelectorAll('[id$=phone], [id$=mobile], .validPhone');
+    allPhones.forEach(function (ph) {
+        ph.addEventListener('change', function (e) {
+            formatPhone(ph);
+        });
     });
-    $('[id$=zip]').on("change", function () {
-        fillInCityStateOnZip($(this));
+
+    //Fill in city states when zip happens;
+    let allZips = document.querySelectorAll('[id$=zip]');
+    allZips.forEach(function (zp) {
+        zp.addEventListener('change', function (e) {
+            fillInCityStateOnZip(zp);
+        });
     });
 }
 
@@ -137,21 +147,19 @@ var phoneCarryover;
 var newPhoneType;
 
 function phoneTypeToggle(phoneType) {
-    if ($('[id$=mobile]').val()) {
-        phoneCarryover = $('[id$=mobile]').val();
-    } else if ($('[id$=phone]').val()) {
-        phoneCarryover = $('[id$=phone]').val();
-    }
+    let phones = document.querySelectorAll('input[id$=mobile], input[id$=phone]');
+    phones.forEach(function (phone) {
+        phoneCarryover = phone.value;
+    });
     newPhoneType = phoneType;
     setPhoneSetting(phoneType);
 }
 
 function setOldPhoneValue() {
-    if (newPhoneType == 'home') {
-        $('[id$=phone]').val(phoneCarryover)
-    } else {
-        $('[id$=mobile]').val(phoneCarryover)
-    }
+    let phones = document.querySelectorAll('input[id$=mobile], input[id$=phone]');
+    phones.forEach(function (phone) {
+        phone.value = phoneCarryover;
+    });
 }
 
 function populateHiddenSchoolValue() {
@@ -218,13 +226,13 @@ function checkForm() {
             inputWrap.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
                 errorHelp.style.display = "block"
             });
-            addErrorFixerListener(item,inputWrap,'change');
+            addErrorFixerListener(item, inputWrap, 'change');
             error_count++;
         }
         if (inputType == 'email' && inputRequired || inputType == 'email' && item.value) {
             if (!emailReg.test(item.value)) {
                 inputWrap.classList.add("slds-has-error");
-                addErrorFixerListener(item,inputWrap, 'change');
+                addErrorFixerListener(item, inputWrap, 'change');
                 error_count++;
             }
         }
@@ -236,7 +244,7 @@ function checkForm() {
         if (selWrap.classList.contains("slds-is-required")) {
             if (!document.getElementById(hiddenData).value) {
                 selWrap.classList.add("slds-has-error");
-                addErrorFixerListener(selWrap,selWrap,'click');
+                addErrorFixerListener(selWrap, selWrap, 'click');
                 error_count++;
             }
         }
@@ -266,7 +274,7 @@ function checkForm() {
     return true;
 }
 
-function addErrorFixerListener (inpt, wrp, evtType) {
+function addErrorFixerListener(inpt, wrp, evtType) {
     inpt.addEventListener(evtType, (e) => {
         wrp.classList.remove("slds-has-error");
         wrp.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
@@ -276,77 +284,109 @@ function addErrorFixerListener (inpt, wrp, evtType) {
 }
 
 function fillInCityStateOnZip(zipObj) {
-    var zip = zipObj.val();
-    var url = "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&addressdetails=1&postalcode=";
+    let zip = zipObj.value;
+    let url = "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&addressdetails=1&postalcode=";
     if (zip.length === 5 && zip.match(/^[0-9]+$/) != null) {
         url = url + zip + "&country=united states";
     } else {
         url = url + zip;
     }
 
-    $('[id$=city], [id$=state]').closest(".slds-form-element").prepend(overlay)
-    $.getJSON(url, function (result) {
-        if (result.length > 0) {
-            var city = result[0].address.city;
-            if (city == null) {
-                city = result[0].address.hamlet;
-            }
-            if (city == null) {
-                city = result[0].address.town;
-            }
-            var state = result[0].address.state;
-            if (state == null) {
-                state = result[0].address.county;
-            }
-
-            $.each(RFIStates, function (key, value) {
-                if (value === state) {
-                    state = key;
-                }
-            });
-            //state = RFIStates.value[state].key;
-            var county = result[0].address.county;
-            var country = result[0].address.country_code.toUpperCase();
-            $("[id$=city]").val(city);
-            $("[id$=state]").val(state);
+    let cityState = document.querySelectorAll('input[id$=city], select[id$=state]');
+    cityState.forEach(function (cs) {
+        let formElem = cs.closest(".slds-form-element");
+        if (formElem !== null) {
+            formElem.append(overlay.cloneNode(true));
         }
-    }).always(function () {
-        $(".waiting-overlay").remove();
+    });
+
+    fetch(url)
+        .then((response) => response.json())
+        .then((result) => {
+            if (result) {
+                let city = result[0].address.city;
+                if (city == null) {
+                    city = result[0].address.hamlet;
+                }
+                if (city == null) {
+                    city = result[0].address.town;
+                }
+                let state = result[0].address.state;
+                if (state == null) {
+                    state = result[0].address.county;
+                }
+
+                for (let [key, value] of Object.entries(RFIStates)) {
+                    if (value === state) {
+                        state = key;
+                    }
+                }
+                let county = result[0].address.county;
+                let country = result[0].address.country_code.toUpperCase();
+                let cityInput = document.querySelector('[id$=city]');
+                let stateInput = document.querySelector('[id$=state]');
+                if (cityInput) {
+                    cityInput.value = city;
+                }
+                if (stateInput) {
+                    stateInput.value = state;
+                }
+            }
+            cityState.forEach(function (cs) {
+                let formElem = cs.closest(".slds-form-element");
+                formElem.querySelectorAll('.waiting-overlay').forEach(function (wa) {
+                    wa.remove();
+                });
+            });
+        }).catch(error => {
+
     });
 }
 
-function formatPhone(obj) {
-    var intr = false,
-        digits = 0;
-    if (obj.val().startsWith("+")) {
+function formatPhone(phone) {
+    let intr = false;
+    let digits = 0;
+    let inValue = phone.value;
+    if (inValue.startsWith("+")) {
         intr = true;
     }
-    digits = obj.val().replace(/\D/g, '');
+    digits = inValue.replace(/\D/g, '');
     if (intr) {
         if (digits.startsWith("0")) {
             digits = digits.substring(1);
         }
-        obj.val("+" + digits);
+        phone.value = "+" + digits;
     } else {
-        obj.val(digits.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3"));
+        phone.value = digits.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
     }
 }
 
 function validYear() {
-    $(".validYear").on("keyup", function () {
-        $(this).val($(this).val().replace(/\D/g, ''));
-        $(this).parent().find(".yearError").remove();
-        if (this.value.length > 4) {
-            $(this).val(this.value.slice(0, 4));
-        }
-    });
-    $(".validYear").on("change", function () {
-        var re = new RegExp(/(19|20)\d{2}/);
-        if (!re.test($(this).val())) {
-            $(this).val("");
-            $(this).after("<span class='yearError'>Enter a valid graduation year.</span>");
-        }
-        ;
+    let yearsToValidate = document.querySelectorAll('.validYear');
+    yearsToValidate.forEach(function (yr) {
+        let yrWrap = yr.closest('.slds-form-element');
+        yr.addEventListener("keyup", (e) => {
+            if (yrWrap.classList.contains('slds-has-error')) {
+                yrWrap.classList.remove('slds-has-error');
+            }
+            yrWrap.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
+                errorHelp.style.display = "none"
+            });
+            yr.value = (yr.value.replace(/\D/g, ''));
+            if (yr.value.length > 4) {
+                yr.value = yr.value.slice(0, 4);
+            }
+        });
+        yr.addEventListener("change", (e) => {
+            let re = new RegExp(/(19|20)\d{2}/);
+            if (!re.test(yr.value)) {
+                yr.value = '';
+                yrWrap.classList.add('slds-has-error');
+                yrWrap.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
+                    errorHelp.style.display = "block"
+                });
+            }
+        });
     });
 }
 
@@ -503,4 +543,23 @@ function arrayRemove(arr, value) {
     return arr.filter(function (ele) {
         return ele != value;
     });
+}
+
+function createSpinner() {
+    let overlay = document.createElement('div');
+    overlay.classList.add('waiting-overlay', 'slds-spinner_container');
+    let overlay1 = document.createElement('div');
+    overlay1.classList.add('slds-spinner', 'slds-spinner_small');
+    let overlay2 = document.createElement('div');
+    overlay2.classList.add('slds-spinner__dot-a')
+    let overlay3 = document.createElement('div');
+    overlay3.classList.add('slds-spinner__dot-b')
+    let overlay4 = document.createElement('span');
+    overlay4.textContent = 'Loading';
+    overlay4.classList.add('slds-assistive-text');
+    overlay1.append(overlay2);
+    overlay1.append(overlay3);
+    overlay1.append(overlay4);
+    overlay.append(overlay1);
+    return overlay;
 }

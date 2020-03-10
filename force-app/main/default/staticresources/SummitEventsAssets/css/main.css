@@ -1,25 +1,7 @@
 .slds-is-required label {font-weight: bold;}
 .slds-form-element .slds-form-element__help {display:none;}
 .slds-has-error {border-color:red!important;}
-/* SummitEventsStyles */
-.waiting-overlay {
-    text-align: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10;
-    background: rgba(255, 255, 255, 0.5) url(//static.stthomas.edu/undergraduate-admissions/rfi/images/spinner.gif) no-repeat center center;
-}
 
-.ui-datepicker {
-    width: 100% !important;
-}
-
-.ui-datepicker td span, .ui-datepicker td a {
-    padding: .7em;
-}
 
 .validationError {
     color: red !important;
