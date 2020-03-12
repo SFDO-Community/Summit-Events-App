@@ -23,11 +23,11 @@ function getFullCalType() {
 
 $(document).ready(function () {
     getFullCalType();
-    $(document).tooltip({
-        content: function () {
-            return $(this).prop('title');
-        }
-    });
+    // $(document).tooltip({
+    //     content: function () {
+    //         return $(this).prop('title');
+    //     }
+    // });
     $("#fullCalendarView").fullCalendar({
         defaultView: fullCalType,
         height: 'auto',
@@ -206,7 +206,6 @@ function populateschSel(data, selector, keyAsText) {
     $.each(data, function (key, value) {
         selector.append($('<option>').text(value).attr('value', key));
     });
-    $(document).foundation('reflow');
 }
 
 //Make a SOQL happy datetime with these two functions
