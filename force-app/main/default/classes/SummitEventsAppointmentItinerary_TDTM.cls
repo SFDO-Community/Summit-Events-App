@@ -33,7 +33,7 @@ global class SummitEventsAppointmentItinerary_TDTM extends hed.TDTM_Runnable {
                     SELECT Id, Name, Appointment_Time__c, Appointment_Time_Formatted__c, Event_Registration__r.Id, Event_Registration__r.Event_Name__c, Appointment_Status__c,
                             Faculty_Staff_Member__c, Appointment_Title__c, Event_Host__c, Host_Name__c, Event_Host__r.Assigned__c,
                             Host_Location__c, Building__c, Room__c, Event_Host__r.Time__c, Event_Host__r.Course_Name__c, Event_Host__r.RecordType.Name,
-                            Chosen_State__c, Event_Registration__r.Event__r.RecordType.Name, Description__c, Do_Not_Show_Time__c
+                            Chosen_State__c, Description__c, Do_Not_Show_Time__c
                     FROM Summit_Events_Appointments__c
                     WHERE Event_Registration__r.Id IN :uniqueRegIds.values()
                     ORDER BY Appointment_Time__c ASC, Event_Host__r.Time__c ASC, Appointment_Title__c ASC
@@ -53,9 +53,7 @@ global class SummitEventsAppointmentItinerary_TDTM extends hed.TDTM_Runnable {
             if (AllAppts.size() > 0) {
 
                 //check if this is an undergrad overnight
-                if (AllAppts[0].Event_Registration__r.Event_Name__c.contains('Overnight') &&
-                        (AllAppts[0].Event_Registration__r.Event__r.RecordType.Name == 'Undergraduate' || String.isBlank(AllAppts[0].Event_Registration__r.Event__r.RecordType.Name))) {
-
+                if (AllAppts[0].Event_Registration__r.Event_Name__c.contains('Overnight')) {
                     isOvernight = true;
                 }
                 // Generate itinaries

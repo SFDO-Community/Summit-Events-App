@@ -9,7 +9,6 @@
     <columns>Event_Name__c</columns>
     <columns>Event_Status__c</columns>
     <columns>CREATED_DATE</columns>
-    <columns>RECORDTYPE</columns>
     <filterScope>Everything</filterScope>
     <filters>
         <field>OBJECT_ID</field>

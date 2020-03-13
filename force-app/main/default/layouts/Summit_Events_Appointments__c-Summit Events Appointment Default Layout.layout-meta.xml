@@ -32,6 +32,10 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
+                <field>Event_Reg_ID__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
                 <field>Event_Registration_Date__c</field>
             </layoutItems>
             <layoutItems>
@@ -58,10 +62,6 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>RecordTypeId</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
                 <field>Client_Created_Appointment__c</field>
             </layoutItems>
             <layoutItems>
@@ -79,6 +79,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Chosen_State__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Sort_Order__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -102,7 +106,12 @@
                 <field>Appointment_Contact_Email__c</field>
             </layoutItems>
         </layoutColumns>
-        <layoutColumns/>
+        <layoutColumns>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Registrant_Input__c</field>
+            </layoutItems>
+        </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
     </layoutSections>
     <layoutSections>
@@ -126,6 +135,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Appointment_Detail__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>UG_Appointment_Category_Order__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -207,7 +220,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hn0000000RcuJ</masterLabel>
+        <masterLabel>00h2F000000uUUs</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

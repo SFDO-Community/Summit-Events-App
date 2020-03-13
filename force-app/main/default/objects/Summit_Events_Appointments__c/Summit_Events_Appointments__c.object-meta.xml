@@ -163,7 +163,6 @@
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Summit Events Appointments</pluralLabel>
-    <recordTypeTrackHistory>false</recordTypeTrackHistory>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
     <startsWith>Vowel</startsWith>

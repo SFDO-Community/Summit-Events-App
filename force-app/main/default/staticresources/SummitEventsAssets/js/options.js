@@ -1,168 +1,190 @@
 // SummitEventsRegistrationOptionScripts
-$(document).ready(function () {
-    $("#chooser .appointmentAdd").on("click", function () {
-        var addAppt;
-        var Appt = $(this).closest(".appointment");
-        var requiredSel = Appt.find('.required');
-        var error = false;
-        if (requiredSel.length > 0) {
-            if (requiredSel.val() == '') {
-                error = true;
-                requiredSel.addClass('aptError').on('select, click, change', function () {
-                    $(this).removeClass("aptError");
-                });
-            }
-        }
-        if (!error) {
 
-            //build a box
-            var ApptOffset = Appt.offset();
-            var lc;
-            var movingBox = $("<div/>", {id: 'movingBox' + Appt.attr("id"), class: 'movingBox'});
-            movingBox.css({
-                "width": (Appt.width() + 1) + 'px',
-                "height": (Appt.height() + 1) + 'px',
-                "left": ApptOffset.left + 'px',
-                "top": ApptOffset.top + 'px',
-            });
-            movingBox.html('<p><i class="fa fa-plus" aria-hidden="true"></i> Adding Appointment...</p>')
-            $('body').before(movingBox);
-            if ($("#choosen .appointmentChoosen:last-child").length > 0) {
-                lc = $("#choosen .appointmentChoosen:last-child");
+var appointmentsReady = (callback) => {
+    if (document.readyState != "loading") callback();
+    else document.addEventListener("DOMContentLoaded", callback);
+}
+
+appointmentsReady(() => {
+
+    //Initialize accordion toggles.
+    let accordionHeads = document.querySelectorAll(".slds-accordion__summary-heading");
+    accordionHeads.forEach(function (ab) {
+        ab.addEventListener("click", function (e) {
+            e.preventDefault();
+            let section = ab.closest('.appointment');
+            if (section.classList.contains('slds-is-open')) {
+                section.classList.remove('slds-is-open')
             } else {
-                lc = $("#choosen");
+                section.classList.add('slds-is-open')
             }
-            var lcOffset = lc.offset();
-            movingBox.delay(300).animate({'top': (lcOffset.top + lc.height() + 10) + 'px', 'left': lcOffset.left + 'px', "height": "0px", "opacity": 0}, 300).fadeOut(100, function () {
-                $(this).remove();
-            });
+        });
+    });
 
-            //move and adjust data
-            var limit = Appt.data("limit");
-            limit--;
-            //build appointment list
-            var apptcat = '', apptid = '', appttype = '', appttitle = '', appChosenState = '', appSort = '', appDesc = '', appInput = '';
-            apptid = Appt.attr('id');
-            if (Appt.data('apptcat')) {
-                apptcat = Appt.data('apptcat');
-            }
-            if (Appt.find(".appointmentType").val()) {
-                appttype = Appt.find(".appointmentType").val();
-            }
-            if (Appt.data('appchosenstate')) {
-                appChosenState = Appt.data('appchosenstate')
-            }
-            if (Appt.data('appsort')) {
-                appSort = Appt.data('appsort')
-            }
-            if (Appt.data('appdesc')) {
-                appDesc = Appt.data('appdesc')
-            }
-            if (Appt.data('appinput')) {
-                appInput = Appt.data('appinput')
-            }
-            appttitle = Appt.data('appttitle');
+    let chooser = document.querySelector("#chooser");
+    let chosen = document.getElementById("chosen");
 
-            addAppt = $('<div/>', {
-                //'id' : 'appt-' + appid,
-                'data-apptid': apptid,
-                'data-apptcat': apptcat,
-                'data-appttype': appttype,
-                'data-appttitle': appttitle,
-                'data-appchosenstate': appChosenState,
-                'data-appsort': appSort,
-                'data-appdesc': appDesc,
-                'data-appinput': appInput,
-                'class': 'appointmentChoosen'
-            });
-            addAppt.append('<p class="appointmentTitle">' + Appt.find(".appointmentTitle a").html() + '</p>');
-            addAppt.find('i').remove();
-            if (Appt.find(".appointmentType").length > 0) {
-                addAppt.append('<p class="appointmentDesc">' + Appt.find(".appointmentType").val() + '</p>');
-            }
-            if (Appt.find(".appointmentCustomInput").length > 0) {
-                addAppt.append('<p class="appointmentDesc">' + Appt.find(".appointmentCustomInput").val() + '</p>');
-            }
-            addAppt.append(
-                $('<a/>', {class: "appointmentRemove"})
-                    .html('<i class="fa fa-times-circle" aria-hidden="true"></i><span> Remove</span></span>')
-                    .on("click", function () {
-                        removeAppt($(this));
-                    })
-            );
-
-            Appt.data("limit", limit);
-            if (limit <= 0) {
-                Appt.delay(300).fadeOut("fast", function () {
-                    $("#choosen").append(addAppt);
-                });
-            } else {
-                $("#choosen").append(addAppt);
-                requiredSel.val('');
-            }
-
-        }
+    //Initiate remove buttons that already exist
+    let chosenRemoveButtons = chosen.querySelectorAll('.appointmentRemove');
+    chosenRemoveButtons.forEach(function (removeBtn) {
+        removeBtn.addEventListener('click', function () {
+            removeSelectedOption(removeBtn);
+        });
     });
 
 
-    $(".appointmentTitle a").on("click", function () {
-        if ($(this).find("i").hasClass("fa-chevron-down")) {
-            $(this).find("i").removeClass("fa-chevron-down").addClass("fa-chevron-up");
-        } else {
-            $(this).find("i").removeClass("fa-chevron-up").addClass("fa-chevron-down");
-        }
-        $(this).closest(".appointment").find(".apptmentDetail").slideToggle("fast");
+    //Initiate add buttons in chooser column
+    let allApptAddButtons = chooser.querySelectorAll(".appointmentAdd");
+
+    allApptAddButtons.forEach(function (apptButton) {
+        apptButton.addEventListener("click", (addAppt) => {
+            addAppt.preventDefault();
+            let Appt = apptButton.closest(".appointment");
+
+            //check for required fields
+            let error = false;
+            let requiredInputs = Appt.querySelectorAll('.slds-is-required');
+            requiredInputs.forEach(function (reqs) {
+                let reqAppt = reqs.closest(".appointment");
+                let incomingValue = '';
+                if (reqAppt.querySelector(".appointmentType")) {
+                    let selType = Appt.querySelector(".appointmentType");
+                    incomingValue = selType.options[selType.selectedIndex].value;
+                }
+                if (reqAppt.querySelector(".appointmentCustomInput")) {
+                    let inputType = Appt.querySelector(".appointmentCustomInput");
+                    incomingValue = inputType.value;
+                }
+                if (!incomingValue) {
+                    reqAppt.classList.add('slds-has-error');
+                    error = true;
+                }
+            });
+
+            if (!error) {
+                //move and adjust data
+                let chosenArea = document.getElementById("chosen");
+
+                let limit = Appt.dataset.limit;
+
+                addAppt = document.createElement('div');
+                addAppt.classList.add('slds-box', 'slds-box_small', 'slds-m-vertical_x-small', 'appointmentChosen');
+                Object.assign(addAppt.dataset, Appt.dataset);
+
+                let appTitle = document.createElement('p');
+                addAppt.classList.add('appointmentTitle', 'slds-text-body');
+                let findTitle = Appt.querySelector(".appointmentTitle");
+                appTitle.textContent = findTitle.textContent;
+                addAppt.append(appTitle);
+
+                let desc = '';
+                if (Appt.querySelector(".appointmentType")) {
+                    let selType = Appt.querySelector(".appointmentType");
+                    desc += selType.options[selType.selectedIndex].value;
+                }
+
+                if (Appt.querySelector(".appointmentCustomInput")) {
+                    let inputType = Appt.querySelector(".appointmentCustomInput");
+                    desc += inputType.value;
+                }
+
+                if (desc) {
+                    let apptDesc = document.createElement('p');
+                    apptDesc.classList.add('appointmentDesc', 'slds-text-body', 'slds-p-vertical_xx-small');
+                    apptDesc.textContent = desc;
+                    addAppt.append(apptDesc);
+                }
+
+                //Create the remove button
+                let removeButton = document.createElement('a');
+                removeButton.classList.add('appointmentRemove');
+                removeButton.textContent = ' Remove ';
+                removeButton.addEventListener("click", function (evt) {
+                    evt.preventDefault();
+                    removeSelectedOption(removeButton)
+                });
+                addAppt.appendChild(removeButton);
+
+                addAppt.id = 'appt' + limit + '-' + Appt.id;
+                Appt.dataset.limit = String(limit - 1);
+
+                chosenArea.append(addAppt);
+
+                //remove all values from hidden appointments.
+                if (Appt.classList.contains('slds-has-error')) {
+                    Appt.classList.remove('slds-has-error');
+                }
+
+                if (Appt.querySelector(".appointmentType")) {
+                    let selType = Appt.querySelector(".appointmentType");
+                    desc += selType.options[selType.selectedIndex].value = '';
+                }
+
+                if (Appt.querySelector(".appointmentCustomInput")) {
+                    let inputType = Appt.querySelector(".appointmentCustomInput");
+                    desc += inputType.value = '';
+                }
+
+                if (Appt.dataset.limit < 1) {
+                    Appt.style.display = "none";
+                }
+
+            }
+        });
     });
 
 });
 
-
-function removeAppt(rmvBtn) {
-    var aptChoosen = rmvBtn.closest(".appointmentChoosen");
-    var appChooser = $('#' + aptChoosen.data('apptid'));
-    appChooser.data('limit', appChooser.data('limit') + 1);
-    appChooser.fadeIn("fast");
-    aptChoosen.remove();
+function removeSelectedOption(removeButton) {
+    let chooserArea = document.getElementById("chooser");
+    let chosenArea = document.getElementById("chosen");
+    let rmvAppt = removeButton.closest(".appointmentChosen");
+    let origAppt = chooserArea.querySelector('#' + rmvAppt.dataset.apptid);
+    origAppt.classList.remove('slds-is-open');
+    origAppt.style.display = "block";
+    chosenArea.removeChild(rmvAppt);
 }
 
+
 function populateApptJSON() {
-    jsonOut = [];
-    $("#choosen div.appointmentChoosen").each(function () {
-        appt = {};
-        appt['apptId'] = $(this).data('apptid');
-        appt['apptCatagory'] = $(this).data('apptcat');
-        appt['apptType'] = $(this).data('appttype');
-        appt['apptText'] = $(this).data('appttext');
-        appt['apptTitle'] = $(this).data('appttitle');
-        appt['appChosenState'] = $(this).data('appchosenstate');
-        appt['appSort'] = $(this).data('appsort');
-        appt['appInput'] = $(this).data('appinput');
-        appt['appDesc'] = $(this).find('.appointmentDesc').html();
+    let jsonOut = [];
+    let chosen = document.getElementById('chosen');
+    let allChosen = chosen.querySelectorAll('.appointmentChosen');
+    allChosen.forEach(function (appointment) {
+        let appt = {};
+        appt['apptId'] = appointment.dataset.apptid;
+        appt['apptCatagory'] = appointment.dataset.apptcat;
+        appt['apptType'] = appointment.dataset.appttype;
+        appt['apptText'] = appointment.dataset.appttext;
+        appt['apptTitle'] = appointment.dataset.appttitle;
+        appt['appChosenState'] = appointment.dataset.appchosenstate;
+        appt['appSort'] = appointment.dataset.appsort;
+        appt['appInput'] = appointment.dataset.appinput;
+        let apptDesc = appointment.querySelector('.appointmentDesc');
+        if (apptDesc) {
+            appt['appDesc'] = apptDesc.textContent;
+        }
         jsonOut.push(appt);
     });
-    $('[id$=outgoingApptJSon]').val(JSON.stringify(jsonOut));
-    //console.log(JSON.stringify(jsonOut));
+    let hiddenData = document.querySelectorAll('[id$=outgoingApptJSon]');
+    hiddenData.forEach(function (hidedata) {
+        hidedata.value = JSON.stringify(jsonOut);
+    });
     return checkForRequiredAppointments();
 }
 
 function checkForRequiredAppointments() {
-    allApptGood = true;
-    $.each($('#chooser .appointmentRequired'), function() {
-        if($(this).is(':visible')) {
-            allApptGood = false;
-            fadein();
-            if($(this).find("i.fa").hasClass('fa-chevron-down')) {
-                $(this).find("a.optionToggler").click();
+    let chooser = document.getElementById('chooser');
+    let requiredAppointments = chooser.querySelectorAll('.appointmentRequired');
+    let allApptGood = true;
+    requiredAppointments.forEach(function (appt) {
+        if (window.getComputedStyle(appt).display !== "none") {
+            allApptGood =  false;
+            appt.classList.add('slds-has-error');
+            if (!appt.classList.contains('slds-is-open')) {
+                appt.classList.add('slds-is-open');
             }
-            $(this).css({borderColor:'red'});
-            $(".requiredSelectionLabel").css({'color':'black', 'opacity' : .5});
-            $(".requiredSelectionLabel").animate({
-                opacity: 1,
-                color: 'red',
-                fontWeight : 'bold'
-            }, 1000, function() {
-                // Animation complete.
-            });
+            fadein();
         }
     });
     return allApptGood;

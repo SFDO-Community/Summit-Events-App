@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Applicant_Type__c</fullName>
+    <fullName>Ask_Applicant_Type__c</fullName>
     <description>Setting this will override applicant type for this event and the user will not be queried about what applicant type they are. Use this if you know the event is only for a and audience of registrants that fall under the same application type.</description>
     <externalId>false</externalId>
     <inlineHelpText>Setting this will override applicant type for this event and the user will not be queried about what applicant type they are. Use this if you know the event is only for a and audience of registrants that fall under the same application type.</inlineHelpText>
-    <label>Applicant Type</label>
+    <label>Ask Applicant Type</label>
     <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
@@ -13,14 +13,34 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>First-Year</fullName>
+                <fullName>Do not ask</fullName>
                 <default>false</default>
-                <label>First-Year</label>
+                <label>Do not ask</label>
             </value>
             <value>
-                <fullName>Transfer</fullName>
+                <fullName>Ask</fullName>
                 <default>false</default>
-                <label>Transfer</label>
+                <label>Ask</label>
+            </value>
+            <value>
+                <fullName>Ask and require</fullName>
+                <default>false</default>
+                <label>Ask and require</label>
+            </value>
+            <value>
+                <fullName>Do not ask but assign First-Year</fullName>
+                <default>false</default>
+                <label>Do not ask but assign First-Year</label>
+            </value>
+            <value>
+                <fullName>Do not ask but assign Transfer</fullName>
+                <default>false</default>
+                <label>Do not ask but assign Transfer</label>
+            </value>
+            <value>
+                <fullName>Do not ask but assign Graduate</fullName>
+                <default>false</default>
+                <label>Do not ask but assign Graduate</label>
             </value>
         </valueSetDefinition>
     </valueSet>

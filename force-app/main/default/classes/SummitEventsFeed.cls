@@ -9,7 +9,6 @@ global with sharing class SummitEventsFeed {
 
     private static String feedType { get; set; }
     private static SummitEventsShared SEShared = new SummitEventsShared();
-    private static Id recTypeId { get; set; }
 
     private Class eventItem {
         public String ID { get; set; }
@@ -38,12 +37,6 @@ global with sharing class SummitEventsFeed {
         feedType = RestContext.request.params.get('feedType');
         String recType = RestContext.request.params.get('rectype');
 
-        if (!String.isBlank(recType)) {
-            List<RecordType> recTypeList = [SELECT Id,Name FROM RecordType WHERE SObjectType = 'Summit_Events__c' AND Name = :recType];
-            if (recTypeList.size() > 0) {
-                recTypeId = recTypeList[0].Id;
-            }
-        }
         RestResponse res = RestContext.response;
         String callback = RestContext.request.params.get('callback');
         String serializedJSON = '';
@@ -54,7 +47,6 @@ global with sharing class SummitEventsFeed {
         } else {
             res.addHeader('Content-Type', 'application/javascript');
         }
-
 
         if (feedType == 'audienceDD') {
             serializedJSON = JSON.serialize(getAudienceDD(Summit_Events__c.Audience__c.getDescribe()));
@@ -91,13 +83,14 @@ global with sharing class SummitEventsFeed {
         eventQuery += ' Event__r.Location_Title__c, Event__r.Location_Type__c, Event__r.Location_Address__c, Event__r.Location_Map_Link__c, Event__r.Building__c, Event__r.Event_description__c, Event__r.Community_Base_URL__c, ';
         eventQuery += ' Building_Override__c, Alternate_Registration_URL_Override__c, Location_Address_Override__c, Location_Map_Link_Override__c, Location_Title_Override__c, Location_Type_Override__c,  ';
         eventQuery += ' Event__r.Event_Short_Listing_Description__c, Event__r.Audience__c, Event__r.Close_Event_Days_Before__c, Start_Date_Time__c, End_Date_Time__c, Event__r.Event_Sponsor__c, ';
-        eventQuery += ' Event__r.Feed_Registration_Button_Text__c, Feed_Registration_Button_Text_Override__c, Capacity__c, Current_Available_Capacity__c ';
+        eventQuery += ' Event__r.Feed_Registration_Button_Text__c, Feed_Registration_Button_Text_Override__c, Capacity__c, Current_Available_Capacity__c, Private_Instance__c, Event__r.Private_Event__c ';
         eventQuery += ' FROM Summit_Events_Instance__c ';
         eventQuery += ' WHERE ';
         eventQuery += ' Event__R.Event_Status__c = \'Active\' ';
         eventQuery += ' AND Active_Status__c = \'Active\' ';
         eventQuery += ' AND (Current_Available_Capacity__c > 0 OR Capacity__c = null) ';
-        eventQuery += ' AND Event__r.Audience__c EXCLUDES (\'No Audience\') ';
+        eventQuery += ' AND Event__r.Private_Event__c = false ';
+        eventQuery += ' AND Private_Instance__c = false ';
 
         // build and sanitize the where statement that have variables
 
@@ -180,10 +173,6 @@ global with sharing class SummitEventsFeed {
             }
             eventQuery = eventQuery.removeEnd('OR ');
             eventQuery += ' ) ';
-        }
-
-        if (!String.isBlank(recTypeId)) {
-            eventQuery += ' AND Event__r.RecordType.Id = \'' + String.valueOf(recTypeId) + '\' ';
         }
 
         String incomingShowLongDesc = req.params.get('longdesc');

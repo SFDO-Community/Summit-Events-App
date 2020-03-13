@@ -165,7 +165,6 @@
         <type>Text</type>
     </nameField>
     <pluralLabel>Summit Events</pluralLabel>
-    <recordTypeTrackHistory>false</recordTypeTrackHistory>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <startsWith>Vowel</startsWith>
