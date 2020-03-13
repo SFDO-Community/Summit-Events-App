@@ -211,11 +211,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-<<<<<<< HEAD:force-app/main/default/layouts/Summit_Events_Appointment_Type__c-Summit Events Appointment Type Layout.layout-meta.xml
         <masterLabel>00h3D00000116qw</masterLabel>
-=======
-        <masterLabel>00h2F000000uUUr</masterLabel>
->>>>>>> master:force-app/main/default/layouts/Summit_Events_Appointment_Type__c-Summit Events Appointment Default Layout.layout-meta.xml
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

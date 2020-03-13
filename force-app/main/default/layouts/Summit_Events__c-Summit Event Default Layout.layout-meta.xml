@@ -130,10 +130,6 @@
                 <behavior>Edit</behavior>
                 <field>Ask_Date_Of_Birth__c</field>
             </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Ask_Program_Interest__c</field>
-            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -163,10 +159,6 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>College_High_School_Ask__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Private_Event__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>

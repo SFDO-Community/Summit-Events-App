@@ -40,8 +40,7 @@ public with sharing class SummitEventsSubmitController {
     public Boolean showPaymentButton { get; set; }
 
     public string headers { get; set; }
-    public String eventStartDateTimeCrumb {get;set;}
-    public String navBreadCrumb {get;set;}
+    public String navBreadCrumb { get; set; }
 
     public SummitEventsSubmitController() {
         test = '';
@@ -93,8 +92,8 @@ public with sharing class SummitEventsSubmitController {
             previousPageURL = previousPage().getUrl();
         }
 
-            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance);
-        }
+        navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance);
+
 
         if (!String.isBlank(evtinfo.evtRegId)) {
             chosenAppts = [

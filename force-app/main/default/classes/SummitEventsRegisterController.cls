@@ -636,7 +636,7 @@ public with sharing class SummitEventsRegisterController {
             if (newContactCreated) {
                 newEvtReg.New_Contact_Created__c = true;
             }
-            newEvtReg = rCRUD.updateRegistration(newEvtReg);
+            newEvtReg = CRUDtoDO.updateRegistration(newEvtReg);
             //Update matching log with new ID
             newEvtReg.Matching_Log__c = newEvtReg.Matching_Log__c.replaceAll('\\[\\[REGID\\]\\]', newEvtReg.Id);
             evtInfo.evtRegId = newEvtReg.Id;
@@ -689,7 +689,7 @@ public with sharing class SummitEventsRegisterController {
         }
 
         //update registration it may already exist, and matching log has to be updated on new registration inserts
-        newEvtReg = rCRUD.updateRegistration(newEvtReg);
+        newEvtReg = CRUDtoDO.updateRegistration(newEvtReg);
         System.debug(JSON.serializePretty(newEvtReg));
 
         if (String.isNotBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING') {
