@@ -13,389 +13,18 @@ public with sharing class SummitEventsContactMatching {
         Map<String, String> matchingResult = new Map<String, String>();
         //Direct to correct matching method
         if (!matchingScope.startsWith('No matching')) {
-            if (matchingType.equalsIgnoreCase('Undergraduate')) {
-                matchingResult = UG_Matching(evt, matchingScope);
-            } else if (matchingType.equalsIgnoreCase('UDAR')) {
-                matchingResult = UDAR_matching(evt, matchingScope);
-            } else if (matchingType.equalsIgnoreCase('Graduate')) {
-                //Using Undergrad matching for now
-                matchingResult = UG_Matching(evt, matchingScope);
+            if (matchingType.equalsIgnoreCase('Matching rules 2')) {
+                matchingResult = matchingRules2 (evt, matchingScope);
+            } else {
+                matchingResult = matchingRules1(evt, matchingScope);
             }
         }
         return matchingResult;
     }
 
     //Check for Matches
-    private Map<String, String> UDAR_matching(Summit_Events_Registration__c evt, String matchingScope) {
-        Id ContactId = null;
-        String matchLog = '';
-        Boolean newContactCreated = false;
-        String hardMatchHeading = '';
-        doCRUD CRUDtoDo = new doCRUD();
 
-        /* These fields may be depreciated witht he matching log
-        String softEmailMatches = '';
-        String softFirstLastZipMatches = '';
-        End of Depreciated fields */
-        String matchLogHead = '<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered slds-size_1-of-1">';
-        matchLogHead += '<thead><tr class="slds-line-height_reset">';
-        matchLogHead += '<th class="" scope="col"><div class="slds-truncate" title="Last Name">Last Name</div></th>';
-        matchLogHead += '<th class="" scope="col"><div class="slds-truncate" title="First Name">Student Last Name</div></th>';
-        matchLogHead += '<th class="" scope="col"><div class="slds-truncate" title="First Name">First Name</div></th>';
-        matchLogHead += '<th class="" scope="col"><div class="slds-truncate" title="Email">Class Year</div></th>';
-        matchLogHead += '<th class="" scope="col"><div class="slds-truncate" title="Email">Email</div></th>';
-        matchLogHead += '<th class="" scope="col"><div class="slds-truncate" title="Email">Phone</div></th>';
-        matchLogHead += '<th class="" scope="col"><div class="slds-truncate" title="Action">Action</div></th>';
-        matchLogHead += '</tr></thead>';
-
-        // Create the Log Header
-        matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Original Registration Information</div>';
-        matchLog += matchLogHead;
-        matchLog += '<tbody>';
-        matchLog += UDARMatchTD('javascript();', evt.Registrant_Last_Name__c, evt.Last_Name_as_Student__c, evt.Registrant_First_Name__c, evt.Preferred_St_Thomas_Class_Year__c, evt.Registrant_Email__c, '', evt.Registrant_Phone__c, '', false);
-        matchLog += '</tbody></table>';
-
-        /**** HARD MATCH TESTING ****/
-        Contact hardContactFound = null;
-        //Hard test on LAST NAME, EMAIL, CLASS
-
-        String query = '';
-        String orStat = '';
-        String querySelect = ' SELECT Id, FirstName, LastName, Email, Personal_Email__c, hed__WorkEmail__c, Previous_Last_Name__c, Preferred_Class_Year__c, Phone, HomePhone FROM Contact';
-        /** Hard match on Last Name, Email, Class Year  **/
-        if (
-                (String.isNotBlank(evt.Registrant_Last_Name__c) || String.isNotBlank(evt.Last_Name_as_Student__c))
-                        && String.isNotBlank(evt.Registrant_Email__c)
-                        && String.isNotBlank(evt.Preferred_St_Thomas_Class_Year__c)) {
-            query += querySelect;
-
-            /** Test on Last Name name Match **/
-            if (String.isNotBlank(evt.Registrant_Last_Name__c)) {
-                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Registrant_Last_Name__c) + '\' ';
-            }
-
-            /** Test on Last Name on previous last name Match **/
-            if (String.isNotBlank(evt.Last_Name_as_Student__c)) {
-                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
-                orStat += ' OR Previous_Last_Name__c = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
-            }
-            orStat = orStat.removeStart(' OR');
-            query += ' WHERE ( ' + orStat + ' ) ';
-            orStat = '';
-
-            /** Test on EMAIL Match **/
-            query += ' AND ( ';
-            query += ' Email = \'' + String.escapeSingleQuotes(evt.Registrant_Email__c) + '\' ';
-            query += ' OR Personal_Email__c = \'' + String.escapeSingleQuotes(evt.Registrant_Email__c) + '\' ';
-            query += ' OR hed__WorkEmail__c = \'' + String.escapeSingleQuotes(evt.Registrant_Email__c) + '\' ';
-            query += ' ) ';
-
-            query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_St_Thomas_Class_Year__c) + '\' ';
-
-            List<Contact> hardContactTestEmail = CRUDtoDo.findContacts(query);
-
-            if (hardContactTestEmail.size() == 1) {
-                hardContactFound = hardContactTestEmail[0];
-                hardMatchHeading = 'Hard match on LAST NAME, EMAIL and CLASS YEAR';
-            }
-        }
-
-        query = '';
-        orStat = '';
-        /** Hard test on LAST NAME, FIRST NAME, EMAIL **/
-        if (
-                (hardContactFound == null && String.isNotBlank(evt.Registrant_Last_Name__c) || String.isNotBlank(evt.Last_Name_as_Student__c))
-                        && String.isNotBlank(evt.Registrant_Email__c)
-                        && (String.isNotBlank(evt.Registrant_First_Name__c) || String.isNotBlank(evt.Registrant_Preferred_First_Name__c))) {
-            //Hard test on LAST NAME, FIRST NAME, EMAIL
-            query += querySelect;
-            /** Test on Last Name name Match **/
-            if (String.isNotBlank(evt.Registrant_Last_Name__c)) {
-                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Registrant_Last_Name__c) + '\' ';
-            }
-
-            /** Test on Last Name on previous last name Match **/
-            if (String.isNotBlank(evt.Last_Name_as_Student__c)) {
-                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
-                orStat += ' OR Previous_Last_Name__c = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
-            }
-            orStat = orStat.removeStart(' OR');
-            query += ' WHERE ( ' + orStat + ' ) ';
-            orStat = '';
-
-            /** Test on Last Name name Match **/
-            if (String.isNotBlank(evt.Registrant_First_Name__c)) {
-                orStat += ' OR FirstName = \'' + String.escapeSingleQuotes(evt.Registrant_First_Name__c) + '\' ';
-                orStat += ' OR Preferred_First_Name__c = \'' + String.escapeSingleQuotes(evt.Registrant_First_Name__c) + '\' ';
-            }
-            /** Test on Last Name on previous last name Match **/
-            if (String.isNotBlank(evt.Registrant_Preferred_First_Name__c)) {
-                orStat += ' OR Preferred_First_Name__c = \'' + String.escapeSingleQuotes(evt.Registrant_Preferred_First_Name__c) + '\' ';
-            }
-            orStat = orStat.removeStart(' OR');
-            query += ' AND ( ' + orStat + ' ) ';
-            orStat = '';
-
-            /** Test on EMAIL Match **/
-            query += ' AND ( ';
-            query += ' Email = \'' + String.escapeSingleQuotes(evt.Registrant_Email__c) + '\' ';
-            query += ' OR Personal_Email__c = \'' + String.escapeSingleQuotes(evt.Registrant_Email__c) + '\' ';
-            query += ' OR hed__WorkEmail__c = \'' + String.escapeSingleQuotes(evt.Registrant_Email__c) + '\' ';
-            query += ' ) ';
-
-            List<Contact> hardContactTestFirst = CRUDtoDo.findContacts(query);
-
-            if (hardContactTestFirst.size() == 1) {
-                hardContactFound = hardContactTestFirst[0];
-                hardMatchHeading = 'Hard match on LAST NAME, FIRST NAME and EMAIL';
-            }
-
-        }
-
-        query = '';
-        orStat = '';
-
-        /** Hard test on LAST NAME, CLASS, FIRST NAME, PHONE **/
-        if (
-                (hardContactFound == null && String.isNotBlank(evt.Registrant_Last_Name__c) || String.isNotBlank(evt.Last_Name_as_Student__c))
-                        && String.isNotBlank(evt.Registrant_Phone__c)
-                        && (String.isNotBlank(evt.Registrant_First_Name__c) || String.isNotBlank(evt.Registrant_Preferred_First_Name__c))
-                        && String.isNotBlank(evt.Preferred_St_Thomas_Class_Year__c)) {
-            query += querySelect;
-            /** Test on Last Name name Match **/
-            if (String.isNotBlank(evt.Registrant_Last_Name__c)) {
-                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Registrant_Last_Name__c) + '\' ';
-            }
-
-            /** Test on Last Name on previous last name Match **/
-            if (String.isNotBlank(evt.Last_Name_as_Student__c)) {
-                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
-                orStat += ' OR Previous_Last_Name__c = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
-            }
-            orStat = orStat.removeStart(' OR');
-            query += ' WHERE ( ' + orStat + ' ) ';
-            orStat = '';
-
-            /** Test on First Name name Match **/
-            if (String.isNotBlank(evt.Registrant_First_Name__c)) {
-                orStat += ' OR FirstName = \'' + String.escapeSingleQuotes(evt.Registrant_First_Name__c) + '\' ';
-                orStat += ' OR Preferred_First_Name__c = \'' + String.escapeSingleQuotes(evt.Registrant_First_Name__c) + '\' ';
-            }
-
-            /** Test on Last Name on previous last name Match **/
-            if (String.isNotBlank(evt.Registrant_Preferred_First_Name__c)) {
-                orStat += ' OR Preferred_First_Name__c = \'' + String.escapeSingleQuotes(evt.Registrant_Preferred_First_Name__c) + '\' ';
-            }
-            orStat = orStat.removeStart(' OR');
-            query += ' AND ( ' + orStat + ' ) ';
-            orStat = '';
-
-            query += ' AND (';
-            query += ' Phone = \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
-            query += ' OR MobilePhone = \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
-            query += ' OR HomePhone =  \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
-            query += ' OR hed__WorkPhone__c =  \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
-            query += ' )';
-            query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_St_Thomas_Class_Year__c) + '\' ';
-
-            List<Contact> hardContactTestNamePhoneClass = CRUDtoDo.findContacts(query);
-
-            if (hardContactTestNamePhoneClass.size() == 1) {
-                hardContactFound = hardContactTestNamePhoneClass[0];
-                hardMatchHeading = 'Hard match on LAST NAME, FIRST NAME and PHONE';
-            }
-        }
-
-        query = '';
-        orStat = '';
-        if (
-                (hardContactFound == null && String.isNotBlank(evt.Registrant_Last_Name__c) || String.isNotBlank(evt.Last_Name_as_Student__c))
-                        && (String.isNotBlank(evt.Registrant_First_Name__c) || String.isNotBlank(evt.Registrant_Preferred_First_Name__c))
-                        && String.isNotBlank(evt.Preferred_St_Thomas_Class_Year__c)) {
-
-            /* Get the first three characters of name and preferred name */
-            String firstThree = evt.Registrant_First_Name__c;
-            if (firstThree.length() > 3) {
-                firstThree = firstThree.substring(0, 3);
-            }
-            String prefFirstThree = '';
-            if (String.isNotBlank(evt.Registrant_Preferred_First_Name__c)) {
-                prefFirstThree = evt.Registrant_Preferred_First_Name__c;
-                if (prefFirstThree.length() > 3) {
-                    prefFirstThree = prefFirstThree.substring(0, 3);
-                }
-            }
-
-            //Hard test on LAST NAME, CLASS, FIRST 3 LETTERS
-            query += querySelect;
-            /** Test on Last Name name Match **/
-            if (String.isNotBlank(evt.Registrant_Last_Name__c)) {
-                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Registrant_Last_Name__c) + '\' ';
-            }
-
-            /** Test on Last Name on previous last name Match **/
-            if (String.isNotBlank(evt.Last_Name_as_Student__c)) {
-                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
-                orStat += ' OR Previous_Last_Name__c = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
-            }
-            orStat = orStat.removeStart(' OR');
-            query += ' WHERE ( ' + orStat + ' ) ';
-            orStat = '';
-
-            If (String.IsNotBlank(firstThree)) {
-                orStat += ' FirstName LIKE \'' + firstThree + '%\' OR ';
-                orStat += ' Preferred_First_Name__c LIKE \'' + firstThree + '%\' OR ';
-            }
-            if (String.IsNotBlank(prefFirstThree)) {
-                orStat += ' Preferred_First_Name__c LIKE \'' + prefFirstThree + '%\' OR ';
-            }
-            orStat = orStat.removeEnd(' OR ');
-            if (String.isNotBlank(orStat)) {
-                query += ' AND ( ' + orStat + ' ) ';
-            }
-            orStat = '';
-
-            query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_St_Thomas_Class_Year__c) + '\' ';
-
-            List<Contact> hardContactTestNameFirstThreeClass = CRUDtoDo.findContacts(query);
-
-            if (hardContactTestNameFirstThreeClass.size() == 1) {
-                hardContactFound = hardContactTestNameFirstThreeClass[0];
-                hardMatchHeading = 'Hard match on LAST NAME, FIRST 3 LETTERS OF FIRST NAME and CLASS';
-            }
-        }
-
-        if (hardContactFound != null) {
-            matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">' + hardMatchHeading + '!</div>';
-            matchLog += matchLogHead;
-            matchLog += '<tbody>';
-            matchLog += UDARMatchTD(hardContactFound.Id, hardContactFound.LastName, hardContactFound.Previous_Last_Name__c, hardContactFound.FirstName, hardContactFound.Preferred_Class_Year__c, hardContactFound.Email, '', hardContactFound.HomePhone, '', false);
-            matchLog += '</tbody></table>';
-            contactId = hardContactFound.Id;
-        }
-
-        /**** SOFT MATCH TESTING ****/
-        query = '';
-        orStat = '';
-        if (hardContactFound == null && (matchingScope.startsWith('Full matching') || String.isBlank(matchingScope))) {
-            //SOFT MATCHES BEGIN
-            Boolean queryComplete = true;
-            query += querySelect;
-            /** Test on Last Name name Match **/
-            if (String.isNotBlank(evt.Registrant_Last_Name__c)) {
-                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Registrant_Last_Name__c) + '\' ';
-                /** Test on Last Name on previous last name Match **/
-                if (String.isNotBlank(evt.Last_Name_as_Student__c)) {
-                    orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
-                    orStat += ' OR Previous_Last_Name__c = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
-                }
-            } else {
-                queryComplete = false;
-            }
-
-            if (String.isNotBlank(orStat)) {
-                orStat = orStat.removeStart(' OR');
-                query += ' WHERE ( ' + orStat + ' ) ';
-            }
-            orStat = '';
-
-            if (String.isNotBlank(evt.Registrant_Phone__c)) {
-                query += ' AND (';
-                query += ' Phone = \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
-                query += ' OR MobilePhone = \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
-                query += ' OR HomePhone =  \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
-                query += ' OR hed__WorkPhone__c =  \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
-                query += ' )';
-            } else {
-                queryComplete = false;
-            }
-
-            if (String.isNotBlank(evt.Preferred_St_Thomas_Class_Year__c)) {
-                query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_St_Thomas_Class_Year__c) + '\' ';
-            } else {
-                queryComplete = false;
-            }
-
-            List<Contact> softContactTestNamePhoneClass = new List<Contact>();
-            if (queryComplete) {
-                softContactTestNamePhoneClass = CRUDtoDo.findContacts(query);
-            }
-
-            if (softContactTestNamePhoneClass.size() > 0) {
-                matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Soft Matches on LAST NAME, PHONE and CLASS.</div>';
-                matchLog += matchLogHead;
-                matchLog += '<tbody>';
-                for (Contact softy : softContactTestNamePhoneClass) {
-                    matchLog += UDARMatchTD(softy.Id, softy.lastName, softy.Previous_Last_Name__c, softy.FirstName, softy.Preferred_Class_Year__c, softy.Email, '', softy.HomePhone, '', true);
-                }
-                matchLog += '</tbody></table>';
-            }
-
-            //if no contact ID was found create a new contact
-            if (hardContactFound == null) {
-                Contact newCreatedContact = createNewContact(evt);
-                contactId = newCreatedContact.Id;
-                matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">New Contact Created</div>';
-                matchLog += matchLogHead;
-                matchLog += '<tbody>';
-                matchLog += UDARMatchTD(contactId, evt.Registrant_Last_Name__c, '', evt.Registrant_First_Name__c, evt.Preferred_St_Thomas_Class_Year__c, newCreatedContact.Email, '', evt.Registrant_Phone__c, '', false);
-                matchLog += '</tbody></table>';
-                newContactCreated = true;
-            }
-
-        }
-
-        return new Map<String, String>{
-                'contactId' => contactId,
-                'matchLog' => matchLog,
-                'newContactCreated' => String.valueOf(newContactCreated)
-        };
-    }
-
-    private String UDARMatchTD(String ContactId, String LastName, String StudentLastName, String FirstName, String ClassYear, String Email, String EmailSuffix, String Phone, String PhoneSuffix, Boolean Action) {
-        String mOut = '<tr class="slds-hint-parent">';
-        if (String.isBlank(LastName)) {
-            LastName = '';
-        }
-        mOut += '<td data-label="Last Name"><div class="slds-truncate"><a href="/' + ContactId + '" target="_blank">' + LastName + '</a></div></td>';
-        if (String.isBlank(StudentLastName)) {
-            StudentLastName = '';
-        }
-        mOut += '<td data-label="Last Name"><div class="slds-truncate"><a href="/' + ContactId + '" target="_blank">' + StudentLastName + '</a></div></td>';
-        if (String.isBlank(FirstName)) {
-            FirstName = '';
-        }
-        mOut += '<td data-label="First Name"><div class="slds-truncate"><a href="/' + ContactId + '" target="_blank">' + FirstName + '</a></div></td>';
-        if (String.isBlank(ClassYear)) {
-            ClassYear = '';
-        }
-        mOut += '<td data-label="First Name"><div class="slds-truncate">' + ClassYear + '</div></td>';
-        if (String.isBlank(Email)) {
-            Email = '';
-        }
-        mOut += '<td data-label="Email"><div class="slds-truncate">' + Email;
-        if (String.isBlank(EmailSuffix)) {
-            mOut += ' ' + EmailSuffix;
-        }
-        mOut += '</div></td>';
-        if (String.isBlank(Phone)) {
-            Phone = '';
-        }
-        mOut += '<td data-label="Phone"><div class="slds-truncate">' + Phone;
-        if (String.isNotBlank(PhoneSuffix)) {
-            mOut += ' ' + PhoneSuffix;
-        }
-        mOut += '</div></td>';
-        if (Action) {
-            mOut += '<td data-label="Action"><div class="slds-truncate"><a class="slds-text-link_reset" href="/apex/SummitEventsReparent?regId=[[REGID]]&reparentTo=' + ContactId + '"><span class="slds-text-link">Reparent</span></a></div></td>';
-        } else {
-            mOut += '<td data-label="Action"><div class="slds-truncate"> --- </div></td>';
-        }
-        mOut += '</tr>';
-        return mOut;
-    }
-
-    private Map<String, String> UG_Matching(Summit_Events_Registration__c evt, String matchingScope) {
+    private Map<String, String> matchingRules1(Summit_Events_Registration__c evt, String matchingScope) {
         String contactId = '';
         String softEmailMatches = '';
         String softFirstLastZipMatches = '';
@@ -438,10 +67,10 @@ public with sharing class SummitEventsContactMatching {
 
             query = ' SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE (';
             if (String.isNotBlank(firstThree)) {
-                query += ' firstName LIKE \'' + firstThree + '%\' OR';
+                query += ' firstName LIKE \'' + String.escapeSingleQuotes(firstThree) + '%\' OR';
             }
             if (String.isNotBlank(prefFirstThree)) {
-                query += ' Preferred_First_Name__c LIKE \'' + prefFirstThree + '%\' OR';
+                query += ' Preferred_First_Name__c LIKE \'' + String.escapeSingleQuotes(prefFirstThree) + '%\' OR';
             }
             query = query.removeEnd(' OR');
             query += ' ) ';
@@ -456,7 +85,7 @@ public with sharing class SummitEventsContactMatching {
                 matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Hard match on FIRST NAME (first 3), LAST NAME, BIRTH DATE!</div>';
                 matchLog += matchLogHead;
                 matchLog += '<tbody>';
-                matchLog += UGMatchTD(hardContactTest1[0].Id, hardContactTest1[0].LastName, hardContactTest1[0].FirstName, hardContactTest1[0].Email, hardContactTest1[0].MailingPostalCode, false);
+                matchLog += matching1TD(hardContactTest1[0].Id, hardContactTest1[0].LastName, hardContactTest1[0].FirstName, hardContactTest1[0].Email, hardContactTest1[0].MailingPostalCode, false);
                 matchLog += '</tbody></table>';
             }
         }
@@ -469,7 +98,7 @@ public with sharing class SummitEventsContactMatching {
                 matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Hard match on LAST NAME, EMAIL!</div>';
                 matchLog += matchLogHead;
                 matchLog += '<tbody>';
-                matchLog += UGMatchTD(hardContactTest2[0].Id, hardContactTest2[0].LastName, hardContactTest2[0].FirstName, hardContactTest2[0].Email, hardContactTest2[0].MailingPostalCode, false);
+                matchLog += matching1TD(hardContactTest2[0].Id, hardContactTest2[0].LastName, hardContactTest2[0].FirstName, hardContactTest2[0].Email, hardContactTest2[0].MailingPostalCode, false);
                 matchLog += '</tbody></table>';
             }
         }
@@ -488,21 +117,21 @@ public with sharing class SummitEventsContactMatching {
                 matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Hard match on LAST NAME, EMAIL (Email was duplicate email)</div>';
                 matchLog += matchLogHead;
                 matchLog += '<tbody>';
-                matchLog += UGMatchTD(hardContactTest3[0].Id, hardContactTest3[0].LastName, hardContactTest3[0].FirstName, hardContactTest3[0].Email, hardContactTest3[0].MailingPostalCode, false);
+                matchLog += matching1TD(hardContactTest3[0].Id, hardContactTest3[0].LastName, hardContactTest3[0].FirstName, hardContactTest3[0].Email, hardContactTest3[0].MailingPostalCode, false);
                 matchLog += '</tbody></table>';
             }
         }
 
         if (String.isBlank(contactId) && (matchingScope.startsWith('Full matching') || String.isBlank(matchingScope))) {
             //Check if first name last name zip match
-            List<Contact> zipContactTest = CRUDtoDo.zipFirstLastMatch(evt.Registrant_Zip__c,evt.Registrant_Last_Name__c, evt.Registrant_First_Name__c );
+            List<Contact> zipContactTest = CRUDtoDo.zipFirstLastMatch(evt.Registrant_Zip__c, evt.Registrant_Last_Name__c, evt.Registrant_First_Name__c);
             if (zipContactTest.size() > 0) {
                 //Soft Match found with zip
                 matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Soft Match on Zip, Last Name, First Name</div>';
                 matchLog += matchLogHead;
                 matchLog += '<tbody>';
                 for (Contact c : zipContactTest) {
-                    matchLog += UGMatchTD(c.Id, c.LastName, c.FirstName, c.Email, c.MailingPostalCode, true);
+                    matchLog += matching1TD(c.Id, c.LastName, c.FirstName, c.Email, c.MailingPostalCode, true);
                     softFirstLastZipMatches += c.Id + ' ';
                 }
                 matchLog += '</tbody></table>';
@@ -514,7 +143,7 @@ public with sharing class SummitEventsContactMatching {
                 matchLog += matchLogHead;
                 matchLog += '<tbody>';
                 for (Contact c : emailContactTest) {
-                    matchLog += UGMatchTD(c.Id, c.LastName, c.FirstName, c.Email, c.MailingPostalCode, true);
+                    matchLog += matching1TD(c.Id, c.LastName, c.FirstName, c.Email, c.MailingPostalCode, true);
                     softEmailMatches += c.Id + ' ';
                 }
                 matchLog += '</tbody></table>';
@@ -525,7 +154,7 @@ public with sharing class SummitEventsContactMatching {
             matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">New contact created!</div>';
             matchLog += matchLogHead;
             matchLog += '<tbody>';
-            matchLog += UGMatchTD(newEvtContact.Id, newEvtContact.LastName, newEvtContact.FirstName, newEvtContact.Email, newEvtContact.MailingPostalCode, false);
+            matchLog += matching1TD(newEvtContact.Id, newEvtContact.LastName, newEvtContact.FirstName, newEvtContact.Email, newEvtContact.MailingPostalCode, false);
             matchLog += '</tbody></table>';
             newContactCreated = true;
             //Create new contact
@@ -541,7 +170,7 @@ public with sharing class SummitEventsContactMatching {
         };
     }
 
-    private String UGMatchTD(String ContactId, String LastName, String FirstName, String Email, String Zip, Boolean Action) {
+    private String matching1TD(String ContactId, String LastName, String FirstName, String Email, String Zip, Boolean Action) {
         String mOut = '<tr class="slds-hint-parent">';
         mOut += '<td data-label="Last Name"><div class="slds-truncate"><a href="/' + ContactId + '" target="_blank">' + LastName + '</a></div></td>';
         mOut += '<td data-label="First Name"><div class="slds-truncate"><a href="/' + ContactId + '" target="_blank">' + FirstName + '</a></div></td>';
@@ -610,9 +239,9 @@ public with sharing class SummitEventsContactMatching {
         newEvtContact.MobilePhone = evt.Registrant_Mobile_Phone__c;
         newEvtContact.HomePhone = evt.Registrant_Phone__c;
         newEvtContact.Previous_Last_Name__c = evt.Last_Name_as_Student__c;
-        newEvtContact.Preferred_Class_Year__c = evt.Preferred_St_Thomas_Class_Year__c;
+        newEvtContact.Preferred_Class_Year__c = evt.Preferred_Class_Year__c;
         //newEvtContact.High_School_Expected_Graduation_Year__c = evt.Registrant_High_School_Grad_Year__c;
-        newEvtContact.LeadSource = 'Event';
+        //newEvtContact.LeadSource = 'Event';
 
         /*if (!String.isBlank(evt.Registrant_Applicant_Type__c)) {
             newEvtContact.Inquiry_Applicant_Type__c = evt.Registrant_Applicant_Type__c;
@@ -628,20 +257,387 @@ public with sharing class SummitEventsContactMatching {
         if (evt.Registrant_Receive_Texts__c = true) {
             newEvtContact.Do_Not_Text__c = false;
         }
-        try {
-            newEvtContact = CRUDtoDo.addContact(newEvtContact);
-            //HEDA address
-            newAddress.hed__Parent_Contact__c = newEvtContact.Id;
-            newAddress = CRUDtoDo.addAddress(newAddress);
-        } catch (Exception ex) {
-            ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
-            ApexPages.addMessage(myMsg);
-        }
+
+        System.debug('Contact to create!!!:  ' + JSON.serializePretty(newEvtContact));
+        newEvtContact = CRUDtoDo.addContact(newEvtContact);
+        //HEDA address
+        newAddress.hed__Parent_Contact__c = newEvtContact.Id;
+        newAddress = CRUDtoDo.addAddress(newAddress);
 
         //Flag registration to show new contact was created
         evt.New_Contact_Created__c = true;
         return newEvtContact;
 
+    }
+
+    private Map<String, String> matchingRules2(Summit_Events_Registration__c evt, String matchingScope) {
+        Id ContactId = null;
+        String matchLog = '';
+        Boolean newContactCreated = false;
+        String hardMatchHeading = '';
+        doCRUD CRUDtoDo = new doCRUD();
+
+        /* These fields may be depreciated with he matching log
+        String softEmailMatches = '';
+        String softFirstLastZipMatches = '';
+        End of Depreciated fields */
+        String matchLogHead = '<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered slds-size_1-of-1">';
+        matchLogHead += '<thead><tr class="slds-line-height_reset">';
+        matchLogHead += '<th class="" scope="col"><div class="slds-truncate" title="Last Name">Last Name</div></th>';
+        matchLogHead += '<th class="" scope="col"><div class="slds-truncate" title="First Name">Student Last Name</div></th>';
+        matchLogHead += '<th class="" scope="col"><div class="slds-truncate" title="First Name">First Name</div></th>';
+        matchLogHead += '<th class="" scope="col"><div class="slds-truncate" title="Email">Class Year</div></th>';
+        matchLogHead += '<th class="" scope="col"><div class="slds-truncate" title="Email">Email</div></th>';
+        matchLogHead += '<th class="" scope="col"><div class="slds-truncate" title="Email">Phone</div></th>';
+        matchLogHead += '<th class="" scope="col"><div class="slds-truncate" title="Action">Action</div></th>';
+        matchLogHead += '</tr></thead>';
+
+        // Create the Log Header
+        matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Original Registration Information</div>';
+        matchLog += matchLogHead;
+        matchLog += '<tbody>';
+        matchLog += matching2TD('javascript();', evt.Registrant_Last_Name__c, evt.Last_Name_as_Student__c, evt.Registrant_First_Name__c, evt.Preferred_Class_Year__c, evt.Registrant_Email__c, '', evt.Registrant_Phone__c, '', false);
+        matchLog += '</tbody></table>';
+
+        /**** HARD MATCH TESTING ****/
+        Contact hardContactFound = null;
+        //Hard test on LAST NAME, EMAIL, CLASS
+
+        String query = '';
+        String orStat = '';
+        String querySelect = ' SELECT Id, FirstName, LastName, Email, Personal_Email__c, hed__WorkEmail__c, Previous_Last_Name__c, Preferred_Class_Year__c, Phone, HomePhone FROM Contact';
+        /** Hard match on Last Name, Email, Class Year  **/
+        if (
+                (String.isNotBlank(evt.Registrant_Last_Name__c) || String.isNotBlank(evt.Last_Name_as_Student__c))
+                        && String.isNotBlank(evt.Registrant_Email__c)
+                        && String.isNotBlank(evt.Preferred_Class_Year__c)) {
+            query += querySelect;
+
+            /** Test on Last Name name Match **/
+            if (String.isNotBlank(evt.Registrant_Last_Name__c)) {
+                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Registrant_Last_Name__c) + '\' ';
+            }
+
+            /** Test on Last Name on previous last name Match **/
+            if (String.isNotBlank(evt.Last_Name_as_Student__c)) {
+                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
+                orStat += ' OR Previous_Last_Name__c = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
+            }
+            orStat = orStat.removeStart(' OR');
+            query += ' WHERE ( ' + orStat + ' ) ';
+            orStat = '';
+
+            /** Test on EMAIL Match **/
+            query += ' AND ( ';
+            query += ' Email = \'' + String.escapeSingleQuotes(evt.Registrant_Email__c) + '\' ';
+            query += ' OR Personal_Email__c = \'' + String.escapeSingleQuotes(evt.Registrant_Email__c) + '\' ';
+            query += ' OR hed__WorkEmail__c = \'' + String.escapeSingleQuotes(evt.Registrant_Email__c) + '\' ';
+            query += ' ) ';
+
+            query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_Class_Year__c) + '\' ';
+
+            List<Contact> hardContactTestEmail = CRUDtoDo.findContacts(query);
+
+            if (hardContactTestEmail.size() == 1) {
+                hardContactFound = hardContactTestEmail[0];
+                hardMatchHeading = 'Hard match on LAST NAME, EMAIL and CLASS YEAR';
+            }
+        }
+
+        query = '';
+        orStat = '';
+
+        /** Hard test on LAST NAME, FIRST NAME, EMAIL **/
+        if (
+                (hardContactFound == null && String.isNotBlank(evt.Registrant_Last_Name__c) || String.isNotBlank(evt.Last_Name_as_Student__c))
+                        && String.isNotBlank(evt.Registrant_Email__c)
+                        && (String.isNotBlank(evt.Registrant_First_Name__c) || String.isNotBlank(evt.Registrant_Preferred_First_Name__c))) {
+            //Hard test on LAST NAME, FIRST NAME, EMAIL
+            query += querySelect;
+            /** Test on Last Name name Match **/
+            if (String.isNotBlank(evt.Registrant_Last_Name__c)) {
+                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Registrant_Last_Name__c) + '\' ';
+            }
+
+            /** Test on Last Name on previous last name Match **/
+            if (String.isNotBlank(evt.Last_Name_as_Student__c)) {
+                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
+                orStat += ' OR Previous_Last_Name__c = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
+            }
+            orStat = orStat.removeStart(' OR');
+            query += ' WHERE ( ' + orStat + ' ) ';
+            orStat = '';
+
+            /** Test on Last Name name Match **/
+            if (String.isNotBlank(evt.Registrant_First_Name__c)) {
+                orStat += ' OR FirstName = \'' + String.escapeSingleQuotes(evt.Registrant_First_Name__c) + '\' ';
+                orStat += ' OR Preferred_First_Name__c = \'' + String.escapeSingleQuotes(evt.Registrant_First_Name__c) + '\' ';
+            }
+            /** Test on Last Name on previous last name Match **/
+            if (String.isNotBlank(evt.Registrant_Preferred_First_Name__c)) {
+                orStat += ' OR Preferred_First_Name__c = \'' + String.escapeSingleQuotes(evt.Registrant_Preferred_First_Name__c) + '\' ';
+            }
+            orStat = orStat.removeStart(' OR');
+            query += ' AND ( ' + orStat + ' ) ';
+            orStat = '';
+
+            /** Test on EMAIL Match **/
+            query += ' AND ( ';
+            query += ' Email = \'' + String.escapeSingleQuotes(evt.Registrant_Email__c) + '\' ';
+            query += ' OR Personal_Email__c = \'' + String.escapeSingleQuotes(evt.Registrant_Email__c) + '\' ';
+            query += ' OR hed__WorkEmail__c = \'' + String.escapeSingleQuotes(evt.Registrant_Email__c) + '\' ';
+            query += ' ) ';
+
+            List<Contact> hardContactTestFirst = CRUDtoDo.findContacts(query);
+
+            if (hardContactTestFirst.size() == 1) {
+                hardContactFound = hardContactTestFirst[0];
+                hardMatchHeading = 'Hard match on LAST NAME, FIRST NAME and EMAIL';
+            }
+
+        }
+
+        query = '';
+        orStat = '';
+
+        /** Hard test on LAST NAME, CLASS, FIRST NAME, PHONE **/
+        if (
+                (hardContactFound == null && String.isNotBlank(evt.Registrant_Last_Name__c) || String.isNotBlank(evt.Last_Name_as_Student__c))
+                        && String.isNotBlank(evt.Registrant_Phone__c)
+                        && (String.isNotBlank(evt.Registrant_First_Name__c) || String.isNotBlank(evt.Registrant_Preferred_First_Name__c))
+                        && String.isNotBlank(evt.Preferred_Class_Year__c)) {
+            query += querySelect;
+            /** Test on Last Name name Match **/
+            if (String.isNotBlank(evt.Registrant_Last_Name__c)) {
+                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Registrant_Last_Name__c) + '\' ';
+            }
+
+            /** Test on Last Name on previous last name Match **/
+            if (String.isNotBlank(evt.Last_Name_as_Student__c)) {
+                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
+                orStat += ' OR Previous_Last_Name__c = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
+            }
+            orStat = orStat.removeStart(' OR');
+            query += ' WHERE ( ' + orStat + ' ) ';
+            orStat = '';
+
+            /** Test on First Name name Match **/
+            if (String.isNotBlank(evt.Registrant_First_Name__c)) {
+                orStat += ' OR FirstName = \'' + String.escapeSingleQuotes(evt.Registrant_First_Name__c) + '\' ';
+                orStat += ' OR Preferred_First_Name__c = \'' + String.escapeSingleQuotes(evt.Registrant_First_Name__c) + '\' ';
+            }
+
+            /** Test on Last Name on previous last name Match **/
+            if (String.isNotBlank(evt.Registrant_Preferred_First_Name__c)) {
+                orStat += ' OR Preferred_First_Name__c = \'' + String.escapeSingleQuotes(evt.Registrant_Preferred_First_Name__c) + '\' ';
+            }
+            orStat = orStat.removeStart(' OR');
+            query += ' AND ( ' + orStat + ' ) ';
+            orStat = '';
+
+            query += ' AND (';
+            query += ' Phone = \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
+            query += ' OR MobilePhone = \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
+            query += ' OR HomePhone =  \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
+            query += ' OR hed__WorkPhone__c =  \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
+            query += ' )';
+            query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_Class_Year__c) + '\' ';
+
+            List<Contact> hardContactTestNamePhoneClass = CRUDtoDo.findContacts(query);
+
+            if (hardContactTestNamePhoneClass.size() == 1) {
+                hardContactFound = hardContactTestNamePhoneClass[0];
+                hardMatchHeading = 'Hard match on LAST NAME, FIRST NAME and PHONE';
+            }
+        }
+
+        query = '';
+        orStat = '';
+        if (
+                (hardContactFound == null && String.isNotBlank(evt.Registrant_Last_Name__c) || String.isNotBlank(evt.Last_Name_as_Student__c))
+                        && (String.isNotBlank(evt.Registrant_First_Name__c) || String.isNotBlank(evt.Registrant_Preferred_First_Name__c))
+                        && String.isNotBlank(evt.Preferred_Class_Year__c)) {
+
+            /* Get the first three characters of name and preferred name */
+            String firstThree = evt.Registrant_First_Name__c;
+            if (firstThree.length() > 3) {
+                firstThree = firstThree.substring(0, 3);
+            }
+            String prefFirstThree = '';
+            if (String.isNotBlank(evt.Registrant_Preferred_First_Name__c)) {
+                prefFirstThree = evt.Registrant_Preferred_First_Name__c;
+                if (prefFirstThree.length() > 3) {
+                    prefFirstThree = prefFirstThree.substring(0, 3);
+                }
+            }
+
+            //Hard test on LAST NAME, CLASS, FIRST 3 LETTERS
+            query += querySelect;
+            /** Test on Last Name name Match **/
+            if (String.isNotBlank(evt.Registrant_Last_Name__c)) {
+                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Registrant_Last_Name__c) + '\' ';
+            }
+
+            /** Test on Last Name on previous last name Match **/
+            if (String.isNotBlank(evt.Last_Name_as_Student__c)) {
+                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
+                orStat += ' OR Previous_Last_Name__c = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
+            }
+            orStat = orStat.removeStart(' OR');
+            query += ' WHERE ( ' + orStat + ' ) ';
+            orStat = '';
+
+            If (String.IsNotBlank(firstThree)) {
+                orStat += ' FirstName LIKE \'' + firstThree + '%\' OR ';
+                orStat += ' Preferred_First_Name__c LIKE \'' + String.escapeSingleQuotes(firstThree) + '%\' OR ';
+            }
+            if (String.IsNotBlank(prefFirstThree)) {
+                orStat += ' Preferred_First_Name__c LIKE \'' +  String.escapeSingleQuotes(prefFirstThree) + '%\' OR ';
+            }
+            orStat = orStat.removeEnd(' OR ');
+            if (String.isNotBlank(orStat)) {
+                query += ' AND ( ' + orStat + ' ) ';
+            }
+            orStat = '';
+
+            query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_Class_Year__c) + '\' ';
+
+            List<Contact> hardContactTestNameFirstThreeClass = CRUDtoDo.findContacts(query);
+
+            if (hardContactTestNameFirstThreeClass.size() == 1) {
+                hardContactFound = hardContactTestNameFirstThreeClass[0];
+                hardMatchHeading = 'Hard match on LAST NAME, FIRST 3 LETTERS OF FIRST NAME and CLASS';
+            }
+        }
+
+        if (hardContactFound != null) {
+            matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">' + hardMatchHeading + '!</div>';
+            matchLog += matchLogHead;
+            matchLog += '<tbody>';
+            matchLog += matching2TD(hardContactFound.Id, hardContactFound.LastName, hardContactFound.Previous_Last_Name__c, hardContactFound.FirstName, hardContactFound.Preferred_Class_Year__c, hardContactFound.Email, '', hardContactFound.HomePhone, '', false);
+            matchLog += '</tbody></table>';
+            contactId = hardContactFound.Id;
+        }
+
+        /**** SOFT MATCH TESTING ****/
+        query = '';
+        orStat = '';
+        if (hardContactFound == null && (matchingScope.startsWith('Full matching') || String.isBlank(matchingScope))) {
+            //SOFT MATCHES BEGIN
+            Boolean queryComplete = true;
+            query += querySelect;
+            /** Test on Last Name name Match **/
+            if (String.isNotBlank(evt.Registrant_Last_Name__c)) {
+                orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Registrant_Last_Name__c) + '\' ';
+                /** Test on Last Name on previous last name Match **/
+                if (String.isNotBlank(evt.Last_Name_as_Student__c)) {
+                    orStat += ' OR LastName = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
+                    orStat += ' OR Previous_Last_Name__c = \'' + String.escapeSingleQuotes(evt.Last_Name_as_Student__c) + '\' ';
+                }
+            } else {
+                queryComplete = false;
+            }
+
+            if (String.isNotBlank(orStat)) {
+                orStat = orStat.removeStart(' OR');
+                query += ' WHERE ( ' + orStat + ' ) ';
+            }
+            orStat = '';
+
+            if (String.isNotBlank(evt.Registrant_Phone__c)) {
+                query += ' AND (';
+                query += ' Phone = \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
+                query += ' OR MobilePhone = \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
+                query += ' OR HomePhone =  \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
+                query += ' OR hed__WorkPhone__c =  \'' + String.escapeSingleQuotes(evt.Registrant_Phone__c) + '\' ';
+                query += ' )';
+            } else {
+                queryComplete = false;
+            }
+
+            if (String.isNotBlank(evt.Preferred_Class_Year__c)) {
+                query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_Class_Year__c) + '\' ';
+            } else {
+                queryComplete = false;
+            }
+
+            List<Contact> softContactTestNamePhoneClass = new List<Contact>();
+            if (queryComplete) {
+                softContactTestNamePhoneClass = CRUDtoDo.findContacts(query);
+            }
+
+            if (softContactTestNamePhoneClass.size() > 0) {
+                matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Soft Matches on LAST NAME, PHONE and CLASS.</div>';
+                matchLog += matchLogHead;
+                matchLog += '<tbody>';
+                for (Contact softy : softContactTestNamePhoneClass) {
+                    matchLog += matching2TD(softy.Id, softy.lastName, softy.Previous_Last_Name__c, softy.FirstName, softy.Preferred_Class_Year__c, softy.Email, '', softy.HomePhone, '', true);
+                }
+                matchLog += '</tbody></table>';
+            }
+
+            //if no contact ID was found create a new contact
+            if (hardContactFound == null) {
+                Contact newCreatedContact = createNewContact(evt);
+                contactId = newCreatedContact.Id;
+                matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">New Contact Created</div>';
+                matchLog += matchLogHead;
+                matchLog += '<tbody>';
+                matchLog += matching2TD(contactId, evt.Registrant_Last_Name__c, '', evt.Registrant_First_Name__c, evt.Preferred_Class_Year__c, newCreatedContact.Email, '', evt.Registrant_Phone__c, '', false);
+                matchLog += '</tbody></table>';
+                newContactCreated = true;
+            }
+
+        }
+
+        return new Map<String, String>{
+                'contactId' => contactId,
+                'matchLog' => matchLog,
+                'newContactCreated' => String.valueOf(newContactCreated)
+        };
+    }
+
+    private String matching2TD(String ContactId, String LastName, String StudentLastName, String FirstName, String ClassYear, String Email, String EmailSuffix, String Phone, String PhoneSuffix, Boolean Action) {
+        String mOut = '<tr class="slds-hint-parent">';
+        if (String.isBlank(LastName)) {
+            LastName = '';
+        }
+        mOut += '<td data-label="Last Name"><div class="slds-truncate"><a href="/' + ContactId + '" target="_blank">' + LastName + '</a></div></td>';
+        if (String.isBlank(StudentLastName)) {
+            StudentLastName = '';
+        }
+        mOut += '<td data-label="Last Name"><div class="slds-truncate"><a href="/' + ContactId + '" target="_blank">' + StudentLastName + '</a></div></td>';
+        if (String.isBlank(FirstName)) {
+            FirstName = '';
+        }
+        mOut += '<td data-label="First Name"><div class="slds-truncate"><a href="/' + ContactId + '" target="_blank">' + FirstName + '</a></div></td>';
+        if (String.isBlank(ClassYear)) {
+            ClassYear = '';
+        }
+        mOut += '<td data-label="First Name"><div class="slds-truncate">' + ClassYear + '</div></td>';
+        if (String.isBlank(Email)) {
+            Email = '';
+        }
+        mOut += '<td data-label="Email"><div class="slds-truncate">' + Email;
+        if (String.isBlank(EmailSuffix)) {
+            mOut += ' ' + EmailSuffix;
+        }
+        mOut += '</div></td>';
+        if (String.isBlank(Phone)) {
+            Phone = '';
+        }
+        mOut += '<td data-label="Phone"><div class="slds-truncate">' + Phone;
+        if (String.isNotBlank(PhoneSuffix)) {
+            mOut += ' ' + PhoneSuffix;
+        }
+        mOut += '</div></td>';
+        if (Action) {
+            mOut += '<td data-label="Action"><div class="slds-truncate"><a class="slds-text-link_reset" href="/apex/SummitEventsReparent?regId=[[REGID]]&reparentTo=' + ContactId + '"><span class="slds-text-link">Reparent</span></a></div></td>';
+        } else {
+            mOut += '<td data-label="Action"><div class="slds-truncate"> --- </div></td>';
+        }
+        mOut += '</tr>';
+        return mOut;
     }
 
     private without sharing class doCRUD {
@@ -651,8 +647,7 @@ public with sharing class SummitEventsContactMatching {
                 List<Contact> contactsFound = database.query(query);
                 return contactsFound;
             } catch (Exception ex) {
-                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
-                ApexPages.addMessage(myMsg);
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
             return null;
         }
@@ -662,8 +657,7 @@ public with sharing class SummitEventsContactMatching {
                 upsert contactToAdd;
                 return contactToAdd;
             } catch (Exception ex) {
-                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
-                ApexPages.addMessage(myMsg);
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
             return null;
         }
@@ -673,8 +667,7 @@ public with sharing class SummitEventsContactMatching {
                 upsert addressToAdd;
                 return addressToAdd;
             } catch (Exception ex) {
-                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
-                ApexPages.addMessage(myMsg);
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
             return null;
         }

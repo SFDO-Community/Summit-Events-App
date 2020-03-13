@@ -6,56 +6,39 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 -->
 
 <apex:page id="SummitEvents" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" cache="false" docType="html-5.0">
-    <apex:composition template="CastorTemplate2017">
+    <apex:composition template="GeneralSLDS">
         <apex:define name="metaPageTitle">Summit Events</apex:define>
         <apex:define name="pageTitle"><a href="/SummitEvents">Events</a></apex:define>
-        <apex:define name="afterJquery">
+        <apex:define name="scriptsHead">
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/fullcalendar/fullcalendar-ust.css')}" rel="stylesheet" type="text/css"/>
             <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/eventList.js')}"/>
             <script type="text/javascript" src="{!URLFOR($Resource.SummitEventsAssets, '/fullcalendar/moment.min.js')}"></script>
             <script type="text/javascript" src="{!URLFOR($Resource.SummitEventsAssets, '/fullcalendar/fullcalendar.min.js')}"></script>
         </apex:define>
-        <apex:define name="sectionNav">
-            <!--
-            <li>
-                <apex:outputLink value="{!$Page.Home_Page}">Home</apex:outputLink>
-            </li>
-            <li>
-                <apex:outputLink value="{!$Page.ScholarshipHome}">Scholarship List</apex:outputLink>
-            </li>
-            <li>
-                <apex:outputLink value="{!$Page.MyProfile}">My Profile</apex:outputLink>
-            </li>
-            <li>
-                <apex:outputLink value="{!$Page.MyApplication}">My Applications</apex:outputLink>
-            </li>
-            -->
-        </apex:define>
+        <apex:define name="sectionNav"/>
         <apex:define name="body">
-            <div class="row">
-                <div class="columns errorMessages">
-                    <apex:messages />
+            <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                    <apex:messages/>
                 </div>
-            </div>
-            <apex:form >
-                <div class="row">
-                    <div class="column small-12 medium-12 large-12">
-                        <fieldset id="#audienceDDwrap">
-                            <label for="audienceDD">Select who you are to see events that are curated for you</label>
-                            <select id="audienceDD" name="audienceDD" required="true" title="Select an audience that matches you.">
+                <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="audienceDD-01">Select who you are to see events that are curated for you</label>
+                        <div class="slds-form-element__control">
+                            <select id="audienceDD" class="slds-select" name="audienceDD" title="Select an audience that matches you.">
                                 <option value="" selected="selected" default="true">Select...</option>
                             </select>
-                        </fieldset>
-                        <div id="eventCalWrap">
-                            <div id="datepickerOverlay">
-                                <div id="fullCalendarView">
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
-            </apex:form>
+                <div id="eventCalWrap" class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                    <div id="datepickerOverlay">
+                        <div id="fullCalendarView">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </apex:define>
     </apex:composition>
 </apex:page>

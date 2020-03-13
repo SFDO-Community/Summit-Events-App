@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Ask_Mailing_Address__c</fullName>
-    <defaultValue>true</defaultValue>
     <description>Ask the registrant for their mail address on registration page.</description>
     <externalId>false</externalId>
     <inlineHelpText>Ask the registrant for their mail address on registration page.</inlineHelpText>
     <label>Ask Mailing Address</label>
+    <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
-    <type>Checkbox</type>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Do not ask</fullName>
+                <default>false</default>
+                <label>Do not ask</label>
+            </value>
+            <value>
+                <fullName>Ask</fullName>
+                <default>false</default>
+                <label>Ask</label>
+            </value>
+            <value>
+                <fullName>Ask and require</fullName>
+                <default>false</default>
+                <label>Ask and require</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
 </CustomField>

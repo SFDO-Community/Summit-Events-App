@@ -1,9 +1,3 @@
-Insert hed__Language__c:
-  sf_object: hed__Language__c
-  table: hed__Language__c
-  fields:
-    Id: sf_id
-    Name: Name
 Insert Summit_Events__c:
   sf_object: Summit_Events__c
   table: Summit_Events__c
@@ -30,19 +24,24 @@ Insert Summit_Events__c:
     Add_Info_Question_Type_5__c: Add_Info_Question_Type_5__c
     Allow_Other_Attendees__c: Allow_Other_Attendees__c
     Alternate_Registration_URL__c: Alternate_Registration_URL__c
-    Applicant_Type__c: Applicant_Type__c
+    Ask_Applicant_Type__c: Ask_Applicant_Type__c
     Ask_Date_Of_Birth__c: Ask_Date_Of_Birth__c
     Ask_Gender__c: Ask_Gender__c
     Ask_If_Parent__c: Ask_If_Parent__c
+    Ask_Last_Name_As_Student__c: Ask_Last_Name_As_Student__c
     Ask_Mailing_Address__c: Ask_Mailing_Address__c
     Ask_Phone__c: Ask_Phone__c
-    Ask_Program_Interest__c: Ask_Program_Interest__c
+    Ask_Preferred_Class_Year__c: Ask_Preferred_Class_Year__c
+    Ask_Preferred_First_Name__c: Ask_Preferred_First_Name__c
     Ask_Registrant_Program_Of_Interest__c: Ask_Registrant_Program_Of_Interest__c
+    Ask_Relationship_To_Institution__c: Ask_Relationship_To_Institution__c
+    Ask_Third_Party_Registrant__c: Ask_Third_Party_Registrant__c
     Audience__c: Audience__c
     Building__c: Building__c
     Close_Event_Days_Before__c: Close_Event_Days_Before__c
     College_High_School_Ask__c: College_High_School_Ask__c
     Contact_Creation__c: Contact_Creation__c
+    Contact_Matching_Rules__c: Contact_Matching_Rules__c
     End_Date__c: End_Date__c
     Event_Appointment_Description__c: Event_Appointment_Description__c
     Event_Appointment_Title__c: Event_Appointment_Title__c
@@ -71,12 +70,10 @@ Insert Summit_Events__c:
     Location_Title__c: Location_Title__c
     Location_Type__c: Location_Type__c
     Max_Other_Attendees__c: Max_Other_Attendees__c
-    Portal_Login_Required__c: Portal_Login_Required__c
     Private_Event__c: Private_Event__c
     Program_Filter_2__c: Program_Filter_2__c
     Program_Filter_3__c: Program_Filter_3__c
     Program_Filter__c: Program_Filter__c
-    RecordTypeId: RecordTypeId
     Start_Date__c: Start_Date__c
     Template__c: Template__c
     Tracking_Cancel_Registration__c: Tracking_Cancel_Registration__c
@@ -84,6 +81,12 @@ Insert Summit_Events__c:
     Tracking_Event_Registration__c: Tracking_Event_Registration__c
     Tracking_Options_Registration__c: Tracking_Options_Registration__c
     Tracking_Submit_Registration__c: Tracking_Submit_Registration__c
+Insert hed__Language__c:
+  sf_object: hed__Language__c
+  table: hed__Language__c
+  fields:
+    Id: sf_id
+    Name: Name
 Insert Summit_Events_Email__c:
   sf_object: Summit_Events_Email__c
   table: Summit_Events_Email__c
@@ -126,6 +129,7 @@ Insert Summit_Events_Instance__c:
     Location_Map_Link_Override__c: Location_Map_Link_Override__c
     Location_Title_Override__c: Location_Title_Override__c
     Location_Type_Override__c: Location_Type_Override__c
+    Private_Instance__c: Private_Instance__c
     Start_Date_Time__c: Start_Date_Time__c
   lookups:
     Event__c:
@@ -175,6 +179,21 @@ Insert Account:
     hed__Primary_Contact__c:
       table: Contact
       after: Insert Contact
+Insert hed__Facility__c:
+  sf_object: hed__Facility__c
+  table: hed__Facility__c
+  fields:
+    Id: sf_id
+    Name: Name
+    hed__Capacity__c: hed__Capacity__c
+    hed__Description__c: hed__Description__c
+    hed__Facility_Type__c: hed__Facility_Type__c
+  lookups:
+    hed__Account__c:
+      table: Account
+    hed__Parent_Facility__c:
+      table: hed__Facility__c
+      after: Insert hed__Facility__c
 Insert Contact:
   sf_object: Contact
   table: Contact
@@ -278,7 +297,7 @@ Insert Summit_Events_Registration__c:
     New_Contact_Created__c: New_Contact_Created__c
     Number_of_Guests__c: Number_of_Guests__c
     Participation_Type__c: Participation_Type__c
-    Preferred_St_Thomas_Class_Year__c: Preferred_St_Thomas_Class_Year__c
+    Preferred_Class_Year__c: Preferred_Class_Year__c
     Preferred_Visit_Time__c: Preferred_Visit_Time__c
     Presentation_Location__c: Presentation_Location__c
     Presentation_Time__c: Presentation_Time__c
@@ -309,7 +328,6 @@ Insert Summit_Events_Registration__c:
     Registrant_Parent_First_Name__c: Registrant_Parent_First_Name__c
     Registrant_Parent_Last_Name__c: Registrant_Parent_Last_Name__c
     Registrant_Parent_Phone__c: Registrant_Parent_Phone__c
-    Registrant_Parent_Status__c: Registrant_Parent_Status__c
     Registrant_Phone__c: Registrant_Phone__c
     Registrant_Postal_Code__c: Registrant_Postal_Code__c
     Registrant_Preferred_First_Name__c: Registrant_Preferred_First_Name__c
@@ -320,8 +338,9 @@ Insert Summit_Events_Registration__c:
     Registrant_State__c: Registrant_State__c
     Registrant_Street_1__c: Registrant_Street_1__c
     Registrant_Street_2__c: Registrant_Street_2__c
+    Registrant_Third_Party_Status__c: Registrant_Third_Party_Status__c
     Registrant_Zip__c: Registrant_Zip__c
-    Relationship_to_St_Thomas__c: Relationship_to_St_Thomas__c
+    Relationship_To_Institution__c: Relationship_To_Institution__c
     Reminder_Call_Complete__c: Reminder_Call_Complete__c
     Session__c: Session__c
     Status__c: Status__c
@@ -406,7 +425,6 @@ Insert Summit_Events_Appointments__c:
     Description__c: Description__c
     Do_Not_Show_Time__c: Do_Not_Show_Time__c
     Faculty_Staff_Member__c: Faculty_Staff_Member__c
-    RecordTypeId: RecordTypeId
     Registrant_Input__c: Registrant_Input__c
     Room__c: Room__c
     Sort_Order__c: Sort_Order__c
@@ -417,20 +435,3 @@ Insert Summit_Events_Appointments__c:
       table: Summit_Events_Host__c
     Event_Registration__c:
       table: Summit_Events_Registration__c
-Insert hed__Trigger_Handler__c:
-  sf_object: hed__Trigger_Handler__c
-  table: hed__Trigger_Handler__c
-  fields:
-    Id: sf_id
-    Name: Name
-    hed__Active__c: hed__Active__c
-    hed__Asynchronous__c: hed__Asynchronous__c
-    hed__Class__c: hed__Class__c
-    hed__Filter_Field__c: hed__Filter_Field__c
-    hed__Filter_Value__c: hed__Filter_Value__c
-    hed__Load_Order__c: hed__Load_Order__c
-    hed__Object__c: hed__Object__c
-    hed__Owned_by_Namespace__c: hed__Owned_by_Namespace__c
-    hed__Trigger_Action__c: hed__Trigger_Action__c
-    hed__User_Managed__c: hed__User_Managed__c
-    hed__Usernames_to_Exclude__c: hed__Usernames_to_Exclude__c

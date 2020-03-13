@@ -13,7 +13,6 @@ public with sharing class SummitEventsShared {
         public String instanceID { get; set; }
         public String evtRegId { get; set; }
         public String evtId { get; set; }
-        public String recordTypeName { get; set; }
     }
 
     public SummitEventsShared() {
@@ -21,7 +20,7 @@ public with sharing class SummitEventsShared {
     }
 
     public SummitEventsInfo getSummitEventsInfo() {
-        //{"audience":"High School Senior","instanceID":"a320m000000A5fOAAS","evtRegId":"a350m0000008q63AAA,"evtId":"a330m0000001SOrAAM", "recordTypeName" :"Undergraduate"}
+        //{"audience":"High School Senior","instanceID":"a320m000000A5fOAAS","evtRegId":"a350m0000008q63AAA,"evtId":"a330m0000001SOrAAM"}
         String jsonInput = '';
         SummitEventsInfo evtInfo = new SummitEventsInfo();
         String URLaudience = ApexPages.currentPage().getParameters().get('audience');
@@ -54,35 +53,11 @@ public with sharing class SummitEventsShared {
                     if (!String.isBlank(URLaudience)) {
                         evtInfo.audience = URLaudience;
                     }
-                    try {
-                        Summit_Events_Instance__c instanceInfo = [SELECT Event__c, Event__r.RecordType.Name FROM Summit_Events_Instance__c WHERE ID = :evtInfo.instanceID][0];
-                        evtInfo.evtId = instanceInfo.Event__c;
-                        if (String.isBlank(instanceInfo.event__r.RecordType.Name)) {
-                            evtInfo.recordTypeName = 'Undergraduate';
-                        } else {
-                            evtInfo.recordTypeName = instanceInfo.event__r.RecordType.Name;
-                        }
-                    } catch (Exception e) {
-
-                    }
-                    String eventCookie = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"COMING","evtId":"' + evtInfo.evtId + '","recordTypeName","' + evtInfo.recordTypeName + '"}';
+                    String eventCookie = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"COMING","evtId":"' + evtInfo.evtId + '"}';
                     System.Debug('COOKIE 1: ' + eventCookie);
                     createEncryptedCookie(eventCookie, 'SummitEvents');
                 }
             }
-        }
-        //Get record type
-
-        List<Summit_Events_Instance__c> recTypeInfo = [SELECT Event__r.RecordType.Name, Id FROM Summit_Events_Instance__c WHERE ID = :evtInfo.instanceID];
-
-        if (recTypeInfo.size() > 0) {
-            if (String.isBlank(recTypeInfo[0].event__r.RecordType.Name)) {
-                evtInfo.recordTypeName = 'Undergraduate';
-            } else {
-                evtInfo.recordTypeName = recTypeInfo[0].event__r.RecordType.Name;
-            }
-        } else {
-            evtInfo.recordTypeName = 'Undergraduate';
         }
 
         //check if regid is there  and whether status it is set to registered. IF so reset cookie if it is.
@@ -90,7 +65,7 @@ public with sharing class SummitEventsShared {
             Summit_Events_Registration__c evtReg = [SELECT Status__c FROM Summit_Events_Registration__c WHERE ID = :evtInfo.evtRegId][0];
             if (evtReg.Status__c != 'Started') {
                 //Registration is complete and a new form should be generated.
-                String eventCookie2 = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"","evtId":"' + evtInfo.evtId + '","recordTypeName","' + evtInfo.recordTypeName + '"}';
+                String eventCookie2 = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"","evtId":"' + evtInfo.evtId + '"}';
                 System.Debug('COOKIE 1: ' + eventCookie2);
                 createEncryptedCookie(eventCookie2, 'SummitEvents');
             }
@@ -107,14 +82,9 @@ public with sharing class SummitEventsShared {
         evt = getSummitEventsInfo();
         SYSTEM.debug('!!!!!!!!!!!!!!!  EVENT ID : ' + evt.evtId + ' , INSTANCE ID : ' + evt.instanceID + ' , EVENT REG ID : ' + evt.evtRegId);
 
-        // Summit_Events_Settings__c orgDefault = Summit_Events_Settings__c.getOrgDefaults();
-        // Summit_Events_Settings__c myProfileSetting = Summit_Events_Settings__c.getInstance(UserInfo.getProfileId());
         Summit_Events_Settings__c myUserSetting = Summit_Events_Settings__c.getInstance(UserInfo.getUserId());
         String communityBaseURL = myUserSetting.Community_Base_URL__c;
 
-        //System.Debug('COMMUNITY URL: ' + communityBaseURL);
-
-        //String ustEventSettings = Summit_Events_Settings__c.getValues('Community_Base_URL__c');
         if ((String.isBlank(evt.evtRegId) && !ApexPages.currentPage().getUrl().containsIgnoreCase('SummitEventsRegister')) || String.isBlank(evt.instanceID)) {
             //Reset the cookie to prevent loop on registration page
             Cookie deleteCookie = new Cookie('SummitEvents', '', null, 0, false); // Note the 0 to delete the cookie
@@ -169,6 +139,29 @@ public with sharing class SummitEventsShared {
             }
         }
         return '';
+    }
+
+    public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance) {
+        String instanceDate = '';
+        if (eventInstance.Start_Date_Time__c != null && eventInstance.End_Date_Time__c != null) {
+            instanceDate = eventInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + eventInstance.End_Date_Time__c.format('h:mm a');
+        }
+
+        String crumb = '';
+        crumb+= '<nav role="navigation" aria-label="Breadcrumbs">';
+        crumb+= '   <ol class="slds-breadcrumb slds-list--horizontal">';
+        if (String.isNotBlank(eventInstance.Event__r.Event_Name__c)) {
+            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Event__r.Event_Name__c + '</a></li>';
+        }
+        if (String.isNotBlank(eventInstance.Instance_Title__c)) {
+            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Instance_Title__c + '</a></li>';
+        }
+        if (String.isNotBlank(instanceDate)) {
+            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + instanceDate + '</a></li>';
+        }
+        crumb+= '   </ol>';
+        crumb+= '</nav>';
+        return crumb;
     }
 
     public DateTime adjustForCentralTime(Datetime dt) {
@@ -252,6 +245,8 @@ public with sharing class SummitEventsShared {
         }
         return retVal;
     }
+
+
 
 
 }

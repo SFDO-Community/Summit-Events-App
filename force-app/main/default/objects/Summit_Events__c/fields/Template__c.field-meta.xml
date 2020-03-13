@@ -24,6 +24,11 @@
                 <default>false</default>
                 <label>OPUSTemplate2018</label>
             </value>
+            <value>
+                <fullName>GeneralSLDS</fullName>
+                <default>false</default>
+                <label>GeneralSLDS</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
