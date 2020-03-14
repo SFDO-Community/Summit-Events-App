@@ -120,7 +120,7 @@ public with sharing class SummitEventsRegisterController {
                             Ask_Last_Name_As_Student__c, Ask_Preferred_Class_Year__c, Ask_Preferred_First_Name__c,
                             Ask_Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c,
-                            Ask_Third_Party_Registrant__c
+                            Ask_Third_Party_Registrant__c, Event_Fee__c, Event_Fee_Additional__c, Event_Fee_Additional_Attribute__c, Event_Fee_Attribute__c
                     FROM Summit_Events__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1

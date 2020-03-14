@@ -134,16 +134,16 @@ CREATE TABLE "Summit_Events_Appointment_Type__c"
     PRIMARY KEY (sf_id)
 );
 INSERT INTO "Summit_Events_Appointment_Type__c"
-VALUES ('a0T2F0000020XV8UAM', '', '', '', '1', 'Active', '', '', 'false', '', '', '', '', '', '', 'Get yourself some quite time in our library.', 'false', '', 'false', '1.0', 'Demo Appointment 0 - Quite time', '', '', '', '', 'a0a2F000006OrdfQAC');
+VALUES ('a0T2F0000020XV8UAM', '', '', '', '1', 'Active', '', '', 'false', '', '', '', '', '', '', 'Get yourself some quite time in our library.', 'false', '', 'false', '1.0', 'Demo Appointment 0 - Quite time', '', '', '', '', 'a0eJ000000DjgjhIAB');
 INSERT INTO "Summit_Events_Appointment_Type__c"
-VALUES ('a0T2F0000020XV9UAM', '', '', '', '1', 'Active', '', '', 'true', '', '', '', '', '', '', 'There is such a thing!', 'false', '', 'false', '30.0', 'Demo Appointment 3 - Free Lunch', '', '', '', '', 'a0a2F000006OrdfQAC');
+VALUES ('a0T2F0000020XV9UAM', '', '', '', '1', 'Active', '', '', 'true', '', '', '', '', '', '', 'There is such a thing!', 'false', '', 'false', '30.0', 'Demo Appointment 3 - Free Lunch', '', '', '', '', 'a0eJ000000DjgjhIAB');
 INSERT INTO "Summit_Events_Appointment_Type__c"
 VALUES ('a0T2F0000020XV6UAM', '', '', '', '1', 'Active', '', '', 'false', '', '', 'Chocolate
 Vanilla
 Strawberry
-Lactose Free', '', '', '', 'Choose the ice cream you could prefer to consume during your visit', 'false', 'Custom pick list', 'false', '10.0', 'Demo Appointment 1 - Ice Cream with Counselor', '', '', '', '', 'a0a2F000006OrdfQAC');
+Lactose Free', '', '', '', 'Choose the ice cream you could prefer to consume during your visit', 'false', 'Custom pick list', 'false', '10.0', 'Demo Appointment 1 - Ice Cream with Counselor', '', '', '', '', 'a0eJ000000DjgjhIAB');
 INSERT INTO "Summit_Events_Appointment_Type__c"
-VALUES ('a0T2F0000020XV7UAM', '', '', '', '2', 'Active', '', '', 'false', '', '', '', '', '', '', 'What is your definition of the meaning of life?', 'false', 'Required text box', 'false', '20.0', 'Demo Appointment 2 - Meaning of life', '', '', '', '', 'a0a2F000006OrdfQAC');
+VALUES ('a0T2F0000020XV7UAM', '', '', '', '2', 'Active', '', '', 'false', '', '', '', '', '', '', 'What is your definition of the meaning of life?', 'false', 'Required text box', 'false', '20.0', 'Demo Appointment 2 - Meaning of life', '', '', '', '', 'a0eJ000000DjgjhIAB');
 CREATE TABLE "Summit_Events_Appointments__c"
 (
     sf_id                           VARCHAR(255) NOT NULL,
