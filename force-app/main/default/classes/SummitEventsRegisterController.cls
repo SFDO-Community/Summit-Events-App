@@ -116,7 +116,7 @@ public with sharing class SummitEventsRegisterController {
                             Ask_Last_Name_As_Student__c, Ask_Preferred_Class_Year__c, Ask_Preferred_First_Name__c,
                             Ask_Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c,
-                            Ask_Third_Party_Registrant__c
+                            Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c
                     FROM Summit_Events__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1
@@ -457,8 +457,10 @@ public with sharing class SummitEventsRegisterController {
         }
         for (Schema.PicklistEntry PicklistValue : PicklistValues) {
             if (YourFieldName == 'Registrant_Third_Party_Status__c') {
-                if (eventPage.Ask_Third_Party_Registrant__c.contains(PicklistValue.getValue())) {
-                    picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));
+                if (eventPage != null) {
+                    if (eventPage.Ask_Third_Party_Registrant__c.contains(PicklistValue.getValue())) {
+                        picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));
+                    }
                 }
             } else {
                 picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));
@@ -478,6 +480,18 @@ public with sharing class SummitEventsRegisterController {
         Pattern TAG_REGEX = Pattern.compile('\\((\\w+|\\w+\\|\\w+)\\)');
         List<String> majorCodes = new List<String>();
         Boolean progSelectionMade = true;
+
+        registrationCRUD rCRUD = new registrationCRUD();
+
+        if (String.isNotBlank(eventPage.Registration_Email_Restriction__c) && eventPage.Registration_Email_Restriction__c != 'No Limit') {
+            System.debug('GOT TO REGISTRANT EMAIL RESTRICTIONS');
+            Summit_Events_Registration__c foundRegistration = rCRUD.checkForOtherRegistrations(eventPage.Registration_Email_Restriction__c, newEvtReg.Registrant_Email__c, evtInstance.Id, eventPage.Id);
+            if (foundRegistration != null) {
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, 'It appears you’ve already registered for this event. Please contact the Event Host for more information.');
+                ApexPages.addMessage(myMsg);
+                return null;
+            }
+        }
 
 
         /* if (selectedPrograms.isEmpty() && String.isBlank(selectedProgramsOne) && !String.isBlank(eventPage.Academic_Program_List__c)) {
@@ -584,7 +598,6 @@ public with sharing class SummitEventsRegisterController {
         }
 
         //Create registration if event Registration does not exist
-        registrationCRUD rCRUD = new registrationCRUD();
         if (String.isBlank(evtInfo.evtRegId) || evtInfo.evtRegId == 'COMING') {
             newEvtReg.Status__c = 'Started';
             newEvtReg.Date__c = Date.valueof(evtInstance.Start_Date_Time__c);
@@ -596,7 +609,9 @@ public with sharing class SummitEventsRegisterController {
             }
             newEvtReg = rCRUD.updateRegistration(newEvtReg);
             //Update matching log with new ID
-            newEvtReg.Matching_Log__c = newEvtReg.Matching_Log__c.replaceAll('\\[\\[REGID\\]\\]', newEvtReg.Id);
+            if (String.isNotBlank(newEvtReg.Matching_Log__c)) {
+                newEvtReg.Matching_Log__c = newEvtReg.Matching_Log__c.replaceAll('\\[\\[REGID\\]\\]', newEvtReg.Id);
+            }
             evtInfo.evtRegId = newEvtReg.Id;
             //make matching log functional for reparenting
         }
@@ -629,6 +644,43 @@ public with sharing class SummitEventsRegisterController {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'HELLO: ' + ex.getMessage()));
             }
             return newEvtReg;
+        }
+
+        public Summit_Events_Registration__c checkForOtherRegistrations(String checkType, String registrationEmail, Id eventInstanceId, Id eventId) {
+
+            String[] notAcceptableStatuses = new List<String>();
+            notAcceptableStatuses.add('Cancelled');
+            notAcceptableStatuses.add('Started');
+            notAcceptableStatuses.add('Status');
+
+            List<Summit_Events_Registration__c> foundRegistrations = new List<Summit_Events_Registration__c>();
+            Summit_Events_Registration__c foundRegistration = null;
+
+            System.debug('Type: ' + checkType + ', email: ' + registrationEmail + ', Instance ID: ' + eventInstanceId + ', Event Id: ' + eventId);
+
+            if (checkType == 'One registration per instance') {
+                foundRegistrations = [
+                        SELECT Id, LastModifiedDate, Registrant_Email__c
+                        FROM Summit_Events_Registration__c
+                        WHERE Registrant_Email__c = :registrationEmail
+                        AND Event_Instance__c = :eventInstanceId
+                        AND Status__c NOT IN :notAcceptableStatuses
+                        ORDER BY LastModifiedDate
+                ];
+            } else if (checkType == 'One registration per event') {
+                foundRegistrations = [
+                        SELECT Id, LastModifiedDate, Registrant_Email__c
+                        FROM Summit_Events_Registration__c
+                        WHERE Registrant_Email__c = :registrationEmail
+                        AND Event__c = :eventId
+                        AND Status__c NOT IN :notAcceptableStatuses
+                        ORDER BY LastModifiedDate
+                ];
+            }
+            if (foundRegistrations.size() > 0) {
+                foundRegistration = foundRegistrations[0];
+            }
+            return foundRegistration;
         }
 
     }

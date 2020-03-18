@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Registration_Email_Restriction__c</fullName>
+    <description>Validates other registrations in the same event to see if the same email was used ignoring &quot;Cancelled&quot; OR &quot;Started&quot; statu registrations. Errors will be given on the application if another email is found with these circumstances.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Validates other registrations in the same event to see if the same email was used ignoring &quot;Cancelled&quot; OR &quot;Started&quot; statu registrations. Errors will be given on the application if another email is found with these circumstances.</inlineHelpText>
+    <label>Registration Email Restriction</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>No limit</fullName>
+                <default>true</default>
+                <label>No limit</label>
+            </value>
+            <value>
+                <fullName>One registration per instance</fullName>
+                <default>false</default>
+                <label>One registration per instance</label>
+            </value>
+            <value>
+                <fullName>One registration per event</fullName>
+                <default>false</default>
+                <label>One registration per event</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
