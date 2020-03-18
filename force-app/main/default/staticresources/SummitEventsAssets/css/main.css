@@ -3,10 +3,10 @@
 .slds-has-error {border-color:red!important;}
 
 
-.validationError {
+.validationError, ul[role=alert] li {
     color: red !important;
 }
-
+ul[role=alert] li { font-weight:bold}
 .validationError input {
     border: 1px solid red;
 }
