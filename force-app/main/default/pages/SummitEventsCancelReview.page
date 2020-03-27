@@ -19,7 +19,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="sectionNav"/>
         <apex:define name="body">
             <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
-                <apex:messages/>
+                <apex:messages />
             </div>
             <apex:form id="SummitEventsRegistrationCancelReview" rendered="{!!eventOver && !eventNotFound}" styleClass="slds-grid slds-wrap">
                 <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
