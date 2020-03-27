@@ -6,11 +6,16 @@
 @isTest
 public with sharing class SummitEventsTestSharedDataFactory {
 
-    public static Summit_Events_Instance__c createTestEvent(String matchingRules, String testEventName, String audience, Boolean includeAppt, Boolean includeAddQuestions) {
+    public static Summit_Events_Instance__c createTestEvent(
+            String matchingRules,
+            String testEventName,
+            String audience,
+            Boolean includeAppt,
+            Boolean includeAddQuestions,
+            String registrationEmailRestriction
+    ) {
 
         Summit_Events__c testEvent = new Summit_Events__c();
-
-        System.Debug('|---------->> USER:' + UserInfo.getUserName());
 
         //Create event
         testEvent = new Summit_Events__c(
@@ -27,7 +32,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Include_Time_frame_List__c = true,
                 Allow_Other_Attendees__c = true,
                 Ask_Mailing_Address__c = 'Ask',
-                Ask_Phone__c = 'Ask',
+                Ask_Phone__c = 'Ask home and mobile require one',
                 Ask_Date_Of_Birth__c = 'Ask',
                 Max_Other_Attendees__c = 5,
                 Close_Event_Days_Before__c = 0,
@@ -37,8 +42,11 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Location_Address__c = '123 Electric Ave.',
                 Location_Type__c = 'Minneapolis',
                 Contact_Matching_Rules__c = matchingRules
-
         );
+
+        if (String.isNotBlank(registrationEmailRestriction)) {
+            testEvent.Registration_Email_Restriction__c = registrationEmailRestriction;
+        }
 
         if (includeAddQuestions) {
             testEvent.Add_Info_Question_Type_1__c = 'Pick-list';
