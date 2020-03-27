@@ -120,8 +120,8 @@ public with sharing class SummitEventsRegisterController {
                             Ask_Last_Name_As_Student__c, Ask_Preferred_Class_Year__c, Ask_Preferred_First_Name__c,
                             Ask_Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c,
-                            Ask_Third_Party_Registrant__c, Event_Fee__c, Event_Fee_Additional__c, Event_Fee_Additional_Attribute__c, Event_Fee_Attribute__c
-                            Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c
+                            Ask_Third_Party_Registrant__c, Event_Fee__c, Event_Fee_Additional__c, Event_Fee_Additional_Attribute__c, Event_Fee_Attribute__c,
+                            Registration_Email_Restriction__c
                     FROM Summit_Events__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1
@@ -525,11 +525,11 @@ public with sharing class SummitEventsRegisterController {
 
         doCRUD CRUDtoDo = new doCRUD();
         CRUDtoDO.setKey();
-        registrationCRUD rCRUD = new registrationCRUD();
+
 
         if (String.isNotBlank(eventPage.Registration_Email_Restriction__c) && eventPage.Registration_Email_Restriction__c != 'No Limit') {
             System.debug('GOT TO REGISTRANT EMAIL RESTRICTIONS');
-            Summit_Events_Registration__c foundRegistration = rCRUD.checkForOtherRegistrations(eventPage.Registration_Email_Restriction__c, newEvtReg.Registrant_Email__c, evtInstance.Id, eventPage.Id);
+            Summit_Events_Registration__c foundRegistration = CRUDtoDO.checkForOtherRegistrations(eventPage.Registration_Email_Restriction__c, newEvtReg.Registrant_Email__c, evtInstance.Id, eventPage.Id);
             if (foundRegistration != null) {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, 'It appears you’ve already registered for this event. Please contact the Event Host for more information.');
                 ApexPages.addMessage(myMsg);
@@ -765,6 +765,8 @@ public with sharing class SummitEventsRegisterController {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
                 ApexPages.addMessage(myMsg);
             }
+        }
+
         public Summit_Events_Registration__c checkForOtherRegistrations(String checkType, String registrationEmail, Id eventInstanceId, Id eventId) {
 
             String[] notAcceptableStatuses = new List<String>();
