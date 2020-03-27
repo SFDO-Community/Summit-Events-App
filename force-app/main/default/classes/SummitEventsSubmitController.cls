@@ -43,6 +43,7 @@ public with sharing class SummitEventsSubmitController {
     public String navBreadCrumb { get; set; }
 
     public SummitEventsSubmitController() {
+        showPaymentButton = false;
         test = '';
         eventHasOptions = false;
         templateSelected = SEShared.defaultTemplate;
@@ -239,38 +240,34 @@ public with sharing class SummitEventsSubmitController {
     }
 
     public PageReference checkEventDetails() {
-
-        /** Below method will display headers and parameters for the page for testing. **/
-        //displayTestingHeaders();
-
-        /** Check for postback of payment gateway **/
-        params = ApexPages.currentPage().getParameters();
-        Map<String, String> returnHeaders = ApexPages.currentPage().getheaders();
-        if (!returnHeaders.isEmpty()) {
-            if (returnHeaders.get('Referer') != null) {
-                String returnedReferrer = returnHeaders.get('Referer').toLowerCase();
-                if (String.isNotBlank(returnedReferrer)) {
-                    if (String.isBlank(gatewayOrigin) && showPaymentButton) {
-                        Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Set your orgs gateway settings or fees will not be collected.'));
-                    } else {
-                        if (returnedReferrer.trim().contains(gatewayOrigin)) {
-                            /** Check for session identifier to see if a payment was successful **/
-                            if (params.get('session_identifier') != null) {
-                                successReturnFromGateway = true;
-                                Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Your payment is processing. Please do not refresh the page.'));
-                            } else {
-                                successReturnFromGateway = false;
-                                Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Your payment is processing was unsuccessful. Please try again.'));
+        successReturnFromGateway = false;
+        if (showPaymentButton) {
+            /** Check for postback of payment gateway **/
+            params = ApexPages.currentPage().getParameters();
+            Map<String, String> returnHeaders = ApexPages.currentPage().getheaders();
+            if (!returnHeaders.isEmpty()) {
+                if (returnHeaders.get('Referer') != null) {
+                    String returnedReferrer = returnHeaders.get('Referer').toLowerCase();
+                    if (String.isNotBlank(returnedReferrer)) {
+                        if (String.isBlank(gatewayOrigin) && showPaymentButton) {
+                            Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Set your orgs gateway settings or fees will not be collected.'));
+                        } else {
+                            if (returnedReferrer.trim().contains(gatewayOrigin)) {
+                                /** Check for session identifier to see if a payment was successful **/
+                                if (params.get('session_identifier') != null) {
+                                    successReturnFromGateway = true;
+                                    Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Your payment is processing. Please do not refresh the page.'));
+                                } else {
+                                    successReturnFromGateway = false;
+                                    Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Your payment is processing was unsuccessful. Please try again.'));
+                                }
+                                return addPaymentInformation();
                             }
-                            return addPaymentInformation();
                         }
                     }
                 }
             }
         }
-
-
-        successReturnFromGateway = false;
         return SEShared.checkForEvent();
     }
 
