@@ -1,6 +1,6 @@
 # Installing or Upgrading Summit Events App in Production, Sandbox or Dev Orgs
 
-*Note: Summit Events is currently an unmanaged package, so installation needs to be done by a developer using the steps below*
+*Note: Summit Events is currently code that is not a packaged, so installation needs to be done by a developer using the steps below*
 
 Your first job is to make sure that you have the following installed on the computer you are using to install Summit Events to Salesforce:
 
