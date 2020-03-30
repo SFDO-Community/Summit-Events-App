@@ -23,7 +23,7 @@ The Summit Events App is a sustainable open source community events app that ser
 *Note: In the Salesforce Winter '20 release Guest User access is severely restricted. There are new instructions in the "Scratch Org Installation"
 to address this new security.*
 * [Scratch Org Installation][1]
-* [Installation in Production Orgs][2]
+* [Setting it up in Production Orgs][2]
 * [CumulusCI Notes][3]
 * [GIT Notes][4]
 * [License][5]
