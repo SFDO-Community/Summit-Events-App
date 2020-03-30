@@ -1,4 +1,4 @@
-# Installing Summit Events App in Production, Sandbox or Dev Orgs
+# Installing or Upgrading Summit Events App in Production, Sandbox or Dev Orgs
 
 *Note: Summit Events is currently an unmanaged package, so installation needs to be done by a developer using the steps below*
 
@@ -61,12 +61,10 @@ You will need to use the Salesforce CLI (Command Line Interface) for this next p
     sfdx force:source:deploy --json --loglevel fatal -l RunLocalTests
     ```
 
-3. Verify that the installation is successful by logging into your org and going to Setup --> Deployment Status, then seeing if the deployment is marked as Succeeded. Note: Since Summit Events is deployed in the same manner as a change set, it will not display as an installed package.
+3. Verify that the installation is successful by logging into your org and going to Setup --> Deployment Status, then seeing if the deployment is marked as Succeeded. 
+
+*Note: Since Summit Events is deployed in the same manner as a change set, it will not display as an installed package.*
 
 ## Your org is ready!
 
-Your installation of Summit Events in your org is completed and ready for you to use! Remember you can open your org with this command once it has been created:
-
-```bash
-cci org browser <org_name>
-```
+Your installation of Summit Events in your org is completed and ready for your admin to [begin setup](set-up.md)!
