@@ -58,7 +58,7 @@ the new security rules we need to set a sharing rule to allow the application to
 been adjust to allow for the required upserts. The following instructions will help you set up the required sharing rules.
 Unfortunately, we are not able to automate these steps yet due to limitations in SFDX.
 
-###Set Sharing Object Access
+### Set Sharing Object Access
 
 1. Open your new scratch org you are working on in the browser (if it is not already open)
 
