@@ -2,7 +2,7 @@
 
 *Note: Summit Events is currently code that is not a packaged, so installation needs to be done by a developer using the steps below.  There are two ways this install can be done (SFDX or Cumulus CI), choose the one that is easist for you.*
 
-# Method 1 - SFDX
+## Method 1 - SFDX
 
 Your first job is to make sure that you have the following installed on the computer you are using to install Summit Events to Salesforce:
 
@@ -12,7 +12,7 @@ Your first job is to make sure that you have the following installed on the comp
 
 Note that Cumulus CI is only needed to install Summit Events in a scratch org, but not needed for production, sandbox or dev orgs
 
-## Connect an org
+### Connect an org
 
 Connect your command line to the org you want to install Summit Events in. Use the following command to initiate this authentication:
 
@@ -23,7 +23,7 @@ sfdx force:auth:web:login --setdefaultusername --setalias my-hub-org
 *"my-hub-org" above is an alias. You can choose whatever alias you wish as it is used to identify this
 particular dev hub if you have multiple*
 
-## Gitting the code (Get it?)
+### Gitting the code (Get it?)
 
 1. Log in to GitHub.
 
@@ -51,7 +51,7 @@ line usage of git, but both are acceptable.
     git clone <the URL you copied from your forked repository>
     ```
 
-## Installing the Summit Events app through the Salesforce Command Line Interface
+### Installing the Summit Events app through the Salesforce Command Line Interface
 
 You will need to use the Salesforce CLI (Command Line Interface) for this next part. If you prefer, you can do it through [Visual Studio Code](https://code.visualstudio.com/download) instead
 
@@ -67,10 +67,10 @@ You will need to use the Salesforce CLI (Command Line Interface) for this next p
 
 *Note: Since Summit Events is deployed in the same manner as a change set, it will not display as an installed package.*
 
-## Your org is ready!
+### Your org is ready!
 Your installation of Summit Events in your org is completed and ready for your admin to [begin setup](set-up.md)!
 
-# Method 2 - Cumulus CI
+## Method 2 - Cumulus CI
 
 Connect the org you want to deploy to:
 
