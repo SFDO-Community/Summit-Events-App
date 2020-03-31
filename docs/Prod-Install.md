@@ -10,7 +10,7 @@ Your first job is to make sure that you have the following installed on the comp
 2. [Git](https://git-scm.com/downloads)
 3. [Salesforce Command Line Interface (CLI)](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm#sfdx_setup_install_cli)
 
-Note that Cumulus CI is only needed to install Summit Events in a scratch org, but not needed for production, sandbox or dev orgs
+*Note that Cumulus CI is not needed to for this method*
 
 ### Connect an org
 
