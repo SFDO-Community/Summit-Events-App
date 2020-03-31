@@ -1,6 +1,8 @@
 # Installing or Upgrading Summit Events App in Production, Sandbox or Dev Orgs
 
-*Note: Summit Events is currently code that is not a packaged, so installation needs to be done by a developer using the steps below*
+*Note: Summit Events is currently code that is not a packaged, so installation needs to be done by a developer using the steps below.  There are two ways this install can be done (SFDX or Cumulus CI), choose the one that is easist for you.*
+
+# Method 1 - SFDX
 
 Your first job is to make sure that you have the following installed on the computer you are using to install Summit Events to Salesforce:
 
@@ -66,5 +68,36 @@ You will need to use the Salesforce CLI (Command Line Interface) for this next p
 *Note: Since Summit Events is deployed in the same manner as a change set, it will not display as an installed package.*
 
 ## Your org is ready!
+Your installation of Summit Events in your org is completed and ready for your admin to [begin setup](set-up.md)!
+
+# Method 2 - Cumulus CI
+
+Connect the org you want to deploy to:
+
+   ```
+   cci org connect <org_name>
+   ```
+Example staging:
+
+   ```
+   cci org connect staging
+   ```
+Example production:
+
+   ```
+   cci org connect production
+   ```
+Deploy code straight to a defined org
+
+First rebuild the root src so it reflects any changes made. Note: The src directory should have been rebuilt if you have deployed to a scratch org like you should have.
+
+   ```
+   cci task run dx_convert_from
+   ```
+Now deploy the src directory to the org of your choice.
+
+   ```
+   cci task run deploy --org <org_name>
+   ```
 
 Your installation of Summit Events in your org is completed and ready for your admin to [begin setup](set-up.md)!
