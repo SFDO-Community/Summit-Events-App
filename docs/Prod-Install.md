@@ -72,7 +72,7 @@ Your installation of Summit Events in your org is completed and ready for your a
 
 ## Method 2 - Cumulus CI
 
-Connect the org you want to deploy to:
+### Connect the org you want to deploy to:
 
    ```
    cci org connect <org_name>
@@ -87,7 +87,36 @@ Example production:
    ```
    cci org connect production
    ```
-Deploy code straight to a defined org
+   
+### Gitting the code (Get it?)
+
+1. Log in to GitHub.
+
+2. Go to the [Summit Events repository](https://summitevt.org).
+
+3. Fork a copy of the repository to your own account by clicking the "Fork" button at the top of the
+GitHub page. This will copy all the code from the repository into your personal account. Code in your
+own repository will not affect the main repository in any way.
+
+4. Navigate to your forked copy of the repository. The path at the top of the page should include your
+GitHub username in it.
+
+5. Click on the "Clone or download" green drop-down near the top left of the page. Copy the URL to clone
+your forked repository.
+
+6. On your computer navigate to the folder that you wish to put your cloned code in. Remember that
+cloning will create a directory for the code for you. You may also wish to use GitHub desktop to 
+make this whole process prettier and less intimidating. This documentation will outline command 
+line usage of git, but both are acceptable.
+
+7. Get a copy of the Event App code from GIT. If you are not directly collaborating with the 
+ project you may want to fork the project into your own GIT repository:
+
+    ```git
+    git clone <the URL you copied from your forked repository>
+    ```
+    
+### Deploy code straight to a defined org
 
 First rebuild the root src so it reflects any changes made. Note: The src directory should have been rebuilt if you have deployed to a scratch org like you should have.
 
@@ -99,5 +128,6 @@ Now deploy the src directory to the org of your choice.
    ```
    cci task run deploy --org <org_name>
    ```
+### Your org is ready!
 
 Your installation of Summit Events in your org is completed and ready for your admin to [begin setup](set-up.md)!
