@@ -126,7 +126,7 @@ First rebuild the root src so it reflects any changes made. Note: The src direct
 Now deploy the src directory to the org of your choice.
 
    ```
-   cci task run deploy --org <org_name>
+   cci task run deploy --org <org_nickname>
    ```
 ### Your org is ready!
 
