@@ -1,4 +1,6 @@
 # Installing or Upgrading Summit Events App in Production, Sandbox or Dev Orgs
+* Note: We are working to create a managed package for this *
+
 
 *Note: Summit Events is currently code that is not packaged, so installation needs to be done by a developer using the steps below.    There are two ways this install can be done (SFDX or Cumulus CI), choose the one that is easist for you.*
 
