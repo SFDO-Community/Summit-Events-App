@@ -38,6 +38,46 @@ The [University of St. Thomas][7] has been running the Summit Events application
 
 ## Working Together
 
+Summit Events will be active particpants in the Open Source Community Sprints to build a collabortive and engaging community around this app.
+
+### March Virtual Sprint 2020
+#### Project Goals
+* Insights into the tool in current state to project team
+* Summit Events Logo development
+* Compassionate Stories for Use Cases for the tool
+* ERD for Summit Events, similar to EDA and NPSP
+* End User documentation; converting and updating current documentation to be in markdown
+* System Admin Permissions and Initial Configurations
+* Appointment Group Discussion
+* Guest Management Discussion around design
+
+#### Project Team Accomplishments
+* Demo of current state to Sprint Group
+* ERD for Summit Events to GitHub
+* Summit Events added to Metecho
+* Collaboration efforts in development through GitHub
+* Started developing a data dictionary
+* Talked through best architecture and abstract dependencies for going managed package
+* Moved Repo to SFDO
+
+#### Future Contributions (AKA what were you unable to finish at the Sprint)
+* Summit Events Logo development
+* Compassionate Stories for Use Cases for the tool
+* End User documentation; converting and updating current documentation to be in markdown
+* System Admin Permissions and Initial Configurations
+* Appointment Group Discussion
+* Guest Management Discussion around design
+
+#### Team Needs:
+* need-developer
+* need-doc-writer
+* need-qa-tester
+* need-user-stories
+* need-thought-leader
+* need-general-volunteers
+
+
+
 *Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
 Use of this source code is governed by a BSD Revised
 license that can be found in the [LICENSE file][6].*
