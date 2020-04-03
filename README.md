@@ -38,6 +38,9 @@ The [University of St. Thomas][7] has been running the Summit Events application
 
 ## Working Together
 
+[March 2020 Open Source Sprint](https://github.com/SFDO-Community-Sprints/Summit-Events-App/wiki/Road-Map#sprint-one---2020)
+
+
 *Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
 Use of this source code is governed by a BSD Revised
 license that can be found in the [LICENSE file][6].*
