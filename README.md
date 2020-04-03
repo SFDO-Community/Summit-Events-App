@@ -38,6 +38,8 @@ The [University of St. Thomas][7] has been running the Summit Events application
 
 ## Working Together
 
+* Join us in the [Power of US Hub](https://powerofus.force.com/s/group/0F91E000000bo8OSAQ/summit-events-app) !
+
 *Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
 Use of this source code is governed by a BSD Revised
 license that can be found in the [LICENSE file][6].*
