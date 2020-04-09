@@ -261,10 +261,10 @@
         <label>Terrence Murphy Hall (TMH)</label>
     </customValue>
     <customValue>
-        <fullName>O’Shaughnessy Stadium</fullName>
+        <fullName>Admissions Office</fullName>
         <default>false</default>
         <isActive>false</isActive>
-        <label>O’Shaughnessy Stadium</label>
+        <label>Admissions Office</label>
     </customValue>
     <customValue>
         <fullName>O&#39;Shaughnessy Science Hall (OSS)</fullName>
@@ -273,10 +273,10 @@
         <label>O&#39;Shaughnessy Science Hall (OSS)</label>
     </customValue>
     <customValue>
-        <fullName>Admissions Office</fullName>
+        <fullName>O’Shaughnessy Stadium</fullName>
         <default>false</default>
         <isActive>false</isActive>
-        <label>Admissions Office</label>
+        <label>O’Shaughnessy Stadium</label>
     </customValue>
     <customValue>
         <fullName>Koch Commons</fullName>
