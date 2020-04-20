@@ -6,7 +6,6 @@ public with sharing class SummitEventsRegisterController {
     public String test { get; set; }
     public Summit_Events_Instance__c evtInstance { get; set; }
     public Summit_Events__c eventPage { get; set; }
-    public List<Summit_Events_Appointment_Type__c> apptTypes { get; set; }
     public String ContactId { get; set; }
     public String instanceName { get; set; }
     public String EvtUserType { get; set; }
@@ -30,13 +29,14 @@ public with sharing class SummitEventsRegisterController {
     public boolean showAddress { get; set; }
     public boolean showPhone { get; set; }
     public String applicantType { get; set; }
-    public String locationCrumb { get; set; }
-    public String eventStartDateTimeCrumb { get; set; }
     public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
     public String dataLayerLocationType { get; set; }
     public String phoneType { get; set; }
     public String navBreadCrumb { get; set; }
+    public boolean showLocation { get; set; }
+    public String startTimeString { get; set; }
+    public String endTimeString { get; set; }
 
 
     public SummitEventsRegisterController() {
@@ -56,7 +56,6 @@ public with sharing class SummitEventsRegisterController {
         additionalQuestions = false;
         showAddress = false;
         showPhone = false;
-        locationCrumb = '';
         EvtUserType = UserInfo.getUserType();
         //Get cookie or URL string variable
         evtInfo = SEShared.getSummitEventsInfo();
@@ -74,8 +73,9 @@ public with sharing class SummitEventsRegisterController {
         if (String.isNotBlank(evtInfo.instanceID)) {
             evtInstance = [
                     SELECT Id, Name, Event__r.Name, Event__r.Event_Name__c, Event__r.Id, Instance_Title__c, Active_Status__c, Capacity__c,
-                            Event__r.Event_description__c, Event__r.Audience__c, Start_Date_Time__c, End_Date_Time__c, Current_Available_Capacity__c,
-                            Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c
+                            Event__r.Event_description__c, Event__r.Audience__c, Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c, Current_Available_Capacity__c,
+                            Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c,
+                            Start_Date_Time__c, End_Date_Time__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :evtInfo.instanceID
                     LIMIT 1
@@ -98,7 +98,8 @@ public with sharing class SummitEventsRegisterController {
                 Boolean adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
                 eventIsClosed = adminOpen;
             }
-
+            startTimeString = SEShared.formatTime(evtInstance.Instance_Start_Time__c, false);
+            endTimeString = SEShared.formatTime(evtInstance.Instance_End_Time__c, false);
         }
 
         //Get Event Info off of instance master detail id
@@ -143,6 +144,17 @@ public with sharing class SummitEventsRegisterController {
                 additionalQuestions = true;
             }
 
+
+            if (String.isNotBlank(eventPage.Location_Title__c)
+                    || String.isNotBlank(evtInstance.Location_Title_Override__c)
+                    || String.isNotBlank(evtInstance.Location_Address_Override__c)
+                    || String.isNotBlank(eventPage.Location_Address__c)
+                    || String.isNotBlank(evtInstance.Location_Map_Link_Override__c)
+                    || String.isNotBlank(eventPage.Location_Map_Link__c)
+                    || String.isNotBlank(evtInstance.Location_Map_Link_Override__c)
+                    ) {
+                showLocation = true;
+            }
             String locationTitle = '';
             if (!String.isBlank(evtInstance.Location_Title_Override__c)) {
                 locationTitle = evtInstance.Location_Title_Override__c;
@@ -164,31 +176,6 @@ public with sharing class SummitEventsRegisterController {
                 locationAddress = eventPage.Location_Title__c;
             }
             dataLayerLocationType = locationAddress;
-
-            if (!String.isBlank(locationTitle)) {
-                locationCrumb = locationTitle + '<br/>';
-            }
-
-            if (!String.isBlank(locationAddress) && !String.isBlank(locationMapLink)) {
-                locationCrumb += ' <a href="' + locationMapLink + '" target="_blank">' + locationAddress + '</a><br/>';
-            } else if (!String.isBlank(locationMapLink)) {
-                locationCrumb += ' <a href="' + locationMapLink + '" target="_blank">Map</a><br/>';
-            }
-
-            if (evtInstance.Start_Date_Time__c != null && evtInstance.End_Date_Time__c != null) {
-                eventStartDateTimeCrumb = evtInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + evtInstance.End_Date_Time__c.format('h:mm a');
-            }
-
-            if (!String.isBlank(locationCrumb)) {
-                locationCrumb = locationCrumb.removeEnd('<br/>');
-                String eventTime = '';
-                if (evtInstance.Start_Date_Time__c != null && evtInstance.End_Date_Time__c != null) {
-                    eventTime = evtInstance.Start_Date_Time__c.format('EEEE MMMM dd, YYYY');
-                    eventTime += '<br/>' + evtInstance.Start_Date_Time__c.format('h:mm a') + ' - ' + evtInstance.End_Date_Time__c.format('h:mm a') + '<br/>';
-                }
-                locationCrumb = eventTime + locationCrumb;
-                locationCrumb = '<h3>Event Details</h3> <p>' + locationCrumb + '</p>';
-            }
 
             navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance);
 

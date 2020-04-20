@@ -1,0 +1,33 @@
+<!--
+ - Created by Thad-PC-2019 on 4/17/2020.
+ -->
+
+<apex:page id="SandhyaTemplate" sidebar="false" lightningStyleSheets="true" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
+    <apex:slds />
+    <html class="no-js" lang="" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <head>
+        <meta charset="utf-8"/>
+        <title>
+            <apex:insert name="metaPageTitle"/>
+        </title>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <apex:insert name="scriptsHead"/>
+    </head>
+    <body>
+    <div class="slds-scope">
+        <div class="slds-grid slds-grid_align-center">
+            <div class="slds-col slds-size_1-of-1" style="max-width:1024px;">
+                <!--[if IE]>
+                <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+                <![endif]-->
+                This is a sample template
+                <apex:insert name="sectionNav"/>
+                <apex:insert name="body"/>
+                <apex:insert name="footer"/>
+            </div>
+        </div>
+    </div>
+    <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/loading.js')}" type="text/javascript"/>
+    </body>
+    </html>
+</apex:page>

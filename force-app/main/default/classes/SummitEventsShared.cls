@@ -66,7 +66,6 @@ public with sharing class SummitEventsShared {
             if (evtReg.Status__c != 'Started') {
                 //Registration is complete and a new form should be generated.
                 String eventCookie2 = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"","evtId":"' + evtInfo.evtId + '"}';
-                System.Debug('COOKIE 1: ' + eventCookie2);
                 createEncryptedCookie(eventCookie2, 'SummitEvents');
             }
         }
@@ -80,7 +79,6 @@ public with sharing class SummitEventsShared {
         SummitEventsInfo evt = new SummitEventsInfo();
         PageReference myVFPage = null;
         evt = getSummitEventsInfo();
-        SYSTEM.debug('!!!!!!!!!!!!!!!  EVENT ID : ' + evt.evtId + ' , INSTANCE ID : ' + evt.instanceID + ' , EVENT REG ID : ' + evt.evtRegId);
 
         Summit_Events_Settings__c myUserSetting = Summit_Events_Settings__c.getInstance(UserInfo.getUserId());
         String communityBaseURL = myUserSetting.Community_Base_URL__c;
@@ -148,19 +146,19 @@ public with sharing class SummitEventsShared {
         }
 
         String crumb = '';
-        crumb+= '<nav role="navigation" aria-label="Breadcrumbs">';
-        crumb+= '   <ol class="slds-breadcrumb slds-list--horizontal">';
+        crumb += '<nav role="navigation" aria-label="Breadcrumbs">';
+        crumb += '   <ol class="slds-breadcrumb slds-list--horizontal">';
         if (String.isNotBlank(eventInstance.Event__r.Event_Name__c)) {
-            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Event__r.Event_Name__c + '</a></li>';
+            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Event__r.Event_Name__c + '</a></li>';
         }
         if (String.isNotBlank(eventInstance.Instance_Title__c)) {
-            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Instance_Title__c + '</a></li>';
+            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Instance_Title__c + '</a></li>';
         }
         if (String.isNotBlank(instanceDate)) {
-            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + instanceDate + '</a></li>';
+            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + instanceDate + '</a></li>';
         }
-        crumb+= '   </ol>';
-        crumb+= '</nav>';
+        crumb += '   </ol>';
+        crumb += '</nav>';
         return crumb;
     }
 
@@ -173,6 +171,29 @@ public with sharing class SummitEventsShared {
         TimeZone tz = TimeZone.getTimeZone('America/Chicago');
         dt = dt.addSeconds(tz.getOffset(dt) / 1000);
         return dt;
+    }
+
+    public String formatTime(Time myTime, boolean military) {
+        String formatTime = '';
+        if (myTime.hour() >= 13 && myTime.hour() > 0 && !military) {
+            formatTime = String.valueOf(myTime.hour() - 12);
+        } else {
+            formatTime = String.valueOf(myTime.hour());
+        }
+        formatTime += ':';
+        if (myTime.minute() < 10) {
+            formatTime += '0' + String.valueOf(myTime.minute());
+        } else {
+            formatTime += String.valueOf(myTime.minute());
+        }
+        if (!military) {
+            if (myTime.hour() >= 12) {
+                formatTime += ' PM';
+            } else {
+                formatTime += ' AM';
+            }
+        }
+        return formatTime;
     }
 
     public Map<String, String> getDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName, String parentValue) {
@@ -245,8 +266,6 @@ public with sharing class SummitEventsShared {
         }
         return retVal;
     }
-
-
 
 
 }
