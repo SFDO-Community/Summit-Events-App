@@ -139,10 +139,49 @@ public with sharing class SummitEventsShared {
         return '';
     }
 
+    public Datetime convertDateToDatetime(Date dateIn, Time timeIn) {
+        if (timeIn == null) {
+            timeIn = Time.newInstance(1, 12, 3, 4);
+        }
+        Datetime converted = Datetime.newInstance(dateIn.year(), dateIn.month(), dateIn.day(), timeIn.hour(), timeIn.minute(), timeIn.second());
+        return converted;
+    }
+
     public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance) {
         String instanceDate = '';
-        if (eventInstance.Start_Date_Time__c != null && eventInstance.End_Date_Time__c != null) {
-            instanceDate = eventInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + eventInstance.End_Date_Time__c.format('h:mm a');
+        if (eventInstance.Instance_Start_Date__c != null && eventInstance.Instance_End_Date__c != null) {
+            Datetime convertedStartDate = convertDateToDatetime(eventInstance.Instance_Start_Date__c, null);
+            Datetime convertedEndDate = convertDateToDatetime(eventInstance.Instance_End_Date__c, null);
+            String monthStart = convertedStartDate.format('MMMM');
+            String monthEnd = convertedEndDate.format('MMMM');
+            String yearStart = convertedStartDate.format('YYYY');
+            String yearEnd = convertedEndDate.format('YYYY');
+            String dayNameStart = convertedStartDate.format('EEEE');
+            String dayNameEnd = convertedEndDate.format('EEEE');
+            String dayStart = convertedStartDate.format('dd');
+            String dayEnd = convertedEndDate.format('dd');
+            String timeStart = '';
+            if (eventInstance.Instance_Start_Time__c != null) {
+                timeStart = formatTime(eventInstance.Instance_Start_Time__c, false);
+            }
+            String timeEnd = '';
+            if (eventInstance.Instance_End_Time__c != null) {
+                timeEnd = formatTime(eventInstance.Instance_End_Time__c, false);
+            }
+            instanceDate = dayNameStart + ', ' + monthStart + ' ' + dayStart;
+            if (eventInstance.Instance_Start_Date__c < eventInstance.Instance_End_Date__c) {
+                if (yearStart != yearEnd) {
+                    instanceDate += ', ' + yearStart;
+                }
+                instanceDate += ', ' + timeStart + ' - ' + dayNameEnd + ', ' + monthEnd + ', ' + dayEnd + ', ' + timeEnd;
+                if (yearStart == yearEnd) {
+                    instanceDate += ', ' + yearStart;
+                } else {
+                    instanceDate += ', ' + yearEnd;
+                }
+            } else {
+                instanceDate += ', ' + yearStart + ', ' + timeStart + ' - ' + timeEnd;
+            }
         }
 
         String crumb = '';
