@@ -69,8 +69,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                             <apex:outputText escape="false" value="{!eventPage.Event_description__c}"></apex:outputText>
                             <apex:outputPanel layout="none" rendered="{!IF(totalEventCost!= 0,true,false)}">
-                                <h3>Event Cost</h3>
-                                <p>$<apex:outputText value="{!totalEventCost}"></apex:outputText>
+                                <h3 class="slds-text-heading_medium">Event Cost</h3>
+                                <p class="slds-text-body">$<apex:outputText value="{!totalEventCost}"></apex:outputText>
                                 </p>
                             </apex:outputPanel>
                             <apex:outputText escape="false" value="{!locationCrumb}" rendered="{!IF(!ISBLANK(locationCrumb), true, false)}"/>

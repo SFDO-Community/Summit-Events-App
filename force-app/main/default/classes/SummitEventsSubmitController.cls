@@ -43,6 +43,7 @@ public with sharing class SummitEventsSubmitController {
     public String navBreadCrumb { get; set; }
 
     public SummitEventsSubmitController() {
+        showPaymentButton = false;
         test = '';
         eventHasOptions = false;
         templateSelected = SEShared.defaultTemplate;
@@ -141,42 +142,48 @@ public with sharing class SummitEventsSubmitController {
                     WHERE Event_Registration__c = :evtInfo.EvtRegId
             ];
             feesByIndex = new Map<String, String>();
-            paymentItemized = '';
+            paymentItemized = '<table class="slds-table slds-table_cell-buffer slds-table_bordered">';
+            paymentItemized += '<thead>';
+            paymentItemized += '<tr class="slds-line-height_reset">';
+            paymentItemized += '<th class="" scope="col">';
+            paymentItemized += '<div class="slds-truncate" title="Item">Item</div>';
+            paymentItemized += '</th>';
+            paymentItemized += '<th class="" scope="col">';
+            paymentItemized += '<div class="slds-truncate" title="Fee">Fee</div>';
+            paymentItemized += '</th>';
+            paymentItemized += '</thead><tbody>';
             eventOnlyPaymentAmount = 0;
             for (Summit_Events_Fee__c fee : eventFees) {
                 if (fee.Event_Fee__c != null && fee.Event_Fee__c > 0) {
                     totalPaymentAmount += fee.Event_Fee__c;
-                    if (feesByIndex.size() > 0) {
-                        if (!fee.Event_Fee_Type__c.equalsIgnoreCase('Event') || !fee.Event_Fee_Type__c.equalsIgnoreCase('Event Additional')) {
-                            if (fee.Event_Fee_Type__c.equalsIgnoreCase('Appointment')) {
-                                paymentItemized += '<tr class="eventAppointmentCost">';
-                                paymentItemized += '<td>' + fee.Event_Appointment_Type__r.Title__c + '</td>';
-                                paymentItemized += '<td>' + prettyCurrencyString(fee.Event_fee__c) + '</td>';
-                                paymentItemized += '</tr>';
-                            } else if (fee.Event_Fee_Type__c.equalsIgnoreCase('Optional Donation')) {
-                                paymentItemized += '<tr class="eventDonation">';
-                                paymentItemized += '<td>' + fee.Event_Fee_Type__c;
-                                if (String.isNotBlank(fee.Event_Fee_Attribute__r.Name)) {
-                                    paymentItemized += ' - ' + fee.Event_Fee_Attribute__r.Name;
-                                }
-                                paymentItemized += '</td>';
-                                paymentItemized += '<td>' + prettyCurrencyString(fee.Event_fee__c) + '</td>';
-                                paymentItemized += '</tr>';
-                            } else {
-                                eventOnlyPaymentAmount += fee.Event_Fee__c;
+                    if (!fee.Event_Fee_Type__c.equalsIgnoreCase('Event') || !fee.Event_Fee_Type__c.equalsIgnoreCase('Event Additional')) {
+                        if (fee.Event_Fee_Type__c.equalsIgnoreCase('Appointment')) {
+                            paymentItemized += '<tr class="eventAppointmentCost">';
+                            paymentItemized += '<td>' + fee.Event_Appointment_Type__r.Title__c + '</td>';
+                            paymentItemized += '<td>' + prettyCurrencyString(fee.Event_fee__c) + '</td>';
+                            paymentItemized += '</tr>';
+                        } else if (fee.Event_Fee_Type__c.equalsIgnoreCase('Optional Donation')) {
+                            paymentItemized += '<tr class="eventDonation">';
+                            paymentItemized += '<td>' + fee.Event_Fee_Type__c;
+                            if (String.isNotBlank(fee.Event_Fee_Attribute__r.Name)) {
+                                paymentItemized += ' - ' + fee.Event_Fee_Attribute__r.Name;
                             }
-                        }
-                        if (feesByIndex.containsKey(fee.Event_Fee_Attribute__c)) {
-                            Decimal newFee = Decimal.valueOf(feesByIndex.get(fee.Event_Fee_Attribute__c));
-                            newFee = newFee + fee.Event_Fee__c;
-                            newFee = newFee.setScale(2);
-                            feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(newFee));
+                            paymentItemized += '</td>';
+                            paymentItemized += '<td>' + prettyCurrencyString(fee.Event_fee__c) + '</td>';
+                            paymentItemized += '</tr>';
                         } else {
-                            feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(fee.Event_Fee__c));
+                            eventOnlyPaymentAmount += fee.Event_Fee__c;
                         }
+                    }
+                    if (feesByIndex.size() > 0 && feesByIndex.containsKey(fee.Event_Fee_Attribute__c)) {
+                        Decimal newFee = Decimal.valueOf(feesByIndex.get(fee.Event_Fee_Attribute__c));
+                        newFee = newFee + fee.Event_Fee__c;
+                        newFee = newFee.setScale(2);
+                        feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(newFee));
                     } else {
                         feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(fee.Event_Fee__c));
                     }
+
                 }
             }
 
@@ -195,7 +202,7 @@ public with sharing class SummitEventsSubmitController {
             paymentItemized += '<td><strong>' + prettyCurrencyString(totalPaymentAmount) + '</strong></td>';
             paymentItemized += '</tr>';
 
-            paymentItemized = '<table class="eventItemizedFees">' + paymentItemized + '</table>';
+            paymentItemized += '</tbody></table>';
 
             System.debug(paymentItemized);
             if (totalPaymentAmount > 0) {
@@ -239,38 +246,34 @@ public with sharing class SummitEventsSubmitController {
     }
 
     public PageReference checkEventDetails() {
-
-        /** Below method will display headers and parameters for the page for testing. **/
-        //displayTestingHeaders();
-
-        /** Check for postback of payment gateway **/
-        params = ApexPages.currentPage().getParameters();
-        Map<String, String> returnHeaders = ApexPages.currentPage().getheaders();
-        if (!returnHeaders.isEmpty()) {
-            if (returnHeaders.get('Referer') != null) {
-                String returnedReferrer = returnHeaders.get('Referer').toLowerCase();
-                if (String.isNotBlank(returnedReferrer)) {
-                    if (String.isBlank(gatewayOrigin) && showPaymentButton) {
-                        Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Set your orgs gateway settings or fees will not be collected.'));
-                    } else {
-                        if (returnedReferrer.trim().contains(gatewayOrigin)) {
-                            /** Check for session identifier to see if a payment was successful **/
-                            if (params.get('session_identifier') != null) {
-                                successReturnFromGateway = true;
-                                Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Your payment is processing. Please do not refresh the page.'));
-                            } else {
-                                successReturnFromGateway = false;
-                                Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Your payment is processing was unsuccessful. Please try again.'));
+        successReturnFromGateway = false;
+        if (showPaymentButton) {
+            /** Check for postback of payment gateway **/
+            params = ApexPages.currentPage().getParameters();
+            Map<String, String> returnHeaders = ApexPages.currentPage().getheaders();
+            if (!returnHeaders.isEmpty()) {
+                if (returnHeaders.get('Referer') != null) {
+                    String returnedReferrer = returnHeaders.get('Referer').toLowerCase();
+                    if (String.isNotBlank(returnedReferrer)) {
+                        if (String.isBlank(gatewayOrigin) && showPaymentButton) {
+                            Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Set your orgs gateway settings or fees will not be collected.'));
+                        } else {
+                            if (returnedReferrer.trim().contains(gatewayOrigin)) {
+                                /** Check for session identifier to see if a payment was successful **/
+                                if (params.get('session_identifier') != null) {
+                                    successReturnFromGateway = true;
+                                    Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Your payment is processing. Please do not refresh the page.'));
+                                } else {
+                                    successReturnFromGateway = false;
+                                    Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Your payment is processing was unsuccessful. Please try again.'));
+                                }
+                                return addPaymentInformation();
                             }
-                            return addPaymentInformation();
                         }
                     }
                 }
             }
         }
-
-
-        successReturnFromGateway = false;
         return SEShared.checkForEvent();
     }
 
