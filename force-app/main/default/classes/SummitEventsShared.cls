@@ -139,6 +139,47 @@ public with sharing class SummitEventsShared {
         return '';
     }
 
+    public String getTimeZonePick(String pickListTimeZone) {
+        if (String.isNotBlank(pickListTimeZone)) {
+            if (pickListTimeZone.length() > 4) {
+                pickListTimeZone = pickListTimeZone.substring(pickListTimeZone.indexOf('(') + 1, pickListTimeZone.indexOf(')'));
+                return pickListTimeZone;
+            }
+        }
+        return '';
+    }
+
+    public TimeZone getTimeZone(String timeZoneId) {
+        TimeZone tz = null;
+        if (String.isNotBlank(timeZoneId)) {
+            tz = TimeZone.getTimeZone(timeZoneId);
+        }
+        return tz;
+    }
+
+    public String getTimeZoneDisplay(String timeZonePick, Boolean shortDisplay) {
+        String displayName = '';
+        if (String.isNotBlank(timeZonePick)) {
+            timeZonePick = getTimeZonePick(timeZonePick);
+            TimeZone tz = getTimeZone(timeZonePick);
+            if (tz != null) {
+                displayName = tz.getDisplayName();
+                //remove all parenthesis items
+                displayName = displayName.replaceAll('(\\(([^\\)]+)\\))', '');
+                displayName = displayName.trim();
+            }
+            if (shortDisplay) {
+                String[] displayNameWordList = displayName.split(' ');
+                String shortDisplayOut = '';
+                for (String word : displayNameWordList) {
+                    shortDisplayOut += word.substring(0, 1);
+                }
+                return shortDisplayOut;
+            }
+        }
+        return displayName;
+    }
+
     public Datetime convertDateToDatetime(Date dateIn, Time timeIn) {
         if (timeIn == null) {
             timeIn = Time.newInstance(1, 12, 3, 4);
@@ -182,6 +223,12 @@ public with sharing class SummitEventsShared {
             } else {
                 instanceDate += ', ' + yearStart + ', ' + timeStart + ' - ' + timeEnd;
             }
+
+            if (String.isNotBlank(eventInstance.Instance_Time_Zone__c)) {
+
+            }
+            String timeZoneDisplay = getTimeZoneDisplay(eventInstance.Instance_Time_Zone__c, true);
+            instanceDate += ' ' + timeZoneDisplay;
         }
 
         String crumb = '';
