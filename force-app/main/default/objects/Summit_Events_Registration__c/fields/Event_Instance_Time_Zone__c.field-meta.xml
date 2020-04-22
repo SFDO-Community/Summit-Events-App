@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Event_Instance_Date__c</fullName>
+    <fullName>Event_Instance_Time_Zone__c</fullName>
     <externalId>false</externalId>
-    <formula>Event_Instance__r.Instance_Start_Date__c</formula>
+    <formula>TEXT(Event_Instance__r.Instance_Time_Zone__c)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <label>Event Instance Date</label>
+    <label>Event Instance Time Zone</label>
     <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
-    <type>Date</type>
+    <type>Text</type>
+    <unique>false</unique>
 </CustomField>
