@@ -84,7 +84,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     if (evtInstance.Start_Date_Time__c != null && evtInstance.End_Date_Time__c != null) {
                         eventStartDateTimeCrumb = evtInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + evtInstance.End_Date_Time__c.format('h:mm a');
                     }
-                    navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance);
+                    navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance,false);
 
                     //Check if the user gets to select any appointments or they are all auto added
                     for (Summit_Events_Appointment_Type__c chosenCheck : appts.values()) {

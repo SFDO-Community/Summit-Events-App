@@ -177,7 +177,7 @@ public with sharing class SummitEventsRegisterController {
             }
             dataLayerLocationType = locationAddress;
 
-            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance);
+            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance,false);
 
             //Check if the Event has appointments and therefore we have to redirect to the appointment page.
             evtHasAppointments = false;

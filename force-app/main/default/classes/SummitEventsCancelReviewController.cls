@@ -47,7 +47,7 @@ public with sharing class SummitEventsCancelReviewController {
                 List<Summit_Events_Instance__c> eventInstance = [SELECT Id, Instance_Title__c, Event__r.Event_Name__c, Start_Date_Time__c, End_Date_Time__c FROM Summit_Events_Instance__c WHERE Id = :evt.Event_Instance__c];
 
                 If (eventInstance.size()>0) {
-                    navBreadCrumb = SEShared.navBreadcrumbBuilder(eventInstance[0]);
+                    navBreadCrumb = SEShared.navBreadcrumbBuilder(eventInstance[0],false);
                 }
 
 

@@ -188,7 +188,7 @@ public with sharing class SummitEventsShared {
         return converted;
     }
 
-    public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance) {
+    public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance, Boolean dateTimeOnly) {
         String instanceDate = '';
         if (eventInstance.Instance_Start_Date__c != null && eventInstance.Instance_End_Date__c != null) {
             Datetime convertedStartDate = convertDateToDatetime(eventInstance.Instance_Start_Date__c, null);
@@ -225,10 +225,12 @@ public with sharing class SummitEventsShared {
             }
 
             if (String.isNotBlank(eventInstance.Instance_Time_Zone__c)) {
-
+                String timeZoneDisplay = getTimeZoneDisplay(eventInstance.Instance_Time_Zone__c, true);
+                instanceDate += ' ' + timeZoneDisplay;
             }
-            String timeZoneDisplay = getTimeZoneDisplay(eventInstance.Instance_Time_Zone__c, true);
-            instanceDate += ' ' + timeZoneDisplay;
+            if (dateTimeOnly) {
+                return instanceDate;
+            }
         }
 
         String crumb = '';

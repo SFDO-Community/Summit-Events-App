@@ -44,7 +44,7 @@ public with sharing class SummitEventsSubmitController {
                 eventStartDateTimeCrumb = evtInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + evtInstance.End_Date_Time__c.format('h:mm a');
             }
 
-            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance);
+            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance,false);
         }
 
         if (!String.isBlank(evtinfo.evtRegId)) {
