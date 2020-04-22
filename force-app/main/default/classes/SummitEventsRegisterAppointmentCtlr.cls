@@ -52,7 +52,14 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             templateSelected = eventPage.Template__c;
 
             if (!String.isBlank(evtinfo.evtRegId)) {
-                evtInstance = [SELECT Instance_Title__c, Event__r.Event_Name__c, Start_Date_Time__c, End_Date_Time__c FROM Summit_Events_Instance__c WHERE Id = :evtinfo.instanceID LIMIT 1];
+                evtInstance = [
+                        SELECT Instance_Title__c, Event__r.Event_Name__c, Start_Date_Time__c, End_Date_Time__c,
+                                Instance_Time_Zone__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Start_Date__c,
+                                Instance_End_Date__c
+                        FROM Summit_Events_Instance__c
+                        WHERE Id = :evtinfo.instanceID
+                        LIMIT 1
+                ];
 
 
                 if (evtInstance != null) {
