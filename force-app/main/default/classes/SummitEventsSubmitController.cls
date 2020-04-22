@@ -13,7 +13,6 @@ public with sharing class SummitEventsSubmitController {
     public List<Summit_Events_Appointments__c> chosenAppts { get; set; }
     public String chosenFormatted { get; set; }
     public String templateSelected { get; set; }
-    public String eventStartDateTimeCrumb { get; set; }
     public String navBreadCrumb { get; set; }
 
     public SummitEventsSubmitController() {
@@ -32,17 +31,13 @@ public with sharing class SummitEventsSubmitController {
             templateSelected = eventPage.Template__c;
 
             evtInstance = [
-                    SELECT Instance_Title__c, Event__r.Event_Name__c, Start_Date_Time__c, End_Date_Time__c,
+                    SELECT Instance_Title__c, Event__r.Event_Name__c,
                             Instance_Time_Zone__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Start_Date__c,
                             Instance_End_Date__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :evtinfo.instanceID
                     LIMIT 1
             ];
-
-            if (evtInstance.Start_Date_Time__c != null && evtInstance.End_Date_Time__c != null) {
-                eventStartDateTimeCrumb = evtInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + evtInstance.End_Date_Time__c.format('h:mm a');
-            }
 
             navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance,false);
         }

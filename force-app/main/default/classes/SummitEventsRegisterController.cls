@@ -74,8 +74,7 @@ public with sharing class SummitEventsRegisterController {
             evtInstance = [
                     SELECT Id, Name, Event__r.Name, Event__r.Event_Name__c, Event__r.Id, Instance_Title__c, Active_Status__c, Capacity__c,
                             Event__r.Event_description__c, Event__r.Audience__c, Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c, Current_Available_Capacity__c,
-                            Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c,
-                            Start_Date_Time__c, End_Date_Time__c
+                            Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :evtInfo.instanceID
                     LIMIT 1
@@ -90,7 +89,7 @@ public with sharing class SummitEventsRegisterController {
                 currentDT = currentDT.addDays(Integer.Valueof(evtInstance.Event__r.Close_Event_Days_Before__c) + 1);
             }
 
-            if (evtInstance.Current_Available_Capacity__c <= 0 || evtInstance.Active_Status__c != 'Active' || evtInstance.End_Date_Time__c <= currentDT) {
+            if (evtInstance.Current_Available_Capacity__c <= 0 || evtInstance.Active_Status__c != 'Active' || evtInstance.Instance_End_Date__c <= currentDT) {
                 eventIsClosed = true;
             }
 
@@ -577,8 +576,6 @@ public with sharing class SummitEventsRegisterController {
                         contactId = (Id) matched.get('contactId');
                         newContactCreated = Boolean.valueOf(matched.get('newContactCreated'));
                     }
-                    newEvtReg.Contact_Soft_Match_Email__c = String.valueOf(matched.get('softEmailMatches'));
-                    newEvtReg.Contact_Soft_Match_First_Last_Zip__c = String.valueOf(matched.get('softFirstLastZipMatches'));
                     newEvtReg.Matching_Log__c = String.valueOf(matched.get('matchLog'));
                 }
             }
@@ -587,7 +584,7 @@ public with sharing class SummitEventsRegisterController {
         //Create registration if event Registration does not exist
         if (String.isBlank(evtInfo.evtRegId) || evtInfo.evtRegId == 'COMING') {
             newEvtReg.Status__c = 'Started';
-            newEvtReg.Date__c = Date.valueof(evtInstance.Start_Date_Time__c);
+            newEvtReg.Event_Instance_Date_Time_Formatted__c = SEShared.navBreadcrumbBuilder(evtInstance, true);
             newEvtReg.Event__c = evtInfo.evtId;
             newEvtReg.Event_Instance__c = evtInfo.instanceID;
             newEvtReg.Contact__c = contactId;

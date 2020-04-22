@@ -267,6 +267,9 @@ public with sharing class SummitEventsShared {
             formatTime = String.valueOf(myTime.hour() - 12);
         } else {
             formatTime = String.valueOf(myTime.hour());
+            if (myTime.hour() < 10) {
+                formatTime = '0' + formatTime;
+            }
         }
         formatTime += ':';
         if (myTime.minute() < 10) {

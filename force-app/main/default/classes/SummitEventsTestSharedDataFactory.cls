@@ -115,8 +115,10 @@ public with sharing class SummitEventsTestSharedDataFactory {
         Summit_Events_Instance__c testInstance = new Summit_Events_Instance__c(
                 Event__c = testEvent.Id,
                 Instance_Title__c = testEventName + ' Sesssion',
-                Start_Date_Time__c = Datetime.now().addDays(1),
-                End_Date_Time__c = Datetime.now().addDays(1).addHours(5),
+                Instance_Start_Date__c = Date.today().addDays(1),
+                Instance_Start_Time__c = Time.newInstance(8,0,0,0),
+                Instance_End_Date__c = Date.today().addDays(1),
+                Instance_End_Time__c = Time.newInstance(14,0,0,0),
                 Active_Status__c = 'Active',
                 Capacity__c = 500,
                 Location_Title_Override__c = 'A location',
@@ -129,8 +131,10 @@ public with sharing class SummitEventsTestSharedDataFactory {
         Summit_Events_Instance__c testInstance2 = new Summit_Events_Instance__c(
                 Event__c = testEvent.Id,
                 Instance_Title__c = testEventName + ' Sesssion 2',
-                Start_Date_Time__c = Datetime.now().addDays(3),
-                End_Date_Time__c = Datetime.now().addDays(3).addHours(5),
+                Instance_Start_Date__c = Date.today().addDays(3),
+                Instance_Start_Time__c = Time.newInstance(8,0,0,0),
+                Instance_End_Date__c = Date.today().addDays(3),
+                Instance_End_Time__c = Time.newInstance(14,0,0,0),
                 Active_Status__c = 'Active',
                 Capacity__c = 500
         );
@@ -179,7 +183,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Action_Sub_status__c = subStatus,
                 BCC_Email__c = 'thad+test@valleyhill.net,thad+test2@valleyhill.net',
                 Email_Subject__c = 'TEST EMAIL',
-                Email_Content__c = 'Name: {!Registrant_First_Name__c} {!Registrant_Last_Name__c} Event Date: {!Date_Time_Text__c} Event Session: {!Instance_Title__c} Attendees:{!Total_Number_of_Guests__c} Email: {!Registrant_Email__c} High School: {!Registrant_High_School__c}',
+                Email_Content__c = 'Name: {!Registrant_First_Name__c} {!Registrant_Last_Name__c} Event Date: {!Event_Instance_Date_Time_Formatted__c} Event Session: {!Instance_Title__c} Attendees:{!Total_Number_of_Guests__c} Email: {!Registrant_Email__c} High School: {!Registrant_High_School__c}',
                 Letterhead_HTML__c = '<html><style> p { margin-top: 0px; margin-bottom: 0px;} </style><body id="body" style=" background-color:#FFFFFF; color:#FFFFFF; " ><center><table cellpadding="0" width="500" cellspacing="0" height="450">  <tr valign="top">    <td id="header" style=" background-color:#FFFFFF; color:#FFFFFF; height:100px; " ><img src="https://c.cs65.visual.force.com/servlet/servlet.ImageServer?id=0150m000000AN8V&oid=00D0m000000Cra6"/>    </td>  </tr><tr valign="top"><td id="accent1" style=" background-color:#FFFFFF; color:#FFFFFF; height:5px; " ></tr><tr valign="top"><td height="300" style=" background-color:#FFFFFF; font-family:arial; font-size:12pt; color:#000000; " ><table border="0" cellpadding="5" width="550" cellspacing="5" height="400"><tr valign="top" height="400"><td id="main" style=" background-color:#FFFFFF; font-family:arial; font-size:12pt; color:#000000; " >[[DONT_DELETE_CONTENT_HERE]]</td></tr></table></td></tr><tr valign="top"><td id="accent2" style=" background-color:#FFFFFF; color:#FFFFFF; height:5px; " ></tr>  <tr valign="top">    <td id="footer" style=" background-color:#FFFFFF; color:#FFFFFF; height:100px; " >    </td>  </tr><tr valign="top"><td id="accent3" style=" background-color:#FFFFFF; color:#FFFFFF; height:5px; " ></tr></table></center></body>',
                 Event__c = evtInst.Event__c
         );

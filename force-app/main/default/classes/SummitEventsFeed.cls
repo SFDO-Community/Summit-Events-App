@@ -67,23 +67,12 @@ global with sharing class SummitEventsFeed {
         List<eventItem> EventList = new List<eventItem>();
         RestRequest req = RestContext.request;
         String eventQuery = '';
-        /*eventQuery += ' SELECT Id, Event__r.Name, Event__r.Event_Name__c, Event__r.Event_Status__c, Active_Status__c, Instance_Title__c, Instance_Short_Description__c, Event__r.Program_Filter__c, Event__r.Alternate_Registration_URL__c, ';
-        eventQuery += ' Event__r.Location_Title__c, Event__r.Location_Type__c, Event__r.Location_Address__c, Event__r.Location_Map_Link__c, Event__r.Building__c, Event__r.Event_description__c, Event__r.Community_Base_URL__c, ';
-        eventQuery += ' Building_Override__c, Alternate_Registration_URL_Override__c, Location_Address_Override__c, Location_Map_Link_Override__c, Location_Title_Override__c, Location_Type_Override__c,  ';
-        eventQuery += ' Event__r.Event_Short_Listing_Description__c, Event__r.Audience__c, Event__r.Close_Event_Days_Before__c, Start_Date_Time__c, End_Date_Time__c, Event__r.School__r.Name, Event__r.Event_Sponsor__c, ';
-        eventQuery += ' Event__r.Feed_Registration_Button_Text__c, Feed_Registration_Button_Text_Override__c ';
-        eventQuery += ' FROM Summit_Events_Instance__c ';
-        eventQuery += ' WHERE ';
-        eventQuery += ' Event__R.Event_Status__c = \'Active\' ';
-        eventQuery += ' AND Active_Status__c = \'Active\' ';
-        eventQuery += ' AND (Current_Available_Capacity__c > 0 OR Capacity__c = null) ';
-        eventQuery += ' AND Event__r.Audience__c EXCLUDES (\'No Audience\') ';*/
-
         eventQuery += ' SELECT Id, Event__r.Name, Event__r.Event_Name__c, Event__r.Event_Status__c, Active_Status__c, Instance_Title__c, Instance_Short_Description__c, Event__r.Program_Filter__c, Event__r.Alternate_Registration_URL__c, ';
         eventQuery += ' Event__r.Location_Title__c, Event__r.Location_Type__c, Event__r.Location_Address__c, Event__r.Location_Map_Link__c, Event__r.Building__c, Event__r.Event_description__c, Event__r.Community_Base_URL__c, ';
         eventQuery += ' Building_Override__c, Alternate_Registration_URL_Override__c, Location_Address_Override__c, Location_Map_Link_Override__c, Location_Title_Override__c, Location_Type_Override__c,  ';
-        eventQuery += ' Event__r.Event_Short_Listing_Description__c, Event__r.Audience__c, Event__r.Close_Event_Days_Before__c, Start_Date_Time__c, End_Date_Time__c, Event__r.Event_Sponsor__c, ';
-        eventQuery += ' Event__r.Feed_Registration_Button_Text__c, Feed_Registration_Button_Text_Override__c, Capacity__c, Current_Available_Capacity__c, Private_Instance__c, Event__r.Private_Event__c ';
+        eventQuery += ' Event__r.Event_Short_Listing_Description__c, Event__r.Audience__c, Event__r.Close_Event_Days_Before__c, Event__r.Event_Sponsor__c, ';
+        eventQuery += ' Event__r.Feed_Registration_Button_Text__c, Feed_Registration_Button_Text_Override__c, Capacity__c, Current_Available_Capacity__c, Private_Instance__c, Event__r.Private_Event__c, ';
+        eventQuery += ' Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c ';
         eventQuery += ' FROM Summit_Events_Instance__c ';
         eventQuery += ' WHERE ';
         eventQuery += ' Event__R.Event_Status__c = \'Active\' ';
@@ -115,10 +104,10 @@ global with sharing class SummitEventsFeed {
             }
             viewEnd = DateTime.valueOf(req.params.get('viewEnd'));
         }
-        formattedViewStart = viewStart.format('yyyy-MM-dd\'T\'hh:mm:ss\'Z\'');
-        formattedViewEnd = viewEnd.format('yyyy-MM-dd\'T\'hh:mm:ss\'Z\'');
-        eventQuery += ' AND Start_Date_Time__c >= ' + formattedViewStart + ' ';
-        eventQuery += ' AND Start_Date_Time__c <= ' + formattedViewEnd + ' ';
+        formattedViewStart = viewStart.format('yyyy-MM-dd');
+        formattedViewEnd = viewEnd.format('yyyy-MM-dd');
+        eventQuery += ' AND Instance_Start_Date__c >= ' + formattedViewStart + ' ';
+        eventQuery += ' AND Instance_Start_Date__c <= ' + formattedViewEnd + ' ';
 
         //build and sanitize
 
@@ -183,117 +172,117 @@ global with sharing class SummitEventsFeed {
             }
         }
 
-        List<Summit_Events_Instance__c> EventInstance = database.query(eventQuery);
+        List<Summit_Events_Instance__c> EventInstanceList = database.query(eventQuery);
 
         DateTime regDateOpenDate = null;
-        for (Summit_Events_Instance__c es : EventInstance) {
+        for (Summit_Events_Instance__c eventInstance : EventInstanceList) {
             regDateOpenDate = Datetime.now().addDays(-1);
-            if (es.Event__r.Close_Event_Days_Before__c != null && es.Event__r.Close_Event_Days_Before__c != 0) {
+            if (eventInstance.Event__r.Close_Event_Days_Before__c != null && eventInstance.Event__r.Close_Event_Days_Before__c != 0) {
                 regDateOpenDate = SEShared.adjustForCentralTime(Datetime.now());
-                regDateOpenDate = regDateOpenDate.addDays((Integer.valueOf(es.Event__r.Close_Event_Days_Before__c) + 1));
+                regDateOpenDate = regDateOpenDate.addDays((Integer.valueOf(eventInstance.Event__r.Close_Event_Days_Before__c) + 1));
             }
             eventItem evt = new eventItem();
-            evt.ID = es.Id;
-            if (es.Event__r.Event_Name__c != null) {
-                evt.title = es.Event__r.Event_Name__c;
+            evt.ID = eventInstance.Id;
+            if (eventInstance.Event__r.Event_Name__c != null) {
+                evt.title = eventInstance.Event__r.Event_Name__c;
             } else {
-                evt.title = es.Event__r.Name;
+                evt.title = eventInstance.Event__r.Name;
             }
 
-            if (es.Instance_Title__c != null) {
-                evt.title += ' - ' + es.Instance_Title__c;
+            if (eventInstance.Instance_Title__c != null) {
+                evt.title += ' - ' + eventInstance.Instance_Title__c;
             }
 
-            if (!String.isBlank(es.Instance_Short_Description__c)) {
-                evt.instanceDesc = es.Instance_Short_Description__c;
+            if (!String.isBlank(eventInstance.Instance_Short_Description__c)) {
+                evt.instanceDesc = eventInstance.Instance_Short_Description__c;
             } else {
                 evt.instanceDesc = '';
             }
 
-            if (!String.isBlank(es.Feed_Registration_Button_Text_Override__c)) {
-                evt.FeedButtonText = es.Feed_Registration_Button_Text_Override__c;
-            } else if (!String.isBlank(es.Event__r.Feed_Registration_Button_Text__c)) {
-                evt.FeedButtonText = es.Event__r.Feed_Registration_Button_Text__c;
+            if (!String.isBlank(eventInstance.Feed_Registration_Button_Text_Override__c)) {
+                evt.FeedButtonText = eventInstance.Feed_Registration_Button_Text_Override__c;
+            } else if (!String.isBlank(eventInstance.Event__r.Feed_Registration_Button_Text__c)) {
+                evt.FeedButtonText = eventInstance.Event__r.Feed_Registration_Button_Text__c;
             } else {
                 evt.FeedButtonText = 'Register';
             }
 
-            if (!String.isBlank(es.Location_Type_Override__c)) {
-                evt.locationType = es.Location_Type_Override__c;
-            } else if (!String.isBlank(es.Event__r.Location_Type__c)) {
-                evt.locationType = es.Event__r.Location_Type__c;
+            if (!String.isBlank(eventInstance.Location_Type_Override__c)) {
+                evt.locationType = eventInstance.Location_Type_Override__c;
+            } else if (!String.isBlank(eventInstance.Event__r.Location_Type__c)) {
+                evt.locationType = eventInstance.Event__r.Location_Type__c;
             } else {
                 evt.locationType = '';
             }
 
-            if (!String.isBlank(es.Event__r.Event_Sponsor__c)) {
-                evt.sponsors = es.Event__r.Event_Sponsor__c;
+            if (!String.isBlank(eventInstance.Event__r.Event_Sponsor__c)) {
+                evt.sponsors = eventInstance.Event__r.Event_Sponsor__c;
             } else {
                 evt.sponsors = '';
             }
 
-            if (!String.isBlank(es.Event__r.Building__c)) {
-                evt.locationBuilding = es.Event__r.Building__c;
+            if (!String.isBlank(eventInstance.Event__r.Building__c)) {
+                evt.locationBuilding = eventInstance.Event__r.Building__c;
             } else {
                 evt.locationBuilding = '';
             }
 
-            if (!String.isBlank(es.Event__r.Event_Short_Listing_Description__c)) {
-                evt.description = es.Event__r.Event_Short_Listing_Description__c;
+            if (!String.isBlank(eventInstance.Event__r.Event_Short_Listing_Description__c)) {
+                evt.description = eventInstance.Event__r.Event_Short_Listing_Description__c;
             } else {
                 evt.description = '';
             }
 
             if (showLongDescription) {
-                evt.longDesc = es.Event__r.Event_description__c;
+                evt.longDesc = eventInstance.Event__r.Event_description__c;
             } else {
                 evt.longDesc = '';
             }
 
-            if (Integer.valueOf(es.Capacity__c) != null) {
-                evt.capacityTotal = Integer.valueOf(es.Capacity__c);
+            if (Integer.valueOf(eventInstance.Capacity__c) != null) {
+                evt.capacityTotal = Integer.valueOf(eventInstance.Capacity__c);
             } else {
                 evt.capacityTotal = 0;
             }
 
-            if (Integer.valueOf(es.Current_Available_Capacity__c) != null) {
-                evt.capacityRemaining = Integer.valueOf(es.Current_Available_Capacity__c);
+            if (Integer.valueOf(eventInstance.Current_Available_Capacity__c) != null) {
+                evt.capacityRemaining = Integer.valueOf(eventInstance.Current_Available_Capacity__c);
             } else {
                 evt.capacityRemaining = 0;
             }
 
-            if (es.Start_Date_Time__c != null) {
-                evt.start = SEShared.adjustForCentralTime(es.Start_Date_Time__c);
+            if (eventInstance.Instance_Start_Date__c != null) {
+               evt.start = SEShared.convertDateToDatetime(eventInstance.Instance_Start_Date__c, eventInstance.Instance_Start_Time__c);
             }
-            if (es.End_Date_Time__c != null) {
-                evt.endDate = SEShared.adjustForCentralTime(es.End_Date_Time__c);
+            if (eventInstance.Instance_End_Date__c != null) {
+                evt.endDate = SEShared.convertDateToDatetime(eventInstance.Instance_End_Date__c, eventInstance.Instance_End_Time__c);
             }
 
-            if (!String.isBlank(es.Event__r.Location_Title__c) || !String.isBlank(es.Location_Title_Override__c)) {
-                if (!String.isBlank(es.Location_Title_Override__c)) {
-                    evt.locationTitle = es.Location_Title_Override__c;
+            if (!String.isBlank(eventInstance.Event__r.Location_Title__c) || !String.isBlank(eventInstance.Location_Title_Override__c)) {
+                if (!String.isBlank(eventInstance.Location_Title_Override__c)) {
+                    evt.locationTitle = eventInstance.Location_Title_Override__c;
                 } else {
-                    evt.locationTitle = es.Event__r.Location_Title__c;
+                    evt.locationTitle = eventInstance.Event__r.Location_Title__c;
                 }
             } else {
                 evt.locationTitle = '';
             }
 
-            if (!String.isBlank(es.Event__r.Location_Address__c) || !String.isBlank(es.Location_Address_Override__c)) {
-                if (!String.isBlank(es.Location_Address_Override__c)) {
-                    evt.locationAddress = es.Location_Address_Override__c;
+            if (!String.isBlank(eventInstance.Event__r.Location_Address__c) || !String.isBlank(eventInstance.Location_Address_Override__c)) {
+                if (!String.isBlank(eventInstance.Location_Address_Override__c)) {
+                    evt.locationAddress = eventInstance.Location_Address_Override__c;
                 } else {
-                    evt.locationAddress = es.Event__r.Location_Address__c;
+                    evt.locationAddress = eventInstance.Event__r.Location_Address__c;
                 }
             } else {
                 evt.locationAddress = '';
             }
 
-            if (!String.isBlank(es.Event__r.Location_Map_Link__c) || !String.isBlank(es.Location_Map_Link_Override__c)) {
-                if (!String.isBlank(es.Location_Map_Link_Override__c)) {
-                    evt.locationMapLink = es.Location_Map_Link_Override__c;
+            if (!String.isBlank(eventInstance.Event__r.Location_Map_Link__c) || !String.isBlank(eventInstance.Location_Map_Link_Override__c)) {
+                if (!String.isBlank(eventInstance.Location_Map_Link_Override__c)) {
+                    evt.locationMapLink = eventInstance.Location_Map_Link_Override__c;
                 } else {
-                    evt.locationMapLink = es.Event__r.Location_Map_Link__c;
+                    evt.locationMapLink = eventInstance.Event__r.Location_Map_Link__c;
                 }
             } else {
                 evt.locationMapLink = '';
@@ -305,15 +294,15 @@ global with sharing class SummitEventsFeed {
                 evt.className = 'eventClosed';
             } else {
                 evt.eventClosed = false;
-                if (!String.isBlank(es.Event__r.Alternate_Registration_URL__c) || !String.isBlank(es.Alternate_Registration_URL_Override__c)) {
-                    if (!String.isBlank(es.Alternate_Registration_URL_Override__c)) {
-                        evt.eventUrl = es.Alternate_Registration_URL_Override__c;
+                if (!String.isBlank(eventInstance.Event__r.Alternate_Registration_URL__c) || !String.isBlank(eventInstance.Alternate_Registration_URL_Override__c)) {
+                    if (!String.isBlank(eventInstance.Alternate_Registration_URL_Override__c)) {
+                        evt.eventUrl = eventInstance.Alternate_Registration_URL_Override__c;
                     } else {
-                        evt.eventUrl = es.Event__r.Alternate_Registration_URL__c;
+                        evt.eventUrl = eventInstance.Event__r.Alternate_Registration_URL__c;
                     }
 
                 } else {
-                    evt.eventUrl = es.Event__r.Community_Base_URL__c + 'SummitEventsRegister?instanceID=' + es.Id;
+                    evt.eventUrl = eventInstance.Event__r.Community_Base_URL__c + 'SummitEventsRegister?instanceID=' + eventInstance.Id;
                 }
                 evt.className = 'eventOpened';
             }
