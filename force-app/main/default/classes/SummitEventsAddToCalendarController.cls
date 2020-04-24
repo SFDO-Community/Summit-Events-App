@@ -25,14 +25,18 @@ public with sharing class SummitEventsAddToCalendarController {
         UUID = NewGuid();
         String URLinstanceID = ApexPages.currentPage().getParameters().get('instanceID');
         if (!String.isBlank(URLinstanceID)) {
-            evtInfo = [
-                    SELECT Event_Name__c, Instance_Start_Date__c, Instance_End_Date__c,
+
+            List<Summit_Events_Instance__c> eventInstanceList = [
+                    SELECT Id, Event_Name__c, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c,
                             Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c,
                             Instance_Short_Description__c, Event__r.Event_Short_Listing_Description__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :URLinstanceID
-                    LIMIT 1
             ];
+
+            if (eventInstanceList.size() > 0) {
+                evtInfo = eventInstanceList[0];
+            }
 
             if (evtInfo != null) {
                 TIMEZONE = SEShared.getTimeZonePick(evtInfo.Instance_Time_Zone__c);
@@ -41,7 +45,7 @@ public with sharing class SummitEventsAddToCalendarController {
                 DTSTAMP = Datetime.now().format('yyyyMMdd\'T\'HHmmss\'Z\'');
                 SUMMARY = evtInfo.Event_Name__c;
                 if (!String.isBlank(evtInfo.Instance_Title__c)) {
-                    SUMMARY += ' - ' + evtInfo.Instance_Title__c;
+                    SUMMARY += evtInfo.Event_Name__c + ' - ' + evtInfo.Instance_Title__c;
                 }
 
                 DESCRIPTION = evtInfo.Event_Name__c;

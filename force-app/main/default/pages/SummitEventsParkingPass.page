@@ -90,7 +90,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         </style>
     </head>
     <apex:outputPanel layout="block" id="pdfWrap" styleClass="pdfWrap" rendered="{!IF(warning == '', true, false)}">
-        <apex:image value="{!URLFOR($Resource.SummitEventsAssets, '/img/UGParkingPassSummer2019.gif')}" styleClass="backImg"/>
+        <apex:image value="{!URLFOR($Resource.SummitEventsAssets, '/img/UGParkingPass.gif')}" styleClass="backImg"/>
         <div class="textReference">
             <div id="coupon">
                 <apex:outputText value="{!couponOut}" escape="false" styleClass="firstNameGreeting"></apex:outputText>

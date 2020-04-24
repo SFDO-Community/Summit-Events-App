@@ -4,8 +4,8 @@
     <externalId>false</externalId>
     <formula>HYPERLINK(
 Event__r.Community_Base_URL__c
-&amp; &quot;usteventparkingpass?regId=&quot;
-&amp; Id
+&amp; &quot;SummitEventsParkingPass?regId=&quot;
+&amp; CASESAFEID(Id)
 ,&quot;Parking Pass&quot;)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>UG Parking Pass Link</label>
