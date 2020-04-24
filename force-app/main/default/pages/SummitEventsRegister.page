@@ -33,7 +33,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     <apex:messages/>
                 </div>
 
-                <apex:form id="SummitEventRegisterForm" styleClass="slds-grid slds-wrap">
+                <apex:form id="SummitEventRegisterForm" styleClass="slds-grid slds-wrap" style="width:100%">
 
                     <apex:actionFunction name="setParentSetting" immediate="true" onComplete="dynamicValidation();fadein();" reRender="thirdPartyRegistrant">
                         <apex:param name="parentType" value="" assignTo="{!newEvtReg.Registrant_Third_Party_Status__c}"></apex:param>
@@ -147,7 +147,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             <apex:outputPanel layout="none" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Primary Registrant' || newEvtReg.Registrant_Third_Party_Status__c == '', false, true)}">
 
                                 <!-- Parent questions -->
-                                <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" id="parentInfo" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Other', false, true)}">
+                                <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" id="parentInfo" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Other', false, true)}" style="width:100%">
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                                         <h3 class="slds-text-heading_medium">Parent Information</h3>
@@ -203,7 +203,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 </apex:outputPanel>
 
                                 <!-- OTHER QUESTIONS -->
-                                <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Other', true, false)}">
+                                <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Other', true, false)}" style="width:100%">
 
                                     <div class="cslds-col slds-p-around_x-small slds-size_1-of-1">
                                         <h3 class="slds-text-heading_medium">Your Information</h3>
@@ -410,7 +410,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </apex:outputPanel>
 
                         <!-- REGISTRANT PHONE NUMBER -->
-                        <apex:outputPanel layout="block" id="phoneBlock" styleClass="slds-grid slds-wrap slds-size_1-of-1 {!IF(CONTAINS(eventPage.Ask_Phone__c, 'require one'), ' phone-require-one ','')}" rendered="{!IF(BEGINS(eventPage.Ask_Phone__c, 'Do not ') || eventPage.Ask_Phone__c == null, false, true) }">
+                        <apex:outputPanel layout="block" id="phoneBlock" styleClass="slds-grid slds-wrap slds-size_1-of-1 {!IF(CONTAINS(eventPage.Ask_Phone__c, 'require one'), ' phone-require-one ','')}" rendered="{!IF(BEGINS(eventPage.Ask_Phone__c, 'Do not ') || eventPage.Ask_Phone__c == null, false, true) }" style="width:100%">
 
                             <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!IF(CONTAINS(eventPage.Ask_Phone__c, 'require one'),true,false)}">
                                 <p class="slds-is-required"><strong>Please provide either a home or mobile number</strong></p>
@@ -540,7 +540,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 </div>
                             </div>
 
-                            <apex:outputPanel layout="block" id="countryInfo" rendered="true" styleClass="slds-grid slds-wrap slds-size_1-of-1">
+                            <apex:outputPanel layout="block" id="countryInfo" rendered="true" styleClass="slds-grid slds-wrap slds-size_1-of-1" style="width:100%">
 
                                 <apex:outputPanel layout="none" rendered="{!IF(newEvtReg.Registrant_Country__c == 'United States' || newEvtReg.Registrant_Country__c == 'Canada', true, false)}">
 
@@ -577,7 +577,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                 </apex:outputPanel>
 
-                                <apex:outputPanel layout="none" rendered="{!IF(newEvtReg.Registrant_Country__c != 'United States' && newEvtReg.Registrant_Country__c != 'Canada', true, false)}" styleClass="slds-grid slds-wrap">
+                                <apex:outputPanel layout="none" rendered="{!IF(newEvtReg.Registrant_Country__c != 'United States' && newEvtReg.Registrant_Country__c != 'Canada', true, false)}" styleClass="slds-grid slds-wrap" style="width:100%">
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_2-of-6 slds-large-size_2-of-6">
                                         <div class="slds-form-element {!IF(eventPage.Ask_Mailing_Address__c == 'Ask and require', 'slds-is-required', '')}">
@@ -621,7 +621,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 <h4 class="slds-text-heading_small">High School</h4>
                             </div>
 
-                            <div id="hsAsk" class="slds-grid slds-wrap slds-size_1-of-1">
+                            <div id="hsAsk" class="slds-grid slds-wrap slds-size_1-of-1" style="width:100%">
                                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_4-of-6 slds-large-size_4-of-6">
                                     <div class="slds-form-element">
                                         <label for="schoolSelector" class="required slds-form-element__label">High School Attended</label>
@@ -670,7 +670,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 <h4 class="slds-text-heading_small">College</h4>
                                 <p class="slds-text-body">Please indicate the last college you attended and the last year you attended that college.</p>
                             </div>
-                            <div id="collegeAsk" class="slds-grid slds-wrap slds-size_1-of-1">
+                            <div id="collegeAsk" class="slds-grid slds-wrap slds-size_1-of-1" style="width:100%">
                                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_4-of-6 slds-large-size_4-of-6">
                                     <div class="slds-form-element">
                                         <label for="collegeSelector" class="slds-form-element__label">School recently attended</label>
@@ -710,7 +710,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </apex:outputPanel>
 
                         <!-- Additional Questions -->
-                        <apex:outputPanel layout="block" id="addInfo" styleClass="slds-grid slds-wrap" rendered="{!additionalQuestions}">
+                        <apex:outputPanel layout="block" id="addInfo" styleClass="slds-grid slds-wrap" rendered="{!additionalQuestions}" style="width:100%">
 
                             <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                                 <h3 class="slds-text-heading_medium">Additional Information</h3>
