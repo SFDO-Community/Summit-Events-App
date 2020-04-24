@@ -256,11 +256,6 @@ public with sharing class SummitEventsRegisterController {
                 newEvtReg.Registrant_Zip__c = userAddress.hed__MailingPostalCode__c;
                 newEvtReg.Registrant_Phone__c = userContact.HomePhone;
                 newEvtReg.Registrant_Mobile_Phone__c = userContact.MobilePhone;
-                //Path to the following not in HEDA ORG yet
-                //newEvtReg.Registrant_College__c = userContact.EnrollmentrxRx__High_School__r.Name;
-                //newEvtReg.Registrant_College_Code__c = userContact.EnrollmentrxRx__High_School__r.EnrollmentrxRx__CEEB_Code__c;
-                //newEvtReg.Registrant_High_School__c = userContact.EnrollmentrxRx__High_School__r.Name;
-                //newEvtReg.Registrant_High_School_Code__c = userContact.EnrollmentrxRx__High_School__r.EnrollmentrxRx__CEEB_Code__c;
                 newEvtReg.Registrant_Preferred_First_Name__c = userContact.Preferred_First_Name__c;
                 newEvtReg.Registrant_Date_of_Birth__c = userContact.Birthdate;
                 if (userContact.Birthdate != null) {
