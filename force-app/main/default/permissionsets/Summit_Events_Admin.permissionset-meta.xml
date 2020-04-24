@@ -462,16 +462,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Summit_Events_Instance__c.Banner_Event_Code__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Summit_Events_Instance__c.Banner_Event_Function_Code__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
         <field>Summit_Events_Instance__c.Building_Override__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -498,11 +488,6 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events_Instance__c.Current_Available_Capacity__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Summit_Events_Instance__c.End_Date_Time__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -572,6 +557,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events_Instance__c.Open_Registration__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events_Instance__c.Primary_Attendees__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -582,12 +572,22 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events_Instance__c.Private_Instance__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Instance__c.Registration_Close_Date__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events_Instance__c.Registration_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
-        <field>Summit_Events_Instance__c.Start_Date_Time__c</field>
+        <editable>false</editable>
+        <field>Summit_Events_Instance__c.Registration_QR_Code__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -676,21 +676,6 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events_Registration__c.Contact_PIDM__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Summit_Events_Registration__c.Contact_Soft_Match_Email__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Summit_Events_Registration__c.Contact_Soft_Match_First_Last_Zip__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Registration__c.Contact__c</field>
         <readable>true</readable>
@@ -701,23 +686,8 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events_Registration__c.Date_Time_Text__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Summit_Events_Registration__c.Date__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Registration__c.Display_Attendance_Publicly__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events_Registration__c.End_Time_Text__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -732,7 +702,17 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events_Registration__c.Event_Instance_End_Date_Text__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events_Registration__c.Event_Instance_End_Date__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Registration__c.Event_Instance_End_Time_Text__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -742,12 +722,17 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Registration__c.Event_Instance_Name__c</field>
+        <field>Summit_Events_Registration__c.Event_Instance_Start_Date_Text__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events_Registration__c.Event_Instance_Start_Date__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Registration__c.Event_Instance_Start_Time_Text__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -777,6 +762,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.Event_Registration_Requested_Date__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Event__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -788,16 +778,6 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Registration__c.Generated_Requested_Appointments__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events_Registration__c.Instance_Title__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Summit_Events_Registration__c.Instance__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1073,11 +1053,6 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Registration__c.Session__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events_Registration__c.Start_Time_Text__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1549,13 +1524,13 @@
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
-        <allowCreate>false</allowCreate>
-        <allowDelete>false</allowDelete>
-        <allowEdit>false</allowEdit>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
+        <modifyAllRecords>true</modifyAllRecords>
         <object>Summit_Events_Instance__c</object>
-        <viewAllRecords>false</viewAllRecords>
+        <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
         <allowCreate>true</allowCreate>

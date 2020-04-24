@@ -74,7 +74,6 @@ Insert Summit_Events__c:
     Program_Filter_2__c: Program_Filter_2__c
     Program_Filter_3__c: Program_Filter_3__c
     Program_Filter__c: Program_Filter__c
-    Registration_Email_Restriction__c: Registration_Email_Restriction__c
     Start_Date__c: Start_Date__c
     Template__c: Template__c
     Tracking_Cancel_Registration__c: Tracking_Cancel_Registration__c
@@ -117,22 +116,21 @@ Insert Summit_Events_Instance__c:
     Active_Status__c: Active_Status__c
     Alternate_Registration_URL_Override__c: Alternate_Registration_URL_Override__c
     Attendee_List__c: Attendee_List__c
+    Banner_Event_Code__c: Banner_Event_Code__c
+    Banner_Event_Function_Code__c: Banner_Event_Function_Code__c
     Building_Override__c: Building_Override__c
     Capacity__c: Capacity__c
     Category__c: Category__c
+    End_Date_Time__c: End_Date_Time__c
     Feed_Registration_Button_Text_Override__c: Feed_Registration_Button_Text_Override__c
-    Instance_End_Date__c: Instance_End_Date__c
-    Instance_End_Time__c: Instance_End_Time__c
     Instance_Short_Description__c: Instance_Short_Description__c
-    Instance_Start_Date__c: Instance_Start_Date__c
-    Instance_Start_Time__c: Instance_Start_Time__c
-    Instance_Time_Zone__c: Instance_Time_Zone__c
     Instance_Title__c: Instance_Title__c
     Location_Address_Override__c: Location_Address_Override__c
     Location_Map_Link_Override__c: Location_Map_Link_Override__c
     Location_Title_Override__c: Location_Title_Override__c
     Location_Type_Override__c: Location_Type_Override__c
     Private_Instance__c: Private_Instance__c
+    Start_Date_Time__c: Start_Date_Time__c
   lookups:
     Event__c:
       table: Summit_Events__c
@@ -271,56 +269,6 @@ Insert Contact:
       table: hed__Language__c
     hed__Primary_Organization__c:
       table: Account
-Insert hed__Address__c:
-  sf_object: hed__Address__c
-  table: hed__Address__c
-  fields:
-    Id: sf_id
-    hed__Address_Type__c: hed__Address_Type__c
-    hed__Default_Address__c: hed__Default_Address__c
-    hed__Latest_End_Date__c: hed__Latest_End_Date__c
-    hed__Latest_Start_Date__c: hed__Latest_Start_Date__c
-    hed__MailingCity__c: hed__MailingCity__c
-    hed__MailingCountry__c: hed__MailingCountry__c
-    hed__MailingPostalCode__c: hed__MailingPostalCode__c
-    hed__MailingState__c: hed__MailingState__c
-    hed__MailingStreet2__c: hed__MailingStreet2__c
-    hed__MailingStreet__c: hed__MailingStreet__c
-    hed__Seasonal_End_Day__c: hed__Seasonal_End_Day__c
-    hed__Seasonal_End_Month__c: hed__Seasonal_End_Month__c
-    hed__Seasonal_End_Year__c: hed__Seasonal_End_Year__c
-    hed__Seasonal_Start_Day__c: hed__Seasonal_Start_Day__c
-    hed__Seasonal_Start_Month__c: hed__Seasonal_Start_Month__c
-    hed__Seasonal_Start_Year__c: hed__Seasonal_Start_Year__c
-  lookups:
-    hed__Parent_Account__c:
-      table: Account
-    hed__Parent_Contact__c:
-      table: Contact
-Insert Summit_Events_Host__c:
-  sf_object: Summit_Events_Host__c
-  table: Summit_Events_Host__c
-  fields:
-    Id: sf_id
-    Additional_Comments__c: Additional_Comments__c
-    Assigned__c: Assigned__c
-    Building__c: Building__c
-    Course_Name__c: Course_Name__c
-    Department__c: Department__c
-    First_Name__c: First_Name__c
-    Gender__c: Gender__c
-    Last_Name__c: Last_Name__c
-    Location__c: Location__c
-    Max_Available__c: Max_Available__c
-    Preferred_Title__c: Preferred_Title__c
-    RecordTypeId: RecordTypeId
-    Time__c: Time__c
-    Undergrad_Major__c: Undergrad_Major__c
-  lookups:
-    Contact__c:
-      table: Contact
-    Event_Instance__c:
-      table: Summit_Events_Instance__c
 Insert Summit_Events_Registration__c:
   sf_object: Summit_Events_Registration__c
   table: Summit_Events_Registration__c
@@ -336,12 +284,14 @@ Insert Summit_Events_Registration__c:
     Campus_Tour_Location__c: Campus_Tour_Location__c
     Campus_Tour_Time__c: Campus_Tour_Time__c
     Confirmation_Call_Result__c: Confirmation_Call_Result__c
+    Contact_Soft_Match_Email__c: Contact_Soft_Match_Email__c
+    Contact_Soft_Match_First_Last_Zip__c: Contact_Soft_Match_First_Last_Zip__c
     Date_All_Appointments_Confirmed_del__c: Date_All_Appointments_Confirmed_del__c
+    Date__c: Date__c
     Display_Attendance_Publicly__c: Display_Attendance_Publicly__c
-    Event_Instance_Date_Time_Formatted__c: Event_Instance_Date_Time_Formatted__c
-    Event_Registration_Requested_Date__c: Event_Registration_Requested_Date__c
     Generated_Itinerary__c: Generated_Itinerary__c
     Generated_Requested_Appointments__c: Generated_Requested_Appointments__c
+    Instance__c: Instance__c
     Last_Name_as_Student__c: Last_Name_as_Student__c
     Matching_Log__c: Matching_Log__c
     New_Contact_Created__c: New_Contact_Created__c
@@ -402,6 +352,56 @@ Insert Summit_Events_Registration__c:
       table: Summit_Events_Instance__c
     Event__c:
       table: Summit_Events__c
+Insert Summit_Events_Host__c:
+  sf_object: Summit_Events_Host__c
+  table: Summit_Events_Host__c
+  fields:
+    Id: sf_id
+    Additional_Comments__c: Additional_Comments__c
+    Assigned__c: Assigned__c
+    Building__c: Building__c
+    Course_Name__c: Course_Name__c
+    Department__c: Department__c
+    First_Name__c: First_Name__c
+    Gender__c: Gender__c
+    Last_Name__c: Last_Name__c
+    Location__c: Location__c
+    Max_Available__c: Max_Available__c
+    Preferred_Title__c: Preferred_Title__c
+    RecordTypeId: RecordTypeId
+    Time__c: Time__c
+    Undergrad_Major__c: Undergrad_Major__c
+  lookups:
+    Contact__c:
+      table: Contact
+    Event_Instance__c:
+      table: Summit_Events_Instance__c
+Insert hed__Address__c:
+  sf_object: hed__Address__c
+  table: hed__Address__c
+  fields:
+    Id: sf_id
+    hed__Address_Type__c: hed__Address_Type__c
+    hed__Default_Address__c: hed__Default_Address__c
+    hed__Latest_End_Date__c: hed__Latest_End_Date__c
+    hed__Latest_Start_Date__c: hed__Latest_Start_Date__c
+    hed__MailingCity__c: hed__MailingCity__c
+    hed__MailingCountry__c: hed__MailingCountry__c
+    hed__MailingPostalCode__c: hed__MailingPostalCode__c
+    hed__MailingState__c: hed__MailingState__c
+    hed__MailingStreet2__c: hed__MailingStreet2__c
+    hed__MailingStreet__c: hed__MailingStreet__c
+    hed__Seasonal_End_Day__c: hed__Seasonal_End_Day__c
+    hed__Seasonal_End_Month__c: hed__Seasonal_End_Month__c
+    hed__Seasonal_End_Year__c: hed__Seasonal_End_Year__c
+    hed__Seasonal_Start_Day__c: hed__Seasonal_Start_Day__c
+    hed__Seasonal_Start_Month__c: hed__Seasonal_Start_Month__c
+    hed__Seasonal_Start_Year__c: hed__Seasonal_Start_Year__c
+  lookups:
+    hed__Parent_Account__c:
+      table: Account
+    hed__Parent_Contact__c:
+      table: Contact
 Insert Summit_Events_Appointments__c:
   sf_object: Summit_Events_Appointments__c
   table: Summit_Events_Appointments__c

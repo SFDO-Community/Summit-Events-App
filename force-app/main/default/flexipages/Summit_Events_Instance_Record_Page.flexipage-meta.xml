@@ -16,6 +16,13 @@
             </componentInstanceProperties>
             <componentName>force:highlightsPanel</componentName>
         </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>hideHeader</name>
+                <value>false</value>
+            </componentInstanceProperties>
+            <componentName>force:relatedListQuickLinksContainer</componentName>
+        </componentInstances>
         <mode>Replace</mode>
         <name>header</name>
         <type>Region</type>
@@ -60,7 +67,7 @@
         <componentInstances>
             <componentInstanceProperties>
                 <name>relatedListComponentOverride</name>
-                <value>NONE</value>
+                <value>GRID</value>
             </componentInstanceProperties>
             <componentName>force:relatedListContainer</componentName>
         </componentInstances>

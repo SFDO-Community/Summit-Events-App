@@ -180,7 +180,9 @@ CREATE TABLE "Summit_Events_Instance__c" (
 	sf_id VARCHAR(255) NOT NULL, 
 	"Active_Status__c" VARCHAR(255), 
 	"Alternate_Registration_URL_Override__c" VARCHAR(255), 
-	"Attendee_List__c" VARCHAR(255),
+	"Attendee_List__c" VARCHAR(255), 
+	"Banner_Event_Code__c" VARCHAR(255), 
+	"Banner_Event_Function_Code__c" VARCHAR(255), 
 	"Building_Override__c" VARCHAR(255), 
 	"Capacity__c" VARCHAR(255), 
 	"Category__c" VARCHAR(255), 
@@ -200,8 +202,8 @@ CREATE TABLE "Summit_Events_Instance__c" (
 	event__c VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "Summit_Events_Instance__c" VALUES('a0X1h000003BjOTEA0','Active','','false','','100.0','','',date('now', '+7 day'),'15:30:00.000Z','A short description',date('now', '+7 day'),'08:00:00.000Z','Central Daylight Time (America/Chicago)','','','','','','false','a0a1h0000043zr3AAA');
-INSERT INTO "Summit_Events_Instance__c" VALUES('a0X1h000003BjOUEA0','Active','','false','','100.0','','',date('now', '+14 day'),'13:15:00.000Z','A short description',date('now', '+14 day'),'09:00:00.000Z','Central Daylight Time (America/Chicago)','A special Title','','','','','false','a0a1h0000043zr3AAA');
+INSERT INTO "Summit_Events_Instance__c" VALUES('a0X1h000003BjOTEA0','Active','','false','','','','100.0','','',date('now', '+7 day'),'15:30:00.000Z','A short description',date('now', '+7 day'),'08:00:00.000Z','Central Daylight Time (America/Chicago)','','','','','','false','a0a1h0000043zr3AAA');
+INSERT INTO "Summit_Events_Instance__c" VALUES('a0X1h000003BjOUEA0','Active','','false','','','','100.0','','',date('now', '+14 day'),'13:15:00.000Z','A short description',date('now', '+14 day'),'09:00:00.000Z','Central Daylight Time (America/Chicago)','A special Title','','','','','false','a0a1h0000043zr3AAA');
 CREATE TABLE "Summit_Events_Registration__c" (
 	sf_id VARCHAR(255) NOT NULL, 
 	"Actual_Number_of_Guests__c" VARCHAR(255), 

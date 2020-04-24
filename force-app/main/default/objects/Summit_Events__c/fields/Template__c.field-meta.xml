@@ -29,6 +29,11 @@
                 <default>false</default>
                 <label>GeneralSLDS</label>
             </value>
+            <value>
+                <fullName>SandhyaTemplate</fullName>
+                <default>false</default>
+                <label>SandhyaTemplate</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
