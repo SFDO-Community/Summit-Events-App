@@ -19,6 +19,14 @@ tasks:
             path: unpackaged/config/site
             unmanaged: True
 
+    deploy_guest_sharing_rules:
+        description: Deploys configuration for Development.
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            namespace_inject: $project_config.project__package__namespace
+            path: unpackaged/config/sharing
+            unmanaged: True
+
     deploy_site_settings:
         description: Setup the Custom Settings for the Event Site
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
@@ -78,3 +86,5 @@ flows:
                 task: deploy_site_settings
             3:
                 task: deploy_guest_permission_set
+            4:
+                task: deploy_guest_sharing_rules
