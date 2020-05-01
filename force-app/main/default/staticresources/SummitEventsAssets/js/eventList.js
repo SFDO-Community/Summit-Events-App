@@ -34,7 +34,7 @@ $(document).ready(function () {
         eventRender: function (event, $el) {
             var evtTmplt = '';
             var evtDesc = '';
-            var eventClass = "ustEventItem";
+            var eventClass = "SummitEventsItem";
             if (event.eventClosed) {
                 eventClass += " ustEventItemClosed";
             }
@@ -108,7 +108,7 @@ function loadJSONEvents() {
     viewStart = getCurrentSOQLDateTimeLiteral($("#fullCalendarView").fullCalendar('getView').start).toString();
     viewEnd = getCurrentSOQLDateTimeLiteral($("#fullCalendarView").fullCalendar('getView').end).toString();
     $.ajax({
-        url: feedURL + "/services/apexrest/usteventfeed",
+        url: feedURL + "/services/apexrest/summiteventsfeed",
         data: {'viewStart': viewStart, 'viewEnd': viewEnd, 'feedType': 'eventList', 'audience': $("#audienceDD").val()},
         dataType: "json",
         cache: false
@@ -170,7 +170,7 @@ function findEvents(edate, instanceID) {
 
 function loadAudienceDD() {
     $.ajax({
-        url: "/services/apexrest/usteventfeed",
+        url: feedURL +"/services/apexrest/summiteventsfeed",
         data: {'feedType': 'audienceDD'},
         dataType: "json"
     }).done(function (data) {
