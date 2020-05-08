@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Date_Time_Text__c</fullName>
+    <fullName>Event_Instance_Start_Date_Text__c</fullName>
     <externalId>false</externalId>
     <formula>(CASE(
-MOD( Date__c - DATE( 1900, 1, 7 ), 7 ),
+MOD( Event_Instance_Start_Date__c - DATE( 1900, 1, 7 ), 7 ),
 0, &quot;Sunday&quot;,
 1, &quot;Monday&quot;,
 2, &quot;Tuesday&quot;,
@@ -16,7 +16,7 @@ MOD( Date__c - DATE( 1900, 1, 7 ), 7 ),
 &amp;&quot;, &quot;&amp;
 
 (CASE(
-MONTH(Date__c),
+MONTH(Event_Instance_Start_Date__c ),
 1, &quot;January&quot;,
 2, &quot;February&quot;,
 3, &quot;March&quot;,
@@ -32,7 +32,7 @@ MONTH(Date__c),
 
 &amp;&quot; &quot;&amp;
 
-CASE(RIGHT(TEXT(Date__c),2),
+CASE(RIGHT(TEXT(Event_Instance_Start_Date__c ),2),
 &quot;01&quot;, &quot;1st&quot;,
 &quot;21&quot;, &quot;21st&quot;,
 &quot;31&quot;, &quot;31st&quot;,
@@ -46,9 +46,9 @@ CASE(RIGHT(TEXT(Date__c),2),
 &quot;07&quot;, &quot;7th&quot;,
 &quot;08&quot;, &quot;8th&quot;,
 &quot;09&quot;, &quot;9th&quot;,
-(RIGHT(TEXT(Date__c),2)&amp;&quot;th&quot;))</formula>
+(RIGHT(TEXT(Event_Instance_Start_Date__c ),2)&amp;&quot;th&quot;))</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <label>Date/Time Text</label>
+    <label>Event Instance Start Date Text</label>
     <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

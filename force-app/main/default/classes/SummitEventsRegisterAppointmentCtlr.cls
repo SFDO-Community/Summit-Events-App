@@ -17,7 +17,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     public String templateSelected { get; set; }
     public Boolean noOptionalAppointments { get; set; }
     public Boolean requiredAppt { get; set; }
-    public String eventStartDateTimeCrumb { get; set; }
     public String navBreadCrumb { get; set; }
 
     public class incomingAppt {
@@ -52,12 +51,19 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             templateSelected = eventPage.Template__c;
 
             if (!String.isBlank(evtinfo.evtRegId)) {
-                evtInstance = [SELECT Instance_Title__c, Event__r.Event_Name__c, Start_Date_Time__c, End_Date_Time__c FROM Summit_Events_Instance__c WHERE Id = :evtinfo.instanceID LIMIT 1];
+                evtInstance = [
+                        SELECT Instance_Title__c, Event__r.Event_Name__c,
+                                Instance_Time_Zone__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Start_Date__c,
+                                Instance_End_Date__c
+                        FROM Summit_Events_Instance__c
+                        WHERE Id = :evtinfo.instanceID
+                        LIMIT 1
+                ];
 
 
                 if (evtInstance != null) {
                     //Datetime rightNow = SEShared.adjustForCentralTime(Datetime.now());
-                    String dayOfWeek = evtInstance.Start_Date_Time__c.format('EEEE');
+                    String dayOfWeek = SEShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c,null).format('EEEE');
                     // = dayOfWeek;
                     //Build available appointments
                     appts = new Map<ID, Summit_Events_Appointment_Type__c>([
@@ -67,17 +73,14 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             FROM Summit_Events_Appointment_Type__c
                             WHERE Summit_Events__c = :evtinfo.evtId
                             AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
-                            AND (Date_Available_Start__c <= :evtInstance.Start_Date_Time__c.date() OR Date_Available_Start__c = NULL)
-                            AND (Date_Available_End__c >= :evtInstance.End_Date_Time__c.date() OR Date_Available_End__c = NULL)
+                            AND (Date_Available_Start__c <= :evtInstance.Instance_Start_Date__c OR Date_Available_Start__c = NULL)
+                            AND (Date_Available_End__c >= :evtInstance.Instance_End_Date__c OR Date_Available_End__c = NULL)
                             AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
                             AND (Appointment_Type_Status__c = 'Active' OR Appointment_Type_Status__c = NULL)
                             ORDER BY Sort_Order__c ASC NULLS LAST
                     ]);
 
-                    if (evtInstance.Start_Date_Time__c != null && evtInstance.End_Date_Time__c != null) {
-                        eventStartDateTimeCrumb = evtInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + evtInstance.End_Date_Time__c.format('h:mm a');
-                    }
-                    navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance);
+                    navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance,false);
 
                     //Check if the user gets to select any appointments or they are all auto added
                     for (Summit_Events_Appointment_Type__c chosenCheck : appts.values()) {
@@ -282,7 +285,12 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             evtInfo = SEShared.getSummitEventsInfo();
             Boolean addedAppts = false;
             Id RegId = evtinfo.evtRegId;
-            evtInstance = [SELECT Instance_Title__c, Start_Date_Time__c, End_Date_Time__c FROM Summit_Events_Instance__c WHERE Id = :evtinfo.instanceID LIMIT 1];
+            evtInstance = [
+                    SELECT Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c
+                    FROM Summit_Events_Instance__c
+                    WHERE Id = :evtinfo.instanceID
+                    LIMIT 1
+            ];
             List<Summit_Events_Appointment_Type__c> autoAddAppt = [
                     SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Registrant_Input__c, Custom_Picklist__c, Appointment_Limits__c,
                             Chosen_State__c, Sort_Order__c, Auto_Confirm_Appointment__c, Auto_add_building__c, Auto_Add_Time__c, Do_Not_Show_Time__c

@@ -33,7 +33,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     <apex:messages />
                 </div>
 
-                <apex:form id="SummitEventRegisterForm" styleClass="slds-grid slds-wrap">
+                <apex:form id="SummitEventRegisterForm" styleClass="slds-grid slds-wrap" style="width:100%">
 
                     <apex:actionFunction name="setParentSetting" immediate="true" onComplete="dynamicValidation();fadein();" reRender="thirdPartyRegistrant">
                         <apex:param name="parentType" value="" assignTo="{!newEvtReg.Registrant_Third_Party_Status__c}"></apex:param>
@@ -68,8 +68,55 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                         <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                             <apex:outputText escape="false" value="{!eventPage.Event_description__c}"></apex:outputText>
-                            <apex:outputText escape="false" value="{!locationCrumb}" rendered="{!IF(!ISBLANK(locationCrumb), true, false)}"/>
                         </div>
+
+                        <!-- Location Inforamation -->
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!showLocation}">
+                            <h4 class="slds-text-heading_medium slds-p-vertical_xx-small">Event Details</h4>
+                            <!-- Location Title -->
+                            <apex:outputPanel layout="none" rendered="{!IF(!ISBLANK(eventPage.Location_Title__c) || !ISBLANK(evtInstance.Location_Title_Override__c), true, false)}">
+                                <p class="slds-text-body_large slds-p-vertical_xx-small">
+                                    <apex:outputText escape="false" value="{!IF(!ISBLANK(evtInstance.Location_Title_Override__c), evtInstance.Location_Title_Override__c, eventPage.Location_Title__c)}"/>
+                                </p>
+                            </apex:outputPanel>
+                            <!-- Location Date/Time -->
+                            <p class="slds-text-body">
+                                <apex:outputText value="{0,date,EEEE MMMM dd, YYYY}">
+                                    <apex:param value="{!evtInstance.Instance_Start_Date__c}"/>
+                                </apex:outputText>
+                            </p>
+                            <p class="slds-text-body">
+                                {!startTimeString} - {!endTimeString}
+                            </p>
+                            <!-- Location Address/Map Link -->
+                            <apex:outputPanel layout="none"
+                                              rendered="{!IF(!ISBLANK(eventPage.Location_Address__c)
+                                              || !ISBLANK(evtInstance.Location_Address_Override__c)
+                                              || !ISBLANK(eventPage.Location_Map_Link__c)
+                                              || !ISBLANK(evtInstance.Location_Map_Link_Override__c)
+                                              , true, false)}">
+                                <p class="slds-text-body_large slds-p-vertical_xx-small">
+
+                                    <!-- Start of Map link if it exists. Override first than regular if blank-->
+                                    <apex:outputText escape="false" rendered="{!If(!ISBLANK(evtInstance.Location_Map_Link_Override__c), true,false)}" value="<a href={0} target=_blank>">
+                                        <apex:param value="{!evtInstance.Location_Map_Link_Override__c}"/>
+                                    </apex:outputText>
+                                    <apex:outputText escape="false" rendered="{!If(!ISBLANK(eventPage.Location_Map_Link__c) && ISBLANK(evtInstance.Location_Map_Link_Override__c),true, false)}" value="<a href={0} target=_blank>">
+                                        <apex:param value="{!eventPage.Location_Map_Link__c}"/>
+                                    </apex:outputText>
+
+                                    <!-- Location Address shows as address if available or Map if no address given but map link -->
+                                    <apex:outputText escape="false" rendered="{!If(!ISBLANK(evtInstance.Location_Address_Override__c), true,false)}" value="{!evtInstance.Location_Address_Override__c}>"/>
+                                    <apex:outputText escape="false" rendered="{!If(!ISBLANK(eventPage.Location_Address__c) && ISBLANK(evtInstance.Location_Address_Override__c),true, false)}" value="{!eventPage.Location_Address__c}"/>
+                                    <apex:outputText escape="false" rendered="{!If((ISBLANK(eventPage.Location_Address__c) && ISBLANK(evtInstance.Location_Address_Override__c)) && (!ISBLANK(eventPage.Location_Map_Link__c) || !ISBLANK(evtInstance.Location_Map_Link_Override__c)),true, false)}" value="Map"/>
+
+                                    <!-- End of Map link if it exists -->
+                                    <apex:outputText escape="false" rendered="{!If(!ISBLANK(eventPage.Location_Map_Link__c) || !ISBLANK(evtInstance.Location_Map_Link_Override__c), true, false)}" value="</a>"/>
+                                </p>
+                            </apex:outputPanel>
+
+                        </apex:outputPanel>
+
 
                         <!-- LOGGED IN TO PORTAL MESSAGE -->
                         <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
@@ -100,7 +147,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             <apex:outputPanel layout="none" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Primary Registrant' || newEvtReg.Registrant_Third_Party_Status__c == '', false, true)}">
 
                                 <!-- Parent questions -->
-                                <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" id="parentInfo" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Other', false, true)}">
+                                <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" id="parentInfo" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Other', false, true)}" style="width:100%">
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                                         <h3 class="slds-text-heading_medium">Parent Information</h3>
@@ -156,7 +203,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 </apex:outputPanel>
 
                                 <!-- OTHER QUESTIONS -->
-                                <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Other', true, false)}">
+                                <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Other', true, false)}" style="width:100%">
 
                                     <div class="cslds-col slds-p-around_x-small slds-size_1-of-1">
                                         <h3 class="slds-text-heading_medium">Your Information</h3>
@@ -363,7 +410,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </apex:outputPanel>
 
                         <!-- REGISTRANT PHONE NUMBER -->
-                        <apex:outputPanel layout="block" id="phoneBlock" styleClass="slds-grid slds-wrap slds-size_1-of-1 {!IF(CONTAINS(eventPage.Ask_Phone__c, 'require one'), ' phone-require-one ','')}" rendered="{!IF(BEGINS(eventPage.Ask_Phone__c, 'Do not ') || eventPage.Ask_Phone__c == null, false, true) }">
+                        <apex:outputPanel layout="block" id="phoneBlock" styleClass="slds-grid slds-wrap slds-size_1-of-1 {!IF(CONTAINS(eventPage.Ask_Phone__c, 'require one'), ' phone-require-one ','')}" rendered="{!IF(BEGINS(eventPage.Ask_Phone__c, 'Do not ') || eventPage.Ask_Phone__c == null, false, true) }" style="width:100%">
 
                             <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!IF(CONTAINS(eventPage.Ask_Phone__c, 'require one'),true,false)}">
                                 <p class="slds-is-required"><strong>Please provide either a home or mobile number</strong></p>
@@ -441,8 +488,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </apex:outputText>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:inputHidden value="{!newEvtReg.Relationship_to_Institution__c}" id="relationshipToInstitution" required="true"/>
-                                    <ol class="selectableOL" id="rel2UST" data-hiddendataid="relationshipToInstitution" html-aria-describedby="relationshipToInstitution-required" required="{!IF(eventPage.Ask_Relationship_To_Institution__c == 'Ask and require',true, false)}">
+                                    <apex:inputHidden value="{!newEvtReg.Relationship_to_Institution__c}" id="relationshipToInstitution" required="{!IF(eventPage.Ask_Relationship_To_Institution__c == 'Ask and require',true, false)}"/>
+                                    <ol class="selectableOL" id="rel2UST" data-hiddendataid="relationshipToInstitution" html-aria-describedby="relationshipToInstitution-required">
                                         <apex:repeat value="{!relationshipDD}" var="account">
                                             <apex:outputText escape="false" value="<li>{!account.value}</li>"/>
                                         </apex:repeat>
@@ -493,7 +540,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 </div>
                             </div>
 
-                            <apex:outputPanel layout="block" id="countryInfo" rendered="true" styleClass="slds-grid slds-wrap slds-size_1-of-1">
+                            <apex:outputPanel layout="block" id="countryInfo" rendered="true" styleClass="slds-grid slds-wrap slds-size_1-of-1" style="width:100%">
 
                                 <apex:outputPanel layout="none" rendered="{!IF(newEvtReg.Registrant_Country__c == 'United States' || newEvtReg.Registrant_Country__c == 'Canada', true, false)}">
 
@@ -530,7 +577,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                 </apex:outputPanel>
 
-                                <apex:outputPanel layout="none" rendered="{!IF(newEvtReg.Registrant_Country__c != 'United States' && newEvtReg.Registrant_Country__c != 'Canada', true, false)}" styleClass="slds-grid slds-wrap">
+                                <apex:outputPanel layout="none" rendered="{!IF(newEvtReg.Registrant_Country__c != 'United States' && newEvtReg.Registrant_Country__c != 'Canada', true, false)}" styleClass="slds-grid slds-wrap" style="width:100%">
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_2-of-6 slds-large-size_2-of-6">
                                         <div class="slds-form-element {!IF(eventPage.Ask_Mailing_Address__c == 'Ask and require', 'slds-is-required', '')}">
@@ -574,7 +621,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 <h4 class="slds-text-heading_small">High School</h4>
                             </div>
 
-                            <div id="hsAsk" class="slds-grid slds-wrap slds-size_1-of-1">
+                            <div id="hsAsk" class="slds-grid slds-wrap slds-size_1-of-1" style="width:100%">
                                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_4-of-6 slds-large-size_4-of-6">
                                     <div class="slds-form-element">
                                         <label for="schoolSelector" class="required slds-form-element__label">High School Attended</label>
@@ -623,7 +670,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 <h4 class="slds-text-heading_small">College</h4>
                                 <p class="slds-text-body">Please indicate the last college you attended and the last year you attended that college.</p>
                             </div>
-                            <div id="collegeAsk" class="slds-grid slds-wrap slds-size_1-of-1">
+                            <div id="collegeAsk" class="slds-grid slds-wrap slds-size_1-of-1" style="width:100%">
                                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_4-of-6 slds-large-size_4-of-6">
                                     <div class="slds-form-element">
                                         <label for="collegeSelector" class="slds-form-element__label">School recently attended</label>
@@ -663,7 +710,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </apex:outputPanel>
 
                         <!-- Additional Questions -->
-                        <apex:outputPanel layout="block" id="addInfo" styleClass="slds-grid slds-wrap" rendered="{!additionalQuestions}">
+                        <apex:outputPanel layout="block" id="addInfo" styleClass="slds-grid slds-wrap" rendered="{!additionalQuestions}" style="width:100%">
 
                             <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                                 <h3 class="slds-text-heading_medium">Additional Information</h3>
@@ -752,9 +799,9 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                             <div class="slds-form-element__control">
 
                                                 <!--Text area -->
-                                                <apex:outputPanel layout="none" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'], 'Text area'), true, false)}" >
+                                                <apex:outputPanel layout="none" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'], 'Text area'), true, false)}">
                                                     <div class="slds-form-element__control">
-                                                        <apex:inputTextarea label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" required="true" styleClass="slds-input" rendered="{!isRequired}"/>
+                                                        <apex:inputTextarea label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input" required="true"  rendered="{!isRequired}"/>
                                                         <apex:inputTextarea label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input" rendered="{!!isRequired}"/>
                                                     </div>
                                                 </apex:outputPanel>
@@ -762,7 +809,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                 <!--Text box-->
                                                 <apex:outputPanel layout="none" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'],'Text box'), true, false)}">
                                                     <div class="slds-form-element__control">
-                                                        <apex:inputText label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" required="true" styleClass="slds-input" rendered="{!isRequired}"/>
+                                                        <apex:inputText label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input"  required="true" rendered="{!isRequired}"/>
                                                         <apex:inputText label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input" rendered="{!!isRequired}"/>
                                                     </div>
                                                 </apex:outputPanel>

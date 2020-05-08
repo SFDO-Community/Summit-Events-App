@@ -3,8 +3,8 @@
     <fullName>Registration_Close_Date__c</fullName>
     <description>Close Day of the Event</description>
     <externalId>false</externalId>
-    <formula>IF(NOT(ISBLANK(Event__r.Close_Event_Days_Before__c)), DATEVALUE(End_Date_Time__c - ABS(Event__r.Close_Event_Days_Before__c)),
-IF(ISBLANK(Event__r.Close_Event_Days_Before__c), DATEVALUE(End_Date_Time__c),
+    <formula>IF(NOT(ISBLANK(Event__r.Close_Event_Days_Before__c)), (Instance_End_Date__c - ABS(Event__r.Close_Event_Days_Before__c)),
+IF(ISBLANK(Event__r.Close_Event_Days_Before__c), Instance_End_Date__c,
 NULL))</formula>
     <label>Registration Close Date</label>
     <required>false</required>

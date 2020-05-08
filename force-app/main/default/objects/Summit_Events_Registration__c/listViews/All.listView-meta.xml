@@ -3,7 +3,7 @@
     <fullName>All</fullName>
     <columns>Event__c</columns>
     <columns>NAME</columns>
-    <columns>Date__c</columns>
+    <columns>Event_Registration_Requested_Date__c</columns>
     <columns>Event_Instance__c</columns>
     <columns>Contact__c</columns>
     <columns>Session__c</columns>

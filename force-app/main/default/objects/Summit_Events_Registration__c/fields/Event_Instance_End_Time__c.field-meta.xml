@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Contact_PIDM__c</fullName>
+    <fullName>Event_Instance_End_Time__c</fullName>
     <externalId>false</externalId>
-    <formula>Contact__r.University_Banner_PIDM__c</formula>
+    <formula>Event_Instance__r.Instance_End_Time__c</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <label>Contact PIDM</label>
-    <precision>18</precision>
+    <label>Event Instance End Time</label>
     <required>false</required>
-    <scale>0</scale>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
-    <type>Number</type>
-    <unique>false</unique>
+    <type>Time</type>
 </CustomField>
