@@ -14,6 +14,13 @@ Created by Thaddaeus Dahlberg on 2/15/2020.
             <apex:insert name="metaPageTitle"/>
         </title>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <style>
+            #loading .background {
+                background-image: url({!URLFOR($Resource.SummitEventsAssets, '/img/loading-summit_events.gif')})!important;
+                width: 160px;
+                height: 160px;
+            }
+        </style>
         <apex:insert name="scriptsHead"/>
     </head>
     <body>

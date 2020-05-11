@@ -66,7 +66,6 @@ public with sharing class SummitEventsShared {
             if (evtReg.Status__c != 'Started') {
                 //Registration is complete and a new form should be generated.
                 String eventCookie2 = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"","evtId":"' + evtInfo.evtId + '"}';
-                System.Debug('COOKIE 1: ' + eventCookie2);
                 createEncryptedCookie(eventCookie2, 'SummitEvents');
             }
         }
@@ -80,7 +79,6 @@ public with sharing class SummitEventsShared {
         SummitEventsInfo evt = new SummitEventsInfo();
         PageReference myVFPage = null;
         evt = getSummitEventsInfo();
-        SYSTEM.debug('!!!!!!!!!!!!!!!  EVENT ID : ' + evt.evtId + ' , INSTANCE ID : ' + evt.instanceID + ' , EVENT REG ID : ' + evt.evtRegId);
 
         Summit_Events_Settings__c myUserSetting = Summit_Events_Settings__c.getInstance(UserInfo.getUserId());
         String communityBaseURL = myUserSetting.Community_Base_URL__c;
@@ -141,26 +139,114 @@ public with sharing class SummitEventsShared {
         return '';
     }
 
-    public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance) {
+    public String getTimeZonePick(String pickListTimeZone) {
+        if (String.isNotBlank(pickListTimeZone)) {
+            if (pickListTimeZone.length() > 4) {
+                pickListTimeZone = pickListTimeZone.substring(pickListTimeZone.indexOf('(') + 1, pickListTimeZone.indexOf(')'));
+                return pickListTimeZone;
+            }
+        }
+        return '';
+    }
+
+    public TimeZone getTimeZone(String timeZoneId) {
+        TimeZone tz = null;
+        if (String.isNotBlank(timeZoneId)) {
+            tz = TimeZone.getTimeZone(timeZoneId);
+        }
+        return tz;
+    }
+
+    public String getTimeZoneDisplay(String timeZonePick, Boolean shortDisplay) {
+        String displayName = '';
+        if (String.isNotBlank(timeZonePick)) {
+            timeZonePick = getTimeZonePick(timeZonePick);
+            TimeZone tz = getTimeZone(timeZonePick);
+            if (tz != null) {
+                displayName = tz.getDisplayName();
+                //remove all parenthesis items
+                displayName = displayName.replaceAll('(\\(([^\\)]+)\\))', '');
+                displayName = displayName.trim();
+            }
+            if (shortDisplay) {
+                String[] displayNameWordList = displayName.split(' ');
+                String shortDisplayOut = '';
+                for (String word : displayNameWordList) {
+                    shortDisplayOut += word.substring(0, 1);
+                }
+                return shortDisplayOut;
+            }
+        }
+        return displayName;
+    }
+
+    public Datetime convertDateToDatetime(Date dateIn, Time timeIn) {
+        if (timeIn == null) {
+            timeIn = Time.newInstance(1, 12, 3, 4);
+        }
+        Datetime converted = Datetime.newInstance(dateIn.year(), dateIn.month(), dateIn.day(), timeIn.hour(), timeIn.minute(), timeIn.second());
+        return converted;
+    }
+
+    public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance, Boolean dateTimeOnly) {
         String instanceDate = '';
-        if (eventInstance.Start_Date_Time__c != null && eventInstance.End_Date_Time__c != null) {
-            instanceDate = eventInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + eventInstance.End_Date_Time__c.format('h:mm a');
+        if (eventInstance.Instance_Start_Date__c != null && eventInstance.Instance_End_Date__c != null) {
+            Datetime convertedStartDate = convertDateToDatetime(eventInstance.Instance_Start_Date__c, null);
+            Datetime convertedEndDate = convertDateToDatetime(eventInstance.Instance_End_Date__c, null);
+            String monthStart = convertedStartDate.format('MMMM');
+            String monthEnd = convertedEndDate.format('MMMM');
+            String yearStart = convertedStartDate.format('YYYY');
+            String yearEnd = convertedEndDate.format('YYYY');
+            String dayNameStart = convertedStartDate.format('EEEE');
+            String dayNameEnd = convertedEndDate.format('EEEE');
+            String dayStart = convertedStartDate.format('dd');
+            String dayEnd = convertedEndDate.format('dd');
+            String timeStart = '';
+            if (eventInstance.Instance_Start_Time__c != null) {
+                timeStart = formatTime(eventInstance.Instance_Start_Time__c, false);
+            }
+            String timeEnd = '';
+            if (eventInstance.Instance_End_Time__c != null) {
+                timeEnd = formatTime(eventInstance.Instance_End_Time__c, false);
+            }
+            instanceDate = dayNameStart + ', ' + monthStart + ' ' + dayStart;
+            if (eventInstance.Instance_Start_Date__c < eventInstance.Instance_End_Date__c) {
+                if (yearStart != yearEnd) {
+                    instanceDate += ', ' + yearStart;
+                }
+                instanceDate += ', ' + timeStart + ' - ' + dayNameEnd + ', ' + monthEnd + ', ' + dayEnd + ', ' + timeEnd;
+                if (yearStart == yearEnd) {
+                    instanceDate += ', ' + yearStart;
+                } else {
+                    instanceDate += ', ' + yearEnd;
+                }
+            } else {
+                instanceDate += ', ' + yearStart + ', ' + timeStart + ' - ' + timeEnd;
+            }
+
+            if (String.isNotBlank(eventInstance.Instance_Time_Zone__c)) {
+                String timeZoneDisplay = getTimeZoneDisplay(eventInstance.Instance_Time_Zone__c, true);
+                instanceDate += ' ' + timeZoneDisplay;
+            }
+            if (dateTimeOnly) {
+                return instanceDate;
+            }
         }
 
         String crumb = '';
-        crumb+= '<nav role="navigation" aria-label="Breadcrumbs">';
-        crumb+= '   <ol class="slds-breadcrumb slds-list--horizontal">';
+        crumb += '<nav role="navigation" aria-label="Breadcrumbs">';
+        crumb += '   <ol class="slds-breadcrumb slds-list--horizontal">';
         if (String.isNotBlank(eventInstance.Event__r.Event_Name__c)) {
-            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Event__r.Event_Name__c + '</a></li>';
+            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Event__r.Event_Name__c + '</a></li>';
         }
         if (String.isNotBlank(eventInstance.Instance_Title__c)) {
-            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Instance_Title__c + '</a></li>';
+            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Instance_Title__c + '</a></li>';
         }
         if (String.isNotBlank(instanceDate)) {
-            crumb+= '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + instanceDate + '</a></li>';
+            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + instanceDate + '</a></li>';
         }
-        crumb+= '   </ol>';
-        crumb+= '</nav>';
+        crumb += '   </ol>';
+        crumb += '</nav>';
         return crumb;
     }
 
@@ -173,6 +259,32 @@ public with sharing class SummitEventsShared {
         TimeZone tz = TimeZone.getTimeZone('America/Chicago');
         dt = dt.addSeconds(tz.getOffset(dt) / 1000);
         return dt;
+    }
+
+    public String formatTime(Time myTime, boolean military) {
+        String formatTime = '';
+        if (myTime.hour() >= 13 && myTime.hour() > 0 && !military) {
+            formatTime = String.valueOf(myTime.hour() - 12);
+        } else {
+            formatTime = String.valueOf(myTime.hour());
+            if (myTime.hour() < 10) {
+                formatTime = '0' + formatTime;
+            }
+        }
+        formatTime += ':';
+        if (myTime.minute() < 10) {
+            formatTime += '0' + String.valueOf(myTime.minute());
+        } else {
+            formatTime += String.valueOf(myTime.minute());
+        }
+        if (!military) {
+            if (myTime.hour() >= 12) {
+                formatTime += ' PM';
+            } else {
+                formatTime += ' AM';
+            }
+        }
+        return formatTime;
     }
 
     public Map<String, String> getDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName, String parentValue) {
@@ -245,8 +357,6 @@ public with sharing class SummitEventsShared {
         }
         return retVal;
     }
-
-
 
 
 }

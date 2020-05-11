@@ -294,13 +294,10 @@ public with sharing class SummitEventsShared_TEST {
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         evtReg.Status__c = 'Requested';
         update evtReg;
-
         Test.startTest();
         SummitEventsParkingPassController parkingCtrl = new SummitEventsParkingPassController();
         ApexPages.currentPage().getParameters().put('regId', evtReg.Id);
         parkingCtrl = new SummitEventsParkingPassController();
-
-        evtReg.Date__c = evtInst.Start_Date_Time__c.date().addDays(-1);
         upsert evtReg;
         parkingCtrl = new SummitEventsParkingPassController();
         Test.stopTest();

@@ -21,7 +21,7 @@ public with sharing class SummitEventsPrintItinerariesExtension {
         SEInstance = (Summit_Events_Instance__c) stdController.getRecord();
 
         eventRegs = [
-                SELECT Instance__c, Id, Generated_Itinerary__c, Registrant_First_Name__c, Registrant_Last_Name__c,Event_Instance_Date__c, Event_Name__c, Preferred_First_Name_Formatted__c
+                SELECT Id, Generated_Itinerary__c, Registrant_First_Name__c, Registrant_Last_Name__c,Event_Instance_Date__c, Event_Name__c, Preferred_First_Name_Formatted__c
                 FROM Summit_Events_Registration__c
                 WHERE Event_Instance__c = :SEInstance.Id
                 ORDER BY Registrant_Last_Name__c
