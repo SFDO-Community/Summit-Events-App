@@ -1,179 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <customValue>
-        <fullName>Actuarial Science</fullName>
+        <fullName>Business</fullName>
         <default>false</default>
-        <label>Actuarial Science</label>
+        <label>Business</label>
     </customValue>
     <customValue>
-        <fullName>Art History</fullName>
+        <fullName>Engineering</fullName>
         <default>false</default>
-        <label>Art History</label>
-    </customValue>
-    <customValue>
-        <fullName>Biochemistry</fullName>
-        <default>false</default>
-        <label>Biochemistry</label>
-    </customValue>
-    <customValue>
-        <fullName>Biology</fullName>
-        <default>false</default>
-        <label>Biology</label>
-    </customValue>
-    <customValue>
-        <fullName>Biology of Global Health</fullName>
-        <default>false</default>
-        <label>Biology of Global Health</label>
-    </customValue>
-    <customValue>
-        <fullName>Business Administration- Accounting</fullName>
-        <default>false</default>
-        <label>Business Administration- Accounting</label>
-    </customValue>
-    <customValue>
-        <fullName>Business Administration- Communication</fullName>
-        <default>false</default>
-        <label>Business Administration- Communication</label>
-    </customValue>
-    <customValue>
-        <fullName>Business Administration- Entrepreneurship</fullName>
-        <default>false</default>
-        <label>Business Administration- Entrepreneurship</label>
-    </customValue>
-    <customValue>
-        <fullName>Business Administration- Family Business</fullName>
-        <default>false</default>
-        <label>Business Administration- Family Business</label>
-    </customValue>
-    <customValue>
-        <fullName>Business Administration- Financial Management</fullName>
-        <default>false</default>
-        <label>Business Administration- Financial Management</label>
-    </customValue>
-    <customValue>
-        <fullName>Business Administration- General Business Management</fullName>
-        <default>false</default>
-        <label>Business Administration- General Business Management</label>
-    </customValue>
-    <customValue>
-        <fullName>Business Administration- Human Resource Management</fullName>
-        <default>false</default>
-        <label>Business Administration- Human Resource Management</label>
-    </customValue>
-    <customValue>
-        <fullName>Business Administration- International Business</fullName>
-        <default>false</default>
-        <label>Business Administration- International Business</label>
-    </customValue>
-    <customValue>
-        <fullName>Business Administration- Leadership and Management</fullName>
-        <default>false</default>
-        <label>Business Administration- Leadership and Management</label>
-    </customValue>
-    <customValue>
-        <fullName>Business Administration- Legal Studies in Business</fullName>
-        <default>false</default>
-        <label>Business Administration- Legal Studies in Business</label>
-    </customValue>
-    <customValue>
-        <fullName>Business Administration- Marketing Management</fullName>
-        <default>false</default>
-        <label>Business Administration- Marketing Management</label>
-    </customValue>
-    <customValue>
-        <fullName>Business Administration- Operations Management</fullName>
-        <default>false</default>
-        <label>Business Administration- Operations Management</label>
-    </customValue>
-    <customValue>
-        <fullName>Busienss Administration- Real Estate Studies</fullName>
-        <default>false</default>
-        <label>Busienss Administration- Real Estate Studies</label>
-    </customValue>
-    <customValue>
-        <fullName>Catholic Studies</fullName>
-        <default>false</default>
-        <label>Catholic Studies</label>
-    </customValue>
-    <customValue>
-        <fullName>Chemistry</fullName>
-        <default>false</default>
-        <label>Chemistry</label>
-    </customValue>
-    <customValue>
-        <fullName>Classical Civilization</fullName>
-        <default>false</default>
-        <label>Classical Civilization</label>
-    </customValue>
-    <customValue>
-        <fullName>Classical Langauges</fullName>
-        <default>false</default>
-        <label>Classical Langauges</label>
-    </customValue>
-    <customValue>
-        <fullName>Communication and Journalism</fullName>
-        <default>false</default>
-        <label>Communication and Journalism</label>
-    </customValue>
-    <customValue>
-        <fullName>Computer Science</fullName>
-        <default>false</default>
-        <label>Computer Science</label>
-    </customValue>
-    <customValue>
-        <fullName>Criminal Justice</fullName>
-        <default>false</default>
-        <label>Criminal Justice</label>
-    </customValue>
-    <customValue>
-        <fullName>Economics</fullName>
-        <default>false</default>
-        <label>Economics</label>
-    </customValue>
-    <customValue>
-        <fullName>Education- Elementary</fullName>
-        <default>false</default>
-        <label>Education- Elementary</label>
-    </customValue>
-    <customValue>
-        <fullName>Education- Secondary</fullName>
-        <default>false</default>
-        <label>Education- Secondary</label>
-    </customValue>
-    <customValue>
-        <fullName>Engineering- Aerospace</fullName>
-        <default>false</default>
-        <label>Engineering- Aerospace</label>
-    </customValue>
-    <customValue>
-        <fullName>Engineering- Biomedical</fullName>
-        <default>false</default>
-        <label>Engineering- Biomedical</label>
-    </customValue>
-    <customValue>
-        <fullName>Engineering- Chemical</fullName>
-        <default>false</default>
-        <label>Engineering- Chemical</label>
-    </customValue>
-    <customValue>
-        <fullName>Engineering- Civil</fullName>
-        <default>false</default>
-        <label>Engineering- Civil</label>
-    </customValue>
-    <customValue>
-        <fullName>Engineering- Computer</fullName>
-        <default>false</default>
-        <label>Engineering- Computer</label>
-    </customValue>
-    <customValue>
-        <fullName>Engineering- Electrical</fullName>
-        <default>false</default>
-        <label>Engineering- Electrical</label>
-    </customValue>
-    <customValue>
-        <fullName>Engineering- Mechanical</fullName>
-        <default>false</default>
-        <label>Engineering- Mechanical</label>
+        <label>Engineering</label>
     </customValue>
     <customValue>
         <fullName>English</fullName>
@@ -181,159 +16,9 @@
         <label>English</label>
     </customValue>
     <customValue>
-        <fullName>English- Education</fullName>
-        <default>false</default>
-        <label>English- Education</label>
-    </customValue>
-    <customValue>
-        <fullName>English- Creative Writing</fullName>
-        <default>false</default>
-        <label>English- Creative Writing</label>
-    </customValue>
-    <customValue>
-        <fullName>Environmental Science</fullName>
-        <default>false</default>
-        <label>Environmental Science</label>
-    </customValue>
-    <customValue>
-        <fullName>Environmental Studies</fullName>
-        <default>false</default>
-        <label>Environmental Studies</label>
-    </customValue>
-    <customValue>
-        <fullName>Exercise Science</fullName>
-        <default>false</default>
-        <label>Exercise Science</label>
-    </customValue>
-    <customValue>
-        <fullName>Family Studies</fullName>
-        <default>false</default>
-        <label>Family Studies</label>
-    </customValue>
-    <customValue>
-        <fullName>French</fullName>
-        <default>false</default>
-        <label>French</label>
-    </customValue>
-    <customValue>
-        <fullName>Geography</fullName>
-        <default>false</default>
-        <label>Geography</label>
-    </customValue>
-    <customValue>
-        <fullName>Geography- Geographic Information Systems (GIS)</fullName>
-        <default>false</default>
-        <label>Geography- Geographic Information Systems (GIS)</label>
-    </customValue>
-    <customValue>
-        <fullName>Geology</fullName>
-        <default>false</default>
-        <label>Geology</label>
-    </customValue>
-    <customValue>
-        <fullName>German</fullName>
-        <default>false</default>
-        <label>German</label>
-    </customValue>
-    <customValue>
-        <fullName>Health Promotion Sciences</fullName>
-        <default>false</default>
-        <label>Health Promotion Sciences</label>
-    </customValue>
-    <customValue>
-        <fullName>History</fullName>
-        <default>false</default>
-        <label>History</label>
-    </customValue>
-    <customValue>
-        <fullName>International Studies</fullName>
-        <default>false</default>
-        <label>International Studies</label>
-    </customValue>
-    <customValue>
-        <fullName>Justice &amp; Peace Studies</fullName>
-        <default>false</default>
-        <label>Justice &amp; Peace Studies</label>
-    </customValue>
-    <customValue>
-        <fullName>Latin</fullName>
-        <default>false</default>
-        <label>Latin</label>
-    </customValue>
-    <customValue>
-        <fullName>Literary Studies</fullName>
-        <default>false</default>
-        <label>Literary Studies</label>
-    </customValue>
-    <customValue>
         <fullName>Mathematics</fullName>
         <default>false</default>
         <label>Mathematics</label>
-    </customValue>
-    <customValue>
-        <fullName>Music</fullName>
-        <default>false</default>
-        <label>Music</label>
-    </customValue>
-    <customValue>
-        <fullName>Music Business</fullName>
-        <default>false</default>
-        <label>Music Business</label>
-    </customValue>
-    <customValue>
-        <fullName>Music- Liturgical Music</fullName>
-        <default>false</default>
-        <label>Music- Liturgical Music</label>
-    </customValue>
-    <customValue>
-        <fullName>Music- Performance</fullName>
-        <default>false</default>
-        <label>Music- Performance</label>
-    </customValue>
-    <customValue>
-        <fullName>Music- Band</fullName>
-        <default>false</default>
-        <label>Music- Band</label>
-    </customValue>
-    <customValue>
-        <fullName>Music- Choir</fullName>
-        <default>false</default>
-        <label>Music- Choir</label>
-    </customValue>
-    <customValue>
-        <fullName>Music- Orchestra</fullName>
-        <default>false</default>
-        <label>Music- Orchestra</label>
-    </customValue>
-    <customValue>
-        <fullName>Music- Guitar</fullName>
-        <default>false</default>
-        <label>Music- Guitar</label>
-    </customValue>
-    <customValue>
-        <fullName>Music- Piano</fullName>
-        <default>false</default>
-        <label>Music- Piano</label>
-    </customValue>
-    <customValue>
-        <fullName>Neuroscience</fullName>
-        <default>false</default>
-        <label>Neuroscience</label>
-    </customValue>
-    <customValue>
-        <fullName>Philosophy</fullName>
-        <default>false</default>
-        <label>Philosophy</label>
-    </customValue>
-    <customValue>
-        <fullName>Physics</fullName>
-        <default>false</default>
-        <label>Physics</label>
-    </customValue>
-    <customValue>
-        <fullName>Political Science</fullName>
-        <default>false</default>
-        <label>Political Science</label>
     </customValue>
     <customValue>
         <fullName>Psychology</fullName>
@@ -341,149 +26,109 @@
         <label>Psychology</label>
     </customValue>
     <customValue>
-        <fullName>Public Health Studies</fullName>
+        <fullName>Undecided</fullName>
         <default>false</default>
-        <label>Public Health Studies</label>
+        <label>Undecided</label>
     </customValue>
     <customValue>
-        <fullName>Social Sciences</fullName>
+        <fullName>Men&apos;s Baseball</fullName>
         <default>false</default>
-        <label>Social Sciences</label>
+        <label>Men&apos;s Baseball</label>
     </customValue>
     <customValue>
-        <fullName>Social Work</fullName>
+        <fullName>Men&apos;s Basketball</fullName>
         <default>false</default>
-        <label>Social Work</label>
+        <label>Men&apos;s Basketball</label>
     </customValue>
     <customValue>
-        <fullName>Sociology</fullName>
+        <fullName>Men&apos;s Cross Country</fullName>
         <default>false</default>
-        <label>Sociology</label>
+        <label>Men&apos;s Cross Country</label>
     </customValue>
     <customValue>
-        <fullName>Spanish</fullName>
+        <fullName>Men&apos;s Football</fullName>
         <default>false</default>
-        <label>Spanish</label>
+        <label>Men&apos;s Football</label>
     </customValue>
     <customValue>
-        <fullName>Statistics</fullName>
+        <fullName>Men&apos;s Golf</fullName>
         <default>false</default>
-        <label>Statistics</label>
+        <label>Men&apos;s Golf</label>
     </customValue>
     <customValue>
-        <fullName>Theology</fullName>
+        <fullName>Men&apos;s Hockey</fullName>
         <default>false</default>
-        <label>Theology</label>
+        <label>Men&apos;s Hockey</label>
     </customValue>
     <customValue>
-        <fullName>Women&#39;s Studies</fullName>
+        <fullName>Men&apos;s Soccer</fullName>
         <default>false</default>
-        <label>Women&#39;s Studies</label>
+        <label>Men&apos;s Soccer</label>
     </customValue>
     <customValue>
-        <fullName>Men&#39;s Baseball</fullName>
+        <fullName>Men&apos;s Swimming and Diving</fullName>
         <default>false</default>
-        <label>Men&#39;s Baseball</label>
+        <label>Men&apos;s Swimming and Diving</label>
     </customValue>
     <customValue>
-        <fullName>Men&#39;s Basketball</fullName>
+        <fullName>Men&apos;s Tennis</fullName>
         <default>false</default>
-        <label>Men&#39;s Basketball</label>
+        <label>Men&apos;s Tennis</label>
     </customValue>
     <customValue>
-        <fullName>Men&#39;s Cross Country</fullName>
+        <fullName>Men&apos;s Track and Field</fullName>
         <default>false</default>
-        <label>Men&#39;s Cross Country</label>
+        <label>Men&apos;s Track and Field</label>
     </customValue>
     <customValue>
-        <fullName>Men&#39;s Football</fullName>
+        <fullName>Women&apos;s Basketball</fullName>
         <default>false</default>
-        <label>Men&#39;s Football</label>
+        <label>Women&apos;s Basketball</label>
     </customValue>
     <customValue>
-        <fullName>Men&#39;s Golf</fullName>
+        <fullName>Women&apos;s Cross Country</fullName>
         <default>false</default>
-        <label>Men&#39;s Golf</label>
+        <label>Women&apos;s Cross Country</label>
     </customValue>
     <customValue>
-        <fullName>Men&#39;s Hockey</fullName>
+        <fullName>Women&apos;s Golf</fullName>
         <default>false</default>
-        <label>Men&#39;s Hockey</label>
+        <label>Women&apos;s Golf</label>
     </customValue>
     <customValue>
-        <fullName>Men&#39;s Soccer</fullName>
+        <fullName>Women&apos;s Hockey</fullName>
         <default>false</default>
-        <label>Men&#39;s Soccer</label>
+        <label>Women&apos;s Hockey</label>
     </customValue>
     <customValue>
-        <fullName>Men&#39;s Swimming and Diving</fullName>
+        <fullName>Women&apos;s Soccer</fullName>
         <default>false</default>
-        <label>Men&#39;s Swimming and Diving</label>
+        <label>Women&apos;s Soccer</label>
     </customValue>
     <customValue>
-        <fullName>Men&#39;s Tennis</fullName>
+        <fullName>Women&apos;s Softball</fullName>
         <default>false</default>
-        <label>Men&#39;s Tennis</label>
+        <label>Women&apos;s Softball</label>
     </customValue>
     <customValue>
-        <fullName>Men&#39;s Track and Field</fullName>
+        <fullName>Women&apos;s Swimming and Diving</fullName>
         <default>false</default>
-        <label>Men&#39;s Track and Field</label>
+        <label>Women&apos;s Swimming and Diving</label>
     </customValue>
     <customValue>
-        <fullName>Women&#39;s Basketball</fullName>
+        <fullName>Women&apos;s Tennis</fullName>
         <default>false</default>
-        <label>Women&#39;s Basketball</label>
+        <label>Women&apos;s Tennis</label>
     </customValue>
     <customValue>
-        <fullName>Women&#39;s Cross Country</fullName>
+        <fullName>Women&apos;s Track and Field</fullName>
         <default>false</default>
-        <label>Women&#39;s Cross Country</label>
+        <label>Women&apos;s Track and Field</label>
     </customValue>
     <customValue>
-        <fullName>Women&#39;s Golf</fullName>
+        <fullName>Women&apos;s Volleyball</fullName>
         <default>false</default>
-        <label>Women&#39;s Golf</label>
-    </customValue>
-    <customValue>
-        <fullName>Women&#39;s Hockey</fullName>
-        <default>false</default>
-        <label>Women&#39;s Hockey</label>
-    </customValue>
-    <customValue>
-        <fullName>Women&#39;s Soccer</fullName>
-        <default>false</default>
-        <label>Women&#39;s Soccer</label>
-    </customValue>
-    <customValue>
-        <fullName>Women&#39;s Softball</fullName>
-        <default>false</default>
-        <label>Women&#39;s Softball</label>
-    </customValue>
-    <customValue>
-        <fullName>Women&#39;s Swimming and Diving</fullName>
-        <default>false</default>
-        <label>Women&#39;s Swimming and Diving</label>
-    </customValue>
-    <customValue>
-        <fullName>Women&#39;s Tennis</fullName>
-        <default>false</default>
-        <label>Women&#39;s Tennis</label>
-    </customValue>
-    <customValue>
-        <fullName>Women&#39;s Track and Field</fullName>
-        <default>false</default>
-        <label>Women&#39;s Track and Field</label>
-    </customValue>
-    <customValue>
-        <fullName>Women&#39;s Volleyball</fullName>
-        <default>false</default>
-        <label>Women&#39;s Volleyball</label>
-    </customValue>
-    <customValue>
-        <fullName>Air Force ROTC</fullName>
-        <default>false</default>
-        <label>Air Force ROTC</label>
+        <label>Women&apos;s Volleyball</label>
     </customValue>
     <customValue>
         <fullName>Campus Ministry</fullName>
@@ -534,12 +179,6 @@
         <fullName>Campus Tour</fullName>
         <default>false</default>
         <label>Campus Tour</label>
-    </customValue>
-    <customValue>
-        <fullName>Data Analytics</fullName>
-        <default>false</default>
-        <isActive>false</isActive>
-        <label>Data Analytics</label>
     </customValue>
     <masterLabel>Appointment Type</masterLabel>
     <sorted>false</sorted>

@@ -72,7 +72,7 @@ public with sharing class SummitEventsConfirmationController {
             } else {
                 eventTitle = evtReg.Event_Name__c;
             }
-            evtReg.Status__c = 'Requested';
+            evtReg.Status__c = 'Registered';
 
 
             registrationCRUD regCRUD = new registrationCRUD();
