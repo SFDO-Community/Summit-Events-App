@@ -116,6 +116,39 @@ Insert Summit_Events__c:
       table: Summit_Events_Fee_Attribute__c
     Event_Fee_Attribute__c:
       table: Summit_Events_Fee_Attribute__c
+Insert Summit_Events_Instance__c:
+  sf_object: Summit_Events_Instance__c
+  table: Summit_Events_Instance__c
+  fields:
+    Id: sf_id
+    Active_Status__c: Active_Status__c
+    Alternate_Registration_URL_Override__c: Alternate_Registration_URL_Override__c
+    Attendee_List__c: Attendee_List__c
+    Building_Override__c: Building_Override__c
+    Capacity__c: Capacity__c
+    Category__c: Category__c
+    Event_Fee_Additional_Override__c: Event_Fee_Additional_Override__c
+    Event_Fee_Override__c: Event_Fee_Override__c
+    Feed_Registration_Button_Text_Override__c: Feed_Registration_Button_Text_Override__c
+    Instance_End_Date__c: Instance_End_Date__c
+    Instance_End_Time__c: Instance_End_Time__c
+    Instance_Short_Description__c: Instance_Short_Description__c
+    Instance_Start_Date__c: Instance_Start_Date__c
+    Instance_Start_Time__c: Instance_Start_Time__c
+    Instance_Time_Zone__c: Instance_Time_Zone__c
+    Instance_Title__c: Instance_Title__c
+    Location_Address_Override__c: Location_Address_Override__c
+    Location_Map_Link_Override__c: Location_Map_Link_Override__c
+    Location_Title_Override__c: Location_Title_Override__c
+    Location_Type_Override__c: Location_Type_Override__c
+    Private_Instance__c: Private_Instance__c
+  lookups:
+    Event_Fee_Additional_Attribute_Override__c:
+      table: Summit_Events_Fee_Attribute__c
+    Event_Fee_Attribute_Override__c:
+      table: Summit_Events_Fee_Attribute__c
+    Event__c:
+      table: Summit_Events__c
 Insert Summit_Events_Email__c:
   sf_object: Summit_Events_Email__c
   table: Summit_Events_Email__c
@@ -148,37 +181,6 @@ Insert Summit_Events_Appointment_Type_Group__c:
     Choosable_Appointment_Amount__c: Choosable_Appointment_Amount__c
   lookups:
     Summit_Events__c:
-      table: Summit_Events__c
-Insert Summit_Events_Instance__c:
-  sf_object: Summit_Events_Instance__c
-  table: Summit_Events_Instance__c
-  fields:
-    Id: sf_id
-    Active_Status__c: Active_Status__c
-    Alternate_Registration_URL_Override__c: Alternate_Registration_URL_Override__c
-    Attendee_List__c: Attendee_List__c
-    Building_Override__c: Building_Override__c
-    Capacity__c: Capacity__c
-    Category__c: Category__c
-    Feed_Registration_Button_Text_Override__c: Feed_Registration_Button_Text_Override__c
-    Instance_End_Date__c: Instance_End_Date__c
-    Instance_End_Time__c: Instance_End_Time__c
-    Instance_Short_Description__c: Instance_Short_Description__c
-    Instance_Start_Date__c: Instance_Start_Date__c
-    Instance_Start_Time__c: Instance_Start_Time__c
-    Instance_Time_Zone__c: Instance_Time_Zone__c
-    Instance_Title__c: Instance_Title__c
-    Location_Address_Override__c: Location_Address_Override__c
-    Location_Map_Link_Override__c: Location_Map_Link_Override__c
-    Location_Title_Override__c: Location_Title_Override__c
-    Location_Type_Override__c: Location_Type_Override__c
-    Private_Instance__c: Private_Instance__c
-  lookups:
-    Event_Fee_Additional_Attribute_Override__c:
-      table: Summit_Events_Fee_Attribute__c
-    Event_Fee_Attribute_Override__c:
-      table: Summit_Events_Fee_Attribute__c
-    Event__c:
       table: Summit_Events__c
 Insert Summit_Events_Appointment_Type__c:
   sf_object: Summit_Events_Appointment_Type__c
@@ -235,6 +237,21 @@ Insert Account:
     hed__Primary_Contact__c:
       table: Contact
       after: Insert Contact
+Insert hed__Facility__c:
+  sf_object: hed__Facility__c
+  table: hed__Facility__c
+  fields:
+    Id: sf_id
+    Name: Name
+    hed__Capacity__c: hed__Capacity__c
+    hed__Description__c: hed__Description__c
+    hed__Facility_Type__c: hed__Facility_Type__c
+  lookups:
+    hed__Account__c:
+      table: Account
+    hed__Parent_Facility__c:
+      table: hed__Facility__c
+      after: Insert hed__Facility__c
 Insert Contact:
   sf_object: Contact
   table: Contact
@@ -310,56 +327,6 @@ Insert Contact:
       table: hed__Language__c
     hed__Primary_Organization__c:
       table: Account
-Insert hed__Address__c:
-  sf_object: hed__Address__c
-  table: hed__Address__c
-  fields:
-    Id: sf_id
-    hed__Address_Type__c: hed__Address_Type__c
-    hed__Default_Address__c: hed__Default_Address__c
-    hed__Latest_End_Date__c: hed__Latest_End_Date__c
-    hed__Latest_Start_Date__c: hed__Latest_Start_Date__c
-    hed__MailingCity__c: hed__MailingCity__c
-    hed__MailingCountry__c: hed__MailingCountry__c
-    hed__MailingPostalCode__c: hed__MailingPostalCode__c
-    hed__MailingState__c: hed__MailingState__c
-    hed__MailingStreet2__c: hed__MailingStreet2__c
-    hed__MailingStreet__c: hed__MailingStreet__c
-    hed__Seasonal_End_Day__c: hed__Seasonal_End_Day__c
-    hed__Seasonal_End_Month__c: hed__Seasonal_End_Month__c
-    hed__Seasonal_End_Year__c: hed__Seasonal_End_Year__c
-    hed__Seasonal_Start_Day__c: hed__Seasonal_Start_Day__c
-    hed__Seasonal_Start_Month__c: hed__Seasonal_Start_Month__c
-    hed__Seasonal_Start_Year__c: hed__Seasonal_Start_Year__c
-  lookups:
-    hed__Parent_Account__c:
-      table: Account
-    hed__Parent_Contact__c:
-      table: Contact
-Insert Summit_Events_Host__c:
-  sf_object: Summit_Events_Host__c
-  table: Summit_Events_Host__c
-  fields:
-    Id: sf_id
-    Additional_Comments__c: Additional_Comments__c
-    Assigned__c: Assigned__c
-    Building__c: Building__c
-    Course_Name__c: Course_Name__c
-    Department__c: Department__c
-    First_Name__c: First_Name__c
-    Gender__c: Gender__c
-    Last_Name__c: Last_Name__c
-    Location__c: Location__c
-    Max_Available__c: Max_Available__c
-    Preferred_Title__c: Preferred_Title__c
-    RecordTypeId: RecordTypeId
-    Time__c: Time__c
-    Undergrad_Major__c: Undergrad_Major__c
-  lookups:
-    Contact__c:
-      table: Contact
-    Event_Instance__c:
-      table: Summit_Events_Instance__c
 Insert Summit_Events_Registration__c:
   sf_object: Summit_Events_Registration__c
   table: Summit_Events_Registration__c
@@ -441,6 +408,90 @@ Insert Summit_Events_Registration__c:
       table: Summit_Events_Instance__c
     Event__c:
       table: Summit_Events__c
+Insert Summit_Events_Host__c:
+  sf_object: Summit_Events_Host__c
+  table: Summit_Events_Host__c
+  fields:
+    Id: sf_id
+    Additional_Comments__c: Additional_Comments__c
+    Assigned__c: Assigned__c
+    Building__c: Building__c
+    Course_Name__c: Course_Name__c
+    Department__c: Department__c
+    First_Name__c: First_Name__c
+    Gender__c: Gender__c
+    Last_Name__c: Last_Name__c
+    Location__c: Location__c
+    Max_Available__c: Max_Available__c
+    Preferred_Title__c: Preferred_Title__c
+    RecordTypeId: RecordTypeId
+    Time__c: Time__c
+    Undergrad_Major__c: Undergrad_Major__c
+  lookups:
+    Contact__c:
+      table: Contact
+    Event_Instance__c:
+      table: Summit_Events_Instance__c
+Insert hed__Address__c:
+  sf_object: hed__Address__c
+  table: hed__Address__c
+  fields:
+    Id: sf_id
+    hed__Address_Type__c: hed__Address_Type__c
+    hed__Default_Address__c: hed__Default_Address__c
+    hed__Latest_End_Date__c: hed__Latest_End_Date__c
+    hed__Latest_Start_Date__c: hed__Latest_Start_Date__c
+    hed__MailingCity__c: hed__MailingCity__c
+    hed__MailingCountry__c: hed__MailingCountry__c
+    hed__MailingPostalCode__c: hed__MailingPostalCode__c
+    hed__MailingState__c: hed__MailingState__c
+    hed__MailingStreet2__c: hed__MailingStreet2__c
+    hed__MailingStreet__c: hed__MailingStreet__c
+    hed__Seasonal_End_Day__c: hed__Seasonal_End_Day__c
+    hed__Seasonal_End_Month__c: hed__Seasonal_End_Month__c
+    hed__Seasonal_End_Year__c: hed__Seasonal_End_Year__c
+    hed__Seasonal_Start_Day__c: hed__Seasonal_Start_Day__c
+    hed__Seasonal_Start_Month__c: hed__Seasonal_Start_Month__c
+    hed__Seasonal_Start_Year__c: hed__Seasonal_Start_Year__c
+  lookups:
+    hed__Parent_Account__c:
+      table: Account
+    hed__Parent_Contact__c:
+      table: Contact
+Insert Summit_Events_Payment__c:
+  sf_object: Summit_Events_Payment__c
+  table: Summit_Events_Payment__c
+  fields:
+    Id: sf_id
+    Account_Number__c: Account_Number__c
+    Address_1__c: Address_1__c
+    Address_2__c: Address_2__c
+    Card_Type__c: Card_Type__c
+    City__c: City__c
+    Country__c: Country__c
+    Email_Address__c: Email_Address__c
+    GatewayApprovalCode__c: GatewayApprovalCode__c
+    Gateway_Session_Identifier__c: Gateway_Session_Identifier__c
+    Method_of_Payment__c: Method_of_Payment__c
+    Name_On_Account__c: Name_On_Account__c
+    Payment_Amount__c: Payment_Amount__c
+    Payment_Defer_Date__c: Payment_Defer_Date__c
+    Payment_Dispute__c: Payment_Dispute__c
+    Payment_Email_Address__c: Payment_Email_Address__c
+    Payment_Forfeit_Date__c: Payment_Forfeit_Date__c
+    Payment_Method_Expiration_Date__c: Payment_Method_Expiration_Date__c
+    Payment_Method__c: Payment_Method__c
+    Payment_Received_Date__c: Payment_Received_Date__c
+    Payment_Refund_Date__c: Payment_Refund_Date__c
+    Payment_Returned_Date__c: Payment_Returned_Date__c
+    Payment_Status__c: Payment_Status__c
+    Phone__c: Phone__c
+    State__c: State__c
+    TouchnetReceiptNumber__c: TouchnetReceiptNumber__c
+    Zip__c: Zip__c
+  lookups:
+    Event_Registration__c:
+      table: Summit_Events_Registration__c
 Insert Summit_Events_Appointments__c:
   sf_object: Summit_Events_Appointments__c
   table: Summit_Events_Appointments__c

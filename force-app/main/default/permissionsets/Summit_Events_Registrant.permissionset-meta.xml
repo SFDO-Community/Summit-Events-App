@@ -521,16 +521,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Instance__c.Banner_Event_Code__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events_Instance__c.Banner_Event_Function_Code__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Summit_Events_Instance__c.Building_Override__c</field>
         <readable>true</readable>
     </fieldPermissions>

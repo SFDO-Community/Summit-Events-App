@@ -67,7 +67,7 @@ public with sharing class SummitEventsSubmitController {
             eventPage = [
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c,
                             Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Submit_Registration__c,
-                            Donation_Description__c,Display_Optional_Donation__c
+                            Donation_Description__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
                     WHERE Id = :evtinfo.evtId
             ][0];
@@ -82,9 +82,9 @@ public with sharing class SummitEventsSubmitController {
                     LIMIT 1
             ];
 
-            if (evtInstance.Start_Date_Time__c != null && evtInstance.End_Date_Time__c != null) {
-                eventStartDateTimeCrumb = evtInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + evtInstance.End_Date_Time__c.format('h:mm a');
-            }
+//            if (evtInstance.Start_Date_Time__c != null && evtInstance.End_Date_Time__c != null) {
+//                eventStartDateTimeCrumb = evtInstance.Start_Date_Time__c.format('MMMM d, YYYY, h:mm a') + ' - ' + evtInstance.End_Date_Time__c.format('h:mm a');
+//            }
 
             List<Summit_Events_Appointment_Type__c> apptTypes = [
                     SELECT Id
@@ -101,8 +101,6 @@ public with sharing class SummitEventsSubmitController {
             
             navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance,false);
         }
-
-        navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance);
 
 
         if (!String.isBlank(evtinfo.evtRegId)) {
@@ -132,7 +130,7 @@ public with sharing class SummitEventsSubmitController {
             eventRegistration = [
                     SELECT Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_City__c, Registrant_State_Province__c, Registrant_State__c,
                             Registrant_Postal_Code__c, Registrant_Zip__c, Registrant_Street_1__c, Registrant_Street_2__c, Registrant_Email__c, Registrant_Country__c,
-                            Event_Name__c, Event_Instance_Title__c, Date_Time_Text__c, Contact__c
+                            Event_Name__c, Event_Instance_Title__c, Event_Instance_Date_Time_Formatted__c, Contact__c
                     FROM Summit_Events_Registration__c
                     WHERE Id = :evtInfo.evtRegId
             ];
@@ -464,8 +462,8 @@ public with sharing class SummitEventsSubmitController {
             if (String.isNotBlank(eventRegistration.Event_Instance_Title__c)) {
                 eventLabel.add(eventRegistration.Event_Instance_Title__c);
             }
-            if (String.isNotBlank(eventRegistration.Date_Time_Text__c)) {
-                eventLabel.add(eventRegistration.Date_Time_Text__c);
+            if (String.isNotBlank(eventRegistration.Event_Instance_Date_Time_Formatted__c)) {
+                eventLabel.add(eventRegistration.Event_Instance_Date_Time_Formatted__c);
             }
             envelop += '        <typ:nameValuePairs>';
             envelop += '            <typ:name>EXT_TRANS_ID_LABEL</typ:name>';

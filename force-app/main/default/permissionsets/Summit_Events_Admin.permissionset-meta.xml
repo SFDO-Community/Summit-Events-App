@@ -806,8 +806,11 @@
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
         <field>Summit_Events_Instance__c.Event_Name__c</field>
+        <editable>true</editable>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Instance__c.Instance_End_Date__c</field>
         <readable>true</readable>

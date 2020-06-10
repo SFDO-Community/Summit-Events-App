@@ -5,9 +5,10 @@ CREATE TABLE "Account" (
 	"CEEB_Code__c" VARCHAR(255), 
 	"Inactive_School__c" VARCHAR(255), 
 	"RecordTypeId" VARCHAR(255), 
-	parent_id VARCHAR(255), 
-	hed__current_address__c VARCHAR(255), 
-	hed__primary_contact__c VARCHAR(255), 
+	"ParentId" VARCHAR(255), 
+	"hed__Current_Address__c" VARCHAR(255), 
+	"hed__Primary_Contact__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
 CREATE TABLE "Account_rt_mapping" (
@@ -64,16 +65,17 @@ CREATE TABLE "Contact" (
 	"hed__WorkEmail__c" VARCHAR(255), 
 	"hed__WorkPhone__c" VARCHAR(255), 
 	"hed__is_Address_Override__c" VARCHAR(255), 
-	account_id VARCHAR(255), 
-	primary_academic_program__c VARCHAR(255), 
-	primary_department__c VARCHAR(255), 
-	primary_educational_institution__c VARCHAR(255), 
-	primary_sports_organization__c VARCHAR(255), 
-	reports_to_id VARCHAR(255), 
-	hed__current_address__c VARCHAR(255), 
-	hed__primary_household__c VARCHAR(255), 
-	hed__primary_language__c VARCHAR(255), 
-	hed__primary_organization__c VARCHAR(255), 
+	"AccountId" VARCHAR(255), 
+	"Primary_Academic_Program__c" VARCHAR(255), 
+	"Primary_Department__c" VARCHAR(255), 
+	"Primary_Educational_Institution__c" VARCHAR(255), 
+	"Primary_Sports_Organization__c" VARCHAR(255), 
+	"ReportsToId" VARCHAR(255), 
+	"hed__Current_Address__c" VARCHAR(255), 
+	"hed__Primary_Household__c" VARCHAR(255), 
+	"hed__Primary_Language__c" VARCHAR(255), 
+	"hed__Primary_Organization__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
 CREATE TABLE "Summit_Events_Appointment_Type_Group__c" (
@@ -82,45 +84,50 @@ CREATE TABLE "Summit_Events_Appointment_Type_Group__c" (
 	"Appointment_Group_Description__c" VARCHAR(255), 
 	"Appointment_Group_Heading__c" VARCHAR(255), 
 	"Choosable_Appointment_Amount__c" VARCHAR(255), 
-	summit_events__c VARCHAR(255), 
+	"Summit_Events__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
 CREATE TABLE "Summit_Events_Appointment_Type__c" (
-	sf_id VARCHAR(255) NOT NULL,
-	"Appointment_Category__c" VARCHAR(255),
-	"Appointment_Fee_Additional__c" VARCHAR(255),
-	"Appointment_Fee__c" VARCHAR(255),
-	"Appointment_Limits__c" VARCHAR(255),
-	"Appointment_Type_Status__c" VARCHAR(255),
-	"Appointment_Type__c" VARCHAR(255),
-	"Auto_Add_Time__c" VARCHAR(255),
-	"Auto_Confirm_Appointment__c" VARCHAR(255),
-	"Auto_add_building__c" VARCHAR(255),
-	"Chosen_State__c" VARCHAR(255),
-	"Custom_Picklist__c" VARCHAR(255),
-	"Date_Available_End__c" VARCHAR(255),
-	"Date_Available_Start__c" VARCHAR(255),
-	"Day_of_Week_Availability__c" VARCHAR(255),
-	"Description__c" VARCHAR(255),
-	"Do_Not_Show_Time__c" VARCHAR(255),
-	"Registrant_Input__c" VARCHAR(255),
-	"Required_Appointment__c" VARCHAR(255),
-	"Sort_Order__c" VARCHAR(255),
-	"Title__c" VARCHAR(255),
-	appointment_fee_additional_attribute__c VARCHAR(255),
-	appointment_fee_attribute__c VARCHAR(255),
-	appointment_group__c VARCHAR(255),
-	restrict_to_instance_title__c VARCHAR(255),
-	summit_events__c VARCHAR(255),
+	sf_id VARCHAR(255) NOT NULL, 
+	"Appointment_Category__c" VARCHAR(255), 
+	"Appointment_Fee_Additional__c" VARCHAR(255), 
+	"Appointment_Fee__c" VARCHAR(255), 
+	"Appointment_Limits__c" VARCHAR(255), 
+	"Appointment_Type_Status__c" VARCHAR(255), 
+	"Appointment_Type__c" VARCHAR(255), 
+	"Auto_Add_Time__c" VARCHAR(255), 
+	"Auto_Confirm_Appointment__c" VARCHAR(255), 
+	"Auto_add_building__c" VARCHAR(255), 
+	"Chosen_State__c" VARCHAR(255), 
+	"Custom_Picklist__c" VARCHAR(255), 
+	"Date_Available_End__c" VARCHAR(255), 
+	"Date_Available_Start__c" VARCHAR(255), 
+	"Day_of_Week_Availability__c" VARCHAR(255), 
+	"Description__c" VARCHAR(255), 
+	"Do_Not_Show_Time__c" VARCHAR(255), 
+	"Registrant_Input__c" VARCHAR(255), 
+	"Required_Appointment__c" VARCHAR(255), 
+	"Sort_Order__c" VARCHAR(255), 
+	"Title__c" VARCHAR(255), 
+	"Appointment_Fee_Additional_Attribute__c" VARCHAR(255), 
+	"Appointment_Fee_Attribute__c" VARCHAR(255), 
+	"Appointment_Group__c" VARCHAR(255), 
+	"Restrict_To_Instance_Title__c" VARCHAR(255), 
+	"Summit_Events__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0UJ0000005OOfaMAG','','','','1','Active','','','false','','','','','','','Get yourself some quite time in our library.','false','','false','1.0','Demo Appointment 0 - Quite time','','','','','a0eJ000000DjgjhIAB');
-INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0UJ0000005OOfbMAG','','','','1','Active','','','true','','','','','','','There is such a thing!','false','','false','30.0','Demo Appointment 3 - Free Lunch','','','','','a0eJ000000DjgjhIAB');
-INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0UJ0000005OOfcMAG','','','','1','Active','','','false','','','Chocolate
-Vanilla
+INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0U54000001pgFbEAI','','','','1','Active','','','false','','','Chocolate
+
 Strawberry
-Lactose Free','','','','Choose the ice cream you could prefer to consume during your visit','false','Custom pick list','false','10.0','Demo Appointment 1 - Ice Cream with Counselor','','','','','a0eJ000000DjgjhIAB');
-INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0UJ0000005OOfdMAG','','','','2','Active','','','false','','','','','','','What is your definition of the meaning of life?','false','Required text box','false','20.0','Demo Appointment 2 - Meaning of life','','','','','a0eJ000000DjgjhIAB');
+
+Vanilla
+
+Lactose Free','','','','<p>Choose the ice cream you could prefer to consume during your visit.</p><p><br></p>','false','Custom pick list','false','99.0','Demo Appointment 1 - Ice Cream with Counselor','','','','','a0e54000004GzhTAAS',NULL);
+INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0U54000001pgFlEAI','','','','1','Active','','','false','','','','','','','<p>There is such a thing!</p><p><br></p>','false','','false','99.0','Demo Appointment 3 - Free Lunch','','','','','a0e54000004GzhTAAS',NULL);
+INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0U54000001pgFWEAY','','','','1','Active','','','false','','','','','','','<p>Demo Appointment 1 - Ice Cream with Counselor</p><p><br></p>','false','','false','99.0','Demo Appointment 0 - Quite time','','','','','a0e54000004GzhTAAS',NULL);
+INSERT INTO "Summit_Events_Appointment_Type__c" VALUES('a0U54000001pgFgEAI','','','','1','Active','','','false','','','','','','','<p>What is your definition of the meaning of life?</p><p><br></p>','false','Required text box','false','99.0','Demo Appointment 2 - Meaning of life','','','','','a0e54000004GzhTAAS',NULL);
 CREATE TABLE "Summit_Events_Appointments__c" (
 	sf_id VARCHAR(255) NOT NULL, 
 	"Appointment_Category__c" VARCHAR(255), 
@@ -144,9 +151,10 @@ CREATE TABLE "Summit_Events_Appointments__c" (
 	"Registrant_Input__c" VARCHAR(255), 
 	"Room__c" VARCHAR(255), 
 	"Sort_Order__c" VARCHAR(255), 
-	event_appointment_type__c VARCHAR(255), 
-	event_host__c VARCHAR(255), 
-	event_registration__c VARCHAR(255), 
+	"Event_Appointment_Type__c" VARCHAR(255), 
+	"Event_Host__c" VARCHAR(255), 
+	"Event_Registration__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
 CREATE TABLE "Summit_Events_Email__c" (
@@ -164,7 +172,8 @@ CREATE TABLE "Summit_Events_Email__c" (
 	"Letterhead__c" VARCHAR(255), 
 	"Org_Email_Id__c" VARCHAR(255), 
 	"Org_Email__c" VARCHAR(255), 
-	event__c VARCHAR(255), 
+	"Event__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
 CREATE TABLE "Summit_Events_Fee_Attribute__c" (
@@ -172,18 +181,21 @@ CREATE TABLE "Summit_Events_Fee_Attribute__c" (
 	"Name" VARCHAR(255), 
 	"Banner_Index__c" VARCHAR(255), 
 	"FOAPAL__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
+INSERT INTO "Summit_Events_Fee_Attribute__c" VALUES('a0X54000001cTtkEAE','TEST Attribute','123','123',NULL);
 CREATE TABLE "Summit_Events_Fee__c" (
 	sf_id VARCHAR(255) NOT NULL, 
 	"Description__c" VARCHAR(255), 
 	"Event_Fee_Type__c" VARCHAR(255), 
 	"Event_Fee__c" VARCHAR(255), 
-	event_appointment_type__c VARCHAR(255), 
-	event_fee_attribute__c VARCHAR(255), 
-	event_registration__c VARCHAR(255), 
-	summit_events_payment__c VARCHAR(255), 
-	summit_events__c VARCHAR(255), 
+	"Event_Appointment_Type__c" VARCHAR(255), 
+	"Event_Fee_Attribute__c" VARCHAR(255), 
+	"Event_Registration__c" VARCHAR(255), 
+	"Summit_Events_Payment__c" VARCHAR(255), 
+	"Summit_Events__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
 CREATE TABLE "Summit_Events_Host__c" (
@@ -202,8 +214,9 @@ CREATE TABLE "Summit_Events_Host__c" (
 	"RecordTypeId" VARCHAR(255), 
 	"Time__c" VARCHAR(255), 
 	"Undergrad_Major__c" VARCHAR(255), 
-	contact__c VARCHAR(255), 
-	event_instance__c VARCHAR(255), 
+	"Contact__c" VARCHAR(255), 
+	"Event_Instance__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
 CREATE TABLE "Summit_Events_Host__c_rt_mapping" (
@@ -216,30 +229,32 @@ CREATE TABLE "Summit_Events_Instance__c" (
 	"Active_Status__c" VARCHAR(255), 
 	"Alternate_Registration_URL_Override__c" VARCHAR(255), 
 	"Attendee_List__c" VARCHAR(255), 
-	"Banner_Event_Code__c" VARCHAR(255), 
-	"Banner_Event_Function_Code__c" VARCHAR(255), 
 	"Building_Override__c" VARCHAR(255), 
 	"Capacity__c" VARCHAR(255), 
 	"Category__c" VARCHAR(255), 
-	"End_Date_Time__c" VARCHAR(255), 
 	"Event_Fee_Additional_Override__c" VARCHAR(255), 
 	"Event_Fee_Override__c" VARCHAR(255), 
 	"Feed_Registration_Button_Text_Override__c" VARCHAR(255), 
+	"Instance_End_Date__c" VARCHAR(255), 
+	"Instance_End_Time__c" VARCHAR(255), 
 	"Instance_Short_Description__c" VARCHAR(255), 
+	"Instance_Start_Date__c" VARCHAR(255), 
+	"Instance_Start_Time__c" VARCHAR(255), 
+	"Instance_Time_Zone__c" VARCHAR(255), 
 	"Instance_Title__c" VARCHAR(255), 
 	"Location_Address_Override__c" VARCHAR(255), 
 	"Location_Map_Link_Override__c" VARCHAR(255), 
 	"Location_Title_Override__c" VARCHAR(255), 
 	"Location_Type_Override__c" VARCHAR(255), 
 	"Private_Instance__c" VARCHAR(255), 
-	"Start_Date_Time__c" VARCHAR(255), 
-	event_fee_additional_attribute_override__c VARCHAR(255), 
-	event_fee_attribute_override__c VARCHAR(255), 
-	event__c VARCHAR(255), 
+	"Event_Fee_Additional_Attribute_Override__c" VARCHAR(255), 
+	"Event_Fee_Attribute_Override__c" VARCHAR(255), 
+	"Event__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "Summit_Events_Instance__c" VALUES('a0aJ0000009CTk0IAG','Active','','false','','','','100.0','','2020-03-20T08:00:00.000Z','','','','','','','','','','false','2020-03-20T12:00:00.000Z','','','a0eJ000000DjgjhIAB');
-INSERT INTO "Summit_Events_Instance__c" VALUES('a0aJ0000009CTk1IAG','Active','','false','','','','100.0','','2020-03-27T08:00:00.000Z','','','','','','','','','','false','2020-03-27T12:00:00.000Z','','','a0eJ000000DjgjhIAB');
+INSERT INTO "Summit_Events_Instance__c" VALUES('a0a54000002FI6eAAG','','','false','','','','','','',date('now', '+7 day'),'15:00:00.000Z','',date('now', '+7 day'),'09:00:00.000Z','Central Daylight Time (America/Chicago)','','','','','','false','','','a0e54000004GzhTAAS',NULL);
+INSERT INTO "Summit_Events_Instance__c" VALUES('a0a54000002FI6ZAAW','','','false','','','','','','',date('now', '+14 day'),'15:00:00.000Z','Secondary instance description',date('now', '+14 day'),'09:00:00.000Z','Central Daylight Time (America/Chicago)','Secondary Title','','','','','false','','','a0e54000004GzhTAAS',NULL);
 CREATE TABLE "Summit_Events_Payment__c" (
 	sf_id VARCHAR(255) NOT NULL, 
 	"Account_Number__c" VARCHAR(255), 
@@ -268,7 +283,8 @@ CREATE TABLE "Summit_Events_Payment__c" (
 	"State__c" VARCHAR(255), 
 	"TouchnetReceiptNumber__c" VARCHAR(255), 
 	"Zip__c" VARCHAR(255), 
-	event_registration__c VARCHAR(255), 
+	"Event_Registration__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
 CREATE TABLE "Summit_Events_Registration__c" (
@@ -283,14 +299,12 @@ CREATE TABLE "Summit_Events_Registration__c" (
 	"Campus_Tour_Location__c" VARCHAR(255), 
 	"Campus_Tour_Time__c" VARCHAR(255), 
 	"Confirmation_Call_Result__c" VARCHAR(255), 
-	"Contact_Soft_Match_Email__c" VARCHAR(255), 
-	"Contact_Soft_Match_First_Last_Zip__c" VARCHAR(255), 
 	"Date_All_Appointments_Confirmed_del__c" VARCHAR(255), 
-	"Date__c" VARCHAR(255), 
 	"Display_Attendance_Publicly__c" VARCHAR(255), 
+	"Event_Instance_Date_Time_Formatted__c" VARCHAR(255), 
+	"Event_Registration_Requested_Date__c" VARCHAR(255), 
 	"Generated_Itinerary__c" VARCHAR(255), 
 	"Generated_Requested_Appointments__c" VARCHAR(255), 
-	"Instance__c" VARCHAR(255), 
 	"Last_Name_as_Student__c" VARCHAR(255), 
 	"Matching_Log__c" VARCHAR(255), 
 	"New_Contact_Created__c" VARCHAR(255), 
@@ -344,9 +358,10 @@ CREATE TABLE "Summit_Events_Registration__c" (
 	"Session__c" VARCHAR(255), 
 	"Status__c" VARCHAR(255), 
 	"Substatus__c" VARCHAR(255), 
-	contact__c VARCHAR(255), 
-	event_instance__c VARCHAR(255), 
-	event__c VARCHAR(255), 
+	"Contact__c" VARCHAR(255), 
+	"Event_Instance__c" VARCHAR(255), 
+	"Event__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
 CREATE TABLE "Summit_Events__c" (
@@ -390,9 +405,9 @@ CREATE TABLE "Summit_Events__c" (
 	"College_High_School_Ask__c" VARCHAR(255), 
 	"Contact_Creation__c" VARCHAR(255), 
 	"Contact_Matching_Rules__c" VARCHAR(255), 
-        "Display_Optional_Donation__c" VARCHAR(255),
-        "Donation_Description__c" VARCHAR(255),
-        "Donation_Suggested_Amount_List__c" VARCHAR(255),
+	"Display_Optional_Donation__c" VARCHAR(255), 
+	"Donation_Description__c" VARCHAR(255), 
+	"Donation_Suggested_Amount_List__c" VARCHAR(255), 
 	"End_Date__c" VARCHAR(255), 
 	"Event_Appointment_Description__c" VARCHAR(255), 
 	"Event_Appointment_Title__c" VARCHAR(255), 
@@ -401,8 +416,8 @@ CREATE TABLE "Summit_Events__c" (
 	"Event_Cancelled_Notification_Text__c" VARCHAR(255), 
 	"Event_Confirmation_Description__c" VARCHAR(255), 
 	"Event_Confirmation_Title__c" VARCHAR(255), 
-        "Event_Fee_Additional__c" VARCHAR(255),
-        "Event_Fee__c" VARCHAR(255),
+	"Event_Fee_Additional__c" VARCHAR(255), 
+	"Event_Fee__c" VARCHAR(255), 
 	"Event_Footer__c" VARCHAR(255), 
 	"Event_Full_Text__c" VARCHAR(255), 
 	"Event_Home_Link_Title__c" VARCHAR(255), 
@@ -427,6 +442,7 @@ CREATE TABLE "Summit_Events__c" (
 	"Program_Filter_2__c" VARCHAR(255), 
 	"Program_Filter_3__c" VARCHAR(255), 
 	"Program_Filter__c" VARCHAR(255), 
+	"Registration_Email_Restriction__c" VARCHAR(255), 
 	"Start_Date__c" VARCHAR(255), 
 	"Template__c" VARCHAR(255), 
 	"Tracking_Cancel_Registration__c" VARCHAR(255), 
@@ -434,22 +450,33 @@ CREATE TABLE "Summit_Events__c" (
 	"Tracking_Event_Registration__c" VARCHAR(255), 
 	"Tracking_Options_Registration__c" VARCHAR(255), 
 	"Tracking_Submit_Registration__c" VARCHAR(255), 
-        donation_recipient_1__c VARCHAR(255),
-        donation_recipient_2__c VARCHAR(255),
-        donation_recipient_3__c VARCHAR(255),
-        donation_recipient_4__c VARCHAR(255),
-        donation_recipient_5__c VARCHAR(255),
-        event_fee_additional_attribute__c VARCHAR(255),
-        event_fee_attribute__c VARCHAR(255),
-    PRIMARY KEY (sf_id)
+	"Donation_Recipient_1__c" VARCHAR(255), 
+	"Donation_Recipient_2__c" VARCHAR(255), 
+	"Donation_Recipient_3__c" VARCHAR(255), 
+	"Donation_Recipient_4__c" VARCHAR(255), 
+	"Donation_Recipient_5__c" VARCHAR(255), 
+	"Event_Fee_Additional_Attribute__c" VARCHAR(255), 
+	"Event_Fee_Attribute__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
+	PRIMARY KEY (sf_id)
 );
-INSERT INTO "Summit_Events__c" VALUES('a0eJ000000DjgjhIAB','Test Event','','','','Red
+INSERT INTO "Summit_Events__c" VALUES('a0e54000004GzhTAAS','Test Event','','','','Red
+
+Blue
 
 Yellow
 
 Green
 
-Blue','','','','','What is your favorite color?','What''s up?','What''s your favorite day of the week?','','','Pick-list','Text area','Text box required','','','true','','Do not ask','Do not ask','','true','Ask and require','Do not ask','','Do not ask','Do not ask','Ask but do not require','Ask and require','Parent/Guardian;Other;Company Representative','High School Senior','','0.0','Both College and HS','Full matching contact creation with duplicate management','Matching rules 1','false','','','2020-04-12','Body text for the appointment/options page explains what these appointments are about.','This is the header of the appointment/options page.','What does it mean to cancel a event.','Online Cancel of Registration Heading','The event has been cancelled.','Explain the registration has been received from the client at this point and is complete','Registration has been received title.','','','This footer appears on every event registration page in the footer.','Explain here that the event has reached capacity and is closed.','Event Home','','Test Event','This description appears in feed and should be concise','','Active','Description of submission being the final act in the registration play.','Heading for the Submit Page','Admissions Event','<p><strong>Rich Text</strong> description of the event that appears on the first registration page.</p>','Register','Touchpoint','true','','','','','5.0','false','','','','2020-02-12','GeneralSLDS','','','','','','','','','','','','');
+Purple','','','','','What is your favorite color?','','','','','Pick-list','','','','','false','','','','','false','','','','','','','Do not ask','','','','0.0','','Full matching contact creation with duplicate management','Matching rules 1','true','<p>Help us with a donation!</p>','10
+
+20
+
+40
+
+100
+
+200',date('now', '+30 day'),'<p>Explain what appointments are about and what selecting them means.</p>','Select Appointments Headline','<p>Explain that cancelling will remove their registration and they will not be attending the event.</p>','Cancel Your Registration','Explain that the registration is now cancelled.','<p>Tell the registrant here that their registration is now in the system. Explain what happens next.</p>','Registration Recieved','20.0','10.0','<p>A footer that appears on every page of registration.</p>','<p>Explain that the event has reached capacity and no more registrations are being taken.</p>','Event Home','','Test Event','Here is a short descrption of the event.','','Active','<p>Explain that the registrant is about to submit their registration and next steps.</p>','Submit Headline','','<p>Here is where you write the description of the event that appears on the first page of registration.</p>','Register','Touchpoint','false','','','','','','false','','','','No limit',date('now', '-30 day'),'CastorTemplate2017','','','','','','a0X54000001cTtkEAE','','','','','','a0X54000001cTtkEAE',NULL);
 CREATE TABLE "hed__Address__c" (
 	sf_id VARCHAR(255) NOT NULL, 
 	"hed__Address_Type__c" VARCHAR(255), 
@@ -468,13 +495,26 @@ CREATE TABLE "hed__Address__c" (
 	"hed__Seasonal_Start_Day__c" VARCHAR(255), 
 	"hed__Seasonal_Start_Month__c" VARCHAR(255), 
 	"hed__Seasonal_Start_Year__c" VARCHAR(255), 
-	hed__parent_account__c VARCHAR(255), 
-	hed__parent_contact__c VARCHAR(255), 
+	"hed__Parent_Account__c" VARCHAR(255), 
+	"hed__Parent_Contact__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
+	PRIMARY KEY (sf_id)
+);
+CREATE TABLE "hed__Facility__c" (
+	sf_id VARCHAR(255) NOT NULL, 
+	"Name" VARCHAR(255), 
+	"hed__Capacity__c" VARCHAR(255), 
+	"hed__Description__c" VARCHAR(255), 
+	"hed__Facility_Type__c" VARCHAR(255), 
+	"hed__Account__c" VARCHAR(255), 
+	"hed__Parent_Facility__c" VARCHAR(255), 
+	record_type VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
 CREATE TABLE "hed__Language__c" (
 	sf_id VARCHAR(255) NOT NULL, 
 	"Name" VARCHAR(255), 
+	record_type VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
 COMMIT;
