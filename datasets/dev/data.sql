@@ -398,7 +398,7 @@ Green
 Blue', '', '', '', '', 'What is your favorite color?', 'What''s up?', 'What''s your favorite day of the week?', '', '',
         'Pick-list', 'Text area', 'Text box required', '', '', 'true', '', 'Do not ask', 'Do not ask', 'Do not ask',
         'true', 'Do not ask', 'Ask', 'Ask with type require', 'Do not ask', 'Do not ask', 'Ask but do not require', 'Do not ask', 'Parent/Guardian;Other',
-        'High School Senior', '2109 Grand Avenue (09G)', '0.0', 'Don''t ask',
+        'General Public', '', '0.0', 'Don''t ask',
         'Full matching contact creation with duplicate management', 'Matching rules 1', '2020-05-16',
         'Body text for the appointment/options page explains what these appointments are about.',
         'This is the header of the appointment/options page.', 'What does it mean to cancel a event.',
