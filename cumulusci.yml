@@ -73,20 +73,25 @@ flows:
                 task: deploy_dev_event_records
             4:
                 task: deploy_permission_set
+            5:
+                task: deploy_site_config
+            6:
+                task: deploy_site_settings
+            7:
+                task: deploy_guest_permission_set
+            8:
+                task: deploy_guest_sharing_rules
     config_dev:
         steps:
             3: 
                 task: deploy_dev_event_records
             4:
                 task: deploy_permission_set
-
-    config_site:
-        steps:
-            1:
+            5:
                 task: deploy_site_config
-            2:
+            6:
                 task: deploy_site_settings
-            3:
+            7:
                 task: deploy_guest_permission_set
-            4:
+            8:
                 task: deploy_guest_sharing_rules

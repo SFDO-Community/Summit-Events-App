@@ -1,6 +1,7 @@
 {
   "orgName": "Summit Events - Dev Org",
   "edition": "Developer",
+  "features": ["Sites"],
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true
