@@ -1,6 +1,6 @@
 {
-  "orgName": "Summit Events - Release Test Org",
-  "edition": "Enterprise",
+  "orgName": "Summit Events - Dev Org",
+  "edition": "Developer",
   "features": ["Sites"],
   "settings": {
     "lightningExperienceSettings": {
