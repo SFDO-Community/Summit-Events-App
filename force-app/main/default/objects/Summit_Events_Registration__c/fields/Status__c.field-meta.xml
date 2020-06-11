@@ -18,14 +18,14 @@
                 <label>Started</label>
             </value>
             <value>
-                <fullName>Requested</fullName>
+                <fullName>Registered</fullName>
                 <default>false</default>
-                <label>Requested</label>
+                <label>Registered</label>
             </value>
             <value>
-                <fullName>Received</fullName>
+                <fullName>In Progress</fullName>
                 <default>false</default>
-                <label>Received</label>
+                <label>In Progress</label>
             </value>
             <value>
                 <fullName>Confirmed</fullName>
@@ -33,9 +33,9 @@
                 <label>Confirmed</label>
             </value>
             <value>
-                <fullName>Ready</fullName>
+                <fullName>Attended</fullName>
                 <default>false</default>
-                <label>Ready</label>
+                <label>Attended</label>
             </value>
             <value>
                 <fullName>Cancelled</fullName>
@@ -48,15 +48,39 @@
                 <label>Rescheduled</label>
             </value>
             <value>
-                <fullName>Status</fullName>
+                <fullName>No-Show</fullName>
                 <default>false</default>
-                <label>Status</label>
+                <label>No-Show</label>
             </value>
             <value>
                 <fullName>Not Planning to Attend</fullName>
                 <default>false</default>
                 <isActive>false</isActive>
                 <label>Not Planning to Attend</label>
+            </value>
+            <value>
+                <fullName>Ready</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Ready</label>
+            </value>
+            <value>
+                <fullName>Received</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Received</label>
+            </value>
+            <value>
+                <fullName>Requested</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Requested</label>
+            </value>
+            <value>
+                <fullName>Status</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Status</label>
             </value>
         </valueSetDefinition>
     </valueSet>

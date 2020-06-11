@@ -13,74 +13,29 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Center for Ethical Organizations</fullName>
+                <fullName>President&apos;s Cabinet</fullName>
                 <default>false</default>
-                <label>Center for Ethical Organizations</label>
+                <label>President&apos;s Cabinet</label>
             </value>
             <value>
-                <fullName>Center for Innovation in the Business of Health Care</fullName>
+                <fullName>Board of Trustees</fullName>
                 <default>false</default>
-                <label>Center for Innovation in the Business of Health Care</label>
+                <label>Board of Trustees</label>
             </value>
             <value>
-                <fullName>Center for Nonprofit Management</fullName>
+                <fullName>Human Resources</fullName>
                 <default>false</default>
-                <label>Center for Nonprofit Management</label>
+                <label>Human Resources</label>
             </value>
             <value>
-                <fullName>Entrepreneurship</fullName>
+                <fullName>Center for Common Good</fullName>
                 <default>false</default>
-                <label>Entrepreneurship</label>
+                <label>Center for Common Good</label>
             </value>
             <value>
-                <fullName>Executive Education</fullName>
+                <fullName>Information Technology</fullName>
                 <default>false</default>
-                <label>Executive Education</label>
-            </value>
-            <value>
-                <fullName>Family Business Center</fullName>
-                <default>false</default>
-                <label>Family Business Center</label>
-            </value>
-            <value>
-                <fullName>Graduate Admissions</fullName>
-                <default>false</default>
-                <label>Graduate Admissions</label>
-            </value>
-            <value>
-                <fullName>Healthcare</fullName>
-                <default>false</default>
-                <label>Healthcare</label>
-            </value>
-            <value>
-                <fullName>Norris Institute</fullName>
-                <default>false</default>
-                <label>Norris Institute</label>
-            </value>
-            <value>
-                <fullName>Principled Leadership</fullName>
-                <default>false</default>
-                <label>Principled Leadership</label>
-            </value>
-            <value>
-                <fullName>Schulze School of Entrepreneurship</fullName>
-                <default>false</default>
-                <label>Schulze School of Entrepreneurship</label>
-            </value>
-            <value>
-                <fullName>Small Business Development Center</fullName>
-                <default>false</default>
-                <label>Small Business Development Center</label>
-            </value>
-            <value>
-                <fullName>Small Business Institute</fullName>
-                <default>false</default>
-                <label>Small Business Institute</label>
-            </value>
-            <value>
-                <fullName>Veritas Institute</fullName>
-                <default>false</default>
-                <label>Veritas Institute</label>
+                <label>Information Technology</label>
             </value>
         </valueSetDefinition>
     </valueSet>

@@ -14,39 +14,19 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Minneapolis</fullName>
-                <default>false</default>
-                <label>Minneapolis</label>
-            </value>
-            <value>
-                <fullName>St. Paul</fullName>
-                <default>false</default>
-                <label>St. Paul</label>
-            </value>
-            <value>
-                <fullName>St. Paul - North</fullName>
-                <default>false</default>
-                <label>St. Paul - North</label>
-            </value>
-            <value>
-                <fullName>St. Paul - South</fullName>
-                <default>false</default>
-                <label>St. Paul - South</label>
-            </value>
-            <value>
-                <fullName>Off Campus</fullName>
-                <default>false</default>
-                <label>Off Campus</label>
-            </value>
-            <value>
                 <fullName>Online</fullName>
                 <default>false</default>
                 <label>Online</label>
             </value>
             <value>
-                <fullName>Rome</fullName>
+                <fullName>On-Site</fullName>
                 <default>false</default>
-                <label>Rome</label>
+                <label>On-Site</label>
+            </value>
+            <value>
+                <fullName>Off-Campus</fullName>
+                <default>false</default>
+                <label>Off-Campus</label>
             </value>
         </valueSetDefinition>
     </valueSet>
