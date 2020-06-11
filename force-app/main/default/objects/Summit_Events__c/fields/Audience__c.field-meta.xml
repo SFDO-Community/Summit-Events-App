@@ -13,94 +13,29 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Dougherty Family College (2-Year)</fullName>
-                <default>false</default>
-                <label>Dougherty Family College (2-Year)</label>
-            </value>
-            <value>
-                <fullName>First-Year International</fullName>
-                <default>false</default>
-                <label>First-Year International</label>
-            </value>
-            <value>
-                <fullName>Graduate Alumni</fullName>
-                <default>false</default>
-                <label>Graduate Alumni</label>
-            </value>
-            <value>
-                <fullName>Graduate Public</fullName>
-                <default>false</default>
-                <label>Graduate Public</label>
-            </value>
-            <value>
-                <fullName>Graduate Staff</fullName>
-                <default>false</default>
-                <label>Graduate Staff</label>
-            </value>
-            <value>
-                <fullName>Graduate Student</fullName>
-                <default>false</default>
-                <label>Graduate Student</label>
-            </value>
-            <value>
-                <fullName>High School Junior or Younger</fullName>
-                <default>false</default>
-                <label>High School Junior or Younger</label>
-            </value>
-            <value>
-                <fullName>High School Senior</fullName>
-                <default>false</default>
-                <label>High School Senior</label>
-            </value>
-            <value>
-                <fullName>International Graduate Student</fullName>
-                <default>false</default>
-                <label>International Graduate Student</label>
-            </value>
-            <value>
                 <fullName>No Audience</fullName>
                 <default>false</default>
                 <label>No Audience</label>
             </value>
             <value>
-                <fullName>Prospective Graduate Student</fullName>
+                <fullName>Prospective Student</fullName>
                 <default>false</default>
-                <label>Prospective Graduate Student</label>
+                <label>Prospective Student</label>
             </value>
             <value>
-                <fullName>Transfer</fullName>
+                <fullName>General Public</fullName>
                 <default>false</default>
-                <label>Transfer</label>
+                <label>General Public</label>
             </value>
             <value>
-                <fullName>Transfer International</fullName>
+                <fullName>Current Students</fullName>
                 <default>false</default>
-                <label>Transfer International</label>
+                <label>Current Students</label>
             </value>
             <value>
-                <fullName>Athletics</fullName>
+                <fullName>Faculty/Staff</fullName>
                 <default>false</default>
-                <label>Athletics</label>
-            </value>
-            <value>
-                <fullName>Career</fullName>
-                <default>false</default>
-                <label>Career</label>
-            </value>
-            <value>
-                <fullName>First Friday</fullName>
-                <default>false</default>
-                <label>First Friday</label>
-            </value>
-            <value>
-                <fullName>National</fullName>
-                <default>false</default>
-                <label>National</label>
-            </value>
-            <value>
-                <fullName>Webinar</fullName>
-                <default>false</default>
-                <label>Webinar</label>
+                <label>Faculty/Staff</label>
             </value>
         </valueSetDefinition>
     </valueSet>

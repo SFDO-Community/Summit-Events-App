@@ -12,9 +12,9 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Registered</fullName>
-                <default>false</default>
-                <label>Registered</label>
+                <fullName>Requested</fullName>
+                <default>true</default>
+                <label>Requested</label>
             </value>
             <value>
                 <fullName>Pending First Request</fullName>

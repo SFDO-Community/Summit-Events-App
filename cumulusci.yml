@@ -81,9 +81,10 @@ flows:
                 task: deploy_guest_permission_set
             8:
                 task: deploy_guest_sharing_rules
+
     config_dev:
         steps:
-            3: 
+            3:
                 task: deploy_dev_event_records
             4:
                 task: deploy_permission_set
