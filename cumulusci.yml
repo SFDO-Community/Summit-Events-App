@@ -69,8 +69,10 @@ tasks:
 flows:
     config_qa:
         steps:
-            1.1:
-                task: deploy_qa_config
+            3:
+                task: deploy_dev_event_records
+            4:
+                task: deploy_permission_set
     config_dev:
         steps:
             3: 
