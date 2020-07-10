@@ -4,7 +4,8 @@
     <externalId>false</externalId>
     <label>Event</label>
     <referenceTo>Summit_Events__c</referenceTo>
-    <relationshipName>Event_Sessions</relationshipName>
+    <relationshipLabel>Summit Events Instances</relationshipLabel>
+    <relationshipName>Event_Instances</relationshipName>
     <relationshipOrder>0</relationshipOrder>
     <reparentableMasterDetail>false</reparentableMasterDetail>
     <trackHistory>false</trackHistory>

@@ -292,12 +292,13 @@ be a descendant of the grid when it is being dragged.
 .fc-list-empty-wrap1 {  width: 100%; height: 100%; display: table; }
 .fc-list-empty {  display: table-cell; vertical-align: middle; text-align: center; }
 .fc-unthemed .fc-list-empty {  background-color: #eee; }
-/*UST special styles*/
+
+/*Summit Event Special Styles*/
 .fc-month-view .ust-desc {display:none;}
-.ustEventItem h4 {font-family:truenolight,Arial,sans-serif; font-weight:normal!important; font-size:1em!important;line-height: 1.2em; margin:0px;}
-.ustEventItem .button {color:#fff!important; margin:5px 0px 0px 0px;}
-.ustEventItem.ustMonthView p {margin:0px; padding:3px 0px;}
-.ustEventItem.ustListView p {margin:0px; padding:4px 0px;}
+.SummitEventsItem h4 {font-family:truenolight,Arial,sans-serif; font-weight:normal!important; font-size:1em!important;line-height: 1.2em; margin:0px;}
+.SummitEventsItem .button {color:#fff!important; margin:5px 0px 0px 0px;}
+.SummitEventsItem.ustMonthView p {margin:0px; padding:3px 0px;}
+.SummitEventsItem.ustListView p {margin:0px; padding:4px 0px;}
 .fc-month-view table, .fc-basicDay-view table {margin:0px;}
 .fc-basicDay-view .fc-content {padding:5px 20px 0px 20px;}
 .fc-basicDay-view .fc-content p {font-size:1em;}

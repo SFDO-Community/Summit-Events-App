@@ -26,14 +26,14 @@ public with sharing class SummitEventsParkingPassController {
         if (validId) {
             Summit_Events_Registration__c visitor = new Summit_Events_Registration__c();
             try {
-                visitor = [SELECT Date__c, Contact__r.Name, Contact__r.FirstName, Contact__r.Preferred_First_Name__c, Status__c FROM Summit_Events_Registration__c WHERE id = :regId][0];
+                visitor = [SELECT Event_Instance_Start_Date__c, Event_Instance_Start_Date_Text__c, Contact__r.Name, Contact__r.FirstName, Contact__r.Preferred_First_Name__c, Status__c FROM Summit_Events_Registration__c WHERE id = :regId][0];
             } catch (Exception e) {
                 System.Debug(e.getMessage());
             }
 
-            if (todaysDate <= visitor.Date__c && visitor.Status__c != 'Started' && visitor.Status__c != 'Cancelled') {
+            if (todaysDate <= visitor.Event_Instance_Start_Date__c && visitor.Status__c != 'Started' && visitor.Status__c != 'Cancelled') {
                 couponOut += '<p>NAME:&nbsp; ' + visitor.Contact__r.Name + '</p>';
-                couponOut += '<p>DATE VALID:&nbsp; ' + visitor.Date__c.format() + '</p>';
+                couponOut += '<p>DATE VALID:&nbsp; ' + visitor.Event_Instance_Start_Date_Text__c + '</p>';
                 if (!String.isBlank(visitor.Contact__r.Preferred_First_Name__c)) {
                     firstName = visitor.Contact__r.Preferred_First_Name__c;
                 } else {

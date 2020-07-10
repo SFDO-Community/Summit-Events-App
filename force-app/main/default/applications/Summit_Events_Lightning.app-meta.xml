@@ -11,7 +11,7 @@
     </actionOverrides>
     <brand>
         <headerColor>#903F98</headerColor>
-        <logo>Summit_Events_App_logo1</logo>
+        <logo>summit_events_logo128x128</logo>
         <logoVersion>1</logoVersion>
         <shouldOverrideOrgTheme>true</shouldOverrideOrgTheme>
     </brand>

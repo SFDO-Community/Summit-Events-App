@@ -23,11 +23,6 @@ function getFullCalType() {
 
 $(document).ready(function () {
     getFullCalType();
-    // $(document).tooltip({
-    //     content: function () {
-    //         return $(this).prop('title');
-    //     }
-    // });
     $("#fullCalendarView").fullCalendar({
         defaultView: fullCalType,
         height: 'auto',
@@ -39,7 +34,7 @@ $(document).ready(function () {
         eventRender: function (event, $el) {
             var evtTmplt = '';
             var evtDesc = '';
-            var eventClass = "ustEventItem";
+            var eventClass = "SummitEventsItem";
             if (event.eventClosed) {
                 eventClass += " ustEventItemClosed";
             }
@@ -84,12 +79,8 @@ $(document).ready(function () {
             loadJSONEvents();
         }
     });
-
-
     //initial load of dropdown audience type
     loadAudienceDD();
-
-
 });
 
 function setInstanceCookie(instanceID) {
@@ -110,12 +101,14 @@ function fullCalButtonEvts() {
     });
 }
 
+let feedURL = 'https://' + window.location.hostname + window.location.pathname;
+
 function loadJSONEvents() {
     $("#dayEventList").html("<h3>Events</h3><p>Please select above to see events available to you.</p>");
     viewStart = getCurrentSOQLDateTimeLiteral($("#fullCalendarView").fullCalendar('getView').start).toString();
     viewEnd = getCurrentSOQLDateTimeLiteral($("#fullCalendarView").fullCalendar('getView').end).toString();
     $.ajax({
-        url: "/services/apexrest/usteventfeed",
+        url: feedURL + "/services/apexrest/summiteventsfeed",
         data: {'viewStart': viewStart, 'viewEnd': viewEnd, 'feedType': 'eventList', 'audience': $("#audienceDD").val()},
         dataType: "json",
         cache: false
@@ -177,7 +170,7 @@ function findEvents(edate, instanceID) {
 
 function loadAudienceDD() {
     $.ajax({
-        url: "/services/apexrest/usteventfeed",
+        url: feedURL +"/services/apexrest/summiteventsfeed",
         data: {'feedType': 'audienceDD'},
         dataType: "json"
     }).done(function (data) {

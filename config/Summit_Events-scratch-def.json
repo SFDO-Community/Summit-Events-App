@@ -3,15 +3,12 @@
   "username": "dahl3702_sfdx@stthomas.edu",
   "adminEmail": "dahl3702@stthomas.edu",
   "edition": "Developer",
+  "hasSampleData": false,
   "features": [
     "API",
     "AuthorApex",
     "Communities",
     "DebugApex",
     "Sites"
-  ],
-  "orgPreferences": {
-    "enabled": [],
-    "disabled": []
-  }
+  ]
 }

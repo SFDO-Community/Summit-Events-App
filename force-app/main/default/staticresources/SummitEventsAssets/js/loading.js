@@ -16,6 +16,8 @@ loadReady(() => {
     background.classList.add("background");
 
     let pleaseWait = document.createElement("SPAN");
+    pleaseWait.style.fontFamily = "Arial, Helvetica, sans-serif";
+    pleaseWait.style.fontSize = '12px';
     pleaseWait.innerHTML = "Please Wait..";
 
     loadingPanel.appendChild(background);

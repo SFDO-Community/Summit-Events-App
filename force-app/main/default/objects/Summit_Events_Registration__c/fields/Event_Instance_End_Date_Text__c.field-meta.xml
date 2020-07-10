@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Instance_End_Date_Text__c</fullName>
+    <externalId>false</externalId>
+    <formula>(CASE(
+MOD( Event_Instance_End_Date__c - DATE( 1900, 1, 7 ), 7 ),
+0, &quot;Sunday&quot;,
+1, &quot;Monday&quot;,
+2, &quot;Tuesday&quot;,
+3, &quot;Wednesday&quot;,
+4, &quot;Thursday&quot;,
+5, &quot;Friday&quot;,
+&quot;Saturday&quot;
+))
+
+&amp;&quot;, &quot;&amp;
+
+(CASE(
+MONTH(Event_Instance_End_Date__c ),
+1, &quot;January&quot;,
+2, &quot;February&quot;,
+3, &quot;March&quot;,
+4, &quot;April&quot;,
+5, &quot;May&quot;,
+6, &quot;June&quot;,
+7, &quot;July&quot;,
+8, &quot;August&quot;,
+9, &quot;September&quot;,
+10, &quot;October&quot;,
+11, &quot;November&quot;,
+&quot;December&quot;))
+
+&amp;&quot; &quot;&amp;
+
+CASE(RIGHT(TEXT(Event_Instance_End_Date__c ),2),
+&quot;01&quot;, &quot;1st&quot;,
+&quot;21&quot;, &quot;21st&quot;,
+&quot;31&quot;, &quot;31st&quot;,
+&quot;02&quot;, &quot;2nd&quot;,
+&quot;22&quot;, &quot;22nd&quot;,
+&quot;03&quot;, &quot;3rd&quot;,
+&quot;23&quot;, &quot;23rd&quot;,
+&quot;04&quot;, &quot;4th&quot;,
+&quot;05&quot;, &quot;5th&quot;,
+&quot;06&quot;, &quot;6th&quot;,
+&quot;07&quot;, &quot;7th&quot;,
+&quot;08&quot;, &quot;8th&quot;,
+&quot;09&quot;, &quot;9th&quot;,
+(RIGHT(TEXT(Event_Instance_End_Date__c  ),2)&amp;&quot;th&quot;))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Event Instance End Date Text</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

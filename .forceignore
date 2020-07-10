@@ -86,6 +86,8 @@ force-app/main/default/components/SiteLogin.component
 force-app/main/default/classes/ForgotPasswordController.cls-meta.xml
 force-app/main/default/classes/ForgotPasswordController.cls
 
+#Ignore sharing rules - deployed during site config flow
+force-app/main/default/sharingRules/**
 
 #EDA things to ignore
 Contact.compactLayouts.hed__**

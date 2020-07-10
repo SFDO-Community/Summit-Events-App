@@ -5,8 +5,8 @@
     <externalId>false</externalId>
     <formula>HYPERLINK(
 Event__r.Community_Base_URL__c
-&amp; &quot;usteventaddtocalendar?instanceID=&quot;
-&amp; Id
+&amp; &quot;SummitEventsAddToCalendar?instanceID=&quot;
+&amp; CASESAFEID(Event_Instance__c)
 ,&quot;Add to Calendar&quot;)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <inlineHelpText>Link to add to your calendar event feature.</inlineHelpText>
