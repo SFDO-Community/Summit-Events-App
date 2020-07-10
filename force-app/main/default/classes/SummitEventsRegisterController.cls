@@ -176,7 +176,7 @@ public with sharing class SummitEventsRegisterController {
             }
             dataLayerLocationType = locationAddress;
 
-            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance,false);
+            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance, false);
 
             //Check if the Event has appointments and therefore we have to redirect to the appointment page.
             evtHasAppointments = false;
@@ -219,24 +219,24 @@ public with sharing class SummitEventsRegisterController {
             //Fill in contact information
             Contact userContact = new Contact();
             if (String.isBlank(evtInfo.evtRegId) || evtInfo.evtRegId == 'COMING') {
-                hed__Address__c userAddress = new hed__Address__c();
-                List<hed__Address__c> userAddressList = [
-                        SELECT hed__Address_Type__c, hed__MailingState__c, hed__MailingStreet2__c, hed__MailingPostalCode__c,
-                                hed__Parent_Contact__r.Id
-                        FROM hed__Address__c
-                        Where hed__Address_Type__c = 'Home'
-                        AND hed__Parent_Contact__c IN (
-                                SELECT ContactId
-                                FROM User
-                                Where Id = :UserInfo.getUserId()
-                        )
-                ];
-                if (userAddressList.size() > 0) {
-                    userAddress = userAddressList[0];
-                }
+//                hed__Address__c userAddress = new hed__Address__c();
+//                List<hed__Address__c> userAddressList = [
+//                        SELECT hed__Address_Type__c, hed__MailingState__c, hed__MailingStreet2__c, hed__MailingPostalCode__c,
+//                                hed__Parent_Contact__r.Id
+//                        FROM hed__Address__c
+//                        Where hed__Address_Type__c = 'Home'
+//                        AND hed__Parent_Contact__c IN (
+//                                SELECT ContactId
+//                                FROM User
+//                                Where Id = :UserInfo.getUserId()
+//                        )
+//                ];
+//                if (userAddressList.size() > 0) {
+//                    userAddress = userAddressList[0];
+//                }
 
                 userContact = [
-                        Select Id, Name, FirstName, LastName, Email, hed__Gender__c, HomePhone, MobilePhone, Do_Not_Text__c, Preferred_First_Name__c, Birthdate
+                        Select Id, Name, FirstName, LastName, Email, HomePhone, MobilePhone, Do_Not_Text__c, Preferred_First_Name__c, Birthdate
                         FROM Contact
                         Where Id In (
                                 Select ContactId
@@ -248,12 +248,12 @@ public with sharing class SummitEventsRegisterController {
                 newEvtReg.Registrant_First_Name__c = userContact.FirstName;
                 newEvtReg.Registrant_Last_Name__c = userContact.LastName;
                 newEvtReg.Registrant_Email__c = userContact.Email;
-                newEvtReg.Registrant_Gender__c = userContact.hed__Gender__c;
-                newEvtReg.Registrant_Street_1__c = userAddress.hed__MailingStreet__c;
-                newEvtReg.Registrant_Street_2__c = userAddress.hed__MailingStreet2__c;
-                newEvtReg.Registrant_State__c = userAddress.hed__MailingState__c;
-                newEvtReg.Registrant_City__c = userAddress.hed__MailingCity__c;
-                newEvtReg.Registrant_Zip__c = userAddress.hed__MailingPostalCode__c;
+//                newEvtReg.Registrant_Gender__c = userContact.hed__Gender__c;
+//                newEvtReg.Registrant_Street_1__c = userAddress.hed__MailingStreet__c;
+//                newEvtReg.Registrant_Street_2__c = userAddress.hed__MailingStreet2__c;
+//                newEvtReg.Registrant_State__c = userAddress.hed__MailingState__c;
+//                newEvtReg.Registrant_City__c = userAddress.hed__MailingCity__c;
+//                newEvtReg.Registrant_Zip__c = userAddress.hed__MailingPostalCode__c;
                 newEvtReg.Registrant_Phone__c = userContact.HomePhone;
                 newEvtReg.Registrant_Mobile_Phone__c = userContact.MobilePhone;
                 newEvtReg.Registrant_Preferred_First_Name__c = userContact.Preferred_First_Name__c;
@@ -312,7 +312,7 @@ public with sharing class SummitEventsRegisterController {
     }
 
     public List<SelectOption> getSexDD() {
-        return PickThePicklist('Contact', 'hed__Gender__c', true);
+        return PickThePicklist('Summit_Events_Registration__c', 'Registrant_Gender__c', true);
     }
 
     public List<SelectOption> getStateDD() {
@@ -533,8 +533,8 @@ public with sharing class SummitEventsRegisterController {
         }
 
         //Begin matching based on event record type to get contact ID or create a new contact ID
-        SummitEventsContactMatching matcher = new SummitEventsContactMatching();
-        Map<String, String> matched = new Map<String, String>();
+//        SummitEventsContactMatching matcher = new SummitEventsContactMatching();
+//        Map<String, String> matched = new Map<String, String>();
 
         //Check if last name, email, phone number or DOB changed
         Boolean dataHasChanged = false;
@@ -548,7 +548,7 @@ public with sharing class SummitEventsRegisterController {
             }
         }
 
-        if (String.isNotBlank(evtInfo.evtRegId) && String.isNotBlank(newEvtReg.Contact__r.Id) && !dataHasChanged) {
+/*        if (String.isNotBlank(evtInfo.evtRegId) && String.isNotBlank(newEvtReg.Contact__r.Id) && !dataHasChanged) {
             matched.put('contactId', newEvtReg.Contact__r.Id);
             contactId = newEvtReg.Contact__r.Id;
         } else {
@@ -574,7 +574,7 @@ public with sharing class SummitEventsRegisterController {
                     newEvtReg.Matching_Log__c = String.valueOf(matched.get('matchLog'));
                 }
             }
-        }
+        }*/
 
         //Create registration if event Registration does not exist
         if (String.isBlank(evtInfo.evtRegId) || evtInfo.evtRegId == 'COMING') {
@@ -588,9 +588,9 @@ public with sharing class SummitEventsRegisterController {
             }
             newEvtReg = rCRUD.updateRegistration(newEvtReg);
             //Update matching log with new ID
-            if (String.isNotBlank(newEvtReg.Matching_Log__c)) {
+            /*if (String.isNotBlank(newEvtReg.Matching_Log__c)) {
                 newEvtReg.Matching_Log__c = newEvtReg.Matching_Log__c.replaceAll('\\[\\[REGID\\]\\]', newEvtReg.Id);
-            }
+            }*/
             evtInfo.evtRegId = newEvtReg.Id;
             //make matching log functional for reparenting
         }
