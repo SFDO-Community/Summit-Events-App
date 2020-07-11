@@ -163,7 +163,7 @@ public with sharing class SummitEventsSubmitController {
             for (Summit_Events_Fee__c fee : eventFees) {
                 if (fee.Event_Fee__c != null && fee.Event_Fee__c > 0) {
                     totalPaymentAmount += fee.Event_Fee__c;
-                    if (!fee.Event_Fee_Type__c.equalsIgnoreCase('Event') || !fee.Event_Fee_Type__c.equalsIgnoreCase('Event Additional')) {
+                    if (!fee.Event_Fee_Type__c.equalsIgnoreCase('Event') && !fee.Event_Fee_Type__c.equalsIgnoreCase('Event Additional')) {
                         if (fee.Event_Fee_Type__c.equalsIgnoreCase('Appointment')) {
                             paymentItemized += '<tr class="eventAppointmentCost">';
                             paymentItemized += '<td>' + fee.Event_Appointment_Type__r.Title__c + '</td>';
@@ -221,12 +221,10 @@ public with sharing class SummitEventsSubmitController {
     }
 
     public String prettyCurrencyString(Decimal numberIn) {
-        String numberOut = '';
-        List<String> args = new String[]{
-                '0', 'number', '###,###,##0.00'
-        };
-        numberOut = '$' + String.format(numberIn.format(), args);
-        return numberOut;
+        // String.format() is useless for numbers in Apex, so we need a hack.
+        Decimal d = numberIn.setScale(2)+0.001;
+        String s = d.format();
+        return '$'+ s.substring(0,s.length()-1);
     }
 
     public void displayTestingHeaders() {
@@ -316,89 +314,43 @@ public with sharing class SummitEventsSubmitController {
 
         ticketName = 'ThomasTicket';
 
-        String envelop = '';
-
-        envelop = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://types.secureLink.touchnet.com">';
-        envelop += '<soapenv:Header/>';
-        envelop += '<soapenv:Body>';
-        envelop += '    <typ:generateSecureLinkTicketRequest>';
-        envelop += '        <typ:ticketName>' + ticketName + '</typ:ticketName>';
-        envelop += '        <typ:nameValuePairs>';
-        envelop += '            <typ:name>AMT</typ:name>';
-        envelop += '            <typ:value>' + totalPaymentAmount + '</typ:value>';
-        envelop += '        </typ:nameValuePairs>';
-
+        List<String> envelop = new List<String>{'<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://types.secureLink.touchnet.com">'};
+        envelop.add('<soapenv:Header/><soapenv:Body><typ:generateSecureLinkTicketRequest>');
+        envelop.add('<typ:ticketName>' + ticketName + '</typ:ticketName>');
+        addNameValuePair(envelop,'AMT', totalPaymentAmount);
         /** Add fees by index code **/
         Integer ff = 0;
-        String accountSuffix = '';
+        String accountSuffix;
         for (String key : feesByIndex.keySet()) {
-            if (ff > 0) {
-                accountSuffix = '_' + String.valueOf(ff + 1);
+            if (ff++ > 0) {
+                accountSuffix = '_' + String.valueOf(ff);
             } else {
                 accountSuffix = '';
             }
-            envelop += '        <typ:nameValuePairs>';
-            envelop += '            <typ:name>CREDIT_ACCT_CODE' + accountSuffix + '</typ:name>';
-            envelop += '            <typ:value>' + feesByIndex.get(key) + '</typ:value>';
-            envelop += '        </typ:nameValuePairs>';
-            envelop += '        <typ:nameValuePairs>';
-            envelop += '            <typ:name>CREDIT_ACCT_AMT' + accountSuffix + '</typ:name>';
-            envelop += '            <typ:value>' + key + '</typ:value>';
-            envelop += '        </typ:nameValuePairs>';
-            ff++;
+            addNameValuePair(envelop,'CREDIT_ACCT_CODE' + accountSuffix, feesByIndex.get(key));
+            addNameValuePair(envelop,'CREDIT_ACCT_AMT' + accountSuffix, key);
         }
 
         /** Pass along customer NAME to pre-fill form. Concat first and last name if they exist with a space between. **/
-        if (String.isNotBlank(eventRegistration.Registrant_First_Name__c) || String.isNotBlank(eventRegistration.Registrant_Last_Name__c)) {
-            envelop += '        <typ:nameValuePairs>';
-            envelop += '            <typ:name>BILL_NAME</typ:name>';
-            envelop += '            <typ:value>';
-            if (String.isNotBlank(eventRegistration.Registrant_First_Name__c)) {
-                envelop += eventRegistration.Registrant_First_Name__c;
-
-            }
-            if (String.isNotBlank(eventRegistration.Registrant_First_Name__c) && String.isNotBlank(eventRegistration.Registrant_Last_Name__c)) {
-                envelop += ' ';
-            }
-            if (String.isNotBlank(eventRegistration.Registrant_Last_Name__c)) {
-                envelop += eventRegistration.Registrant_Last_Name__c;
-            }
-            envelop += '            </typ:value>';
-            envelop += '        </typ:nameValuePairs>';
-        }
-
+        string billName = String.join(
+            new List<String>{
+                eventRegistration.Registrant_First_Name__c,eventRegistration.Registrant_Last_Name__c
+            },' ').trim();
+        addNameValuePair(envelop,'BILL_NAME',billName);
 
         /** Pass along customer EMAIL to pre-fill form **/
-        if (String.isNotBlank(eventRegistration.Registrant_Email__c)) {
-            envelop += '        <typ:nameValuePairs>';
-            envelop += '            <typ:name>BILL_EMAIL_ADDRESS</typ:name>';
-            envelop += '            <typ:value>' + eventRegistration.Registrant_Email__c + '</typ:value>';
-            envelop += '        </typ:nameValuePairs>';
-        }
+        addNameValuePair(envelop,'BILL_EMAIL_ADDRESS', eventRegistration.Registrant_Email__c);
 
         /** Pass along customer ADDRESS 1 to pre-fill form **/
-        if (String.isNotBlank(eventRegistration.Registrant_Street_1__c)) {
-            envelop += '        <typ:nameValuePairs>';
-            envelop += '            <typ:name>BILL_STREET1</typ:name>';
-            envelop += '            <typ:value>' + eventRegistration.Registrant_Street_1__c + '</typ:value>';
-            envelop += '        </typ:nameValuePairs>';
-        }
+        addNameValuePair(envelop,'BILL_STREET1',eventRegistration.Registrant_Street_1__c);
 
         /** Pass along customer ADDRESS 2 to pre-fill form **/
-        if (String.isNotBlank(eventRegistration.Registrant_Street_2__c)) {
-            envelop += '        <typ:nameValuePairs>';
-            envelop += '            <typ:name>BILL_STREET2</typ:name>';
-            envelop += '            <typ:value>' + eventRegistration.Registrant_Street_2__c + '</typ:value>';
-            envelop += '        </typ:nameValuePairs>';
-        }
+        addNameValuePair(envelop,'BILL_STREET2',eventRegistration.Registrant_Street_2__c);
 
         /** Pass along customer CITY to pre-fill form **/
-        if (String.isNotBlank(eventRegistration.Registrant_City__c)) {
-            envelop += '        <typ:nameValuePairs>';
-            envelop += '            <typ:name>BILL_CITY</typ:name>';
-            envelop += '            <typ:value>' + eventRegistration.Registrant_City__c + '</typ:value>';
-            envelop += '        </typ:nameValuePairs>';
-        }
+        addNameValuePair(envelop,'BILL_CITY',eventRegistration.Registrant_City__c);
+
+//TODO CONTINUE HERE -- need to ultimately do a String.join(envelop,'')
 
         /** Pass along customer STATE to pre-fill form **/
         if (String.isNotBlank(eventRegistration.Registrant_State__c)) {
@@ -488,7 +440,7 @@ public with sharing class SummitEventsSubmitController {
             r.setEndpoint(touchNetService);
             r.setHeader('Authorization', getAuthorizationHeader());
             r.setHeader('SOAPAction', touchNetService);
-            r.setMethod('GET');
+            r.setMethod('POST');
             r.setBody(envelop);
             HTTPResponse resp = h.send(r);
             DOM.Document doc = resp.getBodyDocument();
@@ -497,6 +449,15 @@ public with sharing class SummitEventsSubmitController {
             ticket = mapResponse.get('ticket');
         } catch (Exception ex) {
             Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL, 'Error connecting payment gateway, please try later!!' + ex.getMessage()));
+        }
+    }
+
+    private String addNameValuePair(List<String> accumulator, String name, String value) {
+        if (String.isNotBlank(value)) {
+            accumulator.add(
+                String.format('<typ:nameValuePairs><typ:name>{0}</typ:name><typ:value>{1}</typ:value></typ:nameValuePairs>',
+                    new List<string>{name,value})
+            );
         }
     }
 
@@ -569,7 +530,7 @@ public with sharing class SummitEventsSubmitController {
                 r.setEndpoint(touchNetService);
                 r.setHeader('Authorization', getAuthorizationHeader());
                 r.setHeader('SOAPAction', touchNetService);
-                r.setMethod('GET');
+                r.setMethod('POST');
                 r.setBody(envelop);
                 HTTPResponse resp = h.send(r);
                 DOM.Document doc = resp.getBodyDocument();
@@ -611,7 +572,7 @@ public with sharing class SummitEventsSubmitController {
                     }
                     CRUDtoDo.updateFees(eventFees);
 
-                    successReturnFromGateway = false;
+                    successReturnFromGateway = false; //??? why not true?
 
                     pageRedirect = Page.SummitEventsConfirmation;
                     pageRedirect.setRedirect(true);
@@ -627,18 +588,23 @@ public with sharing class SummitEventsSubmitController {
             Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL, 'Payment can not be processed, please try later!!' + ex));
             successReturnFromGateway = false;
             Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+
+            // Notify Apex Exception Notification addresses
             List<String> toAddresses = new List<String>();
-            toAddresses.add('dahl3702@stthomas.edu');
+			for (ApexEmailNotification notify:[SELECT Email,User.Email FROM ApexEmailNotification]) {
+    			toAddresses.add(!String.isBlank(notify.Email) ? notify.Email : notify.User.Email);
+            }
+            if (toAddresses.size()>0) {
+                email.setToAddresses(toAddresses);
+                // Sets the paramaters of the email
+                email.setSubject('Summit Events Transaction Error');
+                email.setPlainTextBody(ex.getStackTraceString() + '***' + ex.getMessage());
 
-            // Sets the paramaters of the email
-            email.setSubject('UST Events Transaction Error');
-            email.setToAddresses(toAddresses);
-            email.setPlainTextBody(ex.getStackTraceString() + '***' + ex.getMessage());
-
-            // Sends the email
-            Messaging.SendEmailResult [] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[]{
-                    email
-            });
+                // Sends the email
+                Messaging.SendEmailResult [] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[]{
+                        email
+                });
+            }
             if (sp != null) {
                 Database.rollback(sp);
             }
