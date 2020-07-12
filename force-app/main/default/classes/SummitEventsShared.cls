@@ -5,7 +5,8 @@
 
 public with sharing class SummitEventsShared {
     //private key for encryption
-    Private Blob key = Blob.valueOf('TmC%2%1119fzG2PrtP7f&6acnc#y8@vr');
+    Private Blob key; 
+    Private Summit_Events_Settings__c settings;
     Public String defaultTemplate = 'CastorTemplate2017';
 
     public class SummitEventsInfo {
@@ -16,7 +17,8 @@ public with sharing class SummitEventsShared {
     }
 
     public SummitEventsShared() {
-
+        settings = Summit_Events_Settings__c.getInstance();
+        key = Blob.valueOf(settings.Encryption_Key__c);
     }
 
     public SummitEventsInfo getSummitEventsInfo() {

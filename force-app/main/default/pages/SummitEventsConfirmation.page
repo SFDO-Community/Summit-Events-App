@@ -46,7 +46,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     </div>
                     <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
                         <p class="slds-text-body ">
-                            <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"></apex:outputText>
+                            <apex:outputText escape="false" value="{!eventPage.Event_Footer__c}"></apex:outputText>
                         </p>
                     </div>
                 </apex:form>
