@@ -15,12 +15,12 @@ public class SummitEventsProgramLookupExtension {
         SelectedPrograms = new List<SelectOption>();
 
       /*  List<String> currentSelected = new List<String>();
-        if (!String.isBlank(SEEvt.Academic_Program_List_Selected__c)) {
+        if (String.isNotBlank(SEEvt.Academic_Program_List_Selected__c)) {
             currentSelected = SEEvt.Academic_Program_List_Selected__c.split(';');
             for (String acPrg : currentSelected) {
                 SelectedPrograms.add(new SelectOption(acPrg, acPrg));
             }
-        } else if (!String.isBlank(SEEvt.Academic_Program_List__c)) {
+        } else if (String.isNotBlank(SEEvt.Academic_Program_List__c)) {
             currentSelected = SEEvt.Academic_Program_List__c.split(';');
             for (Integer xx = currentSelected.size() - 1; xx > -1; xx--) {
                 SelectedPrograms.add(new SelectOption(currentSelected[xx], currentSelected[xx]));
@@ -40,7 +40,7 @@ public class SummitEventsProgramLookupExtension {
         // Get a list of programs
         List<SelectOption> programs = new List<SelectOption>();
         List<Major> schoolProgs = new List<Major>();
-         if (!String.isBlank(SummitEvt.School__c)) {
+         if (String.isNotBlank(SummitEvt.School__c)) {
              Id schoolId = SummitEvt.School__c;
              schoolProgs = [
                      SELECT Id,Name, Major_Display_Name__c, Major_Name__c, Major_Code__c, Program_Offered__r.Program_Code__c
@@ -63,7 +63,7 @@ public class SummitEventsProgramLookupExtension {
          }
          For (Major__c prog : schoolProgs) {
              String progName = prog.Major_Display_Name__c + ' (' + prog.Program_Offered__r.Program_Code__c;
-             if (!String.isBlank(prog.Major_Code__c)) {
+             if (String.isNotBlank(prog.Major_Code__c)) {
                  progName += '|' + prog.Major_Code__c;
              }
              progName += ')';
@@ -84,7 +84,7 @@ public class SummitEventsProgramLookupExtension {
         for (SelectOption p : SelectedPrograms) {
             selectString += p.getValue() + ';';
         }
-        if (!String.isBlank(selectString)) {
+        if (String.isNotBlank(selectString)) {
             Pattern TAG_REGEX = Pattern.compile('\\((\\w+|\\w+\\|\\w+)\\)');
             Matcher matcher = TAG_REGEX.matcher(selectString);
             //loop through found hocks and add only unique

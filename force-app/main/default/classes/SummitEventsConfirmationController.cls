@@ -52,7 +52,7 @@ public with sharing class SummitEventsConfirmationController {
 
         System.debug('EVENT LOAD Cookie INFO: ' + JSON.serializePretty(evtInfo));
         String eventTitle = '';
-        if (!String.isBlank(evtInfo.evtRegId)) {
+        if (String.isNotBlank(evtInfo.evtRegId)) {
             Summit_Events_Registration__c evtReg = [
                     SELECT Id, Status__c, Contact__c, Event_Name__c, Event_Instance_Title__c, Event_Instance__c,
                             Registrant_First_Name__c, Registrant_Last_Name__c,Registrant_Gender__c,
@@ -67,7 +67,7 @@ public with sharing class SummitEventsConfirmationController {
 
             System.debug('EVENT ON LOAD INFO: ' + JSON.serializePretty(evtReg));
 
-            if (!String.isBlank(evtReg.Event_Instance_Title__c)) {
+            if (String.isNotBlank(evtReg.Event_Instance_Title__c)) {
                 eventTitle = evtReg.Event_Name__c + ' - ' + evtReg.Event_Instance_Title__c ;
             } else {
                 eventTitle = evtReg.Event_Name__c;

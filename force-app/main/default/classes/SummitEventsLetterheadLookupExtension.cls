@@ -43,11 +43,11 @@ public class SummitEventsLetterheadLookupExtension {
 
     public PageReference save() {
         Apexpages.addMessage(new ApexPages.Message(ApexPages.SEVERITY.INFO, 'Your letterhead settings have been saved.'));
-        if (!String.isBlank(SummitEvt.Org_Email_Id__c)) {
+        if (String.isNotBlank(SummitEvt.Org_Email_Id__c)) {
             SummitEvt.Org_Email__c = String.valueOf(oweList.get(SummitEvt.Org_Email_Id__c).Address);
         }
         String LHTemplate = '';
-        if (!String.isBlank(SummitEvt.Letterhead_Id__c)) {
+        if (String.isNotBlank(SummitEvt.Letterhead_Id__c)) {
             LHTemplate = brandTemplates.get(SummitEvt.Letterhead_Id__c).Value;
             SummitEvt.Letterhead_Name__c = brandTemplates.get(SummitEvt.Letterhead_Id__c).Name;
         }
@@ -118,7 +118,7 @@ public class SummitEventsLetterheadLookupExtension {
             while (styleMatcher2.find() == true) {
                 so.height = styleMatcher2.group(1);
             }
-            if (!String.IsBlank(so.location)) {
+            if (String.isNotBlank(so.location)) {
                 styles.put(so.location, so);
             }
         }
@@ -140,7 +140,7 @@ public class SummitEventsLetterheadLookupExtension {
             generatedLH += generateStyles(styles.get('header'), true);
         }
         generatedLH += '>\n';
-        if (!String.isBlank(headerImg)) {
+        if (String.isNotBlank(headerImg)) {
             generatedLH += headerImg;
         }
         generatedLH += '        </td>\n';
@@ -188,7 +188,7 @@ public class SummitEventsLetterheadLookupExtension {
             generatedLH += generateStyles(styles.get('footer'), true);
         }
         generatedLH += '>\n';
-        if (!String.isBlank(footerImg)) {
+        if (String.isNotBlank(footerImg)) {
             generatedLH += footerImg;
         }
         generatedLH += '        </td>\n';
@@ -227,23 +227,23 @@ public class SummitEventsLetterheadLookupExtension {
 
     public String generateStyles(styleObject stylesIn, boolean includeID) {
         String sOut = '';
-        if (!String.IsBlank(stylesIn.location) && includeID) {
+        if (String.isNotBlank(stylesIn.location) && includeID) {
             sOut += ' id="' + stylesIn.location + '" ';
         }
         sOut += ' style="';
-        if (!String.IsBlank(stylesIn.backgroundColor)) {
+        if (String.isNotBlank(stylesIn.backgroundColor)) {
             sOut += ' background-color:' + stylesIn.backgroundColor + '; ';
         }
-        if (!String.IsBlank(stylesIn.fontFam)) {
+        if (String.isNotBlank(stylesIn.fontFam)) {
             sOut += ' font-family:' + stylesIn.fontFam + '; ';
         }
-        if (!String.IsBlank(stylesIn.fontSize)) {
+        if (String.isNotBlank(stylesIn.fontSize)) {
             sOut += ' font-size:' + stylesIn.fontSize + '; ';
         }
-        if (!String.IsBlank(stylesIn.color)) {
+        if (String.isNotBlank(stylesIn.color)) {
             sOut += ' color:' + stylesIn.color + '; ';
         }
-        if (!String.IsBlank(stylesIn.height)) {
+        if (String.isNotBlank(stylesIn.height)) {
             sOut += ' height:' + stylesIn.height + 'px; ';
         }
         sOut += '" ';

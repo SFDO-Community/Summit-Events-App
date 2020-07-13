@@ -28,42 +28,36 @@ public with sharing class SummitEventsShared {
         String URLaudience = ApexPages.currentPage().getParameters().get('audience');
         String URLinstanceID = ApexPages.currentPage().getParameters().get('instanceID');
         jsonInput = getDecryptCookie('SummitEvents');
-        if (!String.isBlank(jsonInput)) {
+        if (String.isNotBlank(jsonInput)) {
             try {
                 evtInfo = (SummitEventsInfo) JSON.deserialize(jsonInput, SummitEventsInfo.class);
-                if (!String.isBlank(URLaudience)) {
+                if (String.isNotBlank(URLaudience)) {
                     evtInfo.audience = URLaudience;
                 }
             } catch (Exception e) {
                 //Cookie was un-serializable so delete it
                 Cookie deleteCookie = new Cookie('SummitEvents', '', null, 0, false); // Note the 0 to delete the cookie
-                ApexPages.currentPage().setCookies(new Cookie[]{
-                        deleteCookie
-                });
+                ApexPages.currentPage().setCookies(new Cookie[]{ deleteCookie });
             }
         }
-        if (!String.isBlank(URLinstanceID)) {
-            if (URLinstanceID.length() > 14) {
-                if (URLinstanceID != evtInfo.instanceID) {
-                    //event instance has changed so delete cookie and reestablish with new instance
-                    Cookie deleteCookie = new Cookie('SummitEvents', '', null, 0, false); // Note the 0 to delete the cookie
-                    ApexPages.currentPage().setCookies(new Cookie[]{
-                            deleteCookie
-                    });
-                    evtInfo = new SummitEventsInfo();
-                    evtInfo.instanceID = URLinstanceID;
-                    if (!String.isBlank(URLaudience)) {
-                        evtInfo.audience = URLaudience;
-                    }
-                    String eventCookie = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"COMING","evtId":"' + evtInfo.evtId + '"}';
-                    System.Debug('COOKIE 1: ' + eventCookie);
-                    createEncryptedCookie(eventCookie, 'SummitEvents');
-                }
+        if (String.isNotBlank(URLinstanceID) && (URLinstanceID.length() > 14) && (URLinstanceID != evtInfo.instanceID)) {
+            //event instance has changed so delete cookie and reestablish with new instance
+            Cookie deleteCookie = new Cookie('SummitEvents', '', null, 0, false); // Note the 0 to delete the cookie
+            ApexPages.currentPage().setCookies(new Cookie[]{
+                    deleteCookie
+            });
+            evtInfo = new SummitEventsInfo();
+            evtInfo.instanceID = URLinstanceID;
+            if (String.isNotBlank(URLaudience)) {
+                evtInfo.audience = URLaudience;
             }
+            String eventCookie = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"COMING","evtId":"' + evtInfo.evtId + '"}';
+            System.Debug('COOKIE 1: ' + eventCookie);
+            createEncryptedCookie(eventCookie, 'SummitEvents');
         }
 
         //check if regid is there  and whether status it is set to registered. IF so reset cookie if it is.
-        if (!String.isBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING') {
+        if (String.isNotBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING') {
             Summit_Events_Registration__c evtReg = [SELECT Status__c FROM Summit_Events_Registration__c WHERE ID = :evtInfo.evtRegId][0];
             if (evtReg.Status__c != 'Started') {
                 //Registration is complete and a new form should be generated.
@@ -82,7 +76,7 @@ public with sharing class SummitEventsShared {
         PageReference myVFPage = null;
         evt = getSummitEventsInfo();
 
-        Summit_Events_Settings__c myUserSetting = Summit_Events_Settings__c.getInstance(UserInfo.getUserId());
+        Summit_Events_Settings__c myUserSetting = Summit_Events_Settings__c.getInstance();
         String communityBaseURL = myUserSetting.Community_Base_URL__c;
 
         if ((String.isBlank(evt.evtRegId) && !ApexPages.currentPage().getUrl().containsIgnoreCase('SummitEventsRegister')) || String.isBlank(evt.instanceID)) {
@@ -92,9 +86,9 @@ public with sharing class SummitEventsShared {
                     deleteCookie
             });
 
-            if (!String.isBlank(evt.evtId)) {
+            if (String.isNotBlank(evt.evtId)) {
                 Summit_Events__c eventPage = [SELECT Event_Home_Link_URL__c FROM Summit_Events__c WHERE Id = :evt.evtId][0];
-                if (!String.isBlank(eventPage.Event_Home_Link_URL__c)) {
+                if (String.isNotBlank(eventPage.Event_Home_Link_URL__c)) {
                     myVFPage = new PageReference(eventPage.Event_Home_Link_URL__c);
                 } else if (String.isNotBlank(evt.instanceID) && !ApexPages.currentPage().getUrl().containsIgnoreCase('SummitEventsRegister')) {
                     myVFPage = new PageReference(communityBaseURL + 'SummitEventsRegister?instanceID=' + evt.instanceID);

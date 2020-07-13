@@ -63,7 +63,7 @@ public with sharing class SummitEventsRegisterController {
         evtInfo = SEShared.getSummitEventsInfo();
 
         //Set applicant type if audience is passed
-        if (!String.isBlank(evtInfo.audience)) {
+        if (String.isNotBlank(evtInfo.audience)) {
             if (evtInfo.audience == 'Transfer' || evtInfo.audience == 'Transfer International') {
                 applicantType = 'Transfer';
             } else if (evtInfo.audience == 'High School Senior' || evtInfo.audience == 'High School Junior or Younger' || evtInfo.audience == 'First-Year International' || evtInfo.audience == 'Dougherty Family College (2-Year)') {
@@ -106,7 +106,7 @@ public with sharing class SummitEventsRegisterController {
         }
 
         //Get Event Info off of instance master detail id
-        if (!String.isBlank(evtInfo.evtId)) {
+        if (String.isNotBlank(evtInfo.evtId)) {
             eventPage = [
                     SELECT Name, Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Full_Text__c, Audience__c,Include_Time_frame_List__c,
                             Max_Other_Attendees__c, Allow_Other_Attendees__c, College_High_School_Ask__c, Ask_Gender__c, Template__c,
@@ -121,13 +121,13 @@ public with sharing class SummitEventsRegisterController {
                             Ask_Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c,
                             Ask_Third_Party_Registrant__c, Event_Fee__c, Event_Fee_Additional__c, Event_Fee_Additional_Attribute__c, Event_Fee_Attribute__c,
-                            Registration_Email_Restriction__c
+                            Registration_Email_Restriction__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1
             ][0];
 
-            if (!String.isBlank(eventPage.Ask_Applicant_Type__c)) {
+            if (String.isNotBlank(eventPage.Ask_Applicant_Type__c)) {
                 //Important to start all of this with exact "Do not ask but assign " to assign correctly
                 if (eventPage.Ask_Applicant_Type__c.startsWith('Do not ask but assign ')) {
                     applicantType = eventPage.Ask_Applicant_Type__c.replace('Do not ask but assign ', '');
@@ -135,11 +135,11 @@ public with sharing class SummitEventsRegisterController {
             }
 
             if (
-                    !String.isBlank(eventPage.Add_Info_Question_Type_1__c) ||
-                            !String.isBlank(eventPage.Add_Info_Question_Type_1__c) ||
-                            !String.isBlank(eventPage.Add_Info_Question_Type_1__c) ||
-                            !String.isBlank(eventPage.Add_Info_Question_Type_1__c) ||
-                            !String.isBlank(eventPage.Add_Info_Question_Type_1__c) ||
+                    String.isNotBlank(eventPage.Add_Info_Question_Type_1__c) ||
+                            String.isNotBlank(eventPage.Add_Info_Question_Type_1__c) ||
+                            String.isNotBlank(eventPage.Add_Info_Question_Type_1__c) ||
+                            String.isNotBlank(eventPage.Add_Info_Question_Type_1__c) ||
+                            String.isNotBlank(eventPage.Add_Info_Question_Type_1__c) ||
                             eventPage.Include_Time_frame_List__c ||
                             eventPage.Allow_Other_Attendees__c ||
                             (eventPage.Ask_Gender__c != 'Do not ask' && eventPage.Ask_Gender__c != null) ||
@@ -160,23 +160,23 @@ public with sharing class SummitEventsRegisterController {
                 showLocation = true;
             }
             String locationTitle = '';
-            if (!String.isBlank(evtInstance.Location_Title_Override__c)) {
+            if (String.isNotBlank(evtInstance.Location_Title_Override__c)) {
                 locationTitle = evtInstance.Location_Title_Override__c;
-            } else if (!String.isBlank(eventPage.Location_Title__c)) {
+            } else if (String.isNotBlank(eventPage.Location_Title__c)) {
                 locationTitle = eventPage.Location_Title__c;
             }
 
             String locationMapLink = '';
-            if (!String.isBlank(evtInstance.Location_Map_Link_Override__c)) {
+            if (String.isNotBlank(evtInstance.Location_Map_Link_Override__c)) {
                 locationMapLink = evtInstance.Location_Map_Link_Override__c;
-            } else if (!String.isBlank(eventPage.Location_Map_Link__c)) {
+            } else if (String.isNotBlank(eventPage.Location_Map_Link__c)) {
                 locationMapLink = eventPage.Location_Map_Link__c;
             }
 
             String locationAddress = '';
-            if (!String.isBlank(evtInstance.Location_Address_Override__c)) {
+            if (String.isNotBlank(evtInstance.Location_Address_Override__c)) {
                 locationAddress = evtInstance.Location_Address_Override__c;
-            } else if (!String.isBlank(eventPage.Location_Title__c)) {
+            } else if (String.isNotBlank(eventPage.Location_Title__c)) {
                 locationAddress = eventPage.Location_Title__c;
             }
             dataLayerLocationType = locationAddress;
@@ -197,7 +197,7 @@ public with sharing class SummitEventsRegisterController {
             }
 
             //Grab the template if defined
-            if (!String.isBlank(eventPage.Template__c)) {
+            if (String.isNotBlank(eventPage.Template__c)) {
                 templateSelected = eventPage.Template__c;
             }
 
@@ -258,7 +258,7 @@ public with sharing class SummitEventsRegisterController {
         }
 
         //If the user is logged in use that data
-        if ((!String.isBlank(EvtUserType) && EvtUserType != 'Guest' && EvtUserType != 'Standard') || (!String.isBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING')) {
+        if ((String.isNotBlank(EvtUserType) && EvtUserType != 'Guest' && EvtUserType != 'Standard') || (String.isNotBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING')) {
             //Fill in contact information
             Contact userContact = new Contact();
             if (String.isBlank(evtInfo.evtRegId) || evtInfo.evtRegId == 'COMING') {
@@ -394,7 +394,7 @@ public with sharing class SummitEventsRegisterController {
         //Missing field in HEDA org
         If (String.isBlank(prgString)) {
             List<Major__c> schoolProgs = new List<Major__c>();
-            if (!String.isBlank(eventPage.School__c)) {
+            if (String.isNotBlank(eventPage.School__c)) {
                 Id schoolId = eventPage.School__c;
                 schoolProgs = [
                         SELECT Id,Name, Major_Name__c,Major_Display_Name__c, Major_Code__c, Program_Offered__r.Program_Code__c, Program_Offered__r.Degree_Level__c
@@ -419,7 +419,7 @@ public with sharing class SummitEventsRegisterController {
             prgString = '';
             For (Major__c prog : schoolProgs) {
                 prgString += prog.Major_Display_Name__c + ' - ' + prog.Program_Offered__r.Degree_Level__c + ' (' + prog.Program_Offered__r.Program_Code__c;
-                if (!String.isBlank(prog.Major_Code__c)) {
+                if (String.isNotBlank(prog.Major_Code__c)) {
                     prgString += '|' + prog.Major_Code__c;
                 }
                 prgString += ');';
@@ -438,7 +438,7 @@ public with sharing class SummitEventsRegisterController {
                             prg.replaceAll('\\(\\w+\\|\\w+\\)|\\(\\w+\\)', '').trim()
                     )
             );
-            if (!String.isBlank(prgSelectedAlready) && eventPage.Ask_Registrant_Program_Of_Interest__c != 'Ask and require one selection') {
+            if (String.isNotBlank(prgSelectedAlready) && eventPage.Ask_Registrant_Program_Of_Interest__c != 'Ask and require one selection') {
                 if (prgSelectedAlready.indexOf(prg) > -1) {
                     selectedPrograms.add(prg);
                 }
@@ -450,7 +450,7 @@ public with sharing class SummitEventsRegisterController {
 
     public List<SelectOption> createPicklists(String returnSepStringList) {
         List<SelectOption> cpl = new List<SelectOption>();
-        if (!String.isBlank(returnSepStringList)) {
+        if (String.isNotBlank(returnSepStringList)) {
             cpl.add(new SelectOption('', 'Select...'));
             returnSepStringList = returnSepStringList.Trim();
             returnSepStringList = returnSepStringList.replace('\n\n', '\n');
@@ -519,12 +519,12 @@ public with sharing class SummitEventsRegisterController {
         }
 
 
-        /* if (selectedPrograms.isEmpty() && String.isBlank(selectedProgramsOne) && !String.isBlank(eventPage.Academic_Program_List__c)) {
+        /* if (selectedPrograms.isEmpty() && String.isBlank(selectedProgramsOne) && String.isNotBlank(eventPage.Academic_Program_List__c)) {
              selectedPrograms = eventPage.Academic_Program_List__c.split(';');
              progSelectionMade = false;
          }
 
-         if (!String.isBlank(selectedProgramsOne)) {
+         if (String.isNotBlank(selectedProgramsOne)) {
              selectedPrograms.add(selectedProgramsOne);
          }
 
@@ -566,7 +566,7 @@ public with sharing class SummitEventsRegisterController {
             newEvtReg.Registrant_Date_of_Birth__c = Date.parse(birthDateString);
         }
 
-        if (!String.isBlank(applicantType)) {
+        if (String.isNotBlank(applicantType)) {
             newEvtReg.Registrant_Applicant_Type__c = applicantType;
         } else if (eventPage.Ask_Applicant_Type__c == 'Do not ask but assign First-Year') {
             newEvtReg.Registrant_Applicant_Type__c = 'First-Year';

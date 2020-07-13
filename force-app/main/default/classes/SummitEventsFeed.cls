@@ -56,7 +56,7 @@ global with sharing class SummitEventsFeed {
             serializedJSON = JSON.serialize(getEventList());
             serializedJSON = serializedJSON.replace('"endDate":', '"end":');
         }
-        if (!String.isBlank(callback)) {
+        if (String.isNotBlank(callback)) {
             serializedJSON = callback + '(' + serializedJSON + ')';
         }
         res.responseBody = Blob.valueOf(serializedJSON);
@@ -90,14 +90,14 @@ global with sharing class SummitEventsFeed {
         String formattedViewStart;
         String formattedViewEnd;
 
-        if (!String.isBlank(req.params.get('viewStart'))) {
+        if (String.isNotBlank(req.params.get('viewStart'))) {
             String viewStartString = req.params.get('viewStart').trim();
             if (!viewStartString.containsIgnoreCase(' ')) {
                 viewStartString = viewStartString + ' 00:00:00';
             }
             viewStart = DateTime.valueOf(viewStartString);
         }
-        if (!String.isBlank(req.params.get('viewEnd'))) {
+        if (String.isNotBlank(req.params.get('viewEnd'))) {
             String viewEndString = req.params.get('viewEnd').trim();
             if (!viewEndString.containsIgnoreCase(' ')) {
                 viewEndString = viewEndString + ' 23:59:59';
@@ -120,13 +120,13 @@ global with sharing class SummitEventsFeed {
         } catch (Exception e) {
             eventId = null;
         }
-        if (!String.isBlank(eventId)) {
+        if (String.isNotBlank(eventId)) {
             eventQuery += ' AND Event__r.id = \'' + eventId + '\' ';
         }
 
         //get event based on audience (can be comma seperated)
         String audience = req.params.get('audience');
-        if (audience != 'all' && !String.isBlank(audience)) {
+        if (audience != 'all' && String.isNotBlank(audience)) {
             List<String> audienceList = new List<String>();
             audienceList = audience.split(',');
             for (String aud : audienceList) {
@@ -138,7 +138,7 @@ global with sharing class SummitEventsFeed {
 
         //Sponsor filter (can be comma seperated)
         String sponsor = req.params.get('sponsor');
-        if (!String.isBlank(sponsor)) {
+        if (String.isNotBlank(sponsor)) {
             List<String> sponsorList = new List<String>();
             sponsorList = sponsor.split(',');
             for (String spon : sponsorList) {
@@ -150,7 +150,7 @@ global with sharing class SummitEventsFeed {
 
         //get filter with like soql concatinated program,location, school, location address, location type
         String filter = req.params.get('filter');
-        if (!String.isBlank(filter)) {
+        if (String.isNotBlank(filter)) {
             eventQuery += ' AND  (';
             List<String> filterList = filter.split(',');
             for (String f : filterList) {
@@ -193,41 +193,41 @@ global with sharing class SummitEventsFeed {
                 evt.title += ' - ' + eventInstance.Instance_Title__c;
             }
 
-            if (!String.isBlank(eventInstance.Instance_Short_Description__c)) {
+            if (String.isNotBlank(eventInstance.Instance_Short_Description__c)) {
                 evt.instanceDesc = eventInstance.Instance_Short_Description__c;
             } else {
                 evt.instanceDesc = '';
             }
 
-            if (!String.isBlank(eventInstance.Feed_Registration_Button_Text_Override__c)) {
+            if (String.isNotBlank(eventInstance.Feed_Registration_Button_Text_Override__c)) {
                 evt.FeedButtonText = eventInstance.Feed_Registration_Button_Text_Override__c;
-            } else if (!String.isBlank(eventInstance.Event__r.Feed_Registration_Button_Text__c)) {
+            } else if (String.isNotBlank(eventInstance.Event__r.Feed_Registration_Button_Text__c)) {
                 evt.FeedButtonText = eventInstance.Event__r.Feed_Registration_Button_Text__c;
             } else {
                 evt.FeedButtonText = 'Register';
             }
 
-            if (!String.isBlank(eventInstance.Location_Type_Override__c)) {
+            if (String.isNotBlank(eventInstance.Location_Type_Override__c)) {
                 evt.locationType = eventInstance.Location_Type_Override__c;
-            } else if (!String.isBlank(eventInstance.Event__r.Location_Type__c)) {
+            } else if (String.isNotBlank(eventInstance.Event__r.Location_Type__c)) {
                 evt.locationType = eventInstance.Event__r.Location_Type__c;
             } else {
                 evt.locationType = '';
             }
 
-            if (!String.isBlank(eventInstance.Event__r.Event_Sponsor__c)) {
+            if (String.isNotBlank(eventInstance.Event__r.Event_Sponsor__c)) {
                 evt.sponsors = eventInstance.Event__r.Event_Sponsor__c;
             } else {
                 evt.sponsors = '';
             }
 
-            if (!String.isBlank(eventInstance.Event__r.Building__c)) {
+            if (String.isNotBlank(eventInstance.Event__r.Building__c)) {
                 evt.locationBuilding = eventInstance.Event__r.Building__c;
             } else {
                 evt.locationBuilding = '';
             }
 
-            if (!String.isBlank(eventInstance.Event__r.Event_Short_Listing_Description__c)) {
+            if (String.isNotBlank(eventInstance.Event__r.Event_Short_Listing_Description__c)) {
                 evt.description = eventInstance.Event__r.Event_Short_Listing_Description__c;
             } else {
                 evt.description = '';
@@ -258,8 +258,8 @@ global with sharing class SummitEventsFeed {
                 evt.endDate = SEShared.convertDateToDatetime(eventInstance.Instance_End_Date__c, eventInstance.Instance_End_Time__c);
             }
 
-            if (!String.isBlank(eventInstance.Event__r.Location_Title__c) || !String.isBlank(eventInstance.Location_Title_Override__c)) {
-                if (!String.isBlank(eventInstance.Location_Title_Override__c)) {
+            if (String.isNotBlank(eventInstance.Event__r.Location_Title__c) || String.isNotBlank(eventInstance.Location_Title_Override__c)) {
+                if (String.isNotBlank(eventInstance.Location_Title_Override__c)) {
                     evt.locationTitle = eventInstance.Location_Title_Override__c;
                 } else {
                     evt.locationTitle = eventInstance.Event__r.Location_Title__c;
@@ -268,8 +268,8 @@ global with sharing class SummitEventsFeed {
                 evt.locationTitle = '';
             }
 
-            if (!String.isBlank(eventInstance.Event__r.Location_Address__c) || !String.isBlank(eventInstance.Location_Address_Override__c)) {
-                if (!String.isBlank(eventInstance.Location_Address_Override__c)) {
+            if (String.isNotBlank(eventInstance.Event__r.Location_Address__c) || String.isNotBlank(eventInstance.Location_Address_Override__c)) {
+                if (String.isNotBlank(eventInstance.Location_Address_Override__c)) {
                     evt.locationAddress = eventInstance.Location_Address_Override__c;
                 } else {
                     evt.locationAddress = eventInstance.Event__r.Location_Address__c;
@@ -278,8 +278,8 @@ global with sharing class SummitEventsFeed {
                 evt.locationAddress = '';
             }
 
-            if (!String.isBlank(eventInstance.Event__r.Location_Map_Link__c) || !String.isBlank(eventInstance.Location_Map_Link_Override__c)) {
-                if (!String.isBlank(eventInstance.Location_Map_Link_Override__c)) {
+            if (String.isNotBlank(eventInstance.Event__r.Location_Map_Link__c) || String.isNotBlank(eventInstance.Location_Map_Link_Override__c)) {
+                if (String.isNotBlank(eventInstance.Location_Map_Link_Override__c)) {
                     evt.locationMapLink = eventInstance.Location_Map_Link_Override__c;
                 } else {
                     evt.locationMapLink = eventInstance.Event__r.Location_Map_Link__c;
@@ -294,8 +294,8 @@ global with sharing class SummitEventsFeed {
                 evt.className = 'eventClosed';
             } else {
                 evt.eventClosed = false;
-                if (!String.isBlank(eventInstance.Event__r.Alternate_Registration_URL__c) || !String.isBlank(eventInstance.Alternate_Registration_URL_Override__c)) {
-                    if (!String.isBlank(eventInstance.Alternate_Registration_URL_Override__c)) {
+                if (String.isNotBlank(eventInstance.Event__r.Alternate_Registration_URL__c) || String.isNotBlank(eventInstance.Alternate_Registration_URL_Override__c)) {
+                    if (String.isNotBlank(eventInstance.Alternate_Registration_URL_Override__c)) {
                         evt.eventUrl = eventInstance.Alternate_Registration_URL_Override__c;
                     } else {
                         evt.eventUrl = eventInstance.Event__r.Alternate_Registration_URL__c;

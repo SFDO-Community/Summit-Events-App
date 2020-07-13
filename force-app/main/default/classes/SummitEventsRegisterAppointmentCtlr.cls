@@ -41,7 +41,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
         Map<String, Integer> apptCount = new Map<String, Integer>();
 
-        if (!String.isBlank(evtinfo.evtId)) {
+        if (String.isNotBlank(evtinfo.evtId)) {
             eventPage = [
                     SELECT Event_Name__c, Event_description__c, Event_Appointment_Title__c, Event_Appointment_Description__c, Event_Footer__c,
                             Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Options_Registration__c, Display_Optional_Donation__c
@@ -50,7 +50,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             ][0];
             templateSelected = eventPage.Template__c;
 
-            if (!String.isBlank(evtinfo.evtRegId)) {
+            if (String.isNotBlank(evtinfo.evtRegId)) {
                 evtInstance = [
                         SELECT Instance_Title__c, Event__r.Event_Name__c,
                                 Instance_Time_Zone__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Start_Date__c,
@@ -103,7 +103,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     for (Summit_Events_Appointments__c cappt : chosenAppts) {
 
                         //Keep track of appointment ids to not show in available appointments later
-                        if (!String.isBlank(cappt.Event_Appointment_Type__c)) {
+                        if (String.isNotBlank(cappt.Event_Appointment_Type__c)) {
                             if (!apptCount.containsKey(cappt.Event_Appointment_Type__c)) {
                                 apptCount.put(cappt.Event_Appointment_Type__c, 0);
                             }
@@ -129,7 +129,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         chosenFormatted += '<p class="appointmentTitle">' + cappt.Appointment_Title__c + '</p>';
                         if (!String.isEmpty(cappt.Appointment_Type__c)) {
                             chosenFormatted += '<p class="appointmentDesc">' + cappt.Appointment_Type__c + '</p>';
-                        } else if (!String.isBlank(cappt.Description__c)) {
+                        } else if (String.isNotBlank(cappt.Description__c)) {
                             chosenFormatted += '<p class="appointmentDesc">' + cappt.Description__c + '</p>';
                         }
                         IF (cappt.Chosen_State__c != 'Added and Required' && cappt.Chosen_State__c != 'Added but not shown') {
@@ -145,7 +145,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             requiredAppt = false;
             for (Summit_Events_Appointment_Type__c apt : appts.values()) {
                 Integer apptLimit = 1;
-                if (!String.isBlank(apt.Appointment_Limits__c)) {
+                if (String.isNotBlank(apt.Appointment_Limits__c)) {
                     apptLimit = Integer.valueOf(apt.Appointment_Limits__c);
                 }
                 if (apptCount.containsKey(apt.Id)) {
@@ -201,7 +201,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     appointments += '<div class="slds-form-element">';
                 }
 
-                if (!String.isBlank(apt.Description__c)) {
+                if (String.isNotBlank(apt.Description__c)) {
                     appointments += '<label class="slds-form-element__label slds-text-body_regular slds-p-vertical_x-small" for="input' + apt.Id + '">';
                     appointments += apt.Description__c;
                     appointments += '</label>';
@@ -236,7 +236,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                 }
 
                 if (apt.Registrant_Input__c == 'Custom pick list' || apt.Registrant_Input__c == 'Required custom pick list') {
-                    if (!String.isBlank(apt.Custom_Picklist__c)) {
+                    if (String.isNotBlank(apt.Custom_Picklist__c)) {
                         appointments += '<div class="slds-select_container">';
                         appointments += '<select id="input' + apt.Id + '" name="input' + apt.Id + '"';
                         if (apt.Registrant_Input__c == 'Required custom pick list') {
@@ -362,10 +362,10 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             addAppt.Event_Appointment_Type__c = appt.apptId;
             Summit_Events_Appointment_Type__c apptDefinition = appts.get(appt.apptId);
             addAppt.Chosen_State__c = appt.appChosenState;
-            if (!String.isBlank(appt.apptCatagory) && appt.apptCatagory != 'null' && appt.apptCatagory != 'undefined') {
+            if (String.isNotBlank(appt.apptCatagory) && appt.apptCatagory != 'null' && appt.apptCatagory != 'undefined') {
                 addAppt.Appointment_Category__c = appt.apptCatagory;
             }
-            if (!String.isBlank(appt.apptType) && appt.apptType != 'null' && appt.apptType != 'undefined') {
+            if (String.isNotBlank(appt.apptType) && appt.apptType != 'null' && appt.apptType != 'undefined') {
                 addAppt.Appointment_Type__c = appt.apptType;
             }
             addAppt.Appointment_title__c = appt.apptTitle;
@@ -377,7 +377,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
             //Auto add fields from appointment type as defined auto add
             //TODO: slim down on ui interface storing values and used appt Type map ID to get them
-            if (!String.isBlank(apptDefinition.Auto_add_building__c)) {
+            if (String.isNotBlank(apptDefinition.Auto_add_building__c)) {
                 addAppt.Building__c = apptDefinition.Auto_add_building__c;
             }
             if (apptDefinition.Auto_Confirm_Appointment__c) {

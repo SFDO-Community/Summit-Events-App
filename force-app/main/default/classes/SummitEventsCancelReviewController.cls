@@ -18,7 +18,7 @@ public with sharing class SummitEventsCancelReviewController {
         eventNotFound = false;
         eventOver = false;
         navBreadCrumb = '';
-        if (!String.isBlank(regId)) {
+        if (String.isNotBlank(regId)) {
             List<Summit_Events_Registration__c> evtList = [
                     SELECT id, Status__c, Name, Event__r.Name, Event_Instance__c, Event__r.Event_Name__c, Event__r.Event_description__c,
                             Event__r.Event_Footer__c, Event__r.Event_Cancel_Review_Title__c, Event_Name__c, Event_Instance__r.Instance_Title__c,

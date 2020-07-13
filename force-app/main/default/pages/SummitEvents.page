@@ -41,4 +41,5 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
             </div>
         </apex:define>
     </apex:composition>
+    <site:previewAsAdmin/>
 </apex:page>

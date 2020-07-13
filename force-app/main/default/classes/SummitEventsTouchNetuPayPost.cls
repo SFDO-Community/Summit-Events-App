@@ -1,29 +1,38 @@
-@RestResource(urlMapping='/txy')
-global without sharing class SummitEventsTouchNetSuccess {
+@RestResource(urlMapping='/tnx')
+global without sharing class SummitEventsTouchNetuPayPost {
+
+    global static final String postBackPath = '/tnx';
 
     @HttpPost
-    global static void processUserPostBack() {
+    global static String processPostBack() {
         RestRequest req = RestContext.request;
         // TODO test if query string parameters can overwrite/supplement POST body params
-        system.debug('/txy Received POST from '+req.remoteAddress);
-        system.debug('/txy request headers: '+ JSON.serializePretty(req.headers));
-        system.debug('/txy request parameters: '+ JSON.serializePretty(req.params));
+        // TODO remove these debug statements?
+        system.debug(String.format('Summit Events TouchNet Postback {0} Received POST from {1}',new String[]{postBackPath,req.remoteAddress}));
+        system.debug('Summit Events TouchNet Postback ' + postBackPath + ' request headers: '+ JSON.serializePretty(req.headers));
+        system.debug('Summit Events TouchNet Postback ' + postBackPath + ' request parameters: '+ JSON.serializePretty(req.params));
         Map<String,String> params = req.params;
-        SummitEventSettings__c settings = Summit_Events_Settings__c.getInstance();
-        // TODO decrypt the cookie to check that the registration ID matches EXT_TRANS_ID
-        SummitEventsShared SEShared = new SummitEventsShared();
-        String postingKey = settings.Upay_Posting_Key;
-        String validationKey = settings.Upay_Validation_Key;
+        Summit_Events_Settings__c settings = Summit_Events_Settings__c.getInstance();
+        String postingKey = settings.Upay_Posting_Key__c;
+        String validationKey = settings.Upay_Validation_Key__c;
         // TODO figure out how to handle an actual posting key mismatch -- log the Payment with an error status/message?
         if (String.isNotBlank(postingKey) && postingKey != params.get('posting_key')) {
             system.debug('posting_key ERROR received '+ params.get('posting_key') +' should be '+ postingKey);
+            // Whoever sent an invalid posting key doesn't need to know it is invalid
+            return 'Success';
         }
-        Id evtRegId = params.get('EXT_TRANS_ID');
-        // TODO Error handling for bad EXT_TRANS_ID and checking it against the cookie to ensure same "session"
-        Summit_Events_Registration__c reg = [SELECT Id,Event_Instance__c,Event__c FROM Summit_Events_Registration__c WHERE Id=:evtRegId];
+        String evtRegId = params.get('EXT_TRANS_ID');
+        List<Summit_Events_Registration__c> getReg = [SELECT Id,Event_Instance__c,Event__c FROM Summit_Events_Registration__c WHERE Id=:evtRegId];
+        if (getReg.size() != 1) {
+            // TODO long-term, how much error logging is needed? Is a custom application log appropriate for TouchNet connectivity issues?
+            system.debug(LoggingLevel.ERROR, 'Invalid TouchNet uPay postback EXT_TRANS_ID '+evtRegId);
+            // Whoever sent an invalid transaction Id doesn't need to know it is invalid
+            return 'Success';
+        }
+        Summit_Events_Registration__c reg = getReg[0];
 
         Summit_Events_Payment__c paymentInformation = new Summit_Events_Payment__c();
-        paymentInformation.Event_Registration__c = evtRegId;
+        paymentInformation.Event_Registration__c = reg.Id;
         paymentInformation.Address_1__c = params.get('acct_addr');
         paymentInformation.Address_2__c = params.get('acct_addr2');
         paymentInformation.City__c = params.get('acct_city');
@@ -38,9 +47,10 @@ global without sharing class SummitEventsTouchNetSuccess {
         paymentInformation.Payment_Amount__c = decimal.valueOf(params.get('pmt_amt'));
         paymentInformation.Payment_Method__c = params.get('pmt_method');
         paymentInformation.Payment_Method_Expiration_Date__c = params.get('pmt_method_exp_date');
+        // I don't see session_identifier in the TouchNet docs
         paymentInformation.Gateway_Session_Identifier__c = params.get('session_identifier');
-        paymentInformation.TouchnetReceiptNumber__c = mapResponse.get('receiptNumber');
-        paymentInformation.GatewayApprovalCode__c = mapResponse.get('approvalCode');
+        paymentInformation.TouchnetReceiptNumber__c = params.get('sys_tracking_id');
+        paymentInformation.GatewayApprovalCode__c = params.get('tpg_trans_id');
         paymentInformation.Method_of_Payment__c = 'Credit Card';
         paymentInformation.Payment_Status__c = 'Received';
         paymentInformation.Payment_Received_Date__c = System.Now();
@@ -55,20 +65,21 @@ global without sharing class SummitEventsTouchNetSuccess {
             SELECT Name, Event_Fee__c, Event_Fee_Attribute__c, Description__c, Event_Fee_Type__c, Summit_Events__c, Event_Appointment_Type__c,
                     Event_Appointment_Type__r.Title__c, Event_Fee_Attribute__r.Name
             FROM Summit_Events_Fee__c
-            WHERE Event_Registration__c = :evtInfo.EvtRegId
+            WHERE Event_Registration__c = :reg.Id
         ];
 
-        //Update fees to connect the payment record to them.
-        for (Summit_Events_Fee__c fee:eventFees) {
-            fee.Summit_Events_Payment__c = paymentInformation.Id;
-            fee.Summit_Events__c = evtInfo.evtId;
+        if (eventFees.size() > 0) {
+            //Update fees to connect the payment record to them.
+            for (Summit_Events_Fee__c fee:eventFees) {
+                fee.Summit_Events_Payment__c = paymentInformation.Id;
+                fee.Summit_Events__c = reg.Event__c;
+            }
+            update eventFees;
+        } else {
+            system.debug(LoggingLevel.WARN, 'No related Event Fees found for Payment Postback: '+ paymentInformation.Id);
         }
-        update eventFees;
 
-        RestContext.response.headers.put('Location','/SummitEventsConfirmation');
-        RestContext.response.responseBody='';
-        RestContext.response.statusCode = 302;
-        return;
+        return 'Success';
     }
 
 }

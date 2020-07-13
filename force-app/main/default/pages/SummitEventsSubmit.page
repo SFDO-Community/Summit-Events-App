@@ -67,8 +67,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 <apex:outputPanel layout="block" rendered="{!showPaymentButton && totalPaymentAmount != null && totalPaymentAmount > 0}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
                     <form id="upayForm" action="{!upayURL}" method="post"  styleClass="slds-grid slds-wrap">
                         <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                            <apex:repeat var="field" value="{!upayFormFields.keySet()}">
-                                <input id={!field} type="hidden" name="{!field}" value="{!upayFormFields.get(field)}"/>
+                            <apex:repeat var="field" value="{!upayFields}">
+                                <input id="{!field}" type="hidden" name="{!field}" value="{!upayFields[field]}"/>
                             </apex:repeat>
                             <a href="javascript:;" onclick="fadeout(); document.getElementById('upayForm').submit();" class="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small">Submit and Pay</a>
                             <a href="{!previousPageURL}" onclick="fadeout();" class="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small">Previous</a>
@@ -87,4 +87,5 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
             </div>
         </apex:define>
     </apex:composition>
+    <site:previewAsAdmin/>
 </apex:page>

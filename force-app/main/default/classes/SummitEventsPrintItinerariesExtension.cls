@@ -11,10 +11,10 @@ public with sharing class SummitEventsPrintItinerariesExtension {
 
     public SummitEventsPrintItinerariesExtension(ApexPages.StandardController stdController) {
 
-        if (!String.isBlank(ApexPages.currentPage().getParameters().get('docName'))) {
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('docName'))) {
             docName = ApexPages.currentPage().getParameters().get('docName');
         }
-        if (!String.isBlank(ApexPages.currentPage().getParameters().get('docType'))) {
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('docType'))) {
             docTypeIn = ApexPages.currentPage().getParameters().get('docType');
         }
 
@@ -30,7 +30,7 @@ public with sharing class SummitEventsPrintItinerariesExtension {
 
 
     public String getChooseRender() {
-        if (!String.isBlank(ApexPages.currentPage().getParameters().get('docType'))) {
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('docType'))) {
             if (ApexPages.currentPage().getParameters().get('docType') == 'pdf') {
                 return 'pdf';
             }
@@ -40,7 +40,7 @@ public with sharing class SummitEventsPrintItinerariesExtension {
 
     public String getIsItWord() {
         String filename = fileName();
-        if (!String.isBlank(ApexPages.currentPage().getParameters().get('docType'))) {
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('docType'))) {
             if (ApexPages.currentPage().getParameters().get('docType') == 'word') {
                 return 'application/msword#' + filename + '.doc';
             }
@@ -68,14 +68,14 @@ public with sharing class SummitEventsPrintItinerariesExtension {
 
     public String fileName() {
         String fileName = 'eventItineraries_';
-        if (!String.isBlank(eventRegs[0].Event_Name__c)) {
+        if (String.isNotBlank(eventRegs[0].Event_Name__c)) {
             fileName = eventRegs[0].Event_Name__c;
             Pattern nonAlphanumeric = Pattern.compile('[^a-zA-Z0-9]');
             Matcher matcher = nonAlphanumeric.matcher(fileName);
             fileName = matcher.replaceAll('_'); 
             fileName = fileName + '_';
         }
-        if (!String.isBlank(String.valueOf(eventRegs[0].Event_Instance_Date__c))) {
+        if (String.isNotBlank(String.valueOf(eventRegs[0].Event_Instance_Date__c))) {
             fileName += String.valueOf(eventRegs[0].Event_Instance_Date__c);
         } else {
             fileName += String.valueOf(date.today());

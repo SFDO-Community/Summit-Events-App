@@ -70,7 +70,7 @@ public with sharing class SummitEventsDonationController {
     public List<SelectOption> getSuggestedDonation() {
         List<SelectOption> cpl = new List<SelectOption>();
         String suggested = '';
-        if (!String.isBlank(eventInstance.Event__r.Donation_Suggested_Amount_List__c)) {
+        if (String.isNotBlank(eventInstance.Event__r.Donation_Suggested_Amount_List__c)) {
             suggested = eventInstance.Event__r.Donation_Suggested_Amount_List__c;
             cpl.add(new SelectOption('', 'Select...'));
             suggested = suggested.Trim();

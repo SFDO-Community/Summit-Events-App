@@ -63,14 +63,14 @@ global class SummitEventsAppointmentItinerary_TDTM extends hed.TDTM_Runnable {
                 Boolean appointmentsHaveLocation = false;
                 Boolean appointmentsHaveHost = false;
                 for (Summit_Events_Appointments__c apptTime : AllAppts) {
-                    if (!String.isBlank(apptTime.Appointment_Time_Formatted__c) && !apptTime.Do_Not_Show_Time__c) {
+                    if (String.isNotBlank(apptTime.Appointment_Time_Formatted__c) && !apptTime.Do_Not_Show_Time__c) {
                         appointmentsHaveTime = true;
                     }
-                    if (!String.isBlank(apptTime.Building__c) ||
-                            !String.isBlank(apptTime.Room__c)) {
+                    if (String.isNotBlank(apptTime.Building__c) ||
+                            String.isNotBlank(apptTime.Room__c)) {
                         appointmentsHaveLocation = true;
                     }
-                    if (!String.isBlank(apptTime.Host_Name__c) || !String.isBlank(apptTime.Host_Location__c)) {
+                    if (String.isNotBlank(apptTime.Host_Name__c) || String.isNotBlank(apptTime.Host_Location__c)) {
                         appointmentsHaveHost = true;
                     }
                 }
@@ -98,7 +98,7 @@ global class SummitEventsAppointmentItinerary_TDTM extends hed.TDTM_Runnable {
                         if (appointmentsHaveTime) {
                             generatedItinerary += '<td style="vertical-align:top; text-align:left; font-family:arial; font-size:12pt; color:#000000; padding-top:5px; padding-bottom:10px; padding-right:15px;">';
                             if (!AllAppts[i].Do_Not_Show_Time__c) {
-                                if (!String.isBlank(AllAppts[i].Appointment_Time_Formatted__c)) {
+                                if (String.isNotBlank(AllAppts[i].Appointment_Time_Formatted__c)) {
                                     generatedItinerary += AllAppts[i].Appointment_Time_Formatted__c.replace(' ', '&nbsp;');
                                 }
                             }
@@ -108,7 +108,7 @@ global class SummitEventsAppointmentItinerary_TDTM extends hed.TDTM_Runnable {
                         //Appointment Description
                         generatedItinerary += '<td style="vertical-align:top; text-align:left; font-family:arial; font-size:12pt; padding-top:5px; padding-bottom:10px; color:#000000;">';
                         generatedItinerary += AllAppts[i].Appointment_Title__c + ' - ';
-                        if (!String.isBlank(AllAPpts[i].Description__c) && !isOvernight) {
+                        if (String.isNotBlank(AllAPpts[i].Description__c) && !isOvernight) {
                             generatedItinerary += AllAPpts[i].Description__c + ' - ';
                         }
                         generatedItinerary = generatedItinerary.removeEnd(' - ');
@@ -119,13 +119,13 @@ global class SummitEventsAppointmentItinerary_TDTM extends hed.TDTM_Runnable {
                             if (appointmentsHaveHost || appointmentsHaveLocation) {
                                 generatedItinerary += '<td style="vertical-align:top; text-align:left; font-family:arial; font-size:12pt; color:#000000; padding-top:5px; padding-bottom:10px; padding-left:15px;">';
                                 if (appointmentsHaveHost) {
-                                    if (!String.isBlank(AllAppts[i].Event_Host__r.Course_Name__c)) {
+                                    if (String.isNotBlank(AllAppts[i].Event_Host__r.Course_Name__c)) {
                                         generatedItinerary += AllAppts[i].Event_Host__r.Course_Name__c + '<br/>';
                                     }
-                                    if (!String.isBlank(AllAppts[i].Host_Name__c)) {
+                                    if (String.isNotBlank(AllAppts[i].Host_Name__c)) {
                                         generatedItinerary += AllAppts[i].Host_Name__c + '<br/>';
                                     }
-                                    if (!String.isBlank(AllAppts[i].Host_Location__c)) {
+                                    if (String.isNotBlank(AllAppts[i].Host_Location__c)) {
                                         generatedItinerary += AllAppts[i].Host_Location__c + '<br/>';
                                     }
                                     generatedItinerary = generatedItinerary.removeEnd('<br/>');
@@ -133,10 +133,10 @@ global class SummitEventsAppointmentItinerary_TDTM extends hed.TDTM_Runnable {
 
                                 //Appointment Location
                                 if (appointmentsHaveLocation && !appointmentsHaveHost) {
-                                    if (!String.isBlank(AllAppts[i].Building__c)) {
+                                    if (String.isNotBlank(AllAppts[i].Building__c)) {
                                         generatedItinerary += AllAppts[i].Building__c + '<br/>';
                                     }
-                                    if (!String.isBlank(AllAppts[i].Room__c)) {
+                                    if (String.isNotBlank(AllAppts[i].Room__c)) {
                                         generatedItinerary += AllAppts[i].Room__c + '<br/>';
                                     }
                                     generatedItinerary = generatedItinerary.removeEnd('<br/>');
@@ -147,13 +147,13 @@ global class SummitEventsAppointmentItinerary_TDTM extends hed.TDTM_Runnable {
                             if (appointmentsHaveHost) {
                                 generatedItinerary += '<td style="vertical-align:top; text-align:left; font-family:arial; font-size:12pt; color:#000000; padding-top:5px; padding-bottom:10px; padding-left:15px;">';
 
-                                if (!String.isBlank(AllAppts[i].Event_Host__r.Course_Name__c)) {
+                                if (String.isNotBlank(AllAppts[i].Event_Host__r.Course_Name__c)) {
                                     generatedItinerary += AllAppts[i].Event_Host__r.Course_Name__c + '<br/>';
                                 }
-                                if (!String.isBlank(AllAppts[i].Host_Name__c)) {
+                                if (String.isNotBlank(AllAppts[i].Host_Name__c)) {
                                     generatedItinerary += AllAppts[i].Host_Name__c + '<br/>';
                                 }
-                                if (!String.isBlank(AllAppts[i].Host_Location__c)) {
+                                if (String.isNotBlank(AllAppts[i].Host_Location__c)) {
                                     generatedItinerary += AllAppts[i].Host_Location__c + '<br/>';
                                 }
                                 generatedItinerary = generatedItinerary.removeEnd('<br/>');
@@ -163,10 +163,10 @@ global class SummitEventsAppointmentItinerary_TDTM extends hed.TDTM_Runnable {
                             //Appointment Location
                             if (appointmentsHaveLocation) {
                                 generatedItinerary += '<td style="vertical-align:top; text-align:left; font-family:arial; font-size:12pt; color:#000000; padding-top:5px; padding-bottom:10px; padding-left:15px;">';
-                                if (!String.isBlank(AllAppts[i].Building__c)) {
+                                if (String.isNotBlank(AllAppts[i].Building__c)) {
                                     generatedItinerary += AllAppts[i].Building__c + '<br/>';
                                 }
-                                if (!String.isBlank(AllAppts[i].Room__c)) {
+                                if (String.isNotBlank(AllAppts[i].Room__c)) {
                                     generatedItinerary += AllAppts[i].Room__c + '<br/>';
                                 }
                                 generatedItinerary = generatedItinerary.removeEnd('<br/>');
@@ -184,7 +184,7 @@ global class SummitEventsAppointmentItinerary_TDTM extends hed.TDTM_Runnable {
                         if (appointmentsHaveTime) {
                             generatedAppts += '<td style="vertical-align:top; text-align:left; font-family:arial; font-size:12pt; color:#000000; padding-top:5px; padding-bottom:10px; padding-right:15px; ">';
                             if (!AllAppts[i].Do_Not_Show_Time__c) {
-                                if (!String.isBlank(AllAppts[i].Appointment_Time_Formatted__c)) {
+                                if (String.isNotBlank(AllAppts[i].Appointment_Time_Formatted__c)) {
                                     generatedAppts += AllAppts[i].Appointment_Time_Formatted__c.replace(' ', '&nbsp;');
                                 }
                             }
@@ -199,7 +199,7 @@ global class SummitEventsAppointmentItinerary_TDTM extends hed.TDTM_Runnable {
                         } else {
                             generatedAppts += AllAppts[i].Appointment_Title__c;
                             /* + ' - ';
-                            if (!String.isBlank(AllAPpts[i].Description__c)) {
+                            if (String.isNotBlank(AllAPpts[i].Description__c)) {
                                 generatedAppts += AllAPpts[i].Description__c + ' - ';
                             }
                             generatedAppts = generatedAppts.removeEnd(' - ');
@@ -217,7 +217,7 @@ global class SummitEventsAppointmentItinerary_TDTM extends hed.TDTM_Runnable {
                 }
 
 
-                if (!String.isBlank(generatedItinerary)) {
+                if (String.isNotBlank(generatedItinerary)) {
                     if (isOvernight) {
                         generatedItinerary = '<table border="0" cellpadding="10" cellspacing="0">' + generatedItinerary + '</table>';
                     } else {
@@ -226,7 +226,7 @@ global class SummitEventsAppointmentItinerary_TDTM extends hed.TDTM_Runnable {
 
                 }
 
-                if (!String.isBlank(generatedAppts)) {
+                if (String.isNotBlank(generatedAppts)) {
                     generatedAppts = '<table>' + generatedAppts + '</table>';
                 }
 

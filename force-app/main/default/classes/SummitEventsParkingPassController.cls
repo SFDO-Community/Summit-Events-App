@@ -34,7 +34,7 @@ public with sharing class SummitEventsParkingPassController {
             if (todaysDate <= visitor.Event_Instance_Start_Date__c && visitor.Status__c != 'Started' && visitor.Status__c != 'Cancelled') {
                 couponOut += '<p>NAME:&nbsp; ' + visitor.Contact__r.Name + '</p>';
                 couponOut += '<p>DATE VALID:&nbsp; ' + visitor.Event_Instance_Start_Date_Text__c + '</p>';
-                if (!String.isBlank(visitor.Contact__r.Preferred_First_Name__c)) {
+                if (String.isNotBlank(visitor.Contact__r.Preferred_First_Name__c)) {
                     firstName = visitor.Contact__r.Preferred_First_Name__c;
                 } else {
                     firstName = visitor.Contact__r.FirstName;

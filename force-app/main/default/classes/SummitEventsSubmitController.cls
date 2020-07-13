@@ -43,7 +43,7 @@ public with sharing class SummitEventsSubmitController {
     public string headers { get; set; }
     public String navBreadCrumb { get; set; }
     public String passedAmountValidationKey {get; set; }
-    public Map<String,String> upayFields {get;}
+    public Map<String,String> upayFields {get; set; }
 
     public SummitEventsSubmitController() {
         showPaymentButton = false;
@@ -99,9 +99,7 @@ public with sharing class SummitEventsSubmitController {
                     AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
             ];
 
-            if (apptTypes.size() > 0) {
-                eventHasOptions = true;
-            }
+            eventHasOptions = ! apptTypes.isEmpty();
 
             previousPageURL = previousPage().getUrl();
             
@@ -109,7 +107,7 @@ public with sharing class SummitEventsSubmitController {
         }
 
 
-        if (!String.isBlank(evtinfo.evtRegId)) {
+        if (String.isNotBlank(evtinfo.evtRegId)) {
             chosenAppts = [
                     SELECT Id, Appointment_Category__c, Event_Appointment_Type__c, Appointment_Type__c, Description__c, Appointment_Title__c, Chosen_State__C
                     FROM Summit_Events_Appointments__c
@@ -117,7 +115,7 @@ public with sharing class SummitEventsSubmitController {
                     AND Chosen_State__c != 'Added but not shown'
                     ORDER BY Appointment_Title__c
             ];
-            if (chosenAppts.size() > 0) {
+            if (! chosenAppts.isEmpty()) {
                 chosenFormatted += '<ul id="choosenAppointments" class="slds-list_dotted">';
                 for (Summit_Events_Appointments__c cappt : chosenAppts) {
                     chosenFormatted += '<li>';
@@ -145,7 +143,7 @@ public with sharing class SummitEventsSubmitController {
             Double paymentsSum = (Double)([SELECT SUM(Payment_Amount__c)total FROM Summit_Events_Payment__c 
                                             WHERE Event_Registration__c = :evtInfo.evtRegId AND Payment_Amount__c != null][0].get('total'));
             if (paymentsSum != null) {
-                existingPaymentAmount -= paymentsSum;
+                existingPaymentAmount = paymentsSum;
             }
             /** Collect Fees **/
             eventFees = [
@@ -188,7 +186,7 @@ public with sharing class SummitEventsSubmitController {
                             eventOnlyPaymentAmount += fee.Event_Fee__c;
                         }
                     }
-                    if (feesByIndex.size() > 0 && feesByIndex.containsKey(fee.Event_Fee_Attribute__c)) {
+                    if (feesByIndex.containsKey(fee.Event_Fee_Attribute__c)) {
                         Decimal newFee = Decimal.valueOf(feesByIndex.get(fee.Event_Fee_Attribute__c));
                         newFee = newFee + fee.Event_Fee__c;
                         newFee = newFee.setScale(2);
@@ -200,10 +198,7 @@ public with sharing class SummitEventsSubmitController {
                 }
             }
 
-
-            if (existingPaymentAmount > 0) {
-                totalPaymentAmount = totalPaymentAmount - existingPaymentAmount;
-            }
+            totalPaymentAmount -= existingPaymentAmount;
 
             paymentItemized += '<tr class="eventOnlyCost">';
             paymentItemized += '<td>General Event</td>';
@@ -218,12 +213,11 @@ public with sharing class SummitEventsSubmitController {
             paymentItemized += '</tbody></table>';
 
             System.debug(paymentItemized);
-            if (totalPaymentAmount > 0) {
-                showPaymentButton = true;
+            showPaymentButton = totalPaymentAmount > 0;
+            if (showPaymentButton) {
                 generateTicket();
             }
         }
-
     }
 
     public String prettyCurrencyString(Decimal numberIn) {
@@ -234,7 +228,7 @@ public with sharing class SummitEventsSubmitController {
     }
 
     private String computePassedAmountValidationKey() {
-        if (isBlank(upayValidationKey))
+        if (String.isBlank(upayValidationKey))
             return null;
         String input = upayValidationKey + upayFields.get('EXT_TRANS_ID') + upayFields.get('AMT');
         Blob md5hash = Crypto.generateDigest('MD5', Blob.valueOf(input));
@@ -265,33 +259,29 @@ public with sharing class SummitEventsSubmitController {
     }
 
     public PageReference checkEventDetails() {
-        successReturnFromGateway = false;
-        if (showPaymentButton) {
-            /** Check for postback of payment gateway **/
-            params = ApexPages.currentPage().getParameters();
-            Map<String, String> returnHeaders = ApexPages.currentPage().getheaders();
-            if (!returnHeaders.isEmpty()) {
-                if (returnHeaders.get('Referer') != null) {
-                    String returnedReferrer = returnHeaders.get('Referer').toLowerCase();
-                    if (String.isNotBlank(returnedReferrer)) {
-                        if (String.isBlank(gatewayOrigin) && showPaymentButton) {
-                            Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Set your orgs gateway settings or fees will not be collected.'));
-                        } else {
-                            if (returnedReferrer.trim().contains(gatewayOrigin)) {
-                                /** Check for session identifier to see if a payment was successful **/
-                                if (params.get('session_identifier') != null) {
-                                    successReturnFromGateway = true;
-                                    Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Your payment is processing. Please do not refresh the page.'));
-                                } else {
-                                    successReturnFromGateway = false;
-                                    Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Your payment is processing was unsuccessful. Please try again.'));
-                                }
-                                return addPaymentInformation();
-                            }
-                        }
-                    }
-                }
-            }
+        params = ApexPages.currentPage().getParameters();
+        Map<String, String> returnHeaders = ApexPages.currentPage().getheaders();
+        String origin = String.IsNotBlank(returnHeaders.get('Referer')) ? returnHeaders.get('Referer') : '';
+        Boolean originCheck = String.isBlank(gatewayOrigin) || origin.containsIgnoreCase(gatewayOrigin);
+        Boolean returnFromGateway =  params.get('UPAY_SITE_ID')==upayId && params.get('EXT_TRANS_ID')==evtInfo.evtRegId && originCheck;
+        // showPaymentButton is *false* for a successful payment uPay PostBack;
+        // TODO IMPORTANT uPay INSTRUCTIONS Configure the Posting URL and configure users wait for PostBack completion; 30 second timeout
+        Boolean successReturnFromGateway = returnFromGateway && params.get('tnx')=='y'; // && !showPaymentButton;
+        // NOTE a uPay postback timeout could return success with in an unrecorded payment in Salesforce
+        // TODO DESIGN DECISION -- currently we *trust the gateway referer and success URL* and head to confirmation even if the Payment is not recorded
+        Boolean cancelReturnFromGateway = returnFromGateway && params.get('tnx')=='x' && showPaymentButton;
+        Boolean errorReturnFromGateway = returnFromGateway && params.get('tnx')=='e' && showPaymentButton;
+        if (successReturnFromGateway) {
+            return Page.SummitEventsConfirmation;
+        }
+        if (errorReturnFromGateway) {
+            Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Payment processing was unsuccessful. Please try again.'));
+        } else if (cancelReturnFromGateway) {
+            Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'You cancelled the payment. Do you wish to try again?'));
+        }
+        if (showPaymentButton && String.isBlank(gatewayOrigin)) {
+                // TODO currently this isn't true -- we don't enforce a gateway check if an origin isn't set
+                Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Set your orgs gateway settings or fees will not be collected.'));
         }
         return SEShared.checkForEvent();
     }
@@ -314,7 +304,7 @@ public with sharing class SummitEventsSubmitController {
                     AND Appointment_Type_Status__c = 'Active'
             ];
 
-            if (apptTypes.size() > 0) {
+            if (! apptTypes.isEmpty()) {
                 //If no options skip that step
                 lastPage = Page.SummitEventsRegisterAppointments;
             }
@@ -365,7 +355,8 @@ public with sharing class SummitEventsSubmitController {
         addNameValuePair(envelop,'BILL_CITY',eventRegistration.Registrant_City__c);
 
         /** Pass along customer STATE to pre-fill form **/
-        addNameValuePair(envelop,'BILL_STATE', eventRegistration.Registrant_State__c.toUpperCase());
+        // TODO need 2 digit state abbreviation for US addresses only 
+        addNameValuePair(envelop,'BILL_STATE', String.isBlank(eventRegistration.Registrant_State__c)? '' : eventRegistration.Registrant_State__c.left(2).toUpperCase());
 
         /** Pass along customer ZIP or POSTAL CODE to pre-fill form **/
         String postal_code = String.isNotBlank(eventRegistration.Registrant_Zip__c) ?
@@ -374,14 +365,17 @@ public with sharing class SummitEventsSubmitController {
 
         /** Pass along customer COUNTRY to pre-fill form **/
         // TODO BUG needs to be 2-character uppercase ISO 3166 country code if not US
+        /*
         String country = eventRegistration.Registrant_Country__c.equalsIgnoreCase('united states') ?
             'US' : eventRegistration.Registrant_Country__c.toLowerCase();
+        */
+        String country = 'US';
         addNameValuePair(envelop,'BILL_COUNTRY', country);
 
-        /** Links where to send on different return status -- All the same? **/
-        addNameValuePair(envelop,'SUCCESS_LINK', communityBaseURL + 'services/apexrest/txy');
-        addNameValuePair(envelop,'CANCEL_LINK', communityBaseURL + 'services/apexrest/txx');
-        addNameValuePair(envelop,'ERROR_LINK', communityBaseURL + 'services/apexrest/txn');
+        /** Links where to send on different return status -- All the same? There won't be viewstate; will it be GET or POST? **/
+        addNameValuePair(envelop,'SUCCESS_LINK', communityBaseURL + 'SummitEventsSubmit?tnx=y');
+        addNameValuePair(envelop,'CANCEL_LINK', communityBaseURL + 'SummitEventsSubmit?tnx=x');
+        addNameValuePair(envelop,'ERROR_LINK', communityBaseURL + 'SummitEventsSubmit?tnx=e');
 
         addNameValuePair(envelop,'EXT_TRANS_ID',evtInfo.evtRegId);
 
@@ -399,15 +393,17 @@ public with sharing class SummitEventsSubmitController {
             }
             addNameValuePair(envelop,'EXT_TRANS_ID_LABEL',String.join(eventLabel, ' - '));
         }
+
+        upayFields.put('UPAY_SITE_ID',upayId);
         upayFields.put('VALIDATION_KEY',computePassedAmountValidationKey());
 
-        envelop += '        <typ:nameValuePairs>';
-        envelop += '            <typ:name>POSTING_KEY</typ:name>';
-        envelop += '            <typ:value>' + evtInfo.evtRegId + '</typ:value>';
-        envelop += '        </typ:nameValuePairs>';
-        envelop += '    </typ:generateSecureLinkTicketRequest>';
-        envelop += '</soapenv:Body>';
-        envelop += '</soapenv:Envelope>';
+        envelop.add('        <typ:nameValuePairs>');
+        envelop.add('            <typ:name>POSTING_KEY</typ:name>');
+        envelop.add('            <typ:value>' + evtInfo.evtRegId + '</typ:value>');
+        envelop.add('        </typ:nameValuePairs>');
+        envelop.add('    </typ:generateSecureLinkTicketRequest>');
+        envelop.add('</soapenv:Body>');
+        envelop.add('</soapenv:Envelope>');
 
         // Get rid of multiples spaces maintained for readability above
         String body = String.join(envelop,'').normalizeSpace();
@@ -490,7 +486,7 @@ public with sharing class SummitEventsSubmitController {
         return '';  //should never reach here
     }
 
-    // TODO move this processing to RestResource Class
+    // TODO refactor TLink code out of the way until it's usable
     public PageReference addPaymentInformation() {
         PageReference pageRedirect = null;
         Savepoint sp = null;
@@ -557,7 +553,7 @@ public with sharing class SummitEventsSubmitController {
                     }
                     CRUDtoDo.updateFees(eventFees);
 
-                    successReturnFromGateway = false; //??? why not true?
+                    successReturnFromGateway = false;
 
                     pageRedirect = Page.SummitEventsConfirmation;
                     pageRedirect.setRedirect(true);
@@ -566,7 +562,7 @@ public with sharing class SummitEventsSubmitController {
                     successReturnFromGateway = false;
                     Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Transaction was not successful, please try again'));
                 }
-            } else {
+            } else { // !(successReturnFromGateway && String.isNotBlank(this.touchNetService))
                 return pageRedirect;
             }
         } catch (Exception ex) {
@@ -582,7 +578,7 @@ public with sharing class SummitEventsSubmitController {
     }
 
     private without sharing class ErrorEmail {
-        // Notify Apex Exception Notification addresses
+        // Can notify Apex Exception Notification addresses if any
         Messaging.SingleEmailMessage email;
 
         public ErrorEmail(String subject, String body) {
@@ -591,9 +587,8 @@ public with sharing class SummitEventsSubmitController {
             for (ApexEmailNotification notify:[SELECT Email,User.Email FROM ApexEmailNotification]) {
                 toAddresses.add(String.isNotBlank(notify.Email) ? notify.Email : notify.User.Email);
             }
-            if (toAddresses.size()>0) {
+            if (! toAddresses.isEmpty()) {
                 email.setToAddresses(toAddresses);
-                // Sets the parameters of the email
                 email.setSubject(subject);
                 email.setPlainTextBody(body);
             }
@@ -601,11 +596,10 @@ public with sharing class SummitEventsSubmitController {
 
         public void send() {
             // Sends the email
-            if (email.getToAddresses().size() > 0) {
-                Messaging.SendEmailResult[] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[]{
-                        email
-                });
+            if (email.getToAddresses().isEmpty()) { 
+                return;
             }
+            Messaging.sendEmail(new Messaging.SingleEmailMessage[]{email});
         }
     }
 

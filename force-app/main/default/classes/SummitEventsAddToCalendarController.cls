@@ -24,7 +24,7 @@ public with sharing class SummitEventsAddToCalendarController {
         TIMEZONE = '';
         UUID = NewGuid();
         String URLinstanceID = ApexPages.currentPage().getParameters().get('instanceID');
-        if (!String.isBlank(URLinstanceID)) {
+        if (String.isNotBlank(URLinstanceID)) {
 
             List<Summit_Events_Instance__c> eventInstanceList = [
                     SELECT Id, Event_Name__c, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c,
@@ -44,12 +44,12 @@ public with sharing class SummitEventsAddToCalendarController {
                 DTEND = dateStamp(evtInfo.Instance_End_Date__c, evtInfo.Instance_End_Time__c);
                 DTSTAMP = Datetime.now().format('yyyyMMdd\'T\'HHmmss\'Z\'');
                 SUMMARY = evtInfo.Event_Name__c;
-                if (!String.isBlank(evtInfo.Instance_Title__c)) {
+                if (String.isNotBlank(evtInfo.Instance_Title__c)) {
                     SUMMARY += evtInfo.Event_Name__c + ' - ' + evtInfo.Instance_Title__c;
                 }
 
                 DESCRIPTION = evtInfo.Event_Name__c;
-                if (!String.isBlank(evtInfo.Instance_Title__c)) {
+                if (String.isNotBlank(evtInfo.Instance_Title__c)) {
                     DESCRIPTION += ' - ' + evtInfo.Instance_Title__c;
                 }
                 DESCRIPTION += '\n' + evtInfo.Event__r.Event_Short_Listing_Description__c;

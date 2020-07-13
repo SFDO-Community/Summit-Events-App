@@ -35,7 +35,7 @@ global with sharing class SummitEventsRestAdmissions {
         }
 
         String feedType = RestContext.request.params.get('type');
-        if (!String.isBlank(feedType)) {
+        if (String.isNotBlank(feedType)) {
             if (feedType.toLowerCase() == 'highschool') {
                 // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=highschool
                 serializedJSON = JSON.serialize(getSchools('High School'));
@@ -99,7 +99,7 @@ global with sharing class SummitEventsRestAdmissions {
                 serializedJSON = JSON.serialize(programFinder());
             }
         }
-        if (!String.isBlank(callback)) {
+        if (String.isNotBlank(callback)) {
             serializedJSON = callback + '(' + serializedJSON + ')';
         }
         res.responseBody = Blob.valueOf(serializedJSON);
@@ -129,27 +129,27 @@ global with sharing class SummitEventsRestAdmissions {
         // https://COMMUNITY_SUB_DOMAIN.force.comservices/apexrest/ustadmissionsrest.json?type=programfinder&interest=&degree=&style=&schoolId=&filter=
 
 
-        if (!String.isBlank(RestContext.request.params.get('interest'))) {
+        if (String.isNotBlank(RestContext.request.params.get('interest'))) {
             String majorInterest = String.valueOf(RestContext.request.params.get('interest'));
             majorQuery += ' Areas_of_Interest_for_program_finder__c  IN (\'' + majorInterest + '\') AND' ;
         }
 
-        If (!String.isBlank(RestContext.request.params.get('degree'))) {
+        If (String.isNotBlank(RestContext.request.params.get('degree'))) {
             String majorDegree = String.valueOf(RestContext.request.params.get('degree'));
             majorQuery += ' Program_Offered__r.Degree_Level__c = \'' + majorDegree + '\'  AND' ;
         }
 
-        if (!String.isBlank(RestContext.request.params.get('style'))) {
+        if (String.isNotBlank(RestContext.request.params.get('style'))) {
             String majorStyle = String.valueOf(RestContext.request.params.get('style'));
             majorQuery += ' Learning_Style_for_program_finder__c IN (\'' + majorStyle + '\') AND' ;
         }
 
-        if (!String.isBlank(RestContext.request.params.get('school'))) {
+        if (String.isNotBlank(RestContext.request.params.get('school'))) {
             String majorSchool = String.valueOf(RestContext.request.params.get('school'));
             majorQuery += ' Program_Offered__r.School__r.Name = \'' + majorSchool + '\' AND' ;
         }
 
-        if (!String.isBlank(RestContext.request.params.get('schoolId'))) {
+        if (String.isNotBlank(RestContext.request.params.get('schoolId'))) {
             String majorSchoolId = String.valueOf(RestContext.request.params.get('schoolId'));
             majorQuery += ' Program_Offered__r.School__c = \'' + majorSchoolId + '\' AND' ;
         }
@@ -157,7 +157,7 @@ global with sharing class SummitEventsRestAdmissions {
         majorQuery = majorQuery.removeEnd('AND');
 
         //split apart the filter on commas and test against the fields in the query
-        if (!String.isBlank(RestContext.request.params.get('filter'))) {
+        if (String.isNotBlank(RestContext.request.params.get('filter'))) {
             String majorFilter = String.valueOf(RestContext.request.params.get('filter'));
             majorQuery += ' AND  (';
             List<String> filterList = majorFilter.split(',');
@@ -184,16 +184,16 @@ global with sharing class SummitEventsRestAdmissions {
         for (Major__c m : majorList) {
             programData pd = new programData();
             pd.title = m.Major_Display_Name__c;
-            pd.link = (!String.isBlank(m.Major_Web_URL__c) ? m.Major_Web_URL__c : '');
-            pd.degreeLevel = (!String.isBlank(m.Program_Offered__r.Degree_Level__c) ? m.Program_Offered__r.Degree_Level__c : '');
-            pd.learningStyle = (!String.isBlank(m.Learning_Style_for_program_finder__c) ? m.Learning_Style_for_program_finder__c : '');
-            pd.school = (!String.isBlank(m.Program_Offered__r.School__r.Name) ? m.Program_Offered__r.School__r.Name : '');
-            pd.interest = (!String.isBlank(m.Areas_of_Interest_for_program_finder__c) ? m.Areas_of_Interest_for_program_finder__c : '');
-            pd.majorId = (!String.isBlank(m.Id) ? m.Id : '');
-            pd.schoolId = (!String.isBlank(String.valueOf(m.Program_Offered__r.School__c)) ? String.valueOf(m.Program_Offered__r.School__c) : '');
-            pd.programId = (!String.isBlank(String.valueOf(m.Program_Offered__c)) ? String.valueOf(m.Program_Offered__c) : '');
-            pd.programCode = (!String.isBlank(m.Program_Code__c) ? m.Program_Code__c : '');
-            pd.programMajorCode = (!String.isBlank(m.Prog_Major_Conc_Code__c) ? m.Prog_Major_Conc_Code__c : '');
+            pd.link = (String.isNotBlank(m.Major_Web_URL__c) ? m.Major_Web_URL__c : '');
+            pd.degreeLevel = (String.isNotBlank(m.Program_Offered__r.Degree_Level__c) ? m.Program_Offered__r.Degree_Level__c : '');
+            pd.learningStyle = (String.isNotBlank(m.Learning_Style_for_program_finder__c) ? m.Learning_Style_for_program_finder__c : '');
+            pd.school = (String.isNotBlank(m.Program_Offered__r.School__r.Name) ? m.Program_Offered__r.School__r.Name : '');
+            pd.interest = (String.isNotBlank(m.Areas_of_Interest_for_program_finder__c) ? m.Areas_of_Interest_for_program_finder__c : '');
+            pd.majorId = (String.isNotBlank(m.Id) ? m.Id : '');
+            pd.schoolId = (String.isNotBlank(String.valueOf(m.Program_Offered__r.School__c)) ? String.valueOf(m.Program_Offered__r.School__c) : '');
+            pd.programId = (String.isNotBlank(String.valueOf(m.Program_Offered__c)) ? String.valueOf(m.Program_Offered__c) : '');
+            pd.programCode = (String.isNotBlank(m.Program_Code__c) ? m.Program_Code__c : '');
+            pd.programMajorCode = (String.isNotBlank(m.Prog_Major_Conc_Code__c) ? m.Prog_Major_Conc_Code__c : '');
             programList.add(pd);
         }*/
         return programList;
@@ -236,7 +236,7 @@ global with sharing class SummitEventsRestAdmissions {
         Map<String, String> keyValOut = new Map<String, String>();
         String schoolId = '';
         /*List<Major__c> schoolProgs = new List<Major__c>();
-        if (!String.isBlank(RestContext.request.params.get('schoolid'))) {
+        if (String.isNotBlank(RestContext.request.params.get('schoolid'))) {
             schoolId = RestContext.request.params.get('schoolid');
             schoolProgs = [
                     SELECT Id,Name, Major_Display_Name__c, Major_Name__c, Major_Code__c, Prog_Major_Conc_Code__c, Program_Offered__r.Program_Code__c
@@ -281,10 +281,10 @@ global with sharing class SummitEventsRestAdmissions {
     global static Map<String, String> getCityList() {
         String state = '';
         Map<String, String> keyValOut = new Map<String, String>();
-       /* if (!String.isBlank(RestContext.request.params.get('state'))) {
+       /* if (String.isNotBlank(RestContext.request.params.get('state'))) {
             state = RestContext.request.params.get('state').toUpperCase();
         }
-        if (!String.isBlank(state)) {
+        if (String.isNotBlank(state)) {
             List<City__c> cityList = [SELECT Name FROM City__c WHERE State_Code__c = :state ORDER BY Name DESC];
             For (City__c city : cityList) {
                 keyValOut.put(city.Name, city.Name);
@@ -299,16 +299,16 @@ global with sharing class SummitEventsRestAdmissions {
         //List<String> filter = new List<String>();
 
         /*String state = '';
-        if (!String.isBlank(RestContext.request.params.get('state'))) {
+        if (String.isNotBlank(RestContext.request.params.get('state'))) {
             state = RestContext.request.params.get('state');
         }
         String city = '';
-        if (!String.isBlank(RestContext.request.params.get('city'))) {
+        if (String.isNotBlank(RestContext.request.params.get('city'))) {
             city = '%' + RestContext.request.params.get('city') + '%';
         }
 
         String filter = '';
-        if (!String.isBlank(RestContext.request.params.get('filter'))) {
+        if (String.isNotBlank(RestContext.request.params.get('filter'))) {
             List<String> filterHolder = new List<String>();
             for (String fragment : RestContext.request.params.get('filter').split(' ')) {
                 filterHolder.add('*' + fragment + '*');
@@ -316,7 +316,7 @@ global with sharing class SummitEventsRestAdmissions {
             filter = String.Join(filterHolder, ' ');
         }
 
-        if (!String.isBlank(state) && String.isBlank(city)) {
+        if (String.isNotBlank(state) && String.isBlank(city)) {
             schoolList = [
                     SELECT Name, EnrollmentrxRx__CEEB_Code__c, EnrollmentrxRx__High_School_State__c, EnrollmentrxRx__High_School_City__c
                     FROM EnrollmentrxRx__High_School__c
@@ -325,7 +325,7 @@ global with sharing class SummitEventsRestAdmissions {
                     ORDER BY Name
             ];
         }
-        if (!String.isBlank(state) && !String.isBlank(city)) {
+        if (String.isNotBlank(state) && String.isNotBlank(city)) {
             schoolList = [
                     SELECT Name, EnrollmentrxRx__CEEB_Code__c, EnrollmentrxRx__High_School_State__c, EnrollmentrxRx__High_School_City__c
                     FROM EnrollmentrxRx__High_School__c
@@ -335,7 +335,7 @@ global with sharing class SummitEventsRestAdmissions {
                     ORDER BY Name
             ];
         }
-        if (!String.isBlank(filter)) {
+        if (String.isNotBlank(filter)) {
             schoolList = [
                     FIND :filter
                     IN ALL FIELDS

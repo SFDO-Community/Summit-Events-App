@@ -243,13 +243,13 @@ public with sharing class SummitEventsContactMatching {
         //newEvtContact.High_School_Expected_Graduation_Year__c = evt.Registrant_High_School_Grad_Year__c;
         //newEvtContact.LeadSource = 'Event';
 
-        /*if (!String.isBlank(evt.Registrant_Applicant_Type__c)) {
+        /*if (String.isNotBlank(evt.Registrant_Applicant_Type__c)) {
             newEvtContact.Inquiry_Applicant_Type__c = evt.Registrant_Applicant_Type__c;
         }
 
-        if (!String.isBlank(evt.Registrant_High_School_Code__c) && String.isBlank(evt.Registrant_College_Code__c)) {
+        if (String.isNotBlank(evt.Registrant_High_School_Code__c) && String.isBlank(evt.Registrant_College_Code__c)) {
             newEvtContact.EnrollmentrxRx__High_School_Code__c = evt.Registrant_High_School_Code__c;
-        } else if (!String.isBlank(evt.Registrant_College_Code__c)) {
+        } else if (String.isNotBlank(evt.Registrant_College_Code__c)) {
             newEvtContact.EnrollmentrxRx__High_School_Code__c = evt.Registrant_College_Code__c;
         }*/
 

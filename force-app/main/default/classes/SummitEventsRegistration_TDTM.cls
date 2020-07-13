@@ -108,7 +108,7 @@ global class SummitEventsRegistration_TDTM extends hed.TDTM_Runnable {
 
                         statusMatch = false;
 
-                        if (!String.isBlank(em.Action_Sub_status__c) && !String.isBlank(areg.Substatus__c)) {
+                        if (String.isNotBlank(em.Action_Sub_status__c) && String.isNotBlank(areg.Substatus__c)) {
                             if (em.Action_Sub_status__c.equals(areg.Substatus__c) && em.Action_Status__c.equalsIgnoreCase(areg.Status__c)) {
                                 statusMatch = true;
                                 System.Debug('Match made on Sub status');
@@ -124,7 +124,7 @@ global class SummitEventsRegistration_TDTM extends hed.TDTM_Runnable {
                             //Get email template
                             String emailContent = em.Email_Content__c;
                             String originalTemplate = '[[DONT_DELETE_CONTENT_HERE]]';
-                            if (!String.isBlank(em.Letterhead_HTML__c)) {
+                            if (String.isNotBlank(em.Letterhead_HTML__c)) {
                                 originalTemplate = em.Letterhead_HTML__c;
                             }
 
@@ -204,7 +204,7 @@ global class SummitEventsRegistration_TDTM extends hed.TDTM_Runnable {
                 EmailTo
         });
         mail.setSubject(Subject);
-        if (!String.isBlank(BCCString)) {
+        if (String.isNotBlank(BCCString)) {
             BCCString = BCCString.replaceAll('\\s+', '');
             BCCString = BCCString.replaceAll(';', ',');
             List<String> bccList = BCCString.split(',');
