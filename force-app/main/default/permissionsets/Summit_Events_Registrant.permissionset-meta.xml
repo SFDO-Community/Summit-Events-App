@@ -4,10 +4,6 @@
         <apexClass>SummitEventsFeed</apexClass>
         <enabled>true</enabled>
     </classAccesses>
-    <classAccesses>
-        <apexClass>SummitEventsRestAdmissions</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
     <description>Permissions to allow a public guest user to fill out an event registration.</description>
     <fieldPermissions>
         <editable>false</editable>

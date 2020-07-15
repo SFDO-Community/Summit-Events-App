@@ -51,7 +51,7 @@ global with sharing class SummitEventsFeed {
         if (feedType == 'audienceDD') {
             serializedJSON = JSON.serialize(getAudienceDD(Summit_Events__c.Audience__c.getDescribe()));
         } else if (feedType == 'sexDD') {
-            serializedJSON = JSON.serialize(getAudienceDD(Contact.hed__Gender__c.getDescribe()));
+            serializedJSON = JSON.serialize(getAudienceDD(Summit_Events_Registration__c.Registrant_Gender__c.getDescribe()));
         } else if (feedType == 'eventList') {
             serializedJSON = JSON.serialize(getEventList());
             serializedJSON = serializedJSON.replace('"endDate":', '"end":');

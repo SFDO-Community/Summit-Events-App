@@ -5,8 +5,6 @@ project:
         name:  SummitEventsDX
         namespace:  ustevent
         api_version: '47.0'
-    dependencies:
-        - github: 'https://github.com/SalesforceFoundation/EDA'
     source_format: sfdx
 
 tasks:

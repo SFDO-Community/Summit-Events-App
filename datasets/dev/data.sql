@@ -5,8 +5,6 @@ CREATE TABLE "Account"
     "Name"                  VARCHAR(255),
     "RecordTypeId"          VARCHAR(255),
     parent_id               VARCHAR(255),
-    hed__current_address__c VARCHAR(255),
-    hed__primary_contact__c VARCHAR(255),
     PRIMARY KEY (sf_id)
 );
 CREATE TABLE "Account_rt_mapping"
@@ -35,46 +33,12 @@ CREATE TABLE "Contact"
     "Special_Athlete_Sport_2__c"                       VARCHAR(255),
     "Special_Athlete_Sport_3__c"                       VARCHAR(255),
     "University_Banner_PIDM__c"                        VARCHAR(255),
-    "hed__AlternateEmail__c"                           VARCHAR(255),
-    "hed__Chosen_Full_Name__c"                         VARCHAR(255),
-    "hed__Citizenship__c"                              VARCHAR(255),
-    "hed__Country_of_Origin__c"                        VARCHAR(255),
-    "hed__Deceased__c"                                 VARCHAR(255),
-    "hed__Do_Not_Contact__c"                           VARCHAR(255),
-    "hed__Dual_Citizenship__c"                         VARCHAR(255),
-    "hed__Ethnicity__c"                                VARCHAR(255),
-    "hed__Exclude_from_Household_Formal_Greeting__c"   VARCHAR(255),
-    "hed__Exclude_from_Household_Informal_Greeting__c" VARCHAR(255),
-    "hed__Exclude_from_Household_Name__c"              VARCHAR(255),
-    "hed__FERPA__c"                                    VARCHAR(255),
-    "hed__Financial_Aid_Applicant__c"                  VARCHAR(255),
-    "hed__Gender__c"                                   VARCHAR(255),
-    "hed__HIPAA_Detail__c"                             VARCHAR(255),
-    "hed__HIPAA__c"                                    VARCHAR(255),
-    "hed__Military_Background__c"                      VARCHAR(255),
-    "hed__Military_Service__c"                         VARCHAR(255),
-    "hed__Naming_Exclusions__c"                        VARCHAR(255),
-    "hed__PreferredPhone__c"                           VARCHAR(255),
-    "hed__Preferred_Email__c"                          VARCHAR(255),
-    "hed__Primary_Address_Type__c"                     VARCHAR(255),
-    "hed__Race__c"                                     VARCHAR(255),
-    "hed__Religion__c"                                 VARCHAR(255),
-    "hed__Secondary_Address_Type__c"                   VARCHAR(255),
-    "hed__Social_Security_Number__c"                   VARCHAR(255),
-    "hed__UniversityEmail__c"                          VARCHAR(255),
-    "hed__WorkEmail__c"                                VARCHAR(255),
-    "hed__WorkPhone__c"                                VARCHAR(255),
-    "hed__is_Address_Override__c"                      VARCHAR(255),
     account_id                                         VARCHAR(255),
     primary_academic_program__c                        VARCHAR(255),
     primary_department__c                              VARCHAR(255),
     primary_educational_institution__c                 VARCHAR(255),
     primary_sports_organization__c                     VARCHAR(255),
     reports_to_id                                      VARCHAR(255),
-    hed__current_address__c                            VARCHAR(255),
-    hed__primary_household__c                          VARCHAR(255),
-    hed__primary_language__c                           VARCHAR(255),
-    hed__primary_organization__c                       VARCHAR(255),
     PRIMARY KEY (sf_id)
 );
 CREATE TABLE "Summit_Events_Appointment_Type__c"
@@ -413,44 +377,6 @@ Blue', '', '', '', '', 'What is your favorite color?', 'What''s up?', 'What''s y
         'Register', 'Touchpoint', 'false', '123 Evergreen Blvd., St. Paul, MN', 'https://g.page/sociablecider?share',
         'The best place in the World', '', '5.0', 'false', '', '', '', 'No limit', '2020-03-17', 'GeneralSLDS', '', '',
         '', '', '');
-CREATE TABLE "hed__Address__c"
-(
-    sf_id                          VARCHAR(255) NOT NULL,
-    "hed__Address_Type__c"         VARCHAR(255),
-    "hed__Default_Address__c"      VARCHAR(255),
-    "hed__Latest_End_Date__c"      VARCHAR(255),
-    "hed__Latest_Start_Date__c"    VARCHAR(255),
-    "hed__MailingCity__c"          VARCHAR(255),
-    "hed__MailingCountry__c"       VARCHAR(255),
-    "hed__MailingPostalCode__c"    VARCHAR(255),
-    "hed__MailingState__c"         VARCHAR(255),
-    "hed__MailingStreet2__c"       VARCHAR(255),
-    "hed__MailingStreet__c"        VARCHAR(255),
-    "hed__Seasonal_End_Day__c"     VARCHAR(255),
-    "hed__Seasonal_End_Month__c"   VARCHAR(255),
-    "hed__Seasonal_End_Year__c"    VARCHAR(255),
-    "hed__Seasonal_Start_Day__c"   VARCHAR(255),
-    "hed__Seasonal_Start_Month__c" VARCHAR(255),
-    "hed__Seasonal_Start_Year__c"  VARCHAR(255),
-    hed__parent_account__c         VARCHAR(255),
-    hed__parent_contact__c         VARCHAR(255),
-    PRIMARY KEY (sf_id)
-);
-CREATE TABLE "hed__Facility__c"
-(
-    sf_id                   VARCHAR(255) NOT NULL,
-    "Name"                  VARCHAR(255),
-    "hed__Capacity__c"      VARCHAR(255),
-    "hed__Description__c"   VARCHAR(255),
-    "hed__Facility_Type__c" VARCHAR(255),
-    hed__account__c         VARCHAR(255),
-    hed__parent_facility__c VARCHAR(255),
-    PRIMARY KEY (sf_id)
-);
-CREATE TABLE "hed__Language__c"
-(
-    sf_id  VARCHAR(255) NOT NULL,
-    "Name" VARCHAR(255),
-    PRIMARY KEY (sf_id)
-);
+
+
 COMMIT;
