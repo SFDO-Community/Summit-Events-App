@@ -51,6 +51,10 @@
                 <behavior>Edit</behavior>
                 <field>Display_Attendance_Publicly__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Attended_KBYG__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
