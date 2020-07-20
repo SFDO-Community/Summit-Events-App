@@ -13,7 +13,7 @@ A complete set of general instructions on setting up CumulusCI can be found in t
 
 **To Fork or Branch. That is the question?**
 
-If you are not a direct contributer to the Summit Events App that has requested and recieved access to the main repository you will be forking the code. Forked code is a copy of the Summit Events App code that lives under your own github account. Nothing you do to forked code can harm or improve the main repository of the Summit Events App. This means you can play with the code all you want so have fun! If you do come up with some ground breaking improvement in your forked code you can, and are encouraged, to contribute to the main repository by requestion something called a Pull Request from your forked code.
+If you are not a direct contributer to the Summit Events App that has requested and recieved access to the main repository you will be forking the code. Forked code is a copy of the Summit Events App code that lives under your own GitHub account. Nothing you do to forked code can harm or improve the main repository of the Summit Events App. This means you can play with the code all you want so have fun! If you do come up with some ground breaking improvement in your forked code you can, and are encouraged, to contribute to the main repository by requestion something called a Pull Request from your forked code.
 
 Here is how you fork that code:
 
@@ -42,13 +42,13 @@ cloning will create a directory for the code for you.
 git clone <the URL you copied from your forked repository>
 ```
 
-8. Navigate into the newly created directory that contains the Summit Event App code. Check to make sure a proper CumulusCI project has been established by typing this command into your terminal:
+8. Navigate into the newly created directory that contains the Summit Events App code. Check to make sure a proper CumulusCI project has been established by typing this command into your terminal:
 
 ```bash
 cci project info
 ```
    
-Your Summit Events App is a pre-configured CumulusCI project. If you get the following after the above comman something is wrong with your copy of summit events (seek help):
+Your Summit Events App is a pre-configured CumulusCI project. If you get the following after the above comman something is wrong with your copy of the Summit Events App (seek help):
 
 ```bash
 The file cumulusci.yml was not found in the repo root. Are you in a CumulusCI project directory?
