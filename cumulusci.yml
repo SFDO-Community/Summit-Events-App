@@ -3,7 +3,7 @@ project:
     name: SummitEventsDX
     package:
         name:  SummitEventsDX
-        namespace:  ustevent
+        namespace:  summit
         api_version: '47.0'
     source_format: sfdx
 

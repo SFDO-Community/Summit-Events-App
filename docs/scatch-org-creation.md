@@ -9,23 +9,15 @@ This project is designed to use CumulusCI. So your first job is to make sure tha
 
 A complete set of general instructions on setting up CumulusCI can be found in the [CumulusCI Documentation](https://cumulusci.readthedocs.io/en/latest/tutorial.html).
 
-## Connect a dev hub
-
-1. [Enable Dev Hub in Your Org](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_enable_devhub.htm). This is used to authenticate your rights to spin up scratch orgs.
-This should not effect anything in your org.
-
-2.  Connect your command line to the dev org you turned on. This will require you to log in to the org you identify as your dev hub. Use the following command to initiate this authentication:
-
-```bash
-sfdx force:auth:web:login --setdefaultdevhubusername --setalias my-hub-org
-```
-
-*"my-hub-org" above is an alias. You can choose whatever alias you wish as it is used to identify this
-particular dev hub if you have multiple*
-
 ## Gitting the code (Get it?)
 
-1. Log in to GitHub.
+**To Fork or Branch. That is the question?**
+
+If you are not a direct contributer to the Summit Events App that has requested and recieved access to the main repository you will be forking the code. Forked code is a copy of the Summit Events App code that lives under your own GitHub account. Nothing you do to forked code can harm or improve the main repository of the Summit Events App. This means you can play with the code all you want so have fun! If you do come up with some ground breaking improvement in your forked code you can, and are encouraged, to contribute to the main repository by requestion something called a Pull Request from your forked code.
+
+Here is how you fork that code:
+
+1. Log in to [GitHub](https://github.com).
 
 2. Go to the [Summit Events repository](https://summitevt.org).
 
@@ -37,143 +29,82 @@ own repository will not affect the main repository in any way.
 GitHub username in it.
 
 5. Click on the "Clone or download" green drop-down near the top left of the page. Copy the URL to clone
-your forked repository.
+your forked repository. This is the URL you will use to copy the code down to your local computer.
 
 6. On your computer navigate to the folder that you wish to put your cloned code in. Remember that
-cloning will create a directory for the code for you. You may also wish to use GitHub desktop to 
-make this whole process prettier and less intimidating. This documentation will outline command 
-line usage of git, but both are acceptable.
+cloning will create a directory for the code for you. 
 
-1. Get a copy of the Event App code from GIT. If you are not directly collaborating with the 
- project you may want to fork the project into your own GIT repository:
+*You may also wish to use GitHub desktop to make this whole process prettier and less intimidating. **
 
-    ```git
-    git clone <the URL you copied from your forked repository>
-    ```
+7. Copy your code to your computer with this command:
 
-2. In your terminal, in the code directory check and see if the project is already 
-set up with CumulusCI:
+```git
+git clone <the URL you copied from your forked repository>
+```
 
-    ```bash
-    cci project info
-    ```
+8. Navigate into the newly created directory that contains the Summit Events App code. Check to make sure a proper CumulusCI project has been established by typing this command into your terminal:
+
+```bash
+cci project info
+```
    
-   If the project is not set up you will get this message:
-   
-   ```bash
-   The file cumulusci.yml was not found in the repo root. Are you in a CumulusCI project directory?
-   ```
-   
-   If you get the above message use the following command to init the project into cumulusCI:
-   
-   ```bash
-   cci project init
-   ```
+Your Summit Events App is a pre-configured CumulusCI project. If you get the following after the above comman something is wrong with your copy of the Summit Events App (seek help):
 
-3. Connect Github and and Cumulus to this project:
+```bash
+The file cumulusci.yml was not found in the repo root. Are you in a CumulusCI project directory?
+```
+   
+## Connect a dev hub
 
-   ```bash
-   cci service connect github
-   ```
+1. [Enable Dev Hub in Your Org](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_enable_devhub.htm). This is used to authenticate your rights to spin up scratch orgs. This will not affect anyting in the authenticating org.
+
+2. Navigate to the directory that contains the Summit Events App code.
+
+3. Connect your command line to the same dev hub authenticating org you turned on in step one. This will require you to log in using your credentials for the org in step one:
+
+```bash
+sfdx force:auth:web:login --setdefaultdevhubusername --setalias my-hub-org
+```
+
+*"my-hub-org" above is an alias. You can choose whatever alias you wish as it is used to identify this
+particular dev hub if you have multiple*
+
 
 ## Spinning up a scratch or with the events app installed
 
-1. Create a dev configured scratch org for 7 days
-    ```bash 
-    cci org scratch dev <org_name> --days 7
-    ```
+Now you have the groundork done in the future you should only need these steps to spin up a scratch org.
 
-2. Confirm your dev configured scratch org was created
-    ```bash 
-    cci org list
-    ```
+1. Navigate to the directory that contains the Summit Events App code.
 
-3. Run a flow to deploy the project and install dependencies into your dev configured scratch org
-    ```bash 
-    cci flow run dev_org --org <org_name>
-    ```
+2. Run a CumulusCI flow to deploy the project and install dependencies into your dev configured scratch org
 
-Normally you would be done with a cumulusCI project scratch org at this point, but the Event app requires a salesforce site domain
-be set up. You will need to do this in the next step and then run one final command to complete the site set up.
-
-## Create a site
-
-1. Open your new scratch org you are working on in the browser
-
-   ```bash 
-   cci org browser <org_name> 
-   ```
-   *<org_name> for development is dev*
-   
-2. In Setup go to User Interface -> Sites and Domains -> Sites
-
-3. Select a subdomain that is available. Since you are spinning up scratch orgs you may want to start incrementing a subdomain on a theme (myevents0001...myevents0002).
-
-4. Click "Register My Salesforce Site Domain"
-
-## Automated site set-up
-
-Back in the command line. Use the following command to allow CumulusCI to complete the set-up of the public site:
-```bash
-cci flow run config_site --org <org_name>
+```bash 
+cci flow run dev_org --org dev
 ```
+    
+**What happens when this flow is run?**
 
-*<org_name> for development is dev*
+1. A scratch org is created (Your personal copy of saleforce with no data in it).
 
-## Set Sharing Rules
+2. A community site is created with a random sub domain..
 
-Salesforce Winter '20 and Spring '20 releases will begin to severely limit Guest User access to objects.
-Sharing rules will limit the Guest User to insert access only by default. The Summit Events application requires
-that the Guest user be able to read, and upsert to it's custom objects. In order to align this application with 
-the new security rules we need to set a sharing rule to allow the application to read it's objects. Code has also
-been adjust to allow for the required upserts. The following instructions will help you set up the required sharing rules.
-Unfortunately, we are not able to automate these steps yet due to limitations in SFDX.
+3. Summit Event App is installed. This inclueds Apex code, Visualforce pages, objects, fields, layouts, permission Sets, sharing rules, and sites.
 
-### Set Sharing Object Access
+4. Permission Sets are assigned for admin use of the Summit Events App as well as the guest site user.
 
-1. Open your new scratch org you are working on in the browser (if it is not already open)
+5. Sample event data is inserted.
 
-   ```bash 
-   cci org browser <org_name> 
-   ```
-   *<org_name> for development is dev*
-   
-2. Go to Setup in your scratch org 
-
-3. Type "Sharing" in the quick-find box and click on "Sharing Settings".
-
-4. Click "Edit" to expose sharing option settings for editing
-
-5. Set the Summit Events object and make sure it is set to "Public Read/Write"
-
-6. Make sure the "Secure guest user record access" is also checked. This will be checked by default in the future and will soon not be optional.
-
-7. Click "Save" (You will get an alert. Click "Ok")
-
-### Set Summit Events Sharing Rule
-
-1. Follow setups 1-3 in the instructions above to get into "Sharing Settings"
-
-2. Find the "Summit Events Sharing Rules" section of the page (you can use the "Manage sharing settings for" dropdown on the top or scroll to it)
-
-3. Click the "New" button in the "Summit Events Sharing Rules" section
-
-4. Label your rule "Guest User Read Access" with rule name "Guest_User_Read_Access"
-
-5. Set the radio button for "Rule Type" to "Guest user access, based on criteria"
-
-6. Set "Criteria" to Field => Event Name, Operator => "not equal to", Value => null  (type the world null for the value)
-
-7. Share with can only be set to "Summit Events Site Guest User"
-
-8. Set Access Level to "Read Only"
-
-9. Click "Save"
 
 ## Your org is ready!
 
-Your new scratch org is created and ready for you to develop against/with/for! Remember you can open your org with this command once it has been created:
+Your new scratch org is created and ready for you to develop against/with/for! You can now see that CumulusCI has created a dev org that will last seven days by entering the floowing command:
 
 ```bash
-cci org browser <org_name>
+cci org list
+```
+
+You can open up your new scratch org with Summit Events App installed by entering the following command:
+
+```bash
+cci org browser dev
 ```
