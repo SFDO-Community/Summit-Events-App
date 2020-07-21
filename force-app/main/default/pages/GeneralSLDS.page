@@ -6,7 +6,7 @@ Created by Thaddaeus Dahlberg on 2/15/2020.
 -->
 
 <apex:page id="GeneralSLDS" sidebar="false" lightningStyleSheets="true" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
-    <apex:slds />
+    <apex:slds/>
     <html class="no-js" lang="" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <head>
         <meta charset="utf-8"/>
@@ -16,9 +16,13 @@ Created by Thaddaeus Dahlberg on 2/15/2020.
         <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
         <style>
             #loading .background {
-                background-image: url({!URLFOR($Resource.SummitEventsAssets, '/img/loading-summit_events.gif')})!important;
+                background-image: url({!URLFOR($Resource.SummitEventsAssets, '/img/loading-summit_events.gif')}) !important;
                 width: 160px;
                 height: 160px;
+            }
+
+            .slds-col img {
+                max-width: 99%;
             }
         </style>
         <apex:insert name="scriptsHead"/>
