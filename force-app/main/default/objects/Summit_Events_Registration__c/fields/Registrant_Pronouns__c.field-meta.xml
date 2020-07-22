@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Ask_Relationship_To_Institution__c</fullName>
-    <description>Relationship to the Organization or Institution. Picklist values should be updated on the Event Registration</description>
+    <fullName>Registrant_Pronouns__c</fullName>
     <externalId>false</externalId>
-    <inlineHelpText>Relationship to the Organization or Institution.</inlineHelpText>
-    <label>Ask Relationship To Organization</label>
+    <label>Registrant Pronouns</label>
     <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
@@ -14,19 +12,19 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Do not ask</fullName>
-                <default>true</default>
-                <label>Do not ask</label>
+                <fullName>They/Them</fullName>
+                <default>false</default>
+                <label>They/Them</label>
             </value>
             <value>
-                <fullName>Ask</fullName>
+                <fullName>She/Her</fullName>
                 <default>false</default>
-                <label>Ask</label>
+                <label>She/Her</label>
             </value>
             <value>
-                <fullName>Ask and require</fullName>
+                <fullName>He/Him</fullName>
                 <default>false</default>
-                <label>Ask and require</label>
+                <label>He/Him</label>
             </value>
         </valueSetDefinition>
     </valueSet>

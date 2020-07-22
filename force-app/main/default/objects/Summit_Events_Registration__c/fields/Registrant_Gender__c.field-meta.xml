@@ -23,6 +23,16 @@
                 <default>false</default>
                 <label>Male</label>
             </value>
+            <value>
+                <fullName>Non-binary</fullName>
+                <default>false</default>
+                <label>Non-binary</label>
+            </value>
+            <value>
+                <fullName>Prefer not to say</fullName>
+                <default>false</default>
+                <label>Prefer not to say</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

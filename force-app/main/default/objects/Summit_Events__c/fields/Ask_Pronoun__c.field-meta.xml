@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Ask_Applicant_Type__c</fullName>
-    <description>Setting this will override applicant type for this event and the user will not be queried about what applicant type they are. Use this if you know the event is only for a and audience of registrants that fall under the same application type.</description>
+    <fullName>Ask_Pronoun__c</fullName>
+    <description>Picklist of options managed in the Event Registration</description>
     <externalId>false</externalId>
-    <inlineHelpText>Setting this will override applicant type for this event and the user will not be queried about what applicant type they are. Use this if you know the event is only for a and audience of registrants that fall under the same application type.</inlineHelpText>
-    <label>Ask Applicant Type</label>
+    <label>Ask Pronouns</label>
     <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>
+        <restricted>true</restricted>
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
