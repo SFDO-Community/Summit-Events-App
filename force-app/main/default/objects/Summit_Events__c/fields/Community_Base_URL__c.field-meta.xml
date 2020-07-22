@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Community_Base_URL__c</fullName>
-    <description>The base URL of the Salesforce community. This is not the start of the event app, just the start of the orgs community.</description>
+    <description>The Event Calendar’s URL, generated from your org’s Site or Community. This is not the start of the event app, just the start of the orgs community.</description>
     <externalId>false</externalId>
     <formula>$Setup.Summit_Events_Settings__c.Community_Base_URL__c</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <inlineHelpText>The base URL of the Salesforce community. This is not the start of the event app, just the start of the orgs community.</inlineHelpText>
+    <inlineHelpText>The Event Calendar’s URL, generated from your org’s Site or Community.</inlineHelpText>
     <label>Community Base URL</label>
     <required>false</required>
     <trackHistory>false</trackHistory>
