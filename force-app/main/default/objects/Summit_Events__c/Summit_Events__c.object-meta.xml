@@ -160,7 +160,7 @@
     <externalSharingModel>ReadWrite</externalSharingModel>
     <label>Summit Events</label>
     <nameField>
-        <label>Event Label</label>
+        <label>Event Record Name</label>
         <trackHistory>false</trackHistory>
         <type>Text</type>
     </nameField>

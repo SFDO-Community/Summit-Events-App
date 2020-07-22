@@ -13,12 +13,12 @@
                 <field>Name</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Event_Status__c</field>
+                <behavior>Required</behavior>
+                <field>Event_Name__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Event_Name__c</field>
+                <behavior>Required</behavior>
+                <field>Event_Status__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -482,7 +482,11 @@
         <fields>NAME</fields>
         <fields>Capacity__c</fields>
         <fields>Count_of_Attendees__c</fields>
+        <fields>Instance_Start_Date__c</fields>
+        <fields>Instance_End_Date__c</fields>
         <relatedList>Summit_Events_Instance__c.Event__c</relatedList>
+        <sortField>Instance_Start_Date__c</sortField>
+        <sortOrder>Asc</sortOrder>
     </relatedLists>
     <relatedLists>
         <fields>Title__c</fields>
@@ -538,7 +542,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h0U000001KZQL</masterLabel>
+        <masterLabel>00h3D000001taSG</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
