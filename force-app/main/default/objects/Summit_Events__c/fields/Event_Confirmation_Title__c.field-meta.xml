@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Event_Confirmation_Title__c</fullName>
-    <description>The title that appears on the confirmation page of the event process. The last page once registration is submitted.</description>
+    <description>The title that appears on the confirmation page of the event process</description>
     <externalId>false</externalId>
-    <inlineHelpText>The title that appears on the confirmation page of the event process. The last page once registration is submitted.</inlineHelpText>
+    <inlineHelpText>The title that appears on the confirmation page of the event process</inlineHelpText>
     <label>Event Confirmation Title</label>
     <length>255</length>
     <required>false</required>

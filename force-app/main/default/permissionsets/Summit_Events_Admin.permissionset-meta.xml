@@ -994,6 +994,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.Registrant_Pronouns__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Registrant_Receive_Texts__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1220,6 +1225,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events__c.Ask_Preferred_First_Name__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Ask_Pronoun__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

@@ -6,7 +6,6 @@
     <fields>Active_Status__c</fields>
     <fields>Current_Available_Capacity__c</fields>
     <fields>Confirmed_Attendees__c</fields>
-    <fields>Registration_Link__c</fields>
     <fields>Admin_Open_Registration_Link__c</fields>
     <label>Instance Highlight Panel</label>
 </CompactLayout>
