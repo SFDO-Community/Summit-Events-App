@@ -3,7 +3,7 @@
     <fullName>Event_Sponsor__c</fullName>
     <description>This will allow filtering on this event based on non-program events.</description>
     <externalId>false</externalId>
-    <inlineHelpText>This will allow filtering on this event based on non-program events. This is Internal Sponsors.</inlineHelpText>
+    <inlineHelpText>This will allow filtering on this event based on non-program events.</inlineHelpText>
     <label>Event Sponsor</label>
     <required>false</required>
     <trackHistory>false</trackHistory>

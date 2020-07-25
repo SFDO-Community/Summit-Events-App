@@ -11,11 +11,6 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Attendee</fullName>
-                <default>false</default>
-                <label>Attendee</label>
-            </value>
-            <value>
                 <fullName>First-Year</fullName>
                 <default>false</default>
                 <label>First-Year</label>
@@ -24,31 +19,6 @@
                 <fullName>Transfer</fullName>
                 <default>false</default>
                 <label>Transfer</label>
-            </value>
-            <value>
-                <fullName>Presenter</fullName>
-                <default>false</default>
-                <label>Presenter</label>
-            </value>
-            <value>
-                <fullName>Sponsor</fullName>
-                <default>false</default>
-                <label>Sponsor</label>
-            </value>
-            <value>
-                <fullName>Employee</fullName>
-                <default>false</default>
-                <label>Employee</label>
-            </value>
-            <value>
-                <fullName>Guest</fullName>
-                <default>false</default>
-                <label>Guest</label>
-            </value>
-            <value>
-                <fullName>Volunteer</fullName>
-                <default>false</default>
-                <label>Volunteer</label>
             </value>
         </valueSetDefinition>
     </valueSet>

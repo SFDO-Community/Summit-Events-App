@@ -27,6 +27,21 @@
                 <default>false</default>
                 <label>Ask and require</label>
             </value>
+            <value>
+                <fullName>Do not ask but assign First-Year</fullName>
+                <default>false</default>
+                <label>Do not ask but assign First-Year</label>
+            </value>
+            <value>
+                <fullName>Do not ask but assign Transfer</fullName>
+                <default>false</default>
+                <label>Do not ask but assign Transfer</label>
+            </value>
+            <value>
+                <fullName>Do not ask but assign Graduate</fullName>
+                <default>false</default>
+                <label>Do not ask but assign Graduate</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
