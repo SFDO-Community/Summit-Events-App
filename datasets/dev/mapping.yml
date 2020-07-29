@@ -165,7 +165,6 @@ Insert Account:
   fields:
     Id: sf_id
     Name: Name
-    RecordTypeId: RecordTypeId
   lookups:
     ParentId:
       table: Account
@@ -195,14 +194,6 @@ Insert Contact:
     University_Banner_PIDM__c: University_Banner_PIDM__c
   lookups:
     AccountId:
-      table: Account
-    Primary_Academic_Program__c:
-      table: Account
-    Primary_Department__c:
-      table: Account
-    Primary_Educational_Institution__c:
-      table: Account
-    Primary_Sports_Organization__c:
       table: Account
     ReportsToId:
       table: Contact
