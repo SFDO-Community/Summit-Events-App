@@ -33,6 +33,7 @@ Insert Summit_Events__c:
     Ask_Phone__c: Ask_Phone__c
     Ask_Preferred_Class_Year__c: Ask_Preferred_Class_Year__c
     Ask_Preferred_First_Name__c: Ask_Preferred_First_Name__c
+    Ask_Pronoun__c: Ask_Pronoun__c
     Ask_Registrant_Program_Of_Interest__c: Ask_Registrant_Program_Of_Interest__c
     Ask_Relationship_To_Institution__c: Ask_Relationship_To_Institution__c
     Ask_Third_Party_Registrant__c: Ask_Third_Party_Registrant__c
@@ -291,6 +292,7 @@ Insert Summit_Events_Registration__c:
     Registrant_Postal_Code__c: Registrant_Postal_Code__c
     Registrant_Preferred_First_Name__c: Registrant_Preferred_First_Name__c
     Registrant_Program_Interest__c: Registrant_Program_Interest__c
+    Registrant_Pronouns__c: Registrant_Pronouns__c
     Registrant_Receive_Texts__c: Registrant_Receive_Texts__c
     Registrant_State_Global__c: Registrant_State_Global__c
     Registrant_State_Province__c: Registrant_State_Province__c
