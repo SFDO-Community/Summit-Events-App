@@ -1,5 +1,7 @@
 # Setting up Summit Events App for Scratch org Development
 
+*Note:  The steps below describe the Command Line method of creating a Scratch org; new documentation on how to accomplish this with the Metecho app will be posted soon*
+
 This project is designed to use CumulusCI. So your first job is to make sure that you have the following installed on your development computer:
 
 1. [Python 3+](https://www.python.org/downloads/)
