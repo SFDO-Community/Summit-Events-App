@@ -338,7 +338,7 @@ public with sharing class SummitEventsRegisterController {
     public List<SelectOption> getRelationshipDD() {
         return PickThePicklist('Summit_Events_Registration__c', 'Relationship_To_Institution__c', false);
     }
-    
+
     public List<SelectOption> getPronounDD() {
         return PickThePicklist('Summit_Events_Registration__c', 'Registrant_Pronouns__c', true);
     }
