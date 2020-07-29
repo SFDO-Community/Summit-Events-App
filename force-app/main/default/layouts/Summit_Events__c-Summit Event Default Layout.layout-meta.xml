@@ -59,7 +59,7 @@
     <layoutSections>
         <customLabel>true</customLabel>
         <detailHeading>true</detailHeading>
-        <editHeading>true</editHeading>
+        <editHeading>false</editHeading>
         <label>Registration Links</label>
         <layoutColumns>
             <layoutItems>

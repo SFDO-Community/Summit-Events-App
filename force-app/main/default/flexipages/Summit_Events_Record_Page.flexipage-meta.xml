@@ -3,7 +3,14 @@
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
+                <name>actionNames</name>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
                 <name>collapsed</name>
+                <value>false</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>enableActionsConfiguration</name>
                 <value>false</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
@@ -12,7 +19,7 @@
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>numVisibleActions</name>
-                <value>3</value>
+                <value>4</value>
             </componentInstanceProperties>
             <componentName>force:highlightsPanel</componentName>
         </componentInstances>

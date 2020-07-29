@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Event_Submit_Title__c</fullName>
-    <description>Title that appears on the event submit registration page</description>
+    <description>Title that appears on the event submit registration page. Appears when using Appointment Options.</description>
     <externalId>false</externalId>
-    <inlineHelpText>Title that appears on the event submit registration page</inlineHelpText>
+    <inlineHelpText>Title that appears on the event submit registration page. Appears when using Appointment Options.</inlineHelpText>
     <label>Event Submit Title</label>
     <length>255</length>
     <required>false</required>
