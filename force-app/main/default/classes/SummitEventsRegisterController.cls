@@ -116,7 +116,7 @@ public with sharing class SummitEventsRegisterController {
                             Ask_Last_Name_As_Student__c, Ask_Preferred_Class_Year__c, Ask_Preferred_First_Name__c,
                             Ask_Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c,
-                            Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c
+                            Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c, Ask_Pronoun__c
                     FROM Summit_Events__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1
@@ -278,7 +278,7 @@ public with sharing class SummitEventsRegisterController {
                                 Registrant_College_Not_Found__c, Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c, Registrant_Parent_Phone__c,
                                 Add_Info_Answer_1__c, Add_Info_Answer_2__c, Add_Info_Answer_3__c, Add_Info_Answer_4__c, Add_Info_Answer_5__c, Registrant_Program_Interest__c, Registrant_Preferred_First_Name__c,
                                 Registrant_date_of_Birth__c, Last_Name_as_Student__c, Preferred_Class_Year__c, Relationship_To_Institution__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c, Registrant_Other_Phone__c, Registrant_Other_Relationship__c,
-                                Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c
+                                Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c, Registrant_Pronouns__c
                         FROM Summit_Events_Registration__c
                         WHERE id = :evtInfo.evtRegId
                 ][0];
@@ -337,6 +337,10 @@ public with sharing class SummitEventsRegisterController {
 
     public List<SelectOption> getRelationshipDD() {
         return PickThePicklist('Summit_Events_Registration__c', 'Relationship_To_Institution__c', false);
+    }
+
+    public List<SelectOption> getPronounDD() {
+        return PickThePicklist('Summit_Events_Registration__c', 'Registrant_Pronouns__c', true);
     }
 
     public List<SelectOption> getProgramsAvailable() {

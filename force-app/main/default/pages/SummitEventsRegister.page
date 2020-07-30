@@ -150,7 +150,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" id="parentInfo" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Other', false, true)}" style="width:100%">
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                                        <h3 class="slds-text-heading_medium">Parent Information</h3>
+                                        <h3 class="slds-text-heading_medium">My Information</h3>
                                     </div>
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6">
@@ -206,7 +206,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Other', true, false)}" style="width:100%">
 
                                     <div class="cslds-col slds-p-around_x-small slds-size_1-of-1">
-                                        <h3 class="slds-text-heading_medium">Your Information</h3>
+                                        <h3 class="slds-text-heading_medium">My Information</h3>
                                     </div>
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6">
@@ -256,7 +256,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                                         <div class="slds-form-element">
-                                            <apex:outputLabel value="Your relationship to the student" for="otherRelated" styleClass="slds-form-element__label"/>
+                                            <apex:outputLabel value="Your relationship to the participant" for="otherRelated" styleClass="slds-form-element__label"/>
                                             <div class="slds-form-element__control">
                                                 <apex:inputText value="{!newEvtReg.Registrant_Other_Relationship__c}" id="otherRelated" styleClass="slds-input" maxLength="80"/>
                                             </div>
@@ -266,8 +266,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 </apex:outputPanel>
 
                                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                                    <p class="slds-text-body">Enter the contact information of the student you are registering for this activity below.
-                                        <br/><strong><em>Note: it is preferable that the student have a unique email (different than yours) for our records.</em></strong></p>
+                                    <p class="slds-text-body">Enter the contact information of the individual you are registering for this activity below.
+                                        <br/><strong><em>Note: it is preferable that the registrant have a unique email (different than yours) for our records.</em></strong></p>
                                 </div>
 
                             </apex:outputPanel>
@@ -275,7 +275,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                         <!-- REGISTRANT FIRST NAME -->
                         <apex:outputPanel rendered="{!eventPage.Ask_Third_Party_Registrant__c != null}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" layout="block">
-                            <h3 class="slds-text-heading_medium">Primary Registrant</h3>
+                            <h3 class="slds-text-heading_medium"> Registrant Information</h3>
                         </apex:outputPanel>
 
                         <div class="slds-col slds-p-around_x-small slds-small-size_6-of-6 slds-medium-size_3-of-6 slds-large-size_3-of-6">
@@ -610,6 +610,35 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </apex:outputPanel>
                         </apex:outputPanel>
 
+                        <!-- Gender Question -->
+                        <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" layout="block" rendered="{!IF(eventPage.Ask_Gender__c != 'Do not ask' && !isBlank(eventPage.Ask_Gender__c), true, false)}">
+                            <div class="slds-form-element {!IF(CONTAINS(eventPage.Ask_Gender__c, 'require'), 'slds-is-required', '')}">
+                                <apex:outputLabel value="Gender" for="Gender" styleClass="slds-form-element__label"/>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-select_container">
+                                        <apex:selectList value="{!newEvtReg.Registrant_Gender__c}" size="1" id="sex" multiselect="false" required="{!IF(eventPage.Ask_Gender__c == 'Ask and require', true, false)}" styleClass="slds-select {!IF(eventPage.Ask_Gender__c == 'Ask and require', 'required', '')}" disabled="{!contactSet}">
+                                            <apex:selectOptions value="{!sexDD}"/>
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+
+
+                        <!-- Pronouns Question -->
+                        <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" layout="block" rendered="{!IF(eventPage.Ask_Pronoun__c != 'Do not ask' && !isBlank(eventPage.Ask_Pronoun__c), true, false)}">
+                            <div class="slds-form-element {!IF(CONTAINS(eventPage.Ask_Pronoun__c, 'require'), 'slds-is-required', '')}">
+                                <apex:outputLabel value="Pronouns" for="Pronoun" styleClass="slds-form-element__label"/>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-select_container">
+                                        <apex:selectList value="{!newEvtReg.Registrant_Pronouns__c}" size="1" id="pronoun" multiselect="false" required="{!IF(eventPage.Ask_Pronoun__c == 'Ask and require', true, false)}" styleClass="slds-select {!IF(eventPage.Ask_Pronoun__c == 'Ask and require', 'required', '')}" disabled="{!contactSet}">
+                                            <apex:selectOptions value="{!PronounDD}"/>
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+
                         <!-- Ask High School or College (optional) -->
                         <apex:outputPanel layout="none"
                                           rendered="{!If(CONTAINS(eventPage.College_High_School_Ask__c, 'HS')
@@ -709,6 +738,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             <apex:inputHidden value="{!newEvtReg.Registrant_College_Code__c}" id="collegeCode"/>
                         </apex:outputPanel>
 
+
                         <!-- Additional Questions -->
                         <apex:outputPanel layout="block" id="addInfo" styleClass="slds-grid slds-wrap" rendered="{!additionalQuestions}" style="width:100%">
 
@@ -744,19 +774,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 </div>
                             </apex:outputPanel>
 
-                            <!-- Gender Question -->
-                            <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" layout="block" rendered="{!IF(eventPage.Ask_Gender__c != 'Do not ask' && !isBlank(eventPage.Ask_Gender__c), true, false)}">
-                                <div class="slds-form-element {!IF(CONTAINS(eventPage.Ask_Gender__c, 'require'), 'slds-is-required', '')}">
-                                    <apex:outputLabel value="Sex" for="sex" styleClass="slds-form-element__label"/>
-                                    <div class="slds-form-element__control">
-                                        <div class="slds-select_container">
-                                            <apex:selectList value="{!newEvtReg.Registrant_Gender__c}" size="1" id="sex" multiselect="false" required="{!IF(eventPage.Ask_Gender__c == 'Ask and require', true, false)}" styleClass="slds-select {!IF(eventPage.Ask_Gender__c == 'Ask and require', 'required', '')}" disabled="{!contactSet}">
-                                                <apex:selectOptions value="{!sexDD}"/>
-                                            </apex:selectList>
-                                        </div>
-                                    </div>
-                                </div>
-                            </apex:outputPanel>
 
                             <!-- Program of interest question -->
                             <apex:outputPanel layout="none"
@@ -801,7 +818,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                 <!--Text area -->
                                                 <apex:outputPanel layout="none" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'], 'Text area'), true, false)}">
                                                     <div class="slds-form-element__control">
-                                                        <apex:inputTextarea label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input" required="true"  rendered="{!isRequired}"/>
+                                                        <apex:inputTextarea label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input" required="true" rendered="{!isRequired}"/>
                                                         <apex:inputTextarea label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input" rendered="{!!isRequired}"/>
                                                     </div>
                                                 </apex:outputPanel>
@@ -809,7 +826,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                 <!--Text box-->
                                                 <apex:outputPanel layout="none" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'],'Text box'), true, false)}">
                                                     <div class="slds-form-element__control">
-                                                        <apex:inputText label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input"  required="true" rendered="{!isRequired}"/>
+                                                        <apex:inputText label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input" required="true" rendered="{!isRequired}"/>
                                                         <apex:inputText label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input" rendered="{!!isRequired}"/>
                                                     </div>
                                                 </apex:outputPanel>
