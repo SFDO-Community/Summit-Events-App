@@ -16,8 +16,8 @@ public with sharing class SummitEventsParkingPassController {
         Boolean validId = true;
         Id registrationId = null;
         String regId = ApexPages.currentPage().getParameters().get('regId');
-        Datetime todaysDateTime = SEShared.adjustForCentralTime(Datetime.now());
-        DateTime todaysDate = SEShared.adjustForCentralTime(date.newinstance(todaysDateTime.year(), todaysDateTime.month(), todaysDateTime.day()));
+        Datetime todayDateTime = SEShared.adjustForCentralTime(Datetime.now());
+        DateTime todayDate = SEShared.adjustForCentralTime(date.newinstance(todayDateTime.year(), todayDateTime.month(), todayDateTime.day()));
         try {
             regId = (Id) regId;
         } Catch (Exception e) {
@@ -26,26 +26,24 @@ public with sharing class SummitEventsParkingPassController {
         if (validId) {
             Summit_Events_Registration__c visitor = new Summit_Events_Registration__c();
             try {
-                visitor = [SELECT Event_Instance_Start_Date__c, Event_Instance_Start_Date_Text__c, Contact__r.Name, Contact__r.FirstName, Contact__r.Preferred_First_Name__c, Status__c FROM Summit_Events_Registration__c WHERE id = :regId][0];
+                visitor = [SELECT Event_Instance_Start_Date__c, Event_Instance_Start_Date_Text__c, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Preferred_First_Name__c, Status__c FROM Summit_Events_Registration__c WHERE id = :regId][0];
             } catch (Exception e) {
                 System.Debug(e.getMessage());
             }
 
-            if (todaysDate <= visitor.Event_Instance_Start_Date__c && visitor.Status__c != 'Started' && visitor.Status__c != 'Cancelled') {
-                couponOut += '<p>NAME:&nbsp; ' + visitor.Contact__r.Name + '</p>';
-                couponOut += '<p>DATE VALID:&nbsp; ' + visitor.Event_Instance_Start_Date_Text__c + '</p>';
-                if (!String.isBlank(visitor.Contact__r.Preferred_First_Name__c)) {
-                    firstName = visitor.Contact__r.Preferred_First_Name__c;
+            if (todayDate <= visitor.Event_Instance_Start_Date__c && visitor.Status__c != 'Started' && visitor.Status__c != 'Cancelled') {
+                if (!String.isBlank(visitor.Registrant_Preferred_First_Name__c)) {
+                    firstName = visitor.Registrant_Preferred_First_Name__c;
                 } else {
-                    firstName = visitor.Contact__r.FirstName;
+                    firstName = visitor.Registrant_First_Name__c;
                 }
-
-
+                couponOut += '<p>NAME:&nbsp; ' + firstName + ' ' + visitor.Registrant_Last_Name__c + '</p>';
+                couponOut += '<p>DATE VALID:&nbsp; ' + visitor.Event_Instance_Start_Date_Text__c + '</p>';
             } else {
                 warning = '<p>Sorry, this parking permit has expired or invalid. (' + regId + ')</p>';
             }
 
-            
+
         } else {
             warning = '<p>Sorry, We could not find your parking permit ID. (' + regId + ')</p>';
         }

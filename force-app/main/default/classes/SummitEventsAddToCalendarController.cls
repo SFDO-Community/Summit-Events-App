@@ -110,5 +110,4 @@ public with sharing class SummitEventsAddToCalendarController {
     }
 }
 
-
 //http://dev-stthomas.cs65.force.comusteventaddtocalendar?instanceID=a320m0000001I34

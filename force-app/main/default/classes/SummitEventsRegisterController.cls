@@ -219,24 +219,10 @@ public with sharing class SummitEventsRegisterController {
             //Fill in contact information
             Contact userContact = new Contact();
             if (String.isBlank(evtInfo.evtRegId) || evtInfo.evtRegId == 'COMING') {
-//                hed__Address__c userAddress = new hed__Address__c();
-//                List<hed__Address__c> userAddressList = [
-//                        SELECT hed__Address_Type__c, hed__MailingState__c, hed__MailingStreet2__c, hed__MailingPostalCode__c,
-//                                hed__Parent_Contact__r.Id
-//                        FROM hed__Address__c
-//                        Where hed__Address_Type__c = 'Home'
-//                        AND hed__Parent_Contact__c IN (
-//                                SELECT ContactId
-//                                FROM User
-//                                Where Id = :UserInfo.getUserId()
-//                        )
-//                ];
-//                if (userAddressList.size() > 0) {
-//                    userAddress = userAddressList[0];
-//                }
+
 
                 userContact = [
-                        Select Id, Name, FirstName, LastName, Email, HomePhone, MobilePhone, Do_Not_Text__c, Preferred_First_Name__c, Birthdate
+                        Select Id, Name, FirstName, LastName, Email, HomePhone, MobilePhone, Birthdate
                         FROM Contact
                         Where Id In (
                                 Select ContactId
@@ -248,15 +234,8 @@ public with sharing class SummitEventsRegisterController {
                 newEvtReg.Registrant_First_Name__c = userContact.FirstName;
                 newEvtReg.Registrant_Last_Name__c = userContact.LastName;
                 newEvtReg.Registrant_Email__c = userContact.Email;
-//                newEvtReg.Registrant_Gender__c = userContact.hed__Gender__c;
-//                newEvtReg.Registrant_Street_1__c = userAddress.hed__MailingStreet__c;
-//                newEvtReg.Registrant_Street_2__c = userAddress.hed__MailingStreet2__c;
-//                newEvtReg.Registrant_State__c = userAddress.hed__MailingState__c;
-//                newEvtReg.Registrant_City__c = userAddress.hed__MailingCity__c;
-//                newEvtReg.Registrant_Zip__c = userAddress.hed__MailingPostalCode__c;
                 newEvtReg.Registrant_Phone__c = userContact.HomePhone;
                 newEvtReg.Registrant_Mobile_Phone__c = userContact.MobilePhone;
-                newEvtReg.Registrant_Preferred_First_Name__c = userContact.Preferred_First_Name__c;
                 newEvtReg.Registrant_Date_of_Birth__c = userContact.Birthdate;
                 if (userContact.Birthdate != null) {
                     birthDateString = userContact.Birthdate.format();
@@ -264,9 +243,6 @@ public with sharing class SummitEventsRegisterController {
                 //    newEvtReg.Registrant_Receive_Texts__c = true;
                 if (String.isBlank(userContact.Id)) {
                     contactId = userContact.Id;
-                }
-                if (!userContact.Do_Not_Text__c) {
-                    newEvtReg.Registrant_Receive_Texts__c = true;
                 }
                 contactSet = true;
             } else {
@@ -345,66 +321,6 @@ public with sharing class SummitEventsRegisterController {
 
     public List<SelectOption> getProgramsAvailable() {
         List<SelectOption> progSelOpt = new List<SelectOption>();
-        /*String prgString = eventPage.Academic_Program_List__c;
-        String prgSelectedAlready = newEvtReg.Registrant_Program_Interest__c;
-        if (eventPage.Ask_Registrant_Program_Of_Interest__c == 'Ask and require one selection') {
-            selectedProgramsOne = prgSelectedAlready;
-        }
-
-        //If program list is empty then get the full list
-        //Missing field in HEDA org
-        If (String.isBlank(prgString)) {
-            List<Major__c> schoolProgs = new List<Major__c>();
-            if (!String.isBlank(eventPage.School__c)) {
-                Id schoolId = eventPage.School__c;
-                schoolProgs = [
-                        SELECT Id,Name, Major_Name__c,Major_Display_Name__c, Major_Code__c, Program_Offered__r.Program_Code__c, Program_Offered__r.Degree_Level__c
-                        FROM Major__c
-                        WHERE Status__c = 'Active'
-                        AND Program_Offered__r.EnrollmentrxRx__Program_Catalog__r.Name != 'Undergraduate'
-                        AND Program_Offered__r.Program_Code__c != NULL
-                        AND Program_Offered__r.School__c = :schoolId
-                        ORDER BY Major_Name__c
-                ];
-            } else {
-                schoolProgs = [
-                        SELECT Id,Name, Major_Name__c,Major_Display_Name__c, Major_Code__c, Program_Offered__r.Program_Code__c, Program_Offered__r.Degree_Level__c
-                        FROM Major__c
-                        WHERE Status__c = 'Active'
-                        AND Program_Offered__r.EnrollmentrxRx__Program_Catalog__r.Name != 'Undergraduate'
-                        AND Program_Offered__r.Program_Code__c != NULL
-                        ORDER BY Major_Name__c
-                ];
-            }
-            //turn list into a ; separated string to consume below
-            prgString = '';
-            For (Major__c prog : schoolProgs) {
-                prgString += prog.Major_Display_Name__c + ' - ' + prog.Program_Offered__r.Degree_Level__c + ' (' + prog.Program_Offered__r.Program_Code__c;
-                if (!String.isBlank(prog.Major_Code__c)) {
-                    prgString += '|' + prog.Major_Code__c;
-                }
-                prgString += ');';
-            }
-            prgString = prgString.removeEnd(';');
-        }
-
-
-        progSelOpt.add(new SelectOption('', 'Select...'));
-
-        List<String> prgList = prgString.split(';');
-        for (String prg : prgList) {
-            progSelOpt.add(
-                    new SelectOption(
-                            prg,
-                            prg.replaceAll('\\(\\w+\\|\\w+\\)|\\(\\w+\\)', '').trim()
-                    )
-            );
-            if (!String.isBlank(prgSelectedAlready) && eventPage.Ask_Registrant_Program_Of_Interest__c != 'Ask and require one selection') {
-                if (prgSelectedAlready.indexOf(prg) > -1) {
-                    selectedPrograms.add(prg);
-                }
-            }
-        }*/
         return progSelOpt;
 
     }
@@ -478,49 +394,7 @@ public with sharing class SummitEventsRegisterController {
             }
         }
 
-
-        /* if (selectedPrograms.isEmpty() && String.isBlank(selectedProgramsOne) && !String.isBlank(eventPage.Academic_Program_List__c)) {
-             selectedPrograms = eventPage.Academic_Program_List__c.split(';');
-             progSelectionMade = false;
-         }
-
-         if (!String.isBlank(selectedProgramsOne)) {
-             selectedPrograms.add(selectedProgramsOne);
-         }
-
-         if (!selectedPrograms.isEmpty()) {
-             for (String selPrg : selectedPrograms) {
-                 recordSelPrg += selPrg + ';';
-                 Matcher matcher = TAG_REGEX.matcher(selPrg);
-                 while (matcher.find()) {
-                     majorCodes.add(matcher.group(1).trim());
-                 }
-             }
-             recordSelPrg.removeEnd(';');
-             // Missing Major fields in HEDA
-             List<Major__c> majorIdList = [SELECT Id From Major__c Where Prog_Major_Conc_Code__c IN :majorCodes];
-
-             if (majorIdList.size() > 0) {
-                 for (Integer mc = 0; mc < 4; mc++) {
-                     if (mc < majorIdList.size()) {
-                         if (mc == 0) {
-                             newEvtReg.Registrant_Major__c = majorIdList[0].id;
-                         } else {
-                             newEvtReg.put('Registrant_Major_' + (mc + 1) + '__c', majorIdList[mc].id);
-                         }
-                     } else {
-                         newEvtReg.put('Registrant_Major_' + (mc + 1) + '__c', '');
-                     }
-                 }
-             }
-             //get major ids and save them
-         }*/
-
-//        if ((eventPage.Ask_Registrant_Program_Of_Interest__c == 'Ask but do not require' || eventPage.Ask_Registrant_Program_Of_Interest__c == 'Ask and require' || eventPage.Ask_Registrant_Program_Of_Interest__c == 'Ask and require one selection') && progSelectionMade) {
-//            newEvtReg.Registrant_Program_Interest__c = recordSelPrg;
-//        } else {
         newEvtReg.Registrant_Program_Interest__c = '';
-//        }
 
         if (String.isNotBlank(birthDateString)) {
             newEvtReg.Registrant_Date_of_Birth__c = Date.parse(birthDateString);
@@ -536,10 +410,6 @@ public with sharing class SummitEventsRegisterController {
             newEvtReg.Registrant_Applicant_Type__c = 'Graduate';
         }
 
-        //Begin matching based on event record type to get contact ID or create a new contact ID
-//        SummitEventsContactMatching matcher = new SummitEventsContactMatching();
-//        Map<String, String> matched = new Map<String, String>();
-
         //Check if last name, email, phone number or DOB changed
         Boolean dataHasChanged = false;
         if (oldEvtReg != null) {
@@ -552,34 +422,6 @@ public with sharing class SummitEventsRegisterController {
             }
         }
 
-/*        if (String.isNotBlank(evtInfo.evtRegId) && String.isNotBlank(newEvtReg.Contact__r.Id) && !dataHasChanged) {
-            matched.put('contactId', newEvtReg.Contact__r.Id);
-            contactId = newEvtReg.Contact__r.Id;
-        } else {
-            //pass record type and event reg to matcher helper class
-            String matchingScope = '';
-            if (String.isNotBlank(eventPage.Contact_Creation__c)) {
-                matchingScope = eventPage.Contact_Creation__c;
-            } else {
-                matchingScope = 'Full matching contact creation with duplicate management';
-            }
-            if (!matchingScope.startsWith('No matching')) {
-                String matchingRule = eventPage.Contact_Matching_Rules__c;
-                if (String.isBlank(matchingRule)) {
-                    matchingRule = 'Matching rules 1';
-                }
-                matched = matcher.SummitEventsContactMatching(matchingRule, newEvtReg, matchingScope);
-                //Populate matching results into data - matched may be blank depending on the Contact_Creation__c setting
-                if (matched.size() > 0) {
-                    if (String.isNotBlank(matched.get('contactId'))) {
-                        contactId = (Id) matched.get('contactId');
-                        newContactCreated = Boolean.valueOf(matched.get('newContactCreated'));
-                    }
-                    newEvtReg.Matching_Log__c = String.valueOf(matched.get('matchLog'));
-                }
-            }
-        }*/
-
         //Create registration if event Registration does not exist
         if (String.isBlank(evtInfo.evtRegId) || evtInfo.evtRegId == 'COMING') {
             newEvtReg.Status__c = 'Started';
@@ -591,12 +433,7 @@ public with sharing class SummitEventsRegisterController {
                 newEvtReg.New_Contact_Created__c = true;
             }
             newEvtReg = rCRUD.updateRegistration(newEvtReg);
-            //Update matching log with new ID
-            /*if (String.isNotBlank(newEvtReg.Matching_Log__c)) {
-                newEvtReg.Matching_Log__c = newEvtReg.Matching_Log__c.replaceAll('\\[\\[REGID\\]\\]', newEvtReg.Id);
-            }*/
             evtInfo.evtRegId = newEvtReg.Id;
-            //make matching log functional for reparenting
         }
 
         //update registration it may already exist, and matching log has to be updated on new registration inserts
