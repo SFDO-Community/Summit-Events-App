@@ -40,7 +40,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Location_Title__c = 'A location',
                 Location_Map_Link__c = 'Map Link 1',
                 Location_Address__c = '123 Electric Ave.',
-                Location_Type__c = 'Minneapolis',
+                Location_Type__c = 'On-Site',
                 Contact_Matching_Rules__c = matchingRules
         );
 
@@ -124,7 +124,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Location_Title_Override__c = 'A location',
                 Location_Map_Link_Override__c = 'Map Link 1',
                 Location_Address_Override__c = '123 Electric Ave.',
-                Location_Type_Override__c = 'Minneapolis'
+                Location_Type_Override__c = 'Online'
         );
         insert testInstance;
 
