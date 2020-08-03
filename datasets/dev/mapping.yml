@@ -83,6 +83,20 @@ Insert Summit_Events__c:
     Tracking_Event_Registration__c: Tracking_Event_Registration__c
     Tracking_Options_Registration__c: Tracking_Options_Registration__c
     Tracking_Submit_Registration__c: Tracking_Submit_Registration__c
+Insert Contact:
+  sf_object: Contact
+  table: Contact
+  fields:
+    Id: sf_id
+    FirstName: FirstName
+    LastName: LastName
+    DoNotCall: DoNotCall
+    HasOptedOutOfEmail: HasOptedOutOfEmail
+    HasOptedOutOfFax: HasOptedOutOfFax
+  lookups:
+    ReportsToId:
+      table: Contact
+      after: Insert Contact
 Insert Summit_Events_Email__c:
   sf_object: Summit_Events_Email__c
   table: Summit_Events_Email__c
@@ -159,69 +173,6 @@ Insert Summit_Events_Appointment_Type__c:
       table: Summit_Events_Instance__c
     Summit_Events__c:
       table: Summit_Events__c
-Insert Account:
-  sf_object: Account
-  table: Account
-  fields:
-    Id: sf_id
-    Name: Name
-  lookups:
-    ParentId:
-      table: Account
-      after: Insert Account
-
-Insert Contact:
-  sf_object: Contact
-  table: Contact
-  fields:
-    Id: sf_id
-    FirstName: FirstName
-    LastName: LastName
-    DoNotCall: DoNotCall
-    Do_Not_Text__c: Do_Not_Text__c
-    Foot_On_Campus__c: Foot_On_Campus__c
-    HasOptedOutOfEmail: HasOptedOutOfEmail
-    HasOptedOutOfFax: HasOptedOutOfFax
-    Initial_Foot_on_Campus__c: Initial_Foot_on_Campus__c
-    Last_Time_on_Campus__c: Last_Time_on_Campus__c
-    Personal_Email__c: Personal_Email__c
-    Preferred_Class_Year__c: Preferred_Class_Year__c
-    Preferred_First_Name__c: Preferred_First_Name__c
-    Previous_Last_Name__c: Previous_Last_Name__c
-    Special_Athlete_Sport_1__c: Special_Athlete_Sport_1__c
-    Special_Athlete_Sport_2__c: Special_Athlete_Sport_2__c
-    Special_Athlete_Sport_3__c: Special_Athlete_Sport_3__c
-    University_Banner_PIDM__c: University_Banner_PIDM__c
-  lookups:
-    AccountId:
-      table: Account
-    ReportsToId:
-      table: Contact
-      after: Insert Contact
-Insert Summit_Events_Host__c:
-  sf_object: Summit_Events_Host__c
-  table: Summit_Events_Host__c
-  fields:
-    Id: sf_id
-    Additional_Comments__c: Additional_Comments__c
-    Assigned__c: Assigned__c
-    Building__c: Building__c
-    Course_Name__c: Course_Name__c
-    Department__c: Department__c
-    First_Name__c: First_Name__c
-    Gender__c: Gender__c
-    Last_Name__c: Last_Name__c
-    Location__c: Location__c
-    Max_Available__c: Max_Available__c
-    Preferred_Title__c: Preferred_Title__c
-    RecordTypeId: RecordTypeId
-    Time__c: Time__c
-    Undergrad_Major__c: Undergrad_Major__c
-  lookups:
-    Contact__c:
-      table: Contact
-    Event_Instance__c:
-      table: Summit_Events_Instance__c
 Insert Summit_Events_Registration__c:
   sf_object: Summit_Events_Registration__c
   table: Summit_Events_Registration__c
@@ -304,6 +255,30 @@ Insert Summit_Events_Registration__c:
       table: Summit_Events_Instance__c
     Event__c:
       table: Summit_Events__c
+Insert Summit_Events_Host__c:
+  sf_object: Summit_Events_Host__c
+  table: Summit_Events_Host__c
+  fields:
+    Id: sf_id
+    Additional_Comments__c: Additional_Comments__c
+    Assigned__c: Assigned__c
+    Building__c: Building__c
+    Course_Name__c: Course_Name__c
+    Department__c: Department__c
+    First_Name__c: First_Name__c
+    Gender__c: Gender__c
+    Last_Name__c: Last_Name__c
+    Location__c: Location__c
+    Max_Available__c: Max_Available__c
+    Preferred_Title__c: Preferred_Title__c
+    RecordTypeId: RecordTypeId
+    Time__c: Time__c
+    Undergrad_Major__c: Undergrad_Major__c
+  lookups:
+    Contact__c:
+      table: Contact
+    Event_Instance__c:
+      table: Summit_Events_Instance__c
 Insert Summit_Events_Appointments__c:
   sf_object: Summit_Events_Appointments__c
   table: Summit_Events_Appointments__c
