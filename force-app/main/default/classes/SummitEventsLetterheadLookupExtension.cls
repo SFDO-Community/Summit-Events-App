@@ -207,18 +207,6 @@ public class SummitEventsLetterheadLookupExtension {
         generatedLH += '</center>\n';
         generatedLH += '</body>';
 
-//        generatedLH += headerImg + '\n ' + footerImg;
-//        for (styleObject st : styles.values()) {
-//            generatedLH += '\n background Color: ' + st.backgroundColor;
-//            generatedLH += '\n location: ' + st.location;
-//            generatedLH += '\n font-size: ' + st.fontSize;
-//            generatedLH += '\n font-family: ' + st.fontFam;
-//            generatedLH += '\n color: ' + st.color;
-//            generatedLH += '\n height: ' + st.height;
-//            generatedLH += '\n\n';
-//        }
-
-
         SummitEvt.Letterhead_HTML__c = generatedLH;
         update SummitEvt;
 

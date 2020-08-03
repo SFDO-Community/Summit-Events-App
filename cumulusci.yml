@@ -4,7 +4,7 @@ project:
     package:
         name:  SummitEventsDX
         namespace:  summit
-        api_version: '47.0'
+        api_version: '48.0'
     source_format: sfdx
 
 tasks:
@@ -68,7 +68,7 @@ flows:
     config_qa:
         steps:
             3:
-                task: deploy_dev_event_records
+                task: deploy_dev_event_recordv  s
             4:
                 task: deploy_permission_set
             5:

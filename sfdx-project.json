@@ -1,11 +1,17 @@
 {
-  "packageDirectories": [
-    {
-      "path": "force-app",
-      "default": true
+    "packageDirectories": [
+        {
+            "path": "force-app",
+            "default": true,
+            "package": "Summit Events App",
+            "versionName": "ver 0.11",
+            "versionNumber": "0.1.0.NEXT"
+        }
+    ],
+    "namespace" : "summit",
+    "sfdcLoginUrl": "https://login.salesforce.com",
+    "sourceApiVersion": "48.0",
+    "packageAliases": {
+        "Summit Events App": "0Ho4P000000fxYiSAI"
     }
-  ],
-  "namespace": "",
-  "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "47.0"
 }

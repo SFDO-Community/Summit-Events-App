@@ -70,8 +70,6 @@ public with sharing class SummitEventsShared {
             }
         }
 
-        //If eventInfo is null return to default page (add to event definition object.
-
         return evtInfo;
     }
 

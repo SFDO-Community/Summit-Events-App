@@ -80,7 +80,6 @@ public with sharing class SummitEventsConfirmationController {
 
             //Remove the registration ID from the cookie so back button will redirect to the correct page.
             SEShared.createEncryptedCookie('{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"","evtId":"' + evtInfo.evtId + '"}', 'SummitEvents');
-            //create touchpoint
         }
         return null;
     }

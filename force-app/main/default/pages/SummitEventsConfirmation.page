@@ -18,8 +18,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
             <script>
                 dataLayer = [{
                     <!--'school': '{!eventPage.School__r.Name}',-->
-                    'eventlabel': '{!eventPage.Event_Name__c}'
-                    //'startDate': '{!evtInstance.Instance_Start_Date__c}',
+                    'eventlabel': '{!eventPage.Event_Name__c}',
+                    'startDate': '{!evtInstance.Instance_Start_Date__c}'
                     // 'location':'{}'
                 }];
             </script>
