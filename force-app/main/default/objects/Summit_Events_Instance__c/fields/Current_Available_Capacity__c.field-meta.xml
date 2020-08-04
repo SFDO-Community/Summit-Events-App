@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Current_Available_Capacity__c</fullName>
     <externalId>false</externalId>
-    <formula>Capacity__c - Count_of_Attendees__c</formula>
+    <formula>IF(ISPICKVAL( Capacity_Control__c, &quot;Registrants plus Guests&quot;), Capacity__c - Count_of_Attendees__c, Capacity__c - Primary_Attendees__c)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Current Available Capacity</label>
     <precision>18</precision>
