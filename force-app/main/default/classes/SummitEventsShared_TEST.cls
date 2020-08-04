@@ -292,7 +292,7 @@ public with sharing class SummitEventsShared_TEST {
     @isTest static void testParkingPass() {
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching Rules 1', 'Test Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
-        evtReg.Status__c = 'Requested';
+        evtReg.Status__c = 'Registered';
         update evtReg;
         Test.startTest();
         SummitEventsParkingPassController parkingCtrl = new SummitEventsParkingPassController();
@@ -371,7 +371,7 @@ public with sharing class SummitEventsShared_TEST {
     @isTest static void testLetterheadLookup() {
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
-        Summit_Events_Email__c testEvtEmail = SummitEventsTestSharedDataFactory.createTestTransactionEmail(evtInst, 'Requested', '');
+        Summit_Events_Email__c testEvtEmail = SummitEventsTestSharedDataFactory.createTestTransactionEmail(evtInst, 'Registered', '');
 
         Test.startTest();
         ApexPages.StandardController sc = new ApexPages.StandardController(testEvtEmail);
