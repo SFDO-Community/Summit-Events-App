@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 // Created by Thaddaeus Dahlberg on 4/2/2019.
 
-@isTest
+@IsTest
 public with sharing class SummitEventsTestSharedDataFactory {
 
     public static Summit_Events_Instance__c createTestEvent(
@@ -188,7 +188,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Event__c = evtInst.Event__c
         );
 
-        List<OrgWideEmailAddress> oweList = [SELECT Id, Address,DisplayName, IsAllowAllProfiles from OrgWideEmailAddress WHERE IsAllowAllProfiles = true];
+        List<OrgWideEmailAddress> oweList = [SELECT Id, Address,DisplayName, IsAllowAllProfiles FROM OrgWideEmailAddress WHERE IsAllowAllProfiles = TRUE];
 
         if (oweList.size() > 0) {
             testEvtEmail.Org_Email_Id__c = oweList[0].Id;
