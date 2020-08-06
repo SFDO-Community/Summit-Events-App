@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Actual_Number_of_Guests__c</fullName>
+    <description>Field to track the number of guest that actually show up with the registered individual.</description>
     <externalId>false</externalId>
+    <inlineHelpText>Track the number of guest that show up during check-in. Rolls up to the Instance to track attendance numbers.</inlineHelpText>
     <label>Actual Number of Guests</label>
     <precision>18</precision>
     <required>false</required>
