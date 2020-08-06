@@ -21,9 +21,11 @@ function getFullCalType() {
 }
 
 
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('fullCalendarView');
     getFullCalType();
-    $("#fullCalendarView").fullCalendar({
+
+    var calendar = new Calendar(calendarEl, {
         defaultView: fullCalType,
         height: 'auto',
         events: eventsObj,
@@ -68,6 +70,7 @@ $(document).ready(function () {
             }
         }
     });
+
 
     $("#audienceDDwrap, #audienceDDwrap").append(overlay);
 
@@ -170,7 +173,7 @@ function findEvents(edate, instanceID) {
 
 function loadAudienceDD() {
     $.ajax({
-        url: feedURL +"/services/apexrest/summiteventsfeed",
+        url: feedURL + "/services/apexrest/summiteventsfeed",
         data: {'feedType': 'audienceDD'},
         dataType: "json"
     }).done(function (data) {

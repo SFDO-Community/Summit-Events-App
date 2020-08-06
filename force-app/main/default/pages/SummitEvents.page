@@ -11,10 +11,11 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="pageTitle"><a href="/SummitEvents">Events</a></apex:define>
         <apex:define name="scriptsHead">
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.2.0/main.min.css"/>
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/fullcalendar/fullcalendar-ust.css')}" rel="stylesheet" type="text/css"/>
             <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/eventList.js')}"/>
-            <script type="text/javascript" src="{!URLFOR($Resource.SummitEventsAssets, '/fullcalendar/moment.min.js')}"></script>
-            <script type="text/javascript" src="{!URLFOR($Resource.SummitEventsAssets, '/fullcalendar/fullcalendar.min.js')}"></script>
+            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.2.0/main.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/min/moment.min.js"></script>
         </apex:define>
         <apex:define name="sectionNav"/>
         <apex:define name="body">
