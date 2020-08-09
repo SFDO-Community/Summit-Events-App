@@ -18,18 +18,19 @@ global with sharing class SummitEventsFeed {
         public String longDesc { get; set; }
         public Datetime endDate { get; set; }
         public DateTime start { get; set; }
+        public String timezone { get; set; }
         public String eventUrl { get; set; }
         public Boolean eventClosed { get; set; }
         public String className { get; set; }
-        public String locationTitle { get; set; } 
+        public String locationTitle { get; set; }
         public String locationType { get; set; }
         public String locationAddress { get; set; }
         public String locationMapLink { get; set; }
         public String locationBuilding { get; set; }
         public String feedButtonText { get; set; }
-        public String sponsors {get;set;}
-        public Integer capacityTotal {get;set;}
-        public Integer capacityRemaining {get;set;}
+        public String sponsors { get; set; }
+        public Integer capacityTotal { get; set; }
+        public Integer capacityRemaining { get; set; }
     }
 
     @HttpGet
@@ -84,32 +85,42 @@ global with sharing class SummitEventsFeed {
         // build and sanitize the where statement that have variables
 
         // get start and end view times convert string to datetime then convert back into string to sanitize
-        DateTime viewStart = DateTime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(-1);
-        DateTime viewEnd = DateTime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(1);
+        DateTime viewStart = null;
+        DateTime viewEnd = null;
         ///.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
         String formattedViewStart;
         String formattedViewEnd;
+        if (String.isNotBlank(req.params.get('viewStart'))) {
+            viewStart = Date.valueOf(req.params.get('viewStart'));
+        }
+        //if fullcalendar in use start is passed. start being protected variable
+        if (String.isNotBlank(req.params.get('start'))) {
+            viewStart = Date.valueOf(req.params.get('start'));
+        } else {
+            viewStart = DateTime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(-1);
+        }
 
-        if (!String.isBlank(req.params.get('viewStart'))) {
-            String viewStartString = req.params.get('viewStart').trim();
-            if (!viewStartString.containsIgnoreCase(' ')) {
-                viewStartString = viewStartString + ' 00:00:00';
-            }
-            viewStart = DateTime.valueOf(viewStartString);
+        System.debug(viewStart);
+
+        if (String.isNotBlank(req.params.get('viewEnd'))) {
+            viewEnd = Date.valueOf(req.params.get('viewEnd'));
         }
-        if (!String.isBlank(req.params.get('viewEnd'))) {
-            String viewEndString = req.params.get('viewEnd').trim();
-            if (!viewEndString.containsIgnoreCase(' ')) {
-                viewEndString = viewEndString + ' 23:59:59';
-            }
-            viewEnd = DateTime.valueOf(req.params.get('viewEnd'));
+        //if fullcalendar in use end is passed. end being protected variable
+        if (String.isNotBlank(req.params.get('end'))) {
+            viewEnd = Date.valueOf(req.params.get('end'));
+        } else {
+            viewEnd = DateTime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(1);
+
         }
+
+        System.debug(viewEnd);
+
         formattedViewStart = viewStart.format('yyyy-MM-dd');
         formattedViewEnd = viewEnd.format('yyyy-MM-dd');
         eventQuery += ' AND Instance_Start_Date__c >= ' + formattedViewStart + ' ';
         eventQuery += ' AND Instance_Start_Date__c <= ' + formattedViewEnd + ' ';
 
-        //build and sanitize
+        System.debug(eventQuery);
 
         //get event based on event id
         String eventId = req.params.get('eventId');
@@ -207,6 +218,10 @@ global with sharing class SummitEventsFeed {
                 evt.FeedButtonText = 'Register';
             }
 
+            if (!String.isBlank(eventInstance.Instance_Time_Zone__c)) {
+                evt.timezone = eventInstance.Instance_Time_Zone__c;
+            }
+
             if (!String.isBlank(eventInstance.Location_Type_Override__c)) {
                 evt.locationType = eventInstance.Location_Type_Override__c;
             } else if (!String.isBlank(eventInstance.Event__r.Location_Type__c)) {
@@ -252,7 +267,7 @@ global with sharing class SummitEventsFeed {
             }
 
             if (eventInstance.Instance_Start_Date__c != null) {
-               evt.start = SEShared.convertDateToDatetime(eventInstance.Instance_Start_Date__c, eventInstance.Instance_Start_Time__c);
+                evt.start = SEShared.convertDateToDatetime(eventInstance.Instance_Start_Date__c, eventInstance.Instance_Start_Time__c);
             }
             if (eventInstance.Instance_End_Date__c != null) {
                 evt.endDate = SEShared.convertDateToDatetime(eventInstance.Instance_End_Date__c, eventInstance.Instance_End_Time__c);

@@ -1,0 +1,11 @@
+/*Summit Event Special Styles*/
+.fc-month-view .ust-desc {display:none;}
+.SummitEventsItem h4 {font-family:truenolight,Arial,sans-serif; font-weight:normal!important; font-size:1em!important;line-height: 1.2em; margin:0px;}
+.SummitEventsItem .button {color:#fff!important; margin:5px 0px 0px 0px;}
+.SummitEventsItem.ustMonthView p {margin:0px; padding:3px 0px;}
+.SummitEventsItem.ustListView p {margin:0px; padding:4px 0px;}
+.fc-month-view table, .fc-basicDay-view table {margin:0px;}
+.fc-basicDay-view .fc-content {padding:5px 20px 0px 20px;}
+.fc-basicDay-view .fc-content p {font-size:1em;}
+.fc-basicDay-view td.fc-today {  background: none; }
+.fc-content-skeleton table {margin-bottom: auto;}

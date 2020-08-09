@@ -1,86 +1,108 @@
-// SummitEventsScripts
 var eventsObj, dMonth, dYear;
-var overlay = '<div class="waiting-overlay"></div>';
-//parse event cookie
+var calendarEl = document.getElementById('fullCalendarView');
+var feedURL = 'https://' + window.location.hostname;
+if (window.location.pathname !== undefined) {
+    feedURL += window.location.pathname;
+}
+var audience;
+const overlay = '<div class="waiting-overlay"></div>';
 var SESettings = JSON.parse(readCookie('SummitEvents'));
-var fullCalType = 'month';
+loadAudienceDD();
 
-$(window).on('load resize', function () {
-    getFullCalType();
-});
-
-
-function getFullCalType() {
-    var curWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-    if (curWidth >= 900) {
-        fullCalType = 'month';
-    } else {
-        fullCalType = 'listMonth';
+function getCalView() {
+    let initialView = 'dayGridMonth';
+    if (window.innerWidth <= 900) {
+        initialView = 'listMonth';
     }
-    $("#fullCalendarView").fullCalendar('changeView', fullCalType);
+    return initialView;
 }
 
-
-$(document).ready(function () {
-    getFullCalType();
-    $("#fullCalendarView").fullCalendar({
-        defaultView: fullCalType,
-        height: 'auto',
-        events: eventsObj,
-        viewRender: function (event, element) {
-            loadJSONEvents();
-            fullCalButtonEvts();
+var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: getCalView(),
+    handleWindowResize: true,
+    events: {
+        url: feedURL + "services/apexrest/summiteventsfeed",
+        extraParams: function () {
+            return {
+                'feedType': 'eventList',
+                'audience': document.getElementById("audienceDD").value
+            }
         },
-        eventRender: function (event, $el) {
-            var evtTmplt = '';
-            var evtDesc = '';
-            var eventClass = "SummitEventsItem";
-            if (event.eventClosed) {
-                eventClass += " ustEventItemClosed";
-            }
-            if (event.description != null) {
-                evtDesc = event.description;
-            }
-            if (fullCalType == 'month') {
-                evtTmplt = '<div class="' + eventClass + ' ustMonthView"><p>';
-                if (!event.eventClosed) {
-                    evtTmplt += '<a href="' + event.eventUrl + '&audience=' + $("#audienceDD").val() + '" onclick="return setInstanceCookie(' + event.ID + ');" title="' + evtDesc + '">' + event.title + '</a>';
-                } else {
-                    evtTmplt += '<a href="' + event.eventUrl + '" title="<em>Event Closed</em><br/>' + evtDesc + '"><em>' + event.title + '</em></a>';
-                }
-                evtTmplt += '</p></div>';
-                $el.find('.fc-title').closest('.fc-content').html(evtTmplt);
-            } else {
-                evtTmplt = '<div class="' + eventClass + ' ustListView">';
-                if (!event.eventClosed) {
-                    evtTmplt += '<p><a href="' + event.eventUrl + '&audience=' + $("#audienceDD").val() + '" onclick="return setInstanceCookie(' + event.ID + ');" class="SummitEventsTitle"><strong>' + event.title + '</strong></a></p>';
-                } else {
-                    evtTmplt += '<p class="SummitEventsTitle"><strong>' + event.title + '</strong> <em> - Event closed</em></p>';
-                }
-                if (evtDesc) {
-                    evtTmplt += '<p>' + evtDesc + '</p>';
-                }
-                if (!event.eventClosed) {
-                    evtTmplt += '<p><a href="' + event.eventUrl + '&audience=' + $("#audienceDD").val() + '" onclick="return setInstanceCookie(' + event.ID + ');" class="button">Register</a></p>';
-                }
-                $el.find('.fc-list-item-title').html(evtTmplt);
-                $el.find('.fc-list-item-time, .fc-list-item-marker').remove();
-            }
+    },
+    eventDataTransform: function(rawEventData) {
+        return {
+            id: rawEventData.Id,
+            title: rawEventData.title,
+            url: rawEventData.eventUrl,
+            start: rawEventData.start,
+            end: rawEventData.end,
+            description: rawEventData.description
+        };
+    },
+    eventDisplay: 'block',
+    eventTextColor : '#000',
+    windowResize: function (arg) {
+        this.view.type = getCalView();
+    },
+    eventClick: function (info) {
+        info.jsEvent.preventDefault();
+        if (info.event.url) {
+            window.open(info.event.url);
         }
-    });
+    }
+    // eventContent: function (info) {
+    //     let evtTmplt = '';
+    //     let evtDesc = '';
+    //     let eventClass = "SummitEventsItem";
+    //     let audience = document.getElementById("audienceDD").value;
+    //     if (info.event.eventClosed) {
+    //         eventClass += " ustEventItemClosed";
+    //     }
+    //     if (info.event.description != null) {
+    //         evtDesc = info.event.description;
+    //     }
+    //     let wrap = document.createElement('div');
+    //     wrap.classList.add(eventClass);
+    //     let link = document.createElement('a');
+    //     link.href = info.event.url + '&audience=' + audience;
+    //     link.target = '_blank';
+    //     link.innerText = info.event.title;
+    //     wrap.append(link);
+    //    // if (fullCalType == 'month') {
+    //    //      evtTmplt = '<div class="' + eventClass + ' ustMonthView"><p>';
+    //    //      if (!info.event.eventClosed) {
+    //    //          evtTmplt += '<a href="' + info.event.eventUrl + '&audience=' + audience + '" onclick="return setInstanceCookie(' + event.ID + ');" title="' + evtDesc + '">' + event.title + '</a>';
+    //    //      } else {
+    //    //          evtTmplt += '<a href="' + info.event.eventUrl + '" title="<em>Event Closed</em><br/>' + evtDesc + '"><em>' + event.title + '</em></a>';
+    //    //      }
+    //    //      evtTmplt += '</p></div>';
+    //        // info.find('.fc-title').closest('.fc-content').html(evtTmplt);
+    //     // } else {
+    //     //     evtTmplt = '<div class="' + eventClass + ' ustListView">';
+    //     //     if (!info.event.eventClosed) {
+    //     //         evtTmplt += '<p><a href="' + info.event.eventUrl + '&audience=' + audience + '" onclick="return setInstanceCookie(' + event.ID + ');" class="SummitEventsTitle"><strong>' + event.title + '</strong></a></p>';
+    //     //     } else {
+    //     //         evtTmplt += '<p class="SummitEventsTitle"><strong>' + event.title + '</strong> <em> - Event closed</em></p>';
+    //     //     }
+    //     //     if (evtDesc) {
+    //     //         evtTmplt += '<p>' + evtDesc + '</p>';
+    //     //     }
+    //     //     if (!info.event.eventClosed) {
+    //     //         evtTmplt += '<p><a href="' + info.event.eventUrl + '&audience=' + audience + '" onclick="return setInstanceCookie(' + event.ID + ');" class="button">Register</a></p>';
+    //     //     }
+    //     //
+    //     // }
+    //     let arrayOfDomNodes = [ wrap ]
+    //     return { domNodes: arrayOfDomNodes }
+    // }
+});
 
-    $("#audienceDDwrap, #audienceDDwrap").append(overlay);
+calendar.render();
 
-    $("#audienceDD").on("change", function () {
-        eraseCookie('SummitEvents');
-        createCookie('SummitEvents', '{"audience" : "' + $(this).val() + '"}', '');
-        if ($(this).val() !== '') {
-            //start loading in the list of events by audience
-            loadJSONEvents();
-        }
-    });
-    //initial load of dropdown audience type
-    loadAudienceDD();
+document.getElementById("audienceDD").addEventListener('change', function () {
+    eraseCookie('SummitEvents');
+    createCookie('SummitEvents', '{"audience" : "' + $(this).val() + '"}', '');
+    calendar.refetchEvents();
 });
 
 function setInstanceCookie(instanceID) {
@@ -89,148 +111,44 @@ function setInstanceCookie(instanceID) {
     return true;
 }
 
-function fullCalButtonEvts() {
-    $('#fullCalendarView .fc-prev-button').click(function () {
-        loadJSONEvents();
-        //alert('prev is clicked, do something');
-    });
-
-    $('#fullCalendarView .fc-next-button').click(function () {
-        loadJSONEvents();
-        // alert('nextis clicked, do something');
-    });
-}
-
-let feedURL = 'https://' + window.location.hostname + window.location.pathname;
-
-function loadJSONEvents() {
-    $("#dayEventList").html("<h3>Events</h3><p>Please select above to see events available to you.</p>");
-    viewStart = getCurrentSOQLDateTimeLiteral($("#fullCalendarView").fullCalendar('getView').start).toString();
-    viewEnd = getCurrentSOQLDateTimeLiteral($("#fullCalendarView").fullCalendar('getView').end).toString();
-    $.ajax({
-        url: feedURL + "/services/apexrest/summiteventsfeed",
-        data: {'viewStart': viewStart, 'viewEnd': viewEnd, 'feedType': 'eventList', 'audience': $("#audienceDD").val()},
-        dataType: "json",
-        cache: false
-    }).done(function (data) {
-        eventsObj = data;
-        if (!eventsObj.length) {
-            $("#dayEventList").html("<h3>Events</h3><p>Sorry, no events for your particular settings at this time.</p>");
-        }
-        $("#fullCalendarView").fullCalendar('removeEvents');
-        $("#fullCalendarView").fullCalendar('addEventSource', eventsObj);
-
-    }).fail(function () {
-        console.log("Error - Feed didn't load");
-    }).always(function () {
-        //alert( "complete" );
-    });
-}
-
-function findEvents(edate, instanceID) {
-    var evOut, niceDate, dateSplit, results;
-    edate = getCurrentSOQLDateTimeLiteral(edate, true);
-    niceDate = new Date(edate);
-    if (instanceID) {
-        results = $.grep(eventsObj, function (n, i) {
-            return n.start.indexOf(edate) > -1;            //edate == n.startDate;
-        });
-    } else {
-        edateSplit = edate.split("T");
-        edate = edateSplit[0];
-        results = $.grep(eventsObj, function (n, i) {
-            return instanceID == n.id;            //edate == n.startDate;
-        });
-    }
-
-    evOut = "<h3>Events on " + niceDate.toDateString() + "</h3><p>" + results.length + " results meet your criteria.</p>";
-    evOut += "<table>";
-    $.each(results, function (index, value) {
-        evOut += "<tr>";
-        evOut += "<td><p><strong>" + value.title + "</strong>";
-        if (value.instanceTitle) {
-            evOut += "<br>" + value.instanceTitle;
-        }
-        if (value.instanceDesc) {
-            evOut += "<br>" + value.instanceDesc;
-        }
-        evOut += "</p>";
-        if (value.Description) {
-            evOut += "<p>" + value.Description + "</p>";
-        }
-        alert(value.eventClosed);
-        if (value.eventClosed != true) {
-            evOut += "<a href='/SummitEventsRegister?instanceID=" + value.ID + "&audience=" + encodeURI($("#audienceDD").val()) + "' class='button'>Register</a></td>"
-        }
-        evOut += "</tr>"
-    });
-    evOut += "</table>";
-    $("#dayEventList").html(evOut);
-}
-
 function loadAudienceDD() {
-    $.ajax({
-        url: feedURL +"/services/apexrest/summiteventsfeed",
-        data: {'feedType': 'audienceDD'},
-        dataType: "json"
-    }).done(function (data) {
-        populateschSel(data, $("#audienceDD"))
-        $("#audienceDDwrap .waiting-overlay").remove();
-
-        //preselect audience based on cookie
-        if (SESettings != null) {
-            if (SESettings.audience != null) {
-                $("#audienceDD").val(SESettings.audience);
-                loadJSONEvents();
+    fetch(
+        feedURL + "services/apexrest/summiteventsfeed?feedType=audienceDD"
+    ).then((resp) => resp.json())
+        .then(function (data) {
+            populateschSel(data, document.getElementById("audienceDD"))
+            // $("#audienceDDwrap .waiting-overlay").remove();
+            //preselect audience based on cookie
+            if (SESettings != null) {
+                if (SESettings.audience != null) {
+                    document.getElementById("audienceDD").value = SESettings.audience;
+                }
             }
-        }
-        //reload the calendar with the new audience
-        $("#fullCalendarView").fullCalendar('rerenderEvents');
-    }).fail(function () {
-        alert("error");
-    }).always(function () {
-        //alert( "complete" );
+            calendar.refetchEvents();
+        }).catch(function (error) {
+        console.log(error);
     });
 }
 
 function populateschSel(data, selector, keyAsText) {
-    selector.find("option").remove();
-    selector.append("<option value='' selected='selected'>Select...</option>");
-    $.each(data, function (key, value) {
-        selector.append($('<option>').text(value).attr('value', key));
-    });
-}
-
-//Make a SOQL happy datetime with these two functions
-function twoDigit(number) {
-    var twodigit = number >= 10 ? number : "0" + number.toString();
-    return twodigit;
-}
-
-function getCurrentSOQLDateTimeLiteral(dt, addTZ) {
-    if (!dt) {
-        dt = new Date()
-    } else {
-        dt = new Date(dt);
+    selector.innerHTML = '';
+    let opt1 = document.createElement("option");
+    opt1.value = '';
+    opt1.text = 'Select...';
+    selector.append(opt1);
+    for (const [key, value] of Object.entries(data)) {
+        let opt2 = document.createElement("option");
+        opt2.value = value;
+        opt2.text = key;
+        selector.append(opt2);
     }
-    var soqlDTLiteral = dt.getUTCFullYear() + '-' + twoDigit(dt.getUTCMonth() + 1) + '-' + twoDigit(dt.getUTCDate());
-    if (addTZ) {
-        soqlDTLiteral += 'T';
-    } else {
-        soqlDTLiteral += ' ';
-    }
-    soqlDTLiteral += twoDigit(dt.getUTCHours()) + ':' + twoDigit(dt.getUTCMinutes()) + ':' + twoDigit(dt.getUTCSeconds());
-    if (addTZ) {
-        soqlDTLiteral += 'Z';
-    }
-    return soqlDTLiteral;
 }
 
 function createCookie(name, value, days) {
-    var expires;
+    let expires;
 
     if (days) {
-        var date = new Date();
+        let date = new Date();
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toGMTString();
     } else {
@@ -240,10 +158,10 @@ function createCookie(name, value, days) {
 }
 
 function readCookie(name) {
-    var nameEQ = encodeURIComponent(name) + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
+    let nameEQ = encodeURIComponent(name) + "=";
+    let ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
         while (c.charAt(0) === ' ')
             c = c.substring(1, c.length);
         if (c.indexOf(nameEQ) === 0)
