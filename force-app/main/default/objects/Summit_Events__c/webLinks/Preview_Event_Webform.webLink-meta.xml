@@ -16,5 +16,5 @@
     <protected>false</protected>
     <showsLocation>false</showsLocation>
     <showsStatus>false</showsStatus>
-    <url>{!URLFOR(Summit_Events__c.Community_Base_URL__c + &#39;SummitEvents&#39;)}</url>
+    <url>{!URLFOR(Summit_Events__c.Community_Base_URL__c + &apos;SummitEvents&apos;)}</url>
 </WebLink>

@@ -14,9 +14,9 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Don&#39;t ask</fullName>
+                <fullName>Don&apos;t ask</fullName>
                 <default>false</default>
-                <label>Don&#39;t ask</label>
+                <label>Don&apos;t ask</label>
             </value>
             <value>
                 <fullName>Both College and HS</fullName>

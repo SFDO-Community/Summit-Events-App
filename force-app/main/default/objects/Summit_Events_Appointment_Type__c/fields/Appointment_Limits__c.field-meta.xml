@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Appointment_Limits__c</fullName>
-    <defaultValue>&#39;1&#39;</defaultValue>
+    <defaultValue>&apos;1&apos;</defaultValue>
     <description>The amount of appointments that can be made by this appointment type. Example Lunch would only be once, but you could have multiple coach visit (but you want a limit).</description>
     <externalId>false</externalId>
     <inlineHelpText>The amount of appointments that can be made by this appointment type. Example Lunch would only be once, but you could have multiple coach visit (but you want a limit).</inlineHelpText>

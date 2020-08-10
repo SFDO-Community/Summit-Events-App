@@ -10,18 +10,18 @@ IF(HOUR(Time__c) == 0, 12, HOUR(Time__c))
 
 ) 
 &amp; 
-IF(!ISBLANK(HOUR(Time__c)),&#39;:&#39;,&#39;&#39;) 
+IF(!ISBLANK(HOUR(Time__c)),&apos;:&apos;,&apos;&apos;) 
 &amp; 
-IF(MINUTE(Time__c)&lt;10,&#39;0&#39;,&#39;&#39;) 
+IF(MINUTE(Time__c)&lt;10,&apos;0&apos;,&apos;&apos;) 
 &amp; 
 TEXT( 
 MINUTE(Time__c) 
 ) 
 &amp; 
-IF(!ISBLANK(MINUTE(Time__c)),&#39; &#39;,&#39;&#39;) 
+IF(!ISBLANK(MINUTE(Time__c)),&apos; &apos;,&apos;&apos;) 
 &amp; 
 IF(!ISBLANK(HOUR(Time__c)), 
-IF(HOUR(Time__c) &gt;= 12, &#39;PM&#39;, &#39;AM&#39;), &#39;&#39; 
+IF(HOUR(Time__c) &gt;= 12, &apos;PM&apos;, &apos;AM&apos;), &apos;&apos; 
 )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Formatted Time</label>

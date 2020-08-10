@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Restrict_To_Instance_Title__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
-    <description>This allows a appointment type to only be shown on Summit Events Instances with matching titles. Select one instance with the desired title (it doesn&#39;t matter which one) and all instance with that same title will have this appointment. All non-matching titles will NOT contain this appointment. This is an entirely optional setting.</description>
+    <description>This allows a appointment type to only be shown on Summit Events Instances with matching titles. Select one instance with the desired title (it doesn&apos;t matter which one) and all instance with that same title will have this appointment. All non-matching titles will NOT contain this appointment. This is an entirely optional setting.</description>
     <externalId>false</externalId>
     <inlineHelpText>Appointment type to only be shown on Summit Events Instances with matching titles to instance selected here. All other instance with non-matching titles will not include this appointment.</inlineHelpText>
     <label>Restrict To Instance Title</label>

@@ -3,7 +3,7 @@
     <fullName>Class_Title__c</fullName>
     <description>Classroom Title</description>
     <externalId>false</externalId>
-    <inlineHelpText>Name of class to show on student&#39;s itinerary</inlineHelpText>
+    <inlineHelpText>Name of class to show on student&apos;s itinerary</inlineHelpText>
     <label>Class Title</label>
     <length>50</length>
     <required>false</required>

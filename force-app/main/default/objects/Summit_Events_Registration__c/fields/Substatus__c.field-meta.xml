@@ -48,12 +48,8 @@
             </value>
         </valueSetDefinition>
         <valueSettings>
-            <controllingFieldValue>Attended</controllingFieldValue>
-            <valueName>Incomplete</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attended</controllingFieldValue>
-            <valueName>Walk-In</valueName>
+            <controllingFieldValue>Registered</controllingFieldValue>
+            <valueName>In Progress</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>In Progress</controllingFieldValue>
@@ -68,8 +64,12 @@
             <valueName>All Appointments Confirmed</valueName>
         </valueSettings>
         <valueSettings>
-            <controllingFieldValue>Registered</controllingFieldValue>
-            <valueName>In Progress</valueName>
+            <controllingFieldValue>Attended</controllingFieldValue>
+            <valueName>Incomplete</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Attended</controllingFieldValue>
+            <valueName>Walk-In</valueName>
         </valueSettings>
     </valueSet>
 </CustomField>
