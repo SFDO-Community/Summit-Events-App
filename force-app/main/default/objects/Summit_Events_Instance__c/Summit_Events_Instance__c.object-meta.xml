@@ -150,4 +150,38 @@
     <enableActivities>true</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableEnhancedLookup>true</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableLicensing>false</enableLicensing>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
+    <label>Summit Events Instance</label>
+    <nameField>
+        <displayFormat>S-{000000}</displayFormat>
+        <label>Event Instance</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Summit Events Instances</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>Capacity__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Count_of_Attendees__c</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>Event_Name__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Instance_Title__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Active_Status__c</lookupDialogsAdditionalFields>
+        <lookupFilterFields>Event_Name__c</lookupFilterFields>
+        <lookupFilterFields>NAME</lookupFilterFields>
+        <lookupFilterFields>Instance_Title__c</lookupFilterFields>
+        <lookupFilterFields>Active_Status__c</lookupFilterFields>
+        <searchFilterFields>NAME</searchFilterFields>
+        <searchFilterFields>Event_Name__c</searchFilterFields>
+        <searchFilterFields>Instance_Title__c</searchFilterFields>
+        <searchFilterFields>Active_Status__c</searchFilterFields>
+    </searchLayouts>
+    <sharingModel>ControlledByParent</sharingModel>
+    <startsWith>Vowel</startsWith>
+    <visibility>Public</visibility>
 </CustomObject>
