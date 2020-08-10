@@ -3,7 +3,9 @@
     <fullName>Community_Base_URL__c</fullName>
     <description>The base URL of the Salesforce community. This is not the start of the event app, just the start of the orgs community.</description>
     <externalId>false</externalId>
-    <formula>$Setup.Summit_Events_Settings__c.Community_Base_URL__c</formula>
+    <formula>If (CONTAINS(RIGHT($Setup.Summit_Events_Settings__c.Community_Base_URL__c,1), &apos;/&apos;),
+$Setup.Summit_Events_Settings__c.Community_Base_URL__c,
+$Setup.Summit_Events_Settings__c.Community_Base_URL__c + &apos;/&apos;)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <inlineHelpText>The base URL of the Salesforce community. This is not the start of the event app, just the start of the orgs community.</inlineHelpText>
     <label>Community Base URL</label>
