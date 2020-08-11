@@ -430,11 +430,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Instance__c.Admin_Open_Registration_Link__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Summit_Events_Instance__c.Admin_Open_Registration__c</field>
         <readable>true</readable>
     </fieldPermissions>

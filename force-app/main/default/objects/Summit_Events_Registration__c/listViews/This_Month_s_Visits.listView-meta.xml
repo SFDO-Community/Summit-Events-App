@@ -15,6 +15,6 @@
         <operation>equals</operation>
         <value>THIS_MONTH</value>
     </filters>
-    <label>This Month&#39;s Visits</label>
+    <label>This Month&apos;s Visits</label>
     <language>en_US</language>
 </ListView>

@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Preferred_First_Name_Formatted__c</fullName>
     <externalId>false</externalId>
-    <formula>IF(!ISBLANK(Registrant_Preferred_First_Name__c), Registrant_Preferred_First_Name__c, Registrant_First_Name__c) + &#39; &#39; +
+    <formula>IF(!ISBLANK(Registrant_Preferred_First_Name__c), Registrant_Preferred_First_Name__c, Registrant_First_Name__c) + &apos; &apos; +
 Registrant_Last_Name__c</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Preferred First Name Formatted</label>

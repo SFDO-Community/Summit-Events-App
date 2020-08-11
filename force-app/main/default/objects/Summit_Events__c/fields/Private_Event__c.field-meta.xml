@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Private_Event__c</fullName>
     <defaultValue>false</defaultValue>
-    <description>Indicate if an event is private and shouldn&#39;t appear on a list/calendar of events.</description>
+    <description>Indicate if an event is private and shouldn&apos;t appear on a list/calendar of events.</description>
     <externalId>false</externalId>
     <label>Private Event</label>
     <trackHistory>false</trackHistory>

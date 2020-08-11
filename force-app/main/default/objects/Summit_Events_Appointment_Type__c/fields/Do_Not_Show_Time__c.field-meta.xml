@@ -2,9 +2,9 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Do_Not_Show_Time__c</fullName>
     <defaultValue>false</defaultValue>
-    <description>Do not show this appointment&#39;s time on itinerary generation.</description>
+    <description>Do not show this appointment&apos;s time on itinerary generation.</description>
     <externalId>false</externalId>
-    <inlineHelpText>Do not show this appointment&#39;s time on itinerary generation.</inlineHelpText>
+    <inlineHelpText>Do not show this appointment&apos;s time on itinerary generation.</inlineHelpText>
     <label>Do Not Show Time</label>
     <trackTrending>false</trackTrending>
     <type>Checkbox</type>

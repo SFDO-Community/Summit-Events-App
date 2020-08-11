@@ -16,6 +16,7 @@ public static void setSiteURL() {
 
     Summit_Events_Settings__c eventSettings = Summit_Events_Settings__c.getOrgDefaults();
     eventSettings.Community_Base_URL__c = url;
+    eventSettings.Managed_Package__c = false;
     upsert eventSettings;
 
 }

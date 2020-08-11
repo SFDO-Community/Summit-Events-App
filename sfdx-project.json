@@ -5,7 +5,8 @@
             "default": true,
             "package": "Summit Events App",
             "versionName": "ver 0.11",
-            "versionNumber": "0.1.0.NEXT"
+            "versionNumber": "0.1.0.NEXT",
+            "definitionFile": "orgs/dev.json"
         }
     ],
     "namespace" : "summit",
