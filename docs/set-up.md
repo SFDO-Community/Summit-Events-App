@@ -1,6 +1,6 @@
 # Setting up Summit Events app in salesforce
 
-## Create a site
+## Create a site subdomain
 
 If your org does not already have a site to display public visual force pages you will need to set one up.
 
@@ -17,21 +17,22 @@ If your org does not already have a site to display public visual force pages yo
 
 For **production environments** you may want to manually set up your org to finely tune your permissions and sites. Use the following instructions.
 
-## Create a site
+## Create a site record
 
 After the subdomain is finished registering create a new site record, by clicking the "New" button next to the site header. Fill in the following data and then click "Save."
 
 1. In Setup go to User Interface -> Sites and Domains -> Sites
 2. Click the "New" button next to the site header
-3. Enter the following data in the form
+3. Select "Guest" as the "Type of New Site"
+4. Enter the following data in the form
     * Site Label: Summit Events
     * Site Name: Summit_Events
     * Active Site Home Page:
         * Select the magnifying glass look-up icon and in the dialog select SummitEvents
     * Leave all other settings at their defaults
-4. Click "Save"
-5. Click the "Active" link under Action next to the site you just created
-6. Right click on the site URL and copy the URL to your clipboard. You will need it in the next stage of installation.
+5. Click "Save"
+6. Click the "Active" link under Action next to the site you just created
+7. Right click on the site URL and copy the URL to your clipboard. You will need it in the next stage of installation.
 
 ## Set Custom Settings
 
@@ -43,7 +44,7 @@ Since each installation can have a different site URL we need to define that URL
 
 3. Click "New" button just before the "Default Organization Level Value." There are two "New" buttons on the page. You will know you are on the wrong one if you are asked to assign a user or a profile. You should only need to enter the URL in the follow step.
 
-4. From step 6 in the "Create a site record" use the URL you copied there and enter it into the Community Based URL field.
+4. From step 7 in the "Create a site record" use the URL you copied there and enter it into the Community Based URL field.
 
 5. Click "Save"
 
@@ -115,10 +116,10 @@ Apply to admin users that need to create and maintain events.
 
 2. Click on the name of the site that you want to affect.
 
-3. Click on the "Public Access Button" at the top of the site definition page
+3. Click on the "Public Access Settings" button at the top of the site definition page
 
-4. On the site details page click on the "View Users"
+4. On the site details page click on the "Assigned Users" button
 
 5. On the user list find your guest user and click on the name of that user
 
-6. Go to Permission Set Assignment and assign Ust Event Registrant permission set
+6. Go to Permission Set Assignment and assign "Summit Events Registrant" permission set
