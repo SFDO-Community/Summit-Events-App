@@ -2,14 +2,11 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Contact_Matching_Rule_Description__c</fullName>
     <externalId>false</externalId>
-    <formula>&quot;Summit Matching Rule 1:&quot; + BR() +
-&quot;   First 3 chars of First Name/Pref first name, Last Name, Birthdate =&gt; Last Name, Email;&quot;+ BR() +
-&quot; - - - - - - - - - - - &quot; + BR() +
-&quot;Summit Matching Rule 2:&quot; + BR() +
-&quot;  Last Name/Previous last name, Class year, First name, Phone =&gt; Last Name, Class Year, First 3 chars of First name&quot; + BR() +
-&quot; - - - - - - - - - - - &quot; + BR() +
-&quot;Use Salesforce Duplicate Rule:&quot; + BR() +
-&quot;  Uses a Salesforce Duplicate Rule to create a custom matching formula&quot;</formula>
+    <formula>&quot;Matching rules 1: &quot; 
++ &quot;   First 3 chars of First Name/Pref first name, Last Name, Birthdate =&gt; Last Name, Email;&quot;
++ &quot; + = + = + = + = + = + &quot; 
++ &quot;Matching rules 2: &quot;  
++ &quot;  Last Name/Previous last name, Class year, First name, Phone =&gt; Last Name, Class Year, First 3 chars of First name&quot;</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Contact Matching Rule Description</label>
     <required>false</required>

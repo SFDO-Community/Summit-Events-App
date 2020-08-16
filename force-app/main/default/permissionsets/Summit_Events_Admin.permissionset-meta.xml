@@ -1280,11 +1280,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Summit_Events__c.Contact_Creation_Duplicate_Rule__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
         <field>Summit_Events__c.Contact_Creation__c</field>
         <readable>true</readable>
     </fieldPermissions>
