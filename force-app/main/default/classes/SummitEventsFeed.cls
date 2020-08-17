@@ -65,6 +65,13 @@ global with sharing class SummitEventsFeed {
 
 
     private static List<eventItem> getEventList() {
+
+        //Get namespace if packaged
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+
         List<eventItem> EventList = new List<eventItem>();
         RestRequest req = RestContext.request;
         String eventQuery = '';
@@ -189,7 +196,7 @@ global with sharing class SummitEventsFeed {
         for (Summit_Events_Instance__c eventInstance : EventInstanceList) {
             regDateOpenDate = Datetime.now().addDays(-1);
             if (eventInstance.Event__r.Close_Event_Days_Before__c != null && eventInstance.Event__r.Close_Event_Days_Before__c != 0) {
-                regDateOpenDate = SEShared.adjustForCentralTime(Datetime.now());
+                regDateOpenDate = SEShared.adjustForTimeZone(Datetime.now(),eventInstance.Instance_Time_Zone__c);
                 regDateOpenDate = regDateOpenDate.addDays((Integer.valueOf(eventInstance.Event__r.Close_Event_Days_Before__c) + 1));
             }
             eventItem evt = new eventItem();
@@ -267,10 +274,10 @@ global with sharing class SummitEventsFeed {
             }
 
             if (eventInstance.Instance_Start_Date__c != null) {
-                evt.start = SEShared.convertDateToDatetime(eventInstance.Instance_Start_Date__c, eventInstance.Instance_Start_Time__c);
+                evt.start = SEShared.convertDateToDatetime(eventInstance.Instance_Start_Date__c, eventInstance.Instance_Start_Time__c,'');
             }
             if (eventInstance.Instance_End_Date__c != null) {
-                evt.endDate = SEShared.convertDateToDatetime(eventInstance.Instance_End_Date__c, eventInstance.Instance_End_Time__c);
+                evt.endDate = SEShared.convertDateToDatetime(eventInstance.Instance_End_Date__c, eventInstance.Instance_End_Time__c,'');
             }
 
             if (!String.isBlank(eventInstance.Event__r.Location_Title__c) || !String.isBlank(eventInstance.Location_Title_Override__c)) {
@@ -317,7 +324,7 @@ global with sharing class SummitEventsFeed {
                     }
 
                 } else {
-                    evt.eventUrl = eventInstance.Event__r.Community_Base_URL__c + 'SummitEventsRegister?instanceID=' + eventInstance.Id;
+                    evt.eventUrl = eventInstance.Event__r.Community_Base_URL__c + namespace + 'SummitEventsRegister?instanceID=' + eventInstance.Id;
                 }
                 evt.className = 'eventOpened';
             }

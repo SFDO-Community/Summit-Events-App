@@ -34,6 +34,12 @@
                 <default>false</default>
                 <label>SandhyaTemplate</label>
             </value>
+            <value>
+                <fullName>crowncollege2020</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>crowncollege2020</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

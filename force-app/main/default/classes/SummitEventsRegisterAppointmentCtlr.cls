@@ -62,8 +62,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
 
                 if (evtInstance != null) {
-                    //Datetime rightNow = SEShared.adjustForCentralTime(Datetime.now());
-                    String dayOfWeek = SEShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c,null).format('EEEE');
+                    String dayOfWeek = SEShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c,null,'').format('EEEE');
                     // = dayOfWeek;
                     //Build available appointments
                     appts = new Map<ID, Summit_Events_Appointment_Type__c>([
