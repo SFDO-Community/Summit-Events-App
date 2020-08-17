@@ -32,6 +32,95 @@ ready(() => {
     dynamicValidation();
     validYear();
 
+    let cantFindHS = document.getElementById('cantFindHS');
+    let cantFindCollege = document.getElementById('cantFindCollege');
+
+    if (cantFindHS) {
+        cantFindHS.addEventListener("click", (e) => {
+            let chosenField = document.getElementById('schoolSelector_chosen');
+            let HSAltInput = document.querySelector("[id$=HSAltInput]");
+            if (cantFindHS.checked) {
+                chosenField.style.display = 'none';
+                HSAltInput.style.display = 'block';
+                //$("#schoolSelector").val('').trigger('chosen:updated');
+                populateHiddenSchoolValue();
+            } else {
+                chosenField.style.display = 'block';
+                HSAltInput.style.display = 'none';
+            }
+        });
+    }
+
+    if (cantFindCollege) {
+        cantFindCollege.addEventListener("click", (e) => {
+            let collegeChosenField = document.getElementById('collegeSelector_chosen');
+            let CollegeAltInput = document.querySelector("[id$=CollegeAltInput]");
+            if (cantFindCollege.checked) {
+                //$("#collegeSelector").val('').trigger('chosen:updated');
+                populateHiddenSchoolValue();
+                collegeChosenField.style.display = 'none';
+                CollegeAltInput.style.display = 'block';
+            } else {
+                collegeChosenField.style.display = 'block';
+                CollegeAltInput.style.display = 'none';
+            }
+        });
+    }
+
+    //Set up both school selectors
+    //check if selection has already been made
+    if ($("[id$=school]").val() && $("[id$=schoolCode]").val()) {
+        $("#schoolSelector").append($('<option>', {value: $("[id$=schoolCode]").val(), text: $("[id$=school]").val(), selected: true}));
+    }
+    if ($("[id$=college]").val() && $("[id$=collegeCode]").val()) {
+        $("#collegeSelector").append($('<option>', {value: $("[id$=collegelCode]").val(), text: $("[id$=college]").val(), selected: true}));
+    }
+
+
+    $("#schoolSelector, #collegeSelector").chosen(
+        {no_results_text: "<img src='//static.stthomas.edu/undergraduate-admissions/rfi/images/spinner.gif'/> No results yet, keep typing..."}
+    ).change(function () {
+        populateHiddenSchoolValue();
+    }).select(function () {
+        populateHiddenSchoolValue();
+    });
+
+    ChosenSchoolFilter = $("#schoolSelector").next('.chosen-container').find('.chosen-search-input');
+    ChosenCollegeFilter = $("#collegeSelector").next('.chosen-container').find('.chosen-search-input');
+
+    ChosenSchoolFilter.on("keyup", function (e) {
+        var code = (e.keyCode || e.which);
+        if (code == 37 || code == 38 || code == 39 || code == 40) {
+            return true;
+        }
+        //When return is hit populate hidden data because something was selected.
+        if (e.code == 13) {
+            populateHiddenSchoolValue();
+        }
+        if ($(this).val().length > 3) {
+            getSchoolOptions($(this).val(), 'highSchool');
+        }
+    });
+
+    ChosenCollegeFilter.on("keyup", function (e) {
+        var code = (e.keyCode || e.which);
+        if (code == 37 || code == 38 || code == 39 || code == 40) {
+            return true;
+        }
+        if ($(this).val().length > 3) {
+            getSchoolOptions($(this).val(), 'college');
+        }
+    });
+
+    if ($("[id$=HSAltInput]").val()) {
+        $("#cantFindHS").click();
+    }
+    if ($("[id$=CollegeAltInput]").val()) {
+        $("#cantFindCollege").click();
+    }
+
+    $('[id$=progInterest]').chosen({max_selected_options: 4});
+
 });
 
 function dynamicValidation() {
@@ -73,10 +162,58 @@ function setOldPhoneValue() {
     });
 }
 
+function populateHiddenSchoolValue() {
+    if ($("[id$=school]").length > 0) {
+        $("[id$=school]").val($("#schoolSelector option:selected").text());
+        $("[id$=schoolCode]").val($("#schoolSelector").val());
+    }
+    if ($("[id$=college]").length > 0) {
+        $("[id$=college]").val($("#collegeSelector option:selected").text());
+        $("[id$=collegeCode]").val($("[id$=collegeSelector]").val());
+    }
+    if ($("[id$=HSAltInput]").val()) {
+        $("[id$=school]").val($("#HSAltInput").val());
+    }
+    if ($("[id$=CollegeAltInput]").val()) {
+        $("[id$=college]").val($("[id$=CollegeAltInput]").val());
+    }
+}
+
+function getSchoolOptions(filter, type) {
+    if (ChosenProcessActive[type]) {
+        ChosenProcess[type].abort();
+    }
+    ChosenProcessActive[type] = true;
+    ChosenProcess[type] = $.ajax({
+        url: "/services/apexrest/ustadmissionsrest",
+        data: {'type': type, 'filter': filter},
+        dataType: "json"
+    }).done(function (data) {
+        if (data) {
+            if (type == 'highSchool') {
+                populateschSel(data, $("#schoolSelector"));
+                $("#schoolSelector").trigger('chosen:updated');
+            } else if (type == 'college') {
+                populateschSel(data, $("#collegeSelector"));
+                $("#collegeSelector").trigger('chosen:updated');
+            }
+        }
+        ChosenProcessActive[type] = false;
+    })
+}
+
+function populateschSel(data, selector, keyAsText) {
+    selector.find("option").remove();
+    selector.append($('<option>').text('Select a school from results...').attr('value', ''));
+    $.each(data, function (key, value) {
+        selector.append($('<option>').text(value).attr('value', key));
+    });
+}
 
 //Validation for the page
 function checkForm() {
 
+    populateHiddenSchoolValue();
     var error_count = 0;
     var emailReg = /^([a-zA-Z0-9_.\-.'.+])+@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
@@ -112,6 +249,21 @@ function checkForm() {
             }
         }
     });
+
+    // require school be filled in.
+    // if ($("[id$=collegeAsk]").length > 0) {
+    //     if (!$("[id$=college]").val() && !$("[id$=CollegeAltInput]").val()) {
+    //         error_count++;
+    //         $(this).closest('.slds-form-element').addClass("slds-has-error");
+    //     }
+    // }
+    //
+    // if ($("[id$=hsAsk]").length > 0) {
+    //     if (!$("[id$=school]").val() && !$("[id$=HSAltInput]").val()) {
+    //         error_count++;
+    //         $(this).closest('.slds-form-element').addClass("slds-has-error");
+    //     }
+    // }
 
     if (error_count > 0) {
         fadein();
