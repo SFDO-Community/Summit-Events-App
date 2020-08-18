@@ -11,8 +11,9 @@ public class SummitEventsRegistration {
                 oldListMap.put(ol.Id, ol);
             }
         }
+      
         for (Summit_Events_Registration__c r : (List<Summit_Events_Registration__c>) newlist) {
-
+         
             //Get old Summit_Events_Registration__c by current ID
             Summit_Events_Registration__c oldReg = new Summit_Events_Registration__c(Status__c = 'new', Substatus__c='new');
             if (oldListMap.size() > 0) {
@@ -48,19 +49,19 @@ public class SummitEventsRegistration {
             AND Action_status__c != Null
             AND Action_Status__c != '--Inactive--'
         ];
-
+      
         List<Task> activityUpdates = new List<Task>();
-
+        
         //loop through affected event registrations - have status change from old
         for (Summit_Events_Registration__c areg : affectedRegs) {
             //Loop through gather email templates to get template and use registration fields to fill in hooks
             for (Summit_Events_Email__c em : matchEmail) {
                 Boolean statusMatch = false;
-
+              
                 if (em.Event__r.Id.equals(areg.Event__c)) {
-
+                    
                     statusMatch = false;
-
+                    
                     if (!String.isBlank(em.Action_Sub_status__c) && !String.isBlank(areg.Substatus__c)) {
                         if (em.Action_Sub_status__c.equals(areg.Substatus__c) && em.Action_Status__c.equalsIgnoreCase(areg.Status__c)) {
                             statusMatch = true;
@@ -70,9 +71,9 @@ public class SummitEventsRegistration {
                         System.Debug('Match made on status');
                         statusMatch = true;
                     }
-
+                
                     System.Debug(statusMatch + ': em.Action_Sub_status__c = ' + em.Action_Sub_status__c + ', areg.Substatus__c = ' + areg.Substatus__c + ', areg.Status__c = ' + areg.Status__c + ', em.Action_Status__c = ' + em.Action_Status__c);
-
+                    
                     if (statusMatch) {
                         //Get email template
                         String emailContent = em.Email_Content__c;
@@ -118,17 +119,17 @@ public class SummitEventsRegistration {
                                     found = found.replace('_HL_', ' target="_blank">');
                                     found = found.replace(' target=', '');
                                 }
-
+                                
                                 emailContent = matcher2.replaceAll(found);
                             }
                         }
-
+                        
                         //put email content (after hooks have been replaced with values) into the email template
                         originalTemplate = originalTemplate.replaceAll('\\[\\[DONT_DELETE_CONTENT_HERE\\]\\]', emailContent);
-
+                        
                         //send the message
                         sendEmail2(areg.Registrant_Email__c, originalTemplate, emailContent, em.Email_Subject__c, em.Org_Email_Id__c, em.BCC_Email__c);
-
+                        
                         //Create an activity task
                         Task nt = new Task();
                         nt.WhatId = areg.id;
@@ -139,10 +140,11 @@ public class SummitEventsRegistration {
                         nt.Priority = 'Low';
                         activityUpdates.add(nt);
                     }
-
+                    
                 }
             }
         }
+        
 
         if (activityUpdates.size() > 0) {
             insert activityUpdates;
