@@ -65,6 +65,13 @@ global with sharing class SummitEventsFeed {
 
 
     private static List<eventItem> getEventList() {
+
+        //Get namespace if packaged
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+
         List<eventItem> EventList = new List<eventItem>();
         RestRequest req = RestContext.request;
         String eventQuery = '';
@@ -318,7 +325,7 @@ global with sharing class SummitEventsFeed {
                     }
 
                 } else {
-                    evt.eventUrl = eventInstance.Event__r.Community_Base_URL__c + 'SummitEventsRegister?instanceID=' + eventInstance.Id;
+                    evt.eventUrl = eventInstance.Event__r.Community_Base_URL__c + namespace + 'SummitEventsRegister?instanceID=' + eventInstance.Id;
                 }
                 evt.className = 'eventOpened';
             }
