@@ -2,14 +2,26 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Event_Instance_Feed_URL__c</fullName>
     <externalId>false</externalId>
-    <formula>Community_Base_URL__c + &#39;services/apexrest/usteventfeed?eventId=&#39; + Id + &#39;&amp;feedType=eventList&amp;viewStart=&#39; +
+    <formula>IF( $Setup.Summit_Events_Settings__c.Managed_Package__c,
+
+Community_Base_URL__c + &apos;services/apexrest/summit/summiteventsfeed?eventId=&apos; + Id + &apos;&amp;feedType=eventList&amp;viewStart=&apos; +
             TEXT(YEAR( Start_Date__c))
-            + &#39;-&#39; + TEXT(MONTH( Start_Date__c))
-            + &#39;-&#39; + TEXT(DAY(Start_Date__c))+ &#39;+00:00:00&#39; +
-            &#39;&amp;viewEnd=&#39; +
+            + &apos;-&apos; + TEXT(MONTH( Start_Date__c))
+            + &apos;-&apos; + TEXT(DAY(Start_Date__c))+ &apos;+00:00:00&apos; +
+            &apos;&amp;viewEnd=&apos; +
             TEXT(YEAR( End_Date__c))
-            + &#39;-&#39; + TEXT(MONTH( End_Date__c))
-            + &#39;-&#39; + TEXT(DAY(End_Date__c)) + &#39;+24:59:59&#39;</formula>
+            + &apos;-&apos; + TEXT(MONTH( End_Date__c))
+            + &apos;-&apos; + TEXT(DAY(End_Date__c)) + &apos;+24:59:59&apos;, 
+
+Community_Base_URL__c + &apos;services/apexrest/summiteventsfeed?eventId=&apos; + Id + &apos;&amp;feedType=eventList&amp;viewStart=&apos; +
+            TEXT(YEAR( Start_Date__c))
+            + &apos;-&apos; + TEXT(MONTH( Start_Date__c))
+            + &apos;-&apos; + TEXT(DAY(Start_Date__c))+ &apos;+00:00:00&apos; +
+            &apos;&amp;viewEnd=&apos; +
+            TEXT(YEAR( End_Date__c))
+            + &apos;-&apos; + TEXT(MONTH( End_Date__c))
+            + &apos;-&apos; + TEXT(DAY(End_Date__c)) + &apos;+24:59:59&apos;
+)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Event Instance Feed URL</label>
     <required>false</required>

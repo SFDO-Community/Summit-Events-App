@@ -4,10 +4,10 @@
     <externalId>false</externalId>
     <formula>TRIM(
             /*Location free text */
-            IF(!ISBLANK(Event_Host__r.Location__c), Event_Host__r.Location__c + &#39; &#39;, &#39;&#39;) +
+            IF(!ISBLANK(Event_Host__r.Location__c), Event_Host__r.Location__c + &apos; &apos;, &apos;&apos;) +
 
             /*Building if selected*/
-            IF(!ISBLANK(TEXT(Event_Host__r.Building__c)), TEXT(Event_Host__r.Building__c) + &#39; &#39;, &#39;&#39;)
+            IF(!ISBLANK(TEXT(Event_Host__r.Building__c)), TEXT(Event_Host__r.Building__c) + &apos; &apos;, &apos;&apos;)
             )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Host Location</label>

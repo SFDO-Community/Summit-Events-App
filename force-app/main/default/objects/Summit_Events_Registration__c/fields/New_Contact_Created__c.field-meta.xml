@@ -2,9 +2,9 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>New_Contact_Created__c</fullName>
     <defaultValue>false</defaultValue>
-    <description>This is checked when while registering for an event on the Web a client&#39;s contact was not found and the event app created one for them.</description>
+    <description>This is checked when while registering for an event on the Web a client&apos;s contact was not found and the event app created one for them.</description>
     <externalId>false</externalId>
-    <inlineHelpText>This is checked when while registering for an event on the Web a client&#39;s contact was not found and the event app created one for them.</inlineHelpText>
+    <inlineHelpText>This is checked when while registering for an event on the Web a client&apos;s contact was not found and the event app created one for them.</inlineHelpText>
     <label>New Contact Created</label>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

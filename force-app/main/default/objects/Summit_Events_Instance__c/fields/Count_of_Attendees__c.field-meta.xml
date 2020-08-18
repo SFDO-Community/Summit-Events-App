@@ -8,8 +8,8 @@
     <summarizedField>Summit_Events_Registration__c.Total_Number_of_Guests__c</summarizedField>
     <summaryFilterItems>
         <field>Summit_Events_Registration__c.Status__c</field>
-        <operation>equals</operation>
-        <value>Requested, Received, Confirmed</value>
+        <operation>notEqual</operation>
+        <value>Cancelled, Rescheduled</value>
     </summaryFilterItems>
     <summaryForeignKey>Summit_Events_Registration__c.Event_Instance__c</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>

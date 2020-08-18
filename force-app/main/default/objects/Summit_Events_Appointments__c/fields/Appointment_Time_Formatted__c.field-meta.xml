@@ -10,18 +10,18 @@
 
             )
             &amp;
-            IF(!ISBLANK(HOUR(Appointment_Time__c)),&#39;:&#39;,&#39;&#39;)
+            IF(!ISBLANK(HOUR(Appointment_Time__c)),&apos;:&apos;,&apos;&apos;)
             &amp;
-            IF(MINUTE(Appointment_Time__c)&lt;10,&#39;0&#39;,&#39;&#39;)
+            IF(MINUTE(Appointment_Time__c)&lt;10,&apos;0&apos;,&apos;&apos;)
             &amp;
             TEXT(
             MINUTE(Appointment_Time__c)
             )
             &amp;
-            IF(!ISBLANK(MINUTE(Appointment_Time__c)),&#39; &#39;,&#39;&#39;)
+            IF(!ISBLANK(MINUTE(Appointment_Time__c)),&apos; &apos;,&apos;&apos;)
             &amp;
             IF(!ISBLANK(HOUR(Appointment_Time__c)),
-            IF(HOUR(Appointment_Time__c) &gt;= 12, &#39;PM&#39;, &#39;AM&#39;), &#39;&#39;
+            IF(HOUR(Appointment_Time__c) &gt;= 12, &apos;PM&apos;, &apos;AM&apos;), &apos;&apos;
             )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Appointment Time Formatted</label>

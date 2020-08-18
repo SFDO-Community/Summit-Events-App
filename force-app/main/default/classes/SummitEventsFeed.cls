@@ -268,6 +268,7 @@ global with sharing class SummitEventsFeed {
 
             if (eventInstance.Instance_Start_Date__c != null) {
                 evt.start = SEShared.convertDateToDatetime(eventInstance.Instance_Start_Date__c, eventInstance.Instance_Start_Time__c, '');
+
             }
             if (eventInstance.Instance_End_Date__c != null) {
                 evt.endDate = SEShared.convertDateToDatetime(eventInstance.Instance_End_Date__c, eventInstance.Instance_End_Time__c, '');

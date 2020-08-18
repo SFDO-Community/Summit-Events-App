@@ -47,6 +47,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     <div id="datepickerOverlay">
                         <!-- Copy this for Summit Events Fullcalendar display on any page. -->
                         <div id="fullCalendarView">
+                            <!-- end copy -->
                         </div>
                         <!-- end copy -->
                     </div>

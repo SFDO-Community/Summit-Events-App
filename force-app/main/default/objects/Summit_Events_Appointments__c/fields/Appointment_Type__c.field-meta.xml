@@ -13,10 +13,6 @@
         <valueSetName>Appointment_Type</valueSetName>
         <valueSettings>
             <controllingFieldValue>Additional Options</controllingFieldValue>
-            <valueName>Air Force ROTC</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Additional Options</controllingFieldValue>
             <valueName>Campus Ministry</valueName>
         </valueSettings>
         <valueSettings>
@@ -29,83 +25,83 @@
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Men&#39;s Baseball</valueName>
+            <valueName>Men&apos;s Baseball</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Men&#39;s Basketball</valueName>
+            <valueName>Men&apos;s Basketball</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Men&#39;s Cross Country</valueName>
+            <valueName>Men&apos;s Cross Country</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Men&#39;s Football</valueName>
+            <valueName>Men&apos;s Football</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Men&#39;s Golf</valueName>
+            <valueName>Men&apos;s Golf</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Men&#39;s Hockey</valueName>
+            <valueName>Men&apos;s Hockey</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Men&#39;s Soccer</valueName>
+            <valueName>Men&apos;s Soccer</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Men&#39;s Swimming and Diving</valueName>
+            <valueName>Men&apos;s Swimming and Diving</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Men&#39;s Tennis</valueName>
+            <valueName>Men&apos;s Tennis</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Men&#39;s Track and Field</valueName>
+            <valueName>Men&apos;s Track and Field</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Women&#39;s Basketball</valueName>
+            <valueName>Women&apos;s Basketball</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Women&#39;s Cross Country</valueName>
+            <valueName>Women&apos;s Cross Country</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Women&#39;s Golf</valueName>
+            <valueName>Women&apos;s Golf</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Women&#39;s Hockey</valueName>
+            <valueName>Women&apos;s Hockey</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Women&#39;s Soccer</valueName>
+            <valueName>Women&apos;s Soccer</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Women&#39;s Softball</valueName>
+            <valueName>Women&apos;s Softball</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Women&#39;s Swimming and Diving</valueName>
+            <valueName>Women&apos;s Swimming and Diving</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Women&#39;s Tennis</valueName>
+            <valueName>Women&apos;s Tennis</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Women&#39;s Track and Field</valueName>
+            <valueName>Women&apos;s Track and Field</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Athletic Visit</controllingFieldValue>
-            <valueName>Women&#39;s Volleyball</valueName>
+            <valueName>Women&apos;s Volleyball</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Campus Tour</controllingFieldValue>
@@ -118,267 +114,7 @@
         <valueSettings>
             <controllingFieldValue>Attend A Class</controllingFieldValue>
             <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Actuarial Science</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Art History</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Biochemistry</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Biology</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Biology of Global Health</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Business Administration- Accounting</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Business Administration- Communication</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Business Administration- Entrepreneurship</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Business Administration- Family Business</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Business Administration- Financial Management</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Business Administration- General Business Management</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Business Administration- Human Resource Management</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Business Administration- International Business</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Business Administration- Leadership and Management</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Business Administration- Legal Studies in Business</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Business Administration- Marketing Management</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Business Administration- Operations Management</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Busienss Administration- Real Estate Studies</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Catholic Studies</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Chemistry</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Classical Civilization</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Classical Langauges</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Communication and Journalism</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Computer Science</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Criminal Justice</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Economics</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Education- Elementary</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Education- Secondary</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Engineering- Aerospace</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Engineering- Biomedical</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Engineering- Chemical</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Engineering- Civil</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Engineering- Computer</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Engineering- Electrical</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Engineering- Mechanical</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
             <valueName>English</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>English- Education</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>English- Creative Writing</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Environmental Science</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Environmental Studies</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Exercise Science</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Family Studies</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>French</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Geography</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Geography- Geographic Information Systems (GIS)</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Geology</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>German</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Health Promotion Sciences</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>History</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>International Studies</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Justice &amp; Peace Studies</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Latin</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Literary Studies</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Attend A Class</controllingFieldValue>
@@ -388,112 +124,7 @@
         <valueSettings>
             <controllingFieldValue>Attend A Class</controllingFieldValue>
             <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Music</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Music Business</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Music- Liturgical Music</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Music- Performance</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Music- Band</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Music- Choir</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Music- Orchestra</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Music- Guitar</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Music- Piano</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Neuroscience</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Philosophy</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Physics</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Political Science</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
             <valueName>Psychology</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Public Health Studies</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Social Sciences</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Social Work</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Sociology</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Spanish</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Statistics</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Theology</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Attend A Class</controllingFieldValue>
-            <controllingFieldValue>Faculty Visit</controllingFieldValue>
-            <valueName>Women&#39;s Studies</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Financial Aid Visit</controllingFieldValue>
