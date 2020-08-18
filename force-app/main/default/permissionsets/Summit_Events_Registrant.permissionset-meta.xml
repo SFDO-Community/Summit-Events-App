@@ -277,11 +277,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Instance__c.Admin_Open_Registration_Link__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Summit_Events_Instance__c.Admin_Open_Registration__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -463,6 +458,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events_Registration__c.Add_To_Calendar_Link__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Registration__c.Answer_1_Numeric__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1097,6 +1097,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Contact_Creation_Duplicate_Rule__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.Contact_Creation__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1108,6 +1113,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Contact_Matching_Rules__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Custom_Metadata_Contact_Matching_Method__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

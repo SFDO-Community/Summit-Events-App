@@ -430,11 +430,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Instance__c.Admin_Open_Registration_Link__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Summit_Events_Instance__c.Admin_Open_Registration__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -451,6 +446,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Instance__c.Building_Override__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events_Instance__c.Capacity_Control__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -559,7 +559,7 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
+        <editable>true</editable>
         <field>Summit_Events_Instance__c.Private_Instance__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -576,6 +576,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events_Instance__c.Registration_QR_Code__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events_Instance__c.Virtual_Appointment_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1076,6 +1081,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events_Registration__c.UG_Parking_Pass_Link__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Registration__c.Virtual_Appointment_URL__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
