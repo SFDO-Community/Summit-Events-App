@@ -1,0 +1,525 @@
+<apex:page id="crowncollege2020" sidebar="false" lightningStyleSheets="true" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
+    <apex:slds/>
+    <html lang="en-US">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <link rel="profile" href="http://gmpg.org/xfn/11"/>
+
+        <!-- This site is optimized with the Yoast SEO plugin v14.7 - https://yoast.com/wordpress/plugins/seo/ -->
+        <title>
+            <apex:insert name="metaPageTitle"/>
+        </title>
+        <meta name="description" content="Crown College is a private Christian college located in St. Bonifacius, Minnesota offering undergraduate and graduate programs online and on campus."/>
+        <meta name="robots" content="index, follow"/>
+        <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
+        <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
+        <link rel="canonical" href="http://www.crown.edu/"/>
+        <meta property="og:locale" content="en_US"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="Crown College | Accredited Private Christian College in MN"/>
+        <meta property="og:description" content="Crown College is a private Christian college located in St. Bonifacius, Minnesota offering undergraduate and graduate programs online and on campus."/>
+        <meta property="og:url" content="http://www.crown.edu/"/>
+        <meta property="og:site_name" content="Future Student"/>
+        <meta property="article:modified_time" content="2020-08-11T14:55:36+00:00"/>
+        <meta name="twitter:card" content="summary_large_image"/>
+        <script type="application/ld+json" class="yoast-schema-graph">{
+                "@context": "https://schema.org",
+                "@graph": [
+                    {
+                        "@type": "WebSite",
+                        "@id": "https://www.crown.edu/#website",
+                        "url": "https://www.crown.edu/",
+                        "name": "Future Student",
+                        "description": "",
+                        "potentialAction": [
+                            {
+                                "@type": "SearchAction",
+                                "target": "https://www.crown.edu/?s={search_term_string}",
+                                "query-input": "required name=search_term_string"
+                            }
+                        ],
+                        "inLanguage": "en-US"
+                    },
+                    {
+                        "@type": "WebPage",
+                        "@id": "http://www.crown.edu/#webpage",
+                        "url": "http://www.crown.edu/",
+                        "name": "Crown College | Accredited Private Christian College in MN",
+                        "isPartOf": {
+                            "@id": "https://www.crown.edu/#website"
+                        },
+                        "datePublished": "2019-04-02T10:10:02+00:00",
+                        "dateModified": "2020-08-11T14:55:36+00:00",
+                        "description": "Crown College is a private Christian college located in St. Bonifacius, Minnesota offering undergraduate and graduate programs online and on campus.",
+                        "inLanguage": "en-US",
+                        "potentialAction": [
+                            {
+                                "@type": "ReadAction",
+                                "target": [
+                                    "http://www.crown.edu/"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }</script>
+        <!-- / Yoast SEO plugin. -->
+
+
+        <link rel='dns-prefetch' href='//s.w.org'/>
+        <link rel="alternate" type="application/rss+xml" title="Future Student &raquo; Feed" href="https://www.crown.edu/feed/"/>
+        <link rel="alternate" type="application/rss+xml" title="Future Student &raquo; Comments Feed" href="https://www.crown.edu/comments/feed/"/>
+        <script type="text/javascript">
+            window._wpemojiSettings = {"baseUrl": "https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/72x72\/", "ext": ".png", "svgUrl": "https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/svg\/", "svgExt": ".svg", "source": {"concatemoji": "https:\/\/www.crown.edu\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.4.2"}};
+            /*! This file is auto-generated */
+            !function (e, a, t) {
+                var r, n, o, i, p = a.createElement("canvas"), s = p.getContext && p.getContext("2d");
+
+                function c(e, t) {
+                    var a = String.fromCharCode;
+                    s.clearRect(0, 0, p.width, p.height), s.fillText(a.apply(this, e), 0, 0);
+                    var r = p.toDataURL();
+                    return s.clearRect(0, 0, p.width, p.height), s.fillText(a.apply(this, t), 0, 0), r === p.toDataURL()
+                }
+
+                function l(e) {
+                    if (!s || !s.fillText) return !1;
+                    switch (s.textBaseline = "top", s.font = "600 32px Arial", e) {
+                        case"flag":
+                            return !c([127987, 65039, 8205, 9895, 65039], [127987, 65039, 8203, 9895, 65039]) && (!c([55356, 56826, 55356, 56819], [55356, 56826, 8203, 55356, 56819]) && !c([55356, 57332, 56128, 56423, 56128, 56418, 56128, 56421, 56128, 56430, 56128, 56423, 56128, 56447], [55356, 57332, 8203, 56128, 56423, 8203, 56128, 56418, 8203, 56128, 56421, 8203, 56128, 56430, 8203, 56128, 56423, 8203, 56128, 56447]));
+                        case"emoji":
+                            return !c([55357, 56424, 55356, 57342, 8205, 55358, 56605, 8205, 55357, 56424, 55356, 57340], [55357, 56424, 55356, 57342, 8203, 55358, 56605, 8203, 55357, 56424, 55356, 57340])
+                    }
+                    return !1
+                }
+
+                function d(e) {
+                    var t = a.createElement("script");
+                    t.src = e, t.defer = t.type = "text/javascript", a.getElementsByTagName("head")[0].appendChild(t)
+                }
+
+                for (i = Array("flag", "emoji"), t.supports = {everything: !0, everythingExceptFlag: !0}, o = 0; o < i.length; o++) t.supports[i[o]] = l(i[o]), t.supports.everything = t.supports.everything && t.supports[i[o]], "flag" !== i[o] && (t.supports.everythingExceptFlag = t.supports.everythingExceptFlag && t.supports[i[o]]);
+                t.supports.everythingExceptFlag = t.supports.everythingExceptFlag && !t.supports.flag, t.DOMReady = !1, t.readyCallback = function () {
+                    t.DOMReady = !0
+                }, t.supports.everything || (n = function () {
+                    t.readyCallback()
+                }, a.addEventListener ? (a.addEventListener("DOMContentLoaded", n, !1), e.addEventListener("load", n, !1)) : (e.attachEvent("onload", n), a.attachEvent("onreadystatechange", function () {
+                    "complete" === a.readyState && t.readyCallback()
+                })), (r = t.source || {}).concatemoji ? d(r.concatemoji) : r.wpemoji && r.twemoji && (d(r.twemoji), d(r.wpemoji)))
+            }(window, document, window._wpemojiSettings);
+        </script>
+        <style type="text/css">
+            img.wp-smiley,
+            img.emoji {
+                display: inline !important;
+                border: none !important;
+                box-shadow: none !important;
+                height: 1em !important;
+                width: 1em !important;
+                margin: 0 .07em !important;
+                vertical-align: -0.1em !important;
+                background: none !important;
+                padding: 0 !important;
+            }
+        </style>
+        <link rel="stylesheet" type="text/css" href="https://cloud.typography.com/7985238/7010212/css/fonts.css"/>
+        <link rel='stylesheet' id='wp-block-library-css' href='https://www.crown.edu/wp-includes/css/dist/block-library/style.min.css?ver=5.4.2' type='text/css' media='all'/>
+        <link rel='stylesheet' id='contact-form-7-css' href='https://www.crown.edu/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=5.2.1' type='text/css' media='all'/>
+        <link rel='stylesheet' id='slick-styles-css' href='https://www.crown.edu/wp-content/themes/seadev/assets/slick/slick.css' type='text/css' media='all'/>
+        <link rel='stylesheet' id='slick-theme-styles-css' href='https://www.crown.edu/wp-content/themes/seadev/assets/slick/slick-theme.css' type='text/css' media='all'/>
+        <link rel='stylesheet' id='seadev-scrollbar-css' href='https://www.crown.edu/wp-content/themes/seadev-child/assets/css/jquery.scrollbar.css?ver=0.2.10' type='text/css' media='all'/>
+        <link rel='stylesheet' id='seadev-child-styles-css' href='https://www.crown.edu/wp-content/themes/seadev-child/assets/css/theme.min.css?ver=0.5.5' type='text/css' media='all'/>
+        <script type='text/javascript' src='https://www.crown.edu/wp-includes/js/jquery/jquery.js?ver=1.12.4-wp'></script>
+        <script type='text/javascript' src='https://www.crown.edu/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+        <script type='text/javascript'>
+            /* <![CDATA[ */
+            var cssTarget = "img.seadev-svg";
+            var ForceInlineSVGActive = "false";
+            /* ]]> */
+        </script>
+        <script type='text/javascript' src='https://www.crown.edu/wp-content/plugins/svg-support/js/min/svgs-inline-min.js?ver=1.0.0'></script>
+        <link rel='https://api.w.org/' href='https://www.crown.edu/wp-json/'/>
+        <link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.crown.edu/xmlrpc.php?rsd"/>
+        <link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://www.crown.edu/wp-includes/wlwmanifest.xml"/>
+        <meta name="generator" content="WordPress 5.4.2"/>
+        <link rel='shortlink' href='https://www.crown.edu/'/>
+        <link rel="alternate" type="application/json+oembed" href="https://www.crown.edu/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.crown.edu%2F"/>
+        <link rel="alternate" type="text/xml+oembed" href="https://www.crown.edu/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.crown.edu%2F&#038;format=xml"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="apple-mobile-web-app-title" content="Future Student - "/>
+        <link rel="icon" href="https://dggzvb12b0xax.cloudfront.net/wp-content/uploads/2020/05/favicon.png" sizes="32x32"/>
+        <link rel="icon" href="https://dggzvb12b0xax.cloudfront.net/wp-content/uploads/2020/05/favicon.png" sizes="192x192"/>
+        <link rel="apple-touch-icon" href="https://dggzvb12b0xax.cloudfront.net/wp-content/uploads/2020/05/favicon.png"/>
+        <meta name="msapplication-TileImage" content="https://dggzvb12b0xax.cloudfront.net/wp-content/uploads/2020/05/favicon.png"/>
+
+        <!-- Google Tag Manager -->
+        <script>(function (w, d, s, l, i) {
+                w[l] = w[l] || [];
+                w[l].push({
+                    'gtm.start':
+                        new Date().getTime(), event: 'gtm.js'
+                });
+                var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+                j.async = true;
+                j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-PMB9FK');</script>
+        <!-- End Google Tag Manager -->
+        <style>
+            #loading .background {
+                background-image: url({!URLFOR($Resource.SummitEventsAssets, '/img/loading-summit_events.gif')}) !important;
+                width: 160px;
+                height: 160px;
+            }
+
+            .slds-col img {
+                max-width: 99%;
+            }
+        </style>
+        <apex:insert name="scriptsHead"/>
+    </head>
+
+    <div class="seadev-loading" id="seadev-loading">
+        <div class="loader-circle"></div>
+        <div class="loader-line-mask">
+            <div class="loader-line"></div>
+        </div>
+        <img src="https://dggzvb12b0xax.cloudfront.net/wp-content/uploads/2020/07/loading.svg" alt="Future Student"/>
+    </div>
+
+
+    <body class="home page-template page-template-page-templates page-template-template-blocks page-template-page-templatestemplate-blocks-php page page-id-46 wp-custom-logo wp-embed-responsive page-home group-blog">
+
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PMB9FK"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+
+    <!-- ******************* The Navbar Area ******************* -->
+    <header class="site-header" id="header">
+
+        <a class="skip-link sr-only sr-only-focusable" href="#content">Skip to content</a>
+
+
+        <div class="top-nav">
+            <ul class="menu">
+
+                <li class="active"><a href="https://www.crown.edu">Future Student</a></li>
+
+
+                <li class=""><a href="https://www.crown.edu/online-grad">Online + Grad Student</a></li>
+
+
+                <li class=""><a href="https://www.crown.edu/extensions">Extensions</a></li>
+
+
+                <li class=""><a href="https://www.crown.edu/alumni">Alumni</a></li>
+
+
+            </ul>
+        </div>
+
+
+        <nav class="navbar navbar-dark navbar-expand-xl">
+            <div class="wrap-menu-button">
+                <!-- Your site title as branding in the menu -->
+                <a href="https://www.crown.edu/" class="navbar-brand custom-logo-link" rel="home"><img width="149" height="40" src="https://dggzvb12b0xax.cloudfront.net/wp-content/uploads/2020/05/logo-1.svg" class="img-fluid" alt="Future Student"/></a><!-- end custom logo -->
+
+                <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar top-bar"></span>
+                    <span class="icon-bar middle-bar"></span>
+                    <span class="icon-bar bottom-bar"></span>
+                </button>
+            </div>
+
+            <!-- The WordPress Menu goes here -->
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <div class="header-search">
+                    <div class="container">
+
+                        <form method="get" id="searchform" action="https://www.crown.edu/" role="search">
+                            <button type="submit" class="btn-search"><span class='icon-search'></span></button>
+                            <input class="input-search" id="s" name="s" type="text" placeholder="What are you looking for?" value=""/>
+                        </form>
+                    </div>
+                </div>
+                <div class="wrap-menu-button">
+                    <ul id="main-menu" class="navbar-nav mx-auto">
+                        <li itemscope="itemscope" itemtype="https://www.schema.org/SiteNavigationElement" id="menu-item-238" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-238 nav-item"><a title="Academics" href="https://www.crown.edu/academics/" class="nav-link">Academics</a></li>
+                        <li itemscope="itemscope" itemtype="https://www.schema.org/SiteNavigationElement" id="menu-item-7305" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-7305 nav-item"><a title="Early College" href="http://www.crown.edu/extensions/early-college/" class="nav-link">Early College</a></li>
+                        <li itemscope="itemscope" itemtype="https://www.schema.org/SiteNavigationElement" id="menu-item-553" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-553 nav-item"><a title="Cost + Aid" href="https://www.crown.edu/cost-aid/" class="nav-link">Cost + Aid</a></li>
+                        <li itemscope="itemscope" itemtype="https://www.schema.org/SiteNavigationElement" id="menu-item-557" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-557 nav-item"><a title="Admissions" href="https://www.crown.edu/admissions/" class="nav-link">Admissions</a></li>
+                        <li itemscope="itemscope" itemtype="https://www.schema.org/SiteNavigationElement" id="menu-item-574" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-574 nav-item"><a title="Crown Culture" href="https://www.crown.edu/crown-culture/" class="nav-link">Crown Culture</a></li>
+                        <li itemscope="itemscope" itemtype="https://www.schema.org/SiteNavigationElement" id="menu-item-6871" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6871 nav-item"><a title="Athletics" target="_blank" href="http://athletics.crown.edu" class="nav-link">Athletics</a></li>
+                        <li itemscope="itemscope" itemtype="https://www.schema.org/SiteNavigationElement" id="menu-item-16294" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-16294 nav-item"><a title="News + Events" target="_blank" href="https://www.crown.edu/news-events/" class="nav-link">News + Events</a></li>
+                        <li itemscope="itemscope" itemtype="https://www.schema.org/SiteNavigationElement" id="menu-item-595" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-595 nav-item"><a title="About" href="https://www.crown.edu/about/" class="nav-link">About</a></li>
+                        <li class="menu-item menu-with-icon search-item" id="menu-search-icon"><span class="icon-search"></span></li>
+                    </ul>
+                    <a class="btn-seadev btn-outline" href="http://www.crown.edu/apply-now/" target="">Apply now</a>
+                </div>
+            </div>
+        </nav><!-- .site-navigation -->
+
+
+        <div class="sub-nav">
+
+        </div>
+
+    </header>
+
+    <div class="alert alert-warning mb-0 text-center seadev-alert" role="alert">
+        <a class="alert-link" href="http://www.crown.edu/coronavirus/" target="_blank"></a>
+        <p style="margin-bottom: 0;">For Crown College information concerning COVID-19, please visit crown.edu/coronavirus.</p>
+    </div>
+
+    <div class="wrapper" id="full-width-page-wrapper">
+
+        <main class="site-main" id="main" role="main">
+            <div class="slds-scope">
+                <div class="slds-grid slds-grid_align-center">
+                    <div class="slds-col slds-size_1-of-1" style="max-width:1024px;">
+                        <apex:insert name="sectionNav"/>
+                        <apex:insert name="body"/>
+                        <apex:insert name="footer"/>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div><!-- #full-width-page-wrapper -->
+
+    <footer class="site-footer" id="footer">
+
+        <div class="container">
+            <div class="footer-top">
+                <div class="left">
+                    <div class="box-logo">
+                        <img src="https://dggzvb12b0xax.cloudfront.net/wp-content/uploads/2020/05/logo-footer.svg" alt="Crown College"/>
+
+                        <div class="text">
+                            <strong>Crown College</strong>
+                            <span>8700 College View Drive<br/>Saint Bonifacius, Minnesota 55375</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right">
+                    <ul class="seadev-social-media-list list-inline">
+                        <li class="seadev-social-media-item list-inline-item">
+                            <a target="_blank" href="https://www.facebook.com/CrownCollege" class="channel-facebook">
+                                <i class="fa icon-facebook"></i>
+                            </a>
+                        </li>
+                        <li class="seadev-social-media-item list-inline-item">
+                            <a target="_blank" href="https://twitter.com/crowncollege" class="channel-twitter">
+                                <i class="fa icon-twitter"></i>
+                            </a>
+                        </li>
+                        <li class="seadev-social-media-item list-inline-item">
+                            <a target="_blank" href="https://www.instagram.com/crowncollege/" class="channel-instagram">
+                                <i class="fa icon-instagram"></i>
+                            </a>
+                        </li>
+                        <li class="seadev-social-media-item list-inline-item">
+                            <a target="_blank" href="https://www.youtube.com/user/crowncollege1916" class="channel-youtube">
+                                <i class="fa icon-youtube"></i>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="row">
+                    <div id="nav_menu-2" class="footer-widget widget_nav_menu widget-count-6 col-lg-2 col-md-4 col-sm-6"><h3 class="widget-title">Resources</h3>
+                        <div class="menu-resources-container">
+                            <ul id="menu-resources" class="menu">
+                                <li id="menu-item-184" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-184"><a href="/faq">FAQ’s</a></li>
+                                <li id="menu-item-185" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-185"><a href="/news-events/">News + Events</a></li>
+                                <li id="menu-item-186" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-186"><a href="/careers">Careers</a></li>
+                                <li id="menu-item-187" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-187"><a href="/campus-safety/">Safety/Emergency</a></li>
+                                <li id="menu-item-188" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-188"><a href="https://www.store.crown.edu/">Campus Store</a></li>
+                                <li id="menu-item-189" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-189"><a href="/maps-directions">Maps + Directions</a></li>
+                            </ul>
+                        </div>
+                    </div><!-- .footer-widget -->
+                    <div id="nav_menu-7" class="footer-widget widget_nav_menu widget-count-6 col-lg-2 col-md-4 col-sm-6"><h3 class="widget-title">On-Campus</h3>
+                        <div class="menu-on-campus-container">
+                            <ul id="menu-on-campus" class="menu">
+                                <li id="menu-item-7308" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-7308"><a href="https://www.crown.edu/academics/">Academics</a></li>
+                                <li id="menu-item-7309" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-7309"><a href="/extensions/early-college/">Early College</a></li>
+                                <li id="menu-item-7310" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-7310"><a href="https://www.crown.edu/cost-aid/">Cost + Aid</a></li>
+                                <li id="menu-item-7311" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-7311"><a href="https://www.crown.edu/admissions/">Admissions</a></li>
+                                <li id="menu-item-15833" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-15833"><a href="https://www.crown.edu/crown-culture/">Crown Culture</a></li>
+                                <li id="menu-item-7314" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-7314"><a target="_blank" rel="noopener noreferrer" href="https://athletics.crown.edu/">Athletics</a></li>
+                            </ul>
+                        </div>
+                    </div><!-- .footer-widget -->
+                    <div id="nav_menu-3" class="footer-widget widget_nav_menu widget-count-6 col-lg-2 col-md-4 col-sm-6"><h3 class="widget-title">Online + Grad</h3>
+                        <div class="menu-online-grad-container">
+                            <ul id="menu-online-grad" class="menu">
+                                <li id="menu-item-190" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-190"><a href="/online-grad/undergrad/">Undergrad</a></li>
+                                <li id="menu-item-191" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-191"><a href="/online-grad/graduate/">Graduate</a></li>
+                                <li id="menu-item-193" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-193"><a href="/online-grad/cost-aid/">Cost + Aid</a></li>
+                                <li id="menu-item-194" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-194"><a href="/online-grad/admissions">Admissions</a></li>
+                                <li id="menu-item-15839" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-15839"><a href="/online-grad/online-life/">Online Life</a></li>
+                            </ul>
+                        </div>
+                    </div><!-- .footer-widget -->
+                    <div id="nav_menu-4" class="footer-widget widget_nav_menu widget-count-6 col-lg-2 col-md-4 col-sm-6"><h3 class="widget-title">Extensions</h3>
+                        <div class="menu-extensions-container">
+                            <ul id="menu-extensions" class="menu">
+                                <li id="menu-item-197" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-197"><a href="/extensions/partners/">Partners</a></li>
+                                <li id="menu-item-198" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-198"><a href="/extensions/locations/">Locations</a></li>
+                                <li id="menu-item-199" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-199"><a href="/extensions/professional-development/">Professional Dev.</a></li>
+                                <li id="menu-item-201" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-201"><a href="/extensions/early-college/">Early College</a></li>
+                            </ul>
+                        </div>
+                    </div><!-- .footer-widget -->
+                    <div id="nav_menu-6" class="footer-widget widget_nav_menu widget-count-6 col-lg-2 col-md-4 col-sm-6"><h3 class="widget-title">Alumni + Donor</h3>
+                        <div class="menu-alumni-container">
+                            <ul id="menu-alumni" class="menu">
+                                <li id="menu-item-211" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-211"><a href="/alumni/alumni-resources/">Resources</a></li>
+                                <li id="menu-item-7501" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-7501"><a href="/alumni/alumni-resources/upcoming-alumni-events/">Events</a></li>
+                                <li id="menu-item-7502" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-7502"><a href="/alumni/alumni-resources/update-info/">Update Info</a></li>
+                                <li id="menu-item-212" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-212"><a href="/alumni/repaying-tution/">Repay Loans</a></li>
+                                <li id="menu-item-213" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-213"><a href="/alumni/request-transcript/">Request Transcripts</a></li>
+                            </ul>
+                        </div>
+                    </div><!-- .footer-widget -->            </div>
+            </div>
+
+            <div class="footer-note">
+                <div class="row">
+                    <div id="text-2" class="footer-widget widget_text widget-count-1 col-md-12">
+                        <div class="textwidget"><p class="fs-14"><strong>Account</strong> <a href="https://our.crown.edu/" target="_blank" rel="noopener noreferrer">Our.Crown</a> | <a href="https://canvas.crown.edu" target="_blank" rel="noopener noreferrer">Canvas</a> | <a href="http://email.crown.edu" target="_blank" rel="noopener noreferrer">Office 365</a> | <a href="/academic-calendar/">Academic Calendar</a> | <a href="https://www.crownlibrary.com/" target="_blank" rel="noopener noreferrer">Library</a> | <a href="/information-technology-services">IT Help Desk</a> | <a href="https://crown-xwqbg.formstack.com/forms/sexual_misconduct_reporting_form">Report Misconduct</a></p>
+                            <p>There is always more to discover in-person. Find an <a href="http://www.crown.edu/extensions/">Extension</a> near you or <a href="http://www.crown.edu/admissions/visit-campus/">visit our Minnesota campus</a>. Or <a href="http://www.crown.edu/contact/" target="_blank" rel="noopener noreferrer">Contact Us</a>.</p>
+                        </div>
+                    </div><!-- .footer-widget -->            </div>
+            </div>
+
+            <div class="footer-copyright">
+                <div class="row">
+                    <div class="col left">
+                        <p>© 2020 Crown College. All Rights Reserved.</p>
+                    </div>
+
+                    <div class="col center">
+                        <div class="menu-footer-menu-container">
+                            <ul id="menu-footer-menu" class="menu">
+                                <li id="menu-item-224" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-224"><a href="/privacy-policy">Privacy Policy</a></li>
+                                <li id="menu-item-225" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-225"><a href="#">Terms of Use</a></li>
+                                <li id="menu-item-226" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-226"><a href="/ferpa/">FERPA</a></li>
+                                <li id="menu-item-15408" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-15408"><a target="_blank" rel="noopener noreferrer" href="https://www.crown.edu/hea-consumer-information/">HEA Info</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col right">
+                        <a href="https://seadev.us" target="_blank">
+                            <img src="https://www.crown.edu/wp-content/themes/seadev-child/assets/images/seadev-logo.svg" alt="Seadev"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <link rel='stylesheet' id='seadev-image-background-css' href='https://www.crown.edu/wp-content/themes/seadev-child/block-templates/seadev-image-background/seadev-image-background.css?ver=5.4.2' type='text/css' media='all'/>
+    <link rel='stylesheet' id='seadev-default-css' href='https://www.crown.edu/wp-content/themes/seadev-child/block-templates/seadev-default/seadev-default.css?ver=5.4.2' type='text/css' media='all'/>
+    <link rel='stylesheet' id='seadev-image-content-css' href='https://www.crown.edu/wp-content/themes/seadev-child/block-templates/seadev-image-content/seadev-image-content.css?ver=5.4.2' type='text/css' media='all'/>
+    <link rel='stylesheet' id='seadev-grid-css' href='https://www.crown.edu/wp-content/themes/seadev-child/block-templates/seadev-grid/seadev-grid.css?ver=5.4.2' type='text/css' media='all'/>
+    <link rel='stylesheet' id='seadev-split-css' href='https://www.crown.edu/wp-content/themes/seadev-child/block-templates/seadev-split/seadev-split.css?ver=5.4.2' type='text/css' media='all'/>
+    <link rel='stylesheet' id='su-shortcodes-css' href='https://www.crown.edu/wp-content/plugins/shortcodes-ultimate/includes/css/shortcodes.css?ver=5.9.2' type='text/css' media='all'/>
+    <script type='text/javascript'>
+        /* <![CDATA[ */
+        var wpcf7 = {"apiSettings": {"root": "https:\/\/www.crown.edu\/wp-json\/contact-form-7\/v1", "namespace": "contact-form-7\/v1"}};
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='https://www.crown.edu/wp-content/plugins/contact-form-7/includes/js/scripts.js?ver=5.2.1'></script>
+    <script type='text/javascript' src='https://www.crown.edu/wp-content/themes/seadev/assets/slick/slick.min.js'></script>
+    <script type='text/javascript' src='https://www.crown.edu/wp-content/themes/seadev-child/assets/js/jquery.fancybox.min.js?ver=3.5.7'></script>
+    <script type='text/javascript' src='https://www.crown.edu/wp-content/themes/seadev-child/assets/js/fancybox-video.js?ver=3.5.7'></script>
+    <script type='text/javascript' src='https://www.crown.edu/wp-content/themes/seadev-child/assets/js/jquery.scrollbar.js?ver=0.2.10'></script>
+    <script type='text/javascript' src='https://www.crown.edu/wp-content/themes/seadev-child/assets/js/theme.min.js?ver=0.5.5'></script>
+    <script type='text/javascript'>
+        /* <![CDATA[ */
+        var seadev = {"ajax_url": "https:\/\/www.crown.edu\/wp-admin\/admin-ajax.php"};
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='https://www.crown.edu/wp-content/themes/seadev-child/assets/js/scripts.js?ver=0.5.5'></script>
+    <script type='text/javascript' src='https://www.crown.edu/wp-includes/js/wp-embed.min.js?ver=5.4.2'></script>
+    <script type='text/javascript' src='https://www.crown.edu/wp-content/themes/seadev-child/block-templates/seadev-image-background/seadev-image-background.js'></script>
+    <script type='text/javascript' src='https://www.crown.edu/wp-content/themes/seadev-child/block-templates/seadev-default/seadev-default.js'></script>
+    <script type='text/javascript' src='https://www.crown.edu/wp-content/themes/seadev-child/block-templates/seadev-image-content/seadev-image-content.js'></script>
+    <script type='text/javascript' src='https://www.crown.edu/wp-content/themes/seadev-child/block-templates/seadev-grid/seadev-grid.js'></script>
+    <script type='text/javascript' src='https://www.crown.edu/wp-content/themes/seadev-child/block-templates/seadev-split/seadev-split.js'></script>
+
+    <script>
+        window.intercomSettings = {
+            app_id: "hsxktsnn"
+        };
+    </script>
+
+    <script>
+        // We pre-filled your app ID in the widget URL: 'https://widget.intercom.io/widget/hsxktsnn'
+        (function () {
+            var w = window;
+            var ic = w.Intercom;
+            if (typeof ic === "function") {
+                ic('reattach_activator');
+                ic('update', w.intercomSettings);
+            } else {
+                var d = document;
+                var i = function () {
+                    i.c(arguments);
+                };
+                i.q = [];
+                i.c = function (args) {
+                    i.q.push(args);
+                };
+                w.Intercom = i;
+                var l = function () {
+                    var s = d.createElement('script');
+                    s.type = 'text/javascript';
+                    s.async = true;
+                    s.src = 'https://widget.intercom.io/widget/hsxktsnn';
+                    var x = d.getElementsByTagName('script')[0];
+                    x.parentNode.insertBefore(s, x);
+                };
+                if (w.attachEvent) {
+                    w.attachEvent('onload', l);
+                } else {
+                    w.addEventListener('load', l, false);
+                }
+            }
+        })();
+    </script>
+    <style>
+        :root {
+            --bodyColor: #6f6f6f;
+        }
+    </style>
+    <script>
+        function fadein() {
+            let fadeWrapper = document.getElementById('seadev-loading');
+            fadeWrapper.style.display = "none";
+        }
+        function fadeout() {
+            let fadeWrapper = document.getElementById('seadev-loading');
+            fadeWrapper.style.display = "flex";
+        }
+    </script>
+    </body>
+    </html>
+</apex:page>

@@ -37,6 +37,7 @@ public with sharing class SummitEventsRegisterController {
     public boolean showLocation { get; set; }
     public String startTimeString { get; set; }
     public String endTimeString { get; set; }
+    public Boolean adminOpen { get; set; }
 
 
     public SummitEventsRegisterController() {
@@ -83,20 +84,6 @@ public with sharing class SummitEventsRegisterController {
             //define Event ID from instanceInfo data
             evtInfo.evtId = evtInstance.Event__r.Id;
             instanceName = evtInstance.Name;
-            Datetime currentDT = SEShared.adjustForCentralTime(Datetime.Now());
-
-            if (evtInstance.Event__r.Close_Event_Days_Before__c != null) {
-                currentDT = currentDT.addDays(Integer.Valueof(evtInstance.Event__r.Close_Event_Days_Before__c) + 1);
-            }
-
-            if (evtInstance.Current_Available_Capacity__c <= 0 || evtInstance.Active_Status__c != 'Active' || evtInstance.Instance_End_Date__c <= currentDT) {
-                eventIsClosed = true;
-            }
-
-            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-                Boolean adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-                eventIsClosed = adminOpen;
-            }
             startTimeString = SEShared.formatTime(evtInstance.Instance_Start_Time__c, false);
             endTimeString = SEShared.formatTime(evtInstance.Instance_End_Time__c, false);
         }
@@ -116,7 +103,8 @@ public with sharing class SummitEventsRegisterController {
                             Ask_Last_Name_As_Student__c, Ask_Preferred_Class_Year__c, Ask_Preferred_First_Name__c,
                             Ask_Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c,
-                            Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c, Ask_Pronoun__c
+                            Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c, Ask_Pronoun__c, Keep_Registration_Open_During_Event__c,
+                            Close_Event_Days_Before__c
                     FROM Summit_Events__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1
@@ -127,6 +115,13 @@ public with sharing class SummitEventsRegisterController {
                 if (eventPage.Ask_Applicant_Type__c.startsWith('Do not ask but assign ')) {
                     applicantType = eventPage.Ask_Applicant_Type__c.replace('Do not ask but assign ', '');
                 }
+            }
+
+            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+                adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
+                eventIsClosed = adminOpen;
+            } else {
+                eventIsClosed = SEShared.isEventClosed(eventPage, evtInstance);
             }
 
             if (
@@ -449,6 +444,12 @@ public with sharing class SummitEventsRegisterController {
             // create cookie to pass on to next page
             //Posting along everything we need to build the next page
             String encrytpString = SEShared.createEncryptedCookie('{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"' + evtInfo.evtRegId + '","evtId":"' + evtInfo.evtId + '"}', 'SummitEvents');
+
+            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+                optionPage.setRedirect(true);
+                optionPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
+            }
+
             return optionPage;
         }
 

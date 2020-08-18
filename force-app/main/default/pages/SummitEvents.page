@@ -11,21 +11,31 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="pageTitle"><a href="/SummitEvents">Events</a></apex:define>
         <apex:define name="scriptsHead">
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
+
+            <!--
+                The event calendar can be applied to any Web site. Just copy the highlighted code to any html file on the web.
+                This required code includes:
+                    ** Fullcalendar Css Files (cdn immediately follows this comment)
+                    ** Fullcalendar javascript files (cdn immediately follows this comment)
+                    ** HTML location tags (highlighted below)
+                    ** Custom Javascript to embed Salesforce feed and format it (highlighted below)
+            -->
+            <!-- Copy this for Summit Events Fullcalendar display on any page. Insert anywhere before code below -->
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.2.0/main.min.css"/>
-            <link href="{!URLFOR($Resource.SummitEventsAssets, '/fullcalendar/fullcalendar-ust.css')}" rel="stylesheet" type="text/css"/>
-            <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/eventList.js')}"/>
             <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.2.0/main.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/min/moment.min.js"></script>
+            <!-- end copy -->
         </apex:define>
         <apex:define name="sectionNav"/>
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
-                    <apex:messages />
+                    <apex:messages/>
                 </div>
                 <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                     <div class="slds-form-element">
                         <label class="slds-form-element__label" for="audienceDD-01">Select who you are to see events that are curated for you</label>
+
                         <div class="slds-form-element__control">
                             <select id="audienceDD" class="slds-select" name="audienceDD" title="Select an audience that matches you.">
                                 <option value="" selected="selected" default="true">Select...</option>
@@ -35,11 +45,178 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 </div>
                 <div id="eventCalWrap" class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                     <div id="datepickerOverlay">
+                        <!-- Copy this for Summit Events Fullcalendar display on any page. -->
                         <div id="fullCalendarView">
                         </div>
+                        <!-- end copy -->
                     </div>
                 </div>
             </div>
+            <!-- Copy this for Summit Events Fullcalendar display on any page. paste after fullCalendarView div -->
+            <style>
+                .SummitEventsItem {
+                    display: inline-block;
+                }
+
+                .fc-daygrid-event {
+                    white-space: normal;
+                }
+            </style>
+            <script>
+                const feedURL = '{!feedURL}'
+                const calendarEl = document.getElementById('fullCalendarView');
+                const overlay = '<div class="waiting-overlay"></div>';
+                const SESettings = JSON.parse(readCookie('SummitEvents'));
+                let audience;
+                loadAudienceDD();
+
+                function getCalView() {
+                    let initialView = 'dayGridMonth';
+                    if (window.innerWidth <= 900) {
+                        initialView = 'listMonth';
+                    }
+                    return initialView;
+                }
+
+                let calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: getCalView(),
+                    handleWindowResize: true,
+                    events: {
+                        url: feedURL,
+                        extraParams: function () {
+                            return {
+                                'feedType': 'eventList',
+                                'audience': document.getElementById("audienceDD").value
+                            }
+                        },
+                    },
+                    eventDataTransform: function (rawEventData) {
+                        return {
+                            id: rawEventData.Id,
+                            title: rawEventData.title,
+                            url: rawEventData.eventUrl,
+                            start: rawEventData.start,
+                            end: rawEventData.end,
+                            description: rawEventData.description
+                        };
+                    },
+                    eventDisplay: 'auto',
+                    eventTextColor: '#000',
+                    windowResize: function (arg) {
+                        this.view.type = getCalView();
+                    },
+                    eventClick: function (info) {
+                        info.jsEvent.preventDefault();
+                        if (info.event.url) {
+                            window.open(info.event.url);
+                        }
+                    },
+                    eventContent: function (info) {
+                        let eventClass = "SummitEventsItem";
+                        let audience = document.getElementById("audienceDD").value;
+                        let wrap = document.createElement('div');
+                        wrap.classList.add(eventClass);
+                        let link = document.createElement('a');
+                        link.href = info.event.url + '&audience=' + audience;
+                        link.target = '_blank';
+                        let desc = info.event.title;
+                        let startTime = formatTimeString(info.event.start.toLocaleTimeString());
+                        let endTime = formatTimeString(info.event.end.toLocaleTimeString());
+                        desc += '<br/>' + startTime + ' - ' + endTime;
+                        link.innerHTML = desc;
+                        wrap.append(link);
+                        let arrayOfDomNodes = [wrap]
+                        return {domNodes: arrayOfDomNodes}
+                    }
+                });
+
+                calendar.render();
+
+                document.getElementById("audienceDD").addEventListener('change', function () {
+                    eraseCookie('SummitEvents');
+                    createCookie('SummitEvents', '{"audience" : "' + $(this).val() + '"}', '');
+                    calendar.refetchEvents();
+                });
+
+                function setInstanceCookie(instanceID) {
+                    eraseCookie('SummitEvents');
+                    createCookie('SummitEvents', '{"audience" : "' + $("#audienceDD").val() + '", "instanceID" : "' + instanceID + '" }', '');
+                    return true;
+                }
+
+                function formatTimeString(stringIn) {
+                    let stringOut = '';
+                    let last = stringIn.lastIndexOf(":");
+                    stringOut = stringIn.substring(stringIn, last);
+                    stringOut += stringIn.substring(last + 3, stringIn.length);
+                    return stringOut;
+                }
+
+                function loadAudienceDD() {
+                    fetch(
+                        feedURL + "?feedType=audienceDD"
+                    ).then((resp) => resp.json())
+                        .then(function (data) {
+                            populateOptions(data, document.getElementById("audienceDD"))
+                            // $("#audienceDDwrap .waiting-overlay").remove();
+                            //preselect audience based on cookie
+                            if (SESettings != null) {
+                                if (SESettings.audience != null) {
+                                    document.getElementById("audienceDD").value = SESettings.audience;
+                                }
+                            }
+                            calendar.refetchEvents();
+                        }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
+
+                function populateOptions(data, selector, keyAsText) {
+                    selector.innerHTML = '';
+                    let opt1 = document.createElement("option");
+                    opt1.value = '';
+                    opt1.text = 'Select...';
+                    selector.append(opt1);
+                    for (const [key, value] of Object.entries(data)) {
+                        let opt2 = document.createElement("option");
+                        opt2.value = value;
+                        opt2.text = key;
+                        selector.append(opt2);
+                    }
+                }
+
+                function createCookie(name, value, days) {
+                    let expires;
+
+                    if (days) {
+                        let date = new Date();
+                        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                        expires = "; expires=" + date.toGMTString();
+                    } else {
+                        expires = "";
+                    }
+                    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
+                }
+
+                function readCookie(name) {
+                    let nameEQ = encodeURIComponent(name) + "=";
+                    let ca = document.cookie.split(';');
+                    for (let i = 0; i < ca.length; i++) {
+                        let c = ca[i];
+                        while (c.charAt(0) === ' ')
+                            c = c.substring(1, c.length);
+                        if (c.indexOf(nameEQ) === 0)
+                            return decodeURIComponent(c.substring(nameEQ.length, c.length));
+                    }
+                    return null;
+                }
+
+                function eraseCookie(name) {
+                    createCookie(name, "", -1);
+                }
+
+            </script>
+            <!-- end copy -->
         </apex:define>
     </apex:composition>
 </apex:page>
