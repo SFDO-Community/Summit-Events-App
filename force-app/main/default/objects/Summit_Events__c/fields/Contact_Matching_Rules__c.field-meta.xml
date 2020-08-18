@@ -23,6 +23,11 @@
                 <default>false</default>
                 <label>Matching rules 2</label>
             </value>
+            <value>
+                <fullName>Use Salesforce Duplicate Rule</fullName>
+                <default>false</default>
+                <label>Use Salesforce Duplicate Rule</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

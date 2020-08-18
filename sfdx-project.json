@@ -9,10 +9,11 @@
             "definitionFile": "orgs/dev.json"
         }
     ],
-    "namespace" : "summit",
+    "namespace": "summit",
     "sfdcLoginUrl": "https://login.salesforce.com",
     "sourceApiVersion": "48.0",
     "packageAliases": {
-        "Summit Events App": "0Ho4P000000fxYiSAI"
+        "Summit Events App": "0Ho4P000000fxYiSAI",
+        "Summit Events App@0.1.0-2": "04t4P000002T5TrQAK"
     }
 }

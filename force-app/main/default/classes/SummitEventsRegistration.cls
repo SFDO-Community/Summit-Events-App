@@ -11,8 +11,9 @@ public class SummitEventsRegistration {
                 oldListMap.put(ol.Id, ol);
             }
         }
+      
         for (Summit_Events_Registration__c r : (List<Summit_Events_Registration__c>) newlist) {
-            
+         
             //Get old Summit_Events_Registration__c by current ID
             Summit_Events_Registration__c oldReg = new Summit_Events_Registration__c(Status__c = 'new', Substatus__c='new');
             if (oldListMap.size() > 0) {
@@ -20,7 +21,7 @@ public class SummitEventsRegistration {
                     oldReg = oldListMap.get(r.Id);
                 }
             }
-            
+
             //Get all new trigger Summit_Events_Registration__c that have a status change by comparing old map
             if (String.isNotBlank(oldReg.Id)) {
                 if (r.Status__c != oldReg.Status__c || r.Substatus__c != oldReg.Substatus__c) {
@@ -38,7 +39,7 @@ public class SummitEventsRegistration {
                 }
             }
         }
-        
+
         //Get any templates for events that have restistration status changes
         List<Summit_Events_Email__c> matchEmail = [
             SELECT Action_Status__c, Action_Sub_status__c, Event__r.id, Letterhead_HTML__c, Email_Subject__c,
@@ -48,7 +49,7 @@ public class SummitEventsRegistration {
             AND Action_status__c != Null
             AND Action_Status__c != '--Inactive--'
         ];
-        
+      
         List<Task> activityUpdates = new List<Task>();
         
         //loop through affected event registrations - have status change from old
@@ -56,7 +57,7 @@ public class SummitEventsRegistration {
             //Loop through gather email templates to get template and use registration fields to fill in hooks
             for (Summit_Events_Email__c em : matchEmail) {
                 Boolean statusMatch = false;
-                
+              
                 if (em.Event__r.Id.equals(areg.Event__c)) {
                     
                     statusMatch = false;
@@ -70,7 +71,7 @@ public class SummitEventsRegistration {
                         System.Debug('Match made on status');
                         statusMatch = true;
                     }
-                    
+                
                     System.Debug(statusMatch + ': em.Action_Sub_status__c = ' + em.Action_Sub_status__c + ', areg.Substatus__c = ' + areg.Substatus__c + ', areg.Status__c = ' + areg.Status__c + ', em.Action_Status__c = ' + em.Action_Status__c);
                     
                     if (statusMatch) {
@@ -80,24 +81,24 @@ public class SummitEventsRegistration {
                         if (!String.isBlank(em.Letterhead_HTML__c)) {
                             originalTemplate = em.Letterhead_HTML__c;
                         }
-                        
+
                         emailContent = emailContent.replace('$', '\\$');
                         //Regex to find all Apex delineators {! }
                         Pattern TAG_REGEX = Pattern.compile('\\{!(.+?)\\}');
                         Matcher matcher = TAG_REGEX.matcher(emailContent);
                         Map<String, String> foundTags = new Map<String, String>();
-                        
+
                         //loop through found hocks and add only unique
                         while (matcher.find()) {
                             foundTags.put(matcher.group(1), matcher.group(1));
                         }
-                        
+
                         for (String ft : foundTags.values()) {
                             //add only found hooks and recreate regex with more percise
                             Pattern TAG_REGEX2 = Pattern.compile('\\{!(' + ft + ')\\}');
                             Matcher matcher2 = TAG_REGEX2.matcher(emailContent);
                             while (matcher2.find()) {
-                                
+
                                 //Get the value for hook from registration have to remove any registration object names since we are already in the object
                                 String found = matcher2.group(1).replace('Summit_Events_Registration__c.', '');
                                 try {
@@ -105,13 +106,13 @@ public class SummitEventsRegistration {
                                 } catch (Exception e) {
                                     found = '';
                                 }
-                                
+
                                 //replaceAll doesn't like nulls
                                 if (String.isBlank(found)) {
                                     found = '';
                                 }
                                 //replace all hooks with found values from regstration
-                                
+
                                 if (matcher2.group(1) == 'UG_Parking_Pass_Link__c' || matcher2.group(1) == 'Add_To_Calendar_Link__c' || matcher2.group(1) == 'Event_Registration_Cancel_Link__c') {
                                     found = found.replace('_HL_ENCODED_', '<a href="');
                                     found = found.replace('_HL__blank_HL_', '</a>');
@@ -144,11 +145,12 @@ public class SummitEventsRegistration {
             }
         }
         
+
         if (activityUpdates.size() > 0) {
             insert activityUpdates;
         } 
     }
-    
+
     public static void sendEmail2(String EmailTo, String HTMLBody, String PlainBody, String Subject, Id OrgEmailId, String BCCString) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setToAddresses(new String[]{

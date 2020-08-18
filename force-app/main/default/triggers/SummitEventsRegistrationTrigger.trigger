@@ -1,4 +1,13 @@
-trigger SummitEventsRegistrationTrigger on Summit_Events_Registration__c (after insert, after update) {
+trigger SummitEventsRegistrationTrigger on Summit_Events_Registration__c (before insert, before update, after insert, after update) {
+    if (Trigger.isBefore && Trigger.isInsert){
+        SummitEventsContactMatching SECM = new SummitEventsContactMatching();
+        SECM.matchContacts(Trigger.new);
+    }
+    if (Trigger.isBefore && Trigger.isUpdate){
+        SummitEventsContactMatching SECM = new SummitEventsContactMatching();
+        SECM.matchContacts(Trigger.new);
+    }
+
     if (Trigger.isAfter && Trigger.isInsert){
         SummitEventsRegistration.run(Trigger.new, Trigger.old);
     }

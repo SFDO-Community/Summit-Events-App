@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Keep_Registration_Open_During_Event__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>When checked registrants will be able to register for the event even while the event is happening.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When checked registrants will be able to register for the event even while the event is happening.</inlineHelpText>
+    <label>Keep Registration Open During Event</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
