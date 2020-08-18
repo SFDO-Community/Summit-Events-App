@@ -28,14 +28,6 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SummitEventsContactMatching</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>SummitEventsContactMatchingTest</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>SummitEventsController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -73,14 +65,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>SummitEventsRegisterController</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>SummitEventsRegistration</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>SummitEventsRegistrationTest</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -473,11 +457,6 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Instance__c.Active_Status__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Summit_Events_Instance__c.Admin_Open_Registration_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1328,11 +1307,6 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events__c.Community_Base_URL__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Summit_Events__c.Contact_Creation_Duplicate_Rule__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
