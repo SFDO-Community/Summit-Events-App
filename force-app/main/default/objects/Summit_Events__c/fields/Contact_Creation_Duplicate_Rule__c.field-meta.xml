@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact_Creation_Duplicate_Rule__c</fullName>
+    <description>The name of the Salesforce Duplicate Rule used as the logic for custom Contact Matching</description>
+    <externalId>false</externalId>
+    <label>Contact Creation Duplicate Rule</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Contact_Matching_Rules__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Summit Events Contact Creation</fullName>
+                <default>false</default>
+                <label>Summit Events Contact Creation</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Use Salesforce Duplicate Rule</controllingFieldValue>
+            <valueName>Summit Events Contact Creation</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>
