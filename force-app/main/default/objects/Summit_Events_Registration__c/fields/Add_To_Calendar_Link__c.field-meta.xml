@@ -3,15 +3,11 @@
     <fullName>Add_To_Calendar_Link__c</fullName>
     <description>Link to add to your calendar event feature.</description>
     <externalId>false</externalId>
-    <formula>HYPERLINK( Event__r.Community_Base_URL__c &amp;
-
-IF($Setup.Summit_Events_Settings__c.Managed_Package__c,&apos;summit__&apos;, &apos;&apos;)
-
-&amp; &quot;SummitEventsAddToCalendar?instanceID=&quot; 
-
-&amp; CASESAFEID(Event_Instance__r.Id),
-
-&quot;Add to Calendar&quot;)</formula>
+    <formula>HYPERLINK(
+Event__r.Community_Base_URL__c
+&amp; &quot;SummitEventsAddToCalendar?instanceID=&quot;
+&amp; CASESAFEID(Event_Instance__c)
+,&quot;Add to Calendar&quot;)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <inlineHelpText>Link to add to your calendar event feature.</inlineHelpText>
     <label>Add To Calendar Link</label>

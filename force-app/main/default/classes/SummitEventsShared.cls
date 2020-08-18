@@ -137,31 +137,6 @@ public with sharing class SummitEventsShared {
         return '';
     }
 
-    public boolean isEventClosed(Summit_Events__c eventPage, Summit_Events_Instance__c evtInstance) {
-        //Figure out if the event is closed.
-        Boolean eventIsClosed = false;
-
-        Date compareCloseDate = Date.today();
-
-        if (eventPage.Close_Event_Days_Before__c != null && eventPage.Close_Event_Days_Before__c != 0) {
-            compareCloseDate = compareCloseDate.addDays((Integer.valueOf(eventPage.Close_Event_Days_Before__c) + 1));
-        }
-
-        if (eventPage.Keep_Registration_Open_During_Event__c) {
-            if (evtInstance.Instance_Start_Date__c < compareCloseDate && evtInstance.Instance_End_Date__c != compareCloseDate) {
-                eventIsClosed = true;
-            }
-        } else if (evtInstance.Instance_Start_Date__c <= compareCloseDate) {
-            eventIsClosed = true;
-        }
-
-        if (evtInstance.Current_Available_Capacity__c <= 0 || evtInstance.Active_Status__c != 'Active') {
-            eventIsClosed = true;
-        }
-
-        return eventIsClosed;
-    }
-
     public String getTimeZonePick(String pickListTimeZone) {
         if (String.isNotBlank(pickListTimeZone)) {
             if (pickListTimeZone.length() > 4) {
@@ -203,11 +178,19 @@ public with sharing class SummitEventsShared {
         return displayName;
     }
 
+    public Datetime convertDateToDatetime(Date dateIn, Time timeIn) {
+        if (timeIn == null) {
+            timeIn = Time.newInstance(1, 12, 3, 4);
+        }
+        Datetime converted = Datetime.newInstance(dateIn.year(), dateIn.month(), dateIn.day(), timeIn.hour(), timeIn.minute(), timeIn.second());
+        return converted;
+    }
+
     public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance, Boolean dateTimeOnly) {
         String instanceDate = '';
         if (eventInstance.Instance_Start_Date__c != null && eventInstance.Instance_End_Date__c != null) {
-            Datetime convertedStartDate = convertDateToDatetime(eventInstance.Instance_Start_Date__c, null, '');
-            Datetime convertedEndDate = convertDateToDatetime(eventInstance.Instance_End_Date__c, null, '');
+            Datetime convertedStartDate = convertDateToDatetime(eventInstance.Instance_Start_Date__c, null);
+            Datetime convertedEndDate = convertDateToDatetime(eventInstance.Instance_End_Date__c, null);
             String monthStart = convertedStartDate.format('MMMM');
             String monthEnd = convertedEndDate.format('MMMM');
             String yearStart = convertedStartDate.format('YYYY');
@@ -265,28 +248,15 @@ public with sharing class SummitEventsShared {
         return crumb;
     }
 
-    public DateTime adjustForTimeZone(Datetime dt, String timezoneString) {
-        timezoneString = getTimeZonePick(timezoneString);
+    public DateTime adjustForCentralTime(Datetime dt) {
         //Get the current GMT time and adjust for our timezone
         //tz = TimeZone.getTimeZone('America/Chicago');
         //Timezone adjustment example below:
         //Datetime NowDate = Datetime.now();
         //NowDate = NowDate.addSeconds(tz.getOffset(NowDate)/1000);
-        //Central Daylight Time (America/Chicago)
-        TimeZone tz = TimeZone.getTimeZone(timezoneString);
+        TimeZone tz = TimeZone.getTimeZone('America/Chicago');
         dt = dt.addSeconds(tz.getOffset(dt) / 1000);
         return dt;
-    }
-
-    public Datetime convertDateToDatetime(Date dateIn, Time timeIn, String timezoneString) {
-        if (timeIn == null) {
-            timeIn = Time.newInstance(1, 12, 3, 4);
-        }
-        Datetime converted = Datetime.newInstance(dateIn.year(), dateIn.month(), dateIn.day(), timeIn.hour(), timeIn.minute(), timeIn.second());
-        if(String.isNotBlank(timezoneString)) {
-            converted = adjustForTimeZone(converted,timezoneString);
-        }
-        return converted;
     }
 
     public String formatTime(Time myTime, boolean military) {
@@ -295,7 +265,7 @@ public with sharing class SummitEventsShared {
             formatTime = String.valueOf(myTime.hour() - 12);
         } else {
             formatTime = String.valueOf(myTime.hour());
-            if (myTime.hour() < 10 && military) {
+            if (myTime.hour() < 10) {
                 formatTime = '0' + formatTime;
             }
         }

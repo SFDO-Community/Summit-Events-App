@@ -39,8 +39,9 @@ public with sharing class SummitEventsAddToCalendarController {
             }
 
             if (evtInfo != null) {
-                DTSTART = SEShared.convertDateToDatetime(evtInfo.Instance_Start_Date__c, evtInfo.Instance_Start_Time__c,'').format('yyyyMMdd\'T\'HHmmss\'Z\'');
-                DTEND = SEShared.convertDateToDatetime(evtInfo.Instance_End_Date__c, evtInfo.Instance_End_Time__c,'').format('yyyyMMdd\'T\'HHmmss\'Z\'');
+                TIMEZONE = SEShared.getTimeZonePick(evtInfo.Instance_Time_Zone__c);
+                DTSTART = dateStamp(evtInfo.Instance_Start_Date__c, evtInfo.Instance_Start_Time__c);
+                DTEND = dateStamp(evtInfo.Instance_End_Date__c, evtInfo.Instance_End_Time__c);
                 DTSTAMP = Datetime.now().format('yyyyMMdd\'T\'HHmmss\'Z\'');
                 SUMMARY = evtInfo.Event_Name__c;
                 if (!String.isBlank(evtInfo.Instance_Title__c)) {
@@ -55,6 +56,19 @@ public with sharing class SummitEventsAddToCalendarController {
                 DESCRIPTION += '\n' + evtInfo.Instance_Short_Description__c;
             }
         }
+    }
+
+    public String dateStamp(Date dateIn, Time timeIn) {
+        //20130802T103400
+        String stampOut = '';
+        if (dateIn != null) {
+            stampOut += SEShared.convertDateToDatetime(dateIn, null).format('yyyyMMdd');
+        }
+        if (timeIn != null) {
+            stampOut += 'T' + SEShared.formatTime(timeIn, true) + '00';
+        }
+        SEShared.convertDateToDatetime(dateIn, null).format('yyyyMMdd\'T\'HHmmss\'Z\'');
+        return stampOut;
     }
 
     private static String kHexChars = '0123456789abcdef';

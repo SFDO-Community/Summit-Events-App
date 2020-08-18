@@ -1415,11 +1415,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Summit_Events__c.Keep_Registration_Open_During_Event__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
         <field>Summit_Events__c.Location_Address__c</field>
         <readable>true</readable>
     </fieldPermissions>

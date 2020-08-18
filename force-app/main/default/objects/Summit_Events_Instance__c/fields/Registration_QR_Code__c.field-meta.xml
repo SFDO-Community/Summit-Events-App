@@ -2,15 +2,13 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Registration_QR_Code__c</fullName>
     <externalId>false</externalId>
-    <formula>IF (
+    <formula>/*
 
-$Setup.Summit_Events_Settings__c.Managed_Package__c,
+IMAGE(&apos;https://chart.googleapis.com/chart?chs=250x250&amp;cht=qr&amp;chl=&apos; +  Event__r.Community_Base_URL__c + &apos;SummitEventsRegister?instanceID=&apos; +  Id ,&apos;Scan QR code to open record in mobile.&apos;)
 
-IMAGE(&apos;https://chart.googleapis.com/chart?chs=400x400&amp;cht=qr&amp;chl=&apos; +  Event__r.Community_Base_URL__c + &apos;summit__SummitEventsRegister?instanceID=&apos; +  Id ,&apos;Scan QR code to open record in mobile.&apos;,250,250),
+*/
 
-IMAGE(&apos;https://chart.googleapis.com/chart?chs=400x400&amp;cht=qr&amp;chl=&apos; +  Event__r.Community_Base_URL__c + &apos;SummitEventsRegister?instanceID=&apos; +  Id ,&apos;Scan QR code to open record in mobile.&apos;,250,250)
-
-)</formula>
+IMAGE(&apos;https://chart.googleapis.com/chart?chs=400x400&amp;cht=qr&amp;chl=&apos; +  Event__r.Community_Base_URL__c + &apos;SummitEventsRegister?instanceID=&apos; +  Id ,&apos;Scan QR code to open record in mobile.&apos;,250,250)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Registration QR Code</label>
     <required>false</required>

@@ -94,10 +94,9 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             id: rawEventData.Id,
                             title: rawEventData.title,
                             url: rawEventData.eventUrl,
-                            start: rawEventData.start.replace('Z',''),
-                            end: rawEventData.end.replace('Z',''),
-                            description: rawEventData.description,
-                            className: rawEventData.className,
+                            start: rawEventData.start,
+                            end: rawEventData.end,
+                            description: rawEventData.description
                         };
                     },
                     eventDisplay: 'auto',
@@ -112,10 +111,10 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         }
                     },
                     eventContent: function (info) {
+                        let eventClass = "SummitEventsItem";
                         let audience = document.getElementById("audienceDD").value;
                         let wrap = document.createElement('div');
-                        //alert(info.event.className);
-                        wrap.classList.add(info.event.className);
+                        wrap.classList.add(eventClass);
                         let link = document.createElement('a');
                         link.href = info.event.url + '&audience=' + audience;
                         link.target = '_blank';
