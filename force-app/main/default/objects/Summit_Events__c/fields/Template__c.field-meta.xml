@@ -30,9 +30,9 @@
                 <label>GeneralSLDS</label>
             </value>
             <value>
-                <fullName>SandhyaTemplate</fullName>
+                <fullName>crowncollege2020</fullName>
                 <default>false</default>
-                <label>SandhyaTemplate</label>
+                <label>crowncollege2020</label>
             </value>
         </valueSetDefinition>
     </valueSet>
