@@ -213,6 +213,10 @@
                 <behavior>Edit</behavior>
                 <field>Registration_Email_Restriction__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Keep_Registration_Open_During_Event__c</field>
+            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
     </layoutSections>

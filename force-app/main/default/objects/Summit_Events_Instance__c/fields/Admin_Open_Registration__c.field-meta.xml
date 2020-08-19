@@ -3,19 +3,19 @@
     <fullName>Admin_Open_Registration__c</fullName>
     <externalId>false</externalId>
     <formula>IF (
-$Setup.Summit_Events_Settings__c.Managed_Package__c,
-HYPERLINK(
-Event__r.Community_Base_URL__c
-&amp; &quot;summit__SummitEventsRegister?instanceID=&quot;
-&amp; Id &amp; &quot;&amp;adminopen=1&quot;
-,&quot;Admin Open Registration&quot;),
+        $Setup.Summit_Events_Settings__c.Managed_Package__c,
+        HYPERLINK(
+        Event__r.Community_Base_URL__c
+        &amp; &quot;summit__SummitEventsRegister?instanceID=&quot;
+        &amp; Id &amp; &quot;&amp;adminopen=1&quot;
+        ,&quot;Admin Open Registration&quot;),
 
-HYPERLINK(
-Event__r.Community_Base_URL__c
-&amp; &quot;SummitEventsRegister?instanceID=&quot;
-&amp; Id &amp; &quot;&amp;adminopen=1&quot;
-,&quot;Admin Open Registration&quot;)
-)</formula>
+        HYPERLINK(
+        Event__r.Community_Base_URL__c
+        &amp; &quot;SummitEventsRegister?instanceID=&quot;
+        &amp; Id &amp; &quot;&amp;adminopen=1&quot;
+        ,&quot;Admin Open Registration&quot;)
+        )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Admin Open Registration Link</label>
     <required>false</required>

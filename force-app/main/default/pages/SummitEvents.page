@@ -35,6 +35,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                     <div class="slds-form-element">
                         <label class="slds-form-element__label" for="audienceDD-01">Select who you are to see events that are curated for you</label>
+
                         <div class="slds-form-element__control">
                             <select id="audienceDD" class="slds-select" name="audienceDD" title="Select an audience that matches you.">
                                 <option value="" selected="selected" default="true">Select...</option>
@@ -48,6 +49,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         <div id="fullCalendarView">
                             <!-- end copy -->
                         </div>
+                        <!-- end copy -->
                     </div>
                 </div>
             </div>
@@ -94,9 +96,10 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             id: rawEventData.Id,
                             title: rawEventData.title,
                             url: rawEventData.eventUrl,
-                            start: rawEventData.start,
-                            end: rawEventData.end,
-                            description: rawEventData.description
+                            start: rawEventData.start.replace('Z',''),
+                            end: rawEventData.end.replace('Z',''),
+                            description: rawEventData.description,
+                            className: rawEventData.className,
                         };
                     },
                     eventDisplay: 'auto',
@@ -111,10 +114,10 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         }
                     },
                     eventContent: function (info) {
-                        let eventClass = "SummitEventsItem";
                         let audience = document.getElementById("audienceDD").value;
                         let wrap = document.createElement('div');
-                        wrap.classList.add(eventClass);
+                        //alert(info.event.className);
+                        wrap.classList.add(info.event.className);
                         let link = document.createElement('a');
                         link.href = info.event.url + '&audience=' + audience;
                         link.target = '_blank';
