@@ -6,7 +6,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 -->
 
 <apex:page id="SummitEventsRegister" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" docType="html-5.0" cache="false" controller="SummitEventsRegisterController" action="{!checkEventDetails}">
-    <apex:composition template="{!templateSelected}">
+    <apex:composition template="{!IF((CONTAINS(templateSelected,'summit__') && NOT CONTAINS(templateSelected, 'slds')), $Page[SUBSTITUTE(templateSelected, 'summit__', '')], $Page[templateSelected])}">
         <apex:define name="metaPageTitle">
             {!evtInstance.Event__r.Event_Name__c}
             <apex:outputText rendered="{!!ISBLANK(evtInstance.Instance_Title__c)}" value="{! ' - ' + evtInstance.Instance_Title__c}"/>
@@ -23,6 +23,35 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
             </script>
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
             <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/register.js')}" type="text/javascript"/>
+            <style>
+                .slds-scope .slds-form-element__label, .slds-scope:not(html), .slds-scope body, .slds-scope .slds-input, .slds-scope .slds-select{
+                    font-size: 1.2rem;
+                    line-height: 1.5rem;
+                }
+                .slds-scope .slds-form-element__label, .slds-scope .slds-breadcrumb__item {
+                    font-size: 1.1rem!important;
+                }
+                .slds-scope .slds-input, .slds-scope .slds-select {
+                    min-height: 2.6rem!important;
+                }
+                .slds-scope .slds-text-heading_medium {
+                    font-size: 1.6rem!important;
+                    margin-top: 1.4rem!important;
+                }
+                .slds-scope .slds-text-heading_large {
+                    font-size: 2.2rem!important;
+                }
+                .slds-scope .slds-select {
+                    padding:3px 5px 3px 5px!important;
+                    background-image:none!important;
+                }
+                .slds-scope .slds-button_brand, .slds-scope .slds-button--brand {
+                    margin-top: 1.5rem!important;
+                    background-color:#5C068C!important;
+                    border-color:#5C068C!important;
+                }
+            </style>
+
         </apex:define>
 
         <apex:define name="body">
