@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Admin_Open_Registration__c</fullName>
+    <fullName>Admin_Open_Registration_Link__c</fullName>
     <externalId>false</externalId>
     <formula>IF (
         $Setup.Summit_Events_Settings__c.Managed_Package__c,
@@ -15,7 +15,8 @@
         &amp; &quot;SummitEventsRegister?instanceID=&quot;
         &amp; Id &amp; &quot;&amp;adminopen=1&quot;
         ,&quot;Admin Open Registration&quot;)
-        )</formula>
+        )
+    </formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Admin Open Registration Link</label>
     <required>false</required>
