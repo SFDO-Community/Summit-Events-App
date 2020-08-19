@@ -4,6 +4,7 @@
     <externalId>false</externalId>
     <formula>HYPERLINK(
 Event__r.Community_Base_URL__c
+&amp; IF($Setup.Summit_Events_Settings__c.Managed_Package__c, &quot;summit__&quot;, &quot;&quot;)
 &amp; &quot;summiteventscancelreview?regId=&quot;
 &amp; Id
 ,&quot;Cancel Registration&quot;)</formula>
