@@ -6,7 +6,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 -->
 
 <apex:page id="SummitEventsRegisterAppointments" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" docType="html-5.0" cache="false" controller="SummitEventsRegisterAppointmentCtlr" action="{!checkEventDetails}">
-    <apex:composition template="{!templateSelected}">
+    <apex:composition template="{!IF((CONTAINS(templateSelected,'summit__') && NOT CONTAINS(templateSelected, 'slds')), $Page[SUBSTITUTE(templateSelected, 'summit__', '')], $Page[templateSelected])}">
         <apex:define name="metaPageTitle">
             {!eventPage.Event_Name__c}
             <apex:outputText rendered="{!!ISBLANK(evtInstance.Instance_Title__c)}" value="{! ' - ' + evtInstance.Instance_Title__c}"/>
