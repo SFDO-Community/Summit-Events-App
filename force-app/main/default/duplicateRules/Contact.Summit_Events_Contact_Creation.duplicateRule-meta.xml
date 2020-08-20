@@ -14,5 +14,5 @@
     <masterLabel>Summit Events Contact Creation</masterLabel>
     <operationsOnInsert>Report</operationsOnInsert>
     <securityOption>BypassSharingRules</securityOption>
-    <sortOrder>3</sortOrder>
+    <sortOrder>1</sortOrder>
 </DuplicateRule>
