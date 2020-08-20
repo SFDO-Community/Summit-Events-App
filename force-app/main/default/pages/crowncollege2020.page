@@ -179,12 +179,20 @@
             }
         </style>
         <style>
-            .slds-scope .slds-form-element__label, .slds-scope:not(html), .slds-scope body, .slds-scope .slds-input, .slds-scope .slds-select{
+            .slds-scope {
+                margin-top:10px;
+                margin-bottom:30px;
+            }
+            .slds-scope .slds-form-element__label, .slds-scope:not(html),
+            .slds-scope body, .slds-scope .slds-input, .slds-scope .slds-select,
+            .slds-scope .slds-accordion__summary-heading
+            {
                 font-size: 1.2rem;
                 line-height: 1.5rem;
             }
-            .slds-scope .slds-form-element__label, .slds-scope .slds-breadcrumb__item {
-                font-size: 1.1rem!important;
+            .slds-scope .slds-form-element__label, .slds-scope .slds-breadcrumb__item,
+            .slds-scope .slds-text-body_regular {
+                font-size: 1.2rem!important;
             }
             .slds-scope .slds-input, .slds-scope .slds-select {
                 min-height: 2.6rem!important;
@@ -201,9 +209,11 @@
                 background-image:none!important;
             }
             .slds-scope .slds-button_brand, .slds-scope .slds-button--brand {
-                margin-top: 1.5rem!important;
                 background-color:#5C068C!important;
                 border-color:#5C068C!important;
+            }
+            .slds-scope .slds-button_neutral, .slds-scope .slds-button_brand {
+                margin-top: 1.5rem!important;
             }
         </style>
         <apex:insert name="scriptsHead"/>
@@ -540,10 +550,13 @@
         function fadein() {
             let fadeWrapper = document.getElementById('seadev-loading');
             fadeWrapper.style.display = "none";
+            return true;
         }
         function fadeout() {
             let fadeWrapper = document.getElementById('seadev-loading');
             fadeWrapper.style.display = "flex";
+            fadeWrapper.style.opacity = '.7';
+            return true
         }
     </script>
     </body>
