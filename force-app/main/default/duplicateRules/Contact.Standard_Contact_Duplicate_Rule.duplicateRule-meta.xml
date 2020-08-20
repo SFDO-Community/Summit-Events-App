@@ -2,8 +2,8 @@
 <DuplicateRule xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <actionOnInsert>Allow</actionOnInsert>
     <actionOnUpdate>Allow</actionOnUpdate>
-    <alertText xsi:nil="true"/>
-    <description xsi:nil="true"/>
+    <alertText>Duplicate Alert</alertText>
+    <description>Duplicate rule for contact records.</description>
     <duplicateRuleFilter xsi:nil="true"/>
     <duplicateRuleMatchRules>
         <matchRuleSObjectType>Contact</matchRuleSObjectType>
@@ -11,8 +11,10 @@
         <objectMapping xsi:nil="true"/>
     </duplicateRuleMatchRules>
     <isActive>true</isActive>
-    <masterLabel>Summit Events Contact Creation</masterLabel>
+    <masterLabel>Standard Contact Duplicate Rule</masterLabel>
+    <operationsOnInsert>Alert</operationsOnInsert>
     <operationsOnInsert>Report</operationsOnInsert>
-    <securityOption>BypassSharingRules</securityOption>
-    <sortOrder>3</sortOrder>
+    <operationsOnUpdate>Report</operationsOnUpdate>
+    <securityOption>EnforceSharingRules</securityOption>
+    <sortOrder>2</sortOrder>
 </DuplicateRule>
