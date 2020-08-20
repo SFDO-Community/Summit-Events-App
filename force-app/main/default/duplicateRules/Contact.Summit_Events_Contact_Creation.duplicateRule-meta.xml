@@ -10,9 +10,9 @@
         <matchingRule>Standard_Contact_Match_Rule_v1_1</matchingRule>
         <objectMapping xsi:nil="true"/>
     </duplicateRuleMatchRules>
-    <isActive>true</isActive>
+    <isActive>false</isActive>
     <masterLabel>Summit Events Contact Creation</masterLabel>
     <operationsOnInsert>Report</operationsOnInsert>
     <securityOption>BypassSharingRules</securityOption>
-    <sortOrder>3</sortOrder>
+    <sortOrder>1</sortOrder>
 </DuplicateRule>
