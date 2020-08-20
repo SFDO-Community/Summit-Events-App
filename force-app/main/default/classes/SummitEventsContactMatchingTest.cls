@@ -74,10 +74,6 @@ public class SummitEventsContactMatchingTest {
         registration.Contact__c = null;
         registration.Registrant_First_Name__c = 'Tester';
         update registration;
-        
-        registration.Contact__c = null;
-        registration.Registrant_Phone__c = '1234567890';
-        update registration;
     }
     
     @isTest
