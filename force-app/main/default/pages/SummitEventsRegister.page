@@ -774,38 +774,26 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                 </apex:outputText>
                                             </apex:outputLabel>
 
-
-                                            <div class="slds-form-element__control">
+                                            <apex:outputPanel layout="block" styleClass="slds-form-element__control">
 
                                                 <!--Text area -->
-                                                <apex:outputPanel layout="none" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'], 'Text area'), true, false)}">
-                                                    <div class="slds-form-element__control">
-                                                        <apex:inputTextarea label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input" required="true" rendered="{!isRequired}"/>
-                                                        <apex:inputTextarea label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input" rendered="{!!isRequired}"/>
-                                                    </div>
+                                                <apex:outputPanel layout="block" styleClass="slds-form-element__control" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'], 'Text area'), true, false)}">
+                                                    <apex:inputTextarea label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input"/>
                                                 </apex:outputPanel>
 
                                                 <!--Text box-->
-                                                <apex:outputPanel layout="none" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'],'Text box'), true, false)}">
-                                                    <div class="slds-form-element__control">
-                                                        <apex:inputText label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input" required="true" rendered="{!isRequired}"/>
-                                                        <apex:inputText label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input" rendered="{!!isRequired}"/>
-                                                    </div>
+                                                <apex:outputPanel layout="block" styleClass="slds-form-element__control" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'],'Text box'), true, false)}">
+                                                    <apex:inputText label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input"/>
                                                 </apex:outputPanel>
 
                                                 <!--Pick List-->
-                                                <apex:outputPanel layout="none" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'], 'Pick-list'), true, false)}">
-                                                    <div class="slds-select_container">
-                                                        <apex:selectList label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" size="1" required="true" rendered="{!isRequired}" styleClass="slds-select">
-                                                            <apex:selectOptions value="{!CASE(q, '1', addPick1, '2', addPick2, '3', addPick3, '4', addPick4, addPick5) }"/>
-                                                        </apex:selectList>
-                                                        <apex:selectList label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" size="1" rendered="{!!isRequired}" styleClass="slds-select">
-                                                            <apex:selectOptions value="{!CASE(q, '1', addPick1, '2', addPick2, '3', addPick3, '4', addPick4, addPick5) }"/>
-                                                        </apex:selectList>
-                                                    </div>
+                                                <apex:outputPanel layout="block" styleClass="slds-select_container" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'], 'Pick-list'), true, false)}">
+                                                    <apex:selectList label="{!'AddInfo' + q}" value="{!newEvtReg['Add_Info_Answer_' + q + '__c']}" size="1" styleClass="slds-select">
+                                                        <apex:selectOptions value="{!CASE(q, '1', addPick1, '2', addPick2, '3', addPick3, '4', addPick4, addPick5) }"/>
+                                                    </apex:selectList>
                                                 </apex:outputPanel>
 
-                                            </div>
+                                            </apex:outputPanel>
                                         </div>
                                     </div>
                                 </apex:outputPanel>
