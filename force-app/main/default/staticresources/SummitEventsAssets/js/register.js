@@ -80,7 +80,7 @@ function checkForm() {
     var error_count = 0;
     var emailReg = /^([a-zA-Z0-9_.\-.'.+])+@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
-    document.querySelectorAll(".slds-is-required input, .slds-is-required select").forEach(item => {
+    document.querySelectorAll(".slds-is-required .slds-input, .slds-is-required .slds-textarea").forEach(item => {
         let inputWrap = item.closest('.slds-form-element');
         let inputRequired = inputWrap.classList.contains('slds-is-required');
         let inputType = item.type.toLowerCase();

@@ -258,7 +258,7 @@ public with sharing class SummitEventsRegisterController {
                     birthDateString = newEvtReg.Registrant_date_of_Birth__c.format();
                 }
 
-                if (String.isNotBlank(newEvtReg.Registrant_Mobile_Phone__c) && String.isBlank(newEvtReg.Registrant_Phone__c)) {
+                if (eventPage.Ask_Phone__c.containsIgnoreCase('with type') && String.isNotBlank(newEvtReg.Registrant_Mobile_Phone__c) && String.isBlank(newEvtReg.Registrant_Phone__c)) {
                     phoneType = 'mobile';
                 } else {
                     phoneType = 'home';
@@ -383,7 +383,7 @@ public with sharing class SummitEventsRegisterController {
         List<String> majorCodes = new List<String>();
         Boolean progSelectionMade = true;
 
-        if (String.isNotBlank(phoneType)) {
+        if (String.isNotBlank(phoneType) && eventPage.Ask_Phone__c.containsIgnoreCase('with type')) {
             if (phoneType.equalsIgnoreCase('mobile')) {
                 newEvtReg.Registrant_Phone__c = '';
             } else if (phoneType.equalsIgnoreCase('home')) {
