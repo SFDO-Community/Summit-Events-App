@@ -1,5 +1,5 @@
 @isTest
-public class SummitEventsRegistrationTest {
+public class SummitEventsRegistration_TEST {
     @isTest
     public static void TestSummitEventsRegistration(){
         Summit_Events__c event = new Summit_Events__c();

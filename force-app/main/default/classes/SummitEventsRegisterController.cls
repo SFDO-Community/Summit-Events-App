@@ -258,6 +258,12 @@ public with sharing class SummitEventsRegisterController {
                     birthDateString = newEvtReg.Registrant_date_of_Birth__c.format();
                 }
 
+                if (eventPage.Ask_Phone__c.containsIgnoreCase('with type') && String.isNotBlank(newEvtReg.Registrant_Mobile_Phone__c) && String.isBlank(newEvtReg.Registrant_Phone__c)) {
+                    phoneType = 'mobile';
+                } else {
+                    phoneType = 'home';
+                }
+
                 //for comparison after the form is filled out we keep original queried event the see if key information is changed and matching should be redone.
                 oldEvtReg = newEvtReg;
             }
@@ -376,6 +382,14 @@ public with sharing class SummitEventsRegisterController {
         Pattern TAG_REGEX = Pattern.compile('\\((\\w+|\\w+\\|\\w+)\\)');
         List<String> majorCodes = new List<String>();
         Boolean progSelectionMade = true;
+
+        if (String.isNotBlank(phoneType) && eventPage.Ask_Phone__c.containsIgnoreCase('with type')) {
+            if (phoneType.equalsIgnoreCase('mobile')) {
+                newEvtReg.Registrant_Phone__c = '';
+            } else if (phoneType.equalsIgnoreCase('home')) {
+                newEvtReg.Registrant_Mobile_Phone__c = '';
+            }
+        }
 
         registrationCRUD rCRUD = new registrationCRUD();
 
