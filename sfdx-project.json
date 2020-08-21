@@ -5,7 +5,7 @@
             "default": true,
             "package": "Summit Events App",
             "versionName": "ver 0.11",
-            "versionNumber": "0.5.1.NEXT",
+            "versionNumber": "0.6.0.NEXT",
             "definitionFile": "orgs/dev.json",
             "ancestorId": "04t4P000002T5ZHQA0"
         }
@@ -16,6 +16,7 @@
     "packageAliases": {
         "Summit Events App": "0Ho4P000000fxYiSAI",
         "Summit Events App@0.4.0-1": "04t4P000002T5ZCQA0",
-        "Summit Events App@0.5.0-1": "04t4P000002T5ZHQA0"
+        "Summit Events App@0.5.0-1": "04t4P000002T5ZHQA0",
+        "Summit Events App@0.6.0-1": "04t4P000002T5ZbQAK"
     }
 }
