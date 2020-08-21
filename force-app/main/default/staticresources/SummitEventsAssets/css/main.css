@@ -1,27 +1,12 @@
 .slds-is-required label {font-weight: bold;}
 .slds-form-element .slds-form-element__help {display:none;}
 .slds-has-error {border-color:red!important;}
+.validationError, ul[role=alert] li { color: red !important; }
+ul[role=alert] li { font-weight:bold}   .validationError input { border: 1px solid red; }
+label.required { font-weight: bold; }
+.yearError {color: red; display: block; margin: -20px 0px -5px 0px; font-style: italic; }
 
-
-.validationError, ul[role=alert] li {
-    color: red !important;
-}
-ul[role=alert] li { font-weight:bold}
-.validationError input {
-    border: 1px solid red;
-}
-
-label.required {
-    font-weight: bold;
-}
-
-.yearError {
-    color: red;
-    display: block;
-    margin: -20px 0px -5px 0px;
-    font-style: italic;
-}
-
+#chosen .appointmentChosen p   {margin:6px 0px;}
 .eventClosed, .eventClosed * {
     color: gray !important;
 }

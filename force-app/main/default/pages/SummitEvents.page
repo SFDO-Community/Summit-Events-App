@@ -66,7 +66,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
             <script>
                 const feedURL = '{!feedURL}'
                 const calendarEl = document.getElementById('fullCalendarView');
-                const overlay = '<div class="waiting-overlay"></div>';
                 const SESettings = JSON.parse(readCookie('SummitEvents'));
                 let audience;
                 loadAudienceDD();
@@ -160,7 +159,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     ).then((resp) => resp.json())
                         .then(function (data) {
                             populateOptions(data, document.getElementById("audienceDD"))
-                            // $("#audienceDDwrap .waiting-overlay").remove();
                             //preselect audience based on cookie
                             if (SESettings != null) {
                                 if (SESettings.audience != null) {

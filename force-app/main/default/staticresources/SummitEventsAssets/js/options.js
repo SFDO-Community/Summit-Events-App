@@ -72,7 +72,7 @@ appointmentsReady(() => {
                 Object.assign(addAppt.dataset, Appt.dataset);
 
                 let appTitle = document.createElement('p');
-                addAppt.classList.add('appointmentTitle', 'slds-text-body');
+                addAppt.classList.add('appointmentTitle', 'slds-text-body', 'slds-m-vertical_small');
                 let findTitle = Appt.querySelector(".appointmentTitle");
                 appTitle.textContent = findTitle.textContent;
                 addAppt.append(appTitle);
@@ -90,14 +90,14 @@ appointmentsReady(() => {
 
                 if (desc) {
                     let apptDesc = document.createElement('p');
-                    apptDesc.classList.add('appointmentDesc', 'slds-text-body', 'slds-p-vertical_xx-small');
+                    apptDesc.classList.add('appointmentDesc', 'slds-text-body', 'slds-p-vertical_small');
                     apptDesc.textContent = desc;
                     addAppt.append(apptDesc);
                 }
 
                 //Create the remove button
                 let removeButton = document.createElement('a');
-                removeButton.classList.add('appointmentRemove');
+                removeButton.classList.add('appointmentRemove', 'slds-button', 'slds-button_neutral');
                 removeButton.textContent = ' Remove ';
                 removeButton.addEventListener("click", function (evt) {
                     evt.preventDefault();
@@ -150,6 +150,8 @@ function populateApptJSON() {
     let jsonOut = [];
     let chosen = document.getElementById('chosen');
     let allChosen = chosen.querySelectorAll('.appointmentChosen');
+    let pWithPad = document.createElement('p');
+    pWithPad.classList.add('slds-p-vertical_small');
     allChosen.forEach(function (appointment) {
         let appt = {};
         appt['apptId'] = appointment.dataset.apptid;
