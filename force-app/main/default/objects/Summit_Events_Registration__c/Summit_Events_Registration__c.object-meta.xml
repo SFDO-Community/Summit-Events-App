@@ -166,7 +166,16 @@
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Summit Events Registrations</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <searchResultsAdditionalFields>Event__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Event_Instance__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Registrant_First_Name__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Registrant_Last_Name__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Contact__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Event_Instance_Start_Date__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Event_Instance_Start_Time__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Number_of_Guests__c</searchResultsAdditionalFields>
+    </searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
     <startsWith>Vowel</startsWith>
     <visibility>Public</visibility>

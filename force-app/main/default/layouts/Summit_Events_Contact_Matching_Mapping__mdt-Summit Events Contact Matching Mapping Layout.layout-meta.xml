@@ -16,6 +16,10 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
+                <field>Source_Object__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
                 <field>Source_Value__c</field>
             </layoutItems>
             <layoutItems>
@@ -78,7 +82,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hP0000001cUGi</masterLabel>
+        <masterLabel>00h3F000002Zjfo</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
