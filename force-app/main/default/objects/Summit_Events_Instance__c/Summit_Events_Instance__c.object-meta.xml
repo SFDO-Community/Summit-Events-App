@@ -180,6 +180,13 @@
         <searchFilterFields>Event_Name__c</searchFilterFields>
         <searchFilterFields>Instance_Title__c</searchFilterFields>
         <searchFilterFields>Active_Status__c</searchFilterFields>
+        <searchResultsAdditionalFields>Event__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Count_of_Attendees__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Active_Status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Instance_Start_Date__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Instance_Start_Time__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Instance_End_Date__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Instance_End_Time__c</searchResultsAdditionalFields>
     </searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
     <startsWith>Vowel</startsWith>

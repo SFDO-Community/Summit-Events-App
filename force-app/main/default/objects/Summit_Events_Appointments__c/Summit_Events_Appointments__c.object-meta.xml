@@ -163,7 +163,12 @@
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Summit Events Appointments</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <searchResultsAdditionalFields>Appointment_Category__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Appointment_Date_Time__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Appointment_Status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Contact__c</searchResultsAdditionalFields>
+    </searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
     <startsWith>Vowel</startsWith>
     <visibility>Public</visibility>

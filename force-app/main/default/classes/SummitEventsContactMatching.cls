@@ -16,11 +16,7 @@ public with sharing class SummitEventsContactMatching {
         
         List<Summit_Events_Registration__c> byDuplicateRule = new List<Summit_Events_Registration__c>();
         for (Summit_Events_Registration__c reg : newRegistrations){
-            try {
-                reg.Answer_1_Numeric__c = Integer.valueOf(reg.Add_Info_Answer_1__c);
-            } catch (Exception e){
-                reg.Answer_1_Numeric__c = null;
-            }
+            setNumberFields(reg);
             Summit_Events__c event = matchingRules.get(reg.Event__c);
             
             if (event.Contact_Matching_Rules__c == 'Matching rules 1' || event.Contact_Matching_Rules__c == 'Matching rules 2'){
@@ -38,13 +34,41 @@ public with sharing class SummitEventsContactMatching {
         }
     }
     
+    private void setNumberFields(Summit_Events_Registration__c reg){
+        try {
+            reg.Answer_1_Numeric__c = Integer.valueOf(reg.Add_Info_Answer_1__c);
+        } catch (Exception e){
+            reg.Answer_1_Numeric__c = null;
+        }
+        try {
+            reg.Answer_2_Numeric__c = Integer.valueOf(reg.Add_Info_Answer_2__c);
+        } catch (Exception e){
+            reg.Answer_2_Numeric__c = null;
+        }
+        try {
+            reg.Answer_3_Numeric__c = Integer.valueOf(reg.Add_Info_Answer_3__c);
+        } catch (Exception e){
+            reg.Answer_3_Numeric__c = null;
+        }
+        try {
+            reg.Answer_4_Numeric__c = Integer.valueOf(reg.Add_Info_Answer_4__c);
+        } catch (Exception e){
+            reg.Answer_4_Numeric__c = null;
+        }
+        try {
+            reg.Answer_5_Numeric__c = Integer.valueOf(reg.Add_Info_Answer_5__c);
+        } catch (Exception e){
+            reg.Answer_5_Numeric__c = null;
+        }
+    }
+    
     public void matchContactsByDuplicateRule(List<Summit_Events_Registration__c> newRegistrations){
         // Make it easy to tell what Matching Rule we're basing this off of
         Map<Id, String> matchType = new Map<Id, String>();
         Map<Id, String> matchMethod = new Map<Id, String>();
         for (Summit_Events__c event : [SELECT Id, Contact_Creation_Duplicate_Rule__c, Custom_Metadata_Contact_Matching_Method__c
-                                               FROM Summit_Events__c
-                                               WHERE Id IN (SELECT Event__c FROM Summit_Events_Registration__c WHERE Id IN :newRegistrations)])
+                                       FROM Summit_Events__c
+                                       WHERE Id IN (SELECT Event__c FROM Summit_Events_Registration__c WHERE Id IN :newRegistrations)])
         {
             String duplicateRuleName = event.Contact_Creation_Duplicate_Rule__c;
             duplicateRuleName = duplicateRuleName.replaceAll(' ', '_');
@@ -154,7 +178,7 @@ public with sharing class SummitEventsContactMatching {
         
         for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
                                                                     FROM Summit_Events_Contact_Matching_Mapping__mdt
-                                                                    WHERE Contact_Matching_Method__c = :matchingMethod])
+                                                                    WHERE Contact_Matching_Method__c = :matchingMethod AND Source_Object__c = 'summit__Summit_Events_Registration__c'])
         {
             System.debug('mapping - ' + mapping);
             if (mapping.Source_Type__c == 'Field'){
@@ -328,7 +352,7 @@ public with sharing class SummitEventsContactMatching {
                 'softFirstLastZipMatches' => softFirstLastZipMatches.abbreviate(255),
                 'newContactCreated' => String.valueOf(newContactCreated),
                 'matchLog' => matchLog};
-    }
+                    }
     
     private String matching1TD(String ContactId, String LastName, String FirstName, String Email, String Zip, Boolean Action) {
         String mOut = '<tr class="slds-hint-parent">';
@@ -363,7 +387,7 @@ public with sharing class SummitEventsContactMatching {
         Summit_Events__c event = [SELECT Custom_Metadata_Contact_Matching_Method__c FROM Summit_Events__c WHERE Id = :evt.Event__c];
         for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
                                                                     FROM Summit_Events_Contact_Matching_Mapping__mdt
-                                                                    WHERE Contact_Matching_Method__c = :event.Custom_Metadata_Contact_Matching_Method__c])
+                                                                    WHERE Contact_Matching_Method__c = :event.Custom_Metadata_Contact_Matching_Method__c AND Source_Object__c = 'summit__Summit_Events_Registration__c'])
         {
             System.debug('mapping - ' + mapping);
             if (mapping.Source_Type__c == 'Field'){
@@ -429,8 +453,8 @@ newEvtContact.EnrollmentrxRx__High_School_Code__c = evt.Registrant_College_Code_
         
         //New HEDA field is inverse
         /*if (evt.Registrant_Receive_Texts__c = true) {
-            newEvtContact.Do_Not_Text__c = false;
-        }*/
+newEvtContact.Do_Not_Text__c = false;
+}*/
         
         System.debug('Contact to create!!!:  ' + JSON.serializePretty(newEvtContact));
         newEvtContact = CRUDtoDo.addContact(newEvtContact);
@@ -721,12 +745,12 @@ End of Depreciated fields */
                 queryComplete = false;
             }
             /*
-            if (String.isNotBlank(evt.Preferred_Class_Year__c)) {
-                query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_Class_Year__c) + '\' ';
-            } else {
-                queryComplete = false;
-            }
-            */
+if (String.isNotBlank(evt.Preferred_Class_Year__c)) {
+query += ' AND Preferred_Class_Year__c = \'' + String.escapeSingleQuotes(evt.Preferred_Class_Year__c) + '\' ';
+} else {
+queryComplete = false;
+}
+*/
             List<Contact> softContactTestNamePhoneClass = new List<Contact>();
             if (queryComplete) {
                 softContactTestNamePhoneClass = CRUDtoDo.findContacts(query);
@@ -828,16 +852,16 @@ End of Depreciated fields */
             return null;
         }
         /*
-        public hed__Address__c addAddress(hed__Address__c addressToAdd) {
-            try {
-                upsert addressToAdd;
-                return addressToAdd;
-            } catch (Exception ex) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
-            }
-            return null;
-        }
-        */
+public hed__Address__c addAddress(hed__Address__c addressToAdd) {
+try {
+upsert addressToAdd;
+return addressToAdd;
+} catch (Exception ex) {
+ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
+}
+return null;
+}
+*/
         Public List<Contact> emailLastMatch(String email, String last) {
             List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :last AND Email = :email];
             return foundContacts;
