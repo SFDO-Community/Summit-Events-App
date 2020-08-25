@@ -89,7 +89,7 @@ public class SummitEventsNamespace {
     * @return token name, with namespace prefix removed, if present.
     ********************************************************************************************************/
     public static string StrTokenRemoveNSPrefix(string str) {
-        if(str.startsWith('npsp__'))
+        if (str.startsWith('npsp__'))
             str = str.replaceFirst('npsp__', '');
         if (getNamespace() != '' && str.startsWith(getNamespace() + '__'))
             str = str.replaceFirst(getNamespace() + '__', '');
@@ -108,7 +108,7 @@ public class SummitEventsNamespace {
         if (getNamespace() == '') return str;
         Pattern pat = Pattern.Compile('[a-zA-z0-9]*__c');
         Matcher match = pat.matcher(str);
-        return match.replaceAll(getNamespace()+'__$0');
+        return match.replaceAll(getNamespace() + '__$0');
     }
 
     /*******************************************************************************************************
@@ -124,7 +124,7 @@ public class SummitEventsNamespace {
     * @return string with user's email.
     ********************************************************************************************************/
     public static String sandboxEmailToRealEmail(String email) {
-        if((isSandbox() || Test.isRunningTest()) && email.contains('=')) {
+        if ((isSandbox() || Test.isRunningTest()) && email.contains('=')) {
             email = email.substring(0, email.indexOf('@'));
             email = email.replace('=', '@');
         }

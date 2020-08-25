@@ -196,7 +196,7 @@ global with sharing class SummitEventsFeed {
         for (Summit_Events_Instance__c eventInstance : EventInstanceList) {
             regDateOpenDate = Datetime.now().addDays(-1);
             if (eventInstance.Event__r.Close_Event_Days_Before__c != null && eventInstance.Event__r.Close_Event_Days_Before__c != 0) {
-                regDateOpenDate = SEShared.adjustForTimeZone(Datetime.now(),eventInstance.Instance_Time_Zone__c);
+                regDateOpenDate = SEShared.adjustForTimeZone(Datetime.now(), eventInstance.Instance_Time_Zone__c);
                 regDateOpenDate = regDateOpenDate.addDays((Integer.valueOf(eventInstance.Event__r.Close_Event_Days_Before__c) + 1));
             }
             eventItem evt = new eventItem();

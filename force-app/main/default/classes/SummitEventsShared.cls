@@ -283,8 +283,8 @@ public with sharing class SummitEventsShared {
             timeIn = Time.newInstance(1, 12, 3, 4);
         }
         Datetime converted = Datetime.newInstance(dateIn.year(), dateIn.month(), dateIn.day(), timeIn.hour(), timeIn.minute(), timeIn.second());
-        if(String.isNotBlank(timezoneString)) {
-            converted = adjustForTimeZone(converted,timezoneString);
+        if (String.isNotBlank(timezoneString)) {
+            converted = adjustForTimeZone(converted, timezoneString);
         }
         return converted;
     }

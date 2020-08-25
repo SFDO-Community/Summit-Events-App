@@ -61,7 +61,7 @@ public with sharing class SummitEventsHostAssignmentExtension {
                 upsert newHost;
                 upsert SEApt;
             } else {
-                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR,'Looks like that host has run out of capacity.');
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, 'Looks like that host has run out of capacity.');
                 ApexPages.addMessage(myMsg);
             }
         }

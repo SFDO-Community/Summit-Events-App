@@ -38,14 +38,14 @@
 public with sharing class SummitEventsNamespace_TEST {
 
     static testmethod void TestNamespacePrefixFixups() {
-        if (SummitEventsNamespace.getNamespace()!='') {
-            system.assertNotEquals('',SummitEventsNamespace.getNamespace());
-            system.assertEquals(SummitEventsNamespace.getNamespace()+'__foo', SummitEventsNamespace.StrTokenNSPrefix('foo'));
-            system.assertEquals(SummitEventsNamespace.getNamespace()+'__foo__c', SummitEventsNamespace.StrTokenNSPrefix('foo__c'));
+        if (SummitEventsNamespace.getNamespace() != '') {
+            system.assertNotEquals('', SummitEventsNamespace.getNamespace());
+            system.assertEquals(SummitEventsNamespace.getNamespace() + '__foo', SummitEventsNamespace.StrTokenNSPrefix('foo'));
+            system.assertEquals(SummitEventsNamespace.getNamespace() + '__foo__c', SummitEventsNamespace.StrTokenNSPrefix('foo__c'));
             system.assertEquals('foo', SummitEventsNamespace.StrAllNSPrefix('foo'));
-            system.assertEquals(SummitEventsNamespace.getNamespace()+'__foo__c', SummitEventsNamespace.StrAllNSPrefix('foo__c'));
-            system.assertEquals(SummitEventsNamespace.getNamespace()+'__foo_bar_baz__c', SummitEventsNamespace.StrAllNSPrefix('foo_bar_baz__c'));
-            system.assertEquals('select '+SummitEventsNamespace.getNamespace()+'__foo__c, bar, '+SummitEventsNamespace.getNamespace()+'__baz1__c, '+SummitEventsNamespace.getNamespace()+'__biz_buz__c from Contact', SummitEventsNamespace.StrAllNSPrefix('select foo__c, bar, baz1__c, biz_buz__c from Contact'));
+            system.assertEquals(SummitEventsNamespace.getNamespace() + '__foo__c', SummitEventsNamespace.StrAllNSPrefix('foo__c'));
+            system.assertEquals(SummitEventsNamespace.getNamespace() + '__foo_bar_baz__c', SummitEventsNamespace.StrAllNSPrefix('foo_bar_baz__c'));
+            system.assertEquals('select ' + SummitEventsNamespace.getNamespace() + '__foo__c, bar, ' + SummitEventsNamespace.getNamespace() + '__baz1__c, ' + SummitEventsNamespace.getNamespace() + '__biz_buz__c from Contact', SummitEventsNamespace.StrAllNSPrefix('select foo__c, bar, baz1__c, biz_buz__c from Contact'));
         } else {
             system.assertEquals('foo', SummitEventsNamespace.StrTokenNSPrefix('foo'));
             system.assertEquals('foo__c', SummitEventsNamespace.StrTokenNSPrefix('foo__c'));
