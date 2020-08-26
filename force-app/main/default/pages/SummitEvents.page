@@ -66,7 +66,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 }
 
                 .SummitEventsItem:hover {
-                    text-decoration: none!important;
+                    text-decoration: none !important;
                 }
 
                 .fc-listMonth-view .SummitEventsItem {
@@ -87,6 +87,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     display: block;
                     font-size: .85em;
                 }
+
                 .tippy-box {
                     background: #f9f9f9;
                     font-family: 'Salesforce Sans', Arial, sans-serif;
@@ -116,6 +117,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 const calendarEl = document.getElementById('fullCalendarView');
                 const SESettings = JSON.parse(readCookie('SummitEvents'));
                 const audienceDD = document.getElementById('audienceDD');
+                const hideCalendarUntilAudience = false;
                 if (audienceDD) {
                     loadAudienceDD();
                 }
@@ -156,15 +158,16 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     eventTextColor: '#000',
                     eventContent: function (info) {
                         let wrap = document.createElement('a');
-                        wrap.href= info.event.url;
-                        wrap.target = '_blank';
                         wrap.classList.add('SummitEventsItem');
                         let titleWrap = document.createElement('span');
                         titleWrap.classList.add('summitEventsTitle');
-                        if (info.event.url && info.classNames != 'eventClosed') {
+                        console.log(JSON.stringify(info.event.classNames));
+                        if (info.event.classNames != 'eventClosed') {
                             titleWrap.innerHTML = info.event.title
+                            wrap.href = info.event.url;
+                            wrap.target = '_blank';
                         } else {
-                            titleWrap.innerHTML = info.event.title + '<br><em>Event is closed</em>';
+                            titleWrap.innerHTML = info.event.title + '<br><em>Event is closed.</em>';
                         }
                         let descWrap = document.createElement('span');
                         descWrap.classList.add('summitEventsDesc');
@@ -175,7 +178,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         let endTime = formatTimeString(info.event.end.toLocaleString());
                         timeWrap.innerHTML = startTime + ' - ' + endTime;
                         wrap.append(titleWrap);
-                        if(info.view.type === 'dayGridMonth') {
+                        if (info.view.type === 'dayGridMonth') {
                             wrap.append(timeWrap);
                         } else {
                             wrap.append(descWrap);
@@ -202,6 +205,11 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     audienceDD.addEventListener('change', function () {
                         eraseCookie('SummitEvents');
                         createCookie('SummitEvents', '{"audience" : "' + getAudienceDDValue() + '"}', '');
+                        if (getAudienceDDValue() == '' && hideCalendarUntilAudience) {
+                            calendarEl.style.visibility = "hidden";
+                        } else {
+                            calendarEl.style.visibility = "visible";
+                        }
                         calendar.refetchEvents();
                     });
                 }
@@ -222,7 +230,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     if (audienceDD) {
                         audienceDDValue = audienceDD.value;
                     }
-                    if (audienceDDValue == 'Select..') {
+                    if (audienceDDValue == 'Select...') {
                         audienceDDValue = '';
                     }
                     return audienceDDValue;
@@ -241,6 +249,9 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 }
                             }
                             calendar.refetchEvents();
+                            if (getAudienceDDValue() == '' && hideCalendarUntilAudience) {
+                                calendarEl.style.visibility = "hidden";
+                            }
                         }).catch(function (error) {
                         console.log(error);
                     });
