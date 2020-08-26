@@ -1,7 +1,7 @@
 @isTest
 public class SummitEventsRegistration_TEST {
     @isTest
-    public static void TestSummitEventsRegistration(){
+    public static void TestSummitEventsRegistration() {
         Summit_Events__c event = new Summit_Events__c();
         event.Name = 'Test event';
         insert event;
@@ -9,9 +9,9 @@ public class SummitEventsRegistration_TEST {
         Summit_Events_Instance__c instance = new Summit_Events_Instance__c();
         instance.Event__c = event.Id;
         instance.Instance_Start_Date__c = System.today();
-        instance.Instance_Start_Time__c = Time.newInstance(0,0,0,0);
+        instance.Instance_Start_Time__c = Time.newInstance(0, 0, 0, 0);
         instance.Instance_End_Date__c = System.today();
-        instance.Instance_End_Time__c = Time.newInstance(23,59,59,0);
+        instance.Instance_End_Time__c = Time.newInstance(23, 59, 59, 0);
         instance.Active_Status__c = 'Active';
         insert instance;
         Summit_Events_Email__c email1 = new Summit_Events_Email__c();

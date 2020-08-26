@@ -116,9 +116,9 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Event__c = testEvent.Id,
                 Instance_Title__c = testEventName + ' Sesssion',
                 Instance_Start_Date__c = Date.today().addDays(1),
-                Instance_Start_Time__c = Time.newInstance(8,0,0,0),
+                Instance_Start_Time__c = Time.newInstance(8, 0, 0, 0),
                 Instance_End_Date__c = Date.today().addDays(1),
-                Instance_End_Time__c = Time.newInstance(14,0,0,0),
+                Instance_End_Time__c = Time.newInstance(14, 0, 0, 0),
                 Active_Status__c = 'Active',
                 Capacity__c = 500,
                 Location_Title_Override__c = 'A location',
@@ -132,9 +132,9 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Event__c = testEvent.Id,
                 Instance_Title__c = testEventName + ' Sesssion 2',
                 Instance_Start_Date__c = Date.today().addDays(3),
-                Instance_Start_Time__c = Time.newInstance(8,0,0,0),
+                Instance_Start_Time__c = Time.newInstance(8, 0, 0, 0),
                 Instance_End_Date__c = Date.today().addDays(3),
-                Instance_End_Time__c = Time.newInstance(14,0,0,0),
+                Instance_End_Time__c = Time.newInstance(14, 0, 0, 0),
                 Active_Status__c = 'Active',
                 Capacity__c = 500
         );

@@ -161,7 +161,14 @@
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Summit Events Emails</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <searchResultsAdditionalFields>Event__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Email_Subject__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Email_From__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Action_Status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Action_Sub_status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Org_Email__c</searchResultsAdditionalFields>
+    </searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>

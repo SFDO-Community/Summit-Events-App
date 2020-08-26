@@ -165,7 +165,12 @@
         <type>Text</type>
     </nameField>
     <pluralLabel>Summit Events</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <searchResultsAdditionalFields>Event_Status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Event_Type__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Start_Date__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>End_Date__c</searchResultsAdditionalFields>
+    </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <startsWith>Vowel</startsWith>
     <visibility>Public</visibility>

@@ -15,8 +15,7 @@
         &amp; &quot;SummitEventsRegister?instanceID=&quot;
         &amp; Id &amp; &quot;&amp;adminopen=1&quot;
         ,&quot;Admin Open Registration&quot;)
-        )
-    </formula>
+        )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Admin Open Registration Link</label>
     <required>false</required>

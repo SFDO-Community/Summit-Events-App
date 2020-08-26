@@ -39,7 +39,7 @@ public with sharing class SummitEventsSubmitController {
                     LIMIT 1
             ];
 
-            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance,false);
+            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance, false);
         }
 
         if (!String.isBlank(evtinfo.evtRegId)) {

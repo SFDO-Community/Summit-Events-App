@@ -168,6 +168,11 @@
         <lookupDialogsAdditionalFields>Gender__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>Contact__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>Undergrad_Major__c</lookupDialogsAdditionalFields>
+        <searchResultsAdditionalFields>Event_Instance__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>First_Name__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Last_Name__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>RECORDTYPE</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Assigned__c</searchResultsAdditionalFields>
     </searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>

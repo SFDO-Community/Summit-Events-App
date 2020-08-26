@@ -62,7 +62,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
 
                 if (evtInstance != null) {
-                    String dayOfWeek = SEShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c,null,'').format('EEEE');
+                    String dayOfWeek = SEShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
                     // = dayOfWeek;
                     //Build available appointments
                     appts = new Map<ID, Summit_Events_Appointment_Type__c>([
@@ -79,7 +79,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             ORDER BY Sort_Order__c ASC NULLS LAST
                     ]);
 
-                    navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance,false);
+                    navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance, false);
 
                     //Check if the user gets to select any appointments or they are all auto added
                     for (Summit_Events_Appointment_Type__c chosenCheck : appts.values()) {
