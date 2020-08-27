@@ -11,6 +11,23 @@
     <type>Picklist</type>
     <valueSet>
         <restricted>true</restricted>
-        <valueSetName>Location</valueSetName>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Online</fullName>
+                <default>false</default>
+                <label>Online</label>
+            </value>
+            <value>
+                <fullName>On-Site</fullName>
+                <default>false</default>
+                <label>On-Site</label>
+            </value>
+            <value>
+                <fullName>Off-Campus</fullName>
+                <default>false</default>
+                <label>Off-Campus</label>
+            </value>
+        </valueSetDefinition>
     </valueSet>
 </CustomField>
