@@ -85,9 +85,21 @@ global with sharing class SummitEventsFeed {
         eventQuery += ' WHERE ';
         eventQuery += ' Event__R.Event_Status__c = \'Active\' ';
         eventQuery += ' AND Active_Status__c = \'Active\' ';
-        eventQuery += ' AND (Current_Available_Capacity__c > 0 OR Capacity__c = null) ';
         eventQuery += ' AND Event__r.Private_Event__c = false ';
         eventQuery += ' AND Private_Instance__c = false ';
+
+        Boolean hideClosed = false;
+        if (String.isNotBlank(req.params.get('hideClosed'))) {
+            try {
+                hideClosed = Boolean.valueOf(req.params.get('hideClosed'));
+            } catch (Exception e) {
+                hideClosed = false;
+            }
+        }
+        if (hideClosed) {
+            eventQuery += ' AND (Current_Available_Capacity__c > 0 OR Capacity__c = null) ';
+        }
+
 
         // build and sanitize the where statement that have variables
 
@@ -311,10 +323,13 @@ global with sharing class SummitEventsFeed {
                 evt.locationMapLink = '';
             }
 
-            if (evt.start < regDateOpenDate) {
+            if (evt.start < regDateOpenDate || eventInstance.Current_Available_Capacity__c <= 0) {
                 evt.eventClosed = true;
-                evt.eventUrl = 'javascript:void(0);';
+                evt.eventUrl = 'javascript:;';
                 evt.className = 'eventClosed';
+                if (!hideClosed) {
+                    EventList.add(evt);
+                }
             } else {
                 evt.eventClosed = false;
                 if (!String.isBlank(eventInstance.Event__r.Alternate_Registration_URL__c) || !String.isBlank(eventInstance.Alternate_Registration_URL_Override__c)) {
@@ -328,9 +343,8 @@ global with sharing class SummitEventsFeed {
                     evt.eventUrl = eventInstance.Event__r.Community_Base_URL__c + namespace + 'SummitEventsRegister?instanceID=' + eventInstance.Id;
                 }
                 evt.className = 'eventOpened';
+                EventList.add(evt);
             }
-
-            EventList.add(evt);
         }
         return EventList;
     }
