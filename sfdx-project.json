@@ -5,9 +5,9 @@
             "default": true,
             "package": "Summit Events App",
             "versionName": "ver 0.11",
-            "versionNumber": "0.6.0.NEXT",
+            "versionNumber": "0.7.0.NEXT",
             "definitionFile": "orgs/dev.json",
-            "ancestorId": "04t4P000002T5ZHQA0"
+            "ancestorId": "04t4P000002T5ZlQAK"
         }
     ],
     "namespace": "summit",
@@ -19,6 +19,7 @@
         "Summit Events App@0.5.0-1": "04t4P000002T5ZHQA0",
         "Summit Events App@0.6.0-1": "04t4P000002T5ZbQAK",
         "Summit Events App@0.6.0-2": "04t4P000002T5ZgQAK",
-        "Summit Events App@0.6.0-3": "04t4P000002T5ZlQAK"
+        "Summit Events App@0.6.0-3": "04t4P000002T5ZlQAK",
+        "Summit Events App@0.7.0-1": "04t4P000002T5aPQAS"
     }
 }
