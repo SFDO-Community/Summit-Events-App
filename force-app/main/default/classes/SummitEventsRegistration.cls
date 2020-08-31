@@ -128,17 +128,19 @@ public class SummitEventsRegistration {
                         originalTemplate = originalTemplate.replaceAll('\\[\\[DONT_DELETE_CONTENT_HERE\\]\\]', emailContent);
 
                         //send the message
-                        sendEmail2(areg.Registrant_Email__c, originalTemplate, emailContent, em.Email_Subject__c, em.Org_Email_Id__c, em.BCC_Email__c);
-
-                        //Create an activity task
-                        Task nt = new Task();
-                        nt.WhatId = areg.id;
-                        nt.Type = 'Email';
-                        nt.ActivityDate = Date.today();
-                        nt.Subject = 'Event status email: ' + em.Action_Status__c + ' - ' + em.Email_Subject__c;
-                        nt.Status = 'Completed';
-                        nt.Priority = 'Low';
-                        activityUpdates.add(nt);
+                        sendEmail2(areg.Registrant_Email__c, originalTemplate, emailContent, em.Email_Subject__c, em.Org_Email_Id__c, em.BCC_Email__c, areg.Contact__c, areg.Id);
+                        
+                        if (String.isBlank(areg.Contact__c)){
+                            //Create an activity task
+                            Task nt = new Task();
+                            nt.WhatId = areg.id;
+                            nt.Type = 'Email';
+                            nt.ActivityDate = Date.today();
+                            nt.Subject = 'Event status email: ' + em.Action_Status__c + ' - ' + em.Email_Subject__c;
+                            nt.Status = 'Completed';
+                            nt.Priority = 'Low';
+                            activityUpdates.add(nt);
+                        }
                     }
 
                 }
@@ -151,11 +153,14 @@ public class SummitEventsRegistration {
         }
     }
 
-    public static void sendEmail2(String EmailTo, String HTMLBody, String PlainBody, String Subject, Id OrgEmailId, String BCCString) {
+    public static void sendEmail2(String EmailTo, String HTMLBody, String PlainBody, String Subject, Id OrgEmailId, String BCCString, Id contactId, Id aregId) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-        mail.setToAddresses(new String[]{
-                EmailTo
-        });
+        if (String.isBlank(contactId)){
+            mail.setToAddresses(new String[]{ EmailTo });
+        } else {
+            mail.setTargetObjectId(contactId);
+            mail.setWhatId(aregId);
+        }
         mail.setSubject(Subject);
         if (!String.isBlank(BCCString)) {
             BCCString = BCCString.replaceAll('\\s+', '');
