@@ -32,7 +32,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
     public SummitEventsRegisterAppointmentCtlr() {
         test = '';
-        templateSelected = SEShared.defaultTemplate;
         //Get cookie or URL string variable
         evtInfo = SEShared.getSummitEventsInfo();
         appointments = '';
@@ -48,7 +47,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     FROM Summit_Events__c
                     WHERE Id = :evtinfo.evtId
             ][0];
-            templateSelected = eventPage.Template__c;
+
+            templateSelected = SEShared.getTemplate(eventPage.Template__c);
 
             if (!String.isBlank(evtinfo.evtRegId)) {
                 evtInstance = [

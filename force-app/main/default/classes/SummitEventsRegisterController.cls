@@ -50,7 +50,6 @@ public with sharing class SummitEventsRegisterController {
 
         newEvtReg = new Summit_Events_Registration__c();
         newEvtReg.Add_Info_Answer_1__c = '';
-        templateSelected = SEShared.defaultTemplate;
         test = '';
         contactSet = false;
         eventIsClosed = false;
@@ -186,9 +185,7 @@ public with sharing class SummitEventsRegisterController {
             }
 
             //Grab the template if defined
-            if (!String.isBlank(eventPage.Template__c)) {
-                templateSelected = eventPage.Template__c;
-            }
+            templateSelected = SEShared.getTemplate(eventPage.Template__c);
 
             if (eventPage.Allow_Other_Attendees__c) {
                 guestAmt = new List<SelectOption>();

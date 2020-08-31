@@ -17,7 +17,6 @@ public with sharing class SummitEventsSubmitController {
 
     public SummitEventsSubmitController() {
         test = '';
-        templateSelected = SEShared.defaultTemplate;
 
         //Get cookie or URL string variable
         evtInfo = SEShared.getSummitEventsInfo();
@@ -28,7 +27,8 @@ public with sharing class SummitEventsSubmitController {
                     FROM Summit_Events__c
                     WHERE Id = :evtinfo.evtId
             ][0];
-            templateSelected = eventPage.Template__c;
+
+            templateSelected = SEShared.getTemplate(eventPage.Template__c);
 
             evtInstance = [
                     SELECT Instance_Title__c, Event__r.Event_Name__c,

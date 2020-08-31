@@ -13,7 +13,6 @@ public with sharing class SummitEventsCancelReviewController {
     public String navBreadCrumb { get; set; }
 
     public SummitEventsCancelReviewController() {
-        templateSelected = SEShared.defaultTemplate;
         String regId = ApexPages.currentPage().getParameters().get('regId');
         eventNotFound = false;
         eventOver = false;
@@ -34,7 +33,8 @@ public with sharing class SummitEventsCancelReviewController {
 
             if (evtList.size() > 0) {
                 evt = evtList[0];
-                templateSelected = evt.Event__r.Template__c;
+
+                templateSelected = SEShared.getTemplate(evt.Event__r.Template__c);
 
                 SummitEventsShared SEShared = new SummitEventsShared();
 
