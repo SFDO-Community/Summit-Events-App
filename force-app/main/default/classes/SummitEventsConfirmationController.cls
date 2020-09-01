@@ -13,7 +13,6 @@ public with sharing class SummitEventsConfirmationController {
 
     public SummitEventsConfirmationController() {
 
-        templateSelected = SEShared.defaultTemplate;
         evtInfo = SEShared.getSummitEventsInfo();
 
         if (!String.isEmpty(evtInfo.evtId)) {
@@ -26,8 +25,7 @@ public with sharing class SummitEventsConfirmationController {
                     LIMIT 1
             ];
 
-            System.Debug('EVENT INFO: ' + JSON.serializePretty(eventPage));
-            templateSelected = eventPage.Template__c;
+            templateSelected = SEShared.getTemplate(eventPage.Template__c);
 
             evtInstance = [
                     SELECT Instance_Title__c, Event__r.Event_Name__c,
@@ -36,8 +34,6 @@ public with sharing class SummitEventsConfirmationController {
                     WHERE Id = :evtinfo.instanceID
                     LIMIT 1
             ];
-
-            System.Debug('EVENT INSTANCE INFO: ' + JSON.serializePretty(evtInstance));
 
             navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance, false);
 
