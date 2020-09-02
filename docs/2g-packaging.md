@@ -1,6 +1,6 @@
-#Second Generation Packaging Summit Events
+# Second Generation Packaging Summit Events
 
-##sfdx-project.json
+## sfdx-project.json
 
 The sfdx-project.json is the control center for package versioning and ancestry.
 
@@ -42,7 +42,7 @@ updated to the current package you are creating.
 }
 ```
 
-##Build a beta package
+## Build a beta package
 
 It is surprisingly simple to build a beta package:
 
@@ -56,7 +56,7 @@ sfdx force:package:version:create --path force-app --codecoverage --installation
 Packaging seems to take about 10-15 minutes. Occasionally it will time out but give commands
 to check on the build in the future.
 
-##Promote a beta package
+## Promote a beta package
 
 In order for a beta package to come out of beta to be a fully released version you need 
 to promote the beta version with the following command:
@@ -76,7 +76,7 @@ flag is removed. Simply refresh the package installation page until it no longer
 says beta.
 
 
-##Installing a package
+## Installing a package
 
 At the end of packaging you will get a URL to install the package. It will look like
 this with the ***version_01_id*** replaced with the package id. Don't install beta packages 
