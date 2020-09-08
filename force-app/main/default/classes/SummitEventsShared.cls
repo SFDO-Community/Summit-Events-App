@@ -6,7 +6,7 @@
 public with sharing class SummitEventsShared {
     //private key for encryption
     Private Blob key = Blob.valueOf('TmC%2%1119fzG2PrtP7f&6acnc#y8@vr');
-    Public String defaultTemplate = 'CastorTemplate2017';
+    Public String defaultTemplate = 'GeneralSLDS';
 
     public class SummitEventsInfo {
         public String audience { get; set; }
@@ -17,6 +17,23 @@ public with sharing class SummitEventsShared {
 
     public SummitEventsShared() {
 
+    }
+
+    public String getTemplate(String templateName) {
+        List<String> namespaceTemplate = new List<String> {
+                'GeneralSLDS',
+                'crowncollege2020',
+                'OPUSTemplate2018',
+                'CastorTemplate2017'
+        };
+        if (String.isNotBlank(templateName)) {
+            if(!namespaceTemplate.contains(templateName)) {
+                templateName = 'c__' + templateName;
+            }
+        } else {
+            templateName = 'GeneralSLDS';
+        }
+        return templateName;
     }
 
     public SummitEventsInfo getSummitEventsInfo() {

@@ -74,7 +74,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     line-height: 1.4em !important;
                 }
 
-                .SummitEventsItem .eventClosed, .SummitEventsItem .eventClosed * {
+                .eventClosed .SummitEventsItem, .eventClosed .SummitEventsItem * {
                     color: gray !important;
                 }
 
@@ -118,6 +118,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 const SESettings = JSON.parse(readCookie('SummitEvents'));
                 const audienceDD = document.getElementById('audienceDD');
                 const hideCalendarUntilAudience = false;
+                const hideInstanceTitle = true;
                 if (audienceDD) {
                     loadAudienceDD();
                 }
@@ -158,16 +159,27 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     eventTextColor: '#000',
                     eventContent: function (info) {
                         let wrap = document.createElement('a');
+                        let eventTitle = info.event.title;
+                        if (hideInstanceTitle) {
+                            let eventTitleArr = eventTitle.split('-');
+                            eventTitle = '';
+                            for (let xx = 0; xx < eventTitleArr.length - 1; xx++) {
+                                if (xx > 0) {
+                                    eventTitle += ' - '
+                                }
+                                eventTitle += eventTitleArr[xx].trim();
+                            }
+                        }
                         wrap.classList.add('SummitEventsItem');
                         let titleWrap = document.createElement('span');
                         titleWrap.classList.add('summitEventsTitle');
                         console.log(JSON.stringify(info.event.classNames));
                         if (info.event.classNames != 'eventClosed') {
-                            titleWrap.innerHTML = info.event.title
+                            titleWrap.innerHTML = eventTitle
                             wrap.href = info.event.url;
                             wrap.target = '_blank';
                         } else {
-                            titleWrap.innerHTML = info.event.title + '<br><em>Event is closed.</em>';
+                            titleWrap.innerHTML = eventTitle + '<br><em>Event is closed.</em>';
                         }
                         let descWrap = document.createElement('span');
                         descWrap.classList.add('summitEventsDesc');
