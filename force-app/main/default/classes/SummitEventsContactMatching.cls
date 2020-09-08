@@ -161,9 +161,9 @@ public with sharing class SummitEventsContactMatching {
         
         
         for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
-            SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
-            FROM Summit_Events_Contact_Matching_Mapping__mdt
-            WHERE Contact_Matching_Method__c = :matchingMethod AND Source_Object__c = 'summit__Summit_Events_Registration__c'
+                SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
+                FROM Summit_Events_Contact_Matching_Mapping__mdt
+                WHERE Contact_Matching_Method__c = :matchingMethod AND Source_Object__c = 'summit__Summit_Events_Registration__c'
         ]) {
             System.debug('mapping - ' + mapping);
             if (mapping.Source_Type__c == 'Field') {
