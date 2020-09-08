@@ -129,8 +129,8 @@ public class SummitEventsRegistration {
 
                         //send the message
                         sendEmail2(areg.Registrant_Email__c, originalTemplate, emailContent, em.Email_Subject__c, em.Org_Email_Id__c, em.BCC_Email__c, areg.Contact__c, areg.Id);
-                        
-                        if (String.isBlank(areg.Contact__c)){
+
+                        if (String.isBlank(areg.Contact__c)) {
                             //Create an activity task
                             Task nt = new Task();
                             nt.WhatId = areg.id;
@@ -155,8 +155,10 @@ public class SummitEventsRegistration {
 
     public static void sendEmail2(String EmailTo, String HTMLBody, String PlainBody, String Subject, Id OrgEmailId, String BCCString, Id contactId, Id aregId) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-        if (String.isBlank(contactId)){
-            mail.setToAddresses(new String[]{ EmailTo });
+        if (String.isBlank(contactId)) {
+            mail.setToAddresses(new String[]{
+                    EmailTo
+            });
         } else {
             mail.setTargetObjectId(contactId);
             mail.setWhatId(aregId);
