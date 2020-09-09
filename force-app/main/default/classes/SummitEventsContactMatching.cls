@@ -161,19 +161,23 @@ public with sharing class SummitEventsContactMatching {
         
         
         for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
-                SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
-                FROM Summit_Events_Contact_Matching_Mapping__mdt
-                WHERE Contact_Matching_Method__c = :matchingMethod AND Source_Object__c = 'summit__Summit_Events_Registration__c'
+            SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
+            FROM Summit_Events_Contact_Matching_Mapping__mdt
+            WHERE Contact_Matching_Method__c = :matchingMethod AND Source_Object__c = 'summit__Summit_Events_Registration__c' AND Source_Type__c = 'Field'
         ]) {
             System.debug('mapping - ' + mapping);
-            if (mapping.Source_Type__c == 'Field') {
-                c.put(mapping.Contact_Field_API_Name__c, reg.get(mapping.Source_Value__c));
-            }
-            if (mapping.Source_Type__c == 'Hardcoded') {
-                c.put(mapping.Contact_Field_API_Name__c, mapping.Source_Value__c);
-            }
+            c.put(mapping.Contact_Field_API_Name__c, reg.get(mapping.Source_Value__c));
         }
-        
+
+        for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
+            SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
+            FROM Summit_Events_Contact_Matching_Mapping__mdt
+            WHERE Contact_Matching_Method__c = :matchingMethod AND Source_Type__c = 'Hardcoded'
+        ]) {
+            System.debug('mapping - ' + mapping);
+            c.put(mapping.Contact_Field_API_Name__c, mapping.Source_Value__c);
+        }
+
         System.debug('c - ' + c);
         return c;
     }
@@ -372,17 +376,21 @@ public with sharing class SummitEventsContactMatching {
         
         Summit_Events__c event = [SELECT Custom_Metadata_Contact_Matching_Method__c FROM Summit_Events__c WHERE Id = :evt.Event__c];
         for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
-            SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
-            FROM Summit_Events_Contact_Matching_Mapping__mdt
-            WHERE Contact_Matching_Method__c = :event.Custom_Metadata_Contact_Matching_Method__c AND Source_Object__c = 'summit__Summit_Events_Registration__c'
-        ]) {
+                SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
+                FROM Summit_Events_Contact_Matching_Mapping__mdt
+                WHERE Contact_Matching_Method__c = :event.Custom_Metadata_Contact_Matching_Method__c AND Source_Object__c = 'summit__Summit_Events_Registration__c' AND Source_Type__c = 'Field'])
+        {
             System.debug('mapping - ' + mapping);
-            if (mapping.Source_Type__c == 'Field') {
-                newEvtContact.put(mapping.Contact_Field_API_Name__c, evt.get(mapping.Source_Value__c));
-            }
-            if (mapping.Source_Type__c == 'Hardcoded') {
-                newEvtContact.put(mapping.Contact_Field_API_Name__c, mapping.Source_Value__c);
-            }
+            newEvtContact.put(mapping.Contact_Field_API_Name__c, evt.get(mapping.Source_Value__c));
+        }
+
+        for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
+                SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
+                FROM Summit_Events_Contact_Matching_Mapping__mdt
+                WHERE Contact_Matching_Method__c = :event.Custom_Metadata_Contact_Matching_Method__c AND Source_Type__c = 'Hardcoded'])
+        {
+            System.debug('mapping - ' + mapping);
+            newEvtContact.put(mapping.Contact_Field_API_Name__c, mapping.Source_Value__c);
         }
         
         //Generate all possible emails that could be created, or already exist and put them in a list to limit query and keep out of a loop
