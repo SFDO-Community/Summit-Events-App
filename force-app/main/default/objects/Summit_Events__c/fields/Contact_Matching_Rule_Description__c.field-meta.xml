@@ -6,7 +6,7 @@
 &quot;   * First 3 chars of First Name/Pref first name, Last Name, Birthdate =&gt; Last Name, Email;&quot; + BR()+
 &quot; - - - - - - - - - - - - - - - - - - - - - - - - - - - -&quot; + BR()+
 BR()+
-&quot;Summit Matching Rule 2: &quot;  + BR()+
+ &quot;Matching rules 2: &quot;  + BR()+
  &quot;  * Last Name/Previous last name, Class year, First name, Phone =&gt; Last Name, Class Year, First 3 chars of First name&quot; + BR()+
 &quot; - - - - - - - - - - - - - - - - - - - - - - - - - - - -&quot; + BR()+
 BR()+

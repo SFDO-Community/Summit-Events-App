@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Custom_Matching_Rule_Required_Fields</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISPICKVAL(Contact_Matching_Rules__c, &apos;Use Salesforce Duplicate Rule&apos;) &amp;&amp;
+
+(
+ISPICKVAL(Custom_Metadata_Contact_Matching_Method__c, &apos;&apos;) ||
+ISPICKVAL(Contact_Creation_Duplicate_Rule__c, &apos;&apos;)
+)</errorConditionFormula>
+    <errorMessage>When using a Salesforce Duplicate Rule for matching, the Custom Metadata Contact Matching Method and Contact Creation Duplicate Rules are required</errorMessage>
+</ValidationRule>
