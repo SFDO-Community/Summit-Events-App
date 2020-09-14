@@ -28,7 +28,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages/>
+                    <apex:messages />
                 </div>
 
                 <apex:form id="SummitEventRegisterForm" styleClass="slds-grid slds-wrap" style="width:100%">
@@ -690,6 +690,41 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                         </apex:selectList>
                                     </div>
                                 </div>
+                            </div>
+                        </apex:outputPanel>
+                                                
+                        <!-- Title Question -->
+                        <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" layout="block" rendered="{!IF(eventPage.Ask_Title__c != 'Do not ask' && !isBlank(eventPage.Ask_Title__c), true, false)}">
+                            <div class="slds-form-element {!IF(CONTAINS(eventPage.Ask_Title__c, 'require'), 'slds-is-required', '')}">
+                                <apex:outputLabel for="Title" styleClass="slds-form-element__label">
+                                    Title
+                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Title__c == 'Ask and require', true, false)}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </apex:outputText>
+                                </apex:outputLabel>
+                                <div class="slds-form-element__control">
+                                    
+                                        <apex:inputText value="{!newEvtReg.Registrant_Title__c}" id="title" html-aria-describedby="title-required" required="{!IF(eventPage.Ask_Title__c == 'Ask and require', true, false)}" styleClass="slds-input {!IF(eventPage.Ask_Title__c == 'Ask and require', 'required', '')}" disabled="{!contactSet}" maxLength="80">
+                                        </apex:inputText>
+                                    </div>
+                                
+                             </div>
+                        </apex:outputPanel>
+                                                
+                        <!-- Registrant Company or Organization Question -->
+                        <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" layout="block" rendered="{!IF(eventPage.Ask_Company_Organization__c != 'Do not ask' && !isBlank(eventPage.Ask_Company_Organization__c), true, false)}">
+                            <div class="slds-form-element {!IF(CONTAINS(eventPage.Ask_Company_Organization__c, 'require'), 'slds-is-required', '')}">
+                                <apex:outputLabel for="Company or Organization" styleClass="slds-form-element__label">
+                                    Company or Organization
+                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Company_Organization__c == 'Ask and require', true, false)}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </apex:outputText>
+                                </apex:outputLabel>
+                                <div class="slds-form-element__control">
+                                                                            <apex:inputText value="{!newEvtReg.Registrant_Company_Organization__c}" id="companyorganization" html-aria-describedby="companyorganization" required="{!IF(eventPage.Ask_Company_Organization__c == 'Ask and require', true, false)}" styleClass="slds-select {!IF(eventPage.Ask_Company_Organization__c == 'Ask and require', 'required', '')}" disabled="{!contactSet}">                                  
+                                        </apex:InputText>
+                                    </div>
+                
                             </div>
                         </apex:outputPanel>
 
