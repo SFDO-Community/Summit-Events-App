@@ -126,7 +126,7 @@ public with sharing class SummitEventsContactMatching {
             }
             
             if (!foundContact) {
-                insert c;
+                crud.addContact(c);
                 
                 reg.New_Contact_Created__c = true;
                 reg.Contact__c = c.Id;
