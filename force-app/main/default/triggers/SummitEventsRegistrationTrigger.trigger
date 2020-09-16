@@ -5,8 +5,7 @@ trigger SummitEventsRegistrationTrigger on Summit_Events_Registration__c (before
         SECM.matchContacts(Trigger.new);
     } */
     if (Trigger.isBefore && Trigger.isUpdate) {
-        SummitEventsContactMatching SECM = new SummitEventsContactMatching();
-        SECM.matchContacts(Trigger.new);
+        SummitEventsContactMatching.matchContacts(Trigger.new);
     }
 
     if (Trigger.isAfter && Trigger.isInsert) {
