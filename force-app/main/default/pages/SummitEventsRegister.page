@@ -584,12 +584,12 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </apex:outputPanel>
 
                     </apex:outputPanel>                                            
-                    
+
                         <!-- Mailing Address registration (optional)-->
                         <apex:outputPanel layout="none" rendered="{!eventPage.Ask_Mailing_Address__c != 'Do not ask' && eventPage.Ask_Mailing_Address__c != null}">
 
                             <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                                <h4 class="slds-text-heading_small">Registrant Address</h4>
+                                <h3 class="slds-text-heading_small">Registrant Address</h3>
                             </div>
 
                             <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
