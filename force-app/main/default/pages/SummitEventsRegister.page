@@ -582,7 +582,9 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </div>
                                 </div>
                             </apex:outputPanel>
-                                            
+
+                    </apex:outputPanel>                                            
+                    
                         <!-- Mailing Address registration (optional)-->
                         <apex:outputPanel layout="none" rendered="{!eventPage.Ask_Mailing_Address__c != 'Do not ask' && eventPage.Ask_Mailing_Address__c != null}">
 
