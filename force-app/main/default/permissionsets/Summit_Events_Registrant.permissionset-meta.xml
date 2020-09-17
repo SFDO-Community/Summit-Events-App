@@ -712,6 +712,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.Registrant_Company_Organization__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Registrant_Country__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -877,6 +882,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.Registrant_Title__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Registrant_Zip__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -923,6 +933,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events_Registration__c.UG_Parking_Pass_Link__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Registration__c.Virtual_Appointment_URL__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1032,6 +1047,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Ask_Company_Organization__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.Ask_Date_Of_Birth__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1088,6 +1108,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Ask_Third_Party_Registrant__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Ask_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
