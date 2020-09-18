@@ -2,30 +2,18 @@
 
 ## Create a site subdomain
 
-If your org does not already have a site to display public visual force pages you will need to set one up.
-
-1. Open the org you are working on in the browser
-
-   ```bash 
-   cci org browser <org_name> 
-   ```
-   
-2. In Setup go to User Interface -> Sites and Domains -> Sites
-3. Select a subdomain that is available. Since you are spinning up scratch orgs you may want to start incrementing a subdomain on a theme (myevents0001...myevents0002).
-4. Click "Register My Salesforce Site Domain"
-
-
-For **production environments** you may want to manually set up your org to finely tune your permissions and sites. Use the following instructions.
-
-## Create a site record
-
-After the subdomain is finished registering create a new site record, by clicking the "New" button next to the site header. Fill in the following data and then click "Save."
+If your org does not already have a site to display public visual force pages you will need to set one up. You may use an existing site if one has been set up previously.
 
 1. In Setup go to User Interface -> Sites and Domains -> Sites
-2. Click the "New" button next to the site header
-3. Select "Guest" as the "Type of New Site"
-4. Enter the following data in the form
-    * Site Label: Summit Events
+2. Select a subdomain that is available.
+3. Click "Register My Salesforce Site Domain"
+
+Once your domain has been registered continue:
+
+1. Click the "New" button next to the site header
+2. Select "Guest" as the "Type of New Site"
+3. Enter the following data in the form (label, name, and homepage can be adjust to what makes sense for your site)
+    * Site Label: Summit Events 
     * Site Name: Summit_Events
     * Active Site Home Page:
         * Select the magnifying glass look-up icon and in the dialog select SummitEvents
@@ -61,32 +49,15 @@ Unfortunately, we are not able to automate these steps yet due to limitations in
 
 ### Set Sharing Object Access
 
-1. Open your new scratch org you are working on in the browser (if it is not already open)
+1. Type "Sharing" in the quick-find box in Setup and click on "Sharing Settings".
 
-   ```bash 
-   cci org browser <org_name> 
-   ```
-   *<org_name> for development is dev*
-   
-2. Go to Setup in your scratch org 
+2. Click "Edit" to expose sharing option settings for editing
 
-3. Type "Sharing" in the quick-find box and click on "Sharing Settings".
+3. In the "Manage sharing settings for:" picklist choose "Summit Events"
 
-4. Click "Edit" to expose sharing option settings for editing
+5. Make sure the Summit Events object is "Public Read/Write" in the "Organization-Wide Defaults". Edit if needed.
 
-5. Set the Summit Events object and make sure it is set to "Public Read/Write"
-
-6. Make sure the "Secure guest user record access" is also checked. This will be checked by default in the future and will soon not be optional.
-
-7. Click "Save" (You will get an alert. Click "Ok")
-
-### Set Summit Events Sharing Rule
-
-1. Follow setups 1-3 in the instructions above to get into "Sharing Settings"
-
-2. Find the "Summit Events Sharing Rules" section of the page (you can use the "Manage sharing settings for" dropdown on the top or scroll to it)
-
-3. Click the "New" button in the "Summit Events Sharing Rules" section
+2. Under the "Sharing Rules" header click the "New" button in the "Summit Events Sharing Rules" section.
 
 4. Label your rule "Guest User Read Access" with rule name "Guest_User_Read_Access"
 
@@ -114,12 +85,14 @@ Apply to admin users that need to create and maintain events.
 
 1. Go to Sites in Setup
 
-2. Click on the name of the site that you want to affect.
+2. Click on the name of the site that you Summit Events to be active in.
 
-3. Click on the "Public Access Settings" button at the top of the site definition page
+3. Click on the "Public Access Settings" button at the top of the site definition page.
 
-4. On the site details page click on the "Assigned Users" button
+4. On the site details page click on the "Assigned Users" button.
 
-5. On the user list find your guest user and click on the name of that user
+5. On the user list find your guest user and click on the name of that user.
 
-6. Go to Permission Set Assignment and assign "Summit Events Registrant" permission set
+6. Go to Permission Set Assignment and assign "Summit Events Registrant" permission set.
+
+At this point you should have a functioning Summit Events Package. You only need to set up some events and instances (see other Wiki pages).
