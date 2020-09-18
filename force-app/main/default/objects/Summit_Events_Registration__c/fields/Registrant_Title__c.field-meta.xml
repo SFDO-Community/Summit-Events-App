@@ -3,7 +3,7 @@
     <fullName>Registrant_Title__c</fullName>
     <externalId>false</externalId>
     <label>Registrant Title</label>
-    <length>255</length>
+    <length>128</length>
     <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
