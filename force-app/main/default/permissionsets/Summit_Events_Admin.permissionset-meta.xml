@@ -895,6 +895,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.Registrant_Company_Organization__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Registrant_Country__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1060,6 +1065,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.Registrant_Title__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Registrant_Zip__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1220,6 +1230,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events__c.Ask_Company_Organization__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events__c.Ask_Date_Of_Birth__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1280,6 +1295,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events__c.Ask_Title__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events__c.Audience__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1305,6 +1325,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events__c.Contact_Creation_Duplicate_Rule__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events__c.Contact_Creation__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1316,6 +1341,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events__c.Contact_Matching_Rules__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Custom_Metadata_Contact_Matching_Method__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1436,6 +1466,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events__c.Include_Time_frame_List__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Keep_Registration_Open_During_Event__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
