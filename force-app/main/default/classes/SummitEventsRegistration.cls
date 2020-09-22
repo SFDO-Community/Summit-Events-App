@@ -128,19 +128,23 @@ public class SummitEventsRegistration {
                         originalTemplate = originalTemplate.replaceAll('\\[\\[DONT_DELETE_CONTENT_HERE\\]\\]', emailContent);
 
                         //send the message
-                        sendEmail2(areg.Registrant_Email__c, originalTemplate, emailContent, em.Email_Subject__c, em.Org_Email_Id__c, em.BCC_Email__c, areg.Contact__c, areg.Id);
+                        sendEmail2(areg.Registrant_Email__c, originalTemplate, emailContent, em.Email_Subject__c, em.Org_Email_Id__c, em.BCC_Email__c);
 
-                        if (String.isBlank(areg.Contact__c)) {
-                            //Create an activity task
-                            Task nt = new Task();
-                            nt.WhatId = areg.id;
-                            nt.Type = 'Email';
-                            nt.ActivityDate = Date.today();
-                            nt.Subject = 'Event status email: ' + em.Action_Status__c + ' - ' + em.Email_Subject__c;
-                            nt.Status = 'Completed';
-                            nt.Priority = 'Low';
-                            activityUpdates.add(nt);
-                        }
+                        //Create an activity task
+                        Task nt = new Task();
+                        nt.WhatId = areg.id;
+                        nt.WhoId = areg.Contact__c;
+                        nt.Type = 'Email';
+                        nt.ActivityDate = Date.today();
+                        nt.Subject = 'Event status email: ' + em.Action_Status__c + ' - ' + em.Email_Subject__c;
+                        nt.Status = 'Completed';
+                        nt.Priority = 'Low';
+                        
+                        nt.Description = emailContent.replaceAll('</p>', '\n'); // Replaces </p> (the paragraph closing tag) with a line break, since it is functionally identical to a line break
+                        nt.Description = nt.Description.replaceAll('<(.*?)>',''); // Replaces angled brackets and everything between with an empty string
+                        nt.Description += '\n\n' + 'Registrant Email: ' + areg.Registrant_Email__c;
+                        
+                        activityUpdates.add(nt);
                     }
 
                 }
@@ -153,16 +157,9 @@ public class SummitEventsRegistration {
         }
     }
 
-    public static void sendEmail2(String EmailTo, String HTMLBody, String PlainBody, String Subject, Id OrgEmailId, String BCCString, Id contactId, Id aregId) {
+    public static void sendEmail2(String EmailTo, String HTMLBody, String PlainBody, String Subject, Id OrgEmailId, String BCCString) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-        if (String.isBlank(contactId)) {
-            mail.setToAddresses(new String[]{
-                    EmailTo
-            });
-        } else {
-            mail.setTargetObjectId(contactId);
-            mail.setWhatId(aregId);
-        }
+        mail.setToAddresses(new String[]{ EmailTo });
         mail.setSubject(Subject);
         if (!String.isBlank(BCCString)) {
             BCCString = BCCString.replaceAll('\\s+', '');
