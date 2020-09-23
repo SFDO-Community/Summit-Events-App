@@ -63,7 +63,7 @@ Unfortunately, we are not able to automate these steps yet due to limitations in
 
 5. Set the radio button for "Rule Type" to "Guest user access, based on criteria"
 
-6. Set "Criteria" to Field => Event Name, Operator => "not equal to", Value => null  (type the world null for the value)
+6. Set "Criteria" to Field => Event Name, Operator => "not equal to", Value => null  (type the word null for the value)
 
 7. Share with can only be set to "Summit Events Site Guest User"
 
