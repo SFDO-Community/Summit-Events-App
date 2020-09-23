@@ -89,7 +89,7 @@ Apply to admin users that need to create and maintain events.
 
 3. Click on the "Public Access Settings" button at the top of the site definition page.
 
-4. On the site details page click on the "Assigned Users" button.
+4. On the site details page click on the "View Users" button.
 
 5. On the user list find your guest user and click on the name of that user.
 
