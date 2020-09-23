@@ -11,16 +11,15 @@ If your org does not already have a site to display public visual force pages yo
 Once your domain has been registered continue:
 
 1. Click the "New" button next to the site header
-2. Select "Guest" as the "Type of New Site"
-3. Enter the following data in the form (label, name, and homepage can be adjust to what makes sense for your site)
+2. Enter the following data in the form (label, name, and homepage can be adjust to what makes sense for your site)
     * Site Label: Summit Events 
     * Site Name: Summit_Events
     * Active Site Home Page:
         * Select the magnifying glass look-up icon and in the dialog select SummitEvents
     * Leave all other settings at their defaults
-5. Click "Save"
-6. Click the "Active" link under Action next to the site you just created
-7. Right click on the site URL and copy the URL to your clipboard. You will need it in the next stage of installation.
+3. Click "Save"
+4. Click the "Activate" link under Action next to the site you just created
+5. Right click on the site URL and copy the URL to your clipboard. You will need it in the next stage of installation.
 
 ## Set Custom Settings
 
