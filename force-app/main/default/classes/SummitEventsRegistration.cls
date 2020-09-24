@@ -15,7 +15,7 @@ public class SummitEventsRegistration {
 
     public static void handleIsAfterInsertOrUpdateTrigger(List<Summit_Events_Registration__c> newRegistrations, Map<Id,Summit_Events_Registration__c> oldRegistrationsMap) {
 
-        Map<Id,List<Summit_Events_Registration__c>> registrationsByEmailKey = new Map<Id,List<Summit_Events_Registration__c>>();
+        Map<String,List<Summit_Events_Registration__c>> registrationsByEmailKey = new Map<String,List<Summit_Events_Registration__c>>();
         Boolean isInsert = oldRegistrationsMap == null;
 
         for (Summit_Events_Registration__c r : newRegistrations) {
@@ -25,7 +25,7 @@ public class SummitEventsRegistration {
             else { // updates; check for status or substatus changes
                 Summit_Events_Registration__c oldReg = oldRegistrationsMap.get(r.Id);
                 // might need to recalculate formula fields before comparing them
-                if (r.EmailKey != oldReg.EmailKey) {
+                if (r.Email_Key__c != oldReg.Email_Key__c) {
                     addToRegistrationsMap(registrationsByEmailKey, r);
                 }
             }
@@ -44,13 +44,13 @@ public class SummitEventsRegistration {
         for (Summit_Events_Email__c itemToAdd : matchEmail) {
             String key = itemToAdd.Email_Key__c;
             if (! emailsByEmailKey.containsKey(key)) {
-                emailsByEmailKey.put(key, new List<Summit_Events_Registration__c>{ itemToAdd });
+                emailsByEmailKey.put(key, new List<Summit_Events_Email__c>{ itemToAdd });
             } else {
             (emailsByEmailKey.get(key)).add(itemToAdd);
             }
         }
 
-        List<SingleEmailMessage> emails = new List<SingleEmailMessage>();
+        List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
 
         //loop through affected event registrations - have status change from old
         for (String emailKey : registrationsByEmailKey.keySet()) {
@@ -58,7 +58,7 @@ public class SummitEventsRegistration {
             for (Summit_Events_Email__c em : emailsByEmailKey.get(emailKey)) {
                 List<String> bccList = new List<String>();
                 if (!String.isBlank(em.BCC_Email__c)) {
-                    BCCString = em.BCC_Email__c.deleteWhitespace().replace(';',',');
+                    String BCCString = em.BCC_Email__c.deleteWhitespace().replace(';',',');
                     bccList = BCCString.split(',');
                 }
                 Boolean hasBCC = bccList.size() > 0;
@@ -87,7 +87,7 @@ public class SummitEventsRegistration {
         }
 
         if(emails.size() > 0) {
-            Messaging.SendEmailResult[] results = Messaging.sendEmail(messages,false);
+            Messaging.SendEmailResult[] results = Messaging.sendEmail(emails,false);
             // System.debug any errors?
         }
     }
