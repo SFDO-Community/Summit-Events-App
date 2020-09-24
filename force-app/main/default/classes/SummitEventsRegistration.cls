@@ -40,6 +40,10 @@ public class SummitEventsRegistration {
                 AND Action_Status__c != '--Inactive--'
         ];
 
+        if (matchEmail.isEmpty()) {
+            return;
+        }
+
         Map<String,List<Summit_Events_Email__c>> emailsByEmailKey = new Map<String,List<Summit_Events_Email__c>>();
         for (Summit_Events_Email__c itemToAdd : matchEmail) {
             String key = itemToAdd.Email_Key__c;
@@ -53,7 +57,7 @@ public class SummitEventsRegistration {
         List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
 
         //loop through affected event registrations - have status change from old
-        for (String emailKey : registrationsByEmailKey.keySet()) {
+        for (String emailKey : emailsByEmailKey.keySet()) {
 
             for (Summit_Events_Email__c em : emailsByEmailKey.get(emailKey)) {
                 List<String> bccList = new List<String>();
@@ -63,24 +67,24 @@ public class SummitEventsRegistration {
                 }
                 Boolean hasBCC = bccList.size() > 0;
                 for (Summit_Events_Registration__c areg : registrationsByEmailKey.get(emailKey)) {
-                    Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
-                    message.setTargetObjectId(areg.Contact__c); // only used for activity
-                    message.setTreatTargetObjectAsRecipient(false);
-                    message.setWhatId(areg.Id); //This is important for the merge fields in template to work
-                    message.setTemplateId(em.Email_Template__c); 
+                    Messaging.SingleEmailMessage message;
+                    if (areg.Contact__c != null) {
+                        message = new Messaging.SingleEmailMessage();
+                        message.setTargetObjectId(areg.Contact__c); // only used for activity
+                        message.setTreatTargetObjectAsRecipient(false);
+                        message.setWhatId(areg.Id); //This is important for the merge fields in template to work
+                        message.setTemplateId(em.Email_Template__c); 
+                        message.setUseSignature(false); 
+                        message.setBccSender(false); 
+                    } else { // no contact; start with a rendered template
+                        message = Messaging.renderStoredEmailTemplate(em.Email_Template__c, null, areg.Id);
+                    }
+                    message.setSaveAsActivity(true); // save the email on the Registration even if no contact
                     message.setOrgWideEmailAddressId(em.Org_Email_Id__c);
-                    message.setUseSignature(false); 
-                    message.setBccSender(false); 
-                    message.setSaveAsActivity(areg.Contact__c != null); // saves email on Contact
                     message.setToAddresses(new String[] { areg.Registrant_Email__c });
                     if (hasBCC) {
                         message.setBccAddresses(bccList);
                     }
-                    /* another approach:
-                    Messaging.SingleEmailMessage message = Messaging.renderStoredEmailTemplate(em.Email_Template__c, null, areg.Id);
-                    message.toAddresses = toAddressList;
-                    NOTE: you can't use setSaveAsActivity(true) if you set whoId to null
-                    */
                     emails.add(message);
                 }
             }
@@ -88,6 +92,15 @@ public class SummitEventsRegistration {
 
         if(emails.size() > 0) {
             Messaging.SendEmailResult[] results = Messaging.sendEmail(emails,false);
+            for (Messaging.SendEmailResult result : results) {
+                if (! result.success) {
+                    for (Messaging.SendEmailError error : result.getErrors()) {
+                        System.debug('SendEmailError:');
+                        System.debug(error.message);
+                        System.debug(error.statuscode);
+                    }
+                }
+            }
             // System.debug any errors?
         }
     }
