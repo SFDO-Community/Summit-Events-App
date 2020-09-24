@@ -20,6 +20,8 @@ public class SummitEventsRegistration_TEST {
         email1.Email_Content__c = 'Sample text here';
         email1.Letterhead_HTML__c = 'Letterhead goes here<br/>[[DONT_DELETE_CONTENT_HERE]]';
         email1.BCC_Email__c = 'bcc@example.com';
+        email1.Email_Template__c = '';
+        email1.Org_Email_Id__c = '';
         insert email1;
         Summit_Events_Email__c email2 = new Summit_Events_Email__c();
         email2.Event__c = event.Id;
