@@ -15,31 +15,16 @@ public class SummitEventsRegistration {
 
     public static void handleIsAfterInsertOrUpdateTrigger(List<Summit_Events_Registration__c> newRegistrations, Map<Id,Summit_Events_Registration__c> oldRegistrationsMap) {
 
-/*
-        Unused code -- missing features???
-        
-        List<Id> listConId = new list<Id>();
-        List<Contact> footOnCampus = new List<Contact>();
-        Set<Id> relatedContactIds = new Set<Id>();
-        ...
-        If (r.Status__c == 'Confirmed' && r.Substatus__c == 'Attended') {
-            relatedContactIds.add(r.Id);
-        }
-*/
-
         Map<Id,List<Summit_Events_Registration__c>> registrationsByEmailKey = new Map<Id,List<Summit_Events_Registration__c>>();
         Boolean isInsert = oldRegistrationsMap == null;
 
         for (Summit_Events_Registration__c r : newRegistrations) {
             if (isInsert) { 
-                // assumption: no email for inserted 'new' status and substatus
-                // -- is this even necessary if there are no emails defined for EmailKey=eventId|new|new?
-                if (r.Status__c != 'new' || r.Substatus__c != 'new') {
-                    addToRegistrationsMap(registrationsByEmailKey, r);
-                }
+                addToRegistrationsMap(registrationsByEmailKey, r);
             }
             else { // updates; check for status or substatus changes
                 Summit_Events_Registration__c oldReg = oldRegistrationsMap.get(r.Id);
+                // might need to recalculate formula fields before comparing them
                 if (r.EmailKey != oldReg.EmailKey) {
                     addToRegistrationsMap(registrationsByEmailKey, r);
                 }
@@ -78,7 +63,7 @@ public class SummitEventsRegistration {
                 }
                 Boolean hasBCC = bccList.size() > 0;
                 for (Summit_Events_Registration__c areg : registrationsByEmailKey.get(emailKey)) {
-                    SingleEmailMessage message = new SingleEmailMessage();
+                    Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
                     message.setTargetObjectId(areg.Contact__c); // only used for activity
                     message.setTreatTargetObjectAsRecipient(false);
                     message.setWhatId(areg.Id); //This is important for the merge fields in template to work
@@ -86,7 +71,7 @@ public class SummitEventsRegistration {
                     message.setOrgWideEmailAddressId(em.Org_Email_Id__c);
                     message.setUseSignature(false); 
                     message.setBccSender(false); 
-                    message.setSaveAsActivity(true); // saves email on Contact
+                    message.setSaveAsActivity(areg.Contact__c != null); // saves email on Contact
                     message.setToAddresses(new String[] { areg.Registrant_Email__c });
                     if (hasBCC) {
                         message.setBccAddresses(bccList);
