@@ -8,10 +8,7 @@ trigger SummitEventsRegistrationTrigger on Summit_Events_Registration__c (before
         SummitEventsContactMatching.matchContacts(Trigger.new);
     }
 
-    if (Trigger.isAfter && Trigger.isInsert) {
-        SummitEventsRegistration.run(Trigger.new, Trigger.old);
-    }
-    if (Trigger.isAfter && Trigger.isUpdate) {
-        SummitEventsRegistration.run(Trigger.new, Trigger.old);
+    if (Trigger.isAfter && (Trigger.isInsert || Trigger.isUpdate)) {
+        SummitEventsRegistration.handleIsAfterInsertOrUpdateTrigger(Trigger.new, Trigger.isUpdate ? Trigger.oldMap : null);
     }
 }

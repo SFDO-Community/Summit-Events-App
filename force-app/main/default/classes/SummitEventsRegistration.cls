@@ -1,183 +1,109 @@
 public class SummitEventsRegistration {
-    public static void run(List<SObject> newlist, List<SObject> oldlist) {
-        list<ID> listConId = new list<ID>();
-        Map<Id, Id> affectedIds = new Map<Id, Id>();
-        Map<Id, Id> affectedContactIds = new Map<Id, Id>();
-        List<Summit_Events_Registration__c> affectedRegs = new List<Summit_Events_Registration__c>();
-        List<Contact> footOnCampus = new List<Contact>();
-        Map<id, Summit_Events_Registration__c> oldListMap = new Map<Id, Summit_Events_Registration__c>();
-        if (oldlist != null) {
-            for (Summit_Events_Registration__c ol : (List<Summit_Events_Registration__c>) oldlist) {
-                oldListMap.put(ol.Id, ol);
-            }
+
+// create String formula field Summit_Events_Registration__c.Email_Key__c = EventId + '|' + Status + '|'' Substatus
+// and similar for Summit_Events_Email__c.Email_Key__c
+
+    public static void addToRegistrationsMap(Map<String,List<Summit_Events_Registration__c>> mapOfLists,
+            Summit_Events_Registration__c itemToAdd) {
+        String key = itemToAdd.Email_Key__c;
+        if (! mapOfLists.containsKey(key)) {
+            mapOfLists.put(key, new List<Summit_Events_Registration__c>{ itemToAdd });
+        } else {
+        (mapOfLists.get(key)).add(itemToAdd);
         }
+    }
 
-        for (Summit_Events_Registration__c r : (List<Summit_Events_Registration__c>) newlist) {
+    public static void handleIsAfterInsertOrUpdateTrigger(List<Summit_Events_Registration__c> newRegistrations, Map<Id,Summit_Events_Registration__c> oldRegistrationsMap) {
 
-            //Get old Summit_Events_Registration__c by current ID
-            Summit_Events_Registration__c oldReg = new Summit_Events_Registration__c(Status__c = 'new', Substatus__c = 'new');
-            if (oldListMap.size() > 0) {
-                if (r.Id != null) {
-                    oldReg = oldListMap.get(r.Id);
+/*
+        Unused code -- missing features???
+        
+        List<Id> listConId = new list<Id>();
+        List<Contact> footOnCampus = new List<Contact>();
+        Set<Id> relatedContactIds = new Set<Id>();
+        ...
+        If (r.Status__c == 'Confirmed' && r.Substatus__c == 'Attended') {
+            relatedContactIds.add(r.Id);
+        }
+*/
+
+        Map<Id,List<Summit_Events_Registration__c>> registrationsByEmailKey = new Map<Id,List<Summit_Events_Registration__c>>();
+        Boolean isInsert = oldRegistrationsMap == null;
+
+        for (Summit_Events_Registration__c r : newRegistrations) {
+            if (isInsert) { 
+                // assumption: no email for inserted 'new' status and substatus
+                // -- is this even necessary if there are no emails defined for EmailKey=eventId|new|new?
+                if (r.Status__c != 'new' || r.Substatus__c != 'new') {
+                    addToRegistrationsMap(registrationsByEmailKey, r);
                 }
             }
-
-            //Get all new trigger Summit_Events_Registration__c that have a status change by comparing old map
-            if (String.isNotBlank(oldReg.Id)) {
-                if (r.Status__c != oldReg.Status__c || r.Substatus__c != oldReg.Substatus__c) {
-                    affectedIds.put(r.Event__c, r.Event__c);
-                    affectedRegs.add(r);
-                    If (r.Status__c == 'Confirmed' && r.Substatus__c == 'Attended') {
-                        affectedContactIds.put(r.Id, r.Id);
-                    }
-                }
-            } else {
-                affectedIds.put(r.Event__c, r.Event__c);
-                affectedRegs.add(r);
-                If (r.Status__c == 'Confirmed' && r.Substatus__c == 'Attended') {
-                    affectedContactIds.put(r.Id, r.Id);
+            else { // updates; check for status or substatus changes
+                Summit_Events_Registration__c oldReg = oldRegistrationsMap.get(r.Id);
+                if (r.EmailKey != oldReg.EmailKey) {
+                    addToRegistrationsMap(registrationsByEmailKey, r);
                 }
             }
         }
 
         //Get any templates for events that have restistration status changes
         List<Summit_Events_Email__c> matchEmail = [
-                SELECT Action_Status__c, Action_Sub_status__c, Event__r.id, Letterhead_HTML__c, Email_Subject__c,
-                        Email_Content__c, Letterhead_Id__c, Org_Email_Id__c, BCC_Email__c
+                SELECT Email_Key__c, Email_Template__c, Org_Email_Id__c, BCC_Email__c
                 FROM Summit_Events_Email__c
-                WHERE Event__r.Id IN :affectedIds.values()
-                AND Action_status__c != Null
+                WHERE Email_Key__c IN :registrationsByEmailKey.keySet()
+                AND Action_status__c != null
                 AND Action_Status__c != '--Inactive--'
         ];
 
-        List<Task> activityUpdates = new List<Task>();
+        Map<String,List<Summit_Events_Email__c>> emailsByEmailKey = new Map<String,List<Summit_Events_Email__c>>();
+        for (Summit_Events_Email__c itemToAdd : matchEmail) {
+            String key = itemToAdd.Email_Key__c;
+            if (! emailsByEmailKey.containsKey(key)) {
+                emailsByEmailKey.put(key, new List<Summit_Events_Registration__c>{ itemToAdd });
+            } else {
+            (emailsByEmailKey.get(key)).add(itemToAdd);
+            }
+        }
+
+        List<SingleEmailMessage> emails = new List<SingleEmailMessage>();
 
         //loop through affected event registrations - have status change from old
-        for (Summit_Events_Registration__c areg : affectedRegs) {
-            //Loop through gather email templates to get template and use registration fields to fill in hooks
-            for (Summit_Events_Email__c em : matchEmail) {
-                Boolean statusMatch = false;
+        for (String emailKey : registrationsByEmailKey.keySet()) {
 
-                if (em.Event__r.Id.equals(areg.Event__c)) {
-
-                    statusMatch = false;
-
-                    if (!String.isBlank(em.Action_Sub_status__c) && !String.isBlank(areg.Substatus__c)) {
-                        if (em.Action_Sub_status__c.equals(areg.Substatus__c) && em.Action_Status__c.equalsIgnoreCase(areg.Status__c)) {
-                            statusMatch = true;
-                            System.Debug('Match made on Sub status');
-                        }
-                    } else if (em.Action_Status__c.equals(areg.Status__c) && String.isBlank(em.Action_Sub_status__c) && String.isBlank(areg.Substatus__c)) {
-                        System.Debug('Match made on status');
-                        statusMatch = true;
+            for (Summit_Events_Email__c em : emailsByEmailKey.get(emailKey)) {
+                List<String> bccList = new List<String>();
+                if (!String.isBlank(em.BCC_Email__c)) {
+                    BCCString = em.BCC_Email__c.deleteWhitespace().replace(';',',');
+                    bccList = BCCString.split(',');
+                }
+                Boolean hasBCC = bccList.size() > 0;
+                for (Summit_Events_Registration__c areg : registrationsByEmailKey.get(emailKey)) {
+                    SingleEmailMessage message = new SingleEmailMessage();
+                    message.setTargetObjectId(areg.Contact__c); // only used for activity
+                    message.setTreatTargetObjectAsRecipient(false);
+                    message.setWhatId(areg.Id); //This is important for the merge fields in template to work
+                    message.setTemplateId(em.Email_Template__c); 
+                    message.setOrgWideEmailAddressId(em.Org_Email_Id__c);
+                    message.setUseSignature(false); 
+                    message.setBccSender(false); 
+                    message.setSaveAsActivity(true); // saves email on Contact
+                    message.setToAddresses(new String[] { areg.Registrant_Email__c });
+                    if (hasBCC) {
+                        message.setBccAddresses(bccList);
                     }
-
-                    System.Debug(statusMatch + ': em.Action_Sub_status__c = ' + em.Action_Sub_status__c + ', areg.Substatus__c = ' + areg.Substatus__c + ', areg.Status__c = ' + areg.Status__c + ', em.Action_Status__c = ' + em.Action_Status__c);
-
-                    if (statusMatch) {
-                        //Get email template
-                        String emailContent = em.Email_Content__c;
-                        String originalTemplate = '[[DONT_DELETE_CONTENT_HERE]]';
-                        if (!String.isBlank(em.Letterhead_HTML__c)) {
-                            originalTemplate = em.Letterhead_HTML__c;
-                        }
-
-                        emailContent = emailContent.replace('$', '\\$');
-                        //Regex to find all Apex delineators {! }
-                        Pattern TAG_REGEX = Pattern.compile('\\{!(.+?)\\}');
-                        Matcher matcher = TAG_REGEX.matcher(emailContent);
-                        Map<String, String> foundTags = new Map<String, String>();
-
-                        //loop through found hocks and add only unique
-                        while (matcher.find()) {
-                            foundTags.put(matcher.group(1), matcher.group(1));
-                        }
-
-                        for (String ft : foundTags.values()) {
-                            //add only found hooks and recreate regex with more percise
-                            Pattern TAG_REGEX2 = Pattern.compile('\\{!(' + ft + ')\\}');
-                            Matcher matcher2 = TAG_REGEX2.matcher(emailContent);
-                            while (matcher2.find()) {
-
-                                //Get the value for hook from registration have to remove any registration object names since we are already in the object
-                                String found = matcher2.group(1).replace('Summit_Events_Registration__c.', '');
-                                try {
-                                    found = String.valueOf(areg.get(found));
-                                } catch (Exception e) {
-                                    found = '';
-                                }
-
-                                //replaceAll doesn't like nulls
-                                if (String.isBlank(found)) {
-                                    found = '';
-                                }
-                                //replace all hooks with found values from regstration
-
-                                if (matcher2.group(1) == 'UG_Parking_Pass_Link__c' || matcher2.group(1) == 'Add_To_Calendar_Link__c' || matcher2.group(1) == 'Event_Registration_Cancel_Link__c') {
-                                    found = found.replace('_HL_ENCODED_', '<a href="');
-                                    found = found.replace('_HL__blank_HL_', '</a>');
-                                    found = found.replace('_HL_', ' target="_blank">');
-                                    found = found.replace(' target=', '');
-                                }
-
-                                emailContent = matcher2.replaceAll(found);
-                            }
-                        }
-
-                        //put email content (after hooks have been replaced with values) into the email template
-                        originalTemplate = originalTemplate.replaceAll('\\[\\[DONT_DELETE_CONTENT_HERE\\]\\]', emailContent);
-
-                        //send the message
-                        sendEmail2(areg.Registrant_Email__c, originalTemplate, emailContent, em.Email_Subject__c, em.Org_Email_Id__c, em.BCC_Email__c);
-
-                        //Create an activity task
-                        Task nt = new Task();
-                        nt.WhatId = areg.id;
-                        nt.WhoId = areg.Contact__c;
-                        nt.Type = 'Email';
-                        nt.ActivityDate = Date.today();
-                        nt.Subject = 'Event status email: ' + em.Action_Status__c + ' - ' + em.Email_Subject__c;
-                        nt.Status = 'Completed';
-                        nt.Priority = 'Low';
-                        
-                        nt.Description = emailContent.replaceAll('</p>', '\n'); // Replaces </p> (the paragraph closing tag) with a line break, since it is functionally identical to a line break
-                        nt.Description = nt.Description.replaceAll('<(.*?)>',''); // Replaces angled brackets and everything between with an empty string
-                        nt.Description += '\n\n' + 'Registrant Email: ' + areg.Registrant_Email__c;
-                        
-                        activityUpdates.add(nt);
-                    }
-
+                    /* another approach:
+                    Messaging.SingleEmailMessage message = Messaging.renderStoredEmailTemplate(em.Email_Template__c, null, areg.Id);
+                    message.toAddresses = toAddressList;
+                    NOTE: you can't use setSaveAsActivity(true) if you set whoId to null
+                    */
+                    emails.add(message);
                 }
             }
         }
 
-
-        if (activityUpdates.size() > 0) {
-            insert activityUpdates;
+        if(emails.size() > 0) {
+            Messaging.SendEmailResult[] results = Messaging.sendEmail(messages,false);
+            // System.debug any errors?
         }
-    }
-
-    public static void sendEmail2(String EmailTo, String HTMLBody, String PlainBody, String Subject, Id OrgEmailId, String BCCString) {
-        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-        mail.setToAddresses(new String[]{ EmailTo });
-        mail.setSubject(Subject);
-        if (!String.isBlank(BCCString)) {
-            BCCString = BCCString.replaceAll('\\s+', '');
-            BCCString = BCCString.replaceAll(';', ',');
-            List<String> bccList = BCCString.split(',');
-            if (bccList.size() > 0) {
-                mail.setBccAddresses(bccList);
-            }
-        }
-        mail.setPlainTextBody(plainBody);
-        if (String.isBlank(HTMLBody)) {
-            mail.setHtmlBody(plainBody);
-        } else {
-            mail.setHtmlBody(HTMLBody);
-        }
-        mail.setOrgWideEmailAddressId(OrgEmailId);
-        Messaging.SendEmailResult [] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[]{
-                mail
-        });
     }
 }
