@@ -141,7 +141,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 </div>
                             </div>
 
-                            <!-- If applicant is not the student then display these questions-->
+                            <!-- If individual registering is not the registrant then display these questions-->
                             <apex:outputPanel layout="none" rendered="{!IF(newEvtReg.Registrant_Third_Party_Status__c == 'Primary Registrant' || newEvtReg.Registrant_Third_Party_Status__c == '', false, true)}">
 
                                 <!-- Parent questions -->
