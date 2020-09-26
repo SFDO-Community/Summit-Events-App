@@ -166,7 +166,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6">
                                         <div class="slds-form-element slds-is-required">
                                             <apex:outputLabel for="parentLastName" styleClass="slds-form-element__label">
-                                                Parent last name <abbr class="slds-required" title="required">*</abbr>
+                                                Parent Last Name <abbr class="slds-required" title="required">*</abbr>
                                             </apex:outputLabel>
                                             <div class="slds-form-element__control">
                                                 <apex:inputText value="{!newEvtReg.Registrant_Parent_Last_Name__c}" html-aria-describedby="parentLastName-required" id="parentLastName" required="true" styleClass="required requiredText slds-input" maxLength="80"/>
@@ -178,7 +178,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6">
                                         <div class="slds-form-element slds-is-required">
                                             <apex:outputLabel for="parentEmail" styleClass="slds-form-element__label">
-                                                Parent email <abbr class="slds-required" title="required">*</abbr>
+                                                Parent Email <abbr class="slds-required" title="required">*</abbr>
                                             </apex:outputLabel>
                                             <div class="slds-form-element__control">
                                                 <apex:input type="email" value="{!newEvtReg.Registrant_Parent_Email__c}" id="parentEmail" html-aria-describedby="parentEmail-required" required="true" styleClass="required requiredText validEmail slds-input"/>
@@ -222,7 +222,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6">
                                         <div class="slds-form-element slds-is-required">
                                             <apex:outputLabel for="otherLastName" styleClass="slds-form-element__label">
-                                                Last name <abbr class="slds-required" title="required">*</abbr>
+                                                Last Name <abbr class="slds-required" title="required">*</abbr>
                                             </apex:outputLabel>
                                             <div class="slds-form-element__control">
                                                 <apex:inputText value="{!newEvtReg.Registrant_Other_Last_Name__c}" id="otherLastName" html-aria-describedby="otherLastName-required" required="true" styleClass="required requiredText slds-input" maxLength="80"/>
