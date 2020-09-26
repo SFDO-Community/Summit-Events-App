@@ -3,7 +3,7 @@
     <fullName>Start_Date__c</fullName>
     <description>Date the event begins</description>
     <externalId>false</externalId>
-    <inlineHelpText>Date the event begins</inlineHelpText>
+    <inlineHelpText>Date registration opens</inlineHelpText>
     <label>Start Date</label>
     <required>false</required>
     <trackHistory>false</trackHistory>

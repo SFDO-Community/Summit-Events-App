@@ -3,7 +3,7 @@
     <fullName>Event_Name__c</fullName>
     <description>Event Name</description>
     <externalId>false</externalId>
-    <inlineHelpText>Name of the event</inlineHelpText>
+    <inlineHelpText>Name of the event and displays on the registration page</inlineHelpText>
     <label>Event Name</label>
     <length>80</length>
     <required>false</required>
