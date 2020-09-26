@@ -10,7 +10,7 @@
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>
-        <restricted>false</restricted>
+        <restricted>true</restricted>
         <valueSetName>Buildings</valueSetName>
     </valueSet>
 </CustomField>
