@@ -5,7 +5,7 @@
     <externalId>false</externalId>
     <inlineHelpText>Capacity of this Event Instance</inlineHelpText>
     <label>Capacity</label>
-    <precision>3</precision>
+    <precision>5</precision>
     <required>false</required>
     <scale>0</scale>
     <trackHistory>false</trackHistory>
