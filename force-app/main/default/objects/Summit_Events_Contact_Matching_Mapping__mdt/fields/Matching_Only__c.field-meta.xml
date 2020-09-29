@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Matching_Only__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Only select if this is to be used in a matching rule, but value should not be added to the Contact record.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>Only select if this is to be used in a matching rule, but value should not be added to the Contact record.</inlineHelpText>
+    <label>Matching Only</label>
+    <type>Checkbox</type>
+</CustomField>

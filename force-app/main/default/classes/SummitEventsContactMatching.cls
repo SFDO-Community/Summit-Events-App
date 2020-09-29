@@ -127,6 +127,14 @@ public with sharing class SummitEventsContactMatching {
             }
 
             if (!foundContact) {
+                for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
+                    SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
+                    FROM Summit_Events_Contact_Matching_Mapping__mdt
+                    WHERE Contact_Matching_Method__c = :matchMethod.get(reg.Event__c) AND Matching_Only__c = TRUE])
+                {
+                    c.put(mapping.Contact_Field_API_Name__c, null);
+                }
+                
                 crud.addContact(c);
 
                 reg.New_Contact_Created__c = true;
