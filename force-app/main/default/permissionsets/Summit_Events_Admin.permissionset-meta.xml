@@ -580,7 +580,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Summit_Events_Instance__c.Virtual_Appointment_Link__c</field>
+        <field>Summit_Events_Instance__c.Virtual_Meeting_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
