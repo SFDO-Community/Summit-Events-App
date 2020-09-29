@@ -103,6 +103,16 @@ Requires the Registration to have Appointments</description>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Instance__c.Audience__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event__c.Building__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
             <checkedByDefault>true</checkedByDefault>
             <field>Name</field>
             <table>Summit_Events_Registration__c</table>
@@ -235,6 +245,11 @@ Requires the Registration to have Appointments</description>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Event_Registration_Requested_Date__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event__c.Event_Sponsor__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Audience__c</fullName>
+    <description>Location Type value from Summit Events record</description>
+    <externalId>false</externalId>
+    <formula>TEXT(Event__r.Location_Type__c)</formula>
+    <inlineHelpText>Location Type value from Summit Events record</inlineHelpText>
+    <label>Audience</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

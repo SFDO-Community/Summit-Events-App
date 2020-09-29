@@ -103,6 +103,16 @@ Does not require the Registration to have Appointments</description>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event__c.Audience__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event__c.Building__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
             <checkedByDefault>true</checkedByDefault>
             <field>Name</field>
             <table>Summit_Events_Registration__c</table>
@@ -234,7 +244,17 @@ Does not require the Registration to have Appointments</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Event__c.Event_Sponsor__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Event_Registration_Requested_Date__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Type__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
@@ -280,6 +300,11 @@ Does not require the Registration to have Appointments</description>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Location_Title__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Location_Type__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
@@ -349,17 +374,22 @@ Does not require the Registration to have Appointments</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>Registrant_College_Not_Found__c</field>
-            <table>Summit_Events_Registration__c</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
             <field>Registrant_College_Year__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Registrant_Country__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_College_Not_Found__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_Company_Organization__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
@@ -520,6 +550,11 @@ Does not require the Registration to have Appointments</description>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Registrant_Third_Party_Status__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_Title__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
