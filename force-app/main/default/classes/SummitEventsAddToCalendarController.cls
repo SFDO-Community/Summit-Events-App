@@ -43,17 +43,17 @@ public with sharing class SummitEventsAddToCalendarController {
             if (evtInfo != null) {
                 DTSTART = SEShared.convertDateToDatetime(evtInfo.Instance_Start_Date__c, evtInfo.Instance_Start_Time__c, '').format('yyyyMMdd\'T\'HHmmss\'Z\'');
                 DTEND = SEShared.convertDateToDatetime(evtInfo.Instance_End_Date__c, evtInfo.Instance_End_Time__c, '').format('yyyyMMdd\'T\'HHmmss\'Z\'');
-                DTSTAMP = SEShared.evtInfo.Instance_Start_Date__c.format('yyyyMMdd');
+                DTSTAMP = SEShared(evtInfo.Instance_Start_Date__c, '').format('yyyyMMdd');
                 SUMMARY = evtInfo.Event_Name__c;
                 if (!String.isBlank(evtInfo.Instance_Title__c)) {
                     SUMMARY += evtInfo.Event_Name__c + ' - ' + evtInfo.Instance_Title__c;
                 }
                 if (!String.isNotBlank(evtInfo.Virtual_Meeting_Link__c)) {
-                    SUMMARY += 'Meeting Link' + evtInfo.evtinfo.Virtual_Meeting_Link__c;
+                    SUMMARY += 'Meeting Link' + evtinfo.Virtual_Meeting_Link__c;
                 }
 
                 LOCATION = evtInfo.Location_Title_Override__c;
-                if (!String.isBlank(evtInfo.summit__Location_Title_Override__c)) {
+                if (!String.isBlank(evtInfo.Location_Title_Override__c)) {
                     LOCATION += evtInfo.Event__r.Location_Title__c;
                 }
                 
