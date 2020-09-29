@@ -12,6 +12,7 @@ public with sharing class SummitEventsAddToCalendarController {
     public String DTEND { get; set; }
     public String DTSTAMP { get; set; }
     public String SUMMARY { get; set; }
+    public String LOCATION {get; set; }
     public String DESCRIPTION { get; set; }
     public String UUID { get; set; }
 
@@ -30,7 +31,7 @@ public with sharing class SummitEventsAddToCalendarController {
             List<Summit_Events_Instance__c> eventInstanceList = [
                     SELECT Id, Event_Name__c, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c,
                             Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c,
-                            Instance_Short_Description__c, Event_Short_Listing_Description__c, Virtual_Meeting_Link__c, Event__r.Location_Title__c, Location_Title_Override__c
+                            Instance_Short_Description__c, Event__r.Event_Short_Listing_Description__c, Virtual_Meeting_Link__c, Event__r.Location_Title__c, Location_Title_Override__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :URLinstanceID
             ];
@@ -51,7 +52,7 @@ public with sharing class SummitEventsAddToCalendarController {
                     SUMMARY += 'Meeting Link' + evtInfo.evtinfo.Virtual_Meeting_Link__c;
                 }
 
-                LOCATION = evtInfo.summit__Location_Title_Override__c;
+                LOCATION = evtInfo.Location_Title_Override__c;
                 if (!String.isBlank(evtInfo.summit__Location_Title_Override__c)) {
                     LOCATION += evtInfo.Event__r.Location_Title__c;
                 }
@@ -60,7 +61,7 @@ public with sharing class SummitEventsAddToCalendarController {
                 if (!String.isBlank(evtInfo.Instance_Title__c)) {
                     DESCRIPTION += ' - ' + evtInfo.Instance_Title__c;
                 }
-                DESCRIPTION += '\n' + evtInfo.Event_Short_Listing_Description__c;
+                DESCRIPTION += '\n' + evtInfo.Event__r.Event_Short_Listing_Description__c;
                 DESCRIPTION += '\n' + evtInfo.Instance_Short_Description__c;
             }
         }

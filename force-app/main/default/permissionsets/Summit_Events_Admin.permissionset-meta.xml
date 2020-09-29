@@ -1120,7 +1120,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Registration__c.Virtual_Appointment_URL__c</field>
+        <field>Summit_Events_Registration__c.Virtual_Meeting_URL__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

@@ -214,7 +214,7 @@ Must have a registration for the Instance to appear.</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>Virtual_Appointment_Link__c</field>
+            <field>Virtual_Meeting_Link__c</field>
             <table>Summit_Events_Instance__c</table>
         </columns>
         <masterLabel>Summit Events Instances</masterLabel>
