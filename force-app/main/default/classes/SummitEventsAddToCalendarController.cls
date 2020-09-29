@@ -31,7 +31,9 @@ public with sharing class SummitEventsAddToCalendarController {
             List<Summit_Events_Instance__c> eventInstanceList = [
                     SELECT Id, Event_Name__c, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c,
                             Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c,
-                            Instance_Short_Description__c, Event__r.Event_Short_Listing_Description__c, Virtual_Meeting_Link__c, Event__r.Location_Title__c, Location_Title_Override__c
+                            Instance_Short_Description__c, Event__r.Event_Short_Listing_Description__c, Virtual_Meeting_Link__c, Event__r.Location_Title__c, 
+                            Event__r.Location_Address__c, Event__r.Location_Map_Link__c, 
+                            Location_Title_Override__c, Location_Address_Override__c, Location_Map_Link_Override__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :URLinstanceID
             ];
@@ -59,7 +61,14 @@ public with sharing class SummitEventsAddToCalendarController {
                     DESCRIPTION += '\\n' + '\\n' + evtInfo.Instance_Short_Description__c;
                 }
                 if (!String.isBlank(evtInfo.Virtual_Meeting_Link__c)) {
-                    DESCRIPTION += '\\n' + '\\n' + 'Meeting Link - ' + evtInfo.Virtual_Meeting_Link__c;
+                    DESCRIPTION += '\\n' + '\\n' + 'Meeting Link - ' + evtInfo.Virtual_Meeting_Link__c + '\\n';
+                }
+                if (!String.isBlank(evtInfo.Event__r.Location_Address__c)) {
+                    DESCRIPTION += '\\n' + 'Location Information:' + '\\n' + evtInfo.Event__r.Location_Address__c + '\\n' + evtInfo.Event__r.Location_Map_Link__c;
+                }
+                if (!String.isBlank(evtInfo.Location_Title_Override__c)) {
+                    DESCRIPTION += '\\n' + 'Location Information:' + '\\n' + evtInfo.Location_Title_Override__c + '\\n' + evtInfo.Location_Map_Link_Override__c;
+
                 }
             }
         }
