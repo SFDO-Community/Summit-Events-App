@@ -92,7 +92,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>Virtual_Appointment_URL__c</field>
+                <field>Virtual_Meeting_URL__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>

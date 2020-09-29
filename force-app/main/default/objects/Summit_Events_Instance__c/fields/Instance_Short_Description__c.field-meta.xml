@@ -3,7 +3,7 @@
     <fullName>Instance_Short_Description__c</fullName>
     <description>Short qualifying description of session.</description>
     <externalId>false</externalId>
-    <inlineHelpText>Short qualifying description of session.</inlineHelpText>
+    <inlineHelpText>Short qualifying description of session. Appears on hover over on the calendar.</inlineHelpText>
     <label>Instance Short Description</label>
     <length>255</length>
     <required>false</required>
