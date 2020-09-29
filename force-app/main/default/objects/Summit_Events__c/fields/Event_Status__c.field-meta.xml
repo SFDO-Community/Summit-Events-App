@@ -3,7 +3,7 @@
     <fullName>Event_Status__c</fullName>
     <description>Status of event (Planning, Active, Inactive, Closed, Cancelled)</description>
     <externalId>false</externalId>
-    <inlineHelpText>Status of event (Planning, Active, Inactive, Closed, Cancelled)</inlineHelpText>
+    <inlineHelpText>Status of event and controls whether it appears on the calendar and in the Instance Feed URL</inlineHelpText>
     <label>Event Status</label>
     <required>false</required>
     <trackHistory>false</trackHistory>

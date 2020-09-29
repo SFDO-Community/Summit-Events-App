@@ -13,7 +13,7 @@
             <sorted>false</sorted>
             <value>
                 <fullName>Do not ask</fullName>
-                <default>false</default>
+                <default>true</default>
                 <label>Do not ask</label>
             </value>
             <value>
