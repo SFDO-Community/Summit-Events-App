@@ -214,7 +214,7 @@ Must have a registration for the Instance to appear.</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>Virtual_Appointment_Link__c</field>
+            <field>Virtual_Meeting_Link__c</field>
             <table>Summit_Events_Instance__c</table>
         </columns>
         <masterLabel>Summit Events Instances</masterLabel>
@@ -782,7 +782,7 @@ Must have a registration for the Instance to appear.</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>Virtual_Appointment_URL__c</field>
+            <field>Virtual_Meeting_URL__c</field>
             <table>Summit_Events_Instance__c.Event_Registrations__r</table>
         </columns>
         <masterLabel>Summit Events Registrations</masterLabel>

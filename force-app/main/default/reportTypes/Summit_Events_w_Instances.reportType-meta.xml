@@ -675,7 +675,7 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>Virtual_Appointment_Link__c</field>
+            <field>Virtual_Meeting_Link__c</field>
             <table>Summit_Events__c.Event_Instances__r</table>
         </columns>
         <masterLabel>Summit Events Instances</masterLabel>
