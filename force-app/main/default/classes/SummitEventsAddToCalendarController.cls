@@ -56,7 +56,10 @@ public with sharing class SummitEventsAddToCalendarController {
                 
                 DESCRIPTION = evtInfo.Event__r.Event_Short_Listing_Description__c;
                 if (!String.isBlank(evtInfo.Instance_Short_Description__c)) {
-                    DESCRIPTION += ' - ' + evtInfo.Instance_Short_Description__c;
+                    DESCRIPTION += '\\n' + '\\n' + evtInfo.Instance_Short_Description__c;
+                }
+                if (!String.isBlank(evtInfo.Virtual_Meeting_Link__c)) {
+                    DESCRIPTION += '\\n' + '\\n' + 'Meeting Link - ' + evtInfo.Virtual_Meeting_Link__c;
                 }
             }
         }
