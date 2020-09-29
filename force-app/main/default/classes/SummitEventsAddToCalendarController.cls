@@ -45,24 +45,19 @@ public with sharing class SummitEventsAddToCalendarController {
                 DTEND = SEShared.convertDateToDatetime(evtInfo.Instance_End_Date__c, evtInfo.Instance_End_Time__c, '').format('yyyyMMdd\'T\'HHmmss\'Z\'');
                 DTSTAMP = SEShared.convertDateToDatetime(evtInfo.Instance_Start_Date__c, evtInfo.Instance_Start_Time__c, '').format('yyyyMMdd\'T\'HHmmss\'Z\'');
                 SUMMARY = evtInfo.Event_Name__c;
-                if (!String.isBlank(evtInfo.Instance_Title__c)) {
+                if (!String.isnotBlank(evtInfo.Instance_Title__c)) {
                     SUMMARY += evtInfo.Event_Name__c + ' - ' + evtInfo.Instance_Title__c;
                 }
-                if (!String.isNotBlank(evtInfo.Virtual_Meeting_Link__c)) {
-                    SUMMARY += 'Meeting Link' + evtinfo.Virtual_Meeting_Link__c;
-                }
-
-                LOCATION = evtInfo.Location_Title_Override__c;
+               
+                LOCATION = evtInfo.Event__r.Location_Title__c;
                 if (!String.isBlank(evtInfo.Location_Title_Override__c)) {
-                    LOCATION += evtInfo.Event__r.Location_Title__c;
+                    LOCATION = evtInfo.Location_Title_Override__c;
                 }
                 
-                DESCRIPTION = evtInfo.Event_Name__c;
-                if (!String.isBlank(evtInfo.Instance_Title__c)) {
-                    DESCRIPTION += ' - ' + evtInfo.Instance_Title__c;
+                DESCRIPTION = evtInfo.Event__r.Event_Short_Listing_Description__c;
+                if (!String.isBlank(evtInfo.Instance_Short_Description__c)) {
+                    DESCRIPTION += ' - ' + evtInfo.Instance_Short_Description__c;
                 }
-                DESCRIPTION += '\n' + evtInfo.Event__r.Event_Short_Listing_Description__c;
-                DESCRIPTION += '\n' + evtInfo.Instance_Short_Description__c;
             }
         }
     }
