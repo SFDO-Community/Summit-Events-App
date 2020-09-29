@@ -45,7 +45,9 @@ public with sharing class SummitEventsAddToCalendarController {
             if (evtInfo != null) {
                 DTSTART = SEShared.convertDateToDatetime(evtInfo.Instance_Start_Date__c, evtInfo.Instance_Start_Time__c, '').format('yyyyMMdd\'T\'HHmmss\'Z\'');
                 DTEND = SEShared.convertDateToDatetime(evtInfo.Instance_End_Date__c, evtInfo.Instance_End_Time__c, '').format('yyyyMMdd\'T\'HHmmss\'Z\'');
-                DTSTAMP = SEShared.convertDateToDatetime(evtInfo.Instance_Start_Date__c, evtInfo.Instance_Start_Time__c, '').format('yyyyMMdd\'T\'HHmmss\'Z\'');
+                DTSTAMP = Datetime.now().format('yyyyMMdd\'T\'HHmmss\'Z\'');
+                TIMEZONE = evtInfo.Instance_Time_Zone__c;
+                
                 SUMMARY = evtInfo.Event_Name__c;
                 if (!String.isnotBlank(evtInfo.Instance_Title__c)) {
                     SUMMARY += evtInfo.Event_Name__c + ' - ' + evtInfo.Instance_Title__c;
@@ -58,16 +60,16 @@ public with sharing class SummitEventsAddToCalendarController {
                 
                 DESCRIPTION = evtInfo.Event__r.Event_Short_Listing_Description__c;
                 if (!String.isBlank(evtInfo.Instance_Short_Description__c)) {
-                    DESCRIPTION += '\\n' + '\\n' + evtInfo.Instance_Short_Description__c;
+                    DESCRIPTION += '\\n' + '\\n' + evtInfo.Instance_Short_Description__c+ '\\n';
                 }
                 if (!String.isBlank(evtInfo.Virtual_Meeting_Link__c)) {
-                    DESCRIPTION += '\\n' + '\\n' + 'Meeting Link - ' + evtInfo.Virtual_Meeting_Link__c + '\\n';
+                    DESCRIPTION += '\\n' + 'Meeting Link - ' + evtInfo.Virtual_Meeting_Link__c + '\\n';
                 }
                 if (!String.isBlank(evtInfo.Event__r.Location_Address__c)) {
-                    DESCRIPTION += '\\n' + 'Location Information:' + '\\n' + evtInfo.Event__r.Location_Address__c + '\\n' + evtInfo.Event__r.Location_Map_Link__c;
+                    DESCRIPTION += '\\n' + 'Location Information:' + '\\n' + evtInfo.Event__r.Location_Address__c + '\\n' + evtInfo.Event__r.Location_Map_Link__c + '\\n';
                 }
                 if (!String.isBlank(evtInfo.Location_Title_Override__c)) {
-                    DESCRIPTION += '\\n' + 'Location Information:' + '\\n' + evtInfo.Location_Title_Override__c + '\\n' + evtInfo.Location_Map_Link_Override__c;
+                    DESCRIPTION += '\\n' + 'Location Information:' + '\\n' + evtInfo.Location_Title_Override__c + '\\n' + evtInfo.Location_Map_Link_Override__c + '\\n';
 
                 }
             }
