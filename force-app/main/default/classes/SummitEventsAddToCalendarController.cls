@@ -43,7 +43,7 @@ public with sharing class SummitEventsAddToCalendarController {
             if (evtInfo != null) {
                 DTSTART = SEShared.convertDateToDatetime(evtInfo.Instance_Start_Date__c, evtInfo.Instance_Start_Time__c, '').format('yyyyMMdd\'T\'HHmmss\'Z\'');
                 DTEND = SEShared.convertDateToDatetime(evtInfo.Instance_End_Date__c, evtInfo.Instance_End_Time__c, '').format('yyyyMMdd\'T\'HHmmss\'Z\'');
-                DTSTAMP = SEShared(evtInfo.Instance_Start_Date__c, '').format('yyyyMMdd');
+                DTSTAMP = SEShared.convertDateToDatetime(evtInfo.Instance_Start_Date__c, evtInfo.Instance_Start_Time__c, '').format('yyyyMMdd\'T\'HHmmss\'Z\'');
                 SUMMARY = evtInfo.Event_Name__c;
                 if (!String.isBlank(evtInfo.Instance_Title__c)) {
                     SUMMARY += evtInfo.Event_Name__c + ' - ' + evtInfo.Instance_Title__c;
