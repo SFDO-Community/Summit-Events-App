@@ -20,6 +20,7 @@ public with sharing class SummitEventsAddToCalendarController {
         DTEND = '';
         DTSTAMP = '';
         SUMMARY = '';
+        LOCATION = '';
         DESCRIPTION = '';
         TIMEZONE = '';
         UUID = NewGuid();
@@ -29,7 +30,7 @@ public with sharing class SummitEventsAddToCalendarController {
             List<Summit_Events_Instance__c> eventInstanceList = [
                     SELECT Id, Event_Name__c, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c,
                             Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c,
-                            Instance_Short_Description__c, Event__r.Event_Short_Listing_Description__c
+                            Instance_Short_Description__c, Event_Short_Listing_Description__c, Virtual_Meeting_Link__c, Event__r.Location_Title__c, Location_Title_Override__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :URLinstanceID
             ];
@@ -41,20 +42,25 @@ public with sharing class SummitEventsAddToCalendarController {
             if (evtInfo != null) {
                 DTSTART = SEShared.convertDateToDatetime(evtInfo.Instance_Start_Date__c, evtInfo.Instance_Start_Time__c, '').format('yyyyMMdd\'T\'HHmmss\'Z\'');
                 DTEND = SEShared.convertDateToDatetime(evtInfo.Instance_End_Date__c, evtInfo.Instance_End_Time__c, '').format('yyyyMMdd\'T\'HHmmss\'Z\'');
-                DTSTAMP = SEShared.convertDate(evtInfo.Instance_Start_Date__c).format('yyyyMMdd\'T\'HHmmss\'Z\'');
+                DTSTAMP = SEShared.evtInfo.Instance_Start_Date__c.format('yyyyMMdd');
                 SUMMARY = evtInfo.Event_Name__c;
                 if (!String.isBlank(evtInfo.Instance_Title__c)) {
                     SUMMARY += evtInfo.Event_Name__c + ' - ' + evtInfo.Instance_Title__c;
                 }
-                if (!String.isNotBlank(evtinfo.Virtual_Appointment_Link__c)) {
-                    SUMMARY += 'Meeting Link' + evtInfo.evtinfo.Virtual_Appointment_Link__c;
+                if (!String.isNotBlank(evtInfo.Virtual_Meeting_Link__c)) {
+                    SUMMARY += 'Meeting Link' + evtInfo.evtinfo.Virtual_Meeting_Link__c;
                 }
 
+                LOCATION = evtInfo.summit__Location_Title_Override__c;
+                if (!String.isBlank(evtInfo.summit__Location_Title_Override__c)) {
+                    LOCATION += evtInfo.Event__r.Location_Title__c;
+                }
+                
                 DESCRIPTION = evtInfo.Event_Name__c;
                 if (!String.isBlank(evtInfo.Instance_Title__c)) {
                     DESCRIPTION += ' - ' + evtInfo.Instance_Title__c;
                 }
-                DESCRIPTION += '\n' + evtInfo.Event__r.Event_Short_Listing_Description__c;
+                DESCRIPTION += '\n' + evtInfo.Event_Short_Listing_Description__c;
                 DESCRIPTION += '\n' + evtInfo.Instance_Short_Description__c;
             }
         }
