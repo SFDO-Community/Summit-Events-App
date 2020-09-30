@@ -46,8 +46,6 @@ public with sharing class SummitEventsConfirmationController {
             }
 
             navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance, false);
-
-            System.Debug(navBreadCrumb);
         }
 
     }
@@ -56,36 +54,36 @@ public with sharing class SummitEventsConfirmationController {
         //PageReference resultPageRef =  SEShared.checkForEvent();
         evtInfo = SEShared.getSummitEventsInfo();
 
-        System.debug('EVENT LOAD Cookie INFO: ' + JSON.serializePretty(evtInfo));
-        String eventTitle = '';
-        if (!String.isBlank(evtInfo.evtRegId)) {
-            Summit_Events_Registration__c evtReg = [
-                    SELECT Id, Status__c, Contact__c, Event_Name__c, Event_Instance_Title__c, Event_Instance__c,
-                            Registrant_First_Name__c, Registrant_Last_Name__c,Registrant_Gender__c,
-                            Event_Instance_Date__c, Registrant_Street_1__c, Registrant_Street_2__c, Registrant_City__c,
-                            Registrant_State__c, Registrant_Zip__c, Registrant_Email__c, Registrant_High_School_Grad_Year__c,
-                            Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c,
-                            Registrant_Program_Interest__c
-                    FROM Summit_Events_Registration__c
-                    WHERE id = :evtInfo.evtRegId
-                    LIMIT 1
-            ];
+        if (!eventIsClosed) {
+            String eventTitle = '';
+            if (!String.isBlank(evtInfo.evtRegId)) {
+                Summit_Events_Registration__c evtReg = [
+                        SELECT Id, Status__c, Contact__c, Event_Name__c, Event_Instance_Title__c, Event_Instance__c,
+                                Registrant_First_Name__c, Registrant_Last_Name__c,Registrant_Gender__c,
+                                Event_Instance_Date__c, Registrant_Street_1__c, Registrant_Street_2__c, Registrant_City__c,
+                                Registrant_State__c, Registrant_Zip__c, Registrant_Email__c, Registrant_High_School_Grad_Year__c,
+                                Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c,
+                                Registrant_Program_Interest__c
+                        FROM Summit_Events_Registration__c
+                        WHERE id = :evtInfo.evtRegId
+                        LIMIT 1
+                ];
 
-            System.debug('EVENT ON LOAD INFO: ' + JSON.serializePretty(evtReg));
+                System.debug('EVENT ON LOAD INFO: ' + JSON.serializePretty(evtReg));
 
-            if (!String.isBlank(evtReg.Event_Instance_Title__c)) {
-                eventTitle = evtReg.Event_Name__c + ' - ' + evtReg.Event_Instance_Title__c ;
-            } else {
-                eventTitle = evtReg.Event_Name__c;
+                if (!String.isBlank(evtReg.Event_Instance_Title__c)) {
+                    eventTitle = evtReg.Event_Name__c + ' - ' + evtReg.Event_Instance_Title__c ;
+                } else {
+                    eventTitle = evtReg.Event_Name__c;
+                }
+                evtReg.Status__c = 'Registered';
+
+                registrationCRUD regCRUD = new registrationCRUD();
+                evtReg = regCRUD.updateRegistration(evtReg);
+
+                //Remove the registration ID from the cookie so back button will redirect to the correct page.
+                SEShared.createEncryptedCookie('{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"","evtId":"' + evtInfo.evtId + '"}', 'SummitEvents');
             }
-            evtReg.Status__c = 'Registered';
-
-
-            registrationCRUD regCRUD = new registrationCRUD();
-            evtReg = regCRUD.updateRegistration(evtReg);
-
-            //Remove the registration ID from the cookie so back button will redirect to the correct page.
-            SEShared.createEncryptedCookie('{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"","evtId":"' + evtInfo.evtId + '"}', 'SummitEvents');
         }
         return null;
     }
