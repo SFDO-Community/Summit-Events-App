@@ -14,8 +14,11 @@ public with sharing class SummitEventsSubmitController {
     public String chosenFormatted { get; set; }
     public String templateSelected { get; set; }
     public String navBreadCrumb { get; set; }
+    public boolean eventIsClosed { get; set; }
+    public Boolean adminOpen { get; set; }
 
     public SummitEventsSubmitController() {
+        eventIsClosed = false;
         test = '';
 
         //Get cookie or URL string variable
@@ -23,7 +26,8 @@ public with sharing class SummitEventsSubmitController {
         chosenFormatted = '';
         if (!String.isEmpty(evtInfo.evtId)) {
             eventPage = [
-                    SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Submit_Registration__c
+                    SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
+                            Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c
                     FROM Summit_Events__c
                     WHERE Id = :evtinfo.evtId
             ][0];
@@ -33,11 +37,18 @@ public with sharing class SummitEventsSubmitController {
             evtInstance = [
                     SELECT Instance_Title__c, Event__r.Event_Name__c,
                             Instance_Time_Zone__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Start_Date__c,
-                            Instance_End_Date__c
+                            Instance_End_Date__c, Current_Available_Capacity__c, Active_Status__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :evtinfo.instanceID
                     LIMIT 1
             ];
+
+            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+                adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
+                eventIsClosed = adminOpen;
+            } else {
+                eventIsClosed = SEShared.isEventClosed(eventPage, evtInstance);
+            }
 
             navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance, false);
         }
@@ -74,6 +85,10 @@ public with sharing class SummitEventsSubmitController {
 
     public PageReference submitRegistration() {
         PageReference confirmPage = Page.SummitEventsConfirmation;
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+            confirmPage.setRedirect(true);
+            confirmPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
+        }
         return confirmPage;
     }
 
@@ -84,6 +99,7 @@ public with sharing class SummitEventsSubmitController {
                 WHERE Summit_Events__c = :evtInfo.evtId
                 AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
         ];
+
         PageReference lastPage;
         if (apptTypes.size() == 0) {
             //If no options skip that step
@@ -91,6 +107,12 @@ public with sharing class SummitEventsSubmitController {
         } else {
             lastPage = Page.SummitEventsRegisterAppointments;
         }
+
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+            lastPage.setRedirect(true);
+            lastPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
+        }
+
         return lastPage;
     }
 }

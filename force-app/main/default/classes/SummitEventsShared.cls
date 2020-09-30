@@ -4,9 +4,6 @@
 // Created by Thaddaeus Dahlberg on 5/1/2018.
 
 public with sharing class SummitEventsShared {
-    //private key for encryption
-    Private Blob key = Blob.valueOf('TmC%2%1119fzG2PrtP7f&6acnc#y8@vr');
-    Public String defaultTemplate = 'GeneralSLDS';
 
     public class SummitEventsInfo {
         public String audience { get; set; }
@@ -20,14 +17,14 @@ public with sharing class SummitEventsShared {
     }
 
     public String getTemplate(String templateName) {
-        List<String> namespaceTemplate = new List<String> {
+        List<String> namespaceTemplate = new List<String>{
                 'GeneralSLDS',
                 'crowncollege2020',
                 'OPUSTemplate2018',
                 'CastorTemplate2017'
         };
         if (String.isNotBlank(templateName)) {
-            if(!namespaceTemplate.contains(templateName)) {
+            if (!namespaceTemplate.contains(templateName)) {
                 templateName = 'c__' + templateName;
             }
         } else {
@@ -40,14 +37,14 @@ public with sharing class SummitEventsShared {
         //{"audience":"High School Senior","instanceID":"a320m000000A5fOAAS","evtRegId":"a350m0000008q63AAA,"evtId":"a330m0000001SOrAAM"}
         String jsonInput = '';
         SummitEventsInfo evtInfo = new SummitEventsInfo();
-        String URLaudience = ApexPages.currentPage().getParameters().get('audience');
-        String URLinstanceID = ApexPages.currentPage().getParameters().get('instanceID');
+        String URLAudience = ApexPages.currentPage().getParameters().get('audience');
+        String URLInstanceID = ApexPages.currentPage().getParameters().get('instanceID');
         jsonInput = getDecryptCookie('SummitEvents');
         if (!String.isBlank(jsonInput)) {
             try {
                 evtInfo = (SummitEventsInfo) JSON.deserialize(jsonInput, SummitEventsInfo.class);
-                if (!String.isBlank(URLaudience)) {
-                    evtInfo.audience = URLaudience;
+                if (!String.isBlank(URLAudience)) {
+                    evtInfo.audience = URLAudience;
                 }
             } catch (Exception e) {
                 //Cookie was un-serializable so delete it
@@ -57,21 +54,20 @@ public with sharing class SummitEventsShared {
                 });
             }
         }
-        if (!String.isBlank(URLinstanceID)) {
-            if (URLinstanceID.length() > 14) {
-                if (URLinstanceID != evtInfo.instanceID) {
+        if (!String.isBlank(URLInstanceID)) {
+            if (URLInstanceID.length() > 14) {
+                if (URLInstanceID != evtInfo.instanceID) {
                     //event instance has changed so delete cookie and reestablish with new instance
                     Cookie deleteCookie = new Cookie('SummitEvents', '', null, 0, false); // Note the 0 to delete the cookie
                     ApexPages.currentPage().setCookies(new Cookie[]{
                             deleteCookie
                     });
                     evtInfo = new SummitEventsInfo();
-                    evtInfo.instanceID = URLinstanceID;
-                    if (!String.isBlank(URLaudience)) {
-                        evtInfo.audience = URLaudience;
+                    evtInfo.instanceID = URLInstanceID;
+                    if (!String.isBlank(URLAudience)) {
+                        evtInfo.audience = URLAudience;
                     }
                     String eventCookie = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"COMING","evtId":"' + evtInfo.evtId + '"}';
-                    System.Debug('COOKIE 1: ' + eventCookie);
                     createEncryptedCookie(eventCookie, 'SummitEvents');
                 }
             }
@@ -79,7 +75,7 @@ public with sharing class SummitEventsShared {
 
         //check if regid is there  and whether status it is set to registered. IF so reset cookie if it is.
         if (!String.isBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING') {
-            Summit_Events_Registration__c evtReg = [SELECT Status__c FROM Summit_Events_Registration__c WHERE ID = :evtInfo.evtRegId][0];
+            Summit_Events_Registration__c evtReg = [SELECT Status__c FROM Summit_Events_Registration__c WHERE Id = :evtInfo.evtRegId][0];
             if (evtReg.Status__c != 'Started') {
                 //Registration is complete and a new form should be generated.
                 String eventCookie2 = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"","evtId":"' + evtInfo.evtId + '"}';
@@ -94,6 +90,9 @@ public with sharing class SummitEventsShared {
         SummitEventsInfo evt = new SummitEventsInfo();
         PageReference myVFPage = null;
         evt = getSummitEventsInfo();
+
+        sharedCRUD rCRUD = new sharedCRUD();
+        rCRUD.setCookieKey();
 
         Summit_Events_Settings__c myUserSetting = Summit_Events_Settings__c.getInstance(UserInfo.getUserId());
         String communityBaseURL = myUserSetting.Community_Base_URL__c;
@@ -123,25 +122,29 @@ public with sharing class SummitEventsShared {
     }
 
     public String createEncryptedCookie(String CookieValue, String CookieName) {
-        Blob data = Blob.valueOf(CookieValue);
-        Blob encrypted = Crypto.encryptWithManagedIV('AES256', key, data);
-        String encodedCipherText = EncodingUtil.base64Encode(encrypted);
-        encodedCipherText = EncodingUtil.urlEncode(encodedCipherText, 'UTF-8');
-        Cookie SummitEventsCookie = new Cookie(CookieName, encodedCipherText, null, -1, false);
-        ApexPages.currentPage().setCookies(new Cookie[]{
-                SummitEventsCookie
-        });
+        String encodedCipherText = '';
+        String key = getCookieKey();
+        if (String.isNotBlank(String.valueOf(key))) {
+            Blob data = Blob.valueOf(CookieValue);
+            Blob encrypted = Crypto.encryptWithManagedIV('AES256', Blob.valueOf(key), data);
+            encodedCipherText = EncodingUtil.base64Encode(encrypted);
+            encodedCipherText = EncodingUtil.urlEncode(encodedCipherText, 'UTF-8');
+            Cookie SummitEventsCookie = new Cookie(CookieName, encodedCipherText, null, -1, false);
+            ApexPages.currentPage().setCookies(new Cookie[]{
+                    SummitEventsCookie
+            });
+        }
         return encodedCipherText;
     }
 
     public String getDecryptCookie(String CookieName) {
-
+        String key = getCookieKey();
         Cookie encodedCipherText = ApexPages.currentPage().getCookies().get(CookieName);
-        if (encodedCipherText != null) {
+        if (encodedCipherText != null && String.isNotBlank(String.valueOf(key))) {
             try {
                 Blob decrypted = Crypto.decryptWithManagedIV(
                         'AES256',
-                        key,
+                        Blob.valueOf(key),
                         EncodingUtil.base64Decode(
                                 EncodingUtil.urlDecode(encodedCipherText.getValue(), 'UTF-8')
                         )
@@ -154,7 +157,7 @@ public with sharing class SummitEventsShared {
         return '';
     }
 
-    public boolean isEventClosed(Summit_Events__c eventPage, Summit_Events_Instance__c evtInstance) {
+    public Boolean isEventClosed(Summit_Events__c eventPage, Summit_Events_Instance__c evtInstance) {
         //Figure out if the event is closed.
         Boolean eventIsClosed = false;
 
@@ -282,7 +285,7 @@ public with sharing class SummitEventsShared {
         return crumb;
     }
 
-    public DateTime adjustForTimeZone(Datetime dt, String timezoneString) {
+    public Datetime adjustForTimeZone(Datetime dt, String timezoneString) {
         timezoneString = getTimeZonePick(timezoneString);
         //Get the current GMT time and adjust for our timezone
         //tz = TimeZone.getTimeZone('America/Chicago');
@@ -306,7 +309,7 @@ public with sharing class SummitEventsShared {
         return converted;
     }
 
-    public String formatTime(Time myTime, boolean military) {
+    public String formatTime(Time myTime, Boolean military) {
         String formatTime = '';
         if (myTime.hour() >= 13 && myTime.hour() > 0 && !military) {
             formatTime = String.valueOf(myTime.hour() - 12);
@@ -350,9 +353,9 @@ public with sharing class SummitEventsShared {
             Schema.SObjectField[] fields = objectMeta.fields.getMap().values();
             for (Schema.SObjectField f : fields) {
                 Schema.DescribeFieldResult d = f.getDescribe();
-                String fieldname = d.getName().toLowerCase();
+                String fieldName = d.getName().toLowerCase();
                 String ftype = String.valueOf(d.getType()).toLowerCase();
-                if (fieldname.equals(namespace + parentFieldName.toLowerCase()) && ('picklist'.equals(ftype) || 'multipicklist'.equals(ftype))) {
+                if (fieldName.equals(namespace + parentFieldName.toLowerCase()) && ('picklist'.equals(ftype) || 'multipicklist'.equals(ftype))) {
                     Schema.PicklistEntry[] pplvalues = d.getPicklistValues();
                     for (Integer i = 0; i < pplvalues.size(); i++) {
                         if (parentValue.equals(pplvalues[i].getValue())) {
@@ -361,7 +364,7 @@ public with sharing class SummitEventsShared {
                         }
                     }
                 }
-                if (fieldname.equals(namespace + dependentFieldName.toLowerCase()) && ('picklist'.equals(ftype) || 'multipicklist'.equals(ftype))) {
+                if (fieldName.equals(namespace + dependentFieldName.toLowerCase()) && ('picklist'.equals(ftype) || 'multipicklist'.equals(ftype))) {
                     dependentField = d;
                 }
             }
@@ -403,5 +406,25 @@ public with sharing class SummitEventsShared {
         return retVal;
     }
 
+    private String getCookieKey() {
+        String key = '';
+        Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
+        if (String.isNotBlank(SummitEventsSettings.Cookie_Encryption_Key__c)) {
+            key = SummitEventsSettings.Cookie_Encryption_Key__c;
+        }
+        return key;
+    }
+
+    private without sharing class sharedCRUD {
+        public void setCookieKey() {
+            Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
+            if (String.isBlank(SummitEventsSettings.Cookie_Encryption_Key__c)) {
+                Blob cryptoKey = Crypto.generateAesKey(256);
+                String encryptionString = EncodingUtil.base64Encode(cryptoKey).substring(0, 32);
+                SummitEventsSettings.Cookie_Encryption_Key__c = encryptionString;
+                upsert SummitEventsSettings;
+            }
+        }
+    }
 
 }

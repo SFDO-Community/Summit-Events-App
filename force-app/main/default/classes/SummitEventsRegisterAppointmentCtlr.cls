@@ -13,6 +13,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     public String appointments { get; set; }
     public String chosenFormatted { get; set; }
     public String incomingApptJSon { get; set; }
+    public boolean eventIsClosed { get; set; }
+    public Boolean adminOpen { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public String templateSelected { get; set; }
     public Boolean noOptionalAppointments { get; set; }
@@ -31,6 +33,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     }
 
     public SummitEventsRegisterAppointmentCtlr() {
+        eventIsClosed = false;
         test = '';
         //Get cookie or URL string variable
         evtInfo = SEShared.getSummitEventsInfo();
@@ -43,7 +46,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         if (!String.isBlank(evtinfo.evtId)) {
             eventPage = [
                     SELECT Event_Name__c, Event_description__c, Event_Appointment_Title__c, Event_Appointment_Description__c, Event_Footer__c,
-                            Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Options_Registration__c
+                            Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Options_Registration__c, Event_Full_Text__c,
+                            Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c
                     FROM Summit_Events__c
                     WHERE Id = :evtinfo.evtId
             ][0];
@@ -54,12 +58,18 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                 evtInstance = [
                         SELECT Instance_Title__c, Event__r.Event_Name__c,
                                 Instance_Time_Zone__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Start_Date__c,
-                                Instance_End_Date__c
+                                Instance_End_Date__c, Current_Available_Capacity__c, Active_Status__c
                         FROM Summit_Events_Instance__c
                         WHERE Id = :evtinfo.instanceID
                         LIMIT 1
                 ];
 
+                if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+                    adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
+                    eventIsClosed = adminOpen;
+                } else {
+                    eventIsClosed = SEShared.isEventClosed(eventPage, evtInstance);
+                }
 
                 if (evtInstance != null) {
                     String dayOfWeek = SEShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
@@ -337,6 +347,11 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         appointmentsCRUD apptCrud = new appointmentsCRUD();
         PageReference submitPage = Page.SummitEventsSubmit;
 
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+            submitPage.setRedirect(true);
+            submitPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
+        }
+
         Summit_Events_Appointments__c[] deleteAppt = [
                 SELECT Id, Event_Registration__c, Client_Created_Appointment__c, Chosen_State__c, Do_Not_Show_Time__c
                 FROM Summit_Events_Appointments__c
@@ -396,9 +411,12 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     }
 
     public PageReference previousPage() {
-//if (!String.isBlank(eventRegId)) {
-        PageReference registerPage = Page.SummitEventsRegister;
 
+        PageReference registerPage = Page.SummitEventsRegister;
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+            registerPage.setRedirect(true);
+            registerPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
+        }
         return registerPage;
     }
 
