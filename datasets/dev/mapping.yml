@@ -140,7 +140,7 @@ Insert Summit_Events_Instance__c:
   - Location_Title_Override__c
   - Location_Type_Override__c
   - Private_Instance__c
-  - Virtual_Appointment_Link__c
+  - Virtual_Meeting_Link__c
   lookups:
     Event__c:
       table: Summit_Events__c

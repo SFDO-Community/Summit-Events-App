@@ -21,7 +21,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
-                    <apex:messages />
+                    <apex:messages/>
                 </div>
                 <apex:form id="SummitEventsRegisterAppointmentsForm" styleClass="slds-grid slds-wrap">
                     <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
@@ -31,38 +31,48 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
                             <apex:outputText escape="false" value="{!eventPage.Event_Appointment_Title__c}"/>
                         </h2>
-                        <p class="slds-text-body slds-p-vertical_xx-small">
-                            <apex:outputText escape="false" value="{!eventPage.Event_Appointment_Description__c}"/>
-                        </p>
                     </div>
-                    <apex:outputPanel layout="block" styleClass="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-vertical_x-small slds-p-vertical_xx-small slds-p-right_medium" rendered="{!!noOptionalAppointments}">
-                        <h4 class="slds-text-heading_medium slds-p-vertical_xx-small">Choose your options</h4>
-                        <div id="chooser">
-                            <apex:outputText escape="false" value="{!appointments}"/>
-                        </div>
-                        <apex:outputPanel rendered="{!requiredAppt}" layout="inline" styleClass="requiredSelectionLabel">* Selection required.</apex:outputPanel>
+                    <!-- EVENT CLOSED MESSAGE -->
+                    <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
+                        <p class="slds-text-body">
+                            <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"></apex:outputText>
+                        </p>
                     </apex:outputPanel>
-                    <apex:outputPanel layout="block" styleClass="slds-col slds-size_1-of-1 {!IF(!noOptionalAppointments, 'slds-medium-size_1-of-2 slds-large-size_1-of-2', '')} slds-p-vertical_x-small slds-p-vertical_xx-small">
-                        <h4 class="slds-text-heading_medium slds-p-vertical_xx-small">Selected options</h4>
-                        <div id="chosen">
-                            <apex:outputText escape="false" value="{!chosenFormatted}"/>
+                    <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
+                        <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                            <p class="slds-text-body slds-p-vertical_xx-small">
+                                <apex:outputText escape="false" value="{!eventPage.Event_Appointment_Description__c}"/>
+                            </p>
                         </div>
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-vertical_x-small slds-p-vertical_xx-small slds-p-right_medium" rendered="{!!noOptionalAppointments}">
+                            <h4 class="slds-text-heading_medium slds-p-vertical_xx-small">Choose your options</h4>
+                            <div id="chooser">
+                                <apex:outputText escape="false" value="{!appointments}"/>
+                            </div>
+                            <apex:outputPanel rendered="{!requiredAppt}" layout="inline" styleClass="requiredSelectionLabel">* Selection required.</apex:outputPanel>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-size_1-of-1 {!IF(!noOptionalAppointments, 'slds-medium-size_1-of-2 slds-large-size_1-of-2', '')} slds-p-vertical_x-small slds-p-vertical_xx-small">
+                            <h4 class="slds-text-heading_medium slds-p-vertical_xx-small">Selected options</h4>
+                            <div id="chosen">
+                                <apex:outputText escape="false" value="{!chosenFormatted}"/>
+                            </div>
+                        </apex:outputPanel>
+
+                        <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
+                            <p class="slds-text-body slds-p-vertical_xx-small"><em>Once you have selected all your appointments click next.</em></p>
+                            <p class="slds-text-body slds-p-vertical_xx-small">
+                                <apex:commandLink action="{!saveOptions}" onClick="fadeout(); return populateApptJSON();" Value="Next" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                            </p>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
+                            <p class="slds-text-body ">
+                                <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"></apex:outputText>
+                            </p>
+                        </div>
+                        <apex:inputHidden id="outgoingApptJSon" value="{!incomingApptJSon}"/>
                     </apex:outputPanel>
-
-                    <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
-                        <p class="slds-text-body slds-p-vertical_xx-small"><em>Once you have selected all your appointments click next.</em></p>
-                        <p class="slds-text-body slds-p-vertical_xx-small">
-                            <apex:commandLink action="{!saveOptions}" onClick="fadeout(); return populateApptJSON();" Value="Next" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
-                            <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
-                        </p>
-                    </div>
-
-                    <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
-                        <p class="slds-text-body ">
-                            <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"></apex:outputText>
-                        </p>
-                    </div>
-                    <apex:inputHidden id="outgoingApptJSon" value="{!incomingApptJSon}"/>
                 </apex:form>
             </div>
             <apex:outputText escape="false" value="{!eventPage.Tracking_Options_Registration__c}"></apex:outputText>

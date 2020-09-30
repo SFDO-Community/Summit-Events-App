@@ -103,7 +103,7 @@ public with sharing class SummitEventsRegisterController {
                             Ask_Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c,
                             Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c, Ask_Pronoun__c, Keep_Registration_Open_During_Event__c,
-                            Close_Event_Days_Before__c, Ask_Title__c, Ask_Company_Organization__c	
+                            Close_Event_Days_Before__c, Ask_Title__c, Ask_Company_Organization__c
                     FROM Summit_Events__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1
@@ -316,7 +316,7 @@ public with sharing class SummitEventsRegisterController {
     public List<SelectOption> getPronounDD() {
         return PickThePicklist('Summit_Events_Registration__c', 'Registrant_Pronouns__c', true);
     }
-    
+
     public List<SelectOption> getProgramsAvailable() {
         List<SelectOption> progSelOpt = new List<SelectOption>();
         return progSelOpt;
@@ -370,7 +370,6 @@ public with sharing class SummitEventsRegisterController {
     }
 
     public PageReference saveContactRegistration() {
-        System.debug(LoggingLevel.Info, ' HEY WE ARE SAVING HERE!');
         boolean newContactCreated = false;
         PageReference optionPage;
 

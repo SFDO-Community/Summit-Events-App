@@ -35,9 +35,12 @@ CREATE TABLE "Summit_Events_Appointment_Type__c" (
 );
 INSERT INTO "Summit_Events_Appointment_Type__c" VALUES(1,'','1','Active','','','False','','','','','','','<p>Get yourself some quiet time in our library.</p>','False','','False','1.0','Demo Appointment 0 - Quiet Time','','1');
 INSERT INTO "Summit_Events_Appointment_Type__c" VALUES(2,'','1','Active','','','False','','','','','','','There is such a thing!','False','','False','30.0','Demo Appointment 3 - Free Lunch','','1');
-INSERT INTO "Summit_Events_Appointment_Type__c" VALUES(3,'','1','Active','','','False','','','Chocolate
-Vanilla
-Strawberry
+INSERT INTO "Summit_Events_Appointment_Type__c" VALUES(3,'','1','Active','','','False','','','Chocolate
+
+Vanilla
+
+Strawberry
+
 Lactose Free','','','','Choose the ice cream you could prefer to consume during your visit','False','Custom pick list','False','10.0','Demo Appointment 1 - Ice Cream with Counselor','','1');
 INSERT INTO "Summit_Events_Appointment_Type__c" VALUES(4,'','2','Active','','','False','','','','','','','What is your definition of the meaning of life?','False','Required text box','False','20.0','Demo Appointment 2 - Meaning of life','','1');
 CREATE TABLE "Summit_Events_Appointments__c" (
@@ -133,7 +136,7 @@ CREATE TABLE "Summit_Events_Instance__c" (
 	"Location_Title_Override__c" VARCHAR(255), 
 	"Location_Type_Override__c" VARCHAR(255), 
 	"Private_Instance__c" VARCHAR(255), 
-	"Virtual_Appointment_Link__c" VARCHAR(255), 
+	"Virtual_Meeting_Link__c" VARCHAR(255),
 	"Event__c" VARCHAR(255), 
 	PRIMARY KEY (id)
 );

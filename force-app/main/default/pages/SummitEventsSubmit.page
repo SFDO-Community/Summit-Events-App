@@ -20,7 +20,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages />
+                    <apex:messages/>
                 </div>
                 <apex:form id="SummitEventsRegisterSubmitForm" styleClass="slds-grid slds-wrap">
 
@@ -33,22 +33,32 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
                             <apex:outputText escape="false" value="{!eventPage.Event_Submit_Title__c}"/>
                         </h2>
-                        <p class="slds-text-body slds-p-vertical_xx-small">
-                            <apex:outputText escape="false" value="{!eventPage.Event_Submit_Description__c}"/>
-                        </p>
-                        <apex:outputText escape="false" value="{!chosenFormatted}"/>
                     </div>
-                    <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
-                        <p class="slds-text-body slds-p-vertical_xx-small">
-                            <apex:commandLink action="{!submitRegistration}" onClick="fadeout();" Value="Submit Registration" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
-                            <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                    <!-- EVENT CLOSED MESSAGE -->
+                    <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
+                        <p class="slds-text-body">
+                            <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"></apex:outputText>
                         </p>
-                    </div>
-                    <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
-                        <p class="slds-text-body ">
-                            <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"></apex:outputText>
-                        </p>
-                    </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
+                        <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                            <p class="slds-text-body slds-p-vertical_xx-small">
+                                <apex:outputText escape="false" value="{!eventPage.Event_Submit_Description__c}"/>
+                            </p>
+                            <apex:outputText escape="false" value="{!chosenFormatted}"/>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
+                            <p class="slds-text-body slds-p-vertical_xx-small">
+                                <apex:commandLink action="{!submitRegistration}" onClick="fadeout();" Value="Submit Registration" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                            </p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
+                            <p class="slds-text-body ">
+                                <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"></apex:outputText>
+                            </p>
+                        </div>
+                    </apex:outputPanel>
                 </apex:form>
                 <apex:outputText escape="false" value="{!eventPage.Tracking_Submit_Registration__c}"></apex:outputText>
             </div>
