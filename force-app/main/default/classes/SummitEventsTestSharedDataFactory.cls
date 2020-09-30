@@ -15,6 +15,14 @@ public with sharing class SummitEventsTestSharedDataFactory {
             String registrationEmailRestriction
     ) {
 
+        Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
+        if (String.isBlank(SummitEventsSettings.Cookie_Encryption_Key__c)) {
+            Blob cryptoKey = Crypto.generateAesKey(256);
+            String encryptionString = EncodingUtil.base64Encode(cryptoKey).substring(0, 32);
+            SummitEventsSettings.Cookie_Encryption_Key__c = encryptionString;
+            insert SummitEventsSettings;
+        }
+
         Summit_Events__c testEvent = new Summit_Events__c();
 
         //Create event
