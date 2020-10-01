@@ -35,8 +35,8 @@ public with sharing class SummitEventsSubmitController {
             templateSelected = SEShared.getTemplate(eventPage.Template__c);
 
             evtInstance = [
-                    SELECT Instance_Title__c, Event__r.Event_Name__c,
-                            Instance_Time_Zone__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Start_Date__c,
+                    SELECT Instance_Title__c, Event__r.Event_Name__c, Instance_Time_Zone__c,
+                            Instance_Start_Time__c, Instance_End_Time__c, Instance_Start_Date__c,
                             Instance_End_Date__c, Current_Available_Capacity__c, Active_Status__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :evtinfo.instanceID
@@ -93,12 +93,17 @@ public with sharing class SummitEventsSubmitController {
     }
 
     public PageReference previousPage() {
-        List<Summit_Events_Appointment_Type__c> apptTypes = [
+        List<Summit_Events_Appointment_Type__c> apptTypes = null;
+
+        apptTypes = [
                 SELECT Id
                 From Summit_Events_Appointment_Type__c
                 WHERE Summit_Events__c = :evtInfo.evtId
-                AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
+                AND (
+                        Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c
+                        OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
         ];
+
 
         PageReference lastPage;
         if (apptTypes.size() == 0) {
