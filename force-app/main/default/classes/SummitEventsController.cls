@@ -8,10 +8,14 @@ public with sharing class SummitEventsController {
 
     public SummitEventsController() {
 
+        Summit_Events_Settings__c myUserSetting = Summit_Events_Settings__c.getInstance(UserInfo.getUserId());
+        String communityBaseURL = myUserSetting.Community_Base_URL__c;
+
+        communityBaseURL = communityBaseURL.replaceAll('http:', 'https:');
+
         String namespace = SummitEventsNamespace.getNamespace();
-        String headerdata = ApexPages.currentPage().getHeaders().get('Host');
-        headerdata.replace('http://', 'https://');
-        feedURL = 'https://' + headerdata + '/services/apexrest/';
+
+        feedURL = communityBaseURL + '/services/apexrest/';
 
         if (String.isNotEmpty(namespace)) {
             feedURL += namespace + '/';
