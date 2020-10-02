@@ -33,6 +33,11 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Audience__c</field>
+            <table>Summit_Events_Instance__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Building_Override__c</field>
             <table>Summit_Events_Instance__c</table>
         </columns>
@@ -89,6 +94,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Event_Name__c</field>
+            <table>Summit_Events_Instance__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Type__c</field>
             <table>Summit_Events_Instance__c</table>
         </columns>
         <columns>

@@ -97,6 +97,16 @@
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event__c.Audience__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event__c.Building__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
             <checkedByDefault>true</checkedByDefault>
             <field>Name</field>
             <table>Summit_Events_Registration__c</table>
@@ -233,6 +243,16 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Event__c.Event_Sponsor__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Type__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Generated_Itinerary__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
@@ -274,6 +294,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Location_Title__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Location_Type__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
