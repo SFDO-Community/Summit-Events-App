@@ -15,7 +15,11 @@ public with sharing class SummitEventsController {
 
         String namespace = SummitEventsNamespace.getNamespace();
 
-        feedURL = communityBaseURL + '/services/apexrest/';
+        if (communityBaseURL.endsWith('/')) {
+            feedURL = communityBaseURL + 'services/apexrest/';
+        } else {
+            feedURL = communityBaseURL + '/services/apexrest/';
+        }
 
         if (String.isNotEmpty(namespace)) {
             feedURL += namespace + '/';
