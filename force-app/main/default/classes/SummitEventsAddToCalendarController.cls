@@ -50,7 +50,7 @@ public with sharing class SummitEventsAddToCalendarController{
 				TIMEZONE = SEShared.getTimeZonePick(evtInfo.Instance_Time_Zone__c);
 
 				SUMMARY = evtInfo.Event_Name__c;
-				if (!String.isnotBlank(evtInfo.Instance_Title__c)){
+				if (!String.isBlank(evtInfo.Instance_Title__c)){
 					SUMMARY += evtInfo.Event_Name__c + ' - ' + evtInfo.Instance_Title__c;
 				}
 
