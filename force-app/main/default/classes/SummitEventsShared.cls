@@ -272,13 +272,13 @@ public with sharing class SummitEventsShared {
         crumb += '<nav role="navigation" aria-label="Breadcrumbs">';
         crumb += '   <ol class="slds-breadcrumb slds-list--horizontal">';
         if (String.isNotBlank(eventInstance.Event__r.Event_Name__c)) {
-            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Event__r.Event_Name__c + '</a></li>';
+            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a>' + eventInstance.Event__r.Event_Name__c + '</a></li>';
         }
         if (String.isNotBlank(eventInstance.Instance_Title__c)) {
-            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Instance_Title__c + '</a></li>';
+            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a>' + eventInstance.Instance_Title__c + '</a></li>';
         }
         if (String.isNotBlank(instanceDate)) {
-            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + instanceDate + '</a></li>';
+            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a>' + instanceDate + '</a></li>';
         }
         crumb += '   </ol>';
         crumb += '</nav>';
