@@ -86,9 +86,7 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
-        <content>emailForm</content>
-        <skipRecordTypeSelect>false</skipRecordTypeSelect>
-        <type>Visualforce</type>
+        <type>Default</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>

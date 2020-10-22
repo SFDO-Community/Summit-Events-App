@@ -1,7 +1,0 @@
-<aura:component description="emailFormOverlayAura" implements="flexipage:availableForAllPageTypes">
-    <aura:dependency resource="c:emailFormOverlay" />
-
-    <lightning:overlayLibrary aura:id="emailFormOverlayLib" />
-
-    <c:emailFormOverlay onoverlayloaded="{!c.handleOverlayLoaded}" />
-</aura:component>
