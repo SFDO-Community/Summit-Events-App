@@ -18,7 +18,7 @@
             </value>
             <value>
                 <fullName>Match with most recently modified</fullName>
-                <default>false</default>
+                <default>true</default>
                 <label>Match with most recently modified</label>
             </value>
         </valueSetDefinition>
