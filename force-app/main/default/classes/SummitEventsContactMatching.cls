@@ -123,7 +123,7 @@ public with sharing class SummitEventsContactMatching {
                 query += '\'' + con.Id + '\',';
             query = query.removeEnd(',') + ') ORDER BY LastModifiedDate DESC';
             matchContacts = crud.findContacts(query);
-            if (matchContacts.isEmpty()) {
+            if (matchContacts == null || matchContacts.isEmpty()) { // SOQL queries return null instead of empty lists
                 for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
                     SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
                     FROM Summit_Events_Contact_Matching_Mapping__mdt
