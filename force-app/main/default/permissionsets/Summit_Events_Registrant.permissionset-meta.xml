@@ -1152,6 +1152,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Contact_Matching_Multiple_Match_Behavior__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.Contact_Matching_Rule_Description__c</field>
         <readable>true</readable>
     </fieldPermissions>

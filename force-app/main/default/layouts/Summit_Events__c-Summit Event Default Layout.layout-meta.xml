@@ -178,7 +178,7 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Ask_Applicant_Type__c</field>
-            </layoutItems>            
+            </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Ask_Date_Of_Birth__c</field>
@@ -190,7 +190,7 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Ask_Mailing_Address__c</field>
-            </layoutItems>            
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -433,6 +433,10 @@
                 <behavior>Edit</behavior>
                 <field>Custom_Metadata_Contact_Matching_Method__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Contact_Matching_Multiple_Match_Behavior__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -575,7 +579,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h11000002PYId</masterLabel>
+        <masterLabel>00h2F000001wycB</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
