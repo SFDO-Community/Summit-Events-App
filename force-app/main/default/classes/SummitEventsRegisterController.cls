@@ -32,7 +32,6 @@ public with sharing class SummitEventsRegisterController {
     public String applicantType { get; set; }
     public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
-    public String dataLayerLocationType { get; set; }
     public String phoneType { get; set; }
     public String navBreadCrumb { get; set; }
     public boolean showLocation { get; set; }
@@ -169,7 +168,6 @@ public with sharing class SummitEventsRegisterController {
             } else if (!String.isBlank(eventPage.Location_Title__c)) {
                 locationAddress = eventPage.Location_Title__c;
             }
-            dataLayerLocationType = locationAddress;
 
             navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance, false);
 
