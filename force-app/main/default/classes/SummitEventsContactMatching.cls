@@ -152,10 +152,6 @@ public with sharing class SummitEventsContactMatching {
                     String matchLog = '';
                     matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Match not found using Duplicate Rule <em>' + matchType.get(reg.Event__c) + '</em></div>';
                     matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Contact matching skipped based on "Contact Matching Skip Contact Creation" field value on Summit Events object</div>';
-                    matchLog += matchLogHead;
-                    matchLog += '<tbody>';
-                    matchLog += matchingLog(null, reg.Registrant_Last_Name__c, reg.Registrant_First_Name__c, reg.Registrant_Email__c, reg.Registrant_Postal_Code__c, 'Contact creation skipped');
-                    matchLog += '</tbody></table>';
                     
                     reg.Matching_Log__c = matchLog;
                 }
