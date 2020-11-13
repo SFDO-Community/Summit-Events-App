@@ -16,9 +16,9 @@ public with sharing class SummitEventsRegisterController {
     private SummitEventsShared SEShared = new SummitEventsShared();
     public SummitEventsShared.SummitEventsInfo evtInfo { get; set; }
     public String templateSelected { get; set; }
-    public boolean contactSet { get; set; }
-    public boolean eventIsClosed { get; set; }
-    public boolean additionalQuestions { get; set; }
+    public Boolean contactSet { get; set; }
+    public Boolean eventIsClosed { get; set; }
+    public Boolean additionalQuestions { get; set; }
     public List<String> questionNum { get; set; }
     public List<SelectOption> addPick1 { get; set; }
     public List<SelectOption> addPick2 { get; set; }
@@ -27,15 +27,17 @@ public with sharing class SummitEventsRegisterController {
     public List<SelectOption> addPick5 { get; set; }
     public List<String> selectedPrograms { get; set; }
     public String selectedProgramsOne { get; set; }
-    public boolean showAddress { get; set; }
-    public boolean showPhone { get; set; }
+    public Boolean showAddress { get; set; }
+    public Boolean showPhone { get; set; }
     public String applicantType { get; set; }
     public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
     public String dataLayerLocationType { get; set; }
+    public Decimal totalEventCost { get; set; }
+    public List<Summit_Events_Fee__c> eventFeeList { get; set; }
     public String phoneType { get; set; }
     public String navBreadCrumb { get; set; }
-    public boolean showLocation { get; set; }
+    public Boolean showLocation { get; set; }
     public String startTimeString { get; set; }
     public String endTimeString { get; set; }
     public Boolean adminOpen { get; set; }
@@ -74,8 +76,10 @@ public with sharing class SummitEventsRegisterController {
         if (String.isNotBlank(evtInfo.instanceID)) {
             evtInstance = [
                     SELECT Id, Name, Event__r.Name, Event__r.Event_Name__c, Event__r.Id, Instance_Title__c, Active_Status__c, Capacity__c,
-                            Event__r.Event_description__c, Event__r.Audience__c, Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c, Current_Available_Capacity__c,
-                            Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c
+                            Event__r.Event_description__c, Event__r.Audience__c, Current_Available_Capacity__c,
+                            Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c,
+                            Event_Fee_Additional_Attribute_Override__c, Event_Fee_Additional_Override__c, Event_Fee_Override__c, Event_Fee_Attribute_Override__c,
+                            Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :evtInfo.instanceID
                     LIMIT 1
@@ -104,7 +108,8 @@ public with sharing class SummitEventsRegisterController {
                             Ask_Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c,
                             Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c, Ask_Pronoun__c, Keep_Registration_Open_During_Event__c,
-                            Close_Event_Days_Before__c, Ask_Title__c, Ask_Company_Organization__c
+                            Close_Event_Days_Before__c, Ask_Title__c, Ask_Company_Organization__c, Event_Fee__c, Event_Fee_Additional__c,
+                            Event_Fee_Additional_Attribute__c, Event_Fee_Attribute__c
                     FROM Summit_Events__c
                     WHERE Id = :evtInfo.evtId
                     LIMIT 1
@@ -177,9 +182,9 @@ public with sharing class SummitEventsRegisterController {
             evtHasAppointments = false;
             List<Summit_Events_Appointment_Type__c> apptTypes = [
                     SELECT Id
-                    From Summit_Events_Appointment_Type__c
+                    FROM Summit_Events_Appointment_Type__c
                     WHERE Summit_Events__c = :evtInfo.evtId
-                    AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
+                    AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
             ];
             if (apptTypes.size() > 0) {
                 evtHasAppointments = true;
@@ -205,6 +210,43 @@ public with sharing class SummitEventsRegisterController {
             addPick3 = createPicklists(eventPage.Add_Info_Question_Pick_List_3__c);
             addPick4 = createPicklists(eventPage.Add_Info_Question_Pick_List_4__c);
             addPick5 = createPicklists(eventPage.Add_Info_Question_Pick_List_5__c);
+
+            //Calculate event cost by Instance and Event fees and add to list of fees for upsert
+            eventFeeList = new List<Summit_Events_Fee__c>();
+            totalEventCost = 0;
+
+            if (evtInstance.Event_Fee_Override__c != null) {
+                totalEventCost += evtInstance.Event_Fee_Override__c;
+                eventFeeList.add(new Summit_Events_Fee__c(
+                        Event_Fee__c = evtInstance.Event_Fee_Override__c,
+                        Event_Fee_Attribute__c = evtInstance.Event_Fee_Attribute_Override__c,
+                        Event_Fee_Type__c = 'Event'
+                ));
+            } else if (eventPage.Event_Fee__c != null) {
+                totalEventCost += eventPage.Event_Fee__c;
+                eventFeeList.add(new Summit_Events_Fee__c(
+                        Event_Fee__c = eventPage.Event_Fee__c,
+                        Event_Fee_Attribute__c = eventPage.Event_Fee_Attribute__c,
+                        Event_Fee_Type__c = 'Event'
+                ));
+            }
+
+            if (evtInstance.Event_Fee_Additional_Override__c != null) {
+                totalEventCost += evtInstance.Event_Fee_Additional_Override__c;
+                eventFeeList.add(new Summit_Events_Fee__c(
+                        Event_Fee__c = evtInstance.Event_Fee_Additional_Override__c,
+                        Event_Fee_Attribute__c = evtInstance.Event_Fee_Additional_Attribute_Override__c,
+                        Event_Fee_Type__c = 'Event Additional'
+                ));
+            } else if (eventPage.Event_Fee_Additional__c != null) {
+                totalEventCost += eventPage.Event_Fee_Additional__c;
+                eventFeeList.add(new Summit_Events_Fee__c(
+                        Event_Fee__c = eventPage.Event_Fee_Additional__c,
+                        Event_Fee_Attribute__c = eventPage.Event_Fee_Additional_Attribute__c,
+                        Event_Fee_Type__c = 'Event Additional'
+                ));
+            }
+
         }
 
         //If the user is logged in use that data
@@ -215,12 +257,12 @@ public with sharing class SummitEventsRegisterController {
 
 
                 userContact = [
-                        Select Id, Name, FirstName, LastName, Email, HomePhone, MobilePhone, Birthdate
+                        SELECT Id, Name, FirstName, LastName, Email, HomePhone, MobilePhone, Birthdate
                         FROM Contact
-                        Where Id In (
-                                Select ContactId
-                                From User
-                                Where Id = :UserInfo.getUserId()
+                        WHERE Id IN (
+                                SELECT ContactId
+                                FROM User
+                                WHERE Id = :UserInfo.getUserId()
                         )
                 ];
 
@@ -235,7 +277,7 @@ public with sharing class SummitEventsRegisterController {
                 }
                 //    newEvtReg.Registrant_Receive_Texts__c = true;
                 if (String.isBlank(userContact.Id)) {
-                    contactId = userContact.Id;
+                    ContactId = userContact.Id;
                 }
                 contactSet = true;
             } else {
@@ -246,14 +288,14 @@ public with sharing class SummitEventsRegisterController {
                                 Registrant_High_School__c, Registrant_High_School_Code__c, Registrant_Receive_Texts__c, Registrant_High_School_Grad_Year__c, Registrant_High_School_Not_Found__c,
                                 Registrant_College_Not_Found__c, Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c, Registrant_Parent_Phone__c,
                                 Add_Info_Answer_1__c, Add_Info_Answer_2__c, Add_Info_Answer_3__c, Add_Info_Answer_4__c, Add_Info_Answer_5__c, Registrant_Program_Interest__c, Registrant_Preferred_First_Name__c,
-                                Registrant_date_of_Birth__c, Last_Name_as_Student__c, Preferred_Class_Year__c, Relationship_To_Institution__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c, Registrant_Other_Phone__c, Registrant_Other_Relationship__c,
+                                Registrant_Date_of_Birth__c, Last_Name_as_Student__c, Preferred_Class_Year__c, Relationship_To_Institution__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c, Registrant_Other_Phone__c, Registrant_Other_Relationship__c,
                                 Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c, Registrant_Pronouns__c, Registrant_Title__c, Registrant_Company_Organization__c
                         FROM Summit_Events_Registration__c
-                        WHERE id = :evtInfo.evtRegId
+                        WHERE Id = :evtInfo.evtRegId
                 ][0];
 
-                if (newEvtReg.Registrant_date_of_Birth__c != null) {
-                    birthDateString = newEvtReg.Registrant_date_of_Birth__c.format();
+                if (newEvtReg.Registrant_Date_of_Birth__c != null) {
+                    birthDateString = newEvtReg.Registrant_Date_of_Birth__c.format();
                 }
 
                 if (eventPage.Ask_Phone__c.containsIgnoreCase('with type') && String.isNotBlank(newEvtReg.Registrant_Mobile_Phone__c) && String.isBlank(newEvtReg.Registrant_Phone__c)) {
@@ -276,10 +318,6 @@ public with sharing class SummitEventsRegisterController {
 
         }
 
-    }
-
-    public PageReference setParentInfo(String n) {
-        return null;
     }
 
     public PageReference checkEventDetails() {
@@ -319,16 +357,15 @@ public with sharing class SummitEventsRegisterController {
     }
 
     public List<SelectOption> getProgramsAvailable() {
-        List<SelectOption> progSelOpt = new List<SelectOption>();
-        return progSelOpt;
-
+        List<SelectOption> programsSelOpt = new List<SelectOption>();
+        return programsSelOpt;
     }
 
     public List<SelectOption> createPicklists(String returnSepStringList) {
         List<SelectOption> cpl = new List<SelectOption>();
         if (!String.isBlank(returnSepStringList)) {
             cpl.add(new SelectOption('', 'Select...'));
-            returnSepStringList = returnSepStringList.Trim();
+            returnSepStringList = returnSepStringList.trim();
             returnSepStringList = returnSepStringList.replace('\n\n', '\n');
             String[] splitList = returnSepStringList.split('\n');
             for (String p : splitList) {
@@ -339,7 +376,7 @@ public with sharing class SummitEventsRegisterController {
         return cpl;
     }
 
-    public List<SelectOption> PickThePicklist(string YourObjectName, string YourFieldName, Boolean includeSelect) {
+    public List<SelectOption> PickThePicklist(String YourObjectName, String YourFieldName, Boolean includeSelect) {
         List<SelectOption> picklists = new List<SelectOption>();
         String namespace = SummitEventsNamespace.getNamespace();
         if (String.isNotBlank(namespace)) {
@@ -371,14 +408,8 @@ public with sharing class SummitEventsRegisterController {
     }
 
     public PageReference saveContactRegistration() {
-        boolean newContactCreated = false;
+        Boolean newContactCreated = false;
         PageReference optionPage;
-
-        //Record selected programs of interest
-        String recordSelPrg = '';
-        Pattern TAG_REGEX = Pattern.compile('\\((\\w+|\\w+\\|\\w+)\\)');
-        List<String> majorCodes = new List<String>();
-        Boolean progSelectionMade = true;
 
         if (String.isNotBlank(phoneType) && eventPage.Ask_Phone__c.containsIgnoreCase('with type')) {
             if (phoneType.equalsIgnoreCase('mobile')) {
@@ -434,12 +465,58 @@ public with sharing class SummitEventsRegisterController {
             newEvtReg.Event_Instance_Date_Time_Formatted__c = SEShared.navBreadcrumbBuilder(evtInstance, true);
             newEvtReg.Event__c = evtInfo.evtId;
             newEvtReg.Event_Instance__c = evtInfo.instanceID;
-            newEvtReg.Contact__c = contactId;
+            newEvtReg.Contact__c = ContactId;
             if (newContactCreated) {
                 newEvtReg.New_Contact_Created__c = true;
             }
             newEvtReg = rCRUD.updateRegistration(newEvtReg);
             evtInfo.evtRegId = newEvtReg.Id;
+            //make matching log functional for reparenting
+        }
+
+        //Check and create fees and save on registration
+        List<Summit_Events_Fee__c> recordedEventFeeList = [
+                SELECT Id, Event_Fee_Type__c, Event_Fee_Attribute__c, Event_Fee__c
+                FROM Summit_Events_Fee__c
+                WHERE Event_Fee_Type__c != 'Appointment'
+                AND Event_Fee_Type__c != 'Appointment Additional'
+                AND Event_Registration__c = :evtInfo.evtRegId
+        ];
+        if (recordedEventFeeList.size() > 0) {
+            //Fees already exist so checks need to be made if current fees are there
+            List<Id> recordedUsedIds = new List<Id>();
+            for (Integer ff = 0; ff < eventFeeList.size(); ff++) {
+                for (Summit_Events_Fee__c recordedFees : recordedEventFeeList) {
+                    if (eventFeeList[ff].Event_Fee_Type__c == recordedFees.Event_Fee_Type__c) {
+                        eventFeeList[ff].Id = recordedFees.Id;
+                        recordedUsedIds.add(recordedFees.Id);
+                    }
+                }
+                if (String.isBlank(eventFeeList[ff].Event_Registration__c)) {
+                    eventFeeList[ff].Event_Registration__c = evtInfo.evtRegId;
+                }
+            }
+            List<Summit_Events_Fee__c> deleteEventFees = [
+                    SELECT Id, Event_Fee_Type__c, Event_Fee_Attribute__c, Event_Fee__c
+                    FROM Summit_Events_Fee__c
+                    WHERE Event_Fee_Type__c != 'Appointment'
+                    AND Event_Fee_Type__c != 'Appointment Additional'
+                    AND Event_Registration__c = :evtInfo.evtRegId
+                    AND Id NOT IN :recordedUsedIds
+            ];
+            if (deleteEventFees.size() > 0) {
+                rCRUD.deleteFees(deleteEventFees);
+            }
+        } else {
+            //No Fees have ever been recorded on this event. Apply event registration id to all fees.
+            if (eventFeeList.size() > 0) {
+                for (Integer ff = 0; ff < eventFeeList.size(); ff++) {
+                    eventFeeList[ff].Event_Registration__c = evtInfo.evtRegId;
+                }
+            }
+        }
+        if (eventFeeList.size() > 0) {
+            rCRUD.updateFees(eventFeeList);
         }
 
         //update registration it may already exist, and matching log has to be updated on new registration inserts
@@ -449,13 +526,15 @@ public with sharing class SummitEventsRegisterController {
         if (String.isNotBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING') {
             if (evtHasAppointments) {
                 optionPage = Page.SummitEventsRegisterAppointments;
+            } else if (eventPage.Display_Optional_Donation__c) {
+                optionPage = Page.SummitEventsDonation;
+            } else if (eventFeeList.size() > 0) {
+                optionPage = Page.SummitEventsSubmit;
             } else {
                 optionPage = Page.SummitEventsConfirmation;
             }
             // create cookie to pass on to next page
             //Posting along everything we need to build the next page
-            String encrytpString = SEShared.createEncryptedCookie('{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"' + evtInfo.evtRegId + '","evtId":"' + evtInfo.evtId + '"}', 'SummitEvents');
-
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
                 optionPage.setRedirect(true);
                 optionPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
@@ -476,6 +555,24 @@ public with sharing class SummitEventsRegisterController {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'HELLO: ' + ex.getMessage()));
             }
             return newEvtReg;
+        }
+
+        public void deleteFees(List<Summit_Events_Fee__c> deletableFees) {
+            try {
+                delete deletableFees;
+            } catch (Exception ex) {
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
+                ApexPages.addMessage(myMsg);
+            }
+        }
+
+        public void updateFees(List<Summit_Events_Fee__c> upsertFees) {
+            try {
+                upsert upsertFees;
+            } catch (Exception ex) {
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
+                ApexPages.addMessage(myMsg);
+            }
         }
 
         public Summit_Events_Registration__c checkForOtherRegistrations(String checkType, String registrationEmail, Id eventInstanceId, Id eventId) {

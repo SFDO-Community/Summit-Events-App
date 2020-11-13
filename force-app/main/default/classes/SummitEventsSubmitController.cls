@@ -13,12 +13,19 @@ public with sharing class SummitEventsSubmitController {
     public List<Summit_Events_Appointments__c> chosenAppts { get; set; }
     public String chosenFormatted { get; set; }
     public String templateSelected { get; set; }
+    public Map <String, String> feesByIndex { get; set; }
     public String navBreadCrumb { get; set; }
     public boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
+    private List<Summit_Events_Fee__c> eventFees { get; set; }
+    public Double totalPaymentAmount { get; set; }
+    public Double existingPaymentAmount { get; set; }
+    public Double eventOnlyPaymentAmount { get; set; }
+    public String paymentItemized { get; set; }
+    public Boolean showPaymentButton { get; set; }
 
     public SummitEventsSubmitController() {
-        eventIsClosed = false;
+        showPaymentButton = false;
         test = '';
 
         //Get cookie or URL string variable
@@ -27,7 +34,8 @@ public with sharing class SummitEventsSubmitController {
         if (!String.isEmpty(evtInfo.evtId)) {
             eventPage = [
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
-                            Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c
+                            Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
+                            Donation_Description__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
                     WHERE Id = :evtinfo.evtId
             ][0];
@@ -75,10 +83,109 @@ public with sharing class SummitEventsSubmitController {
                 }
                 chosenFormatted += '</ul>';
             }
+
+//            /** Get Event registrant information if possible **/
+//            eventRegistration = [
+//                    SELECT Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_City__c, Registrant_State_Province__c, Registrant_State__c,
+//                            Registrant_Postal_Code__c, Registrant_Zip__c, Registrant_Street_1__c, Registrant_Street_2__c, Registrant_Email__c, Registrant_Country__c,
+//                            Event_Name__c, Event_Instance_Title__c, Event_Instance_Date_Time_Formatted__c, Contact__c
+//                    FROM Summit_Events_Registration__c
+//                    WHERE Id = :evtInfo.evtRegId
+//            ];
+
+            /** Check for preexisting payment **/
+            List<Summit_Events_Payment__c> existingPayment = [SELECT Id, Payment_Amount__c, TouchnetReceiptNumber__c From Summit_Events_Payment__c WHERE Event_Registration__c = :evtInfo.evtRegId];
+            if (existingPayment.size() > 0) {
+                existingPaymentAmount = existingPayment[0].Payment_Amount__c;
+            }
+
+            /** Collect Fees **/
+            eventFees = [
+                    SELECT Name, Event_Fee__c, Event_Fee_Attribute__c, Description__c, Event_Fee_Type__c, Summit_Events__c, Event_Appointment_Type__c,
+                            Event_Appointment_Type__r.Title__c, Event_Fee_Attribute__r.Name
+                    FROM Summit_Events_Fee__c
+                    WHERE Event_Registration__c = :evtInfo.EvtRegId
+            ];
+            feesByIndex = new Map<String, String>();
+            paymentItemized = '<table class="slds-table slds-table_cell-buffer slds-table_bordered">';
+            paymentItemized += '<thead>';
+            paymentItemized += '<tr class="slds-line-height_reset">';
+            paymentItemized += '<th class="" scope="col">';
+            paymentItemized += '<div class="slds-truncate" title="Item">Item</div>';
+            paymentItemized += '</th>';
+            paymentItemized += '<th class="" scope="col">';
+            paymentItemized += '<div class="slds-truncate" title="Fee">Fee</div>';
+            paymentItemized += '</th>';
+            paymentItemized += '</thead><tbody>';
+            eventOnlyPaymentAmount = 0;
+            for (Summit_Events_Fee__c fee : eventFees) {
+                if (fee.Event_Fee__c != null && fee.Event_Fee__c > 0) {
+                    totalPaymentAmount += fee.Event_Fee__c;
+                    if (!fee.Event_Fee_Type__c.equalsIgnoreCase('Event') || !fee.Event_Fee_Type__c.equalsIgnoreCase('Event Additional')) {
+                        if (fee.Event_Fee_Type__c.equalsIgnoreCase('Appointment')) {
+                            paymentItemized += '<tr class="eventAppointmentCost">';
+                            paymentItemized += '<td>' + fee.Event_Appointment_Type__r.Title__c + '</td>';
+                            paymentItemized += '<td>' + prettyCurrencyString(fee.Event_fee__c) + '</td>';
+                            paymentItemized += '</tr>';
+                        } else if (fee.Event_Fee_Type__c.equalsIgnoreCase('Optional Donation')) {
+                            paymentItemized += '<tr class="eventDonation">';
+                            paymentItemized += '<td>' + fee.Event_Fee_Type__c;
+                            if (String.isNotBlank(fee.Event_Fee_Attribute__r.Name)) {
+                                paymentItemized += ' - ' + fee.Event_Fee_Attribute__r.Name;
+                            }
+                            paymentItemized += '</td>';
+                            paymentItemized += '<td>' + prettyCurrencyString(fee.Event_fee__c) + '</td>';
+                            paymentItemized += '</tr>';
+                        } else {
+                            eventOnlyPaymentAmount += fee.Event_Fee__c;
+                        }
+                    }
+                    if (feesByIndex.size() > 0 && feesByIndex.containsKey(fee.Event_Fee_Attribute__c)) {
+                        Decimal newFee = Decimal.valueOf(feesByIndex.get(fee.Event_Fee_Attribute__c));
+                        newFee = newFee + fee.Event_Fee__c;
+                        newFee = newFee.setScale(2);
+                        feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(newFee));
+                    } else {
+                        feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(fee.Event_Fee__c));
+                    }
+
+                }
+            }
+
+
+            if (existingPaymentAmount > 0) {
+                totalPaymentAmount = totalPaymentAmount - existingPaymentAmount;
+            }
+
+            paymentItemized += '<tr class="eventOnlyCost">';
+            paymentItemized += '<td>General Event</td>';
+            paymentItemized += '<td>' + prettyCurrencyString(eventOnlyPaymentAmount) + '</td>';
+            paymentItemized += '</tr>';
+
+            paymentItemized += '<tr class="eventTotalCost">';
+            paymentItemized += '<td><strong>Total Cost</strong></td>';
+            paymentItemized += '<td><strong>' + prettyCurrencyString(totalPaymentAmount) + '</strong></td>';
+            paymentItemized += '</tr>';
+
+            paymentItemized += '</tbody></table>';
+
+            System.debug(paymentItemized);
+            if (totalPaymentAmount > 0) {
+                showPaymentButton = true;
+                //generateTicket();
+            }
         }
 
     }
 
+    public String prettyCurrencyString(Decimal numberIn) {
+        String numberOut = '';
+        List<String> args = new String[]{
+                '0', 'number', '###,###,##0.00'
+        };
+        numberOut = '$' + String.format(numberIn.format(), args);
+        return numberOut;
+    }
     public PageReference checkEventDetails() {
         return SEShared.checkForEvent();
     }
@@ -93,31 +200,32 @@ public with sharing class SummitEventsSubmitController {
     }
 
     public PageReference previousPage() {
-        List<Summit_Events_Appointment_Type__c> apptTypes = null;
-
-        apptTypes = [
-                SELECT Id
-                From Summit_Events_Appointment_Type__c
-                WHERE Summit_Events__c = :evtInfo.evtId
-                AND (
-                        Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c
-                        OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
-        ];
-
-
         PageReference lastPage;
-        if (apptTypes.size() == 0) {
-            //If no options skip that step
-            lastPage = Page.SummitEventsRegister;
+        List<Summit_Events_Appointment_Type__c> apptTypes = null;
+        if (eventPage.Display_Optional_Donation__c) {
+            lastPage = Page.SummitEventsDonation;
         } else {
-            lastPage = Page.SummitEventsRegisterAppointments;
-        }
+            apptTypes = [
+                    SELECT Id
+                    From Summit_Events_Appointment_Type__c
+                    WHERE Summit_Events__c = :evtInfo.evtId
+                    AND (
+                            Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c
+                            OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
+            ];
 
+            if (apptTypes.size() == 0) {
+                //If no options skip that step
+                lastPage = Page.SummitEventsRegister;
+            } else {
+                lastPage = Page.SummitEventsRegisterAppointments;
+            }
+
+        }
         if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
             lastPage.setRedirect(true);
             lastPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
         }
-
         return lastPage;
     }
 }

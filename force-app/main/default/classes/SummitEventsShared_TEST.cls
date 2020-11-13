@@ -195,7 +195,7 @@ public with sharing class SummitEventsShared_TEST {
         SEShared.createEncryptedCookie(eventForCookie, 'SummitEvents');
         SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
 
-        PageReference pr = registerCtrl.setParentInfo('This');
+        //PageReference pr = registerCtrl.setParentInfo('This');
 
         eventForCookie = '{"audience":"High School Senior","instanceID":"' + evtInst.Id + '","evtRegId":"COMING","evtId":"' + evtInst.Event__c + '"}';
         SEShared.createEncryptedCookie(eventForCookie, 'SummitEvents');
