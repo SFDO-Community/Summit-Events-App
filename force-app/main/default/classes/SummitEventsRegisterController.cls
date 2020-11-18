@@ -197,13 +197,13 @@ public with sharing class SummitEventsRegisterController {
 
             //Check if the Event has appointments and therefore we have to redirect to the appointment page.
             evtHasAppointments = false;
-            List<Summit_Events_Appointment_Type__c> apptTypes = [
+            List<Summit_Events_Appointment_Type__c> appointmentTypes = [
                     SELECT Id
                     FROM Summit_Events_Appointment_Type__c
                     WHERE Summit_Events__c = :eventInformation.evtId
                     AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
             ];
-            if (apptTypes.size() > 0) {
+            if (appointmentTypes.size() > 0) {
                 evtHasAppointments = true;
             }
 
@@ -219,8 +219,8 @@ public with sharing class SummitEventsRegisterController {
                 }
             }
 
-            //Get Appoitment Types for event
-            apptTypes = [SELECT Id, Title__c, Appointment_Category__c, Appointment_Type__c, Description__c FROM Summit_Events_Appointment_Type__c WHERE Summit_Events__c = :eventInformation.evtId];
+            //Get appointment types for event
+            appointmentTypes = [SELECT Id, Title__c, Appointment_Category__c, Appointment_Type__c, Description__c FROM Summit_Events_Appointment_Type__c WHERE Summit_Events__c = :eventInformation.evtId];
 
             addPick1 = createPicklists(eventPage.Add_Info_Question_Pick_List_1__c);
             addPick2 = createPicklists(eventPage.Add_Info_Question_Pick_List_2__c);
