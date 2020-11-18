@@ -7,88 +7,102 @@ public with sharing class SummitEventsRegisterController {
     public String test { get; set; }
     public Summit_Events_Instance__c evtInstance { get; set; }
     public Summit_Events__c eventPage { get; set; }
-    public String ContactId { get; set; }
+    public String contactId { get; set; }
     public String instanceName { get; set; }
-    public String EvtUserType { get; set; }
     public List<SelectOption> guestAmt { get; set; }
-    public Summit_Events_Registration__c newEvtReg { get; set; }
-    public Summit_Events_Registration__c oldEvtReg { get; set; }
-    private SummitEventsShared SEShared = new SummitEventsShared();
-    public SummitEventsShared.SummitEventsInfo evtInfo { get; set; }
+    public Summit_Events_Registration__c eventRegistration { get; set; }
+    public Summit_Events_Registration__c incomingEventRegistration { get; set; }
+    public List<Summit_Events_Appointments__c> eventRegistrationAppointments { get; set; }
+    public List<Summit_Events_Appointments__c> incomingEventRegistrationAppointments { get; set; }
+    private SummitEventsShared SeaShared = new SummitEventsShared();
+    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
     public String templateSelected { get; set; }
-    public boolean contactSet { get; set; }
-    public boolean eventIsClosed { get; set; }
-    public boolean additionalQuestions { get; set; }
+    public Boolean contactSet { get; set; }
+    public Boolean eventIsClosed { get; set; }
+    public Boolean additionalQuestions { get; set; }
     public List<String> questionNum { get; set; }
     public List<SelectOption> addPick1 { get; set; }
     public List<SelectOption> addPick2 { get; set; }
     public List<SelectOption> addPick3 { get; set; }
     public List<SelectOption> addPick4 { get; set; }
     public List<SelectOption> addPick5 { get; set; }
-    public List<String> selectedPrograms { get; set; }
-    public String selectedProgramsOne { get; set; }
-    public boolean showAddress { get; set; }
-    public boolean showPhone { get; set; }
+    public Boolean showAddress { get; set; }
+    public Boolean showPhone { get; set; }
     public String applicantType { get; set; }
     public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
     public String phoneType { get; set; }
     public String navBreadCrumb { get; set; }
-    public boolean showLocation { get; set; }
+    public Boolean showLocation { get; set; }
     public String startTimeString { get; set; }
     public String endTimeString { get; set; }
     public Boolean adminOpen { get; set; }
 
-
     public SummitEventsRegisterController() {
-        selectedPrograms = new List<String>();
-        selectedProgramsOne = '';
         //array for looping through additional information questions
         questionNum = new List<String>{
                 '1', '2', '3', '4', '5'
         };
 
-        newEvtReg = new Summit_Events_Registration__c();
-        newEvtReg.Add_Info_Answer_1__c = '';
         test = '';
         contactSet = false;
         eventIsClosed = false;
         additionalQuestions = false;
         showAddress = false;
         showPhone = false;
-        EvtUserType = UserInfo.getUserType();
+        String EvtUserType = UserInfo.getUserType();
         //Get cookie or URL string variable
-        evtInfo = SEShared.getSummitEventsInfo();
+        eventInformation = SeaShared.getSummitEventsInfo();
+
+        //Create event registration. Populate with current registration if it exists with removed id
+        eventRegistration = new Summit_Events_Registration__c();
+        eventRegistrationAppointments = new List<Summit_Events_Appointments__c>();
+
+        if (String.isNotBlank(eventInformation.evtRegId)) {
+            incomingEventRegistration = getEventRegistration(eventInformation.evtRegId);
+            incomingEventRegistrationAppointments = getEventRegistrationAppointments(eventInformation.evtRegId);
+
+            for (Summit_Events_Appointments__c appointment : incomingEventRegistrationAppointments) {
+                eventRegistrationAppointments.add(appointment.clone(false, true, true, true));
+            }
+            System.debug('Incoming appointments: ' + JSON.serializePretty(eventRegistrationAppointments));
+            eventRegistration = incomingEventRegistration.clone(false, true, true, true);
+            incomingEventRegistration.Id = eventInformation.evtRegId;
+            if (eventRegistration.Registrant_Date_of_Birth__c != null) {
+                birthDateString = eventRegistration.Registrant_Date_of_Birth__c.format();
+            }
+
+        }
 
         //Set applicant type if audience is passed
-        if (!String.isBlank(evtInfo.audience)) {
-            if (evtInfo.audience == 'Transfer' || evtInfo.audience == 'Transfer International') {
+        if (!String.isBlank(eventInformation.audience)) {
+            if (eventInformation.audience == 'Transfer' || eventInformation.audience == 'Transfer International') {
                 applicantType = 'Transfer';
-            } else if (evtInfo.audience == 'High School Senior' || evtInfo.audience == 'High School Junior or Younger' || evtInfo.audience == 'First-Year International' || evtInfo.audience == 'Dougherty Family College (2-Year)') {
+            } else if (eventInformation.audience == 'High School Senior' || eventInformation.audience == 'High School Junior or Younger' || eventInformation.audience == 'First-Year International' || eventInformation.audience == 'Dougherty Family College (2-Year)') {
                 applicantType = 'First-Year';
             }
         }
 
         //Get Instance information
-        if (String.isNotBlank(evtInfo.instanceID)) {
+        if (String.isNotBlank(eventInformation.instanceID)) {
             evtInstance = [
                     SELECT Id, Name, Event__r.Name, Event__r.Event_Name__c, Event__r.Id, Instance_Title__c, Active_Status__c, Capacity__c,
                             Event__r.Event_description__c, Event__r.Audience__c, Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c, Current_Available_Capacity__c,
                             Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c
                     FROM Summit_Events_Instance__c
-                    WHERE Id = :evtInfo.instanceID
+                    WHERE Id = :eventInformation.instanceID
                     LIMIT 1
             ][0];
 
             //define Event ID from instanceInfo data
-            evtInfo.evtId = evtInstance.Event__r.Id;
+            eventInformation.evtId = evtInstance.Event__r.Id;
             instanceName = evtInstance.Name;
-            startTimeString = SEShared.formatTime(evtInstance.Instance_Start_Time__c, false);
-            endTimeString = SEShared.formatTime(evtInstance.Instance_End_Time__c, false);
+            startTimeString = SeaShared.formatTime(evtInstance.Instance_Start_Time__c, false);
+            endTimeString = SeaShared.formatTime(evtInstance.Instance_End_Time__c, false);
         }
 
         //Get Event Info off of instance master detail id
-        if (!String.isBlank(evtInfo.evtId)) {
+        if (!String.isBlank(eventInformation.evtId)) {
             eventPage = [
                     SELECT Name, Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Full_Text__c, Audience__c,Include_Time_frame_List__c,
                             Max_Other_Attendees__c, Allow_Other_Attendees__c, College_High_School_Ask__c, Ask_Gender__c, Template__c,
@@ -105,9 +119,19 @@ public with sharing class SummitEventsRegisterController {
                             Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c, Ask_Pronoun__c, Keep_Registration_Open_During_Event__c,
                             Close_Event_Days_Before__c, Ask_Title__c, Ask_Company_Organization__c
                     FROM Summit_Events__c
-                    WHERE Id = :evtInfo.evtId
+                    WHERE Id = :eventInformation.evtId
                     LIMIT 1
             ][0];
+
+            if (eventPage.Ask_Phone__c.containsIgnoreCase('with type') && String.isNotBlank(eventRegistration.Registrant_Mobile_Phone__c) && String.isBlank(eventRegistration.Registrant_Phone__c)) {
+                phoneType = 'mobile';
+            } else {
+                phoneType = 'home';
+            }
+
+            if (String.isBlank(eventRegistration.Registrant_Country__c)) {
+                eventRegistration.Registrant_Country__c = 'United States';
+            }
 
             if (!String.isBlank(eventPage.Ask_Applicant_Type__c)) {
                 //Important to start all of this with exact "Do not ask but assign " to assign correctly
@@ -120,7 +144,7 @@ public with sharing class SummitEventsRegisterController {
                 adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
                 eventIsClosed = adminOpen;
             } else {
-                eventIsClosed = SEShared.isEventClosed(eventPage, evtInstance);
+                eventIsClosed = SeaShared.isEventClosed(eventPage, evtInstance);
             }
 
             if (
@@ -169,22 +193,22 @@ public with sharing class SummitEventsRegisterController {
                 locationAddress = eventPage.Location_Title__c;
             }
 
-            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance, false);
+            navBreadCrumb = SeaShared.navBreadcrumbBuilder(evtInstance, false);
 
             //Check if the Event has appointments and therefore we have to redirect to the appointment page.
             evtHasAppointments = false;
             List<Summit_Events_Appointment_Type__c> apptTypes = [
                     SELECT Id
-                    From Summit_Events_Appointment_Type__c
-                    WHERE Summit_Events__c = :evtInfo.evtId
-                    AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
+                    FROM Summit_Events_Appointment_Type__c
+                    WHERE Summit_Events__c = :eventInformation.evtId
+                    AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
             ];
             if (apptTypes.size() > 0) {
                 evtHasAppointments = true;
             }
 
             //Grab the template if defined
-            templateSelected = SEShared.getTemplate(eventPage.Template__c);
+            templateSelected = SeaShared.getTemplate(eventPage.Template__c);
 
             if (eventPage.Allow_Other_Attendees__c) {
                 guestAmt = new List<SelectOption>();
@@ -196,7 +220,7 @@ public with sharing class SummitEventsRegisterController {
             }
 
             //Get Appoitment Types for event
-            apptTypes = [SELECT Id, Title__c, Appointment_Category__c, Appointment_Type__c, Description__c FROM Summit_Events_Appointment_Type__c WHERE Summit_Events__c = :evtInfo.evtId];
+            apptTypes = [SELECT Id, Title__c, Appointment_Category__c, Appointment_Type__c, Description__c FROM Summit_Events_Appointment_Type__c WHERE Summit_Events__c = :eventInformation.evtId];
 
             addPick1 = createPicklists(eventPage.Add_Info_Question_Pick_List_1__c);
             addPick2 = createPicklists(eventPage.Add_Info_Question_Pick_List_2__c);
@@ -206,28 +230,27 @@ public with sharing class SummitEventsRegisterController {
         }
 
         //If the user is logged in use that data
-        if ((!String.isBlank(EvtUserType) && EvtUserType != 'Guest' && EvtUserType != 'Standard') || (!String.isBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING')) {
+        if ((!String.isBlank(EvtUserType) && EvtUserType != 'Guest' && EvtUserType != 'Standard') || (String.isNotBlank(eventInformation.evtRegId) && eventInformation.evtRegId != 'COMING')) {
             //Fill in contact information
             Contact userContact = new Contact();
-            if (String.isBlank(evtInfo.evtRegId) || evtInfo.evtRegId == 'COMING') {
-
+            if (String.isBlank(eventInformation.evtRegId) || eventInformation.evtRegId == 'COMING') {
 
                 userContact = [
-                        Select Id, Name, FirstName, LastName, Email, HomePhone, MobilePhone, Birthdate
+                        SELECT Id, Name, FirstName, LastName, Email, HomePhone, MobilePhone, Birthdate
                         FROM Contact
-                        Where Id In (
-                                Select ContactId
-                                From User
-                                Where Id = :UserInfo.getUserId()
+                        WHERE Id IN (
+                                SELECT ContactId
+                                FROM User
+                                WHERE Id = :UserInfo.getUserId()
                         )
                 ];
 
-                newEvtReg.Registrant_First_Name__c = userContact.FirstName;
-                newEvtReg.Registrant_Last_Name__c = userContact.LastName;
-                newEvtReg.Registrant_Email__c = userContact.Email;
-                newEvtReg.Registrant_Phone__c = userContact.HomePhone;
-                newEvtReg.Registrant_Mobile_Phone__c = userContact.MobilePhone;
-                newEvtReg.Registrant_Date_of_Birth__c = userContact.Birthdate;
+                eventRegistration.Registrant_First_Name__c = userContact.FirstName;
+                eventRegistration.Registrant_Last_Name__c = userContact.LastName;
+                eventRegistration.Registrant_Email__c = userContact.Email;
+                eventRegistration.Registrant_Phone__c = userContact.HomePhone;
+                eventRegistration.Registrant_Mobile_Phone__c = userContact.MobilePhone;
+                eventRegistration.Registrant_Date_of_Birth__c = userContact.Birthdate;
                 if (userContact.Birthdate != null) {
                     birthDateString = userContact.Birthdate.format();
                 }
@@ -236,52 +259,50 @@ public with sharing class SummitEventsRegisterController {
                     contactId = userContact.Id;
                 }
                 contactSet = true;
-            } else {
-                newEvtReg = [
-                        SELECT Contact__c, Contact__r.Id, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c, Number_of_Guests__c,
-                                Registrant_Gender__c, Registrant_Street_1__c, Registrant_Street_2__c, Registrant_State__c, Registrant_City__c, Preferred_Visit_Time__c,
-                                Registrant_Zip__c, Registrant_Phone__c, Registrant_Mobile_Phone__c, Registrant_College__c, Registrant_College_Code__c, Registrant_College_Year__c,
-                                Registrant_High_School__c, Registrant_High_School_Code__c, Registrant_Receive_Texts__c, Registrant_High_School_Grad_Year__c, Registrant_High_School_Not_Found__c,
-                                Registrant_College_Not_Found__c, Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c, Registrant_Parent_Phone__c,
-                                Add_Info_Answer_1__c, Add_Info_Answer_2__c, Add_Info_Answer_3__c, Add_Info_Answer_4__c, Add_Info_Answer_5__c, Registrant_Program_Interest__c, Registrant_Preferred_First_Name__c,
-                                Registrant_date_of_Birth__c, Last_Name_as_Student__c, Preferred_Class_Year__c, Relationship_To_Institution__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c, Registrant_Other_Phone__c, Registrant_Other_Relationship__c,
-                                Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c, Registrant_Pronouns__c, Registrant_Title__c, Registrant_Company_Organization__c
-                        FROM Summit_Events_Registration__c
-                        WHERE id = :evtInfo.evtRegId
-                ][0];
-
-                if (newEvtReg.Registrant_date_of_Birth__c != null) {
-                    birthDateString = newEvtReg.Registrant_date_of_Birth__c.format();
-                }
-
-                if (eventPage.Ask_Phone__c.containsIgnoreCase('with type') && String.isNotBlank(newEvtReg.Registrant_Mobile_Phone__c) && String.isBlank(newEvtReg.Registrant_Phone__c)) {
-                    phoneType = 'mobile';
-                } else {
-                    phoneType = 'home';
-                }
-
-                //for comparison after the form is filled out we keep original queried event the see if key information is changed and matching should be redone.
-                oldEvtReg = newEvtReg;
             }
-
             if (EvtUserType != 'Guest') {
                 contactSet = true;
             }
         }
-
-        if (String.isBlank(newEvtReg.Registrant_Country__c)) {
-            newEvtReg.Registrant_Country__c = 'United States';
-
-        }
-
     }
 
-    public PageReference setParentInfo(String n) {
-        return null;
+    public Summit_Events_Registration__c getEventRegistration(Id eventRegistrationId) {
+        Summit_Events_Registration__c oldEventRegistration = [
+                SELECT Contact__c, Contact__r.Id, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c, Number_of_Guests__c,
+                        Registrant_Gender__c, Registrant_Street_1__c, Registrant_Street_2__c, Registrant_State__c, Registrant_City__c, Preferred_Visit_Time__c,
+                        Registrant_Zip__c, Registrant_Phone__c, Registrant_Mobile_Phone__c, Registrant_College__c, Registrant_College_Code__c, Registrant_College_Year__c,
+                        Registrant_High_School__c, Registrant_High_School_Code__c, Registrant_Receive_Texts__c, Registrant_High_School_Grad_Year__c, Registrant_High_School_Not_Found__c,
+                        Registrant_College_Not_Found__c, Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c, Registrant_Parent_Phone__c,
+                        Add_Info_Answer_1__c, Add_Info_Answer_2__c, Add_Info_Answer_3__c, Add_Info_Answer_4__c, Add_Info_Answer_5__c, Registrant_Program_Interest__c, Registrant_Preferred_First_Name__c,
+                        Registrant_Date_of_Birth__c, Last_Name_as_Student__c, Preferred_Class_Year__c, Relationship_To_Institution__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c, Registrant_Other_Phone__c, Registrant_Other_Relationship__c,
+                        Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c, Registrant_Pronouns__c, Registrant_Title__c, Registrant_Company_Organization__c
+                FROM Summit_Events_Registration__c
+                WHERE Id = :eventRegistrationId
+        ][0];
+        if (oldEventRegistration != null) {
+            return oldEventRegistration;
+        }
+        return new Summit_Events_Registration__c();
+    }
+
+    public List<Summit_Events_Appointments__c> getEventRegistrationAppointments(Id eventRegistrationId) {
+
+        List<Summit_Events_Appointments__c> oldEventRegistrationAppointments = [
+                SELECT Id, Appointment_Category__c, Appointment_Status__c, Client_Created_Appointment__c, Appointment_Type__c,
+                        Event_Appointment_Type__c, Chosen_State__c, Appointment_Title__c, Sort_Order__c,
+                        Building__c, Do_Not_Show_Time__c, Appointment_Time__c, Registrant_Input__c, Description__c
+                FROM Summit_Events_Appointments__c
+                WHERE Event_Registration__c = :eventRegistrationId
+        ];
+
+        if (oldEventRegistrationAppointments.size() > 0) {
+            return oldEventRegistrationAppointments;
+        }
+        return new List<Summit_Events_Appointments__c>();
     }
 
     public PageReference checkEventDetails() {
-        return SEShared.checkForEvent();
+        return SeaShared.checkForEvent();
     }
 
     public List<SelectOption> getSexDD() {
@@ -316,17 +337,11 @@ public with sharing class SummitEventsRegisterController {
         return PickThePicklist('Summit_Events_Registration__c', 'Registrant_Pronouns__c', true);
     }
 
-    public List<SelectOption> getProgramsAvailable() {
-        List<SelectOption> progSelOpt = new List<SelectOption>();
-        return progSelOpt;
-
-    }
-
     public List<SelectOption> createPicklists(String returnSepStringList) {
         List<SelectOption> cpl = new List<SelectOption>();
         if (!String.isBlank(returnSepStringList)) {
             cpl.add(new SelectOption('', 'Select...'));
-            returnSepStringList = returnSepStringList.Trim();
+            returnSepStringList = returnSepStringList.trim();
             returnSepStringList = returnSepStringList.replace('\n\n', '\n');
             String[] splitList = returnSepStringList.split('\n');
             for (String p : splitList) {
@@ -337,7 +352,7 @@ public with sharing class SummitEventsRegisterController {
         return cpl;
     }
 
-    public List<SelectOption> PickThePicklist(string YourObjectName, string YourFieldName, Boolean includeSelect) {
+    public List<SelectOption> PickThePicklist(String YourObjectName, String YourFieldName, Boolean includeSelect) {
         List<SelectOption> picklists = new List<SelectOption>();
         String namespace = SummitEventsNamespace.getNamespace();
         if (String.isNotBlank(namespace)) {
@@ -369,28 +384,21 @@ public with sharing class SummitEventsRegisterController {
     }
 
     public PageReference saveContactRegistration() {
-        boolean newContactCreated = false;
+        Boolean newContactCreated = false;
         PageReference optionPage;
-
-        //Record selected programs of interest
-        String recordSelPrg = '';
-        Pattern TAG_REGEX = Pattern.compile('\\((\\w+|\\w+\\|\\w+)\\)');
-        List<String> majorCodes = new List<String>();
-        Boolean progSelectionMade = true;
 
         if (String.isNotBlank(phoneType) && eventPage.Ask_Phone__c.containsIgnoreCase('with type')) {
             if (phoneType.equalsIgnoreCase('mobile')) {
-                newEvtReg.Registrant_Phone__c = '';
+                eventRegistration.Registrant_Phone__c = '';
             } else if (phoneType.equalsIgnoreCase('home')) {
-                newEvtReg.Registrant_Mobile_Phone__c = '';
+                eventRegistration.Registrant_Mobile_Phone__c = '';
             }
         }
 
         registrationCRUD rCRUD = new registrationCRUD();
 
         if (String.isNotBlank(eventPage.Registration_Email_Restriction__c) && eventPage.Registration_Email_Restriction__c != 'No Limit') {
-            System.debug('GOT TO REGISTRANT EMAIL RESTRICTIONS');
-            Summit_Events_Registration__c foundRegistration = rCRUD.checkForOtherRegistrations(eventPage.Registration_Email_Restriction__c, newEvtReg.Registrant_Email__c, evtInstance.Id, eventPage.Id);
+            Summit_Events_Registration__c foundRegistration = rCRUD.checkForOtherRegistrations(eventPage.Registration_Email_Restriction__c, eventRegistration.Registrant_Email__c, evtInstance.Id, eventPage.Id);
             if (foundRegistration != null) {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, 'It appears you’ve already registered for this event. Please contact the Event Host for more information.');
                 ApexPages.addMessage(myMsg);
@@ -398,82 +406,79 @@ public with sharing class SummitEventsRegisterController {
             }
         }
 
-        newEvtReg.Registrant_Program_Interest__c = '';
+        eventRegistration.Registrant_Program_Interest__c = '';
 
         if (String.isNotBlank(birthDateString)) {
-            newEvtReg.Registrant_Date_of_Birth__c = Date.parse(birthDateString);
+            eventRegistration.Registrant_Date_of_Birth__c = Date.parse(birthDateString);
         }
 
         if (!String.isBlank(applicantType)) {
-            newEvtReg.Registrant_Applicant_Type__c = applicantType;
+            eventRegistration.Registrant_Applicant_Type__c = applicantType;
         } else if (eventPage.Ask_Applicant_Type__c == 'Do not ask but assign First-Year') {
-            newEvtReg.Registrant_Applicant_Type__c = 'First-Year';
+            eventRegistration.Registrant_Applicant_Type__c = 'First-Year';
         } else if (eventPage.Ask_Applicant_Type__c == 'Do not ask but assign Transfer') {
-            newEvtReg.Registrant_Applicant_Type__c = 'Transfer';
+            eventRegistration.Registrant_Applicant_Type__c = 'Transfer';
         } else if (eventPage.Ask_Applicant_Type__c == 'Do not ask but assign Graduate') {
-            newEvtReg.Registrant_Applicant_Type__c = 'Graduate';
-        }
-
-        //Check if last name, email, phone number or DOB changed
-        Boolean dataHasChanged = false;
-        if (oldEvtReg != null) {
-            if (oldEvtReg.Registrant_Date_of_Birth__c != newEvtReg.Registrant_Date_of_Birth__c
-                    || oldEvtReg.Registrant_Last_Name__c != newEvtReg.Registrant_Last_Name__c
-                    || oldEvtReg.Registrant_Email__c != newEvtReg.Registrant_Email__c
-                    || oldEvtReg.Registrant_First_Name__c != newEvtReg.Registrant_First_Name__c
-                    ) {
-                dataHasChanged = true;
-            }
+            eventRegistration.Registrant_Applicant_Type__c = 'Graduate';
         }
 
         //Create registration if event Registration does not exist
-        if (String.isBlank(evtInfo.evtRegId) || evtInfo.evtRegId == 'COMING') {
-            newEvtReg.Status__c = 'Started';
-            newEvtReg.Event_Instance_Date_Time_Formatted__c = SEShared.navBreadcrumbBuilder(evtInstance, true);
-            newEvtReg.Event__c = evtInfo.evtId;
-            newEvtReg.Event_Instance__c = evtInfo.instanceID;
-            newEvtReg.Contact__c = contactId;
-            if (newContactCreated) {
-                newEvtReg.New_Contact_Created__c = true;
-            }
-            newEvtReg = rCRUD.updateRegistration(newEvtReg);
-            evtInfo.evtRegId = newEvtReg.Id;
+        eventRegistration.Status__c = 'Started';
+        eventRegistration.Event_Instance_Date_Time_Formatted__c = SeaShared.navBreadcrumbBuilder(evtInstance, true);
+        eventRegistration.Event__c = eventInformation.evtId;
+        eventRegistration.Event_Instance__c = eventInformation.instanceID;
+        eventRegistration.Contact__c = contactId;
+        if (newContactCreated) {
+            eventRegistration.New_Contact_Created__c = true;
         }
 
-        //update registration it may already exist, and matching log has to be updated on new registration inserts
-        newEvtReg = rCRUD.updateRegistration(newEvtReg);
-        System.debug(JSON.serializePretty(newEvtReg));
+        eventRegistration = rCRUD.updateRegistration(eventRegistration, eventRegistrationAppointments, incomingEventRegistration);
+        eventInformation.evtRegId = eventRegistration.Id;
 
-        if (String.isNotBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING') {
-            if (evtHasAppointments) {
-                optionPage = Page.SummitEventsRegisterAppointments;
-            } else {
-                optionPage = Page.SummitEventsConfirmation;
-            }
-            // create cookie to pass on to next page
-            //Posting along everything we need to build the next page
-            String encrytpString = SEShared.createEncryptedCookie('{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"' + evtInfo.evtRegId + '","evtId":"' + evtInfo.evtId + '"}', 'SummitEvents');
-
-            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-                optionPage.setRedirect(true);
-                optionPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
-            }
-
-            return optionPage;
+        if (evtHasAppointments) {
+            optionPage = Page.SummitEventsRegisterAppointments;
+        } else {
+            optionPage = Page.SummitEventsConfirmation;
         }
 
-        return null;
+        // create cookie to pass on to next page
+        //Posting along everything we need to build the next page
+        SeaShared.createEncryptedCookie('{"audience":"' + eventInformation.audience + '","instanceID":"' + eventInformation.instanceID + '","evtRegId":"' + eventInformation.evtRegId + '","evtId":"' + eventInformation.evtId + '"}', 'SummitEvents');
+
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+            optionPage.setRedirect(true);
+            optionPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
+        }
+
+        return optionPage;
+
     }
 
     private without sharing class registrationCRUD {
 
-        public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c newEvtReg) {
+        public Summit_Events_Registration__c updateRegistration(
+                Summit_Events_Registration__c eventRegistration, List<Summit_Events_Appointments__c> eventRegistrationAppointments,
+                Summit_Events_Registration__c incomingEventRegistration
+        ) {
             try {
-                upsert newEvtReg;
+                if (incomingEventRegistration.Id != null) {
+                    //deletes all master detail records like appointments
+                    delete incomingEventRegistration;
+                }
+
+                insert eventRegistration;
+
+                if (eventRegistrationAppointments.size() > 0) {
+                    for (Integer xx = 0; xx < eventRegistrationAppointments.size(); xx++) {
+                        eventRegistrationAppointments[xx].Event_Registration__c = eventRegistration.Id;
+                    }
+                    insert eventRegistrationAppointments;
+                }
+
             } catch (Exception ex) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'HELLO: ' + ex.getMessage()));
+                System.debug(ex.getMessage());
             }
-            return newEvtReg;
+            return eventRegistration;
         }
 
         public Summit_Events_Registration__c checkForOtherRegistrations(String checkType, String registrationEmail, Id eventInstanceId, Id eventId) {
@@ -485,8 +490,6 @@ public with sharing class SummitEventsRegisterController {
 
             List<Summit_Events_Registration__c> foundRegistrations = new List<Summit_Events_Registration__c>();
             Summit_Events_Registration__c foundRegistration = null;
-
-            System.debug('Type: ' + checkType + ', email: ' + registrationEmail + ', Instance ID: ' + eventInstanceId + ', Event Id: ' + eventId);
 
             if (checkType == 'One registration per instance') {
                 foundRegistrations = [

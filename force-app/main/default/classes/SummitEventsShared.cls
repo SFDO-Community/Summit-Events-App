@@ -40,7 +40,7 @@ public with sharing class SummitEventsShared {
         String URLAudience = ApexPages.currentPage().getParameters().get('audience');
         String URLInstanceID = ApexPages.currentPage().getParameters().get('instanceID');
         jsonInput = getDecryptCookie('SummitEvents');
-        if (!String.isBlank(jsonInput)) {
+        if (String.isNotBlank(jsonInput)) {
             try {
                 evtInfo = (SummitEventsInfo) JSON.deserialize(jsonInput, SummitEventsInfo.class);
                 if (!String.isBlank(URLAudience)) {
@@ -54,7 +54,7 @@ public with sharing class SummitEventsShared {
                 });
             }
         }
-        if (!String.isBlank(URLInstanceID)) {
+        if (String.isNotBlank(URLInstanceID)) {
             if (URLInstanceID.length() > 14) {
                 if (URLInstanceID != evtInfo.instanceID) {
                     //event instance has changed so delete cookie and reestablish with new instance
