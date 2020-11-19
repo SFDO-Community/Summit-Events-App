@@ -1339,11 +1339,6 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
-        <field>Summit_Events__c.Contact_Matching_No_Match_Behavior__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Contact_Matching_Rule_Description__c</field>
         <readable>true</readable>

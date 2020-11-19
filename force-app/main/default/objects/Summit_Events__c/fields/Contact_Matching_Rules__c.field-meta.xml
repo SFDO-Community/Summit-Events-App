@@ -14,6 +14,16 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
+                <fullName>Matching rules 1</fullName>
+                <default>false</default>
+                <label>Summit Matching Rule 1</label>
+            </value>
+            <value>
+                <fullName>Matching rules 2</fullName>
+                <default>false</default>
+                <label>Summit Matching Rule 2</label>
+            </value>
+            <value>
                 <fullName>Use Salesforce Duplicate Rule</fullName>
                 <default>false</default>
                 <label>Use Salesforce Duplicate Rule</label>
