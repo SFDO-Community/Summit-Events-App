@@ -16,9 +16,9 @@
                 <label>Create Contact</label>
             </value>
             <value>
-                <fullName>Do Nothing</fullName>
+                <fullName>Skip Creating Contact</fullName>
                 <default>false</default>
-                <label>Do Nothing</label>
+                <label>Skip Creating Contact</label>
             </value>
         </valueSetDefinition>
     </valueSet>

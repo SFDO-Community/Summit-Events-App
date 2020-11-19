@@ -12,14 +12,14 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Skip matching</fullName>
-                <default>false</default>
-                <label>Skip matching</label>
-            </value>
-            <value>
                 <fullName>Match with most recently modified</fullName>
                 <default>true</default>
                 <label>Match with most recently modified</label>
+            </value>
+            <value>
+                <fullName>Skip matching</fullName>
+                <default>false</default>
+                <label>Skip matching</label>
             </value>
         </valueSetDefinition>
     </valueSet>
