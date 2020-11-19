@@ -61,10 +61,9 @@ public with sharing class SummitEventsContactMatching {
     private static void matchContactsByDuplicateRule(List<Summit_Events_Registration__c> newRegistrations) {
         // Make it easy to tell what Matching Rule we're basing this off of
         Map<Id, String> matchType = new Map<Id, String>();
-        Map<Id, String> matchMethod = new Map<Id, String>();
-        Map<Id, String> multipleMethod = new Map<Id, String>();
+        Map<Id, Summit_Events__c> allEvents = new Map<Id, Summit_Events__c>();
         for (Summit_Events__c event : [
-            SELECT Id, Contact_Creation_Duplicate_Rule__c, Custom_Metadata_Contact_Matching_Method__c, Contact_Matching_Multiple_Match_Behavior__c
+            SELECT Id, Contact_Creation_Duplicate_Rule__c, Custom_Metadata_Contact_Matching_Method__c, Contact_Matching_Multiple_Match_Behavior__c, Contact_Matching_No_Match_Behavior__c
             FROM Summit_Events__c
             WHERE Id IN (SELECT Event__c FROM Summit_Events_Registration__c WHERE Id IN :newRegistrations)
         ]) {
@@ -72,15 +71,15 @@ public with sharing class SummitEventsContactMatching {
             duplicateRuleName = duplicateRuleName.replaceAll(' ', '_');
             
             matchType.put(event.Id, duplicateRuleName);
-            matchMethod.put(event.Id, event.Custom_Metadata_Contact_Matching_Method__c);
-            multipleMethod.put(event.Id, event.Contact_Matching_Multiple_Match_Behavior__c);
+            allEvents.put(event.Id, event);
         }
         
         // Find out which Registrations need new Contacts, creates them, 
         // and matches with existing Contacts whenever possible as defined by existing Duplicate Rules
         List<Contact> newContacts = new List<Contact>();
         for (Summit_Events_Registration__c reg : newRegistrations) {
-            Contact c = makeContact(reg, matchMethod.get(reg.Event__c));
+            Summit_Events__c event = allEvents.get(reg.Event__c);
+            Contact c = makeContact(reg, event.Custom_Metadata_Contact_Matching_Method__c);
             
             String matchLogHead = '<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered slds-size_1-of-1">' +
                 '<thead><tr class="slds-line-height_reset">' +
@@ -112,33 +111,44 @@ public with sharing class SummitEventsContactMatching {
                 }
             }
             
-            String query = 'SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE Id IN (';
-            for (Contact con : matchContacts)
-                query += '\'' + con.Id + '\',';
-            query = query.removeEnd(',') + ') ORDER BY LastModifiedDate DESC';
-            matchContacts = crud.findContacts(query);
+            if (!matchContacts.isEmpty()){
+                String query = 'SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE Id IN (';
+                for (Contact con : matchContacts)
+                    query += '\'' + con.Id + '\',';
+                query = query.removeEnd(',') + ') ORDER BY LastModifiedDate DESC';
+                matchContacts = crud.findContacts(query);
+            }
             if (matchContacts == null || matchContacts.isEmpty()) { // SOQL queries return null instead of empty lists
-                for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
-                    SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
-                    FROM Summit_Events_Contact_Matching_Mapping__mdt
-                    WHERE Contact_Matching_Method__c = :matchMethod.get(reg.Event__c) AND Matching_Only__c = TRUE])
-                {
-                    c.put(mapping.Contact_Field_API_Name__c, null);
+                if (event.Contact_Matching_No_Match_Behavior__c == 'Create Contact') {
+                    for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
+                        SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
+                        FROM Summit_Events_Contact_Matching_Mapping__mdt
+                        WHERE Contact_Matching_Method__c = :event.Custom_Metadata_Contact_Matching_Method__c AND Matching_Only__c = TRUE])
+                    {
+                        c.put(mapping.Contact_Field_API_Name__c, null);
+                    }
+                    
+                    crud.addContact(c);
+                    
+                    reg.New_Contact_Created__c = true;
+                    reg.Contact__c = c.Id;
+                    
+                    String matchLog = '<div class="slds-text-heading_small slds-m-vertical_medium">New contact created!</div>';
+                    matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Match not found using Duplicate Rule <em>' + matchType.get(reg.Event__c) + '</em></div>';
+                    matchLog += matchLogHead;
+                    matchLog += '<tbody>';
+                    matchLog += matchingLog(c.Id, reg.Registrant_Last_Name__c, reg.Registrant_First_Name__c, reg.Registrant_Email__c, reg.Registrant_Postal_Code__c, null);
+                    matchLog += '</tbody></table>';
+                    
+                    reg.Matching_Log__c = matchLog;
                 }
-                
-                crud.addContact(c);
-                
-                reg.New_Contact_Created__c = true;
-                reg.Contact__c = c.Id;
-                
-                String matchLog = '<div class="slds-text-heading_small slds-m-vertical_medium">New contact created!</div>';
-                matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Match not found using Duplicate Rule <em>' + matchType.get(reg.Event__c) + '</em></div>';
-                matchLog += matchLogHead;
-                matchLog += '<tbody>';
-                matchLog += matchingLog(c.Id, reg.Registrant_Last_Name__c, reg.Registrant_First_Name__c, reg.Registrant_Email__c, reg.Registrant_Postal_Code__c, null);
-                matchLog += '</tbody></table>';
-                
-                reg.Matching_Log__c = matchLog;
+                else {
+                    String matchLog = '';
+                    matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Match not found using Duplicate Rule <em>' + matchType.get(reg.Event__c) + '</em></div>';
+                    matchLog += '<div class="slds-text-heading_small slds-m-vertical_medium">Contact matching skipped based on "Contact Matching Skip Contact Creation" field value on Summit Events object</div>';
+                    
+                    reg.Matching_Log__c = matchLog;
+                }
             } else if (matchContacts.size() == 1){
                 reg.Contact__c = matchContacts[0].Id;
                 reg.New_Contact_Created__c = false;
@@ -153,7 +163,7 @@ public with sharing class SummitEventsContactMatching {
                 
                 reg.Matching_Log__c = matchLog;
             } else {
-                if (multipleMethod.get(reg.Event__c) == 'Skip matching') {
+                if (event.Contact_Matching_Multiple_Match_Behavior__c == 'Skip matching') {
                     String matchLog = '<div class="slds-text-heading_small slds-m-vertical_medium">Multiple matches found using Salesforce Duplicate Rule <em>' + matchType.get(reg.Event__c).replaceAll('_', ' ') + '</em>, Contact matching skipped based on "Contact Matching Multiple Match Behavior" field value on Summit Events object</div>';
                     matchLog += matchLogHead;
                     matchLog += '<tbody>';
@@ -165,7 +175,7 @@ public with sharing class SummitEventsContactMatching {
                     matchLog += '</tbody></table>';
                     
                     reg.Matching_Log__c = matchLog;
-                } else if (multipleMethod.get(reg.Event__c) == 'Match with most recently modified'){
+                } else if (event.Contact_Matching_Multiple_Match_Behavior__c == 'Match with most recently modified'){
                     reg.Contact__c = matchContacts[0].Id;
                     
                     String matchLog = '<div class="slds-text-heading_small slds-m-vertical_medium">Multiple matches found using Salesforce Duplicate Rule <em>' + matchType.get(reg.Event__c).replaceAll('_', ' ') + '</em>, Most recently modified Contact was selected based on "Contact Matching Multiple Match Behavior" field value on Summit Events object</div>';
