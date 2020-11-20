@@ -124,11 +124,13 @@ public with sharing class SummitEventsShared {
         String newUrl = '';
 
         if (onRegistrationPage) {
-            String URLInstanceID = ApexPages.currentPage().getParameters().get('instanceID');
-            if (String.isNotBlank(newInstanceId) && !newInstanceId.equals(URLInstanceID)) {
-                System.debug('Registration page change');
-                newInstanceId = URLInstanceID;
-                newUrl = communityBaseURL + 'SummitEventsRegister?instanceID=' + URLInstanceID;
+            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('instanceID'))) {
+                String URLInstanceID = ApexPages.currentPage().getParameters().get('instanceID');
+                if (String.isNotBlank(newInstanceId) && !newInstanceId.equals(URLInstanceID)) {
+                    System.debug('Registration page change');
+                    newInstanceId = URLInstanceID;
+                    newUrl = communityBaseURL + 'SummitEventsRegister?instanceID=' + URLInstanceID;
+                }
             }
         } else if (String.isBlank(newRegistrationId) && !onRegistrationPage) {
             System.debug('eventInformation.registrationId 2: ' + newRegistrationId);
