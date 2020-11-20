@@ -7,9 +7,9 @@ public with sharing class SummitEventsShared {
 
     public class SummitEventsInfo {
         public String audience { get; set; }
-        public String instanceID { get; set; }
-        public String evtRegId { get; set; }
-        public String evtId { get; set; }
+        public String instanceId { get; set; }
+        public String eventId { get; set; }
+        public String registrationId { get; set; }
     }
 
     public SummitEventsShared() {
@@ -35,93 +35,136 @@ public with sharing class SummitEventsShared {
 
     public SummitEventsInfo getSummitEventsInfo() {
         //{"audience":"High School Senior","instanceID":"a320m000000A5fOAAS","evtRegId":"a350m0000008q63AAA,"evtId":"a330m0000001SOrAAM"}
-        String jsonInput = '';
-        SummitEventsInfo evtInfo = new SummitEventsInfo();
+        SummitEventsInfo eventInformation = new SummitEventsInfo();
         String URLAudience = ApexPages.currentPage().getParameters().get('audience');
         String URLInstanceID = ApexPages.currentPage().getParameters().get('instanceID');
-        jsonInput = getDecryptCookie('SummitEvents');
+        String jsonInput = getDecryptCookie();
+
+        //See if a cookie exists
         if (String.isNotBlank(jsonInput)) {
+            System.debug('cookie decrypted: ' + JSON.serializePretty(jsonInput));
             try {
-                evtInfo = (SummitEventsInfo) JSON.deserialize(jsonInput, SummitEventsInfo.class);
-                if (!String.isBlank(URLAudience)) {
-                    evtInfo.audience = URLAudience;
-                }
+                eventInformation = (SummitEventsInfo) JSON.deserialize(jsonInput, SummitEventsInfo.class);
             } catch (Exception e) {
-                //Cookie was un-serializable so delete it
-                Cookie deleteCookie = new Cookie('SummitEvents', '', null, 0, false); // Note the 0 to delete the cookie
-                ApexPages.currentPage().setCookies(new Cookie[]{
-                        deleteCookie
-                });
+                System.debug(e.getMessage());
             }
         }
+
+        if (!String.isBlank(URLAudience)) {
+            eventInformation.audience = URLAudience;
+        }
+
+        //check if URL instance has changed
         if (String.isNotBlank(URLInstanceID)) {
             if (URLInstanceID.length() > 14) {
-                if (URLInstanceID != evtInfo.instanceID) {
-                    //event instance has changed so delete cookie and reestablish with new instance
-                    Cookie deleteCookie = new Cookie('SummitEvents', '', null, 0, false); // Note the 0 to delete the cookie
-                    ApexPages.currentPage().setCookies(new Cookie[]{
-                            deleteCookie
-                    });
-                    evtInfo = new SummitEventsInfo();
-                    evtInfo.instanceID = URLInstanceID;
+                if (URLInstanceID != eventInformation.instanceId) {
+                    eventInformation.instanceId = URLInstanceID;
+                    eventInformation.registrationId = '';
                     if (!String.isBlank(URLAudience)) {
-                        evtInfo.audience = URLAudience;
+                        eventInformation.audience = URLAudience;
                     }
-                    String eventCookie = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"COMING","evtId":"' + evtInfo.evtId + '"}';
-                    createEncryptedCookie(eventCookie, 'SummitEvents');
                 }
             }
         }
 
-        //check if regid is there  and whether status it is set to registered. IF so reset cookie if it is.
-        if (!String.isBlank(evtInfo.evtRegId) && evtInfo.evtRegId != 'COMING') {
-            Summit_Events_Registration__c evtReg = [SELECT Status__c FROM Summit_Events_Registration__c WHERE Id = :evtInfo.evtRegId][0];
+        // Make sure registration id isn't the string null
+        if (eventInformation.registrationId.equalsIgnoreCase('null')) {
+            eventInformation.registrationId = '';
+        }
+
+        //check if registration id is there and whether status it is set to registered. IF so reset cookie if it is.
+        if (String.isNotBlank(eventInformation.registrationId)) {
+            Summit_Events_Registration__c evtReg = [SELECT Status__c FROM Summit_Events_Registration__c WHERE Id = :eventInformation.registrationId][0];
             if (evtReg.Status__c != 'Started') {
-                //Registration is complete and a new form should be generated.
-                String eventCookie2 = '{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"","evtId":"' + evtInfo.evtId + '"}';
-                createEncryptedCookie(eventCookie2, 'SummitEvents');
+                eventInformation.registrationId = '';
             }
         }
 
-        return evtInfo;
+        if (String.isBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
+            Summit_Events_Instance__c instanceInfo = [SELECT Id, Event__c FROM Summit_Events_Instance__c WHERE Id = :eventInformation.instanceId];
+            if (instanceInfo != null) {
+                eventInformation.eventId = instanceInfo.Event__c;
+            }
+        }
+
+        return eventInformation;
     }
 
     public PageReference checkForEvent() {
-        SummitEventsInfo evt = new SummitEventsInfo();
-        PageReference myVFPage = null;
-        evt = getSummitEventsInfo();
+        PageReference myVFPage;
+        SummitEventsInfo eventInformation = getSummitEventsInfo();
+        System.debug('eventInfo from check event 1: ' + JSON.serializePretty(eventInformation));
 
-        sharedCRUD rCRUD = new sharedCRUD();
-        rCRUD.setCookieKey();
+        Boolean onRegistrationPage = false;
+        String[] currentURL = ApexPages.currentPage().getUrl().split('\\?');
+        if (currentURL[0].endsWithIgnoreCase('SummitEventsRegister')) {
+            onRegistrationPage = true;
+        }
+        System.debug('ON registration page: ' + onRegistrationPage);
 
+        //Make sure there is a cookie encryption key. If no make one.
+        crudToDo doCRUD = new crudToDo();
+        doCRUD.setCookieKey();
+
+        //Get home page link if it exists
+        String eventHomeLink = '';
+        String newInstanceId = eventInformation.instanceId;
+        String newRegistrationId = eventInformation.registrationId;
+
+        if (String.isNotBlank(newInstanceId)) {
+            Summit_Events_Instance__c eventPage = [SELECT Event__r.Event_Home_Link_URL__c FROM Summit_Events_Instance__c WHERE Id = :newInstanceId];
+            if (eventPage != null) {
+                eventHomeLink = eventPage.Event__r.Event_Home_Link_URL__c;
+            }
+        }
+        //Get community base URL from custom settings
         Summit_Events_Settings__c myUserSetting = Summit_Events_Settings__c.getInstance(UserInfo.getUserId());
         String communityBaseURL = myUserSetting.Community_Base_URL__c;
 
-        if ((String.isBlank(evt.evtRegId) && !ApexPages.currentPage().getUrl().containsIgnoreCase('SummitEventsRegistration')) || String.isBlank(evt.instanceID)) {
-            //Reset the cookie to prevent loop on registration page
-            Cookie deleteCookie = new Cookie('SummitEvents', '', null, 0, false); // Note the 0 to delete the cookie
-            ApexPages.currentPage().setCookies(new Cookie[]{
-                    deleteCookie
-            });
+        String newUrl = '';
 
-            if (!String.isBlank(evt.evtId)) {
-                Summit_Events__c eventPage = [SELECT Event_Home_Link_URL__c FROM Summit_Events__c WHERE Id = :evt.evtId][0];
-                if (!String.isBlank(eventPage.Event_Home_Link_URL__c)) {
-                    myVFPage = new PageReference(eventPage.Event_Home_Link_URL__c);
-                } else if (String.isNotBlank(evt.instanceID) && !ApexPages.currentPage().getUrl().containsIgnoreCase('SummitEventsRegister')) {
-                    myVFPage = new PageReference(communityBaseURL + 'SummitEventsRegister?instanceID=' + evt.instanceID);
-                } else {
-                    myVFPage = new PageReference(communityBaseURL + 'SummitEvents');
-                }
-            } else {
-                myVFPage = new PageReference(communityBaseURL + 'SummitEvents');
+        if (onRegistrationPage) {
+            String URLInstanceID = ApexPages.currentPage().getParameters().get('instanceID');
+            if (String.isNotBlank(newInstanceId) && !newInstanceId.equals(URLInstanceID)) {
+                System.debug('Registration page change');
+                newInstanceId = URLInstanceID;
+                newUrl = communityBaseURL + 'SummitEventsRegister?instanceID=' + URLInstanceID;
             }
-            myVFPage.setRedirect(true);
+        } else if (String.isBlank(newRegistrationId) && !onRegistrationPage) {
+            System.debug('eventInformation.registrationId 2: ' + newRegistrationId);
+            if (String.isNotBlank(eventHomeLink)) {
+                System.debug('USING HOME LINK');
+                newUrl = eventHomeLink;
+            } else if (String.isNotBlank(newInstanceId)) {
+                System.debug('USING instance link');
+                newUrl = communityBaseURL + 'SummitEventsRegister?instanceID=' + newInstanceId;
+            } else {
+                System.debug('USING default site home link');
+                newUrl = communityBaseURL + 'SummitEvents';
+            }
         }
+        if (String.isNotBlank(newUrl)) {
+            myVFPage = new PageReference(newUrl);
+            myVFPage.setRedirect(true);
+            newRegistrationId = '';
+            System.debug('eventInfo from check event 2 - page change: ' + JSON.serializePretty(eventInformation));
+            createEncryptedCookie(eventInformation.audience, newInstanceId, eventInformation.eventId, newRegistrationId);
+        } else if (onRegistrationPage) {
+            createEncryptedCookie(eventInformation.audience, newInstanceId, eventInformation.eventId, newRegistrationId);
+        }
+
         return myVFPage;
     }
 
-    public String createEncryptedCookie(String CookieValue, String CookieName) {
+    public String createEncryptedCookie(String audience, String instanceId, String eventId, String registrationId) {
+
+        //Check everything to not let nulls through to JSON string
+        audience = (String.isNotBlank(audience) && !audience.equalsIgnoreCase('null')) ? audience : '';
+        instanceId = (String.isNotBlank(instanceId) && !instanceId.equalsIgnoreCase('null')) ? instanceId : '';
+        eventId = (String.isNotBlank(eventId) && !eventId.equalsIgnoreCase('null')) ? eventId : '';
+        registrationId = (String.isNotBlank(registrationId) && !registrationId.equalsIgnoreCase('null')) ? registrationId : '';
+
+        String CookieValue = '{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '"}';
         String encodedCipherText = '';
         String key = getCookieKey();
         if (String.isNotBlank(String.valueOf(key))) {
@@ -129,7 +172,7 @@ public with sharing class SummitEventsShared {
             Blob encrypted = Crypto.encryptWithManagedIV('AES256', Blob.valueOf(key), data);
             encodedCipherText = EncodingUtil.base64Encode(encrypted);
             encodedCipherText = EncodingUtil.urlEncode(encodedCipherText, 'UTF-8');
-            Cookie SummitEventsCookie = new Cookie(CookieName, encodedCipherText, null, -1, false);
+            Cookie SummitEventsCookie = new Cookie('SummitEvents', encodedCipherText, null, -1, false);
             ApexPages.currentPage().setCookies(new Cookie[]{
                     SummitEventsCookie
             });
@@ -137,7 +180,8 @@ public with sharing class SummitEventsShared {
         return encodedCipherText;
     }
 
-    public String getDecryptCookie(String CookieName) {
+    public String getDecryptCookie() {
+        String CookieName = 'SummitEvents';
         String key = getCookieKey();
         Cookie encodedCipherText = ApexPages.currentPage().getCookies().get(CookieName);
         if (encodedCipherText != null && String.isNotBlank(String.valueOf(key))) {
@@ -415,7 +459,7 @@ public with sharing class SummitEventsShared {
         return key;
     }
 
-    private without sharing class sharedCRUD {
+    private without sharing class crudToDo {
         public void setCookieKey() {
             Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
             if (String.isBlank(SummitEventsSettings.Cookie_Encryption_Key__c)) {

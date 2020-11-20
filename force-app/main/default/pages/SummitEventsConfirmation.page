@@ -9,7 +9,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
     <apex:composition template="{!templateSelected}">
         <apex:define name="metaPageTitle">
             {!eventPage.Event_Name__c}
-            <apex:outputText rendered="{!!ISBLANK(evtInstance.Instance_Title__c)}" value="{! ' - ' + evtInstance.Instance_Title__c}"/>
+            <apex:outputText rendered="{!!ISBLANK(eventInstance.Instance_Title__c)}" value="{! ' - ' + eventInstance.Instance_Title__c}"/>
             - Confirmation
         </apex:define>
         <apex:define name="pageTitle"><a href="{!eventPage.Event_Home_Link_URL__c}">{!eventPage.Event_Home_Link_Title__c}</a></apex:define>
@@ -20,7 +20,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
-                    <apex:messages/>
+                    <apex:messages />
                 </div>
                 <apex:form id="SummitEventsConfirmationForm" styleClass="slds-grid slds-wrap">
                     <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
