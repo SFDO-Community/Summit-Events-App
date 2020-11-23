@@ -15,7 +15,7 @@ public with sharing class SummitEventsSubmitController {
     public String templateSelected { get; set; }
     public Map <String, String> feesByIndex { get; set; }
     public String navBreadCrumb { get; set; }
-    public boolean eventIsClosed { get; set; }
+    public Boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
     private List<Summit_Events_Fee__c> eventFees { get; set; }
     public Double totalPaymentAmount { get; set; }
@@ -37,7 +37,7 @@ public with sharing class SummitEventsSubmitController {
                             Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
                             Donation_Description__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
-                    WHERE Id = :evtinfo.evtId
+                    WHERE Id = :evtInfo.evtId
             ][0];
 
             templateSelected = SEShared.getTemplate(eventPage.Template__c);
@@ -47,7 +47,7 @@ public with sharing class SummitEventsSubmitController {
                             Instance_Start_Time__c, Instance_End_Time__c, Instance_Start_Date__c,
                             Instance_End_Date__c, Current_Available_Capacity__c, Active_Status__c
                     FROM Summit_Events_Instance__c
-                    WHERE Id = :evtinfo.instanceID
+                    WHERE Id = :evtInfo.instanceID
                     LIMIT 1
             ];
 
@@ -61,11 +61,11 @@ public with sharing class SummitEventsSubmitController {
             navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance, false);
         }
 
-        if (!String.isBlank(evtinfo.evtRegId)) {
+        if (!String.isBlank(evtInfo.evtRegId)) {
             chosenAppts = [
-                    SELECT Id, Appointment_Category__c, Event_Appointment_Type__c, Appointment_Type__c, Description__c, Appointment_Title__c, Chosen_State__C
+                    SELECT Id, Appointment_Category__c, Event_Appointment_Type__c, Appointment_Type__c, Description__c, Appointment_Title__c, Chosen_State__c
                     FROM Summit_Events_Appointments__c
-                    WHERE Event_Registration__c = :evtinfo.evtRegId
+                    WHERE Event_Registration__c = :evtInfo.evtRegId
                     AND Chosen_State__c != 'Added but not shown'
                     ORDER BY Appointment_Title__c
             ];
@@ -214,12 +214,24 @@ public with sharing class SummitEventsSubmitController {
                             OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
             ];
 
+<<<<<<< HEAD
             if (apptTypes.size() == 0) {
                 //If no options skip that step
                 lastPage = Page.SummitEventsRegister;
             } else {
                 lastPage = Page.SummitEventsRegisterAppointments;
             }
+=======
+        apptTypes = [
+                SELECT Id
+                FROM Summit_Events_Appointment_Type__c
+                WHERE Summit_Events__c = :evtInfo.evtId
+                AND (
+                        Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c
+                        OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
+        ];
+
+>>>>>>> origin/master
 
         }
         if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
