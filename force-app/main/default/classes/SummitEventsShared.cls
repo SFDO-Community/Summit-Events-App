@@ -276,8 +276,8 @@ public with sharing class SummitEventsShared {
             Datetime convertedEndDate = convertDateToDatetime(eventInstance.Instance_End_Date__c, null, '');
             String monthStart = convertedStartDate.format('MMMM');
             String monthEnd = convertedEndDate.format('MMMM');
-            String yearStart = convertedStartDate.format('YYYY');
-            String yearEnd = convertedEndDate.format('YYYY');
+            String yearStart = String.valueOf(eventInstance.Instance_Start_Date__c.year());
+            String yearEnd = String.valueOf(eventInstance.Instance_End_Date__c.year());
             String dayNameStart = convertedStartDate.format('EEEE');
             String dayNameEnd = convertedEndDate.format('EEEE');
             String dayStart = convertedStartDate.format('dd');

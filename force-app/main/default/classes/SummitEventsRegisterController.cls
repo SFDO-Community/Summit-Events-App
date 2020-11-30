@@ -38,6 +38,7 @@ public with sharing class SummitEventsRegisterController {
     public String endTimeString { get; set; }
     public Boolean adminOpen { get; set; }
     public String registrantAudience { get; set; }
+    public String EvtUserType { get; set; }
     public Id incomingEventRegistrationId { get; set; }
 
     public SummitEventsRegisterController() {
@@ -52,7 +53,7 @@ public with sharing class SummitEventsRegisterController {
         additionalQuestions = false;
         showAddress = false;
         showPhone = false;
-        String EvtUserType = UserInfo.getUserType();
+        EvtUserType = UserInfo.getUserType();
         //Get cookie or URL string variable
         eventInformation = SeaShared.getSummitEventsInfo();
 
@@ -462,9 +463,6 @@ public with sharing class SummitEventsRegisterController {
                         recordedUsedIds.add(recordedFees.Id);
                     }
                 }
-                if (String.isBlank(eventFeeList[ff].Event_Registration__c)) {
-                    eventFeeList[ff].Event_Registration__c = eventInformation.registrationId;
-                }
             }
             List<Summit_Events_Fee__c> deleteEventFees = [
                     SELECT Id, Event_Fee_Type__c, Event_Fee_Attribute__c, Event_Fee__c
@@ -477,16 +475,6 @@ public with sharing class SummitEventsRegisterController {
             if (deleteEventFees.size() > 0) {
                 rCRUD.deleteFees(deleteEventFees);
             }
-        } else {
-            //No Fees have ever been recorded on this event. Apply event registration id to all fees.
-            if (eventFeeList.size() > 0) {
-                for (Integer ff = 0; ff < eventFeeList.size(); ff++) {
-                    eventFeeList[ff].Event_Registration__c = eventInformation.registrationId;
-                }
-            }
-        }
-        if (eventFeeList.size() > 0) {
-            rCRUD.updateFees(eventFeeList);
         }
 
         eventRegistration.Status__c = 'Started';
@@ -498,7 +486,7 @@ public with sharing class SummitEventsRegisterController {
             eventRegistration.New_Contact_Created__c = true;
         }
 
-        eventRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience);
+        eventRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience, eventFeeList);
         eventInformation.registrationId = eventRegistration.Id;
 
         if (evtHasAppointments) {
@@ -522,7 +510,7 @@ public with sharing class SummitEventsRegisterController {
 
     private without sharing class registrationCRUD {
 
-        public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c eventRegistration, Id incomingEventRegistrationId, String registrantAudience) {
+        public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c eventRegistration, Id incomingEventRegistrationId, String registrantAudience, List<Summit_Events_Fee__c> upsertFees) {
             try {
                 if (String.isNotBlank(incomingEventRegistrationId)) {
                     eventRegistration.Id = incomingEventRegistrationId;
@@ -533,24 +521,30 @@ public with sharing class SummitEventsRegisterController {
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
             }
+
+            //Save fees
+            if (upsertFees.size() > 0) {
+                for (Integer ff = 0; ff < upsertFees.size(); ff++) {
+                    upsertFees[ff].Event_Registration__c = eventRegistration.Id;
+                }
+                try {
+                    upsert upsertFees;
+                } catch (Exception ex) {
+                    System.debug(ex.getMessage());
+                }
+            }
+
+            //Update encrypted cookie
             SummitEventsShared SeaShared = new SummitEventsShared();
             System.debug('Before CRUD cookie creation: ' + JSON.serializePretty(eventRegistration));
             SeaShared.createEncryptedCookie(registrantAudience, eventRegistration.Event_Instance__c, eventRegistration.Event__c, eventRegistration.Id);
+
             return eventRegistration;
         }
 
         public void deleteFees(List<Summit_Events_Fee__c> deletableFees) {
             try {
                 delete deletableFees;
-            } catch (Exception ex) {
-                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
-                ApexPages.addMessage(myMsg);
-            }
-        }
-
-        public void updateFees(List<Summit_Events_Fee__c> upsertFees) {
-            try {
-                upsert upsertFees;
             } catch (Exception ex) {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
                 ApexPages.addMessage(myMsg);

@@ -84,17 +84,8 @@ public with sharing class SummitEventsSubmitController {
                 chosenFormatted += '</ul>';
             }
 
-//            /** Get Event registrant information if possible **/
-//            eventRegistration = [
-//                    SELECT Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_City__c, Registrant_State_Province__c, Registrant_State__c,
-//                            Registrant_Postal_Code__c, Registrant_Zip__c, Registrant_Street_1__c, Registrant_Street_2__c, Registrant_Email__c, Registrant_Country__c,
-//                            Event_Name__c, Event_Instance_Title__c, Event_Instance_Date_Time_Formatted__c, Contact__c
-//                    FROM Summit_Events_Registration__c
-//                    WHERE Id = :evtInfo.evtRegId
-//            ];
-
             /** Check for preexisting payment **/
-            List<Summit_Events_Payment__c> existingPayment = [SELECT Id, Payment_Amount__c, TouchnetReceiptNumber__c From Summit_Events_Payment__c WHERE Event_Registration__c = :evtInfo.registrationId];
+            List<Summit_Events_Payment__c> existingPayment = [SELECT Id, Payment_Amount__c, TouchnetReceiptNumber__c FROM Summit_Events_Payment__c WHERE Event_Registration__c = :evtInfo.registrationId];
             if (existingPayment.size() > 0) {
                 existingPaymentAmount = existingPayment[0].Payment_Amount__c;
             }
@@ -106,73 +97,75 @@ public with sharing class SummitEventsSubmitController {
                     FROM Summit_Events_Fee__c
                     WHERE Event_Registration__c = :evtInfo.registrationId
             ];
-            feesByIndex = new Map<String, String>();
-            paymentItemized = '<table class="slds-table slds-table_cell-buffer slds-table_bordered">';
-            paymentItemized += '<thead>';
-            paymentItemized += '<tr class="slds-line-height_reset">';
-            paymentItemized += '<th class="" scope="col">';
-            paymentItemized += '<div class="slds-truncate" title="Item">Item</div>';
-            paymentItemized += '</th>';
-            paymentItemized += '<th class="" scope="col">';
-            paymentItemized += '<div class="slds-truncate" title="Fee">Fee</div>';
-            paymentItemized += '</th>';
-            paymentItemized += '</thead><tbody>';
-            eventOnlyPaymentAmount = 0;
-            for (Summit_Events_Fee__c fee : eventFees) {
-                if (fee.Event_Fee__c != null && fee.Event_Fee__c > 0) {
-                    totalPaymentAmount += fee.Event_Fee__c;
-                    if (!fee.Event_Fee_Type__c.equalsIgnoreCase('Event') || !fee.Event_Fee_Type__c.equalsIgnoreCase('Event Additional')) {
-                        if (fee.Event_Fee_Type__c.equalsIgnoreCase('Appointment')) {
-                            paymentItemized += '<tr class="eventAppointmentCost">';
-                            paymentItemized += '<td>' + fee.Event_Appointment_Type__r.Title__c + '</td>';
-                            paymentItemized += '<td>' + prettyCurrencyString(fee.Event_fee__c) + '</td>';
-                            paymentItemized += '</tr>';
-                        } else if (fee.Event_Fee_Type__c.equalsIgnoreCase('Optional Donation')) {
-                            paymentItemized += '<tr class="eventDonation">';
-                            paymentItemized += '<td>' + fee.Event_Fee_Type__c;
-                            if (String.isNotBlank(fee.Event_Fee_Attribute__r.Name)) {
-                                paymentItemized += ' - ' + fee.Event_Fee_Attribute__r.Name;
+
+            if (eventFees.size()>0) {
+                feesByIndex = new Map<String, String>();
+                paymentItemized = '<table class="slds-table slds-table_cell-buffer slds-table_bordered">';
+                paymentItemized += '<thead>';
+                paymentItemized += '<tr class="slds-line-height_reset">';
+                paymentItemized += '<th class="" scope="col">';
+                paymentItemized += '<div class="slds-truncate" title="Item">Item</div>';
+                paymentItemized += '</th>';
+                paymentItemized += '<th class="" scope="col">';
+                paymentItemized += '<div class="slds-truncate" title="Fee">Fee</div>';
+                paymentItemized += '</th>';
+                paymentItemized += '</thead><tbody>';
+                eventOnlyPaymentAmount = 0;
+                totalPaymentAmount = 0;
+                for (Summit_Events_Fee__c fee : eventFees) {
+                    if (fee.Event_Fee__c != null && fee.Event_Fee__c > 0) {
+                        totalPaymentAmount += fee.Event_Fee__c;
+                        if (!fee.Event_Fee_Type__c.equalsIgnoreCase('Event') || !fee.Event_Fee_Type__c.equalsIgnoreCase('Event Additional')) {
+                            if (fee.Event_Fee_Type__c.equalsIgnoreCase('Appointment')) {
+                                paymentItemized += '<tr class="eventAppointmentCost">';
+                                paymentItemized += '<td>' + fee.Event_Appointment_Type__r.Title__c + '</td>';
+                                paymentItemized += '<td>' + prettyCurrencyString(fee.Event_Fee__c) + '</td>';
+                                paymentItemized += '</tr>';
+                            } else if (fee.Event_Fee_Type__c.equalsIgnoreCase('Optional Donation')) {
+                                paymentItemized += '<tr class="eventDonation">';
+                                paymentItemized += '<td>' + fee.Event_Fee_Type__c;
+                                if (String.isNotBlank(fee.Event_Fee_Attribute__r.Name)) {
+                                    paymentItemized += ' - ' + fee.Event_Fee_Attribute__r.Name;
+                                }
+                                paymentItemized += '</td>';
+                                paymentItemized += '<td>' + prettyCurrencyString(fee.Event_Fee__c) + '</td>';
+                                paymentItemized += '</tr>';
+                            } else {
+                                eventOnlyPaymentAmount += fee.Event_Fee__c;
                             }
-                            paymentItemized += '</td>';
-                            paymentItemized += '<td>' + prettyCurrencyString(fee.Event_fee__c) + '</td>';
-                            paymentItemized += '</tr>';
-                        } else {
-                            eventOnlyPaymentAmount += fee.Event_Fee__c;
                         }
-                    }
-                    if (feesByIndex.size() > 0 && feesByIndex.containsKey(fee.Event_Fee_Attribute__c)) {
-                        Decimal newFee = Decimal.valueOf(feesByIndex.get(fee.Event_Fee_Attribute__c));
-                        newFee = newFee + fee.Event_Fee__c;
-                        newFee = newFee.setScale(2);
-                        feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(newFee));
-                    } else {
-                        feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(fee.Event_Fee__c));
-                    }
+                        if (feesByIndex.size() > 0 && feesByIndex.containsKey(fee.Event_Fee_Attribute__c)) {
+                            Decimal newFee = Decimal.valueOf(feesByIndex.get(fee.Event_Fee_Attribute__c));
+                            newFee = newFee + fee.Event_Fee__c;
+                            newFee = newFee.setScale(2);
+                            feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(newFee));
+                        } else {
+                            feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(fee.Event_Fee__c));
+                        }
 
+                    }
                 }
+
+
+                if (existingPaymentAmount > 0) {
+                    totalPaymentAmount = totalPaymentAmount - existingPaymentAmount;
+                }
+
+                paymentItemized += '<tr class="eventOnlyCost">';
+                paymentItemized += '<td>General Event</td>';
+                paymentItemized += '<td>' + prettyCurrencyString(eventOnlyPaymentAmount) + '</td>';
+                paymentItemized += '</tr>';
+
+                paymentItemized += '<tr class="eventTotalCost">';
+                paymentItemized += '<td><strong>Total Cost</strong></td>';
+                paymentItemized += '<td><strong>' + prettyCurrencyString(totalPaymentAmount) + '</strong></td>';
+                paymentItemized += '</tr>';
+
+                paymentItemized += '</tbody></table>';
             }
-
-
-            if (existingPaymentAmount > 0) {
-                totalPaymentAmount = totalPaymentAmount - existingPaymentAmount;
-            }
-
-            paymentItemized += '<tr class="eventOnlyCost">';
-            paymentItemized += '<td>General Event</td>';
-            paymentItemized += '<td>' + prettyCurrencyString(eventOnlyPaymentAmount) + '</td>';
-            paymentItemized += '</tr>';
-
-            paymentItemized += '<tr class="eventTotalCost">';
-            paymentItemized += '<td><strong>Total Cost</strong></td>';
-            paymentItemized += '<td><strong>' + prettyCurrencyString(totalPaymentAmount) + '</strong></td>';
-            paymentItemized += '</tr>';
-
-            paymentItemized += '</tbody></table>';
-
             System.debug(paymentItemized);
             if (totalPaymentAmount > 0) {
                 showPaymentButton = true;
-                //generateTicket();
             }
         }
 
