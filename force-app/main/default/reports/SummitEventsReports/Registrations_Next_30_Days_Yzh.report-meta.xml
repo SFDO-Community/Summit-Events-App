@@ -38,7 +38,7 @@
             <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>NEXT_N_DAYS:7,TODAY</value>
+            <value>NEXT_N_DAYS:30,TODAY</value>
         </criteriaItems>
         <language>en_US</language>
     </filter>
