@@ -34,7 +34,7 @@ public with sharing class SummitEventsShared {
     }
 
     public SummitEventsInfo getSummitEventsInfo() {
-        //{"audience":"High School Senior","instanceID":"a320m000000A5fOAAS","evtRegId":"a350m0000008q63AAA,"evtId":"a330m0000001SOrAAM"}
+        //{"audience":"High School Senior","instanceId":"a320m000000A5fOAAS","registrationId":"a350m0000008q63AAA,"eventId":"a330m0000001SOrAAM"}
         SummitEventsInfo eventInformation = new SummitEventsInfo();
         String URLAudience = ApexPages.currentPage().getParameters().get('audience');
         String URLInstanceID = ApexPages.currentPage().getParameters().get('instanceID');

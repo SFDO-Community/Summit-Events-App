@@ -37,7 +37,7 @@ public with sharing class SummitEventsDonationController {
             List<Summit_Events_Fee__c> previousDonationFees = [
                     SELECT Id, Event_Registration__c, Event_Fee__c, Event_Fee_Attribute__c
                     FROM Summit_Events_Fee__c
-                    WHERE Event_Registration__c = :eventInfo.evtRegId
+                    WHERE Event_Registration__c = :eventInfo.registrationId
                     AND Event_Fee_Type__c = 'Optional Donation'
             ];
 
@@ -115,8 +115,8 @@ public with sharing class SummitEventsDonationController {
             Summit_Events_Fee__c newFee = new Summit_Events_Fee__c();
             newFee.Event_Fee_Attribute__c = donationRecipient;
             newFee.Event_Fee__c = cleanFeeStringToDecimal(donationAmount);
-            newFee.Event_Registration__c = eventInfo.evtRegId;
-            newFee.Summit_Events__c = eventInfo.evtId;
+            newFee.Event_Registration__c = eventInfo.registrationId;
+            newFee.Summit_Events__c = eventInfo.eventId;
             newFee.Event_Fee_Type__c = 'Optional Donation';
             //If there is an incoming fee already for a donation just update it by applying the id
             if (incomingFee != null) {
@@ -140,7 +140,7 @@ public with sharing class SummitEventsDonationController {
         List<Summit_Events_Appointment_Type__c> appointmentTypes = [
                 SELECT Id
                 FROM Summit_Events_Appointment_Type__c
-                WHERE Summit_Events__c = :eventInfo.evtId
+                WHERE Summit_Events__c = :eventInfo.eventId
                 AND (Restrict_To_Instance_Title__r.Instance_Title__c = :eventInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
                 AND Appointment_Type_Status__c = 'Active'
         ];

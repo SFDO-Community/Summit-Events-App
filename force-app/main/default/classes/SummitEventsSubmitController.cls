@@ -94,7 +94,7 @@ public with sharing class SummitEventsSubmitController {
 //            ];
 
             /** Check for preexisting payment **/
-            List<Summit_Events_Payment__c> existingPayment = [SELECT Id, Payment_Amount__c, TouchnetReceiptNumber__c From Summit_Events_Payment__c WHERE Event_Registration__c = :evtInfo.evtRegId];
+            List<Summit_Events_Payment__c> existingPayment = [SELECT Id, Payment_Amount__c, TouchnetReceiptNumber__c From Summit_Events_Payment__c WHERE Event_Registration__c = :evtInfo.registrationId];
             if (existingPayment.size() > 0) {
                 existingPaymentAmount = existingPayment[0].Payment_Amount__c;
             }
@@ -104,7 +104,7 @@ public with sharing class SummitEventsSubmitController {
                     SELECT Name, Event_Fee__c, Event_Fee_Attribute__c, Description__c, Event_Fee_Type__c, Summit_Events__c, Event_Appointment_Type__c,
                             Event_Appointment_Type__r.Title__c, Event_Fee_Attribute__r.Name
                     FROM Summit_Events_Fee__c
-                    WHERE Event_Registration__c = :evtInfo.EvtRegId
+                    WHERE Event_Registration__c = :evtInfo.registrationId
             ];
             feesByIndex = new Map<String, String>();
             paymentItemized = '<table class="slds-table slds-table_cell-buffer slds-table_bordered">';
