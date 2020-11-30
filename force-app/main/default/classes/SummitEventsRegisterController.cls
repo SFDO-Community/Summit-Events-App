@@ -32,12 +32,9 @@ public with sharing class SummitEventsRegisterController {
     public String applicantType { get; set; }
     public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
-<<<<<<< HEAD
     public String dataLayerLocationType { get; set; }
     public Decimal totalEventCost { get; set; }
     public List<Summit_Events_Fee__c> eventFeeList { get; set; }
-=======
->>>>>>> origin/master
     public String phoneType { get; set; }
     public String navBreadCrumb { get; set; }
     public Boolean showLocation { get; set; }

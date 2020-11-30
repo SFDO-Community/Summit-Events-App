@@ -652,11 +652,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-<<<<<<< HEAD
         <masterLabel>00h0R0000032lKw</masterLabel>
-=======
-        <masterLabel>00h0R0000034bqK</masterLabel>
->>>>>>> origin/master
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

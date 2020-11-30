@@ -200,29 +200,9 @@ public with sharing class SummitEventsSubmitController {
     }
 
     public PageReference previousPage() {
-        PageReference lastPage;
-        List<Summit_Events_Appointment_Type__c> apptTypes = null;
-        if (eventPage.Display_Optional_Donation__c) {
-            lastPage = Page.SummitEventsDonation;
-        } else {
-            apptTypes = [
-                    SELECT Id
-                    From Summit_Events_Appointment_Type__c
-                    WHERE Summit_Events__c = :evtInfo.evtId
-                    AND (
-                            Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c
-                            OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
-            ];
+        List<Summit_Events_Appointment_Type__c> appointmentTypes = null;
 
-<<<<<<< HEAD
-            if (apptTypes.size() == 0) {
-                //If no options skip that step
-                lastPage = Page.SummitEventsRegister;
-            } else {
-                lastPage = Page.SummitEventsRegisterAppointments;
-            }
-=======
-        apptTypes = [
+        appointmentTypes = [
                 SELECT Id
                 FROM Summit_Events_Appointment_Type__c
                 WHERE Summit_Events__c = :evtInfo.evtId
@@ -231,9 +211,15 @@ public with sharing class SummitEventsSubmitController {
                         OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
         ];
 
->>>>>>> origin/master
 
+        PageReference lastPage;
+        if (appointmentTypes.size() == 0) {
+            //If no options skip that step
+            lastPage = Page.SummitEventsRegister;
+        } else {
+            lastPage = Page.SummitEventsRegisterAppointments;
         }
+
         if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
             lastPage.setRedirect(true);
             lastPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
