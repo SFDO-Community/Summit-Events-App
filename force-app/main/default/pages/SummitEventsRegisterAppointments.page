@@ -71,7 +71,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"></apex:outputText>
                             </p>
                         </div>
-                        <apex:inputHidden id="outgoingApptJSon" value="{!incomingApptJSon}"/>
+                        <apex:inputHidden id="outgoingApptJSon" value="{!incomingAppointmentJSON}"/>
                     </apex:outputPanel>
                 </apex:form>
             </div>

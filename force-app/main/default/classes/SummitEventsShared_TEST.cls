@@ -3,12 +3,12 @@
 // license that can be found in the LICENSE file.
 // Created by Thaddaeus Dahlberg on 6/12/2018.
 
-@isTest
+@IsTest
 public with sharing class SummitEventsShared_TEST {
 
     /**
 
-    Data Facotry Methods:
+    Data Factory Methods:
 
     createTestEvent(String recType, String testEventName, String audience, Boolean includeAppt, Boolean includeAddQuestions)
         - Returns Event Instance
@@ -18,20 +18,19 @@ public with sharing class SummitEventsShared_TEST {
         - Returns user
     createEventRegistration(Summit_Events_Instance__c evtI, String firstName, String lastName, String Email, String Zip, String DOB, String ClassYear)
         - Returns Event Registration
-    createEventRegistrionObj(String firstName, String preferredFirst, String lastName, String Email, String Zip, String Phone, String DOB, String ClassYear)
+    createEventRegistrationObj(String firstName, String preferredFirst, String lastName, String Email, String Zip, String Phone, String DOB, String ClassYear)
         -Returns Event Registration Object
     createTestTransactionEmail(Id evtId, String status)
         -Returns Summit_Events_Email__c
 
      **/
 
-    @isTest static void testBlankEvent() {
+    @IsTest static void testBlankEvent() {
         Test.startTest();
         //Making bad cookies for exceptions
-        String eventForCookie = '{"blah":"blah"}';
         SummitEventsShared SEShared = new SummitEventsShared();
         SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
-        SEShared.createEncryptedCookie(eventForCookie, 'SummitEvents');
+        SEShared.createEncryptedCookie('','','','');
         SEShared.getSummitEventsInfo();
         registerCtrl = new SummitEventsRegisterController();
         PageReference pageRef = Page.SummitEventsCancelReview;
@@ -41,9 +40,9 @@ public with sharing class SummitEventsShared_TEST {
         Test.stopTest();
     }
 
-    @isTest static void testMatching2() {
+    @IsTest static void testMatching2() {
         //Insert a test event
-        Contact evtCon = SummitEventsTestSharedDataFactory.createContact('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55555', '(555) 555-5555', '1971-03-22', '2012');
+        SummitEventsTestSharedDataFactory.createContact('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55555', '(555) 555-5555', '1971-03-22', '2012');
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 2', 'Test Event', '', true, true, '');
 
         Test.startTest();
@@ -53,38 +52,38 @@ public with sharing class SummitEventsShared_TEST {
         ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
         SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
 
-        //Blank registraiton
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', '', 'TestLast', '', '', '', '', '2002');
+        //Blank registration
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', '', 'TestLast', '', '', '', '', '2002');
         registerCtrl.saveContactRegistration();
 
         //Create a new contact
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'TestLast', 'test@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'TestLast', 'test@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
         registerCtrl.saveContactRegistration();
 
         //Hard test on LAST NAME, EMAIL, CLASS
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2012');
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2012');
         registerCtrl.saveContactRegistration();
 
         ///Hard test on LAST NAME, FIRST NAME, EMAIL
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
         registerCtrl.saveContactRegistration();
 
         //Hard test on LAST NAME, CLASS, FIRST NAME, PHONE
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55418', '(555) 555-5555', '1989-03-22', '2012');
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55418', '(555) 555-5555', '1989-03-22', '2012');
         registerCtrl.saveContactRegistration();
 
         //Soft Match on Last Name
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
         registerCtrl.saveContactRegistration();
 
         //Soft Match LAST NAME, PHONE and CLASS
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55418', '(555) 555-5555', '1989-03-22', '2012');
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55418', '(555) 555-5555', '1989-03-22', '2012');
         registerCtrl.saveContactRegistration();
 
         Test.stopTest();
     }
 
-    @isTest static void testNoMatchGraduate() {
+    @IsTest static void testNoMatchGraduate() {
         //Insert a test event
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', '', true, true, '');
         Test.startTest();
@@ -93,7 +92,7 @@ public with sharing class SummitEventsShared_TEST {
         Test.setCurrentPage(pageRef);
         ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
         SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('Graduate', 'Test', 'Master', 'graduate@valleyhill.net', '55555', '(555) 555-5555', '1989-03-22', '2014');
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('Graduate', 'Test', 'Master', 'graduate@valleyhill.net', '55555', '(555) 555-5555', '1989-03-22', '2014');
         registerCtrl.saveContactRegistration();
 
         //Run same registration again for reg Id match
@@ -103,9 +102,9 @@ public with sharing class SummitEventsShared_TEST {
     }
 
 
-    @isTest static void testMatching1() {
+    @IsTest static void testMatching1() {
         //Insert a test event
-        Contact evtCon = SummitEventsTestSharedDataFactory.createContact('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55555', '(555) 555-5555', '1971-03-22', '2012');
+        SummitEventsTestSharedDataFactory.createContact('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55555', '(555) 555-5555', '1971-03-22', '2012');
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', 'High School Senior', true, true, '');
 
         Test.startTest();
@@ -116,28 +115,28 @@ public with sharing class SummitEventsShared_TEST {
         ApexPages.currentPage().getParameters().put('audience', 'High School Senior');
         SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
 
-        //Blank registraiton
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', '', 'TestLast', '', '', '', '', '2002');
+        //Blank registration
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', '', 'TestLast', '', '', '', '', '2002');
         registerCtrl.saveContactRegistration();
 
         //No Match create a new contact
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'TestLast', 'test@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'TestLast', 'test@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
         registerCtrl.saveContactRegistration();
 
         // Hard Match on Last Name Email
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
         registerCtrl.saveContactRegistration();
 
         //Hard Match on First 3 letters of first name / preferred first name, last name, and birthdate
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1971-03-22', '2002');
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1971-03-22', '2002');
         registerCtrl.saveContactRegistration();
 
         //Soft Match with Last Name, First Name, Zip
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55555', '(555) 444-4444', '1989-03-22', '2002');
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55555', '(555) 444-4444', '1989-03-22', '2002');
         registerCtrl.saveContactRegistration();
 
         //Soft Match found with email
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'TestLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'TestLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
         registerCtrl.saveContactRegistration();
 
         //Run same registration again for reg Id match
@@ -152,19 +151,18 @@ public with sharing class SummitEventsShared_TEST {
         Test.stopTest();
     }
 
-    @isTest static void testRegPicklists() {
+    @IsTest static void testRegPicklists() {
         SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
         registerCtrl.getSexDD();
-        registerCtrl.GetStateDD();
+        registerCtrl.getStateDD();
         registerCtrl.getCountryDD();
         registerCtrl.getTimeFrame();
         registerCtrl.getThirdPartyStatus();
         registerCtrl.getApplicantTypeDD();
         registerCtrl.getRelationshipDD();
-        registerCtrl.getProgramsAvailable();
     }
 
-    @isTest static void testEventWithEmailRestrictions() {
+    @IsTest static void testEventWithEmailRestrictions() {
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', '', true, true, 'One registration per instance');
 
         Test.startTest();
@@ -173,34 +171,31 @@ public with sharing class SummitEventsShared_TEST {
         Test.setCurrentPage(pageRef);
         ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
         SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'TestLast', 'test@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'TestLast', 'test@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
         registerCtrl.saveContactRegistration();
 //        UST_Event_Registration__c evtReg2 = TestUSTEventSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         registerCtrl.saveContactRegistration();
-        registerCtrl.newEvtReg.Registrant_Email__c = 'test2@valleyhill.net';
-        registerCtrl.newEvtReg.Registrant_Date_of_Birth__c = Date.valueOf('1989-03-22');
+        registerCtrl.eventRegistration.Registrant_Email__c = 'test2@valleyhill.net';
+        registerCtrl.eventRegistration.Registrant_Date_of_Birth__c = Date.valueOf('1989-03-22');
         registerCtrl.saveContactRegistration();
         Test.stopTest();
     }
 
-    @isTest static void testRegAlreadyExists() {
+    @IsTest static void testRegAlreadyExists() {
         //Insert a test event
-        Contact evtCon = SummitEventsTestSharedDataFactory.createContact('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55555', '(555) 555-5555', '1971-03-22', '2012');
+        SummitEventsTestSharedDataFactory.createContact('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55555', '(555) 555-5555', '1971-03-22', '2012');
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', 'High School Senior', false, false, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'MatchFirst', 'MatchLast', 'match@valleyhill.net', '55555', '1971-03-22', '2012', null);
 
         Test.startTest();
         SummitEventsShared SEShared = new SummitEventsShared();
-        String eventForCookie = '{"audience":"High School Senior","instanceID":"' + evtInst.Id + '","evtRegId":"' + evtReg.Id + '","evtId":"' + evtInst.Event__c + '"}';
-        SEShared.createEncryptedCookie(eventForCookie, 'SummitEvents');
+        SEShared.createEncryptedCookie('High School Senior',evtInst.Id,evtInst.Event__c, evtReg.Id);
+
         SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
+        SEShared.createEncryptedCookie('High School Senior',evtInst.Id,evtInst.Event__c, '');
 
-        //PageReference pr = registerCtrl.setParentInfo('This');
-
-        eventForCookie = '{"audience":"High School Senior","instanceID":"' + evtInst.Id + '","evtRegId":"COMING","evtId":"' + evtInst.Event__c + '"}';
-        SEShared.createEncryptedCookie(eventForCookie, 'SummitEvents');
         registerCtrl = new SummitEventsRegisterController();
-        registerCtrl.newEvtReg = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55555', '(555) 555-5555', '1971-03-22', '2012');
+        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55555', '(555) 555-5555', '1971-03-22', '2012');
         registerCtrl.saveContactRegistration();
 
 
@@ -209,51 +204,53 @@ public with sharing class SummitEventsShared_TEST {
     }
 
 
-    @isTest static void testSubmit() {
-        Contact evtCon = SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
+    @IsTest static void testSubmit() {
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         Test.startTest();
         PageReference pageRef = Page.SummitEventsSubmit;
         Test.setCurrentPage(pageRef);
+
         SummitEventsShared SEShared = new SummitEventsShared();
-        String eventForCookie = '{"audience":"Transfer","instanceID":"' + evtInst.Id + '","evtRegId":"' + evtReg.Id + '","evtId":"' + evtInst.Event__c + '"}';
-        SEShared.createEncryptedCookie(eventForCookie, 'SummitEvents');
+        SEShared.createEncryptedCookie('Transfer',evtInst.Id,evtInst.Event__c, evtReg.Id);
+
         //ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
         SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
-        PageReference checkEvt = submitCtrl.checkEventDetails();
-        PageReference prevPage = submitCtrl.previousPage();
+        submitCtrl.checkEventDetails();
+        submitCtrl.previousPage();
         submitCtrl.submitRegistration();
     }
 
-    @isTest static void testRegWithOptions() {
-        Contact evtCon = SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
+    @IsTest static void testRegWithOptions() {
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching Rules 1', 'Test Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
         Test.startTest();
         SummitEventsRegisterAppointmentCtlr optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
+
         SummitEventsShared SEShared = new SummitEventsShared();
-        String eventForCookie = '{"audience":"Transfer","instanceID":"' + evtInst.Id + '","evtRegId":"' + evtReg.Id + '","evtId":"' + evtInst.Event__c + '"}';
-        SEShared.createEncryptedCookie(eventForCookie, 'SummitEvents');
+        SEShared.createEncryptedCookie('Transfer',evtInst.Id,evtInst.Event__c, evtReg.Id);
+
         optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
 
         optionsCtrl.checkEventDetails();
         optionsCtrl.previousPage();
 
-        optionsCtrl.incomingApptJSon = '[]';
+        optionsCtrl.incomingAppointmentJSON = '[]';
         optionsCtrl.saveOptions();
 
-        //[{"apptId":"a010m000003EibeAAC","apptCatagory":"","apptType":"","apptText":"","apptTitle":"Multi colored socks for everyone"},{"apptId":"a010m000003EibUAAS","apptCatagory":"","apptType":"","apptText":"","apptTitle":"Red Socks Only"}]
+        //[{"apptId":"a010m000003EibeAAC","apptCategory":"","apptType":"","apptText":"","apptTitle":"Multi colored socks for everyone"},{"apptId":"a010m000003EibUAAS","apptCategory":"","apptType":"","apptText":"","apptTitle":"Red Socks Only"}]
 
         List<Summit_Events_Appointment_Type__c> newApptTypes = [SELECT Id, Title__c FROM Summit_Events_Appointment_Type__c WHERE Summit_Events__c = :evtInst.Event__c];
         String jsonAppts = '[';
         for (Summit_Events_Appointment_Type__c at : newApptTypes) {
-            jsonAppts += '{"apptId":"' + at.Id + '","apptCatagory":"","apptType":"","apptText":"","apptTitle":"' + at.Title__c + '"},';
+            jsonAppts += '{"apptId":"' + at.Id + '","apptCategory":"","apptType":"","apptText":"","apptTitle":"' + at.Title__c + '"},';
         }
         jsonAppts = jsonAppts.removeEnd(',');
         jsonAppts += ']';
-        optionsCtrl.incomingApptJSon = jsonAppts;
+        optionsCtrl.incomingAppointmentJSON = jsonAppts;
         optionsCtrl.saveOptions();
 
         //run constructor again to simulate page load after save
@@ -262,7 +259,7 @@ public with sharing class SummitEventsShared_TEST {
         Test.stopTest();
     }
 
-    @isTest static void testRegCancel() {
+    @IsTest static void testRegCancel() {
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
@@ -275,21 +272,22 @@ public with sharing class SummitEventsShared_TEST {
         Test.stopTest();
     }
 
-    @isTest static void testRegConfirmationPage() {
+    @IsTest static void testRegConfirmationPage() {
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching Rules 1', 'Test Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
         Test.startTest();
         SummitEventsShared SEShared = new SummitEventsShared();
-        String eventForCookie = '{"audience":"","instanceID":"' + evtInst.Id + '","evtRegId":"' + evtReg.Id + '","evtId":"' + evtInst.Event__c + '"}';
-        SEShared.createEncryptedCookie(eventForCookie, 'SummitEvents');
+        SEShared.createEncryptedCookie('',evtInst.Id,evtInst.Event__c, evtReg.Id);
+
         SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
-        SEShared.createEncryptedCookie(eventForCookie, 'SummitEvents');
+        SEShared.createEncryptedCookie('',evtInst.Id,evtInst.Event__c, evtReg.Id);
+
         confirmCtrl.checkEventDetails();
         Test.stopTest();
     }
 
-    @isTest static void testParkingPass() {
+    @IsTest static void testParkingPass() {
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching Rules 1', 'Test Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         evtReg.Status__c = 'Registered';
@@ -303,13 +301,13 @@ public with sharing class SummitEventsShared_TEST {
         Test.stopTest();
     }
 
-    @isTest static void testEventFeed() {
+    @IsTest static void testEventFeed() {
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', 'Alumni', true, true, '');
 
         Test.startTest();
         RestRequest req = new RestRequest();
         RestResponse res = new RestResponse();
-        req.requestURI = '/services/apexrest/usteventfeed';
+        req.requestURI = '/services/apexrest/summiteventfeed';
         req.httpMethod = 'GET';
         req.addHeader('Content-Type', 'application/json');
 
@@ -368,9 +366,9 @@ public with sharing class SummitEventsShared_TEST {
 
     }
 
-    @isTest static void testLetterheadLookup() {
+    @IsTest static void testLetterheadLookup() {
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', '', true, true, '');
-        Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         Summit_Events_Email__c testEvtEmail = SummitEventsTestSharedDataFactory.createTestTransactionEmail(evtInst, 'Registered', '');
 
         Test.startTest();
@@ -383,7 +381,7 @@ public with sharing class SummitEventsShared_TEST {
         BrandTemplate fakeBrandTemplate = new BrandTemplate(
                 Id = SummitEventsTestSharedDataFactory.getFakeId(BrandTemplate.SObjectType),
                 Name = 'Test',
-                value = '<body class="setupTab" ><style background-color="#FFFFFF" bEditID="b1st1" bLabel="body" ></style><center ><table cellpadding="0" width="500" cellspacing="0" id="topTable" height="450" ><tr valign="top" ><td ><style background-color="#FFFFFF" bEditID="r1st1" bLabel="header" vertical-align="top" height="5" text-align="left" ></style><img border="0" bEditID="r1sp1" bLabel="headerImage" id="r1sp1"><![CDATA[/servlet/servlet.ImageServer?id=0150m000000AN8V&oid=00D0m000000Cra6]]></img></td></tr><tr valign="top" ><td ><style background-color="#6600CC" bEditID="r2st1" bLabel="accent1" height="5" ></style><![CDATA[]]></td></tr><tr valign="top" ><td styleInsert="1" height="300" ><style background-color="#FFFFFF" bEditID="r3st1" color="#000000" bLabel="main" font-size="12pt" font-family="arial" ></style><![CDATA[]]></td></tr><tr valign="top" ><td ><style background-color="#6600CC" bEditID="r4st1" bLabel="accent2" height="5" ></style><![CDATA[]]></td></tr><tr valign="top" ><td ><style background-color="#FFFFFF" bEditID="r5st1" bLabel="footer" vertical-align="top" height="125" text-align="left" ></style><img border="0" bEditID="r5sp1" bLabel="footerImage" id="r5sp1"><![CDATA[/servlet/servlet.ImageServer?id=0150m000000AN8U&oid=00D0m000000Cra6]]></img></td></tr><tr valign="top" ><td ><style background-color="#FFFFFF" bEditID="r6st1" bLabel="accent3" height="5" ></style><![CDATA[]]></td></tr></table></center></body>'
+                Value = '<body class="setupTab" ><style background-color="#FFFFFF" bEditID="b1st1" bLabel="body" ></style><center ><table cellpadding="0" width="500" cellspacing="0" id="topTable" height="450" ><tr valign="top" ><td ><style background-color="#FFFFFF" bEditID="r1st1" bLabel="header" vertical-align="top" height="5" text-align="left" ></style><img border="0" bEditID="r1sp1" bLabel="headerImage" id="r1sp1"><![CDATA[/servlet/servlet.ImageServer?id=0150m000000AN8V&oid=00D0m000000Cra6]]></img></td></tr><tr valign="top" ><td ><style background-color="#6600CC" bEditID="r2st1" bLabel="accent1" height="5" ></style><![CDATA[]]></td></tr><tr valign="top" ><td styleInsert="1" height="300" ><style background-color="#FFFFFF" bEditID="r3st1" color="#000000" bLabel="main" font-size="12pt" font-family="arial" ></style><![CDATA[]]></td></tr><tr valign="top" ><td ><style background-color="#6600CC" bEditID="r4st1" bLabel="accent2" height="5" ></style><![CDATA[]]></td></tr><tr valign="top" ><td ><style background-color="#FFFFFF" bEditID="r5st1" bLabel="footer" vertical-align="top" height="125" text-align="left" ></style><img border="0" bEditID="r5sp1" bLabel="footerImage" id="r5sp1"><![CDATA[/servlet/servlet.ImageServer?id=0150m000000AN8U&oid=00D0m000000Cra6]]></img></td></tr><tr valign="top" ><td ><style background-color="#FFFFFF" bEditID="r6st1" bLabel="accent3" height="5" ></style><![CDATA[]]></td></tr></table></center></body>'
         );
         emailController.brandTemplates = new Map<Id, BrandTemplate>();
         emailController.brandTemplates.put(fakeBrandTemplate.Id, fakeBrandTemplate);
@@ -403,18 +401,18 @@ public with sharing class SummitEventsShared_TEST {
     }
 
     //Test the add to calendar page
-    @isTest static void testSEAddToCalendar() {
+    @IsTest static void testSEAddToCalendar() {
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Overnight Event', '', true, true, '');
 
         Test.startTest();
         ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
-        SummitEventsAddToCalendarController add2Cal = new SummitEventsAddToCalendarController();
+        new SummitEventsAddToCalendarController();
         Test.stopTest();
     }
 
 
     //Test the add to calendar page
-    @isTest static void testSEHostAssignment() {
+    @IsTest static void testSEHostAssignment() {
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Overnight Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
@@ -450,7 +448,7 @@ public with sharing class SummitEventsShared_TEST {
 
 
     //Test itinerary printout
-    @isTest static void testItineraryPrint() {
+    @IsTest static void testItineraryPrint() {
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Overnight Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 

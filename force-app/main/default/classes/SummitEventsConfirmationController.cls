@@ -4,37 +4,37 @@
 // Created by Thaddaeus Dahlberg on 5/1/2018.
 
 public with sharing class SummitEventsConfirmationController {
-    public SummitEventsShared SEShared = new SummitEventsShared();
-    public SummitEventsShared.SummitEventsInfo evtInfo { get; set; }
+    public SummitEventsShared seaShared = new SummitEventsShared();
+    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
     public Summit_Events__c eventPage { get; set; }
-    public Summit_Events_Instance__c evtInstance { get; set; }
+    public Summit_Events_Instance__c eventInstance { get; set; }
     public String templateSelected { get; set; }
     public String navBreadCrumb { get; set; }
-    public boolean eventIsClosed { get; set; }
+    public Boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
 
     public SummitEventsConfirmationController() {
         eventIsClosed = false;
-        evtInfo = SEShared.getSummitEventsInfo();
+        eventInformation = seaShared.getSummitEventsInfo();
 
-        if (!String.isEmpty(evtInfo.evtId)) {
+        if (!String.isEmpty(eventInformation.eventId)) {
             eventPage = [
                     SELECT Event_Confirmation_Title__c, Event_Name__c, Template__c, Event_Confirmation_Description__c, Event_Footer__c,
                             Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Confirmation_Registration__c, Event_Full_Text__c,
                             Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
                             Hand_Raise_Action__c
                     FROM Summit_Events__c
-                    WHERE Id = :evtinfo.evtId
+                    WHERE Id = :eventInformation.eventId
                     LIMIT 1
             ];
 
-            templateSelected = SEShared.getTemplate(eventPage.Template__c);
+            templateSelected = seaShared.getTemplate(eventPage.Template__c);
 
-            evtInstance = [
+            eventInstance = [
                     SELECT Instance_Title__c, Event__r.Event_Name__c, Instance_Time_Zone__c, Instance_Start_Time__c, Instance_End_Time__c,
                             Instance_Start_Date__c, Instance_End_Date__c, Current_Available_Capacity__c, Active_Status__c
                     FROM Summit_Events_Instance__c
-                    WHERE Id = :evtinfo.instanceID
+                    WHERE Id = :eventInformation.instanceId
                     LIMIT 1
             ];
 
@@ -42,21 +42,21 @@ public with sharing class SummitEventsConfirmationController {
                 adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
                 eventIsClosed = adminOpen;
             } else {
-                eventIsClosed = SEShared.isEventClosed(eventPage, evtInstance);
+                eventIsClosed = seaShared.isEventClosed(eventPage, eventInstance);
             }
 
-            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance, false);
+            navBreadCrumb = seaShared.navBreadcrumbBuilder(eventInstance, false);
         }
 
     }
 
     public PageReference checkEventDetails() {
         //PageReference resultPageRef =  SEShared.checkForEvent();
-        evtInfo = SEShared.getSummitEventsInfo();
+        eventInformation = seaShared.getSummitEventsInfo();
 
         if (!eventIsClosed) {
             String eventTitle = '';
-            if (!String.isBlank(evtInfo.evtRegId)) {
+            if (!String.isBlank(eventInformation.registrationId)) {
                 Summit_Events_Registration__c evtReg = [
                         SELECT Id, Status__c, Contact__c, Event_Name__c, Event_Instance_Title__c, Event_Instance__c,
                                 Registrant_First_Name__c, Registrant_Last_Name__c,Registrant_Gender__c,
@@ -65,7 +65,7 @@ public with sharing class SummitEventsConfirmationController {
                                 Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c,
                                 Registrant_Program_Interest__c
                         FROM Summit_Events_Registration__c
-                        WHERE id = :evtInfo.evtRegId
+                        WHERE Id = :eventInformation.registrationId
                         LIMIT 1
                 ];
 
@@ -82,7 +82,7 @@ public with sharing class SummitEventsConfirmationController {
                 evtReg = regCRUD.updateRegistration(evtReg);
 
                 //Remove the registration ID from the cookie so back button will redirect to the correct page.
-                SEShared.createEncryptedCookie('{"audience":"' + evtInfo.audience + '","instanceID":"' + evtInfo.instanceID + '","evtRegId":"","evtId":"' + evtInfo.evtId + '"}', 'SummitEvents');
+                seaShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, '');
             }
         }
         return null;
