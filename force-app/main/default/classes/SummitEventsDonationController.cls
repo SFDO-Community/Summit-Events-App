@@ -6,38 +6,47 @@
 
 public with sharing class SummitEventsDonationController {
     public SummitEventsShared SEShared = new SummitEventsShared();
-    public SummitEventsShared.SummitEventsInfo eventInfo { get; set; }
-
+    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public String navBreadCrumb { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public String templateSelected { get; set; }
     public String donationRecipient { get; set; }
     public String donationAmountSelect { get; set; }
     public String donationAmount { get; set; }
     public Summit_Events_Fee__c incomingFee { get; set; }
+    public Boolean eventIsClosed { get; set; }
+    public Boolean adminOpen { get; set; }
+    public Summit_Events__c eventPage { get; set; }
 
     public SummitEventsDonationController() {
-        eventInfo = SEShared.getSummitEventsInfo();
+        eventInformation = SEShared.getSummitEventsInfo();
 
-        List<Summit_Events_Instance__c> eventInstanceList = [
-                SELECT Id, Event__r.Display_Optional_Donation__c, Event__r.Donation_Suggested_Amount_List__c, Event__r.Donation_Description__c,
-                        Event__r.Donation_Recipient_1__c,Event__r.Donation_Recipient_2__c, Event__r.Donation_Recipient_3__c, Event__r.Donation_Recipient_4__c,
-                        Event__r.Donation_Recipient_5__c, Event__r.Donation_Recipient_1__r.Name, Event__r.Donation_Recipient_2__r.Name,
-                        Event__r.Donation_Recipient_3__r.Name, Event__r.Donation_Recipient_4__r.Name, Event__r.Donation_Recipient_5__r.Name,
-                        Event__r.Event_Name__c, Instance_Title__c, Event__r.Event_Home_Link_URL__c, Event__r.Event_Home_Link_Title__c, Event__r.Template__c
-                FROM Summit_Events_Instance__c
-                WHERE Id = :eventInfo.instanceID
-        ];
+        if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
 
+            eventPage = [
+                    SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
+                            Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Donation_Suggested_Amount_List__c,
+                            Donation_Description__c, Display_Optional_Donation__c, Donation_Recipient_1__c, Donation_Recipient_2__c, Donation_Recipient_3__c, Donation_Recipient_4__c,
+                            Donation_Recipient_5__c, Donation_Recipient_1__r.Name, Donation_Recipient_2__r.Name, Donation_Recipient_3__r.Name, Donation_Recipient_4__r.Name,
+                            Donation_Recipient_5__r.Name
+                    FROM Summit_Events__c
+                    WHERE Id = :eventInformation.eventId
+            ][0];
 
-        if (eventInstanceList.size() > 0) {
-            eventInstance = eventInstanceList[0];
-            templateSelected = SEShared.getTemplate(eventInstance.Event__r.Template__c);
+            Summit_Events_Instance__c eventInstance = [
+                    SELECT Id, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c,
+                            Current_Available_Capacity__c, Active_Status__c, Event__r.Event_Name__c
+                    FROM Summit_Events_Instance__c
+                    WHERE Id = :eventInformation.instanceID
+            ];
+
+            templateSelected = SEShared.getTemplate(eventPage.Template__c);
 
             //Check for current donation fees for this registration
             List<Summit_Events_Fee__c> previousDonationFees = [
                     SELECT Id, Event_Registration__c, Event_Fee__c, Event_Fee_Attribute__c
                     FROM Summit_Events_Fee__c
-                    WHERE Event_Registration__c = :eventInfo.registrationId
+                    WHERE Event_Registration__c = :eventInformation.registrationId
                     AND Event_Fee_Type__c = 'Optional Donation'
             ];
 
@@ -48,6 +57,15 @@ public with sharing class SummitEventsDonationController {
                 donationAmount = String.valueOf(incomingFee.Event_Fee__c);
                 donationAmountSelect = String.valueOf(incomingFee.Event_Fee__c);
             }
+
+            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+                adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
+                eventIsClosed = adminOpen;
+            } else {
+                eventIsClosed = SEShared.isEventClosed(eventPage, eventInstance);
+            }
+
+            navBreadCrumb = SEShared.navBreadcrumbBuilder(eventInstance, false);
         }
     }
 
@@ -56,11 +74,11 @@ public with sharing class SummitEventsDonationController {
         options.add(new SelectOption('', 'Select...'));
 
         for (Integer xx = 1; xx < 6; xx++) {
-            if (String.isNotBlank(String.valueOf(eventInstance.getSObject('Event__r').get('Donation_Recipient_' + xx + '__c')))) {
+            if (String.isNotBlank(String.valueOf(eventPage.get('Donation_Recipient_' + xx + '__c')))) {
                 options.add(
                         new SelectOption(
-                                String.valueOf(eventInstance.getSObject('Event__r').get('Donation_Recipient_' + xx + '__c')),
-                                String.valueOf(eventInstance.getSObject('Event__r').getSObject('Donation_Recipient_' + xx + '__r').get('Name'))
+                                String.valueOf(eventPage.get('Donation_Recipient_' + xx + '__c')),
+                                String.valueOf(eventPage.getSObject('Donation_Recipient_' + xx + '__r').get('Name'))
                         )
                 );
             }
@@ -71,8 +89,8 @@ public with sharing class SummitEventsDonationController {
     public List<SelectOption> getSuggestedDonation() {
         List<SelectOption> cpl = new List<SelectOption>();
         String suggested = '';
-        if (!String.isBlank(eventInstance.Event__r.Donation_Suggested_Amount_List__c)) {
-            suggested = eventInstance.Event__r.Donation_Suggested_Amount_List__c;
+        if (!String.isBlank(eventPage.Donation_Suggested_Amount_List__c)) {
+            suggested = eventPage.Donation_Suggested_Amount_List__c;
             cpl.add(new SelectOption('', 'Select...'));
             suggested = suggested.trim();
             suggested = suggested.replace('\n\n', '\n');
@@ -115,8 +133,8 @@ public with sharing class SummitEventsDonationController {
             Summit_Events_Fee__c newFee = new Summit_Events_Fee__c();
             newFee.Event_Fee_Attribute__c = donationRecipient;
             newFee.Event_Fee__c = cleanFeeStringToDecimal(donationAmount);
-            newFee.Event_Registration__c = eventInfo.registrationId;
-            newFee.Summit_Events__c = eventInfo.eventId;
+            newFee.Event_Registration__c = eventInformation.registrationId;
+            newFee.Summit_Events__c = eventInformation.eventId;
             newFee.Event_Fee_Type__c = 'Optional Donation';
             //If there is an incoming fee already for a donation just update it by applying the id
             if (incomingFee != null) {
@@ -140,7 +158,7 @@ public with sharing class SummitEventsDonationController {
         List<Summit_Events_Appointment_Type__c> appointmentTypes = [
                 SELECT Id
                 FROM Summit_Events_Appointment_Type__c
-                WHERE Summit_Events__c = :eventInfo.eventId
+                WHERE Summit_Events__c = :eventInformation.eventId
                 AND (Restrict_To_Instance_Title__r.Instance_Title__c = :eventInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
                 AND Appointment_Type_Status__c = 'Active'
         ];

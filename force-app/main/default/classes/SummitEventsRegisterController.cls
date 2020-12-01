@@ -119,7 +119,7 @@ public with sharing class SummitEventsRegisterController {
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c,
                             Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c, Ask_Pronoun__c, Keep_Registration_Open_During_Event__c,
                             Close_Event_Days_Before__c, Ask_Title__c, Ask_Company_Organization__c, Event_Fee__c, Event_Fee_Additional__c,
-                            Event_Fee_Additional_Attribute__c, Event_Fee_Attribute__c
+                            Event_Fee_Additional_Attribute__c, Event_Fee_Attribute__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     LIMIT 1

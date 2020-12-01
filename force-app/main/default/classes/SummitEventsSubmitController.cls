@@ -8,7 +8,7 @@ public with sharing class SummitEventsSubmitController {
     public String test { get; set; }
     public SummitEventsShared.SummitEventsInfo evtInfo { get; set; }
     public Summit_Events__c eventPage { get; set; }
-    public Summit_Events_Instance__c evtInstance { get; set; }
+    public Summit_Events_Instance__c eventInstance { get; set; }
     public List<Summit_Events_Appointment_Type__c> appointments { get; set; }
     public List<Summit_Events_Appointments__c> chosenAppointments { get; set; }
     public String chosenFormatted { get; set; }
@@ -42,7 +42,7 @@ public with sharing class SummitEventsSubmitController {
 
             templateSelected = SEShared.getTemplate(eventPage.Template__c);
 
-            evtInstance = [
+            eventInstance = [
                     SELECT Instance_Title__c, Event__r.Event_Name__c, Instance_Time_Zone__c,
                             Instance_Start_Time__c, Instance_End_Time__c, Instance_Start_Date__c,
                             Instance_End_Date__c, Current_Available_Capacity__c, Active_Status__c
@@ -55,10 +55,10 @@ public with sharing class SummitEventsSubmitController {
                 adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
                 eventIsClosed = adminOpen;
             } else {
-                eventIsClosed = SEShared.isEventClosed(eventPage, evtInstance);
+                eventIsClosed = SEShared.isEventClosed(eventPage, eventInstance);
             }
 
-            navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance, false);
+            navBreadCrumb = SEShared.navBreadcrumbBuilder(eventInstance, false);
         }
 
         if (!String.isBlank(evtInfo.registrationId)) {
@@ -200,13 +200,15 @@ public with sharing class SummitEventsSubmitController {
                 FROM Summit_Events_Appointment_Type__c
                 WHERE Summit_Events__c = :evtInfo.eventId
                 AND (
-                        Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c
+                        Restrict_To_Instance_Title__r.Instance_Title__c = :eventInstance.Instance_Title__c
                         OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
         ];
 
 
         PageReference lastPage;
-        if (appointmentTypes.size() == 0) {
+        if (eventPage.Display_Optional_Donation__c) {
+            lastPage = Page.SummitEventsDonation;
+        } else if (appointmentTypes.size() == 0) {
             //If no options skip that step
             lastPage = Page.SummitEventsRegister;
         } else {
