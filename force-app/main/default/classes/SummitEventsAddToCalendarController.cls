@@ -44,8 +44,8 @@ public with sharing class SummitEventsAddToCalendarController{
 			}
 
 			if (evtInfo != null){
-				DTSTART = SEShared.convertDateToDatetime(evtInfo.Instance_Start_Date__c, evtInfo.Instance_Start_Time__c, '').format('yyyyMMdd\'T\'HHmmss\'Z\'');
-				DTEND = SEShared.convertDateToDatetime(evtInfo.Instance_End_Date__c, evtInfo.Instance_End_Time__c, '').format('yyyyMMdd\'T\'HHmmss\'Z\'');
+				DTSTART = SEShared.convertDateToDatetime(evtInfo.Instance_Start_Date__c, evtInfo.Instance_Start_Time__c, evtInfo.Instance_Time_Zone__c).format('yyyyMMdd\'T\'HHmmss\'Z\'');
+				DTEND = SEShared.convertDateToDatetime(evtInfo.Instance_End_Date__c, evtInfo.Instance_End_Time__c, evtInfo.Instance_Time_Zone__c).format('yyyyMMdd\'T\'HHmmss\'Z\'');
 				DTSTAMP = Datetime.now().format('yyyyMMdd\'T\'HHmmss\'Z\'');
 				TIMEZONE = SEShared.getTimeZonePick(evtInfo.Instance_Time_Zone__c);
 
