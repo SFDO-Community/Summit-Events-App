@@ -4,9 +4,8 @@
 // Created by Thaddaeus Dahlberg on 5/1/2018.
 
 public with sharing class SummitEventsSubmitController {
-    public SummitEventsShared SEShared = new SummitEventsShared();
-    public String test { get; set; }
-    public SummitEventsShared.SummitEventsInfo evtInfo { get; set; }
+    public SummitEventsShared seaShared = new SummitEventsShared();
+    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public List<Summit_Events_Appointment_Type__c> appointments { get; set; }
@@ -26,28 +25,27 @@ public with sharing class SummitEventsSubmitController {
 
     public SummitEventsSubmitController() {
         showPaymentButton = false;
-        test = '';
 
         //Get cookie or URL string variable
-        evtInfo = SEShared.getSummitEventsInfo();
+        eventInformation = seaShared.getSummitEventsInfo();
         chosenFormatted = '';
-        if (!String.isEmpty(evtInfo.eventId)) {
+        if (!String.isEmpty(eventInformation.eventId)) {
             eventPage = [
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
                             Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
                             Donation_Description__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
-                    WHERE Id = :evtInfo.eventId
+                    WHERE Id = :eventInformation.eventId
             ][0];
 
-            templateSelected = SEShared.getTemplate(eventPage.Template__c);
+            templateSelected = seaShared.getTemplate(eventPage.Template__c);
 
             eventInstance = [
                     SELECT Instance_Title__c, Event__r.Event_Name__c, Instance_Time_Zone__c,
                             Instance_Start_Time__c, Instance_End_Time__c, Instance_Start_Date__c,
                             Instance_End_Date__c, Current_Available_Capacity__c, Active_Status__c
                     FROM Summit_Events_Instance__c
-                    WHERE Id = :evtInfo.instanceId
+                    WHERE Id = :eventInformation.instanceId
                     LIMIT 1
             ];
 
@@ -55,17 +53,17 @@ public with sharing class SummitEventsSubmitController {
                 adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
                 eventIsClosed = adminOpen;
             } else {
-                eventIsClosed = SEShared.isEventClosed(eventPage, eventInstance);
+                eventIsClosed = seaShared.isEventClosed(eventPage, eventInstance);
             }
 
-            navBreadCrumb = SEShared.navBreadcrumbBuilder(eventInstance, false);
+            navBreadCrumb = seaShared.navBreadcrumbBuilder(eventInstance, false);
         }
 
-        if (!String.isBlank(evtInfo.registrationId)) {
+        if (!String.isBlank(eventInformation.registrationId)) {
             chosenAppointments = [
                     SELECT Id, Appointment_Category__c, Event_Appointment_Type__c, Appointment_Type__c, Description__c, Appointment_Title__c, Chosen_State__c
                     FROM Summit_Events_Appointments__c
-                    WHERE Event_Registration__c = :evtInfo.registrationId
+                    WHERE Event_Registration__c = :eventInformation.registrationId
                     AND Chosen_State__c != 'Added but not shown'
                     ORDER BY Appointment_Title__c
             ];
@@ -85,7 +83,7 @@ public with sharing class SummitEventsSubmitController {
             }
 
             /** Check for preexisting payment **/
-            List<Summit_Events_Payment__c> existingPayment = [SELECT Id, Payment_Amount__c, TouchnetReceiptNumber__c FROM Summit_Events_Payment__c WHERE Event_Registration__c = :evtInfo.registrationId];
+            List<Summit_Events_Payment__c> existingPayment = [SELECT Id, Payment_Amount__c, TouchnetReceiptNumber__c FROM Summit_Events_Payment__c WHERE Event_Registration__c = :eventInformation.registrationId];
             if (existingPayment.size() > 0) {
                 existingPaymentAmount = existingPayment[0].Payment_Amount__c;
             }
@@ -95,7 +93,7 @@ public with sharing class SummitEventsSubmitController {
                     SELECT Name, Event_Fee__c, Event_Fee_Attribute__c, Description__c, Event_Fee_Type__c, Summit_Events__c, Event_Appointment_Type__c,
                             Event_Appointment_Type__r.Title__c, Event_Fee_Attribute__r.Name
                     FROM Summit_Events_Fee__c
-                    WHERE Event_Registration__c = :evtInfo.registrationId
+                    WHERE Event_Registration__c = :eventInformation.registrationId
             ];
 
             if (eventFees.size()>0) {
@@ -180,7 +178,7 @@ public with sharing class SummitEventsSubmitController {
         return numberOut;
     }
     public PageReference checkEventDetails() {
-        return SEShared.checkForEvent();
+        return seaShared.checkForEvent();
     }
 
     public PageReference submitRegistration() {
@@ -198,7 +196,7 @@ public with sharing class SummitEventsSubmitController {
         appointmentTypes = [
                 SELECT Id
                 FROM Summit_Events_Appointment_Type__c
-                WHERE Summit_Events__c = :evtInfo.eventId
+                WHERE Summit_Events__c = :eventInformation.eventId
                 AND (
                         Restrict_To_Instance_Title__r.Instance_Title__c = :eventInstance.Instance_Title__c
                         OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)

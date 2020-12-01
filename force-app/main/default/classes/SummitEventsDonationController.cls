@@ -5,7 +5,8 @@
 
 
 public with sharing class SummitEventsDonationController {
-    public SummitEventsShared SEShared = new SummitEventsShared();
+
+    public SummitEventsShared seaShared = new SummitEventsShared();
     public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
     public String navBreadCrumb { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
@@ -19,7 +20,9 @@ public with sharing class SummitEventsDonationController {
     public Summit_Events__c eventPage { get; set; }
 
     public SummitEventsDonationController() {
-        eventInformation = SEShared.getSummitEventsInfo();
+        eventInformation = seaShared.getSummitEventsInfo();
+
+        System.debug(JSON.serializePretty(eventInformation));
 
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
 
@@ -28,19 +31,19 @@ public with sharing class SummitEventsDonationController {
                             Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Donation_Suggested_Amount_List__c,
                             Donation_Description__c, Display_Optional_Donation__c, Donation_Recipient_1__c, Donation_Recipient_2__c, Donation_Recipient_3__c, Donation_Recipient_4__c,
                             Donation_Recipient_5__c, Donation_Recipient_1__r.Name, Donation_Recipient_2__r.Name, Donation_Recipient_3__r.Name, Donation_Recipient_4__r.Name,
-                            Donation_Recipient_5__r.Name
+                            Donation_Recipient_5__r.Name, Donation_Title__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
             ][0];
 
-            Summit_Events_Instance__c eventInstance = [
+            eventInstance = [
                     SELECT Id, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c,
                             Current_Available_Capacity__c, Active_Status__c, Event__r.Event_Name__c
                     FROM Summit_Events_Instance__c
-                    WHERE Id = :eventInformation.instanceID
+                    WHERE Id = :eventInformation.instanceId
             ];
 
-            templateSelected = SEShared.getTemplate(eventPage.Template__c);
+            templateSelected = seaShared.getTemplate(eventPage.Template__c);
 
             //Check for current donation fees for this registration
             List<Summit_Events_Fee__c> previousDonationFees = [
@@ -62,10 +65,10 @@ public with sharing class SummitEventsDonationController {
                 adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
                 eventIsClosed = adminOpen;
             } else {
-                eventIsClosed = SEShared.isEventClosed(eventPage, eventInstance);
+                eventIsClosed = seaShared.isEventClosed(eventPage, eventInstance);
             }
 
-            navBreadCrumb = SEShared.navBreadcrumbBuilder(eventInstance, false);
+            navBreadCrumb = seaShared.navBreadcrumbBuilder(eventInstance, false);
         }
     }
 
@@ -121,7 +124,7 @@ public with sharing class SummitEventsDonationController {
     }
 
     public PageReference checkEventDetails() {
-        return SEShared.checkForEvent();
+        return seaShared.checkForEvent();
     }
 
     public PageReference submitDonation() {
@@ -154,18 +157,34 @@ public with sharing class SummitEventsDonationController {
     }
 
     public PageReference previousPage() {
-        PageReference prevPage = Page.SummitEventsRegister;
-        List<Summit_Events_Appointment_Type__c> appointmentTypes = [
+
+        List<Summit_Events_Appointment_Type__c> appointmentTypes = null;
+
+        appointmentTypes = [
                 SELECT Id
                 FROM Summit_Events_Appointment_Type__c
                 WHERE Summit_Events__c = :eventInformation.eventId
-                AND (Restrict_To_Instance_Title__r.Instance_Title__c = :eventInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
-                AND Appointment_Type_Status__c = 'Active'
+                AND (
+                        Restrict_To_Instance_Title__r.Instance_Title__c = :eventInstance.Instance_Title__c
+                        OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
         ];
-        if (appointmentTypes.size() > 0) {
-            prevPage = Page.SummitEventsRegisterAppointments;
+
+
+        PageReference lastPage;
+
+        if (appointmentTypes.size() == 0) {
+            //If no options skip that step
+            lastPage = Page.SummitEventsRegister;
+        } else {
+            lastPage = Page.SummitEventsRegisterAppointments;
         }
-        return prevPage;
+
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+            lastPage.setRedirect(true);
+            lastPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
+        }
+        return lastPage;
+
     }
 
     private without sharing class doCRUD {

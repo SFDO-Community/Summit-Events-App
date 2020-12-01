@@ -451,6 +451,7 @@ public with sharing class SummitEventsRegisterController {
                 FROM Summit_Events_Fee__c
                 WHERE Event_Fee_Type__c != 'Appointment'
                 AND Event_Fee_Type__c != 'Appointment Additional'
+                AND Event_Fee_Type__c != 'Optional Donation'
                 AND Event_Registration__c = :eventInformation.registrationId
         ];
         if (recordedEventFeeList.size() > 0) {
@@ -469,6 +470,7 @@ public with sharing class SummitEventsRegisterController {
                     FROM Summit_Events_Fee__c
                     WHERE Event_Fee_Type__c != 'Appointment'
                     AND Event_Fee_Type__c != 'Appointment Additional'
+                    AND Event_Fee_Type__c != 'Optional Donation'
                     AND Event_Registration__c = :eventInformation.registrationId
                     AND Id NOT IN :recordedUsedIds
             ];
