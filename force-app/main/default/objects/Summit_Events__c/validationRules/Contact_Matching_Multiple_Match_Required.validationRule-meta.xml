@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact_Matching_Multiple_Match_Required</fullName>
+    <active>true</active>
+    <errorConditionFormula>NOT(ISPICKVAL(Contact_Matching_Rules__c, &apos;&apos;)) &amp;&amp;
+ISPICKVAL(Contact_Matching_Multiple_Match_Behavior__c, &apos;&apos;)</errorConditionFormula>
+    <errorMessage>&quot;Contact Matching Multiple Match Behavior&quot; is required when using a &quot;Contact Matching Rule&quot;</errorMessage>
+</ValidationRule>

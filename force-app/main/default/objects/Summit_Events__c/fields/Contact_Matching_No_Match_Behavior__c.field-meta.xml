@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact_Matching_No_Match_Behavior__c</fullName>
+    <externalId>false</externalId>
+    <label>Contact Matching No Match Behavior</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Create Contact</fullName>
+                <default>true</default>
+                <label>Create Contact</label>
+            </value>
+            <value>
+                <fullName>Skip Creating Contact</fullName>
+                <default>false</default>
+                <label>Skip Creating Contact</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

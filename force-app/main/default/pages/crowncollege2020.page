@@ -1,5 +1,5 @@
 <apex:page id="crowncollege2020" sidebar="false" lightningStyleSheets="true" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
-    <apex:slds/>
+    <apex:slds />
     <html lang="en-US">
     <head>
         <meta charset="UTF-8"/>
