@@ -271,9 +271,9 @@
         <label>Costa Rica</label>
     </customValue>
     <customValue>
-        <fullName>Cote d&apos;Ivoire</fullName>
+        <fullName>Cote d&#39;Ivoire</fullName>
         <default>false</default>
-        <label>Cote d&apos;Ivoire</label>
+        <label>Cote d&#39;Ivoire</label>
     </customValue>
     <customValue>
         <fullName>Croatia</fullName>
@@ -576,9 +576,9 @@
         <label>Kiribati</label>
     </customValue>
     <customValue>
-        <fullName>Korea, Dem People&apos;s Rep of</fullName>
+        <fullName>Korea, Dem People&#39;s Rep of</fullName>
         <default>false</default>
-        <label>Korea, Dem People&apos;s Rep of</label>
+        <label>Korea, Dem People&#39;s Rep of</label>
     </customValue>
     <customValue>
         <fullName>Korea, Republic of</fullName>

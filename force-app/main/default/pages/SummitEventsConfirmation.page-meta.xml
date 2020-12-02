@@ -4,4 +4,9 @@
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>SummitEventsConfirmation</label>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>84</minorNumber>
+        <namespace>hed</namespace>
+    </packageVersions>
 </ApexPage>

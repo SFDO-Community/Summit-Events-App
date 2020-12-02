@@ -3,7 +3,7 @@
     <fullName>Event_Fee__c</fullName>
     <description>The amount of fee incurred.</description>
     <externalId>false</externalId>
-    <inlineHelpText>Summit Events Fee _ Salesforce.html</inlineHelpText>
+    <inlineHelpText>The amount of fee incurred.</inlineHelpText>
     <label>Event Fee</label>
     <precision>8</precision>
     <required>false</required>

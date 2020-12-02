@@ -223,8 +223,8 @@ public with sharing class SummitEventsTestSharedDataFactory {
 
         //Creating a student contact
         Contact student = new Contact(
-                FirstName = firstName,
-                LastName = lastName,
+                firstName = firstName,
+                lastName = lastName,
                 Email = Email,
                 MailingStreet = '123 Flinstone Ave',
                 MailingCity = 'Bedrock',
@@ -247,7 +247,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Event_Instance__c = evtI.Id,
                 Registrant_Email__c = Email,
                 Registrant_First_Name__c = firstName,
-                Registrant_Last_Name__c = lastName,
+                Registrant_Last_Name__c = lastname,
                 Registrant_Zip__c = Zip,
                 Registrant_High_School_Code__c = '000000',
                 Registrant_Date_of_Birth__c = Date.valueOf(DOB),
@@ -284,7 +284,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                     Client_Created_Appointment__c = true,
                     Room__c = 'TEST ROOM'
             );
-            if (Math.mod(aptNum, 2) == 0) {
+            if (math.mod(aptNum, 2) == 0) {
                 addThisAppt.Appointment_Status__c = 'Registered';
             } else {
                 addThisAppt.Appointment_Status__c = 'Confirmed';
