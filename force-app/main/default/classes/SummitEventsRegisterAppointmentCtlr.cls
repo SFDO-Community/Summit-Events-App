@@ -4,16 +4,16 @@
 // Created by Thaddaeus Dahlberg on 5/1/2018.
 
 public with sharing class SummitEventsRegisterAppointmentCtlr {
-    public SummitEventsShared SEShared = new SummitEventsShared();
+    public SummitEventsShared seaShared = new SummitEventsShared();
     public String test { get; set; }
-    public SummitEventsShared.SummitEventsInfo evtInfo { get; set; }
+    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
     public Map<Id, Summit_Events_Appointment_Type__c> appts { get; set; }
     public List<Summit_Events_Appointments__c> chosenAppts { get; set; }
     public Summit_Events_Instance__c evtInstance { get; set; }
     public String appointments { get; set; }
     public String chosenFormatted { get; set; }
-    public String incomingApptJSon { get; set; }
-    public boolean eventIsClosed { get; set; }
+    public String incomingAppointmentJSON { get; set; }
+    public Boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public String templateSelected { get; set; }
@@ -35,32 +35,32 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     public SummitEventsRegisterAppointmentCtlr() {
         eventIsClosed = false;
         test = '';
-        //Get cookie or URL string variable
-        evtInfo = SEShared.getSummitEventsInfo();
+        eventInformation = seaShared.getSummitEventsInfo();
+        System.debug('cookie reception on appointment page: ' + JSON.serializePretty(eventInformation));
         appointments = '';
         chosenFormatted = '';
         noOptionalAppointments = true;
 
         Map<String, Integer> apptCount = new Map<String, Integer>();
 
-        if (!String.isBlank(evtinfo.evtId)) {
+        if (!String.isBlank(eventInformation.eventId)) {
             eventPage = [
                     SELECT Event_Name__c, Event_description__c, Event_Appointment_Title__c, Event_Appointment_Description__c, Event_Footer__c,
                             Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Options_Registration__c, Event_Full_Text__c,
-                            Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c
+                            Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
-                    WHERE Id = :evtinfo.evtId
+                    WHERE Id = :eventInformation.eventId
             ][0];
 
-            templateSelected = SEShared.getTemplate(eventPage.Template__c);
+            templateSelected = seaShared.getTemplate(eventPage.Template__c);
 
-            if (!String.isBlank(evtinfo.evtRegId)) {
+            if (!String.isBlank(eventInformation.registrationId)) {
                 evtInstance = [
                         SELECT Instance_Title__c, Event__r.Event_Name__c,
                                 Instance_Time_Zone__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Start_Date__c,
                                 Instance_End_Date__c, Current_Available_Capacity__c, Active_Status__c
                         FROM Summit_Events_Instance__c
-                        WHERE Id = :evtinfo.instanceID
+                        WHERE Id = :eventInformation.instanceId
                         LIMIT 1
                 ];
 
@@ -68,20 +68,20 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
                     eventIsClosed = adminOpen;
                 } else {
-                    eventIsClosed = SEShared.isEventClosed(eventPage, evtInstance);
+                    eventIsClosed = seaShared.isEventClosed(eventPage, evtInstance);
                 }
 
                 if (evtInstance != null) {
-                    String dayOfWeek = SEShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
+                    String dayOfWeek = seaShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
                     // = dayOfWeek;
                     //Build available appointments
-                    appts = new Map<ID, Summit_Events_Appointment_Type__c>([
+                    appts = new Map<Id, Summit_Events_Appointment_Type__c>([
                             SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Appointment_Limits__c, Chosen_State__c,
                                     Registrant_Input__c, Custom_Picklist__c, Sort_Order__c, Auto_Confirm_Appointment__c, Auto_add_building__c, Auto_Add_Time__c, Do_Not_Show_Time__c,
                                     Date_Available_Start__c, Date_Available_End__c, Day_of_Week_Availability__c, Required_Appointment__c, Appointment_Type_Status__c
                             FROM Summit_Events_Appointment_Type__c
-                            WHERE Summit_Events__c = :evtinfo.evtId
-                            AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
+                            WHERE Summit_Events__c = :eventInformation.eventId
+                            AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
                             AND (Date_Available_Start__c <= :evtInstance.Instance_Start_Date__c OR Date_Available_Start__c = NULL)
                             AND (Date_Available_End__c >= :evtInstance.Instance_End_Date__c OR Date_Available_End__c = NULL)
                             AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
@@ -89,11 +89,11 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             ORDER BY Sort_Order__c ASC NULLS LAST
                     ]);
 
-                    navBreadCrumb = SEShared.navBreadcrumbBuilder(evtInstance, false);
+                    navBreadCrumb = seaShared.navBreadcrumbBuilder(evtInstance, false);
 
                     //Check if the user gets to select any appointments or they are all auto added
                     for (Summit_Events_Appointment_Type__c chosenCheck : appts.values()) {
-                        If (chosenCheck.Chosen_State__c != 'Added and Required' && chosenCheck.Chosen_State__c != 'Added but not shown') {
+                        if (chosenCheck.Chosen_State__c != 'Added and Required' && chosenCheck.Chosen_State__c != 'Added but not shown') {
                             noOptionalAppointments = false;
                             break;
                         }
@@ -104,8 +104,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             SELECT Id, Appointment_Category__c, Event_Appointment_Type__c, Appointment_Type__c, Appointment_Title__c, Chosen_State__c, Description__c, Sort_Order__c,
                                     Registrant_Input__c, Do_Not_Show_Time__c
                             FROM Summit_Events_Appointments__c
-                            WHERE Event_Registration__c = :evtinfo.evtRegId
-                            AND Client_Created_Appointment__c = true
+                            WHERE Event_Registration__c = :eventInformation.registrationId
+                            AND Client_Created_Appointment__c = TRUE
                     ];
 
 
@@ -126,7 +126,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         chosenFormatted += ' data-apptid="' + cappt.Event_Appointment_Type__c + '"';
                         chosenFormatted += ' data-apptcat="' + cappt.Appointment_Category__c + '"';
                         chosenFormatted += ' data-appttype="' + cappt.Appointment_Type__c + '"';
-                        chosenFormatted += ' data-appttitle="' + cappt.Appointment_title__c + '"';
+                        chosenFormatted += ' data-appttitle="' + cappt.Appointment_Title__c + '"';
                         chosenFormatted += ' data-appchosenstate="' + cappt.Chosen_State__c + '"';
                         chosenFormatted += ' data-appsort="' + cappt.Sort_Order__c + '"';
                         chosenFormatted += ' data-appreginput="' + cappt.Registrant_Input__c + '"';
@@ -141,7 +141,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         } else if (!String.isBlank(cappt.Description__c)) {
                             chosenFormatted += '<p class="appointmentDesc">' + cappt.Description__c + '</p>';
                         }
-                        IF (cappt.Chosen_State__c != 'Added and Required' && cappt.Chosen_State__c != 'Added but not shown') {
+                        if (cappt.Chosen_State__c != 'Added and Required' && cappt.Chosen_State__c != 'Added but not shown') {
                             chosenFormatted += '<a href="javascript:;" class="appointmentRemove slds-button slds-button_neutral" title="Remove Appointment">Remove</a>';
                         }
 
@@ -220,7 +220,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                 if (apt.Appointment_Category__c != null) {
                     //getDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName, String parentValue)
-                    Map<String, String> dependencies = SEShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', apt.Appointment_Category__c);
+                    Map<String, String> dependencies = seaShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', apt.Appointment_Category__c);
                     if (dependencies.size() > 1) {
                         appointments += '<div class="slds-select_container">';
                         appointments += '<select class="appointmentType required slds-select" id="input' + apt.Id + '" name="input' + apt.Id + '">';
@@ -256,7 +256,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         appointments += '>';
                         appointments += '<option value="">Select...</option>';
                         String custPickListText = apt.Custom_Picklist__c;
-                        custPickListText = custPickListText.Trim();
+                        custPickListText = custPickListText.trim();
                         custPickListText = custPickListText.replace('\n\n', '\n');
                         String[] custPckListList = custPickListText.split('\n');
 
@@ -287,65 +287,18 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
 
     public PageReference checkEventDetails() {
-        PageReference eventActivePg = SEShared.checkForEvent();
-        appointmentsCRUD apptCrud = new appointmentsCRUD();
-        if (eventActivePg == null) {
-            //Get event into
-            evtInfo = SEShared.getSummitEventsInfo();
-            Boolean addedAppts = false;
-            Id RegId = evtinfo.evtRegId;
-            evtInstance = [
-                    SELECT Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c
-                    FROM Summit_Events_Instance__c
-                    WHERE Id = :evtinfo.instanceID
-                    LIMIT 1
-            ];
-            List<Summit_Events_Appointment_Type__c> autoAddAppt = [
-                    SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Registrant_Input__c, Custom_Picklist__c, Appointment_Limits__c,
-                            Chosen_State__c, Sort_Order__c, Auto_Confirm_Appointment__c, Auto_add_building__c, Auto_Add_Time__c, Do_Not_Show_Time__c
-                    FROM Summit_Events_Appointment_Type__c
-                    WHERE Summit_Events__c = :evtinfo.evtId
-                    AND (Chosen_State__c = 'Added' OR Chosen_State__c = 'Added and Required' OR Chosen_State__c = 'Added but not shown')
-                    AND Id NOT IN (SELECT Event_Appointment_Type__c FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :RegId)
-                    AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null)
-                    ORDER BY Sort_Order__c ASC NULLS LAST
-            ];
-
-            List<Summit_Events_Appointments__c> apptToAdd = new List<Summit_Events_Appointments__c>();
-            for (Summit_Events_Appointment_Type__c appt : autoAddAppt) {
-                Summit_Events_Appointments__c addAppt = new Summit_Events_Appointments__c();
-                addAppt.Event_Appointment_Type__c = appt.Id;
-                addAppt.Event_Registration__c = RegId;
-                addAppt.Appointment_Title__c = appt.Title__c;
-                addAppt.Appointment_Status__c = 'Registered';
-                addAppt.Appointment_Category__c = appt.Appointment_Category__c;
-                addAppt.Appointment_Type__c = appt.Appointment_Type__c;
-                addAppt.Appointment_Detail__c = appt.Description__c;
-                addAppt.Client_Created_Appointment__c = true;
-                addAppt.Chosen_State__c = appt.Chosen_State__c;
-                addAppt.Sort_Order__c = appt.Sort_Order__c;
-                addAppt.Description__c = appt.Description__c;
-                addAppt.Registrant_Input__c = appt.Registrant_Input__c;
-                addAppt.Do_Not_Show_Time__c = appt.Do_Not_Show_Time__c;
-                apptToAdd.add(addAppt);
-            }
-
-            if (apptToAdd.size() > 0) {
-                apptCRUD.updateAppointments(apptToAdd);
-                addedAppts = true;
-            }
-
-            if (addedAppts) {
-                return new PageReference(ApexPages.currentPage().getUrl());
-            }
-        }
-        return eventActivePg;
+        return seaShared.checkForEvent();
     }
 
     public PageReference saveOptions() {
         //remove old client created appointments
-        appointmentsCRUD apptCrud = new appointmentsCRUD();
-        PageReference submitPage = Page.SummitEventsSubmit;
+        crudToDo doCRUD = new crudToDo();
+        PageReference submitPage = null;
+        if (eventPage.Display_Optional_Donation__c) {
+            submitPage = Page.SummitEventsDonation;
+        } else {
+            submitPage = Page.SummitEventsSubmit;
+        }
 
         if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
             submitPage.setRedirect(true);
@@ -355,17 +308,17 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         Summit_Events_Appointments__c[] deleteAppt = [
                 SELECT Id, Event_Registration__c, Client_Created_Appointment__c, Chosen_State__c, Do_Not_Show_Time__c
                 FROM Summit_Events_Appointments__c
-                WHERE Event_Registration__c = :evtinfo.evtRegId
-                AND Client_Created_Appointment__c = true
+                WHERE Event_Registration__c = :eventInformation.registrationId
+                AND Client_Created_Appointment__c = TRUE
         ];
-        apptCrud.deleteAppointments(deleteAppt);
+        doCRUD.deleteAppointments(deleteAppt);
 
-        List<incomingAppt> deserializedInvoices = (List<incomingAppt>) JSON.deserialize(incomingApptJSon, List<incomingAppt>.class);
+        List<incomingAppt> deserializedInvoices = (List<incomingAppt>) JSON.deserialize(incomingAppointmentJSON, List<incomingAppt>.class);
 
         List<Summit_Events_Appointments__c> apptToAdd = new List<Summit_Events_Appointments__c>();
         for (incomingAppt appt : deserializedInvoices) {
             Summit_Events_Appointments__c addAppt = new Summit_Events_Appointments__c();
-            addAppt.Event_Registration__c = evtInfo.evtRegId;
+            addAppt.Event_Registration__c = eventInformation.registrationId;
             addAppt.Appointment_Status__c = 'Registered';
             addAppt.Client_Created_Appointment__c = true;
             addAppt.Event_Appointment_Type__c = appt.apptId;
@@ -377,7 +330,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             if (!String.isBlank(appt.apptType) && appt.apptType != 'null' && appt.apptType != 'undefined') {
                 addAppt.Appointment_Type__c = appt.apptType;
             }
-            addAppt.Appointment_title__c = appt.apptTitle;
+            addAppt.Appointment_Title__c = appt.apptTitle;
             if (appt.appSort == null) {
                 addAppt.Sort_Order__c = 99;
             } else {
@@ -405,7 +358,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         }
 
         if (apptToAdd.size() > 0) {
-            apptCRUD.updateAppointments(apptToAdd);
+            doCRUD.updateAppointments(apptToAdd);
         }
         return submitPage;
     }
@@ -420,20 +373,20 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         return registerPage;
     }
 
-    private without sharing class appointmentsCRUD {
+    private without sharing class crudToDo {
 
-        public void updateAppointments(List<Summit_Events_Appointments__c> appts) {
+        public void updateAppointments(List<Summit_Events_Appointments__c> appointments) {
             try {
-                upsert appts;
+                upsert appointments;
             } catch (Exception ex) {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
                 ApexPages.addMessage(myMsg);
             }
         }
 
-        public void deleteAppointments(List<Summit_Events_Appointments__c> appts) {
+        public void deleteAppointments(List<Summit_Events_Appointments__c> appointments) {
             try {
-                delete appts;
+                delete appointments;
             } catch (Exception ex) {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
                 ApexPages.addMessage(myMsg);

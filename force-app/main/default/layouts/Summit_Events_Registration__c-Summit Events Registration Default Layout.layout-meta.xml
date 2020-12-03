@@ -635,6 +635,14 @@
         <sortOrder>Asc</sortOrder>
     </relatedLists>
     <relatedLists>
+        <fields>NAME</fields>
+        <fields>Event_Fee__c</fields>
+        <fields>Event_Fee_Attribute__c</fields>
+        <fields>Event_Fee_Type__c</fields>
+        <fields>Description__c</fields>
+        <relatedList>Summit_Events_Fee__c.Event_Registration__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <fields>TASK.SUBJECT</fields>
         <fields>TASK.WHO_NAME</fields>
         <fields>ACTIVITY.TASK</fields>
@@ -649,7 +657,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h11000002PYIc</masterLabel>
+        <masterLabel>00h11000002pkwY</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

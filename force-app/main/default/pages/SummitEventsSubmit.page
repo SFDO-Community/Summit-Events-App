@@ -9,7 +9,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
     <apex:composition template="{!templateSelected}">
         <apex:define name="metaPageTitle">
             {!eventPage.Event_Name__c}
-            <apex:outputText rendered="{!!ISBLANK(evtInstance.Instance_Title__c)}" value="{! ' - ' + evtInstance.Instance_Title__c}"/>
+            <apex:outputText rendered="{!!ISBLANK(eventInstance.Instance_Title__c)}" value="{! ' - ' + eventInstance.Instance_Title__c}"/>
             - Submit
         </apex:define>
         <apex:define name="pageTitle"><a href="{!eventPage.Event_Home_Link_URL__c}">{!eventPage.Event_Home_Link_Title__c}</a></apex:define>
@@ -20,7 +20,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages/>
+                    <apex:messages />
                 </div>
                 <apex:form id="SummitEventsRegisterSubmitForm" styleClass="slds-grid slds-wrap">
 
@@ -47,6 +47,12 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </p>
                             <apex:outputText escape="false" value="{!chosenFormatted}"/>
                         </div>
+
+                        <apex:outputPanel layout="block" rendered="{!showPaymentButton}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
+                            <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">Event Cost</h3>
+                            <apex:outputText escape="false" value="{!paymentItemized}"/>
+                        </apex:outputPanel>
+
                         <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
                             <p class="slds-text-body slds-p-vertical_xx-small">
                                 <apex:commandLink action="{!submitRegistration}" onClick="fadeout();" Value="Submit Registration" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>

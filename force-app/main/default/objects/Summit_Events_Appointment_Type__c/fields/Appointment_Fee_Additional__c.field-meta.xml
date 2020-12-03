@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Appointment_Fee_Additional__c</fullName>
+    <description>Second fee associated with this appointment. Can be useful for splitting fees between donation and event costs.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Second fee associated with this appointment. Can be useful for splitting fees between donation and event costs.</inlineHelpText>
+    <label>Appointment Fee Additional</label>
+    <precision>8</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>
