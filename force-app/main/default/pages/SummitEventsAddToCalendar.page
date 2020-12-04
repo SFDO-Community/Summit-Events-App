@@ -5,34 +5,37 @@ license that can be found in the LICENSE file.
 Created by Thaddaeus Dahlberg on 11/12/2018.
 -->
 
-<apex:page id="SummitEventsAddToCalendar" title="event.ics" contentType="text/calendar" cache="false" controller="SummitEventsAddToCalendarController">
-    BEGIN:VCALENDAR
-    PRODID:-//AddEvent Inc//AddEvent.com v1.7//EN
-    VERSION:2.0
-    BEGIN:VTIMEZONE
-    TZID:America/Los_Angeles
-    BEGIN:STANDARD
-    DTSTART:{!DTStartStandard}
-    TZOFFSETFROM:-0700
-    TZOFFSETTO:-0800
-    TZNAME:PST
-    END:STANDARD
-    BEGIN:DAYLIGHT
-    DTSTART:20200308T100000
-    TZOFFSETFROM:-0800
-    TZOFFSETTO:-0700
-    TZNAME:PDT
-    END:DAYLIGHT
-    END:VTIMEZONE
-    BEGIN:VEVENT
-    DTSTAMP:20201201T140630Z
-    STATUS:CONFIRMED
-    UID:1606831590addeventcom
-    SEQUENCE:0
-    DTSTART;TZID=America/Los_Angeles:20201202T100000
-    DTEND;TZID=America/Los_Angeles:20201202T110000
-    SUMMARY:
-    TRANSP:OPAQUE
-    END:VEVENT
-    END:VCALENDAR
+<apex:page id="SummitEventsAddToCalendar" title="event.ics" contentType="text/calendar" cache="false" controller="SummitEventsAddToCalendarController" action="{!calendarType}">
+BEGIN:VCALENDAR
+<apex:outputPanel layout="none" rendered="{!daylightSavingsTimes.size > 0}">
+BEGIN:VTIMEZONE
+TZID:America/Chicago
+X-MICROSOFT-CDO-TZID:11
+BEGIN:DAYLIGHT
+DTSTART:20200308T080000
+TZOFFSETFROM:-0600
+TZOFFSETTO:-0500
+TZNAME:CDT
+END:DAYLIGHT
+BEGIN:STANDARD
+DTSTART:20201101T070000
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0600
+TZNAME:CST
+END:STANDARD
+END:VTIMEZONE
+</apex:outputPanel>
+BEGIN:VEVENT
+DTSTAMP:{!DTStamp}
+STATUS:CONFIRMED
+UID:{!UUID}
+SEQUENCE:0
+DTSTART;TZID={!TIMEZONE2}:{!DTStart}
+DTEND;TZID={!TIMEZONE2}:{!DTEnd}
+SUMMARY:{!SUMMARY}
+DESCRIPTION:{!DESCRIPTION}
+{!LOCATION}
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR
 </apex:page>
