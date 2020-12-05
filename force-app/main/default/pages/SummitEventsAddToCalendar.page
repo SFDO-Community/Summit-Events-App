@@ -7,24 +7,8 @@ Created by Thaddaeus Dahlberg on 11/12/2018.
 
 <apex:page id="SummitEventsAddToCalendar" title="event.ics" contentType="text/calendar" cache="false" controller="SummitEventsAddToCalendarController" action="{!calendarType}">
 BEGIN:VCALENDAR
-<apex:outputPanel layout="none" rendered="{!daylightSavingsTimes.size > 0}">
-BEGIN:VTIMEZONE
-TZID:America/Chicago
-X-MICROSOFT-CDO-TZID:11
-BEGIN:DAYLIGHT
-DTSTART:20200308T080000
-TZOFFSETFROM:-0600
-TZOFFSETTO:-0500
-TZNAME:CDT
-END:DAYLIGHT
-BEGIN:STANDARD
-DTSTART:20201101T070000
-TZOFFSETFROM:-0500
-TZOFFSETTO:-0600
-TZNAME:CST
-END:STANDARD
-END:VTIMEZONE
-</apex:outputPanel>
+VERSION:2.0
+<apex:outputText escape="false" rendered="{!!ISBLANK(VTIMEZONE)}" value="{!VTIMEZONE}"/>
 BEGIN:VEVENT
 DTSTAMP:{!DTStamp}
 STATUS:CONFIRMED

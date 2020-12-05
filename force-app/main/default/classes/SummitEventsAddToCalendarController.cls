@@ -28,6 +28,8 @@ public with sharing class SummitEventsAddToCalendarController {
     public String DTStartStandard { get; set; }
     public String DTStartDaylight { get; set; }
 
+    public String VTIMEZONE { get; set; }
+
     public List<daylightSavings> daylightSavingsTimes { get; set; }
 
     public SummitEventsAddToCalendarController() {
@@ -43,36 +45,15 @@ public with sharing class SummitEventsAddToCalendarController {
                 DTEnd = SEShared.convertDateToDatetime(eventInformation.Instance_End_Date__c, eventInformation.Instance_End_Time__c, eventInformation.Instance_Time_Zone__c).format('yyyyMMdd\'T\'HHmmss\'Z\'');
                 TIMEZONE2 = SEShared.getTimeZonePick(eventInformation.Instance_Time_Zone__c);
 
-                daylightSavingsTimes = getDayLightSavings(TIMEZONE2, eventInformation.Instance_Start_Date__c.year(), eventInformation.Instance_End_Date__c.year());
-                System.debug(JSON.serializePretty(daylightSavingsTimes));
+                VTIMEZONE = getDayLightSavings(TIMEZONE2, eventInformation.Instance_Start_Date__c.year(), eventInformation.Instance_End_Date__c.year());
 
                 TimeZone tz = TimeZone.getTimeZone(TIMEZONE2);
                 Integer offset = tz.getOffset(Datetime.now());
                 DTStamp = Datetime.now().addMinutes(offset / 1000 / 60).format('yyyyMMdd\'T\'HHmmss\'Z\'');
 
                 // String timeZoneNameShort = getTimeZoneDisplay(tz, true);
-
-                Datetime startDateDate = Datetime.newInstanceGmt(
-                        eventInformation.Instance_Start_Date__c.year(),
-                        eventInformation.Instance_Start_Date__c.month(),
-                        eventInformation.Instance_Start_Date__c.day(),
-                        eventInformation.Instance_Start_Time__c.hour(),
-                        eventInformation.Instance_Start_Time__c.minute(),
-                        eventInformation.Instance_Start_Time__c.second());
-                //Integer eventStartOffset = tz.getOffset(startDateDate);
-                DTStart = startDateDate.format('yyyyMMdd\'T\'HHmmss');
-
-                Datetime endDateDate = Datetime.newInstanceGmt(
-                        eventInformation.Instance_End_Date__c.year(),
-                        eventInformation.Instance_End_Date__c.month(),
-                        eventInformation.Instance_End_Date__c.day(),
-                        eventInformation.Instance_End_Time__c.hour(),
-                        eventInformation.Instance_End_Time__c.minute(),
-                        eventInformation.Instance_End_Time__c.second());
-                //Integer eventStartOffset = tz.getOffset(startDateDate);
-                DTEnd = endDateDate.format('yyyyMMdd\'T\'HHmmss');
-
-                //Integer eventEndOffset = tz.getOffset(eventInformation.Instance_Start_Date__c);
+                DTStart = formattedGmtVersionOfDate(eventInformation.Instance_Start_Date__c, eventInformation.Instance_Start_Time__c);
+                DTEnd = formattedGmtVersionOfDate(eventInformation.Instance_End_Date__c, eventInformation.Instance_End_Time__c);
 
                 SUMMARY = getEventTitle(eventInformation);
 
@@ -99,6 +80,14 @@ public with sharing class SummitEventsAddToCalendarController {
                 DESCRIPTION = getEventDescription(eventInformation);
             }
         }
+    }
+
+    public String formattedGmtVersionOfDate(Date aDate, Time aTime) {
+        String formattedString = '';
+        Datetime newDateTime = Datetime.newInstanceGmt(aDate.year(), aDate.month(), aDate.day(), aTime.hour(), aTime.minute(), aTime.second());
+        //Integer eventStartOffset = tz.getOffset(startDateDate);
+        formattedString = newDateTime.format('yyyyMMdd\'T\'HHmmss');
+        return formattedString;
     }
 
     public String getEventTitle(Summit_Events_Instance__c eventInformation) {
@@ -136,7 +125,7 @@ public with sharing class SummitEventsAddToCalendarController {
         if (String.isNotBlank(eventInformation.Instance_Short_Description__c)) {
             fullDescription += '\\n' + eventInformation.Instance_Short_Description__c;
         } else if (String.isNotBlank(eventInformation.Instance_Short_Description__c)) {
-            fullDescription += '\\n' +  eventInformation.Event__r.Event_description__c;
+            fullDescription += '\\n' + eventInformation.Event__r.Event_description__c;
         }
         if (String.isBlank(fullDescription)) {
             return '';
@@ -231,7 +220,10 @@ public with sharing class SummitEventsAddToCalendarController {
                 //Title of event
                 urlCalendarLink += '&text=' + EncodingUtil.urlEncode(getEventTitle(eventInformation), 'UTF-8');
                 //Start and end dates in GMT dates=20201231T193000Z/20201231T223000Z
-                urlCalendarLink += '&dates=[START_DATEZ/END_DATEZ]';
+                urlCalendarLink += '&dates=';
+                urlCalendarLink += 'START_DATEZ';
+                urlCalendarLink += '/';
+                urlCalendarLink += 'END_DATEZ';
                 //Timezone ctz=America/New_York
                 urlCalendarLink += '&ctz=America/New_York';
                 //Location - Google readable address
@@ -281,25 +273,24 @@ public with sharing class SummitEventsAddToCalendarController {
     public class daylightSavingsYears {
         Integer year { get; set; }
         List<daylightSavings> data { get; set; }
-
     }
 
     public class daylightSavings {
         Integer year { get; set; }
         Boolean isDaylightSavings { get; set; }
         String DTStart { get; set; }
-        Datetime DTStartDate { get; set; }
+        String DTStartDate { get; set; }
         String TZOffsetFrom { get; set; }
         String TZOffsetTo { get; set; }
         String TZName { get; set; }
     }
 
 
-    public static List<daylightSavings> getDayLightSavings(String timezoneString, Integer eventStartYear, Integer eventEndYear) {
+    public static String getDayLightSavings(String timezoneString, Integer eventStartYear, Integer eventEndYear) {
         List<daylightSavingsYears> dlsYears = new List<daylightSavingsYears>();
         List<daylightSavings> dlsList = new List<daylightSavings>();
         TimeZone tz = TimeZone.getTimeZone(timezoneString);
-        String timeZoneNameShort = getTimeZoneDisplay(tz, true);
+        String timeZoneNameShort = '';
         Integer startYear = eventStartYear;
         Integer endYear = eventEndYear;
         Integer oldMonthOffset = 0;
@@ -307,6 +298,7 @@ public with sharing class SummitEventsAddToCalendarController {
         Integer oldHourOffset = 0;
         for (Integer y = startYear; y <= endYear; y++) {
             daylightSavingsYears dlsYear = new daylightSavingsYears();
+            List<daylightSavings> dlsData = new List<daylightSavings>();
             dlsYear.year = y;
             //looping through months detecting offset changes, then days, then hours
             for (Integer m = 1; m <= 12; m++) {
@@ -322,15 +314,17 @@ public with sharing class SummitEventsAddToCalendarController {
                                 currentYear = Datetime.newInstanceGmt(y, m - 1, d - 1, h, 0, 0);
                                 Integer hourOffset = tz.getOffset(currentYear);
                                 if (oldHourOffset != 0 && hourOffset != oldHourOffset) {
-                                    daylightSavings daylightSavingItem = new daylightSavings();
+                                    daylightSavings dlsItem = new daylightSavings();
                                     currentYear = Datetime.newInstanceGmt(y, m - 1, d - 1, h - 1, 0, 0);
                                     Integer finalOffset = tz.getOffset(currentYear) / 1000 / 60 ;
+                                    system.debug(tz.toString());
+                                    timeZoneNameShort = getTimeZoneDisplay(tz, true);
                                     currentYear.addMinutes(finalOffset);
                                     //add an hour because we started at 0
-                                    daylightSavingItem.year = currentYear.year();
-                                    daylightSavingItem.DTStartDate = currentYear;
-                                    daylightSavingItem.DTStart = currentYear.addMinutes(finalOffset).addHours(1).formatGmt('YYYYMMdd\'T\'hhmmss');
-                                    daylightSavingItem.isDaylightSavings = true;
+                                    dlsItem.year = currentYear.year();
+                                    dlsItem.DTStartDate = currentYear.formatGmt('YYYYMMdd\'T\'hhmmss');
+                                    dlsItem.DTStart = currentYear.addMinutes(finalOffset).addHours(1).formatGmt('YYYYMMdd\'T\'hhmmss');
+                                    dlsItem.isDaylightSavings = true;
                                     String offsetString = String.valueOf(finalOffset / 60);
                                     Boolean negativeOffset = false;
                                     if (offsetString.startsWith('-')) {
@@ -342,10 +336,10 @@ public with sharing class SummitEventsAddToCalendarController {
                                     if (negativeOffset) {
                                         offsetString = '-' + offsetString;
                                     }
-                                    daylightSavingItem.TZOffsetTo = offsetString;
-                                    daylightSavingItem.TZOffsetFrom = offsetString;
-                                    daylightSavingItem.TZName = timeZoneNameShort;
-                                    //dlsYear.data.add(daylightSavingItem);
+                                    dlsItem.TZOffsetTo = offsetString;
+                                    dlsItem.TZOffsetFrom = offsetString;
+                                    dlsItem.TZName = currentYear.format('z', timezoneString);
+                                    dlsList.add(dlsItem);
                                 }
                                 oldHourOffset = hourOffset;
                             }
@@ -356,15 +350,61 @@ public with sharing class SummitEventsAddToCalendarController {
                 }
                 oldMonthOffset = monthOffset;
             }
+            // dlsYear[y].data = (List<daylightSavings>)dlsList;
+            dlsYear.data = dlsList;
             dlsYears.add(dlsYear);
         }
-        return dlsList;
+
+        //loop through and organize data by timezone
+        for (daylightSavingsYears dlsItem : dlsYears) {
+            for (Integer xy = 0; xy < dlsItem.data.size(); xy++) {
+                String offsetString = dlsItem.data[xy].TZOffsetTo.replace('-', '');
+                Integer offsetInteger = Integer.valueOf(offsetString);
+                if (xy != 0 && offsetInteger > Integer.valueOf(dlsItem.data[xy - 1].TZOffsetTo.replace('-', ''))) {
+                    dlsItem.data[xy - 1].isDaylightSavings = false;
+                    dlsItem.data[xy - 1].TZOffsetFrom = dlsItem.data[xy].TZOffsetTo;
+                    dlsItem.data[xy].TZOffsetFrom = dlsItem.data[xy - 1].TZOffsetTo;
+                    dlsItem.data[xy].isDaylightSavings = true;
+                } else if (xy != 0) {
+                    dlsItem.data[xy - 1].isDaylightSavings = true;
+                    dlsItem.data[xy - 1].TZOffsetFrom = dlsItem.data[xy].TZOffsetTo;
+                    dlsItem.data[xy].TZOffsetFrom = dlsItem.data[xy - 1].TZOffsetTo;
+                    dlsItem.data[xy].isDaylightSavings = false;
+                }
+            }
+        }
+
+        String VTimezone = '\n' + 'BEGIN:VTIMEZONE' + '\n';
+        VTimezone += 'TZID:' + timezoneString + '\n';
+        for (daylightSavingsYears dlsYearItem : dlsYears) {
+            for (daylightSavings dslItem : dlsYearItem.data) {
+                if (dslItem.isDaylightSavings) {
+                    VTimezone += 'BEGIN:DAYLIGHT' + '\n';
+                } else {
+                    VTimezone += 'BEGIN:STANDARD' + '\n';
+                }
+                VTimezone += 'DTSTART:' + dslItem.DTStart + '\n';
+                VTimezone += 'TZOFFSETFROM:' + dslItem.TZOffsetFrom + '\n';
+                VTimezone += 'TZOFFSETTO:' + dslItem.TZOffsetTo + '\n';
+                VTimezone += 'TZNAME:' + dslItem.TZName + '\n';
+                if (dslItem.isDaylightSavings) {
+                    VTimezone += 'END:DAYLIGHT' + '\n';
+                } else {
+                    VTimezone += 'END:STANDARD' + '\n';
+                }
+            }
+        }
+
+        VTimezone += 'END:VTIMEZONE';
+
+        return VTimezone;
     }
 
     public static String getTimeZoneDisplay(TimeZone tz, Boolean shortDisplay) {
         String displayName = '';
         if (tz != null) {
             displayName = tz.getDisplayName();
+            System.debug(displayName);
             //remove all parenthesis items
             displayName = displayName.replaceAll('(\\(([^\\)]+)\\))', '');
             displayName = displayName.trim();
