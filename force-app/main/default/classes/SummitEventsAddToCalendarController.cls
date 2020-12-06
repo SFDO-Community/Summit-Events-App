@@ -3,34 +3,20 @@
 // license that can be found in the LICENSE file.
 // Created by Thaddaeus Dahlberg on 11/12/2018.
 
-
 public with sharing class SummitEventsAddToCalendarController {
 
-
     public SummitEventsShared SEShared = new SummitEventsShared();
-
     public String DTStart { get; set; }
-
     public String TIMEZONE2 { get; set; }
-
     public String DTEnd { get; set; }
-
     public String DTStamp { get; set; }
-
     public String SUMMARY { get; set; }
-
     public String LOCATION { get; set; }
-
     public String DESCRIPTION { get; set; }
-
     public String UUID { get; set; }
-
     public String DTStartStandard { get; set; }
     public String DTStartDaylight { get; set; }
-
     public String VTIMEZONE { get; set; }
-
-    public List<daylightSavings> daylightSavingsTimes { get; set; }
 
     public SummitEventsAddToCalendarController() {
         DTStart = DTEnd = DTStamp = SUMMARY = LOCATION = DESCRIPTION = TIMEZONE2 = DTStartStandard = DTStartDaylight = '';
@@ -93,7 +79,7 @@ public with sharing class SummitEventsAddToCalendarController {
     public String getEventTitle(Summit_Events_Instance__c eventInformation) {
         String eventTitle = eventInformation.Event_Name__c;
         if (!String.isBlank(eventInformation.Instance_Title__c)) {
-            eventTitle += eventInformation.Event_Name__c + ' - ' + eventInformation.Instance_Title__c;
+            eventTitle +=  ' - ' + eventInformation.Instance_Title__c;
         }
         return eventTitle;
     }
@@ -210,60 +196,62 @@ public with sharing class SummitEventsAddToCalendarController {
             String type = '';
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('type'))) {
                 type = String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('type'));
-            }
-            if (type.equalsIgnoreCase('google')) {
-                //Google documentation: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/master/services/google.md
-                //http://www.google.com/calendar/event?action=TEMPLATE&text=[event-title]&dates=[start-custom format='Ymd\\THi00\\Z']/[end-custom format='Ymd\\THi00\\Z']&details=[description]&location=[location]&trp=false&sprop=&sprop=name:" target="_blank" rel="nofollow
-                urlCalendarLink = 'http://www.google.com/calendar/event';
-                //Default template
-                urlCalendarLink += '?action=TEMPLATE';
-                //Title of event
-                urlCalendarLink += '&text=' + EncodingUtil.urlEncode(getEventTitle(eventInformation), 'UTF-8');
-                //Start and end dates in GMT dates=20201231T193000Z/20201231T223000Z
-                urlCalendarLink += '&dates=';
-                urlCalendarLink += 'START_DATEZ';
-                urlCalendarLink += '/';
-                urlCalendarLink += 'END_DATEZ';
-                //Timezone ctz=America/New_York
-                urlCalendarLink += '&ctz=America/New_York';
-                //Location - Google readable address
-                urlCalendarLink += '&location=[location]';
-                //Url of source of the event
-                urlCalendarLink += '&sprop=[event_source_url]';
-                //description of event
-                urlCalendarLink += '&details=' + EncodingUtil.urlEncode(getEventDescription(eventInformation), 'UTF-8');
-                linkPage = new PageReference(urlCalendarLink);
-                linkPage.setRedirect(true);
-                return linkPage;
-            } else if (type.equalsIgnoreCase('yahoo')) {
-                //Yahoo documentation: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/master/services/yahoo.md
-                //https://calendar.yahoo.com/?v=60&st=st20201231T193000&DUR=0200&desc=With%20clowns%20and%20stuff&in_loc=North%20Pole
-                urlCalendarLink = 'https://calendar.yahoo.com?v=60';
-                //Start time
-                urlCalendarLink += '&st=st' + eventInformation.Event__r.Name;
-                //End time
-                urlCalendarLink += '&et=et' + eventInformation.Event__r.Name;
-                //Duration
-                urlCalendarLink += '&DUR=' + eventInformation.Event__r.Name;
-                //Description
-                urlCalendarLink += '&desc=' + EncodingUtil.urlEncode(getEventDescription(eventInformation), 'UTF-8');
-                //location title
-                urlCalendarLink += '&in_loc=' + EncodingUtil.urlEncode(getLocationTitle(eventInformation), 'UTF-8');
-                //Street address
-                urlCalendarLink += '&in_st=' + eventInformation.Event__r.Name;
-                //City/State/Zip = Atlanta, GA, 30307
-                urlCalendarLink += '&in_csz=' + eventInformation.Event__r.Name;
-                //Unique Id
-                urlCalendarLink += '&uid=' + eventInformation.Event__r.Name;
-                linkPage = new PageReference(urlCalendarLink);
-                linkPage.setRedirect(true);
-                return linkPage;
-            } else if (type.equalsIgnoreCase('ical') || type.equalsIgnoreCase('apple')) {
-                //Use standard .ics file
-                return null;
-            } else if (type.equalsIgnoreCase('outlook') || type.equalsIgnoreCase('windows')) {
-                //Use standard .ics file
-                return null;
+                DTStart = formattedGmtVersionOfDate(eventInformation.Instance_Start_Date__c, eventInformation.Instance_Start_Time__c);
+                DTEnd = formattedGmtVersionOfDate(eventInformation.Instance_End_Date__c, eventInformation.Instance_End_Time__c);
+                if (type.equalsIgnoreCase('google')) {
+                    //Google documentation: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/master/services/google.md
+                    //http://www.google.com/calendar/event?action=TEMPLATE&text=[event-title]&dates=[start-custom format='Ymd\\THi00\\Z']/[end-custom format='Ymd\\THi00\\Z']&details=[description]&location=[location]&trp=false&sprop=&sprop=name:" target="_blank" rel="nofollow
+                    urlCalendarLink = 'http://www.google.com/calendar/event';
+                    //Default template
+                    urlCalendarLink += '?action=TEMPLATE';
+                    //Title of event
+                    urlCalendarLink += '&text=' + EncodingUtil.urlEncode(getEventTitle(eventInformation), 'UTF-8');
+                    //Start and end dates in GMT dates=20201231T193000Z/20201231T223000Z
+                    urlCalendarLink += '&dates=';
+                    urlCalendarLink += formattedGmtVersionOfDate(eventInformation.Instance_Start_Date__c, eventInformation.Instance_Start_Time__c);
+                    urlCalendarLink += '/';
+                    urlCalendarLink += formattedGmtVersionOfDate(eventInformation.Instance_End_Date__c, eventInformation.Instance_End_Time__c);
+                    //Timezone ctz=America/New_York
+                    urlCalendarLink += '&ctz=' + SEShared.getTimeZonePick(eventInformation.Instance_Time_Zone__c);
+                    //Location - Google readable address
+                    urlCalendarLink += '&location=' + EncodingUtil.urlEncode(getEventAddress(eventInformation), 'UTF-8');
+                    //Url of source of the event
+                    urlCalendarLink += '&sprop=[event_source_url]' + EncodingUtil.urlEncode(getEventLocationLink(eventInformation), 'UTF-8');
+                    //description of event
+                    urlCalendarLink += '&details=' + EncodingUtil.urlEncode(getEventDescription(eventInformation).replace('\\n', '<br/>'), 'UTF-8');
+                    linkPage = new PageReference(urlCalendarLink);
+                    linkPage.setRedirect(true);
+                    return linkPage;
+                } else if (type.equalsIgnoreCase('yahoo')) {
+                    //Yahoo documentation: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/master/services/yahoo.md
+                    //https://calendar.yahoo.com/?v=60&st=st20201231T193000&DUR=0200&desc=With%20clowns%20and%20stuff&in_loc=North%20Pole
+                    urlCalendarLink = 'https://calendar.yahoo.com?v=60';
+                    //Start time
+                    urlCalendarLink += '&st=st' + formattedGmtVersionOfDate(eventInformation.Instance_Start_Date__c, eventInformation.Instance_Start_Time__c);
+                    //End time
+                    urlCalendarLink += '&et=et' + formattedGmtVersionOfDate(eventInformation.Instance_End_Date__c, eventInformation.Instance_End_Time__c);
+                    //Duration
+                    urlCalendarLink += '&DUR=' + eventInformation.Event__r.Name;
+                    //Description
+                    urlCalendarLink += '&desc=' + EncodingUtil.urlEncode(getEventDescription(eventInformation), 'UTF-8');
+                    //location title
+                    urlCalendarLink += '&in_loc=' + EncodingUtil.urlEncode(getLocationTitle(eventInformation), 'UTF-8');
+                    //Street address
+                    urlCalendarLink += '&in_st=' +  EncodingUtil.urlEncode(getEventAddress(eventInformation), 'UTF-8');
+                    //City/State/Zip = Atlanta, GA, 30307
+                    urlCalendarLink += '&in_csz=' + SEShared.getTimeZonePick(eventInformation.Instance_Time_Zone__c);
+                    //Unique Id
+                    urlCalendarLink += '&uid=';
+                    linkPage = new PageReference(urlCalendarLink);
+                    linkPage.setRedirect(true);
+                    return linkPage;
+                } else if (type.equalsIgnoreCase('ical') || type.equalsIgnoreCase('apple')) {
+                    //Use standard .ics file
+                    return null;
+                } else if (type.equalsIgnoreCase('outlook') || type.equalsIgnoreCase('windows')) {
+                    //Use standard .ics file
+                    return null;
+                }
             }
         }
         //Use standard .ics file
@@ -298,7 +286,6 @@ public with sharing class SummitEventsAddToCalendarController {
         Integer oldHourOffset = 0;
         for (Integer y = startYear; y <= endYear; y++) {
             daylightSavingsYears dlsYear = new daylightSavingsYears();
-            List<daylightSavings> dlsData = new List<daylightSavings>();
             dlsYear.year = y;
             //looping through months detecting offset changes, then days, then hours
             for (Integer m = 1; m <= 12; m++) {
@@ -317,7 +304,6 @@ public with sharing class SummitEventsAddToCalendarController {
                                     daylightSavings dlsItem = new daylightSavings();
                                     currentYear = Datetime.newInstanceGmt(y, m - 1, d - 1, h - 1, 0, 0);
                                     Integer finalOffset = tz.getOffset(currentYear) / 1000 / 60 ;
-                                    system.debug(tz.toString());
                                     timeZoneNameShort = getTimeZoneDisplay(tz, true);
                                     currentYear.addMinutes(finalOffset);
                                     //add an hour because we started at 0
@@ -404,7 +390,6 @@ public with sharing class SummitEventsAddToCalendarController {
         String displayName = '';
         if (tz != null) {
             displayName = tz.getDisplayName();
-            System.debug(displayName);
             //remove all parenthesis items
             displayName = displayName.replaceAll('(\\(([^\\)]+)\\))', '');
             displayName = displayName.trim();
@@ -420,5 +405,3 @@ public with sharing class SummitEventsAddToCalendarController {
         return displayName;
     }
 }
-
-//http://dev-stthomas.cs65.force.comusteventaddtocalendar?instanceID=a320m0000001I34
