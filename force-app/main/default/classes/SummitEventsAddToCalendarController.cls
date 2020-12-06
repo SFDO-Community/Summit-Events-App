@@ -78,7 +78,7 @@ public with sharing class SummitEventsAddToCalendarController {
 
     public String getEventTitle(Summit_Events_Instance__c eventInformation) {
         String eventTitle = eventInformation.Event_Name__c;
-        if (!String.isBlank(eventInformation.Instance_Title__c)) {
+        if (String.isNotBlank(eventInformation.Instance_Title__c)) {
             eventTitle +=  ' - ' + eventInformation.Instance_Title__c;
         }
         return eventTitle;
@@ -121,7 +121,7 @@ public with sharing class SummitEventsAddToCalendarController {
 
     public String getEventAddress(Summit_Events_Instance__c eventInformation) {
         String locationAddress = eventInformation.Event__r.Location_Address__c;
-        if (!String.isBlank(eventInformation.Location_Address_Override__c)) {
+        if (String.isNotBlank(eventInformation.Location_Address_Override__c)) {
             locationAddress = eventInformation.Location_Address_Override__c;
         }
         if (String.isNotBlank(eventInformation.Building_Override__c) || String.isNotBlank(eventInformation.Event__r.Building__c)) {
@@ -140,7 +140,7 @@ public with sharing class SummitEventsAddToCalendarController {
 
     public String getLocationTitle(Summit_Events_Instance__c eventInformation) {
         String locationTitle = eventInformation.Event__r.Location_Title__c;
-        if (!String.isBlank(eventInformation.Location_Title_Override__c)) {
+        if (String.isNotBlank(eventInformation.Location_Title_Override__c)) {
             locationTitle = eventInformation.Event__r.Location_Title__c;
         }
         if (String.isBlank(locationTitle)) {
@@ -151,10 +151,10 @@ public with sharing class SummitEventsAddToCalendarController {
 
     public String getEventLocationLink(Summit_Events_Instance__c eventInformation) {
         String locationLink = eventInformation.Event__r.Location_Map_Link__c;
-        if (!String.isBlank(eventInformation.Location_Map_Link_Override__c)) {
+        if (String.isNotBlank(eventInformation.Location_Map_Link_Override__c)) {
             locationLink = eventInformation.Location_Map_Link_Override__c;
         }
-        if (!String.isBlank(eventInformation.Virtual_Meeting_Link__c)) {
+        if (String.isNotBlank(eventInformation.Virtual_Meeting_Link__c)) {
             locationLink = eventInformation.Virtual_Meeting_Link__c;
         }
         if (String.isBlank(locationLink)) {
@@ -226,14 +226,14 @@ public with sharing class SummitEventsAddToCalendarController {
                     //Yahoo documentation: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/master/services/yahoo.md
                     //https://calendar.yahoo.com/?v=60&st=st20201231T193000&DUR=0200&desc=With%20clowns%20and%20stuff&in_loc=North%20Pole
                     urlCalendarLink = 'https://calendar.yahoo.com?v=60';
+                    //Title
+                    urlCalendarLink += '&title=' + EncodingUtil.urlEncode(getEventTitle(eventInformation), 'UTF-8');
                     //Start time
                     urlCalendarLink += '&st=st' + formattedGmtVersionOfDate(eventInformation.Instance_Start_Date__c, eventInformation.Instance_Start_Time__c);
                     //End time
                     urlCalendarLink += '&et=et' + formattedGmtVersionOfDate(eventInformation.Instance_End_Date__c, eventInformation.Instance_End_Time__c);
-                    //Duration
-                    urlCalendarLink += '&DUR=' + eventInformation.Event__r.Name;
                     //Description
-                    urlCalendarLink += '&desc=' + EncodingUtil.urlEncode(getEventDescription(eventInformation), 'UTF-8');
+                    urlCalendarLink += '&desc=' + EncodingUtil.urlEncode(getEventDescription(eventInformation).replace('\\n', '\n'), 'UTF-8');
                     //location title
                     urlCalendarLink += '&in_loc=' + EncodingUtil.urlEncode(getLocationTitle(eventInformation), 'UTF-8');
                     //Street address
@@ -241,7 +241,7 @@ public with sharing class SummitEventsAddToCalendarController {
                     //City/State/Zip = Atlanta, GA, 30307
                     urlCalendarLink += '&in_csz=' + SEShared.getTimeZonePick(eventInformation.Instance_Time_Zone__c);
                     //Unique Id
-                    urlCalendarLink += '&uid=';
+                    //urlCalendarLink += '&uid=' + NewGuid();
                     linkPage = new PageReference(urlCalendarLink);
                     linkPage.setRedirect(true);
                     return linkPage;
