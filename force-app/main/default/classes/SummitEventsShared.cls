@@ -271,13 +271,28 @@ public with sharing class SummitEventsShared {
 
     public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance, Boolean dateTimeOnly) {
         String instanceDate = '';
+        Time noTime = Time.newInstance(0,0,0,0);
         if (eventInstance.Instance_Start_Date__c != null && eventInstance.Instance_End_Date__c != null) {
-            Datetime convertedStartDate = convertDateToDatetime(eventInstance.Instance_Start_Date__c, null, '');
-            Datetime convertedEndDate = convertDateToDatetime(eventInstance.Instance_End_Date__c, null, '');
+            Datetime convertedStartDate = Datetime.newInstanceGmt(
+                    eventInstance.Instance_Start_Date__c.year(),
+                    eventInstance.Instance_Start_Date__c.month(),
+                    eventInstance.Instance_Start_Date__c.day(),
+                    noTime.hour(),
+                    noTime.minute(),
+                    noTime.second()
+            );
+            Datetime convertedEndDate = Datetime.newInstanceGmt(
+                    eventInstance.Instance_End_Date__c.year(),
+                    eventInstance.Instance_End_Date__c.month(),
+                    eventInstance.Instance_End_Date__c.day(),
+                    noTime.hour(),
+                    noTime.minute(),
+                    noTime.second()
+            );
             String monthStart = convertedStartDate.format('MMMM');
             String monthEnd = convertedEndDate.format('MMMM');
-            String yearStart = convertedStartDate.format('YYYY');
-            String yearEnd = convertedEndDate.format('YYYY');
+            String yearStart = String.valueOf(convertedStartDate.year());
+            String yearEnd = String.valueOf(convertedEndDate.year());
             String dayNameStart = convertedStartDate.format('EEEE');
             String dayNameEnd = convertedEndDate.format('EEEE');
             String dayStart = convertedStartDate.format('dd');

@@ -22,8 +22,7 @@ public with sharing class SummitEventsAddToCalendarController {
         DTStart = DTEnd = DTStamp = SUMMARY = LOCATION = DESCRIPTION = TIMEZONE2 = DTStartStandard = DTStartDaylight = '';
         UUID = NewGuid().replace('-', '') + 'Summit';
         String URLInstanceID = ApexPages.currentPage().getParameters().get('instanceID');
-        if (!String.isBlank(URLInstanceID)) {
-
+        if (String.isNotBlank(URLInstanceID)) {
             Summit_Events_Instance__c eventInformation = getEventInformation(URLInstanceID);
 
             if (eventInformation != null) {
@@ -191,7 +190,7 @@ public with sharing class SummitEventsAddToCalendarController {
         String URLInstanceID = ApexPages.currentPage().getParameters().get('instanceID');
         PageReference linkPage = null;
         String urlCalendarLink = '';
-        if (!String.isBlank(URLInstanceID)) {
+        if (String.isNotBlank(URLInstanceID)) {
             Summit_Events_Instance__c eventInformation = getEventInformation(URLInstanceID);
             String type = '';
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('type'))) {
