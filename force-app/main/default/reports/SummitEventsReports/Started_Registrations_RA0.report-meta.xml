@@ -33,19 +33,19 @@
     <columns>
         <field>Summit_Events_Registration__c$Contact__c</field>
     </columns>
-    <description>Summit Events Registration records that have Status = Registered</description>
+    <description>Summit Events Registration records that have Status = Started</description>
     <filter>
         <criteriaItems>
             <column>Summit_Events_Registration__c$Status__c</column>
             <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>Registered</value>
+            <value>Started</value>
         </criteriaItems>
         <language>en_US</language>
     </filter>
     <format>Tabular</format>
-    <name>New Registrations</name>
+    <name>Started Registrations</name>
     <params>
         <name>co</name>
         <value>1</value>
