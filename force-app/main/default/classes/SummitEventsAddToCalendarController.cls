@@ -72,7 +72,7 @@ public with sharing class SummitEventsAddToCalendarController {
         System.debug('TIME: ' + aTime);
         Datetime newDateTime = Datetime.newInstanceGmt(aDate.year(), aDate.month(), aDate.day(), aTime.hour(), aTime.minute(), aTime.second());
         System.debug('new Datetime: ' + newDateTime);
-        //Integer eventStartOffset = tz.getOffset(startDateDate);
+        //Integer eventStartOffset = tz.getOffset(startDateDate,'');
         formattedString = newDateTime.formatGmt('yyyyMMdd\'T\'HHmmss');
         System.debug('Formatted: ' + formattedString);
         return formattedString;
@@ -247,6 +247,42 @@ public with sharing class SummitEventsAddToCalendarController {
                     linkPage = new PageReference(urlCalendarLink);
                     linkPage.setRedirect(true);
                     return linkPage;
+                } else if (type.equalsIgnoreCase('outlookweb')) {
+                    //outlook web link docs: https://interactiondesignfoundation.github.io/add-event-to-calendar-docs/services/outlook-web.html
+                    urlCalendarLink = 'https://outlook.office.com/owa/';
+                    //compose action
+                    urlCalendarLink += '?path=/calendar/action/compose';
+                    //subject
+                    urlCalendarLink += '&subject=' + EncodingUtil.urlEncode(getEventTitle(eventInformation), 'UTF-8');
+                    //Body
+                    urlCalendarLink += '&body=' + EncodingUtil.urlEncode(getEventDescription(eventInformation).replace('\\n', '<br/>'), 'UTF-8');
+                    //locaiton
+                    urlCalendarLink += '&location=' + EncodingUtil.urlEncode(getLocationTitle(eventInformation) + ',  ' + getEventAddress(eventInformation), 'UTF-8');
+
+                    //Start date in zurich gmt time (YYYY-MM-DDTHH:mm:SSZ) or date (YYYY-MM-DD, for all-day events)
+                    String timezoneString = SEShared.getTimeZonePick(eventInformation.Instance_Time_Zone__c);
+                    TimeZone tz = TimeZone.getTimeZone(timezoneString);
+                    Date startD = eventInformation.Instance_Start_Date__c;
+                    Time startT = eventInformation.Instance_Start_Time__c;
+                    Date endD = eventInformation.Instance_End_Date__c;
+                    Time endT = eventInformation.Instance_End_Time__c;
+                    Datetime startDateTime = Datetime.newInstanceGmt(startD.year(), startD.month(), startD.day(), startT.hour(), startT.minute(), startT.second());
+                    Datetime endDateTime = Datetime.newInstanceGmt(endD.year(), endD.month(), endD.day(), endT.hour(), endT.minute(), endT.second());
+                    startDateTime = startDateTime.addSeconds(-(tz.getOffset(startDateTime) / 1000));
+                    endDateTime = endDateTime.addSeconds(-(tz.getOffset(endDateTime) / 1000));
+                    String formattedStartDate = startDateTime.formatGmt('yyyy-MM-dd\'T\'HH:mm:SS') + 'Z';
+                    String formattedEndDate = endDateTime.formatGmt('yyyy-MM-dd\'T\'HH:mm:SS') + 'Z';
+                    System.debug('FOMRATED ZURIK TIME: ' + formattedStartDate);
+                    urlCalendarLink += '&startdt=' + formattedStartDate;
+
+                    // End date in zurich gmt time (YYYY-MM-DDTHH:mm:SSZ) or date (YYYY-MM-DD, for all-day events)
+                    urlCalendarLink += '&enddt=' + formattedEndDate;
+
+                    System.debug(urlCalendarLink);
+                    linkPage = new PageReference(urlCalendarLink);
+                    linkPage.setRedirect(true);
+                    return linkPage;
+
                 } else if (type.equalsIgnoreCase('ical') || type.equalsIgnoreCase('apple')) {
                     //Use standard .ics file
                     return null;
