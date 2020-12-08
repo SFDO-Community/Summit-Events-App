@@ -665,11 +665,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-<<<<<<< HEAD
-        <masterLabel>00h3B000001ZuZw</masterLabel>
-=======
         <masterLabel>00h11000002pkwY</masterLabel>
->>>>>>> origin/master
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

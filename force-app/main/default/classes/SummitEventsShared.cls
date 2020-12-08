@@ -444,7 +444,7 @@ public with sharing class SummitEventsShared {
                     }
                 }
             }
-        }git
+        }
         return dependentItems;
     }
 
