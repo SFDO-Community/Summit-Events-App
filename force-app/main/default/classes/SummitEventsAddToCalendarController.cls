@@ -69,16 +69,19 @@ public with sharing class SummitEventsAddToCalendarController {
 
     public String formattedGmtVersionOfDate(Date aDate, Time aTime) {
         String formattedString = '';
+        System.debug('TIME: ' + aTime);
         Datetime newDateTime = Datetime.newInstanceGmt(aDate.year(), aDate.month(), aDate.day(), aTime.hour(), aTime.minute(), aTime.second());
+        System.debug('new Datetime: ' + newDateTime);
         //Integer eventStartOffset = tz.getOffset(startDateDate);
-        formattedString = newDateTime.format('yyyyMMdd\'T\'HHmmss');
+        formattedString = newDateTime.formatGmt('yyyyMMdd\'T\'HHmmss');
+        System.debug('Formatted: ' + formattedString);
         return formattedString;
     }
 
     public String getEventTitle(Summit_Events_Instance__c eventInformation) {
         String eventTitle = eventInformation.Event_Name__c;
         if (String.isNotBlank(eventInformation.Instance_Title__c)) {
-            eventTitle +=  ' - ' + eventInformation.Instance_Title__c;
+            eventTitle += ' - ' + eventInformation.Instance_Title__c;
         }
         return eventTitle;
     }
@@ -236,7 +239,7 @@ public with sharing class SummitEventsAddToCalendarController {
                     //location title
                     urlCalendarLink += '&in_loc=' + EncodingUtil.urlEncode(getLocationTitle(eventInformation), 'UTF-8');
                     //Street address
-                    urlCalendarLink += '&in_st=' +  EncodingUtil.urlEncode(getEventAddress(eventInformation), 'UTF-8');
+                    urlCalendarLink += '&in_st=' + EncodingUtil.urlEncode(getEventAddress(eventInformation), 'UTF-8');
                     //City/State/Zip = Atlanta, GA, 30307
                     urlCalendarLink += '&in_csz=' + SEShared.getTimeZonePick(eventInformation.Instance_Time_Zone__c);
                     //Unique Id
@@ -309,7 +312,7 @@ public with sharing class SummitEventsAddToCalendarController {
                                     dlsItem.year = currentYear.year();
                                     dlsItem.DTStartDate = currentYear.formatGmt('YYYYMMdd\'T\'hhmmss');
                                     dlsItem.DTStart = currentYear.addMinutes(finalOffset).addHours(1).formatGmt('YYYYMMdd\'T\'hhmmss');
-                                    dlsItem.isDaylightSavings = true;
+                                    dlsItem.isDaylightSavings = false;
                                     String offsetString = String.valueOf(finalOffset / 60);
                                     Boolean negativeOffset = false;
                                     if (offsetString.startsWith('-')) {
@@ -323,7 +326,8 @@ public with sharing class SummitEventsAddToCalendarController {
                                     }
                                     dlsItem.TZOffsetTo = offsetString;
                                     dlsItem.TZOffsetFrom = offsetString;
-                                    dlsItem.TZName = currentYear.format('z', timezoneString);
+                                    dlsItem.TZName = currentYear.addDays(1).format('z', timezoneString);
+
                                     dlsList.add(dlsItem);
                                 }
                                 oldHourOffset = hourOffset;
@@ -341,21 +345,22 @@ public with sharing class SummitEventsAddToCalendarController {
         }
 
         //loop through and organize data by timezone
-        for (daylightSavingsYears dlsItem : dlsYears) {
-            for (Integer xy = 0; xy < dlsItem.data.size(); xy++) {
-                String offsetString = dlsItem.data[xy].TZOffsetTo.replace('-', '');
-                Integer offsetInteger = Integer.valueOf(offsetString);
-                if (xy != 0 && offsetInteger > Integer.valueOf(dlsItem.data[xy - 1].TZOffsetTo.replace('-', ''))) {
-                    dlsItem.data[xy - 1].isDaylightSavings = false;
-                    dlsItem.data[xy - 1].TZOffsetFrom = dlsItem.data[xy].TZOffsetTo;
-                    dlsItem.data[xy].TZOffsetFrom = dlsItem.data[xy - 1].TZOffsetTo;
-                    dlsItem.data[xy].isDaylightSavings = true;
-                } else if (xy != 0) {
-                    dlsItem.data[xy - 1].isDaylightSavings = true;
-                    dlsItem.data[xy - 1].TZOffsetFrom = dlsItem.data[xy].TZOffsetTo;
-                    dlsItem.data[xy].TZOffsetFrom = dlsItem.data[xy - 1].TZOffsetTo;
-                    dlsItem.data[xy].isDaylightSavings = false;
+        for (daylightSavingsYears dlsYearItem : dlsYears) {
+            if (dlsYearItem.data.size() == 2) {
+                Integer dataZeroOffset = Integer.valueOf(dlsYearItem.data[0].TZOffsetTo.replace('-', ''));
+                Integer dataOneOffset = Integer.valueOf(dlsYearItem.data[1].TZOffsetTo.replace('-', ''));
+                if (dataZeroOffset < dataOneOffset) {
+                    //dataZeroOffset is standard time (its a lower time difference)
+                    dlsYearItem.data[0].isDaylightSavings = false;
+                    dlsYearItem.data[1].isDaylightSavings = true;
+
+                } else {
+                    //dataZeroOffset is daylight savings time (its a lower time difference)
+                    dlsYearItem.data[0].isDaylightSavings = true;
+                    dlsYearItem.data[1].isDaylightSavings = false;
                 }
+                dlsYearItem.data[0].TZOffsetTo = dlsYearItem.data[1].TZOffsetFrom;
+                dlsYearItem.data[1].TZOffsetTo = dlsYearItem.data[0].TZOffsetFrom;
             }
         }
 
