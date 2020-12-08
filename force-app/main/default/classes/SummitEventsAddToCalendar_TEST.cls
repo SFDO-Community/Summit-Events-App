@@ -57,4 +57,17 @@ private class SummitEventsAddToCalendar_TEST {
         calendarController.calendarType();
         Test.stopTest();
     }
+
+    @IsTest
+    static void testOutlookWeb() {
+        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Overnight Event', '', true, true, '');
+        Test.startTest();
+        ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
+        ApexPages.currentPage().getParameters().put('type', 'outlookweb');
+        SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
+        calendarController.calendarType();
+        Test.stopTest();
+    }
+
+
 }
