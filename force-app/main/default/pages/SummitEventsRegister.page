@@ -58,6 +58,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                         <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                             <apex:outputText escape="false" value="{!eventPage.Event_description__c}"></apex:outputText>
+                            <apex:outputText escape="false" value="{!locationCrumb}" rendered="{!IF(!ISBLANK(locationCrumb), true, false)}"/>
                         </div>
 
                         <!-- Location Inforamation -->
@@ -105,6 +106,11 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                         </apex:outputPanel>
 
+                        <apex:outputPanel layout="block" rendered="{!IF(totalEventCost!= 0,true,false)}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
+                            <h3 class="slds-text-heading_medium">Event Cost</h3>
+                            <p class="slds-text-body">$<apex:outputText value="{!totalEventCost}"></apex:outputText>
+                            </p>
+                        </apex:outputPanel>
 
                         <!-- LOGGED IN TO PORTAL MESSAGE -->
                         <div class="slds-col slds-p-around_x-small slds-size_1-of-1">

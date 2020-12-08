@@ -47,7 +47,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             eventPage = [
                     SELECT Event_Name__c, Event_description__c, Event_Appointment_Title__c, Event_Appointment_Description__c, Event_Footer__c,
                             Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Options_Registration__c, Event_Full_Text__c,
-                            Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c
+                            Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
             ][0];
@@ -293,7 +293,12 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     public PageReference saveOptions() {
         //remove old client created appointments
         crudToDo doCRUD = new crudToDo();
-        PageReference submitPage = Page.SummitEventsSubmit;
+        PageReference submitPage = null;
+        if (eventPage.Display_Optional_Donation__c) {
+            submitPage = Page.SummitEventsDonation;
+        } else {
+            submitPage = Page.SummitEventsSubmit;
+        }
 
         if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
             submitPage.setRedirect(true);

@@ -34,7 +34,7 @@ public with sharing class SummitEventsShared {
     }
 
     public SummitEventsInfo getSummitEventsInfo() {
-        //{"audience":"High School Senior","instanceID":"a320m000000A5fOAAS","evtRegId":"a350m0000008q63AAA,"evtId":"a330m0000001SOrAAM"}
+        //{"audience":"High School Senior","instanceId":"a320m000000A5fOAAS","registrationId":"a350m0000008q63AAA,"eventId":"a330m0000001SOrAAM"}
         SummitEventsInfo eventInformation = new SummitEventsInfo();
         String URLAudience = ApexPages.currentPage().getParameters().get('audience');
         String URLInstanceID = ApexPages.currentPage().getParameters().get('instanceID');
@@ -291,8 +291,8 @@ public with sharing class SummitEventsShared {
             );
             String monthStart = convertedStartDate.format('MMMM');
             String monthEnd = convertedEndDate.format('MMMM');
-            String yearStart = String.valueOf(convertedStartDate.year());
-            String yearEnd = String.valueOf(convertedEndDate.year());
+            String yearStart = String.valueOf(eventInstance.Instance_Start_Date__c.year());
+            String yearEnd = String.valueOf(eventInstance.Instance_End_Date__c.year());
             String dayNameStart = convertedStartDate.format('EEEE');
             String dayNameEnd = convertedEndDate.format('EEEE');
             String dayStart = convertedStartDate.format('dd');
@@ -444,7 +444,7 @@ public with sharing class SummitEventsShared {
                     }
                 }
             }
-        }
+        }git
         return dependentItems;
     }
 

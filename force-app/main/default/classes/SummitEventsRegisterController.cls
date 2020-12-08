@@ -28,6 +28,9 @@ public with sharing class SummitEventsRegisterController {
     public String applicantType { get; set; }
     public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
+    public String dataLayerLocationType { get; set; }
+    public Decimal totalEventCost { get; set; }
+    public List<Summit_Events_Fee__c> eventFeeList { get; set; }
     public String phoneType { get; set; }
     public String navBreadCrumb { get; set; }
     public Boolean showLocation { get; set; }
@@ -35,6 +38,7 @@ public with sharing class SummitEventsRegisterController {
     public String endTimeString { get; set; }
     public Boolean adminOpen { get; set; }
     public String registrantAudience { get; set; }
+    public String EvtUserType { get; set; }
     public Id incomingEventRegistrationId { get; set; }
     public String formattedStartDate { get; set; }
 
@@ -50,7 +54,7 @@ public with sharing class SummitEventsRegisterController {
         additionalQuestions = false;
         showAddress = false;
         showPhone = false;
-        String EvtUserType = UserInfo.getUserType();
+        EvtUserType = UserInfo.getUserType();
         //Get cookie or URL string variable
         eventInformation = SeaShared.getSummitEventsInfo();
 
@@ -83,8 +87,10 @@ public with sharing class SummitEventsRegisterController {
         if (String.isNotBlank(eventInformation.instanceId)) {
             evtInstance = [
                     SELECT Id, Name, Event__r.Name, Event__r.Event_Name__c, Event__r.Id, Instance_Title__c, Active_Status__c, Capacity__c,
-                            Event__r.Event_description__c, Event__r.Audience__c, Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c, Current_Available_Capacity__c,
-                            Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c
+                            Event__r.Event_description__c, Event__r.Audience__c, Current_Available_Capacity__c,
+                            Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c,
+                            Event_Fee_Additional_Attribute_Override__c, Event_Fee_Additional_Override__c, Event_Fee_Override__c, Event_Fee_Attribute_Override__c,
+                            Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :eventInformation.instanceId
                     LIMIT 1
@@ -115,7 +121,8 @@ public with sharing class SummitEventsRegisterController {
                             Ask_Applicant_Type__c, Location_Type__c, Location_Title__c, Location_Address__c, Location_Map_Link__c,
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c,
                             Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c, Ask_Pronoun__c, Keep_Registration_Open_During_Event__c,
-                            Close_Event_Days_Before__c, Ask_Title__c, Ask_Company_Organization__c
+                            Close_Event_Days_Before__c, Ask_Title__c, Ask_Company_Organization__c, Event_Fee__c, Event_Fee_Additional__c,
+                            Event_Fee_Additional_Attribute__c, Event_Fee_Attribute__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     LIMIT 1
@@ -225,6 +232,43 @@ public with sharing class SummitEventsRegisterController {
             addPick3 = createPicklists(eventPage.Add_Info_Question_Pick_List_3__c);
             addPick4 = createPicklists(eventPage.Add_Info_Question_Pick_List_4__c);
             addPick5 = createPicklists(eventPage.Add_Info_Question_Pick_List_5__c);
+
+            //Calculate event cost by Instance and Event fees and add to list of fees for upsert
+            eventFeeList = new List<Summit_Events_Fee__c>();
+            totalEventCost = 0;
+
+            if (evtInstance.Event_Fee_Override__c != null) {
+                totalEventCost += evtInstance.Event_Fee_Override__c;
+                eventFeeList.add(new Summit_Events_Fee__c(
+                        Event_Fee__c = evtInstance.Event_Fee_Override__c,
+                        Event_Fee_Attribute__c = evtInstance.Event_Fee_Attribute_Override__c,
+                        Event_Fee_Type__c = 'Event'
+                ));
+            } else if (eventPage.Event_Fee__c != null) {
+                totalEventCost += eventPage.Event_Fee__c;
+                eventFeeList.add(new Summit_Events_Fee__c(
+                        Event_Fee__c = eventPage.Event_Fee__c,
+                        Event_Fee_Attribute__c = eventPage.Event_Fee_Attribute__c,
+                        Event_Fee_Type__c = 'Event'
+                ));
+            }
+
+            if (evtInstance.Event_Fee_Additional_Override__c != null) {
+                totalEventCost += evtInstance.Event_Fee_Additional_Override__c;
+                eventFeeList.add(new Summit_Events_Fee__c(
+                        Event_Fee__c = evtInstance.Event_Fee_Additional_Override__c,
+                        Event_Fee_Attribute__c = evtInstance.Event_Fee_Additional_Attribute_Override__c,
+                        Event_Fee_Type__c = 'Event Additional'
+                ));
+            } else if (eventPage.Event_Fee_Additional__c != null) {
+                totalEventCost += eventPage.Event_Fee_Additional__c;
+                eventFeeList.add(new Summit_Events_Fee__c(
+                        Event_Fee__c = eventPage.Event_Fee_Additional__c,
+                        Event_Fee_Attribute__c = eventPage.Event_Fee_Additional_Attribute__c,
+                        Event_Fee_Type__c = 'Event Additional'
+                ));
+            }
+
         }
 
         //If the user is logged in use that data
@@ -411,7 +455,40 @@ public with sharing class SummitEventsRegisterController {
             eventRegistration.Registrant_Applicant_Type__c = 'Graduate';
         }
 
-        //Create registration if event Registration does not exist
+        //Check and create fees and save on registration
+        List<Summit_Events_Fee__c> recordedEventFeeList = [
+                SELECT Id, Event_Fee_Type__c, Event_Fee_Attribute__c, Event_Fee__c
+                FROM Summit_Events_Fee__c
+                WHERE Event_Fee_Type__c != 'Appointment'
+                AND Event_Fee_Type__c != 'Appointment Additional'
+                AND Event_Fee_Type__c != 'Optional Donation'
+                AND Event_Registration__c = :eventInformation.registrationId
+        ];
+        if (recordedEventFeeList.size() > 0) {
+            //Fees already exist so checks need to be made if current fees are there
+            List<Id> recordedUsedIds = new List<Id>();
+            for (Integer ff = 0; ff < eventFeeList.size(); ff++) {
+                for (Summit_Events_Fee__c recordedFees : recordedEventFeeList) {
+                    if (eventFeeList[ff].Event_Fee_Type__c == recordedFees.Event_Fee_Type__c) {
+                        eventFeeList[ff].Id = recordedFees.Id;
+                        recordedUsedIds.add(recordedFees.Id);
+                    }
+                }
+            }
+            List<Summit_Events_Fee__c> deleteEventFees = [
+                    SELECT Id, Event_Fee_Type__c, Event_Fee_Attribute__c, Event_Fee__c
+                    FROM Summit_Events_Fee__c
+                    WHERE Event_Fee_Type__c != 'Appointment'
+                    AND Event_Fee_Type__c != 'Appointment Additional'
+                    AND Event_Fee_Type__c != 'Optional Donation'
+                    AND Event_Registration__c = :eventInformation.registrationId
+                    AND Id NOT IN :recordedUsedIds
+            ];
+            if (deleteEventFees.size() > 0) {
+                rCRUD.deleteFees(deleteEventFees);
+            }
+        }
+
         eventRegistration.Status__c = 'Started';
         eventRegistration.Event_Instance_Date_Time_Formatted__c = SeaShared.navBreadcrumbBuilder(evtInstance, true);
         eventRegistration.Event__c = eventInformation.eventId;
@@ -421,11 +498,15 @@ public with sharing class SummitEventsRegisterController {
             eventRegistration.New_Contact_Created__c = true;
         }
 
-        eventRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience);
+        eventRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience, eventFeeList);
         eventInformation.registrationId = eventRegistration.Id;
 
         if (evtHasAppointments) {
             optionPage = Page.SummitEventsRegisterAppointments;
+        } else if (eventPage.Display_Optional_Donation__c) {
+            optionPage = Page.SummitEventsDonation;
+        } else if (eventFeeList.size() > 0) {
+            optionPage = Page.SummitEventsSubmit;
         } else {
             optionPage = Page.SummitEventsConfirmation;
         }
@@ -436,12 +517,12 @@ public with sharing class SummitEventsRegisterController {
         }
 
         return optionPage;
-
     }
+
 
     private without sharing class registrationCRUD {
 
-        public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c eventRegistration, Id incomingEventRegistrationId, String registrantAudience) {
+        public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c eventRegistration, Id incomingEventRegistrationId, String registrantAudience, List<Summit_Events_Fee__c> upsertFees) {
             try {
                 if (String.isNotBlank(incomingEventRegistrationId)) {
                     eventRegistration.Id = incomingEventRegistrationId;
@@ -452,10 +533,34 @@ public with sharing class SummitEventsRegisterController {
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
             }
+
+            //Save fees
+            if (upsertFees.size() > 0) {
+                for (Integer ff = 0; ff < upsertFees.size(); ff++) {
+                    upsertFees[ff].Event_Registration__c = eventRegistration.Id;
+                }
+                try {
+                    upsert upsertFees;
+                } catch (Exception ex) {
+                    System.debug(ex.getMessage());
+                }
+            }
+
+            //Update encrypted cookie
             SummitEventsShared SeaShared = new SummitEventsShared();
             System.debug('Before CRUD cookie creation: ' + JSON.serializePretty(eventRegistration));
             SeaShared.createEncryptedCookie(registrantAudience, eventRegistration.Event_Instance__c, eventRegistration.Event__c, eventRegistration.Id);
+
             return eventRegistration;
+        }
+
+        public void deleteFees(List<Summit_Events_Fee__c> deletableFees) {
+            try {
+                delete deletableFees;
+            } catch (Exception ex) {
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
+                ApexPages.addMessage(myMsg);
+            }
         }
 
         public Summit_Events_Registration__c checkForOtherRegistrations(String checkType, String registrationEmail, Id eventInstanceId, Id eventId) {
