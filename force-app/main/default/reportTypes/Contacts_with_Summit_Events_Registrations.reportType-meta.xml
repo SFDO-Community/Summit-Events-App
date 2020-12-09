@@ -32,11 +32,6 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>CleanStatus</field>
-            <table>Contact</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
             <field>Id</field>
             <table>Contact</table>
         </columns>
@@ -123,6 +118,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Individual</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>CleanStatus</field>
             <table>Contact</table>
         </columns>
         <columns>
