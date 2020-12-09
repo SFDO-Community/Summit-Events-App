@@ -42,7 +42,6 @@
             <operator>equals</operator>
             <value>Registered</value>
         </criteriaItems>
-        <language>en_US</language>
     </filter>
     <format>Tabular</format>
     <name>New Registrations</name>

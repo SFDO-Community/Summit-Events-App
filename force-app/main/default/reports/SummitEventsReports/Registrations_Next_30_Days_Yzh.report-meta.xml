@@ -40,7 +40,6 @@
             <operator>equals</operator>
             <value>NEXT_N_DAYS:30,TODAY</value>
         </criteriaItems>
-        <language>en_US</language>
     </filter>
     <format>Summary</format>
     <groupingsDown>
