@@ -40,6 +40,7 @@ public with sharing class SummitEventsRegisterController {
     public String registrantAudience { get; set; }
     public String EvtUserType { get; set; }
     public Id incomingEventRegistrationId { get; set; }
+    public String formattedStartDate { get; set; }
 
     public SummitEventsRegisterController() {
         //array for looping through additional information questions
@@ -101,6 +102,8 @@ public with sharing class SummitEventsRegisterController {
             startTimeString = SeaShared.formatTime(evtInstance.Instance_Start_Time__c, false);
             endTimeString = SeaShared.formatTime(evtInstance.Instance_End_Time__c, false);
         }
+
+        formattedStartDate = formattedGmtVersionOfDate(evtInstance.Instance_Start_Date__c, evtInstance.Instance_Start_Time__c, evtInstance.Instance_Time_Zone__c);
 
         //Get Event Info off of instance master detail id
         if (!String.isBlank(eventInformation.eventId)) {
@@ -373,6 +376,13 @@ public with sharing class SummitEventsRegisterController {
             }
         }
         return cpl;
+    }
+
+    public String formattedGmtVersionOfDate(Date aDate, Time aTime, String timeZoneString) {
+        String formattedString = '';
+        Datetime newDateTime = Datetime.newInstanceGmt(aDate.year(), aDate.month(), aDate.day(), aTime.hour(), aTime.minute(), aTime.second());
+        formattedString = newDateTime.formatGmt('EEEE MMMM dd, ') + newDateTime.year();
+        return formattedString;
     }
 
     public List<SelectOption> PickThePicklist(String YourObjectName, String YourFieldName, Boolean includeSelect) {

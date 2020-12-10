@@ -5,25 +5,21 @@ license that can be found in the LICENSE file.
 Created by Thaddaeus Dahlberg on 11/12/2018.
 -->
 
-<apex:page id="SummitEventsAddToCalendar" title="event.ics" contentType="text/calendar" cache="false" controller="SummitEventsAddToCalendarController">
+<apex:page id="SummitEventsAddToCalendar" title="event.ics" contentType="text/calendar" cache="false" controller="SummitEventsAddToCalendarController" action="{!calendarType}">
 BEGIN:VCALENDAR
 VERSION:2.0
-CALSCALE:GREGORIAN
+<apex:outputText escape="false" rendered="{!!ISBLANK(VTIMEZONE)}" value="{!VTIMEZONE}"/>
 BEGIN:VEVENT
-SUMMARY:{!SUMMARY}
-DTSTART;TZID={!TIMEZONE}:{!DTSTART}
-DTEND;TZID={!TIMEZONE}:{!DTEND}
-LOCATION: {!LOCATION}
-DESCRIPTION:{!DESCRIPTION}
+DTSTAMP:{!DTStamp}
 STATUS:CONFIRMED
-METHOD:PUBLISH
-DTSTAMP:{!DTSTAMP}
-BEGIN:VALARM
-TRIGGER:-PT10M
-DESCRIPTION:{!SUMMARY}
-ACTION:DISPLAY
-END:VALARM
 UID:{!UUID}
+SEQUENCE:0
+DTSTART;TZID={!TIMEZONE2}:{!DTStart}
+DTEND;TZID={!TIMEZONE2}:{!DTEnd}
+SUMMARY:{!SUMMARY}
+DESCRIPTION:{!DESCRIPTION}
+{!LOCATION}
+TRANSP:OPAQUE
 END:VEVENT
 END:VCALENDAR
 </apex:page>
