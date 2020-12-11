@@ -25,145 +25,153 @@ public with sharing class SummitEventsShared_TEST {
 
      **/
 
-    @IsTest static void testBlankEvent() {
-        Test.startTest();
-        //Making bad cookies for exceptions
-        SummitEventsShared SEShared = new SummitEventsShared();
-        SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
-        SEShared.createEncryptedCookie('','','','');
-        SEShared.getSummitEventsInfo();
-        registerCtrl = new SummitEventsRegisterController();
-        PageReference pageRef = Page.SummitEventsCancelReview;
-        Test.setCurrentPage(pageRef);
-        registerCtrl.checkEventDetails();
-        registerCtrl.checkEventDetails();
-        Test.stopTest();
-    }
+//    @IsTest static void testBlankEvent() {
+//        Test.startTest();
+//        //Making bad cookies for exceptions
+//        SummitEventsShared SEShared = new SummitEventsShared();
+//        SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
+//        SEShared.createEncryptedCookie('','','','');
+//        SEShared.getSummitEventsInfo();
+//        registerCtrl = new SummitEventsRegisterController();
+//        PageReference pageRef = Page.SummitEventsCancelReview;
+//        Test.setCurrentPage(pageRef);
+//        registerCtrl.checkEventDetails();
+//        registerCtrl.checkEventDetails();
+//        Test.stopTest();
+//    }
 
-    @IsTest static void testMatching2() {
-        //Insert a test event
-        SummitEventsTestSharedDataFactory.createContact('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55555', '(555) 555-5555', '1971-03-22', '2012');
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 2', 'Test Event', '', true, true, '');
+//    @IsTest static void testMatching2() {
+//        //Insert a test event
+//        SummitEventsTestSharedDataFactory.createContact('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55555', '(555) 555-5555', '1971-03-22', '2012');
+//        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', '', true, true, '');
+//
+//        Test.startTest();
+//        //Add instance ID to register page
+//        PageReference pageRef = Page.SummitEventsRegister;
+//        Test.setCurrentPage(pageRef);
+//        ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
+//        SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
+//
+//        //Blank registration
+//        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', '', 'TestLast', '', '', '', '', '2002');
+//        registerCtrl.saveContactRegistration();
+//
+//        //Create a new contact
+//        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'TestLast', 'test@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
+//        registerCtrl.saveContactRegistration();
+//
+//        //Hard test on LAST NAME, EMAIL, CLASS
+//        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2012');
+//        registerCtrl.saveContactRegistration();
+//
+//        ///Hard test on LAST NAME, FIRST NAME, EMAIL
+//        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
+//        registerCtrl.saveContactRegistration();
+//
+//        //Hard test on LAST NAME, CLASS, FIRST NAME, PHONE
+//        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55418', '(555) 555-5555', '1989-03-22', '2012');
+//        registerCtrl.saveContactRegistration();
+//
+//        //Soft Match on Last Name
+//        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
+//        registerCtrl.saveContactRegistration();
+//
+//        //Soft Match LAST NAME, PHONE and CLASS
+//        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55418', '(555) 555-5555', '1989-03-22', '2012');
+//        registerCtrl.saveContactRegistration();
+//
+//        Test.stopTest();
+//    }
 
-        Test.startTest();
-        //Add instance ID to register page
-        PageReference pageRef = Page.SummitEventsRegister;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
-        SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
-
-        //Blank registration
-        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', '', 'TestLast', '', '', '', '', '2002');
-        registerCtrl.saveContactRegistration();
-
-        //Create a new contact
-        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'TestLast', 'test@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
-        registerCtrl.saveContactRegistration();
-
-        //Hard test on LAST NAME, EMAIL, CLASS
-        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2012');
-        registerCtrl.saveContactRegistration();
-
-        ///Hard test on LAST NAME, FIRST NAME, EMAIL
-        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
-        registerCtrl.saveContactRegistration();
-
-        //Hard test on LAST NAME, CLASS, FIRST NAME, PHONE
-        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55418', '(555) 555-5555', '1989-03-22', '2012');
-        registerCtrl.saveContactRegistration();
-
-        //Soft Match on Last Name
-        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
-        registerCtrl.saveContactRegistration();
-
-        //Soft Match LAST NAME, PHONE and CLASS
-        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55418', '(555) 555-5555', '1989-03-22', '2012');
-        registerCtrl.saveContactRegistration();
-
-        Test.stopTest();
-    }
-
-    @IsTest static void testNoMatchGraduate() {
-        //Insert a test event
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', '', true, true, '');
-        Test.startTest();
-        //Add instance ID to register page
-        PageReference pageRef = Page.SummitEventsRegister;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
-        SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
-        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('Graduate', 'Test', 'Master', 'graduate@valleyhill.net', '55555', '(555) 555-5555', '1989-03-22', '2014');
-        registerCtrl.saveContactRegistration();
-
-        //Run same registration again for reg Id match
-        registerCtrl.saveContactRegistration();
-
-        Test.stopTest();
-    }
-
-
-    @IsTest static void testMatching1() {
-        //Insert a test event
-        SummitEventsTestSharedDataFactory.createContact('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55555', '(555) 555-5555', '1971-03-22', '2012');
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', 'High School Senior', true, true, '');
-
-        Test.startTest();
-        //Add instance ID to register page
-        PageReference pageRef = Page.SummitEventsRegister;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
-        ApexPages.currentPage().getParameters().put('audience', 'High School Senior');
-        SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
-
-        //Blank registration
-        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', '', 'TestLast', '', '', '', '', '2002');
-        registerCtrl.saveContactRegistration();
-
-        //No Match create a new contact
-        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'TestLast', 'test@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
-        registerCtrl.saveContactRegistration();
-
-        // Hard Match on Last Name Email
-        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
-        registerCtrl.saveContactRegistration();
-
-        //Hard Match on First 3 letters of first name / preferred first name, last name, and birthdate
-        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1971-03-22', '2002');
-        registerCtrl.saveContactRegistration();
-
-        //Soft Match with Last Name, First Name, Zip
-        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55555', '(555) 444-4444', '1989-03-22', '2002');
-        registerCtrl.saveContactRegistration();
-
-        //Soft Match found with email
-        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'TestLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
-        registerCtrl.saveContactRegistration();
-
-        //Run same registration again for reg Id match
-        PageReference newpg = registerCtrl.saveContactRegistration();
-        Test.setCurrentPage(newpg);
-
-        pageRef = Page.SummitEventsRegister;
-        Test.setCurrentPage(pageRef);
-        registerCtrl.saveContactRegistration();
+//    @IsTest static void testNoMatchGraduate() {
+//        //Insert a test event
+//        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', '', true, true, '');
+//        Test.startTest();
+//        //Add instance ID to register page
+//        PageReference pageRef = Page.SummitEventsRegister;
+//        Test.setCurrentPage(pageRef);
+//        ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
+//        SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
+//        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('Graduate', 'Test', 'Master', 'graduate@valleyhill.net', '55555', '(555) 555-5555', '1989-03-22', '2014');
+//        registerCtrl.saveContactRegistration();
+//
+//        //Run same registration again for reg Id match
+//        registerCtrl.saveContactRegistration();
+//
+//        Test.stopTest();
+//    }
 
 
-        Test.stopTest();
-    }
+//    @IsTest static void testMatching1() {
+//        //Insert a test event
+//        SummitEventsTestSharedDataFactory.createContact('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55555', '(555) 555-5555', '1971-03-22', '2012');
+//        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', 'High School Senior', true, true, '');
+//
+//        Test.startTest();
+//        //Add instance ID to register page
+//        PageReference pageRef = Page.SummitEventsRegister;
+//        Test.setCurrentPage(pageRef);
+//        ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
+//        ApexPages.currentPage().getParameters().put('audience', 'High School Senior');
+//        SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
+//
+//        //Blank registration
+//        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', '', 'TestLast', '', '', '', '', '2002');
+//        registerCtrl.saveContactRegistration();
+//
+//        //No Match create a new contact
+//        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'TestLast', 'test@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
+//        registerCtrl.saveContactRegistration();
+//
+//        // Hard Match on Last Name Email
+//        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
+//        registerCtrl.saveContactRegistration();
+//
+//        //Hard Match on First 3 letters of first name / preferred first name, last name, and birthdate
+//        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1971-03-22', '2002');
+//        registerCtrl.saveContactRegistration();
+//
+//        //Soft Match with Last Name, First Name, Zip
+//        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('MatchFirst', 'Test', 'MatchLast', 'test@valleyhill.net', '55555', '(555) 444-4444', '1989-03-22', '2002');
+//        registerCtrl.saveContactRegistration();
+//
+//        //Soft Match found with email
+//        registerCtrl.eventRegistration = SummitEventsTestSharedDataFactory.createEventRegistrationObj('TestFirst', 'Test', 'TestLast', 'match@valleyhill.net', '55418', '(555) 444-4444', '1989-03-22', '2002');
+//        registerCtrl.saveContactRegistration();
+//
+//        //Run same registration again for reg Id match
+//        PageReference newpg = registerCtrl.saveContactRegistration();
+//        Test.setCurrentPage(newpg);
+//
+//        pageRef = Page.SummitEventsRegister;
+//        Test.setCurrentPage(pageRef);
+//        registerCtrl.saveContactRegistration();
+//
+//
+//        Test.stopTest();
+//    }
 
     @IsTest static void testRegPicklists() {
-        SummitEventsRegisterController registerCtrl = new SummitEventsRegisterController();
-        registerCtrl.getSexDD();
-        registerCtrl.getStateDD();
-        registerCtrl.getCountryDD();
-        registerCtrl.getTimeFrame();
-        registerCtrl.getThirdPartyStatus();
-        registerCtrl.getApplicantTypeDD();
-        registerCtrl.getRelationshipDD();
+        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', '', true, true, 'One registration per instance');
+
+        Test.startTest();
+        //Add instance ID to register page
+        PageReference pageRef = Page.SummitEventsRegister;
+        Test.setCurrentPage(pageRef);
+        ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
+        SummitEventsRegisterController registerController = new SummitEventsRegisterController();
+        registerController.getSexDD();
+        registerController.getStateDD();
+        registerController.getCountryDD();
+        registerController.getTimeFrame();
+        registerController.getThirdPartyStatus();
+        registerController.getApplicantTypeDD();
+        registerController.getRelationshipDD();
+        Test.stopTest();
     }
 
     @IsTest static void testEventWithEmailRestrictions() {
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', '', true, true, 'One registration per instance');
+        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', '', true, true, 'One registration per instance');
 
         Test.startTest();
         //Add instance ID to register page
@@ -184,7 +192,7 @@ public with sharing class SummitEventsShared_TEST {
     @IsTest static void testRegAlreadyExists() {
         //Insert a test event
         SummitEventsTestSharedDataFactory.createContact('MatchFirst', 'Match', 'MatchLast', 'match@valleyhill.net', '55555', '(555) 555-5555', '1971-03-22', '2012');
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', 'High School Senior', false, false, '');
+        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', 'High School Senior', false, false, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'MatchFirst', 'MatchLast', 'match@valleyhill.net', '55555', '1971-03-22', '2012', null);
 
         Test.startTest();
@@ -206,7 +214,7 @@ public with sharing class SummitEventsShared_TEST {
 
     @IsTest static void testSubmit() {
         SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', '', true, true, '');
+        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         Test.startTest();
         PageReference pageRef = Page.SummitEventsSubmit;
@@ -224,7 +232,7 @@ public with sharing class SummitEventsShared_TEST {
 
     @IsTest static void testRegWithOptions() {
         SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching Rules 1', 'Test Event', '', true, true, '');
+        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
         Test.startTest();
@@ -235,7 +243,7 @@ public with sharing class SummitEventsShared_TEST {
 
         optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
 
-        optionsCtrl.checkEventDetails();
+        //optionsCtrl.checkEventDetails();
         optionsCtrl.previousPage();
 
         optionsCtrl.incomingAppointmentJSON = '[]';
@@ -260,7 +268,7 @@ public with sharing class SummitEventsShared_TEST {
     }
 
     @IsTest static void testRegCancel() {
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', '', true, true, '');
+        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
         Test.startTest();
@@ -273,7 +281,7 @@ public with sharing class SummitEventsShared_TEST {
     }
 
     @IsTest static void testRegConfirmationPage() {
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching Rules 1', 'Test Event', '', true, true, '');
+        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
         Test.startTest();
@@ -288,7 +296,7 @@ public with sharing class SummitEventsShared_TEST {
     }
 
     @IsTest static void testParkingPass() {
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching Rules 1', 'Test Event', '', true, true, '');
+        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         evtReg.Status__c = 'Registered';
         update evtReg;
@@ -302,7 +310,7 @@ public with sharing class SummitEventsShared_TEST {
     }
 
     @IsTest static void testEventFeed() {
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', 'Alumni', true, true, '');
+        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', 'Alumni', true, true, '');
 
         Test.startTest();
         RestRequest req = new RestRequest();
@@ -367,7 +375,7 @@ public with sharing class SummitEventsShared_TEST {
     }
 
     @IsTest static void testLetterheadLookup() {
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Test Event', '', true, true, '');
+        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', '', true, true, '');
         SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         Summit_Events_Email__c testEvtEmail = SummitEventsTestSharedDataFactory.createTestTransactionEmail(evtInst, 'Registered', '');
 
@@ -402,7 +410,7 @@ public with sharing class SummitEventsShared_TEST {
 
     //Test the add to calendar page
     @IsTest static void testSEAddToCalendar() {
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Overnight Event', '', true, true, '');
+        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Overnight Event', '', true, true, '');
 
         Test.startTest();
         ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
@@ -413,7 +421,7 @@ public with sharing class SummitEventsShared_TEST {
 
     //Test the add to calendar page
     @IsTest static void testSEHostAssignment() {
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Overnight Event', '', true, true, '');
+        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Overnight Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
         Test.startTest();
@@ -449,7 +457,7 @@ public with sharing class SummitEventsShared_TEST {
 
     //Test itinerary printout
     @IsTest static void testItineraryPrint() {
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Matching rules 1', 'Overnight Event', '', true, true, '');
+        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Overnight Event', '', true, true, '');
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
         Test.startTest();

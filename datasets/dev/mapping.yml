@@ -1,10 +1,7 @@
 Insert Contact:
   sf_object: Contact
   fields:
-  - DoNotCall
   - FirstName
-  - HasOptedOutOfEmail
-  - HasOptedOutOfFax
   - LastName
   lookups:
     ReportsToId:
