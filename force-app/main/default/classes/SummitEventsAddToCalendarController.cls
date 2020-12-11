@@ -231,9 +231,9 @@ public with sharing class SummitEventsAddToCalendarController {
                     //Title
                     urlCalendarLink += '&title=' + EncodingUtil.urlEncode(getEventTitle(eventInformation), 'UTF-8');
                     //Start time
-                    urlCalendarLink += '&st=st' + formattedGmtVersionOfDate(eventInformation.Instance_Start_Date__c, eventInformation.Instance_Start_Time__c);
+                    urlCalendarLink += '&st=' + formattedGmtVersionOfDate(eventInformation.Instance_Start_Date__c, eventInformation.Instance_Start_Time__c);
                     //End time
-                    urlCalendarLink += '&et=et' + formattedGmtVersionOfDate(eventInformation.Instance_End_Date__c, eventInformation.Instance_End_Time__c);
+                    urlCalendarLink += '&et=' + formattedGmtVersionOfDate(eventInformation.Instance_End_Date__c, eventInformation.Instance_End_Time__c);
                     //Description
                     urlCalendarLink += '&desc=' + EncodingUtil.urlEncode(getEventDescription(eventInformation).replace('\\n', '\n'), 'UTF-8');
                     //location title
