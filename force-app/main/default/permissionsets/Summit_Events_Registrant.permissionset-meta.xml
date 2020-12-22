@@ -12,7 +12,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Appointment_Type__c.Appointment_Fee_Additional_Attribute__c</field>
+        <field>Summit_Events_Appointment_Type__c.Appointment_Fee_Additional_Allocation__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -22,7 +22,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Appointment_Type__c.Appointment_Fee_Attribute__c</field>
+        <field>Summit_Events_Appointment_Type__c.Appointment_Fee_Allocation__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -247,7 +247,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Summit_Events_Fee__c.Event_Fee_Attribute__c</field>
+        <field>Summit_Events_Fee__c.Event_Fee_Allocation__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1242,27 +1242,27 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Donation_Recipient_1__c</field>
+        <field>Summit_Events__c.Donation_Allocation_1__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Donation_Recipient_2__c</field>
+        <field>Summit_Events__c.Donation_Allocation_2__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Donation_Recipient_3__c</field>
+        <field>Summit_Events__c.Donation_Allocation_3__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Donation_Recipient_4__c</field>
+        <field>Summit_Events__c.Donation_Allocation_4__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Donation_Recipient_5__c</field>
+        <field>Summit_Events__c.Donation_Allocation_5__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1317,7 +1317,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Event_Fee_Additional_Attribute__c</field>
+        <field>Summit_Events__c.Event_Fee_Additional_Allocation__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1327,7 +1327,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Event_Fee_Attribute__c</field>
+        <field>Summit_Events__c.Event_Fee_Allocation__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1526,7 +1526,7 @@
         <allowEdit>false</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>Summit_Events_Fee_Attribute__c</object>
+        <object>Summit_Events_Fee_Allocation__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>

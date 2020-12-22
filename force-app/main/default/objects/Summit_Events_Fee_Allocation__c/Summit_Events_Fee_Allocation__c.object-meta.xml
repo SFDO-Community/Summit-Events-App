@@ -153,13 +153,13 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>Summit Events Fee Attribute</label>
+    <label>Summit Events Fee Allocation</label>
     <nameField>
-        <label>Summit Events Fee Attributes Name</label>
+        <label>Summit Events Fee Allocation Name</label>
         <trackHistory>false</trackHistory>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Summit Events Fees Attributes</pluralLabel>
+    <pluralLabel>Summit Events Fees Allocations</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>

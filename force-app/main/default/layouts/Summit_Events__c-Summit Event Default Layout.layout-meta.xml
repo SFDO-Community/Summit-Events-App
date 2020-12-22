@@ -132,7 +132,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Event_Fee_Attribute__c</field>
+                <field>Event_Fee_Allocation__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -142,7 +142,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Event_Fee_Additional_Attribute__c</field>
+                <field>Event_Fee_Additional_Allocation__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -163,15 +163,15 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_Recipient_1__c</field>
+                <field>Donation_Allocation_1__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_Recipient_2__c</field>
+                <field>Donation_Allocation_2__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_Recipient_3__c</field>
+                <field>Donation_Allocation_3__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -185,11 +185,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_Recipient_4__c</field>
+                <field>Donation_Allocation_4__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_Recipient_5__c</field>
+                <field>Donation_Allocation_5__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
