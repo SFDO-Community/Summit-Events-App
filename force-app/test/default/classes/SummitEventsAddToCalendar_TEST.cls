@@ -4,7 +4,7 @@
 // Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas on 12/6/2020.
 
 @IsTest
-private class SummitEventsAddToCalendar_TEST {
+public class SummitEventsAddToCalendar_TEST {
     @IsTest
     static void testIcsFileGeneration() {
         Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Overnight Event', '', true, true, '');
