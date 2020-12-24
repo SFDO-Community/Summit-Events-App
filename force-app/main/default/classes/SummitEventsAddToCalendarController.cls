@@ -112,7 +112,7 @@ public with sharing class SummitEventsAddToCalendarController {
 
         if (String.isNotBlank(eventInformation.Instance_Short_Description__c)) {
             fullDescription += '\\n' + eventInformation.Instance_Short_Description__c;
-        } else if (String.isNotBlank(eventInformation.Instance_Short_Description__c)) {
+        } else if (String.isBlank(eventInformation.Instance_Short_Description__c)) {
             fullDescription += '\\n' + eventInformation.Event__r.Event_description__c;
         }
         if (String.isBlank(fullDescription)) {
