@@ -6,15 +6,15 @@
 @IsTest
 private class SummitEventsParkingPass_TEST {
     @IsTest static void testParkingPass() {
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', '', true, true, '');
-        Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
-        evtReg.Status__c = 'Registered';
-        update evtReg;
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c testEventRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        testEventRegistration.Status__c = 'Registered';
+        update testEventRegistration;
         Test.startTest();
         SummitEventsParkingPassController parkingCtrl = new SummitEventsParkingPassController();
-        ApexPages.currentPage().getParameters().put('regId', evtReg.Id);
+        ApexPages.currentPage().getParameters().put('regId', testEventRegistration.Id);
         parkingCtrl = new SummitEventsParkingPassController();
-        upsert evtReg;
+        upsert testEventRegistration;
         parkingCtrl = new SummitEventsParkingPassController();
         Test.stopTest();
     }

@@ -7,14 +7,14 @@
 private class SummitEventsRegisterAppointment_TEST {
     @IsTest static void testRegWithOptions() {
         SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', '', true, true, '');
-        Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
         Test.startTest();
         SummitEventsRegisterAppointmentCtlr optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
 
         SummitEventsShared SEShared = new SummitEventsShared();
-        SEShared.createEncryptedCookie('Transfer',evtInst.Id,evtInst.Event__c, evtReg.Id);
+        SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
 
         optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
 
@@ -24,20 +24,18 @@ private class SummitEventsRegisterAppointment_TEST {
         optionsCtrl.incomingAppointmentJSON = '[]';
         optionsCtrl.saveOptions();
 
-        //[{"apptId":"a010m000003EibeAAC","apptCategory":"","apptType":"","apptText":"","apptTitle":"Multi colored socks for everyone"},{"apptId":"a010m000003EibUAAS","apptCategory":"","apptType":"","apptText":"","apptTitle":"Red Socks Only"}]
-
-        List<Summit_Events_Appointment_Type__c> newApptTypes = [SELECT Id, Title__c FROM Summit_Events_Appointment_Type__c WHERE Summit_Events__c = :evtInst.Event__c];
-        String jsonAppts = '[';
-        for (Summit_Events_Appointment_Type__c at : newApptTypes) {
-            jsonAppts += '{"apptId":"' + at.Id + '","apptCategory":"","apptType":"","apptText":"","apptTitle":"' + at.Title__c + '"},';
+        List<Summit_Events_Appointment_Type__c> newAppointmentTypes = [SELECT Id, Title__c FROM Summit_Events_Appointment_Type__c WHERE Summit_Events__c = :seaTestInstances[1].Event__c];
+        String jsonAppointments = '[';
+        for (Summit_Events_Appointment_Type__c at : newAppointmentTypes) {
+            jsonAppointments += '{"apptId":"' + at.Id + '","apptCategory":"","apptType":"","apptText":"","apptTitle":"' + at.Title__c + '"},';
         }
-        jsonAppts = jsonAppts.removeEnd(',');
-        jsonAppts += ']';
-        optionsCtrl.incomingAppointmentJSON = jsonAppts;
+        jsonAppointments = jsonAppointments.removeEnd(',');
+        jsonAppointments += ']';
+        optionsCtrl.incomingAppointmentJSON = jsonAppointments;
         optionsCtrl.saveOptions();
 
         //run constructor again to simulate page load after save
-        evtReg.UG_Event_Appointments__r.add(new Summit_Events_Appointments__c(Client_Created_Appointment__c = true));
+        seaTestRegistration.UG_Event_Appointments__r.add(new Summit_Events_Appointments__c(Client_Created_Appointment__c = true));
         optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
         Test.stopTest();
     }

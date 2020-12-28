@@ -7,16 +7,16 @@
 private class SummitEventsSubmit_TEST {
     @IsTest static void testSubmit() {
         SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', '', true, true, '');
-        Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         Test.startTest();
         PageReference pageRef = Page.SummitEventsSubmit;
         Test.setCurrentPage(pageRef);
 
         SummitEventsShared SEShared = new SummitEventsShared();
-        SEShared.createEncryptedCookie('Transfer', evtInst.Id, evtInst.Event__c, evtReg.Id);
+        SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
 
-        //ApexPages.currentPage().getParameters().put('instanceID', evtInst.Id);
+        //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
         SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
         submitCtrl.checkEventDetails();
         submitCtrl.previousPage();

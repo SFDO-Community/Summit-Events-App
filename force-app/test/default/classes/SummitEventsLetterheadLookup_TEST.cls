@@ -6,9 +6,9 @@
 @IsTest
 public with sharing class SummitEventsLetterheadLookup_TEST {
     @IsTest static void testLetterheadLookup() {
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', '', true, true, '');
-        SummitEventsTestSharedDataFactory.createEventRegistration(evtInst, 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
-        Summit_Events_Email__c testEvtEmail = SummitEventsTestSharedDataFactory.createTestTransactionEmail(evtInst, 'Registered', '');
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        Summit_Events_Email__c testEvtEmail = SummitEventsTestSharedDataFactory.createTestTransactionEmail(seaTestInstances[1], 'Registered', '');
 
         Test.startTest();
         ApexPages.StandardController sc = new ApexPages.StandardController(testEvtEmail);

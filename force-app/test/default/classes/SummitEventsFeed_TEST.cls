@@ -6,7 +6,7 @@
 @IsTest
 private class SummitEventsFeed_TEST {
     @IsTest static void testEventFeed() {
-        Summit_Events_Instance__c evtInst = SummitEventsTestSharedDataFactory.createTestEvent('Use Salesforce Duplicate Rule', 'Test Event', 'Alumni', true, true, '');
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
 
         Test.startTest();
         RestRequest req = new RestRequest();
@@ -36,7 +36,7 @@ private class SummitEventsFeed_TEST {
         //test filter minus dates
         req.params.remove('feedType');
         req.params.put('feedType', 'eventList');
-        req.params.put('eventId', evtInst.Id);
+        req.params.put('eventId', seaTestInstances[1].Id);
         req.params.put('sponsor', 'Big Business');
         req.params.put('longdesc', 'true');
         RestContext.request = req;
