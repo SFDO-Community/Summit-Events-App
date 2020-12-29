@@ -403,7 +403,7 @@ public with sharing class SummitEventsRegisterController {
         }
         for (Schema.PicklistEntry PicklistValue : PicklistValues) {
             if (YourFieldName == 'Registrant_Third_Party_Status__c') {
-                if (eventPage != null) {
+                if (eventPage != null && String.isNotBlank(eventPage.Ask_Third_Party_Registrant__c)) {
                     if (eventPage.Ask_Third_Party_Registrant__c.contains(PicklistValue.getValue())) {
                         picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));
                     }

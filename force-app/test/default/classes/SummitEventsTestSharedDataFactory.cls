@@ -51,42 +51,72 @@ public with sharing class SummitEventsTestSharedDataFactory {
             seaInstance.Location_Title_Override__c = 'A location';
             seaTestInstances.add(seaInstance);
         }
-
         insert seaTestInstances;
-
-//        Id classRecType = Schema.SObjectType.Summit_Events_Host__c.getRecordTypeInfosByName().get('Class').getRecordTypeId();
-//        List<Summit_Events_Host__c> testHosts = new List<Summit_Events_Host__c>();
-//        testHosts.add(new Summit_Events_Host__c(
-//                Event_Instance__c = testInstance.Id,
-//                First_Name__c = 'Host1',
-//                Last_Name__c = 'Host1',
-//                RecordTypeId = classRecType,
-//                Preferred_Title__c = 'Mr.',
-//                Gender__c = 'M',
-//                Department__c = 'Host Dept 1',
-//                Course_Name__c = 'Host 1 Course',
-//                Max_Available__c = 10,
-//                Location__c = 'TEST LOCATION 1'
-//        ));
-//
-//        testHosts.add(new Summit_Events_Host__c(
-//                Event_Instance__c = testInstance.Id,
-//                First_Name__c = 'Host2',
-//                Last_Name__c = 'Host2',
-//                RecordTypeId = classRecType,
-//                Preferred_Title__c = 'Mr.',
-//                Gender__c = 'M',
-//                Department__c = 'Host Dept 2',
-//                Course_Name__c = 'Host 2 Course',
-//                Max_Available__c = 10,
-//                Assigned__c = 10,
-//                Location__c = 'TEST LOCATION 2'
-//        ));
-//        insert testHosts;
-
         return seaTestInstances;
-
     }
+
+    public static List<Summit_Events_Host__c> createHosts(Id seaInstanceId) {
+        Id classRecType = Schema.SObjectType.Summit_Events_Host__c.getRecordTypeInfosByName().get('Class').getRecordTypeId();
+        List<Summit_Events_Host__c> testHosts = new List<Summit_Events_Host__c>();
+        testHosts.add(new Summit_Events_Host__c(
+                Event_Instance__c = seaInstanceId,
+                First_Name__c = 'Host1',
+                Last_Name__c = 'Host1',
+                RecordTypeId = classRecType,
+                Preferred_Title__c = 'Mr.',
+                Gender__c = 'M',
+                Department__c = 'Host Dept 1',
+                Course_Name__c = 'Host 1 Course',
+                Max_Available__c = 10,
+                Location__c = 'TEST LOCATION 1'
+        ));
+
+        testHosts.add(new Summit_Events_Host__c(
+                Event_Instance__c = seaInstanceId,
+                First_Name__c = 'Host2',
+                Last_Name__c = 'Host2',
+                RecordTypeId = classRecType,
+                Preferred_Title__c = 'Mr.',
+                Gender__c = 'M',
+                Department__c = 'Host Dept 2',
+                Course_Name__c = 'Host 2 Course',
+                Max_Available__c = 10,
+                Assigned__c = 10,
+                Location__c = 'TEST LOCATION 2'
+        ));
+        insert testHosts;
+        return testHosts;
+    }
+
+    public static List<Summit_Events_Appointment_Type__c> createAppointmentTypes(Id seaEventId) {
+        List<Summit_Events_Appointment_Type__c> seaTestAppointmentTypes = new List<Summit_Events_Appointment_Type__c>();
+
+        //Get all the variations of user input to make a appointment type for each
+        List<String> registrantInputValues= new List<String>();
+        Schema.DescribeFieldResult fieldResult = Summit_Events_Appointment_Type__c.Registrant_Input__c.getDescribe();
+        List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+        for( Schema.PicklistEntry pickListVal : ple){
+            registrantInputValues.add(pickListVal.getLabel());
+        }
+
+        for (Integer x=0; x < registrantInputValues.size(); x++) {
+            Summit_Events_Appointment_Type__c appointmentType = new Summit_Events_Appointment_Type__c();
+            appointmentType.Summit_Events__c = seaEventId;
+            appointmentType.Title__c = 'Test Appointment ' + x;
+            appointmentType.Appointment_Type_Status__c = 'Active';
+            appointmentType.Sort_Order__c = x;
+            appointmentType.Registrant_Input__c = registrantInputValues[x];
+            if (registrantInputValues[x].containsIgnoreCase('pick list')) {
+                appointmentType.Custom_Picklist__c = 'Picklist 1;Picklist 2;Picklist 3; Picklist 4;';
+            }
+            appointmentType.Description__c = 'Test Appointment Number ' + x;
+            seaTestAppointmentTypes.add(appointmentType);
+        }
+        insert seaTestAppointmentTypes;
+        return seaTestAppointmentTypes;
+    }
+
+
 
     public static Summit_Events_Email__c createTestTransactionEmail(Summit_Events_Instance__c evtInst, String status, String subStatus) {
 
@@ -127,7 +157,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
         insert a;
 
         //Creating a student contact
-        Contact student = new Contact(
+        Contact testContact = new Contact(
                 FirstName = firstName,
                 LastName = lastName,
                 Email = Email,
@@ -139,9 +169,9 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Birthdate = Date.valueOf(DOB),
                 AccountId = a.Id
         );
-        insert student;
+        insert testContact;
 
-        return student;
+        return testContact;
 
     }
 
@@ -167,42 +197,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
             testRegistration.Contact__c = optionalContactLinkId;
             upsert testRegistration;
         }
-
-        List<Summit_Events_Appointments__c> addToRegAppointments = new List<Summit_Events_Appointments__c>();
-        Integer aptNum = 0;
-
-        //Add athletic appointment
-        addToRegAppointments.add(new Summit_Events_Appointments__c(
-                Event_Registration__c = testRegistration.Id,
-                Description__c = 'Athletic Appointment',
-                Appointment_Category__c = 'Athletic Visit',
-                Appointment_Type__c = 'Men\'s Golf',
-                Appointment_Status__c = 'Registered'
-        ));
-
-        //Represent all other appointment types
-        List<Summit_Events_Appointment_Type__c> newAppointmentTypes = [SELECT Id FROM Summit_Events_Appointment_Type__c WHERE Summit_Events__c = :evtI.Event__c];
-
-        for (Summit_Events_Appointment_Type__c nat : newAppointmentTypes) {
-            Summit_Events_Appointments__c addThisAppointment = new Summit_Events_Appointments__c (
-                    Event_Appointment_Type__c = nat.Id,
-                    Event_Registration__c = testRegistration.Id,
-                    Client_Created_Appointment__c = true,
-                    Room__c = 'TEST ROOM'
-            );
-            if (Math.mod(aptNum, 2) == 0) {
-                addThisAppointment.Appointment_Status__c = 'Registered';
-            } else {
-                addThisAppointment.Appointment_Status__c = 'Confirmed';
-            }
-
-            addToRegAppointments.add(addThisAppointment);
-            aptNum++;
-        }
-        insert addToRegAppointments;
-
         return testRegistration;
-
     }
 
     static Integer s_num = 1;

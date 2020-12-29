@@ -8,6 +8,16 @@ private class SummitEventsPrintItineraries_TEST {
     @IsTest static void testItineraryPrint() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        List<Summit_Events_Host__c> testHosts = SummitEventsTestSharedDataFactory.createHosts(seaTestInstances[1].Id);
+        List<Summit_Events_Appointment_Type__c> testAppointmentTypes = SummitEventsTestSharedDataFactory.createAppointmentTypes(seaTestInstances[1].Event__c);
+        List<Summit_Events_Appointments__c> testAppointments = new List<Summit_Events_Appointments__c>();
+
+        for (Summit_Events_Appointment_Type__c appointmentType : testAppointmentTypes) {
+            Summit_Events_Appointments__c appointment = new Summit_Events_Appointments__c();
+            appointment.Event_Registration__c = seaTestRegistration.Id;
+            testAppointments.add(appointment);
+        }
+        insert testAppointments;
 
         Test.startTest();
 
@@ -19,7 +29,6 @@ private class SummitEventsPrintItineraries_TEST {
         hostController.getListHost();
         hostController.assignHost();
 
-        List<Summit_Events_Host__c> testHosts = [SELECT Id FROM Summit_Events_Host__c WHERE Event_Instance__c = :seaTestInstances[1].Id];
         //Assign a host from test data
         hostController.hostId = testHosts[0].Id;
         hostController.hostAction = 'assign';
