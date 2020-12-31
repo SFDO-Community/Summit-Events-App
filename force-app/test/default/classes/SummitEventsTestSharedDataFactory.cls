@@ -14,7 +14,11 @@ public with sharing class SummitEventsTestSharedDataFactory {
             Blob cryptoKey = Crypto.generateAesKey(256);
             String encryptionString = EncodingUtil.base64Encode(cryptoKey).substring(0, 32);
             SummitEventsSettings.Cookie_Encryption_Key__c = encryptionString;
-            insert SummitEventsSettings;
+            upsert SummitEventsSettings;
+        }
+        if (String.isBlank(SummitEventsSettings.Community_Base_URL__c)) {
+            SummitEventsSettings.Community_Base_URL__c = 'http://google.com/';
+            upsert SummitEventsSettings;
         }
 
         Summit_Events__c testEvent = new Summit_Events__c();
@@ -223,5 +227,31 @@ public with sharing class SummitEventsTestSharedDataFactory {
         }
         return eReg;
     }
+
+    public static List<Summit_Events_Fee_Allocation__c> AddFeesToEvent (Id eventId) {
+        Summit_Events__c seaTestEvent = [
+                SELECT Id, Event_Fee__c, Event_Fee_Additional__c, Event_Fee_Allocation__c, Event_Fee_Additional_Allocation__c
+                FROM Summit_Events__c
+                WHERE Id = :eventId
+        ];
+
+        List<Summit_Events_Fee_Allocation__c> testFeeAllocations = new List<Summit_Events_Fee_Allocation__c>();
+        for (Integer x=0; x<5; x++) {
+            Summit_Events_Fee_Allocation__c feeAllocation = new Summit_Events_Fee_Allocation__c();
+            feeAllocation.Name = 'Test Allocation ' + x;
+            testFeeAllocations.add(feeAllocation);
+        }
+        insert testFeeAllocations;
+
+        seaTestEvent.Event_Fee__c = 100.00;
+        seaTestEvent.Event_Fee_Allocation__c = testFeeAllocations[0].Id;
+        seaTestEvent.Event_Fee_Additional__c = 50.00;
+        seaTestEvent.Event_Fee_Additional_Allocation__c = testFeeAllocations[1].Id;
+        upsert seaTestEvent;
+
+        return testFeeAllocations;
+
+    }
+
 
 }

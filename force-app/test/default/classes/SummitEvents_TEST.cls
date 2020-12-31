@@ -7,5 +7,12 @@
 private class SummitEvents_TEST {
     @IsTest
     static void testBehavior() {
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Test.startTest();
+        PageReference pageRef = Page.SummitEvents;
+        pageRef.getParameters().put('adminopen', 'true');
+        Test.setCurrentPage(pageRef);
+        SummitEventsController submitCtrl = new SummitEventsController();
+        Test.stopTest();
     }
 }
