@@ -10,12 +10,13 @@ private class SummitEventsConfirmation_TEST {
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
         Test.startTest();
+        PageReference pageRef = Page.SummitEventsConfirmation;
+        pageRef.getParameters().put('adminopen', 'true');
+        Test.setCurrentPage(pageRef);
         SummitEventsShared SEShared = new SummitEventsShared();
-        SEShared.createEncryptedCookie('', seaTestInstances[1].Id, seaTestInstances[1].Event__c, evtReg.Id);
-
+        SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, evtReg.Id);
         SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
-        SEShared.createEncryptedCookie('', seaTestInstances[1].Id, seaTestInstances[1].Event__c, evtReg.Id);
-
+        confirmCtrl.eventIsClosed = false;
         confirmCtrl.checkEventDetails();
         Test.stopTest();
     }
