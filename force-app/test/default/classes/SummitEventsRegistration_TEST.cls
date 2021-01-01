@@ -3,9 +3,9 @@
 // license that can be found in the LICENSE file.
 // Created by Thaddaeus Dahlberg on 12/28/2020.
 
-@isTest
+@IsTest
 public class SummitEventsRegistration_TEST {
-    @isTest
+    @IsTest
     public static void TestSummitEventsRegistration() {
         Summit_Events__c event = new Summit_Events__c();
         event.Name = 'Test event';

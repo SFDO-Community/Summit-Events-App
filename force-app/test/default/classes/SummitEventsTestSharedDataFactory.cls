@@ -96,14 +96,14 @@ public with sharing class SummitEventsTestSharedDataFactory {
         List<Summit_Events_Appointment_Type__c> seaTestAppointmentTypes = new List<Summit_Events_Appointment_Type__c>();
 
         //Get all the variations of user input to make a appointment type for each
-        List<String> registrantInputValues= new List<String>();
+        List<String> registrantInputValues = new List<String>();
         Schema.DescribeFieldResult fieldResult = Summit_Events_Appointment_Type__c.Registrant_Input__c.getDescribe();
         List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
-        for( Schema.PicklistEntry pickListVal : ple){
+        for (Schema.PicklistEntry pickListVal : ple) {
             registrantInputValues.add(pickListVal.getLabel());
         }
 
-        for (Integer x=0; x < registrantInputValues.size(); x++) {
+        for (Integer x = 0; x < registrantInputValues.size(); x++) {
             Summit_Events_Appointment_Type__c appointmentType = new Summit_Events_Appointment_Type__c();
             appointmentType.Summit_Events__c = seaEventId;
             appointmentType.Title__c = 'Test Appointment ' + x;
@@ -119,7 +119,6 @@ public with sharing class SummitEventsTestSharedDataFactory {
         insert seaTestAppointmentTypes;
         return seaTestAppointmentTypes;
     }
-
 
 
     public static Summit_Events_Email__c createTestTransactionEmail(Summit_Events_Instance__c evtInst, String status, String subStatus) {
@@ -228,7 +227,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
         return eReg;
     }
 
-    public static List<Summit_Events_Fee_Allocation__c> AddFeesToEvent (Id eventId) {
+    public static List<Summit_Events_Fee_Allocation__c> AddFeesToEvent(Id eventId) {
         Summit_Events__c seaTestEvent = [
                 SELECT Id, Event_Fee__c, Event_Fee_Additional__c, Event_Fee_Allocation__c, Event_Fee_Additional_Allocation__c
                 FROM Summit_Events__c
@@ -236,7 +235,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
         ];
 
         List<Summit_Events_Fee_Allocation__c> testFeeAllocations = new List<Summit_Events_Fee_Allocation__c>();
-        for (Integer x=0; x<5; x++) {
+        for (Integer x = 0; x < 10; x++) {
             Summit_Events_Fee_Allocation__c feeAllocation = new Summit_Events_Fee_Allocation__c();
             feeAllocation.Name = 'Test Allocation ' + x;
             testFeeAllocations.add(feeAllocation);
@@ -251,6 +250,28 @@ public with sharing class SummitEventsTestSharedDataFactory {
 
         return testFeeAllocations;
 
+    }
+
+    public static void AddDonationsToEvents(Id eventId, List<Summit_Events_Fee_Allocation__c> testFeeAllocations) {
+        Summit_Events__c seaTestEvent = [
+                SELECT Id, Event_Fee__c, Event_Fee_Additional__c, Event_Fee_Allocation__c, Event_Fee_Additional_Allocation__c,
+                        Donation_Allocation_1__c,Donation_Allocation_2__c,Donation_Allocation_3__c,Donation_Allocation_4__c,Donation_Allocation_5__c,
+                        Donation_Description__c, Donation_Suggested_Amount_List__c, Display_Optional_Donation__c, Donation_Title__c
+                FROM Summit_Events__c
+                WHERE Id = :eventId
+        ];
+
+        seaTestEvent.Donation_Description__c = 'Test Donation Description';
+        seaTestEvent.Display_Optional_Donation__c = true;
+        seaTestEvent.Donation_Suggested_Amount_List__c = '100\n200\n300\n400\n';
+        seaTestEvent.Donation_Title__c = 'Test Donation Title';
+        seaTestEvent.Donation_Allocation_1__c = testFeeAllocations[1].Id;
+        seaTestEvent.Donation_Allocation_2__c = testFeeAllocations[2].Id;
+        seaTestEvent.Donation_Allocation_3__c = testFeeAllocations[3].Id;
+        seaTestEvent.Donation_Allocation_4__c = testFeeAllocations[4].Id;
+        seaTestEvent.Donation_Allocation_5__c = testFeeAllocations[5].Id;
+
+        upsert seaTestEvent;
     }
 
 
