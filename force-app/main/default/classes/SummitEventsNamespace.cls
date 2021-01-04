@@ -40,7 +40,7 @@ public class SummitEventsNamespace {
     /******************************************************************************************************
     * @description String helper property for getNamespace() method.
     *******************************************************************************************************/
-    private static string plainNamespace;
+    @TestVisible private static string plainNamespace;
     /*******************************************************************************************************
     * @description Finds the namespace for the current context.
     * @return string The current namespace as a string, or a blank string if we're not in a namespaced context.
