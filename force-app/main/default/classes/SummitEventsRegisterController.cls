@@ -28,7 +28,6 @@ public with sharing class SummitEventsRegisterController {
     public String applicantType { get; set; }
     public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
-    public String dataLayerLocationType { get; set; }
     public Decimal totalEventCost { get; set; }
     public List<Summit_Events_Fee__c> eventFeeList { get; set; }
     public String phoneType { get; set; }

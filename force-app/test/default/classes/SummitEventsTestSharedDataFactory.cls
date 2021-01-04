@@ -35,7 +35,9 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Location_Title__c = 'A location',
                 Location_Map_Link__c = 'Map Link 1',
                 Location_Address__c = '123 Electric Ave.',
-                Location_Type__c = 'On-Site'
+                Location_Type__c = 'On-Site',
+                Allow_Other_Attendees__c = true,
+                Max_Other_Attendees__c = 10
         );
         insert testEvent;
 
@@ -52,7 +54,6 @@ public with sharing class SummitEventsTestSharedDataFactory {
             seaInstance.Instance_Time_Zone__c = 'Central Daylight Time (America/Chicago)';
             seaInstance.Active_Status__c = 'Active';
             seaInstance.Capacity__c = 500;
-            seaInstance.Location_Title_Override__c = 'A location';
             seaTestInstances.add(seaInstance);
         }
         insert seaTestInstances;
@@ -92,6 +93,14 @@ public with sharing class SummitEventsTestSharedDataFactory {
         return testHosts;
     }
 
+    public static Summit_Events__c getEventRecord(Id eventId) {
+        Summit_Events__c seaTestEvent = [
+                SELECT Name, Id
+                FROM Summit_Events__c
+                WHERE Id = :eventId
+        ];
+        return seaTestEvent;
+    }
     public static List<Summit_Events_Appointment_Type__c> createAppointmentTypes(Id seaEventId) {
         List<Summit_Events_Appointment_Type__c> seaTestAppointmentTypes = new List<Summit_Events_Appointment_Type__c>();
 
@@ -116,6 +125,15 @@ public with sharing class SummitEventsTestSharedDataFactory {
             appointmentType.Description__c = 'Test Appointment Number ' + x;
             seaTestAppointmentTypes.add(appointmentType);
         }
+        //Add a category appointment
+        Summit_Events_Appointment_Type__c appointmentType = new Summit_Events_Appointment_Type__c();
+        appointmentType.Summit_Events__c = seaEventId;
+        appointmentType.Title__c = 'Test Appointment Category';
+        appointmentType.Appointment_Type_Status__c = 'Active';
+        appointmentType.Sort_Order__c = 99;
+        appointmentType.Appointment_Category__c = 'Admissions Visit';
+        appointmentType.Description__c = 'Test Appointment Category ';
+        seaTestAppointmentTypes.add(appointmentType);
         insert seaTestAppointmentTypes;
         return seaTestAppointmentTypes;
     }
@@ -273,6 +291,5 @@ public with sharing class SummitEventsTestSharedDataFactory {
 
         upsert seaTestEvent;
     }
-
 
 }
