@@ -12,7 +12,16 @@ private class SummitEvents_TEST {
         PageReference pageRef = Page.SummitEvents;
         pageRef.getParameters().put('adminopen', 'true');
         Test.setCurrentPage(pageRef);
+
         SummitEventsController submitCtrl = new SummitEventsController();
+        System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/summiteventsfeed');
+
+        Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
+        SummitEventsSettings.Community_Base_URL__c = 'http://google.com';
+        upsert SummitEventsSettings;
+        submitCtrl = new SummitEventsController();
+        System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/summiteventsfeed');
+
         Test.stopTest();
     }
 }

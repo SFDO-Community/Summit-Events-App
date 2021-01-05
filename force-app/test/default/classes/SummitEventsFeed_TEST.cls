@@ -47,12 +47,14 @@ private class SummitEventsFeed_TEST {
 
         //test filter with start date
         req.params.put('viewStart', String.valueOf(Datetime.now().addMonths(-1)));
+        req.params.put('hideClosed', 'true');
         RestContext.request = req;
         SummitEventsFeed.getSummitEventsFeed();
 
         //test filter with end date
         req.params.put('viewEnd', String.valueOf(Datetime.now().addMonths(1)));
         req.params.put('audience', 'Alumni');
+        req.params.put('hideClosed', 'notRight');
         RestContext.request = req;
         SummitEventsFeed.getSummitEventsFeed();
 

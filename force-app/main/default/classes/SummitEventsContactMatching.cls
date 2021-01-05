@@ -257,7 +257,7 @@ public with sharing class SummitEventsContactMatching {
                 List<Contact> contactsFound = database.query(query);
                 return contactsFound;
             } catch (Exception ex) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
+                System.debug(ex.getMessage());
             }
             return null;
         }
@@ -267,7 +267,7 @@ public with sharing class SummitEventsContactMatching {
                 upsert contactToAdd;
                 return contactToAdd;
             } catch (Exception ex) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
+                System.debug(ex.getMessage());
             }
             return null;
         }

@@ -89,7 +89,7 @@ public with sharing class SummitEventsCancelReviewController {
             try {
                 upsert newEvtReg;
             } catch (Exception ex) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
+                System.debug(ex.getMessage());
             }
             return newEvtReg;
         }

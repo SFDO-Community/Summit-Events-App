@@ -7,14 +7,20 @@
 private class SummitEventsCancelReview_TEST {
     @IsTest static void testRegCancel() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        Summit_Events_Registration__c testRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
         Test.startTest();
         PageReference pageRef = Page.SummitEventsCancelReview;
         Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('regId', evtReg.Id);
+        ApexPages.currentPage().getParameters().put('regId', testRegistration.Id);
         SummitEventsCancelReviewController cancelReviewCtrl = new SummitEventsCancelReviewController();
         cancelReviewCtrl.cancelRegistration();
+
+        Summit_Events_Registration__c statusRegistration = [
+                SELECT Id, Status__c FROM Summit_Events_Registration__c
+                WHERE Id = :testRegistration.Id
+        ];
+        System.assertEquals(statusRegistration.Status__c, 'Cancelled');
         Test.stopTest();
     }
 }
