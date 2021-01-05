@@ -90,8 +90,8 @@ public with sharing class SummitEventsSubmitController {
 
             /** Collect Fees **/
             eventFees = [
-                    SELECT Name, Event_Fee__c, Event_Fee_Attribute__c, Description__c, Event_Fee_Type__c, Summit_Events__c, Event_Appointment_Type__c,
-                            Event_Appointment_Type__r.Title__c, Event_Fee_Attribute__r.Name
+                    SELECT Name, Event_Fee__c, Event_Fee_Allocation__c, Description__c, Event_Fee_Type__c, Summit_Events__c, Event_Appointment_Type__c,
+                            Event_Appointment_Type__r.Title__c, Event_Fee_Allocation__r.Name
                     FROM Summit_Events_Fee__c
                     WHERE Event_Registration__c = :eventInformation.registrationId
             ];
@@ -122,8 +122,8 @@ public with sharing class SummitEventsSubmitController {
                             } else if (fee.Event_Fee_Type__c.equalsIgnoreCase('Optional Donation')) {
                                 paymentItemized += '<tr class="eventDonation">';
                                 paymentItemized += '<td>' + fee.Event_Fee_Type__c;
-                                if (String.isNotBlank(fee.Event_Fee_Attribute__r.Name)) {
-                                    paymentItemized += ' - ' + fee.Event_Fee_Attribute__r.Name;
+                                if (String.isNotBlank(fee.Event_Fee_Allocation__r.Name)) {
+                                    paymentItemized += ' - ' + fee.Event_Fee_Allocation__r.Name;
                                 }
                                 paymentItemized += '</td>';
                                 paymentItemized += '<td>' + prettyCurrencyString(fee.Event_Fee__c) + '</td>';
@@ -132,13 +132,13 @@ public with sharing class SummitEventsSubmitController {
                                 eventOnlyPaymentAmount += fee.Event_Fee__c;
                             }
                         }
-                        if (feesByIndex.size() > 0 && feesByIndex.containsKey(fee.Event_Fee_Attribute__c)) {
-                            Decimal newFee = Decimal.valueOf(feesByIndex.get(fee.Event_Fee_Attribute__c));
+                        if (feesByIndex.size() > 0 && feesByIndex.containsKey(fee.Event_Fee_Allocation__c)) {
+                            Decimal newFee = Decimal.valueOf(feesByIndex.get(fee.Event_Fee_Allocation__c));
                             newFee = newFee + fee.Event_Fee__c;
                             newFee = newFee.setScale(2);
-                            feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(newFee));
+                            feesByIndex.put(fee.Event_Fee_Allocation__c, String.valueOf(newFee));
                         } else {
-                            feesByIndex.put(fee.Event_Fee_Attribute__c, String.valueOf(fee.Event_Fee__c));
+                            feesByIndex.put(fee.Event_Fee_Allocation__c, String.valueOf(fee.Event_Fee__c));
                         }
 
                     }

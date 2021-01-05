@@ -40,6 +40,7 @@ public with sharing class SummitEventsRegisterController {
     public String registrantAudience { get; set; }
     public String EvtUserType { get; set; }
     public Id incomingEventRegistrationId { get; set; }
+    public String formattedStartDate { get; set; }
 
     public SummitEventsRegisterController() {
         //array for looping through additional information questions
@@ -88,7 +89,7 @@ public with sharing class SummitEventsRegisterController {
                     SELECT Id, Name, Event__r.Name, Event__r.Event_Name__c, Event__r.Id, Instance_Title__c, Active_Status__c, Capacity__c,
                             Event__r.Event_description__c, Event__r.Audience__c, Current_Available_Capacity__c,
                             Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c,
-                            Event_Fee_Additional_Attribute_Override__c, Event_Fee_Additional_Override__c, Event_Fee_Override__c, Event_Fee_Attribute_Override__c,
+                            Event_Fee_Additional_Allocation_Override__c, Event_Fee_Additional_Override__c, Event_Fee_Override__c, Event_Fee_Allocation_Override__c,
                             Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :eventInformation.instanceId
@@ -101,6 +102,8 @@ public with sharing class SummitEventsRegisterController {
             startTimeString = SeaShared.formatTime(evtInstance.Instance_Start_Time__c, false);
             endTimeString = SeaShared.formatTime(evtInstance.Instance_End_Time__c, false);
         }
+
+        formattedStartDate = formattedGmtVersionOfDate(evtInstance.Instance_Start_Date__c, evtInstance.Instance_Start_Time__c, evtInstance.Instance_Time_Zone__c);
 
         //Get Event Info off of instance master detail id
         if (!String.isBlank(eventInformation.eventId)) {
@@ -119,7 +122,7 @@ public with sharing class SummitEventsRegisterController {
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c,
                             Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c, Ask_Pronoun__c, Keep_Registration_Open_During_Event__c,
                             Close_Event_Days_Before__c, Ask_Title__c, Ask_Company_Organization__c, Event_Fee__c, Event_Fee_Additional__c,
-                            Event_Fee_Additional_Attribute__c, Event_Fee_Attribute__c, Display_Optional_Donation__c
+                            Event_Fee_Additional_Allocation__c, Event_Fee_Allocation__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     LIMIT 1
@@ -238,14 +241,14 @@ public with sharing class SummitEventsRegisterController {
                 totalEventCost += evtInstance.Event_Fee_Override__c;
                 eventFeeList.add(new Summit_Events_Fee__c(
                         Event_Fee__c = evtInstance.Event_Fee_Override__c,
-                        Event_Fee_Attribute__c = evtInstance.Event_Fee_Attribute_Override__c,
+                        Event_Fee_Allocation__c = evtInstance.Event_Fee_Allocation_Override__c,
                         Event_Fee_Type__c = 'Event'
                 ));
             } else if (eventPage.Event_Fee__c != null) {
                 totalEventCost += eventPage.Event_Fee__c;
                 eventFeeList.add(new Summit_Events_Fee__c(
                         Event_Fee__c = eventPage.Event_Fee__c,
-                        Event_Fee_Attribute__c = eventPage.Event_Fee_Attribute__c,
+                        Event_Fee_Allocation__c = eventPage.Event_Fee_Allocation__c,
                         Event_Fee_Type__c = 'Event'
                 ));
             }
@@ -254,14 +257,14 @@ public with sharing class SummitEventsRegisterController {
                 totalEventCost += evtInstance.Event_Fee_Additional_Override__c;
                 eventFeeList.add(new Summit_Events_Fee__c(
                         Event_Fee__c = evtInstance.Event_Fee_Additional_Override__c,
-                        Event_Fee_Attribute__c = evtInstance.Event_Fee_Additional_Attribute_Override__c,
+                        Event_Fee_Allocation__c = evtInstance.Event_Fee_Additional_Allocation_Override__c,
                         Event_Fee_Type__c = 'Event Additional'
                 ));
             } else if (eventPage.Event_Fee_Additional__c != null) {
                 totalEventCost += eventPage.Event_Fee_Additional__c;
                 eventFeeList.add(new Summit_Events_Fee__c(
                         Event_Fee__c = eventPage.Event_Fee_Additional__c,
-                        Event_Fee_Attribute__c = eventPage.Event_Fee_Additional_Attribute__c,
+                        Event_Fee_Allocation__c = eventPage.Event_Fee_Additional_Allocation__c,
                         Event_Fee_Type__c = 'Event Additional'
                 ));
             }
@@ -375,6 +378,13 @@ public with sharing class SummitEventsRegisterController {
         return cpl;
     }
 
+    public String formattedGmtVersionOfDate(Date aDate, Time aTime, String timeZoneString) {
+        String formattedString = '';
+        Datetime newDateTime = Datetime.newInstanceGmt(aDate.year(), aDate.month(), aDate.day(), aTime.hour(), aTime.minute(), aTime.second());
+        formattedString = newDateTime.formatGmt('EEEE MMMM dd, ') + newDateTime.year();
+        return formattedString;
+    }
+
     public List<SelectOption> PickThePicklist(String YourObjectName, String YourFieldName, Boolean includeSelect) {
         List<SelectOption> picklists = new List<SelectOption>();
         String namespace = SummitEventsNamespace.getNamespace();
@@ -447,7 +457,7 @@ public with sharing class SummitEventsRegisterController {
 
         //Check and create fees and save on registration
         List<Summit_Events_Fee__c> recordedEventFeeList = [
-                SELECT Id, Event_Fee_Type__c, Event_Fee_Attribute__c, Event_Fee__c
+                SELECT Id, Event_Fee_Type__c, Event_Fee_Allocation__c, Event_Fee__c
                 FROM Summit_Events_Fee__c
                 WHERE Event_Fee_Type__c != 'Appointment'
                 AND Event_Fee_Type__c != 'Appointment Additional'
@@ -466,7 +476,7 @@ public with sharing class SummitEventsRegisterController {
                 }
             }
             List<Summit_Events_Fee__c> deleteEventFees = [
-                    SELECT Id, Event_Fee_Type__c, Event_Fee_Attribute__c, Event_Fee__c
+                    SELECT Id, Event_Fee_Type__c, Event_Fee_Allocation__c, Event_Fee__c
                     FROM Summit_Events_Fee__c
                     WHERE Event_Fee_Type__c != 'Appointment'
                     AND Event_Fee_Type__c != 'Appointment Additional'

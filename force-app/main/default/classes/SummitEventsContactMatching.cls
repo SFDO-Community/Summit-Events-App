@@ -20,7 +20,6 @@ public with sharing class SummitEventsContactMatching {
             Summit_Events__c event = matchingRules.get(reg.Event__c);
             
             if (event.Contact_Matching_Rules__c == 'Use Salesforce Duplicate Rule' && String.isBlank(reg.Contact__c)) {
-                System.debug('event - ' + event);
                 byDuplicateRule.add(reg);
             }
         }
@@ -111,6 +110,8 @@ public with sharing class SummitEventsContactMatching {
                 }
             }
             
+            System.debug(matchContacts);
+            
             if (!matchContacts.isEmpty()){
                 String query = 'SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE Id IN (';
                 for (Contact con : matchContacts)
@@ -164,6 +165,7 @@ public with sharing class SummitEventsContactMatching {
                 reg.Matching_Log__c = matchLog;
             } else {
                 if (event.Contact_Matching_Multiple_Match_Behavior__c == 'Skip matching') {
+                    System.debug('Matching skipped');
                     String matchLog = '<div class="slds-text-heading_small slds-m-vertical_medium">Multiple matches found using Salesforce Duplicate Rule <em>' + matchType.get(reg.Event__c).replaceAll('_', ' ') + '</em>, Contact matching skipped based on "Contact Matching Multiple Match Behavior" field value on Summit Events object</div>';
                     matchLog += matchLogHead;
                     matchLog += '<tbody>';
@@ -231,7 +233,6 @@ public with sharing class SummitEventsContactMatching {
             c.put(mapping.Contact_Field_API_Name__c, mapping.Source_Value__c);
         }
         
-        System.debug('c - ' + c);
         return c;
     }
     
@@ -257,7 +258,7 @@ public with sharing class SummitEventsContactMatching {
                 List<Contact> contactsFound = database.query(query);
                 return contactsFound;
             } catch (Exception ex) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
+                System.debug(ex.getMessage());
             }
             return null;
         }
@@ -267,40 +268,9 @@ public with sharing class SummitEventsContactMatching {
                 upsert contactToAdd;
                 return contactToAdd;
             } catch (Exception ex) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
+                System.debug(ex.getMessage());
             }
             return null;
-        }
-        
-        Public List<Contact> emailLastMatch(String email, String last) {
-            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :last AND Email = :email];
-            return foundContacts;
-        }
-        
-        Public List<Contact> possibleEmailLastMatches(String last, List<String> possibleEmails) {
-            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :last AND Email IN :possibleEmails];
-            return foundContacts;
-        }
-        
-        Public List<Contact> possibleEmailMatches(String[] possibleEmails) {
-            List<Contact> foundContacts = [SELECT Id, Email FROM Contact WHERE Email IN :possibleEmails];
-            return foundContacts;
-        }
-        
-        public List<Contact> emailOnlyMatch(string email) {
-            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE Email = :email];
-            return foundContacts;
-        }
-        
-        public List<Contact> zipFirstLastMatch(String zip, String last, String first) {
-            List<Contact> foundContacts = [
-                SELECT Id, LastName, FirstName, Email, MailingPostalCode
-                FROM Contact
-                WHERE FirstName = :first
-                AND LastName = :last
-                AND MailingPostalCode = :zip
-            ];
-            return foundContacts;
         }
         
         public List<Datacloud.FindDuplicatesResult> findDuplicateContacts(List<Contact> cons) {

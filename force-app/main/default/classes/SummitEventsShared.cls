@@ -68,9 +68,9 @@ public with sharing class SummitEventsShared {
         }
 
         // Make sure registration id isn't the string null
-        if (eventInformation.registrationId.equalsIgnoreCase('null')) {
-            eventInformation.registrationId = '';
-        }
+//        if (eventInformation.registrationId.equalsIgnoreCase('null')) {
+//            eventInformation.registrationId = '';
+//        }
 
         //check if registration id is there and whether status it is set to registered. IF so reset cookie if it is.
         if (String.isNotBlank(eventInformation.registrationId)) {
@@ -271,9 +271,24 @@ public with sharing class SummitEventsShared {
 
     public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance, Boolean dateTimeOnly) {
         String instanceDate = '';
+        Time noTime = Time.newInstance(0,0,0,0);
         if (eventInstance.Instance_Start_Date__c != null && eventInstance.Instance_End_Date__c != null) {
-            Datetime convertedStartDate = convertDateToDatetime(eventInstance.Instance_Start_Date__c, null, '');
-            Datetime convertedEndDate = convertDateToDatetime(eventInstance.Instance_End_Date__c, null, '');
+            Datetime convertedStartDate = Datetime.newInstanceGmt(
+                    eventInstance.Instance_Start_Date__c.year(),
+                    eventInstance.Instance_Start_Date__c.month(),
+                    eventInstance.Instance_Start_Date__c.day(),
+                    noTime.hour(),
+                    noTime.minute(),
+                    noTime.second()
+            );
+            Datetime convertedEndDate = Datetime.newInstanceGmt(
+                    eventInstance.Instance_End_Date__c.year(),
+                    eventInstance.Instance_End_Date__c.month(),
+                    eventInstance.Instance_End_Date__c.day(),
+                    noTime.hour(),
+                    noTime.minute(),
+                    noTime.second()
+            );
             String monthStart = convertedStartDate.format('MMMM');
             String monthEnd = convertedEndDate.format('MMMM');
             String yearStart = String.valueOf(eventInstance.Instance_Start_Date__c.year());
@@ -318,13 +333,13 @@ public with sharing class SummitEventsShared {
         crumb += '<nav role="navigation" aria-label="Breadcrumbs">';
         crumb += '   <ol class="slds-breadcrumb slds-list--horizontal">';
         if (String.isNotBlank(eventInstance.Event__r.Event_Name__c)) {
-            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Event__r.Event_Name__c + '</a></li>';
+            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a>' + eventInstance.Event__r.Event_Name__c + '</a></li>';
         }
         if (String.isNotBlank(eventInstance.Instance_Title__c)) {
-            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + eventInstance.Instance_Title__c + '</a></li>';
+            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a>' + eventInstance.Instance_Title__c + '</a></li>';
         }
         if (String.isNotBlank(instanceDate)) {
-            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a href="javascript:void(0);">' + instanceDate + '</a></li>';
+            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a>' + instanceDate + '</a></li>';
         }
         crumb += '   </ol>';
         crumb += '</nav>';

@@ -94,15 +94,31 @@
                 <behavior>Readonly</behavior>
                 <field>Virtual_Meeting_URL__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>UG_Parking_Pass_Link__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>Add_To_Calendar_Link__c</field>
+                <field>Add_to_Apple_Calendar__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>UG_Parking_Pass_Link__c</field>
+                <field>Add_to_Outlook_Calendar__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Add_To_Outlook_Web_Calendar__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Add_To_Google_Calendar_Link__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Add_To_Yahoo_Calendar__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -637,7 +653,7 @@
     <relatedLists>
         <fields>NAME</fields>
         <fields>Event_Fee__c</fields>
-        <fields>Event_Fee_Attribute__c</fields>
+        <fields>Event_Fee_Allocation__c</fields>
         <fields>Event_Fee_Type__c</fields>
         <fields>Description__c</fields>
         <relatedList>Summit_Events_Fee__c.Event_Registration__c</relatedList>
@@ -657,7 +673,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h11000002pkwY</masterLabel>
+        <masterLabel>00h8A0000023u6M</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

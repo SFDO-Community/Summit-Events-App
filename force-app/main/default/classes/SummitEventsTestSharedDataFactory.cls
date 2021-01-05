@@ -49,7 +49,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Location_Map_Link__c = 'Map Link 1',
                 Location_Address__c = '123 Electric Ave.',
                 Location_Type__c = 'On-Site',
-                Contact_Matching_Rules__c = matchingRules
+                Ask_Third_Party_Registrant__c = 'Parent/Guardian;Other'
         );
 
         if (String.isNotBlank(registrationEmailRestriction)) {
@@ -127,6 +127,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Instance_Start_Time__c = Time.newInstance(8, 0, 0, 0),
                 Instance_End_Date__c = Date.today().addDays(1),
                 Instance_End_Time__c = Time.newInstance(14, 0, 0, 0),
+                Instance_Time_Zone__c = 'Central Daylight Time (America/Chicago)',
                 Active_Status__c = 'Active',
                 Capacity__c = 500,
                 Location_Title_Override__c = 'A location',
@@ -143,6 +144,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Instance_Start_Time__c = Time.newInstance(8, 0, 0, 0),
                 Instance_End_Date__c = Date.today().addDays(3),
                 Instance_End_Time__c = Time.newInstance(14, 0, 0, 0),
+                Instance_Time_Zone__c = 'Central Daylight Time (America/Chicago)',
                 Active_Status__c = 'Active',
                 Capacity__c = 500
         );
@@ -252,7 +254,8 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Registrant_High_School_Code__c = '000000',
                 Registrant_Date_of_Birth__c = Date.valueOf(DOB),
                 Preferred_Class_Year__c = ClassYear,
-                Status__c = 'Started'
+                Status__c = 'Started',
+                Registrant_Third_Party_Status__c = 'Primary Registrant'
         );
 
         insert testRegistration;
