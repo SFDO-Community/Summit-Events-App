@@ -18,7 +18,6 @@ public with sharing class SummitEventsContactMatching {
         for (Summit_Events_Registration__c reg : newRegistrations) {
             setNumberFields(reg);
             Summit_Events__c event = matchingRules.get(reg.Event__c);
-
             if (event.Contact_Matching_Rules__c == 'Use Salesforce Duplicate Rule' && String.isBlank(reg.Contact__c)) {
                 byDuplicateRule.add(reg);
             }
