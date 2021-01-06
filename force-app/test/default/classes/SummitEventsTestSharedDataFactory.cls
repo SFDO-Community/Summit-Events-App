@@ -6,155 +6,65 @@
 @IsTest
 public with sharing class SummitEventsTestSharedDataFactory {
 
-    public static Summit_Events_Instance__c createTestEvent(
-            String matchingRules,
-            String testEventName,
-            String audience,
-            Boolean includeAppt,
-            Boolean includeAddQuestions,
-            String registrationEmailRestriction
-    ) {
+
+    public static List<Summit_Events_Instance__c> createTestEvent() {
 
         Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
         if (String.isBlank(SummitEventsSettings.Cookie_Encryption_Key__c)) {
             Blob cryptoKey = Crypto.generateAesKey(256);
             String encryptionString = EncodingUtil.base64Encode(cryptoKey).substring(0, 32);
             SummitEventsSettings.Cookie_Encryption_Key__c = encryptionString;
-            insert SummitEventsSettings;
+            upsert SummitEventsSettings;
+        }
+        if (String.isBlank(SummitEventsSettings.Community_Base_URL__c)) {
+            SummitEventsSettings.Community_Base_URL__c = 'http://google.com/';
+            upsert SummitEventsSettings;
         }
 
         Summit_Events__c testEvent = new Summit_Events__c();
 
         //Create event
         testEvent = new Summit_Events__c(
-                Name = testEventName,
+                Name = 'Test Event',
                 Event_Status__c = 'Active',
-                Event_Name__c = testEventName,
-                Start_Date__c = Date.today().addDays(1),
-                End_Date__c = Date.today().addDays(1),
-                Template__c = 'CastorTemplate2017',
-                Event_Home_Link_Title__c = 'testHome',
-                Event_Home_Link_URL__c = '/',
-                College_High_School_Ask__c = 'Auto Select on Audience',
-                Ask_Gender__c = 'Ask and require',
-                Include_Time_frame_List__c = true,
-                Allow_Other_Attendees__c = true,
-                Ask_Mailing_Address__c = 'Ask',
-                Ask_Phone__c = 'Ask home and mobile require one',
-                Ask_Date_Of_Birth__c = 'Ask',
-                Max_Other_Attendees__c = 5,
+                Event_Name__c = 'Test Event',
+                Start_Date__c = Date.today().addDays(-20),
+                End_Date__c = Date.today().addDays(20),
+                Template__c = 'GeneralSLDS',
                 Close_Event_Days_Before__c = 0,
-                Audience__c = audience,
                 Location_Title__c = 'A location',
                 Location_Map_Link__c = 'Map Link 1',
                 Location_Address__c = '123 Electric Ave.',
                 Location_Type__c = 'On-Site',
-                Ask_Third_Party_Registrant__c = 'Parent/Guardian;Other'
+                Allow_Other_Attendees__c = true,
+                Max_Other_Attendees__c = 10
         );
-
-        if (String.isNotBlank(registrationEmailRestriction)) {
-            testEvent.Registration_Email_Restriction__c = registrationEmailRestriction;
-        }
-
-        if (includeAddQuestions) {
-            testEvent.Add_Info_Question_Type_1__c = 'Pick-list';
-            testEvent.Add_Info_Question_Text_1__c = 'What is your favorite color?';
-            testEvent.Add_Info_Question_Pick_List_1__c = 'Red\nGreen\nYellow\nBlue';
-            testEvent.Academic_Program_List__c = 'This(THIS_THIS|THAT);That(THAT_THAT|THIS);';
-        }
-
         insert testEvent;
 
-        if (includeAppt) {
-            //Create appointment  types
-            List<Summit_Events_Appointment_Type__c> newApptTypes = new List<Summit_Events_Appointment_Type__c>();
-            newApptTypes.add(new Summit_Events_Appointment_Type__c(
-                    Summit_Events__c = testEvent.Id,
-                    Title__c = 'Test Appointment',
-                    Appointment_Limits__c = '1',
-                    Description__c = 'Test description'
-            ));
+        List<Summit_Events_Instance__c> seaTestInstances = new List<Summit_Events_Instance__c>();
 
-            newApptTypes.add(new Summit_Events_Appointment_Type__c(
-                    Summit_Events__c = testEvent.Id,
-                    Title__c = 'Test Appointment 2',
-                    Appointment_Limits__c = '1',
-                    Description__c = 'Test description 2',
-                    Appointment_Category__c = 'Faculty Visit'
-            ));
-
-            newApptTypes.add(new Summit_Events_Appointment_Type__c(
-                    Summit_Events__c = testEvent.Id,
-                    Title__c = 'Test Appointment 3',
-                    Appointment_Limits__c = '1',
-                    Description__c = 'Test description 3',
-                    Registrant_Input__c = 'Text box'
-            ));
-
-            newApptTypes.add(new Summit_Events_Appointment_Type__c(
-                    Summit_Events__c = testEvent.Id,
-                    Title__c = 'Test Appointment 4',
-                    Appointment_Limits__c = '2',
-                    Description__c = 'Test description 4',
-                    Registrant_Input__c = 'Required text box'
-            ));
-
-            newApptTypes.add(new Summit_Events_Appointment_Type__c(
-                    Summit_Events__c = testEvent.Id,
-                    Title__c = 'Test Appointment 5',
-                    Appointment_Limits__c = '2',
-                    Description__c = 'Test description 5',
-                    Registrant_Input__c = 'Required custom pick list',
-                    Custom_Picklist__c = 'Pick One\n\nPickTwo'
-            ));
-
-            newApptTypes.add(new Summit_Events_Appointment_Type__c(
-                    Summit_Events__c = testEvent.Id,
-                    Title__c = 'Test Appointment 6',
-                    Appointment_Limits__c = '1',
-                    Description__c = 'Test description 6',
-                    Registrant_Input__c = 'Custom pick list',
-                    Custom_Picklist__c = 'Pick One\n\nPickTwo'
-            ));
-
-            insert newApptTypes;
+        for (Integer x = -1; x < 10; x++) {
+            Summit_Events_Instance__c seaInstance = new Summit_Events_Instance__c();
+            seaInstance.Event__c = testEvent.Id;
+            seaInstance.Instance_Title__c = testEvent.Name + ' Session ' + x;
+            seaInstance.Instance_Start_Date__c = Date.today().addDays(x);
+            seaInstance.Instance_Start_Time__c = Time.newInstance(8, 0, 0, 0);
+            seaInstance.Instance_End_Date__c = Date.today().addDays(x);
+            seaInstance.Instance_End_Time__c = Time.newInstance(14, 0, 0, 0);
+            seaInstance.Instance_Time_Zone__c = 'Central Daylight Time (America/Chicago)';
+            seaInstance.Active_Status__c = 'Active';
+            seaInstance.Capacity__c = 500;
+            seaTestInstances.add(seaInstance);
         }
-        //Create event instance
-        Summit_Events_Instance__c testInstance = new Summit_Events_Instance__c(
-                Event__c = testEvent.Id,
-                Instance_Title__c = testEventName + ' Sesssion',
-                Instance_Start_Date__c = Date.today().addDays(1),
-                Instance_Start_Time__c = Time.newInstance(8, 0, 0, 0),
-                Instance_End_Date__c = Date.today().addDays(1),
-                Instance_End_Time__c = Time.newInstance(14, 0, 0, 0),
-                Instance_Time_Zone__c = 'Central Daylight Time (America/Chicago)',
-                Active_Status__c = 'Active',
-                Capacity__c = 500,
-                Location_Title_Override__c = 'A location',
-                Location_Map_Link_Override__c = 'Map Link 1',
-                Location_Address_Override__c = '123 Electric Ave.',
-                Location_Type_Override__c = 'Online'
-        );
-        insert testInstance;
+        insert seaTestInstances;
+        return seaTestInstances;
+    }
 
-        Summit_Events_Instance__c testInstance2 = new Summit_Events_Instance__c(
-                Event__c = testEvent.Id,
-                Instance_Title__c = testEventName + ' Sesssion 2',
-                Instance_Start_Date__c = Date.today().addDays(3),
-                Instance_Start_Time__c = Time.newInstance(8, 0, 0, 0),
-                Instance_End_Date__c = Date.today().addDays(3),
-                Instance_End_Time__c = Time.newInstance(14, 0, 0, 0),
-                Instance_Time_Zone__c = 'Central Daylight Time (America/Chicago)',
-                Active_Status__c = 'Active',
-                Capacity__c = 500
-        );
-        insert testInstance2;
-
-
+    public static List<Summit_Events_Host__c> createHosts(Id seaInstanceId) {
         Id classRecType = Schema.SObjectType.Summit_Events_Host__c.getRecordTypeInfosByName().get('Class').getRecordTypeId();
         List<Summit_Events_Host__c> testHosts = new List<Summit_Events_Host__c>();
         testHosts.add(new Summit_Events_Host__c(
-                Event_Instance__c = testInstance.Id,
+                Event_Instance__c = seaInstanceId,
                 First_Name__c = 'Host1',
                 Last_Name__c = 'Host1',
                 RecordTypeId = classRecType,
@@ -167,7 +77,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
         ));
 
         testHosts.add(new Summit_Events_Host__c(
-                Event_Instance__c = testInstance.Id,
+                Event_Instance__c = seaInstanceId,
                 First_Name__c = 'Host2',
                 Last_Name__c = 'Host2',
                 RecordTypeId = classRecType,
@@ -180,14 +90,58 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Location__c = 'TEST LOCATION 2'
         ));
         insert testHosts;
-
-        return testInstance;
-
+        return testHosts;
     }
+
+    public static Summit_Events__c getEventRecord(Id eventId) {
+        Summit_Events__c seaTestEvent = [
+                SELECT Name, Id
+                FROM Summit_Events__c
+                WHERE Id = :eventId
+        ];
+        return seaTestEvent;
+    }
+    public static List<Summit_Events_Appointment_Type__c> createAppointmentTypes(Id seaEventId) {
+        List<Summit_Events_Appointment_Type__c> seaTestAppointmentTypes = new List<Summit_Events_Appointment_Type__c>();
+
+        //Get all the variations of user input to make a appointment type for each
+        List<String> registrantInputValues = new List<String>();
+        Schema.DescribeFieldResult fieldResult = Summit_Events_Appointment_Type__c.Registrant_Input__c.getDescribe();
+        List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+        for (Schema.PicklistEntry pickListVal : ple) {
+            registrantInputValues.add(pickListVal.getLabel());
+        }
+
+        for (Integer x = 0; x < registrantInputValues.size(); x++) {
+            Summit_Events_Appointment_Type__c appointmentType = new Summit_Events_Appointment_Type__c();
+            appointmentType.Summit_Events__c = seaEventId;
+            appointmentType.Title__c = 'Test Appointment ' + x;
+            appointmentType.Appointment_Type_Status__c = 'Active';
+            appointmentType.Sort_Order__c = x;
+            appointmentType.Registrant_Input__c = registrantInputValues[x];
+            if (registrantInputValues[x].containsIgnoreCase('pick list')) {
+                appointmentType.Custom_Picklist__c = 'Picklist 1;Picklist 2;Picklist 3; Picklist 4;';
+            }
+            appointmentType.Description__c = 'Test Appointment Number ' + x;
+            seaTestAppointmentTypes.add(appointmentType);
+        }
+        //Add a category appointment
+        Summit_Events_Appointment_Type__c appointmentType = new Summit_Events_Appointment_Type__c();
+        appointmentType.Summit_Events__c = seaEventId;
+        appointmentType.Title__c = 'Test Appointment Category';
+        appointmentType.Appointment_Type_Status__c = 'Active';
+        appointmentType.Sort_Order__c = 99;
+        appointmentType.Appointment_Category__c = 'Admissions Visit';
+        appointmentType.Description__c = 'Test Appointment Category ';
+        seaTestAppointmentTypes.add(appointmentType);
+        insert seaTestAppointmentTypes;
+        return seaTestAppointmentTypes;
+    }
+
 
     public static Summit_Events_Email__c createTestTransactionEmail(Summit_Events_Instance__c evtInst, String status, String subStatus) {
 
-        // Add email on requeted status
+        // Add email on requested status
         Summit_Events_Email__c testEvtEmail = new Summit_Events_Email__c(
                 Action_Status__c = status,
                 Action_Sub_status__c = subStatus,
@@ -220,15 +174,15 @@ public with sharing class SummitEventsTestSharedDataFactory {
 
     public static Contact createContact(String firstName, String preferredFirst, String lastName, String Email, String Zip, String Phone, String DOB, String ClassYear) {
 
-        Account a = new Account(Name = 'Freddy McFlintstone Account Name');
+        Account a = new Account(Name = firstName + ' ' + lastName + ' Account Name');
         insert a;
 
         //Creating a student contact
-        Contact student = new Contact(
+        Contact testContact = new Contact(
                 FirstName = firstName,
                 LastName = lastName,
                 Email = Email,
-                MailingStreet = '123 Flinstone Ave',
+                MailingStreet = '123 Rock Ave',
                 MailingCity = 'Bedrock',
                 MailingState = 'MN',
                 MailingPostalCode = Zip,
@@ -236,9 +190,9 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Birthdate = Date.valueOf(DOB),
                 AccountId = a.Id
         );
-        insert student;
+        insert testContact;
 
-        return student;
+        return testContact;
 
     }
 
@@ -264,42 +218,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
             testRegistration.Contact__c = optionalContactLinkId;
             upsert testRegistration;
         }
-
-        List<Summit_Events_Appointments__c> addToRegAppt = new List<Summit_Events_Appointments__c>();
-        Integer aptNum = 0;
-
-        //Add athletic appointment
-        addToRegAppt.add(new Summit_Events_Appointments__c(
-                Event_Registration__c = testRegistration.Id,
-                Description__c = 'Athletic Appointment',
-                Appointment_Category__c = 'Athletic Visit',
-                Appointment_Type__c = 'Men\'s Golf',
-                Appointment_Status__c = 'Registered'
-        ));
-
-        //Represent all other appointment types
-        List<Summit_Events_Appointment_Type__c> newApptTypes = [SELECT Id FROM Summit_Events_Appointment_Type__c WHERE Summit_Events__c = :evtI.Event__c];
-
-        for (Summit_Events_Appointment_Type__c nat : newApptTypes) {
-            Summit_Events_Appointments__c addThisAppt = new Summit_Events_Appointments__c (
-                    Event_Appointment_Type__c = nat.Id,
-                    Event_Registration__c = testRegistration.Id,
-                    Client_Created_Appointment__c = true,
-                    Room__c = 'TEST ROOM'
-            );
-            if (Math.mod(aptNum, 2) == 0) {
-                addThisAppt.Appointment_Status__c = 'Registered';
-            } else {
-                addThisAppt.Appointment_Status__c = 'Confirmed';
-            }
-
-            addToRegAppt.add(addThisAppt);
-            aptNum++;
-        }
-        insert addToRegAppt;
-
         return testRegistration;
-
     }
 
     static Integer s_num = 1;
@@ -324,6 +243,53 @@ public with sharing class SummitEventsTestSharedDataFactory {
             eReg.Registrant_Date_of_Birth__c = Date.valueOf(DOB);
         }
         return eReg;
+    }
+
+    public static List<Summit_Events_Fee_Allocation__c> AddFeesToEvent(Id eventId) {
+        Summit_Events__c seaTestEvent = [
+                SELECT Id, Event_Fee__c, Event_Fee_Additional__c, Event_Fee_Allocation__c, Event_Fee_Additional_Allocation__c
+                FROM Summit_Events__c
+                WHERE Id = :eventId
+        ];
+
+        List<Summit_Events_Fee_Allocation__c> testFeeAllocations = new List<Summit_Events_Fee_Allocation__c>();
+        for (Integer x = 0; x < 10; x++) {
+            Summit_Events_Fee_Allocation__c feeAllocation = new Summit_Events_Fee_Allocation__c();
+            feeAllocation.Name = 'Test Allocation ' + x;
+            testFeeAllocations.add(feeAllocation);
+        }
+        insert testFeeAllocations;
+
+        seaTestEvent.Event_Fee__c = 100.00;
+        seaTestEvent.Event_Fee_Allocation__c = testFeeAllocations[0].Id;
+        seaTestEvent.Event_Fee_Additional__c = 50.00;
+        seaTestEvent.Event_Fee_Additional_Allocation__c = testFeeAllocations[1].Id;
+        upsert seaTestEvent;
+
+        return testFeeAllocations;
+
+    }
+
+    public static void AddDonationsToEvents(Id eventId, List<Summit_Events_Fee_Allocation__c> testFeeAllocations) {
+        Summit_Events__c seaTestEvent = [
+                SELECT Id, Event_Fee__c, Event_Fee_Additional__c, Event_Fee_Allocation__c, Event_Fee_Additional_Allocation__c,
+                        Donation_Allocation_1__c,Donation_Allocation_2__c,Donation_Allocation_3__c,Donation_Allocation_4__c,Donation_Allocation_5__c,
+                        Donation_Description__c, Donation_Suggested_Amount_List__c, Display_Optional_Donation__c, Donation_Title__c
+                FROM Summit_Events__c
+                WHERE Id = :eventId
+        ];
+
+        seaTestEvent.Donation_Description__c = 'Test Donation Description';
+        seaTestEvent.Display_Optional_Donation__c = true;
+        seaTestEvent.Donation_Suggested_Amount_List__c = '100\n200\n300\n400\n';
+        seaTestEvent.Donation_Title__c = 'Test Donation Title';
+        seaTestEvent.Donation_Allocation_1__c = testFeeAllocations[1].Id;
+        seaTestEvent.Donation_Allocation_2__c = testFeeAllocations[2].Id;
+        seaTestEvent.Donation_Allocation_3__c = testFeeAllocations[3].Id;
+        seaTestEvent.Donation_Allocation_4__c = testFeeAllocations[4].Id;
+        seaTestEvent.Donation_Allocation_5__c = testFeeAllocations[5].Id;
+
+        upsert seaTestEvent;
     }
 
 }

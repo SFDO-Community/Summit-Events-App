@@ -95,8 +95,7 @@ public with sharing class SummitEventsConfirmationController {
                 upsert newEvtReg;
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
-                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
-                ApexPages.addMessage(myMsg);
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
             return newEvtReg;
         }

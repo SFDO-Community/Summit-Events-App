@@ -28,7 +28,6 @@ public with sharing class SummitEventsRegisterController {
     public String applicantType { get; set; }
     public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
-    public String dataLayerLocationType { get; set; }
     public Decimal totalEventCost { get; set; }
     public List<Summit_Events_Fee__c> eventFeeList { get; set; }
     public String phoneType { get; set; }
@@ -403,7 +402,7 @@ public with sharing class SummitEventsRegisterController {
         }
         for (Schema.PicklistEntry PicklistValue : PicklistValues) {
             if (YourFieldName == 'Registrant_Third_Party_Status__c') {
-                if (eventPage != null) {
+                if (eventPage != null && String.isNotBlank(eventPage.Ask_Third_Party_Registrant__c)) {
                     if (eventPage.Ask_Third_Party_Registrant__c.contains(PicklistValue.getValue())) {
                         picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));
                     }
@@ -417,7 +416,6 @@ public with sharing class SummitEventsRegisterController {
     }
 
     public PageReference saveContactRegistration() {
-        Boolean newContactCreated = false;
         PageReference optionPage;
 
         if (String.isNotBlank(phoneType) && eventPage.Ask_Phone__c.containsIgnoreCase('with type')) {
@@ -445,7 +443,7 @@ public with sharing class SummitEventsRegisterController {
             eventRegistration.Registrant_Date_of_Birth__c = Date.parse(birthDateString);
         }
 
-        if (!String.isBlank(applicantType)) {
+        if (String.isNotBlank(applicantType)) {
             eventRegistration.Registrant_Applicant_Type__c = applicantType;
         } else if (eventPage.Ask_Applicant_Type__c == 'Do not ask but assign First-Year') {
             eventRegistration.Registrant_Applicant_Type__c = 'First-Year';
@@ -494,10 +492,6 @@ public with sharing class SummitEventsRegisterController {
         eventRegistration.Event__c = eventInformation.eventId;
         eventRegistration.Event_Instance__c = eventInformation.instanceId;
         eventRegistration.Contact__c = contactId;
-        if (newContactCreated) {
-            eventRegistration.New_Contact_Created__c = true;
-        }
-
         eventRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience, eventFeeList);
         eventInformation.registrationId = eventRegistration.Id;
 
@@ -558,8 +552,7 @@ public with sharing class SummitEventsRegisterController {
             try {
                 delete deletableFees;
             } catch (Exception ex) {
-                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
-                ApexPages.addMessage(myMsg);
+                System.debug(ex.getMessage());
             }
         }
 
