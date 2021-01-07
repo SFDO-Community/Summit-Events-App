@@ -23,7 +23,14 @@ private class SummitEventsDonation_TEST {
         System.assert(donationController.getDonationAllocationList().size() > 0);
         System.assertEquals(donationController.getSuggestedDonation().size(), 6);
         System.assertEquals(donationController.checkEventDetails(), null);
-        System.assertEquals(donationController.previousPage().getUrl(), '/apex/summiteventsregister?adminopen=true');
+
+        String namespace = SummitEventsNamespace.getNamespace();
+        if(String.isNotBlank(namespace)) {
+            System.assertEquals(donationController.previousPage().getUrl(), '/apex/' + namespace + '__summiteventsregister?adminopen=true');
+        } else {
+            System.assertEquals(donationController.previousPage().getUrl(), '/apex/summiteventsregister?adminopen=true');
+        }
+
 
         donationController.donationAllocation = testFeeAllocations[1].Id;
         donationController.donationAmountSelect = donationController.getSuggestedDonation().get(1).getValue();

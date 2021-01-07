@@ -14,13 +14,23 @@ private class SummitEvents_TEST {
         Test.setCurrentPage(pageRef);
 
         SummitEventsController submitCtrl = new SummitEventsController();
-        System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/summiteventsfeed');
+        String namespace = SummitEventsNamespace.getNamespace();
+        if(String.isNotBlank(namespace)) {
+            System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/' + namespace + '/summiteventsfeed');
+        } else {
+            System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/summiteventsfeed');
+        }
 
         Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
+        //no trailing slash
         SummitEventsSettings.Community_Base_URL__c = 'http://google.com';
         upsert SummitEventsSettings;
         submitCtrl = new SummitEventsController();
-        System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/summiteventsfeed');
+        if(String.isNotBlank(namespace)) {
+            System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/' + namespace + '/summiteventsfeed');
+        } else {
+            System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/summiteventsfeed');
+        }
 
         Test.stopTest();
     }

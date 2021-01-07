@@ -10,6 +10,7 @@
             "ancestorId": "04t4P000002T5rdQAC"
         }
     ],
+    "namespace": "summit",
     "sfdcLoginUrl": "https://login.salesforce.com",
     "sourceApiVersion": "48.0",
     "packageAliases": {
@@ -25,6 +26,6 @@
         "Summit Events App@0.9.0-1": "04t4P000002T5k7QAC",
         "Summit Events App@0.10.0-1": "04t4P000002T5kMQAS",
         "Summit Events App@0.11.0-2": "04t4P000002T5rdQAC",
-        "Summit Events App@0.12.0-3": "04t4P000002T5yPQAS"
+        "Summit Events App@0.12.0-4": "04t4P000002T5zDQAS"
     }
 }
