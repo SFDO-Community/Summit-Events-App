@@ -11,7 +11,7 @@ public with sharing class SummitEventsDonationController {
     public String navBreadCrumb { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public String templateSelected { get; set; }
-    public String donationRecipient { get; set; }
+    public String donationAllocation { get; set; }
     public String donationAmountSelect { get; set; }
     public String donationAmount { get; set; }
     public Summit_Events_Fee__c incomingFee { get; set; }
@@ -29,9 +29,9 @@ public with sharing class SummitEventsDonationController {
             eventPage = [
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
                             Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Donation_Suggested_Amount_List__c,
-                            Donation_Description__c, Display_Optional_Donation__c, Donation_Recipient_1__c, Donation_Recipient_2__c, Donation_Recipient_3__c, Donation_Recipient_4__c,
-                            Donation_Recipient_5__c, Donation_Recipient_1__r.Name, Donation_Recipient_2__r.Name, Donation_Recipient_3__r.Name, Donation_Recipient_4__r.Name,
-                            Donation_Recipient_5__r.Name, Donation_Title__c
+                            Donation_Description__c, Display_Optional_Donation__c, Donation_Allocation_1__c, Donation_Allocation_2__c, Donation_Allocation_3__c, Donation_Allocation_4__c,
+                            Donation_Allocation_5__c, Donation_Allocation_1__r.Name, Donation_Allocation_2__r.Name, Donation_Allocation_3__r.Name, Donation_Allocation_4__r.Name,
+                            Donation_Allocation_5__r.Name, Donation_Title__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
             ][0];
@@ -47,7 +47,7 @@ public with sharing class SummitEventsDonationController {
 
             //Check for current donation fees for this registration
             List<Summit_Events_Fee__c> previousDonationFees = [
-                    SELECT Id, Event_Registration__c, Event_Fee__c, Event_Fee_Attribute__c
+                    SELECT Id, Event_Registration__c, Event_Fee__c, Event_Fee_Allocation__c
                     FROM Summit_Events_Fee__c
                     WHERE Event_Registration__c = :eventInformation.registrationId
                     AND Event_Fee_Type__c = 'Optional Donation'
@@ -56,7 +56,7 @@ public with sharing class SummitEventsDonationController {
             if (previousDonationFees.size() > 0) {
                 incomingFee = previousDonationFees[0];
                 System.debug('INCOMING FEE: ' + incomingFee);
-                donationRecipient = incomingFee.Event_Fee_Attribute__c;
+                donationAllocation = incomingFee.Event_Fee_Allocation__c;
                 donationAmount = String.valueOf(incomingFee.Event_Fee__c);
                 donationAmountSelect = String.valueOf(incomingFee.Event_Fee__c);
             }
@@ -72,16 +72,16 @@ public with sharing class SummitEventsDonationController {
         }
     }
 
-    public List<SelectOption> getDonationRecipientList() {
+    public List<SelectOption> getDonationAllocationList() {
         List<SelectOption> options = new List<SelectOption>();
         options.add(new SelectOption('', 'Select...'));
 
         for (Integer xx = 1; xx < 6; xx++) {
-            if (String.isNotBlank(String.valueOf(eventPage.get('Donation_Recipient_' + xx + '__c')))) {
+            if (String.isNotBlank(String.valueOf(eventPage.get('Donation_Allocation_' + xx + '__c')))) {
                 options.add(
                         new SelectOption(
-                                String.valueOf(eventPage.get('Donation_Recipient_' + xx + '__c')),
-                                String.valueOf(eventPage.getSObject('Donation_Recipient_' + xx + '__r').get('Name'))
+                                String.valueOf(eventPage.get('Donation_Allocation_' + xx + '__c')),
+                                String.valueOf(eventPage.getSObject('Donation_Allocation_' + xx + '__r').get('Name'))
                         )
                 );
             }
@@ -134,7 +134,7 @@ public with sharing class SummitEventsDonationController {
         if (String.isNotBlank(donationAmount)) {
             //Build fee on what we have for donation information
             Summit_Events_Fee__c newFee = new Summit_Events_Fee__c();
-            newFee.Event_Fee_Attribute__c = donationRecipient;
+            newFee.Event_Fee_Allocation__c = donationAllocation;
             newFee.Event_Fee__c = cleanFeeStringToDecimal(donationAmount);
             newFee.Event_Registration__c = eventInformation.registrationId;
             newFee.Summit_Events__c = eventInformation.eventId;

@@ -29,7 +29,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Event_Fee_Attribute__c</field>
+                <field>Event_Fee_Allocation__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>

@@ -169,7 +169,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Event_Fee_Attribute_Override__c</field>
+                <field>Event_Fee_Allocation_Override__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -194,7 +194,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Event_Fee_Additional_Attribute_Override__c</field>
+                <field>Event_Fee_Additional_Allocation_Override__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>

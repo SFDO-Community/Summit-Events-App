@@ -113,7 +113,7 @@ public class SummitEventsRegistration {
                                 }
                                 //replace all hooks with found values from regstration
 
-                                if (matcher2.group(1) == 'UG_Parking_Pass_Link__c' || matcher2.group(1) == 'Add_To_Calendar_Link__c' || matcher2.group(1) == 'Event_Registration_Cancel_Link__c') {
+                                if (matcher2.group(1) == 'UG_Parking_Pass_Link__c' || matcher2.group(1) == 'Add_To_Calendar_Link__c' || matcher2.group(1) == 'Event_Registration_Cancel_Link__c' || matcher2.group(1) == 'Add_to_Apple_Calendar__c' || matcher2.group(1) =='Add_To_Google_Calendar_Link__c' || matcher2.group(1) == 'Add_to_Outlook_Calendar__c' || matcher2.group(1) == 'Add_To_Outlook_Web_Calendar__c' || matcher2.group(1) == 'Add_To_Yahoo_Calendar__c') {
                                     found = found.replace('_HL_ENCODED_', '<a href="');
                                     found = found.replace('_HL__blank_HL_', '</a>');
                                     found = found.replace('_HL_', ' target="_blank">');
