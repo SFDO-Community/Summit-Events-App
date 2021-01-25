@@ -8,7 +8,7 @@
             <axisBinding>y</axisBinding>
             <column>RowCount</column>
         </chartSummaries>
-        <chartType>VerticalColumn</chartType>
+        <chartType>HorizontalBar</chartType>
         <enableHoverLabels>false</enableHoverLabels>
         <expandOthers>true</expandOthers>
         <groupingColumn>Summit_Events_Registration__c$Event_Instance_Date__c</groupingColumn>
@@ -58,7 +58,7 @@
             <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>Attended,No-Show</value>
+            <value>Attended</value>
         </criteriaItems>
         <criteriaItems>
             <column>Summit_Events_Registration__c$Event_Instance_Date__c</column>
