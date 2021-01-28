@@ -550,7 +550,9 @@ public with sharing class SummitEventsRegisterController {
 
         public void deleteFees(List<Summit_Events_Fee__c> deletableFees) {
             try {
-                delete deletableFees;
+                if (Schema.sObjectType.Summit_Events_Fee__c.isDeletable()) {
+                    delete deletableFees;
+                }
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
             }

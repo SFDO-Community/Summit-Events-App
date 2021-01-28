@@ -194,7 +194,9 @@ public with sharing class SummitEventsDonationController {
         }
 
         public void deleteFee(Summit_Events_Fee__c feeIn) {
-            delete feeIn;
+            if (Schema.sObjectType.Summit_Events_Fee__c.isDeletable()) {
+                delete feeIn;
+            }
         }
 
     }

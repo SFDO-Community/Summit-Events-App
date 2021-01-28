@@ -386,7 +386,9 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
         public void deleteAppointments(List<Summit_Events_Appointments__c> appointments) {
             try {
-                delete appointments;
+                if (Schema.sObjectType.Summit_Events_Appointments__c.isDeletable()) {
+                    delete appointments;
+                }
             } catch (Exception ex) {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
                 ApexPages.addMessage(myMsg);
