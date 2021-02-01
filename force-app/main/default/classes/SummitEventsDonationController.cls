@@ -22,8 +22,6 @@ public with sharing class SummitEventsDonationController {
     public SummitEventsDonationController() {
         eventInformation = seaShared.getSummitEventsInfo();
 
-        System.debug(JSON.serializePretty(eventInformation));
-
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
 
             eventPage = [
@@ -34,13 +32,15 @@ public with sharing class SummitEventsDonationController {
                             Donation_Allocation_5__r.Name, Donation_Title__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
-            ][0];
+                    WITH SECURITY_ENFORCED
+            ];
 
             eventInstance = [
                     SELECT Id, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c,
                             Current_Available_Capacity__c, Active_Status__c, Event__r.Event_Name__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :eventInformation.instanceId
+                    WITH SECURITY_ENFORCED
             ];
 
             templateSelected = seaShared.getTemplate(eventPage.Template__c);
@@ -51,11 +51,11 @@ public with sharing class SummitEventsDonationController {
                     FROM Summit_Events_Fee__c
                     WHERE Event_Registration__c = :eventInformation.registrationId
                     AND Event_Fee_Type__c = 'Optional Donation'
+                    WITH SECURITY_ENFORCED
             ];
 
             if (previousDonationFees.size() > 0) {
                 incomingFee = previousDonationFees[0];
-                System.debug('INCOMING FEE: ' + incomingFee);
                 donationAllocation = incomingFee.Event_Fee_Allocation__c;
                 donationAmount = String.valueOf(incomingFee.Event_Fee__c);
                 donationAmountSelect = String.valueOf(incomingFee.Event_Fee__c);
@@ -130,7 +130,6 @@ public with sharing class SummitEventsDonationController {
     public PageReference submitDonation() {
 
         doCRUD CRUDToDo = new doCRUD();
-        System.debug('Donation Amount' + donationAmount);
         if (String.isNotBlank(donationAmount)) {
             //Build fee on what we have for donation information
             Summit_Events_Fee__c newFee = new Summit_Events_Fee__c();
@@ -143,7 +142,6 @@ public with sharing class SummitEventsDonationController {
             if (incomingFee != null) {
                 newFee.Id = incomingFee.Id;
             }
-            System.debug('Incoming Fee: ' + JSON.serializePretty(incomingFee));
             CRUDToDo.upsertFee(newFee);
         } else {
             //If there is no amount and a fee exists than delete it.

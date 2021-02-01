@@ -10,7 +10,12 @@ public with sharing class SummitEventsContactMatching {
         for (Summit_Events_Registration__c reg : newRegistrations) {
             matchingRules.put(reg.Event__c, null);
         }
-        for (Summit_Events__c event : [SELECT Id, Contact_Matching_Rules__c FROM Summit_Events__c WHERE Id IN :matchingRules.keyset()]) {
+        for (Summit_Events__c event : [
+                SELECT Id, Contact_Matching_Rules__c
+                FROM Summit_Events__c
+                WHERE Id IN :matchingRules.keySet()
+                WITH SECURITY_ENFORCED
+        ]) {
             matchingRules.put(event.Id, event);
         }
 
@@ -63,7 +68,12 @@ public with sharing class SummitEventsContactMatching {
         for (Summit_Events__c event : [
                 SELECT Id, Contact_Creation_Duplicate_Rule__c, Custom_Metadata_Contact_Matching_Method__c, Contact_Matching_Multiple_Match_Behavior__c, Contact_Matching_No_Match_Behavior__c
                 FROM Summit_Events__c
-                WHERE Id IN (SELECT Event__c FROM Summit_Events_Registration__c WHERE Id IN :newRegistrations)
+                WHERE Id IN (
+                        SELECT Event__c
+                        FROM Summit_Events_Registration__c
+                        WHERE Id IN :newRegistrations
+                )
+                WITH SECURITY_ENFORCED
         ]) {
             String duplicateRuleName = event.Contact_Creation_Duplicate_Rule__c;
             duplicateRuleName = duplicateRuleName.replaceAll(' ', '_');
@@ -89,7 +99,7 @@ public with sharing class SummitEventsContactMatching {
                     '</tr></thead>';
 
             List<Datacloud.FindDuplicatesResult> results = new List<Datacloud.FindDuplicatesResult>();
-            doCrud crud = new doCrud();
+            doCRUD crud = new doCRUD();
 
             try { // Datacloud.FindDuplicates returns an error if no matching rules are active
                 List<Contact> cons = new List<Contact>();
@@ -110,13 +120,14 @@ public with sharing class SummitEventsContactMatching {
                 }
             }
 
-            System.debug(matchContacts);
-
             if (!matchContacts.isEmpty()) {
                 String query = 'SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE Id IN (';
-                for (Contact con : matchContacts)
+                for (Contact con : matchContacts) {
                     query += '\'' + con.Id + '\',';
-                query = query.removeEnd(',') + ') ORDER BY LastModifiedDate DESC';
+                }
+                query = query.removeEnd(',') + ') ';
+                query += ' WITH SECURITY_ENFORCED ';
+                query += ' ORDER BY LastModifiedDate DESC';
                 matchContacts = crud.findContacts(query);
             }
             if (matchContacts == null || matchContacts.isEmpty()) { // SOQL queries return null instead of empty lists
@@ -124,7 +135,9 @@ public with sharing class SummitEventsContactMatching {
                     for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
                             SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
                             FROM Summit_Events_Contact_Matching_Mapping__mdt
-                            WHERE Contact_Matching_Method__c = :event.Custom_Metadata_Contact_Matching_Method__c AND Matching_Only__c = TRUE
+                            WHERE Contact_Matching_Method__c = :event.Custom_Metadata_Contact_Matching_Method__c
+                            AND Matching_Only__c = TRUE
+                            WITH SECURITY_ENFORCED
                     ]) {
                         c.put(mapping.Contact_Field_API_Name__c, null);
                     }
@@ -217,7 +230,10 @@ public with sharing class SummitEventsContactMatching {
         for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
                 SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
                 FROM Summit_Events_Contact_Matching_Mapping__mdt
-                WHERE Contact_Matching_Method__c = :matchingMethod AND Source_Object__c = 'summit__Summit_Events_Registration__c' AND Source_Type__c = 'Field'
+                WHERE Contact_Matching_Method__c = :matchingMethod
+                AND Source_Object__c = 'summit__Summit_Events_Registration__c'
+                AND Source_Type__c = 'Field'
+                WITH SECURITY_ENFORCED
         ]) {
             System.debug('mapping - ' + mapping);
             c.put(mapping.Contact_Field_API_Name__c, reg.get(mapping.Source_Value__c));
@@ -226,9 +242,10 @@ public with sharing class SummitEventsContactMatching {
         for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
                 SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
                 FROM Summit_Events_Contact_Matching_Mapping__mdt
-                WHERE Contact_Matching_Method__c = :matchingMethod AND Source_Type__c = 'Hardcoded'
+                WHERE Contact_Matching_Method__c = :matchingMethod
+                AND Source_Type__c = 'Hardcoded'
+                WITH SECURITY_ENFORCED
         ]) {
-            System.debug('mapping - ' + mapping);
             c.put(mapping.Contact_Field_API_Name__c, mapping.Source_Value__c);
         }
 
@@ -252,9 +269,9 @@ public with sharing class SummitEventsContactMatching {
 
     private without sharing class doCRUD {
 
-        public List<Contact> findContacts(string query) {
+        public List<Contact> findContacts(String query) {
             try {
-                List<Contact> contactsFound = database.query(query);
+                List<Contact> contactsFound = Database.query(query);
                 return contactsFound;
             } catch (Exception ex) {
                 System.debug(ex.getMessage());

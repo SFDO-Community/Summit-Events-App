@@ -18,6 +18,7 @@ public with sharing class SummitEventsLetterheadLookupExtension {
                 SELECT Id, Address,DisplayName, IsAllowAllProfiles
                 FROM OrgWideEmailAddress
                 WHERE IsAllowAllProfiles = TRUE
+                WITH SECURITY_ENFORCED
         ]);
         List<SelectOption> owe = new List<SelectOption>();
         owe.add(new SelectOption('', 'Select...'));
@@ -33,6 +34,7 @@ public with sharing class SummitEventsLetterheadLookupExtension {
                 SELECT Id, Name, Value
                 FROM BrandTemplate
                 WHERE IsActive = TRUE
+                WITH SECURITY_ENFORCED
         ]
         );
         List<SelectOption> brandOptions = new List<SelectOption>();
@@ -53,7 +55,7 @@ public with sharing class SummitEventsLetterheadLookupExtension {
     }
 
     public PageReference save() {
-        ApexPages.addMessage(new ApexPages.Message(ApexPages.SEVERITY.INFO, 'Your letterhead settings have been saved.'));
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'Your letterhead settings have been saved.'));
         if (!String.isBlank(SummitEvt.Org_Email_Id__c)) {
             SummitEvt.Org_Email__c = String.valueOf(oweList.get(SummitEvt.Org_Email_Id__c).Address);
         }

@@ -3,21 +3,21 @@
 // license that can be found in the LICENSE file.
 // Created by Thaddaeus Dahlberg on 8/09/2018.
 
-@RestResource(urlMapping='/summiteventsfeed/*')
+@RestResource(UrlMapping='/summiteventsfeed/*')
 
 global with sharing class SummitEventsFeed {
 
     private static String feedType { get; set; }
     private static SummitEventsShared SEShared = new SummitEventsShared();
 
-    private Class eventItem {
+    private class eventItem {
         public String ID { get; set; }
         public String title { get; set; }
         public String instanceDesc { get; set; }
         public String description { get; set; }
         public String longDesc { get; set; }
         public Datetime endDate { get; set; }
-        public DateTime start { get; set; }
+        public Datetime start { get; set; }
         public String timezone { get; set; }
         public String eventUrl { get; set; }
         public Boolean eventClosed { get; set; }
@@ -36,7 +36,6 @@ global with sharing class SummitEventsFeed {
     @HttpGet
     global static void getSummitEventsFeed() {
         feedType = RestContext.request.params.get('feedType');
-        String recType = RestContext.request.params.get('rectype');
 
         RestResponse res = RestContext.response;
         String callback = RestContext.request.params.get('callback');
@@ -104,31 +103,31 @@ global with sharing class SummitEventsFeed {
         // build and sanitize the where statement that have variables
 
         // get start and end view times convert string to datetime then convert back into string to sanitize
-        DateTime viewStart = null;
-        DateTime viewEnd = null;
+        Datetime viewStart = null;
+        Datetime viewEnd = null;
         ///.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
         String formattedViewStart;
         String formattedViewEnd;
         if (String.isNotBlank(req.params.get('viewStart'))) {
-            viewStart = Date.valueOf(req.params.get('viewStart'));
+            viewStart = Date.valueOf(String.escapeSingleQuotes(req.params.get('viewStart')));
         }
         //if fullcalendar in use start is passed. start being protected variable
         if (String.isNotBlank(req.params.get('start'))) {
             viewStart = Date.valueOf(req.params.get('start'));
         } else {
-            viewStart = DateTime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(-1);
+            viewStart = Datetime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(-1);
         }
 
         System.debug(viewStart);
 
         if (String.isNotBlank(req.params.get('viewEnd'))) {
-            viewEnd = Date.valueOf(req.params.get('viewEnd'));
+            viewEnd = Date.valueOf(String.escapeSingleQuotes(req.params.get('viewEnd')));
         }
         //if fullcalendar in use end is passed. end being protected variable
         if (String.isNotBlank(req.params.get('end'))) {
             viewEnd = Date.valueOf(req.params.get('end'));
         } else {
-            viewEnd = DateTime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(1);
+            viewEnd = Datetime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(1);
 
         }
 
@@ -202,9 +201,10 @@ global with sharing class SummitEventsFeed {
             }
         }
 
-        List<Summit_Events_Instance__c> EventInstanceList = database.query(eventQuery);
+        eventQuery += ' WITH SECURITY_ENFORCED ';
+        List<Summit_Events_Instance__c> EventInstanceList = Database.query(eventQuery);
 
-        DateTime regDateOpenDate = null;
+        Datetime regDateOpenDate = null;
         for (Summit_Events_Instance__c eventInstance : EventInstanceList) {
             regDateOpenDate = Datetime.now().addDays(-1);
             if (eventInstance.Event__r.Close_Event_Days_Before__c != null && eventInstance.Event__r.Close_Event_Days_Before__c != 0) {
@@ -230,11 +230,11 @@ global with sharing class SummitEventsFeed {
             }
 
             if (!String.isBlank(eventInstance.Feed_Registration_Button_Text_Override__c)) {
-                evt.FeedButtonText = eventInstance.Feed_Registration_Button_Text_Override__c;
+                evt.feedButtonText = eventInstance.Feed_Registration_Button_Text_Override__c;
             } else if (!String.isBlank(eventInstance.Event__r.Feed_Registration_Button_Text__c)) {
-                evt.FeedButtonText = eventInstance.Event__r.Feed_Registration_Button_Text__c;
+                evt.feedButtonText = eventInstance.Event__r.Feed_Registration_Button_Text__c;
             } else {
-                evt.FeedButtonText = 'Register';
+                evt.feedButtonText = 'Register';
             }
 
             if (!String.isBlank(eventInstance.Instance_Time_Zone__c)) {

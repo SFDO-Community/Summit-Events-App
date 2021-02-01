@@ -1585,11 +1585,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Summit_Events__c.Donation_Description__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
         <field>Summit_Events__c.Donation_Allocation_1__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1611,6 +1606,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events__c.Donation_Allocation_5__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Donation_Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

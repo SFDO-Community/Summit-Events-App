@@ -50,7 +50,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
-            ][0];
+                    WITH SECURITY_ENFORCED
+            ];
 
             templateSelected = seaShared.getTemplate(eventPage.Template__c);
 
@@ -61,7 +62,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                                 Instance_End_Date__c, Current_Available_Capacity__c, Active_Status__c
                         FROM Summit_Events_Instance__c
                         WHERE Id = :eventInformation.instanceId
-                        LIMIT 1
+                        WITH SECURITY_ENFORCED
                 ];
 
                 if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
@@ -86,6 +87,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             AND (Date_Available_End__c >= :evtInstance.Instance_End_Date__c OR Date_Available_End__c = NULL)
                             AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
                             AND (Appointment_Type_Status__c = 'Active' OR Appointment_Type_Status__c = NULL)
+                            WITH SECURITY_ENFORCED
                             ORDER BY Sort_Order__c ASC NULLS LAST
                     ]);
 
@@ -106,6 +108,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             FROM Summit_Events_Appointments__c
                             WHERE Event_Registration__c = :eventInformation.registrationId
                             AND Client_Created_Appointment__c = TRUE
+                            WITH SECURITY_ENFORCED
                     ];
 
 
@@ -310,6 +313,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                 FROM Summit_Events_Appointments__c
                 WHERE Event_Registration__c = :eventInformation.registrationId
                 AND Client_Created_Appointment__c = TRUE
+                WITH SECURITY_ENFORCED
         ];
         doCRUD.deleteAppointments(deleteAppt);
 

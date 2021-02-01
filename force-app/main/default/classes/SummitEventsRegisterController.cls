@@ -92,8 +92,8 @@ public with sharing class SummitEventsRegisterController {
                             Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :eventInformation.instanceId
-                    LIMIT 1
-            ][0];
+                    WITH SECURITY_ENFORCED
+            ];
 
             //define Event ID from instanceInfo data
             eventInformation.eventId = evtInstance.Event__r.Id;
@@ -124,8 +124,8 @@ public with sharing class SummitEventsRegisterController {
                             Event_Fee_Additional_Allocation__c, Event_Fee_Allocation__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
-                    LIMIT 1
-            ][0];
+                    WITH SECURITY_ENFORCED
+            ];
 
             if (eventPage.Ask_Phone__c.containsIgnoreCase('with type') && String.isNotBlank(eventRegistration.Registrant_Mobile_Phone__c) && String.isBlank(eventRegistration.Registrant_Phone__c)) {
                 phoneType = 'mobile';
@@ -206,6 +206,7 @@ public with sharing class SummitEventsRegisterController {
                     FROM Summit_Events_Appointment_Type__c
                     WHERE Summit_Events__c = :eventInformation.eventId
                     AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
+                    WITH SECURITY_ENFORCED
             ];
             if (appointmentTypes.size() > 0) {
                 evtHasAppointments = true;
@@ -224,7 +225,12 @@ public with sharing class SummitEventsRegisterController {
             }
 
             //Get appointment types for event
-            appointmentTypes = [SELECT Id, Title__c, Appointment_Category__c, Appointment_Type__c, Description__c FROM Summit_Events_Appointment_Type__c WHERE Summit_Events__c = :eventInformation.eventId];
+            appointmentTypes = [
+                    SELECT Id, Title__c, Appointment_Category__c, Appointment_Type__c, Description__c
+                    FROM Summit_Events_Appointment_Type__c
+                    WHERE Summit_Events__c = :eventInformation.eventId
+                    WITH SECURITY_ENFORCED
+            ];
 
             addPick1 = createPicklists(eventPage.Add_Info_Question_Pick_List_1__c);
             addPick2 = createPicklists(eventPage.Add_Info_Question_Pick_List_2__c);
@@ -284,6 +290,7 @@ public with sharing class SummitEventsRegisterController {
                                 FROM User
                                 WHERE Id = :UserInfo.getUserId()
                         )
+                        WITH SECURITY_ENFORCED
                 ];
 
                 eventRegistration.Registrant_First_Name__c = userContact.FirstName;
@@ -309,7 +316,7 @@ public with sharing class SummitEventsRegisterController {
 
     public Summit_Events_Registration__c getEventRegistration(Id eventRegistrationId) {
         Summit_Events_Registration__c oldEventRegistration = [
-                SELECT Contact__c, Contact__r.Id, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c, Number_of_Guests__c,
+                SELECT  Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c, Number_of_Guests__c,
                         Registrant_Gender__c, Registrant_Street_1__c, Registrant_Street_2__c, Registrant_State__c, Registrant_City__c, Preferred_Visit_Time__c,
                         Registrant_Zip__c, Registrant_Phone__c, Registrant_Mobile_Phone__c, Registrant_College__c, Registrant_College_Code__c, Registrant_College_Year__c,
                         Registrant_High_School__c, Registrant_High_School_Code__c, Registrant_Receive_Texts__c, Registrant_High_School_Grad_Year__c, Registrant_High_School_Not_Found__c,
@@ -319,7 +326,8 @@ public with sharing class SummitEventsRegisterController {
                         Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c, Registrant_Pronouns__c, Registrant_Title__c, Registrant_Company_Organization__c
                 FROM Summit_Events_Registration__c
                 WHERE Id = :eventRegistrationId
-        ][0];
+                WITH SECURITY_ENFORCED
+        ];
         if (oldEventRegistration != null) {
             return oldEventRegistration;
         }
@@ -550,7 +558,7 @@ public with sharing class SummitEventsRegisterController {
 
         public void deleteFees(List<Summit_Events_Fee__c> deletableFees) {
             try {
-                if (Schema.sObjectType.Summit_Events_Fee__c.isDeletable()) {
+                if (Schema.SObjectType.Summit_Events_Fee__c.isDeletable()) {
                     delete deletableFees;
                 }
             } catch (Exception ex) {
@@ -575,6 +583,7 @@ public with sharing class SummitEventsRegisterController {
                         WHERE Registrant_Email__c = :registrationEmail
                         AND Event_Instance__c = :eventInstanceId
                         AND Status__c NOT IN :notAcceptableStatuses
+                        WITH SECURITY_ENFORCED
                         ORDER BY LastModifiedDate
                 ];
             } else if (checkType == 'One registration per event') {
@@ -584,6 +593,7 @@ public with sharing class SummitEventsRegisterController {
                         WHERE Registrant_Email__c = :registrationEmail
                         AND Event__c = :eventId
                         AND Status__c NOT IN :notAcceptableStatuses
+                        WITH SECURITY_ENFORCED
                         ORDER BY LastModifiedDate
                 ];
             }

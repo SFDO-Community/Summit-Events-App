@@ -14,24 +14,28 @@ public with sharing class SummitEventsParkingPassController {
         warning = '';
         couponOut = '';
         Boolean validId = true;
-        Id registrationId = null;
         String regId = String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('regId'));
 
         try {
             regId = (Id) regId;
-        } Catch (Exception e) {
+        } catch (Exception e) {
             validId = false;
         }
         if (validId) {
             Summit_Events_Registration__c visitor = new Summit_Events_Registration__c();
             try {
-                visitor = [SELECT Event_Instance_Start_Date__c, Event_Instance_Time_Zone__c, Event_Instance_Start_Date_Text__c, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Preferred_First_Name__c, Status__c FROM Summit_Events_Registration__c WHERE id = :regId][0];
+                visitor = [
+                        SELECT Event_Instance_Start_Date__c, Event_Instance_Time_Zone__c, Event_Instance_Start_Date_Text__c, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Preferred_First_Name__c, Status__c
+                        FROM Summit_Events_Registration__c
+                        WHERE Id = :regId
+                        WITH SECURITY_ENFORCED
+                ];
             } catch (Exception e) {
-                System.Debug(e.getMessage());
+                System.debug(e.getMessage());
             }
 
             Datetime todayDateTime = SEShared.adjustForTimeZone(Datetime.now(), visitor.Event_Instance_Time_Zone__c);
-            Date todayDate = date.newinstance(todayDateTime.year(), todayDateTime.month(), todayDateTime.day());
+            Date todayDate = Date.newInstance(todayDateTime.year(), todayDateTime.month(), todayDateTime.day());
 
             if (todayDate <= visitor.Event_Instance_Start_Date__c && visitor.Status__c != 'Started' && visitor.Status__c != 'Cancelled') {
                 if (!String.isBlank(visitor.Registrant_Preferred_First_Name__c)) {

@@ -74,14 +74,24 @@ public with sharing class SummitEventsShared {
 
         //check if registration id is there and whether status it is set to registered. IF so reset cookie if it is.
         if (String.isNotBlank(eventInformation.registrationId)) {
-            Summit_Events_Registration__c evtReg = [SELECT Status__c FROM Summit_Events_Registration__c WHERE Id = :eventInformation.registrationId][0];
+            Summit_Events_Registration__c evtReg = [
+                    SELECT Status__c
+                    FROM Summit_Events_Registration__c
+                    WHERE Id = :eventInformation.registrationId
+                    WITH SECURITY_ENFORCED
+            ];
             if (evtReg.Status__c != 'Started') {
                 eventInformation.registrationId = '';
             }
         }
 
         if (String.isBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
-            Summit_Events_Instance__c instanceInfo = [SELECT Id, Event__c FROM Summit_Events_Instance__c WHERE Id = :eventInformation.instanceId];
+            Summit_Events_Instance__c instanceInfo = [
+                    SELECT Id, Event__c
+                    FROM Summit_Events_Instance__c
+                    WHERE Id = :eventInformation.instanceId
+                    WITH SECURITY_ENFORCED
+            ];
             if (instanceInfo != null) {
                 eventInformation.eventId = instanceInfo.Event__c;
             }
@@ -112,7 +122,12 @@ public with sharing class SummitEventsShared {
         String newRegistrationId = eventInformation.registrationId;
 
         if (String.isNotBlank(newInstanceId)) {
-            Summit_Events_Instance__c eventPage = [SELECT Event__r.Event_Home_Link_URL__c FROM Summit_Events_Instance__c WHERE Id = :newInstanceId];
+            Summit_Events_Instance__c eventPage = [
+                    SELECT Event__r.Event_Home_Link_URL__c
+                    FROM Summit_Events_Instance__c
+                    WHERE Id = :newInstanceId
+                    WITH SECURITY_ENFORCED
+            ];
             if (eventPage != null) {
                 eventHomeLink = eventPage.Event__r.Event_Home_Link_URL__c;
             }

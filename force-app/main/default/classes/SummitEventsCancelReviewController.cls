@@ -28,6 +28,7 @@ public with sharing class SummitEventsCancelReviewController {
                             Event__r.Tracking_Cancel_Registration__c
                     FROM Summit_Events_Registration__c
                     WHERE id = :regId
+                    WITH SECURITY_ENFORCED
             ];
 
 
@@ -42,6 +43,7 @@ public with sharing class SummitEventsCancelReviewController {
                         SELECT Id, Appointment_Title__c, Appointment_Category__c, Appointment_Type__c
                         FROM Summit_Events_Appointments__c
                         WHERE Event_Registration__c = :regId
+                        WITH SECURITY_ENFORCED
                 ];
 
 
@@ -50,6 +52,7 @@ public with sharing class SummitEventsCancelReviewController {
                                 Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c
                         FROM Summit_Events_Instance__c W
                         WHERE Id = :evt.Event_Instance__c
+                        WITH SECURITY_ENFORCED
                 ];
 
                 if (SEShared.convertDateToDatetime(evt.Event_Instance__r.Instance_End_Date__c, null, '') < SEShared.adjustForTimeZone(Datetime.now(), evt.Event_Instance__r.Instance_Time_Zone__c)) {

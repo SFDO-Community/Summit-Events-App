@@ -23,10 +23,11 @@ public with sharing class SummitEventsHostAssignmentExtension {
                             Gender__c, Undergrad_Major__c, Department__c, Contact__c, Formatted_Time__c,
                             Course_Name__c, Building__c, Location__c, Additional_Comments__c, Remaining__c,
                             Assigned__c
-                    From Summit_Events_Host__c
+                    FROM Summit_Events_Host__c
                     WHERE Event_Instance__c = :instanceID
                     AND RecordType.Id = :recordTypeId
                     AND Remaining__c > 0
+                    WITH SECURITY_ENFORCED
                     ORDER BY Last_Name__c, First_Name__c, Course_Name__c
             ];
         } else {
@@ -35,9 +36,10 @@ public with sharing class SummitEventsHostAssignmentExtension {
                             Gender__c, Undergrad_Major__c, Department__c, Contact__c, Formatted_Time__c,
                             Course_Name__c, Building__c, Location__c, Additional_Comments__c, Remaining__c,
                             Assigned__c
-                    From Summit_Events_Host__c
+                    FROM Summit_Events_Host__c
                     WHERE Event_Instance__c = :instanceID
                     AND Id = :SEApt.Event_Host__c
+                    WITH SECURITY_ENFORCED
                     ORDER BY Last_Name__c, First_Name__c, Course_Name__c
             ];
         }
@@ -68,12 +70,12 @@ public with sharing class SummitEventsHostAssignmentExtension {
         return null;
     }
 
-    public list<SelectOption> getRecordTypes() {
-        list<SelectOption> options = new list<SelectOption>();
+    public List<SelectOption> getRecordTypes() {
+        List<SelectOption> options = new List<SelectOption>();
         options.add(new SelectOption('', 'Select...'));
-        for (list<RecordType> rts : [SELECT ID, name FROM RecordType WHERE SObjectType = 'Summit_Events_Host__c' ORDER BY name]) {
+        for (List<RecordType> rts : [SELECT Id, Name FROM RecordType WHERE SobjectType = 'Summit_Events_Host__c' ORDER BY Name]) {
             for (RecordType rt : rts) {
-                options.add(new SelectOption(rt.ID, rt.Name));
+                options.add(new SelectOption(rt.Id, rt.Name));
             }
         }
         return options;

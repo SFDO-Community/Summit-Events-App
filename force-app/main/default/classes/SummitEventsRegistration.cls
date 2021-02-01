@@ -1,11 +1,11 @@
 public class SummitEventsRegistration {
     public static void run(List<SObject> newlist, List<SObject> oldlist) {
-        list<ID> listConId = new list<ID>();
+
         Map<Id, Id> affectedIds = new Map<Id, Id>();
         Map<Id, Id> affectedContactIds = new Map<Id, Id>();
         List<Summit_Events_Registration__c> affectedRegs = new List<Summit_Events_Registration__c>();
-        List<Contact> footOnCampus = new List<Contact>();
-        Map<id, Summit_Events_Registration__c> oldListMap = new Map<Id, Summit_Events_Registration__c>();
+
+        Map<Id, Summit_Events_Registration__c> oldListMap = new Map<Id, Summit_Events_Registration__c>();
         if (oldlist != null) {
             for (Summit_Events_Registration__c ol : (List<Summit_Events_Registration__c>) oldlist) {
                 oldListMap.put(ol.Id, ol);
@@ -27,14 +27,14 @@ public class SummitEventsRegistration {
                 if (r.Status__c != oldReg.Status__c || r.Substatus__c != oldReg.Substatus__c) {
                     affectedIds.put(r.Event__c, r.Event__c);
                     affectedRegs.add(r);
-                    If (r.Status__c == 'Confirmed' && r.Substatus__c == 'Attended') {
+                    if (r.Status__c == 'Confirmed' && r.Substatus__c == 'Attended') {
                         affectedContactIds.put(r.Id, r.Id);
                     }
                 }
             } else {
                 affectedIds.put(r.Event__c, r.Event__c);
                 affectedRegs.add(r);
-                If (r.Status__c == 'Confirmed' && r.Substatus__c == 'Attended') {
+                if (r.Status__c == 'Confirmed' && r.Substatus__c == 'Attended') {
                     affectedContactIds.put(r.Id, r.Id);
                 }
             }
@@ -42,12 +42,13 @@ public class SummitEventsRegistration {
 
         //Get any templates for events that have restistration status changes
         List<Summit_Events_Email__c> matchEmail = [
-                SELECT Action_Status__c, Action_Sub_status__c, Event__r.id, Letterhead_HTML__c, Email_Subject__c,
+                SELECT Action_Status__c, Action_Sub_status__c, Event__c, Letterhead_HTML__c, Email_Subject__c,
                         Email_Content__c, Letterhead_Id__c, Org_Email_Id__c, BCC_Email__c
                 FROM Summit_Events_Email__c
                 WHERE Event__r.Id IN :affectedIds.values()
-                AND Action_status__c != Null
+                AND Action_Status__c != NULL
                 AND Action_Status__c != '--Inactive--'
+                WITH SECURITY_ENFORCED
         ];
 
         List<Task> activityUpdates = new List<Task>();
@@ -58,21 +59,17 @@ public class SummitEventsRegistration {
             for (Summit_Events_Email__c em : matchEmail) {
                 Boolean statusMatch = false;
 
-                if (em.Event__r.Id.equals(areg.Event__c)) {
+                if (em.Event__c.equals(areg.Event__c)) {
 
                     statusMatch = false;
 
                     if (!String.isBlank(em.Action_Sub_status__c) && !String.isBlank(areg.Substatus__c)) {
                         if (em.Action_Sub_status__c.equals(areg.Substatus__c) && em.Action_Status__c.equalsIgnoreCase(areg.Status__c)) {
                             statusMatch = true;
-                            System.Debug('Match made on Sub status');
                         }
                     } else if (em.Action_Status__c.equals(areg.Status__c) && String.isBlank(em.Action_Sub_status__c) && String.isBlank(areg.Substatus__c)) {
-                        System.Debug('Match made on status');
                         statusMatch = true;
                     }
-
-                    System.Debug(statusMatch + ': em.Action_Sub_status__c = ' + em.Action_Sub_status__c + ', areg.Substatus__c = ' + areg.Substatus__c + ', areg.Status__c = ' + areg.Status__c + ', em.Action_Status__c = ' + em.Action_Status__c);
 
                     if (statusMatch) {
                         //Get email template
@@ -113,7 +110,7 @@ public class SummitEventsRegistration {
                                 }
                                 //replace all hooks with found values from regstration
 
-                                if (matcher2.group(1) == 'UG_Parking_Pass_Link__c' || matcher2.group(1) == 'Add_To_Calendar_Link__c' || matcher2.group(1) == 'Event_Registration_Cancel_Link__c' || matcher2.group(1) == 'Add_to_Apple_Calendar__c' || matcher2.group(1) =='Add_To_Google_Calendar_Link__c' || matcher2.group(1) == 'Add_to_Outlook_Calendar__c' || matcher2.group(1) == 'Add_To_Outlook_Web_Calendar__c' || matcher2.group(1) == 'Add_To_Yahoo_Calendar__c') {
+                                if (matcher2.group(1) == 'UG_Parking_Pass_Link__c' || matcher2.group(1) == 'Add_To_Calendar_Link__c' || matcher2.group(1) == 'Event_Registration_Cancel_Link__c' || matcher2.group(1) == 'Add_to_Apple_Calendar__c' || matcher2.group(1) == 'Add_To_Google_Calendar_Link__c' || matcher2.group(1) == 'Add_to_Outlook_Calendar__c' || matcher2.group(1) == 'Add_To_Outlook_Web_Calendar__c' || matcher2.group(1) == 'Add_To_Yahoo_Calendar__c') {
                                     found = found.replace('_HL_ENCODED_', '<a href="');
                                     found = found.replace('_HL__blank_HL_', '</a>');
                                     found = found.replace('_HL_', ' target="_blank">');
@@ -132,18 +129,18 @@ public class SummitEventsRegistration {
 
                         //Create an activity task
                         Task nt = new Task();
-                        nt.WhatId = areg.id;
+                        nt.WhatId = areg.Id;
                         nt.WhoId = areg.Contact__c;
                         nt.Type = 'Email';
                         nt.ActivityDate = Date.today();
                         nt.Subject = 'Event status email: ' + em.Action_Status__c + ' - ' + em.Email_Subject__c;
                         nt.Status = 'Completed';
                         nt.Priority = 'Low';
-                        
+
                         nt.Description = emailContent.replaceAll('</p>', '\n'); // Replaces </p> (the paragraph closing tag) with a line break, since it is functionally identical to a line break
-                        nt.Description = nt.Description.replaceAll('<(.*?)>',''); // Replaces angled brackets and everything between with an empty string
+                        nt.Description = nt.Description.replaceAll('<(.*?)>', ''); // Replaces angled brackets and everything between with an empty string
                         nt.Description += '\n\n' + 'Registrant Email: ' + areg.Registrant_Email__c;
-                        
+
                         activityUpdates.add(nt);
                     }
 
@@ -157,9 +154,11 @@ public class SummitEventsRegistration {
         }
     }
 
-    public static void sendEmail2(String EmailTo, String HTMLBody, String PlainBody, String Subject, Id OrgEmailId, String BCCString) {
+    public static void sendEmail2(String EmailTo, String HTMLBody, String plainBody, String Subject, Id OrgEmailId, String BCCString) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-        mail.setToAddresses(new String[]{ EmailTo });
+        mail.setToAddresses(new String[]{
+                EmailTo
+        });
         mail.setSubject(Subject);
         if (!String.isBlank(BCCString)) {
             BCCString = BCCString.replaceAll('\\s+', '');

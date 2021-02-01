@@ -36,7 +36,8 @@ public with sharing class SummitEventsSubmitController {
                             Donation_Description__c, Display_Optional_Donation__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
-            ][0];
+                    WITH SECURITY_ENFORCED
+            ];
 
             templateSelected = seaShared.getTemplate(eventPage.Template__c);
 
@@ -46,7 +47,7 @@ public with sharing class SummitEventsSubmitController {
                             Instance_End_Date__c, Current_Available_Capacity__c, Active_Status__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :eventInformation.instanceId
-                    LIMIT 1
+                    WITH SECURITY_ENFORCED
             ];
 
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
@@ -65,6 +66,7 @@ public with sharing class SummitEventsSubmitController {
                     FROM Summit_Events_Appointments__c
                     WHERE Event_Registration__c = :eventInformation.registrationId
                     AND Chosen_State__c != 'Added but not shown'
+                    WITH SECURITY_ENFORCED
                     ORDER BY Appointment_Title__c
             ];
             if (chosenAppointments.size() > 0) {
@@ -94,9 +96,10 @@ public with sharing class SummitEventsSubmitController {
                             Event_Appointment_Type__r.Title__c, Event_Fee_Allocation__r.Name
                     FROM Summit_Events_Fee__c
                     WHERE Event_Registration__c = :eventInformation.registrationId
+                    WITH SECURITY_ENFORCED
             ];
 
-            if (eventFees.size()>0) {
+            if (eventFees.size() > 0) {
                 feesByIndex = new Map<String, String>();
                 paymentItemized = '<table class="slds-table slds-table_cell-buffer slds-table_bordered">';
                 paymentItemized += '<thead>';
@@ -199,7 +202,9 @@ public with sharing class SummitEventsSubmitController {
                 WHERE Summit_Events__c = :eventInformation.eventId
                 AND (
                         Restrict_To_Instance_Title__r.Instance_Title__c = :eventInstance.Instance_Title__c
-                        OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
+                        OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL
+                )
+                WITH SECURITY_ENFORCED
         ];
 
 
