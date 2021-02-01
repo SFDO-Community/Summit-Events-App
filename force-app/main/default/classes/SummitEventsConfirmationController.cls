@@ -50,8 +50,7 @@ public with sharing class SummitEventsConfirmationController {
 
     }
 
-    public PageReference checkEventDetails() {
-        //PageReference resultPageRef =  SEShared.checkForEvent();
+    public void checkEventDetails() {
         eventInformation = seaShared.getSummitEventsInfo();
 
         if (!eventIsClosed) {
@@ -69,8 +68,6 @@ public with sharing class SummitEventsConfirmationController {
                         LIMIT 1
                 ];
 
-                System.debug('EVENT ON LOAD INFO: ' + JSON.serializePretty(evtReg));
-
                 if (!String.isBlank(evtReg.Event_Instance_Title__c)) {
                     eventTitle = evtReg.Event_Name__c + ' - ' + evtReg.Event_Instance_Title__c ;
                 } else {
@@ -85,7 +82,6 @@ public with sharing class SummitEventsConfirmationController {
                 seaShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, '');
             }
         }
-        return null;
     }
 
     private without sharing class registrationCRUD {

@@ -31,6 +31,9 @@ public class SummitEventsContactMatching_TEST {
         seaTestRegistration.Contact__c = null;
         seaTestRegistration.Registrant_Phone__c = '1234567890';
         update seaTestRegistration;
+
+        System.assert(String.isBlank(seaTestRegistration.Contact__c));
+
         Test.stopTest();
     }
 

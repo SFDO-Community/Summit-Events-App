@@ -11,15 +11,25 @@ private class SummitEventsRegisterAppointment_TEST {
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         List<Summit_Events_Appointment_Type__c> testAppointmentTypes = SummitEventsTestSharedDataFactory.createAppointmentTypes(seaTestInstances[1].Event__c);
         Test.startTest();
-        SummitEventsRegisterAppointmentCtlr optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
 
+        PageReference pageRef = Page.SummitEventsRegisterAppointments;
+        pageRef.getParameters().put('adminopen', 'true');
+        Test.setCurrentPage(pageRef);
+
+        SummitEventsRegisterAppointmentCtlr optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
         SummitEventsShared SEShared = new SummitEventsShared();
         SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
-
         optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
 
         //optionsCtrl.checkEventDetails();
-        optionsCtrl.previousPage();
+        pageRef.getParameters().remove('adminopen');
+        pageRef.getParameters().put('adminopen', 'true');
+        System.assertEquals(optionsCtrl.previousPage().getUrl(), '/apex/summiteventsregister?adminopen=true');
+
+        List<Summit_Events_Appointments__c> testAppointments = [SELECT Id, Event_Registration__c FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :seaTestRegistration.Id];
+        System.assertEquals(testAppointments.size(), 0);
+
+        System.debug(optionsCtrl.checkEventDetails());
 
         optionsCtrl.incomingAppointmentJSON = '[]';
         optionsCtrl.saveOptions();
@@ -36,9 +46,11 @@ private class SummitEventsRegisterAppointment_TEST {
         }
         jsonAppointments = jsonAppointments.removeEnd(',');
         jsonAppointments += ']';
-        System.debug('JSON HERE: ' + jsonAppointments);
         optionsCtrl.incomingAppointmentJSON = jsonAppointments;
         optionsCtrl.saveOptions();
+
+        testAppointments = [SELECT Id, Event_Registration__c FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :seaTestRegistration.Id];
+        System.assertEquals(testAppointments.size(), 5);
 
         //run constructor again to simulate page load after save
         seaTestRegistration.UG_Event_Appointments__r.add(new Summit_Events_Appointments__c(Client_Created_Appointment__c = true));

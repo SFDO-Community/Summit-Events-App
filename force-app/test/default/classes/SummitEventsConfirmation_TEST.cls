@@ -6,9 +6,8 @@
 @IsTest
 private class SummitEventsConfirmation_TEST {
     @IsTest static void testRegConfirmationPage() {
-    List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c evtReg = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
-
         Test.startTest();
         PageReference pageRef = Page.SummitEventsConfirmation;
         pageRef.getParameters().put('adminopen', 'true');
@@ -18,6 +17,12 @@ private class SummitEventsConfirmation_TEST {
         SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
         confirmCtrl.eventIsClosed = false;
         confirmCtrl.checkEventDetails();
+        Summit_Events_Registration__c checkRegistrationStatus = [
+                SELECT Id, Status__c FROM
+                Summit_Events_Registration__c
+                WHERE Id = :evtReg.Id
+        ];
+        System.assertEquals(checkRegistrationStatus.Status__c, 'Registered');
         Test.stopTest();
     }
 }

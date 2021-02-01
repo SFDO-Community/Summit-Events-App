@@ -70,19 +70,29 @@ private class SummitEventsPrintItineraries_TEST {
 
         ApexPages.StandardController sc2 = new ApexPages.StandardController(seaTestInstances[1]);
         SummitEventsPrintItinerariesExtension itPrint = new SummitEventsPrintItinerariesExtension(sc2);
-        itPrint.getChooseRender();
-        itPrint.getIsItWord();
-        itPrint.generateDoc();
-        itPrint.generatePDF();
+        System.assertEquals(itPrint.getChooseRender(), null);
+        System.assertEquals(itPrint.getIsItWord(), null);
+        System.assertEquals(itPrint.generateDoc().getUrl(), null);
+        System.assertEquals(itPrint.generatePDF().getUrl(), null);
 
         itPrint = new SummitEventsPrintItinerariesExtension(sc2);
         itPrint.docName = 'admissOvernight';
+
         ApexPages.currentPage().getParameters().put('docType', 'word');
-        itPrint.getChooseRender();
-        itPrint.getIsItWord();
-        itPrint.generateDoc();
-        itPrint.generatePDF();
-        //itPrint = new SummitEventsPrintItinerariesExtension(sc);
+        System.assertEquals(itPrint.getChooseRender(), null);
+        String testStartDate = String.valueOf(seaTestInstances[1].Instance_Start_Date__c);
+        testStartDate = testStartDate.replace(' 00:00:00','');
+        System.assertEquals(itPrint.getIsItWord(), 'application/msword#Test_Event_'+ testStartDate + '.doc');
+
+        ApexPages.currentPage().getParameters().put('docName', 'testingDocument');
+        itPrint = new SummitEventsPrintItinerariesExtension(sc2);
+        System.assertEquals(itPrint.getIsItWord(), 'application/msword#Test_Event_'+ testStartDate + '.doc');
+
+        ApexPages.currentPage().getParameters().remove('docType');
+        ApexPages.currentPage().getParameters().put('docType', 'pdf');
+        System.assertEquals(itPrint.getChooseRender(), 'pdf');
+        System.assertEquals(itPrint.generatePDF().getUrl(), null);
+
         Test.stopTest();
     }
 }

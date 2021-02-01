@@ -15,7 +15,7 @@ public with sharing class SummitEventsParkingPassController {
         couponOut = '';
         Boolean validId = true;
         Id registrationId = null;
-        String regId = ApexPages.currentPage().getParameters().get('regId');
+        String regId = String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('regId'));
 
         try {
             regId = (Id) regId;

@@ -12,10 +12,10 @@ public with sharing class SummitEventsPrintItinerariesExtension {
     public SummitEventsPrintItinerariesExtension(ApexPages.StandardController stdController) {
 
         if (!String.isBlank(ApexPages.currentPage().getParameters().get('docName'))) {
-            docName = ApexPages.currentPage().getParameters().get('docName');
+            docName = String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('docName'));
         }
         if (!String.isBlank(ApexPages.currentPage().getParameters().get('docType'))) {
-            docTypeIn = ApexPages.currentPage().getParameters().get('docType');
+            docTypeIn = String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('docType'));
         }
 
         SEInstance = (Summit_Events_Instance__c) stdController.getRecord();
@@ -31,7 +31,8 @@ public with sharing class SummitEventsPrintItinerariesExtension {
 
     public String getChooseRender() {
         if (!String.isBlank(ApexPages.currentPage().getParameters().get('docType'))) {
-            if (ApexPages.currentPage().getParameters().get('docType') == 'pdf') {
+            docTypeIn = String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('docType'));
+            if (docTypeIn.equalsIgnoreCase('pdf')) {
                 return 'pdf';
             }
         }
@@ -41,7 +42,8 @@ public with sharing class SummitEventsPrintItinerariesExtension {
     public String getIsItWord() {
         String filename = fileName();
         if (!String.isBlank(ApexPages.currentPage().getParameters().get('docType'))) {
-            if (ApexPages.currentPage().getParameters().get('docType') == 'word') {
+            docTypeIn = String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('docType'));
+            if (docTypeIn.equalsIgnoreCase('word')) {
                 return 'application/msword#' + filename + '.doc';
             }
         }

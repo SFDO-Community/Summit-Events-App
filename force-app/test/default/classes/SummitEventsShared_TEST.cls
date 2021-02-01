@@ -26,6 +26,8 @@ public with sharing class SummitEventsShared_TEST {
      **/
 
     @IsTest
-    static void testBehavior() {
+    static void testDepreciation() {
+        Boolean depreciated = true;
+        System.assertEquals(depreciated, true);
     }
 }

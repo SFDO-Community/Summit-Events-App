@@ -7,6 +7,7 @@
 public with sharing class SummitEventsLetterheadLookup_TEST {
     @IsTest static void testLetterheadLookup() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events__c testEvent = SummitEventsTestSharedDataFactory.getEventRecord(seaTestInstances[1].Event__c);
         SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         Summit_Events_Email__c testEvtEmail = SummitEventsTestSharedDataFactory.createTestTransactionEmail(seaTestInstances[1], 'Registered', '');
 
@@ -14,7 +15,12 @@ public with sharing class SummitEventsLetterheadLookup_TEST {
         ApexPages.StandardController sc = new ApexPages.StandardController(testEvtEmail);
         SummitEventsLetterheadLookupExtension emailController = new SummitEventsLetterheadLookupExtension(sc);
         emailController.getOrgWideEmail();
-        emailController.getLetterheads();
+        List<SelectOption> templateList = emailController.getLetterheads();
+        System.assertEquals(templateList[1].getLabel(), 'SummitEvents Test Letterhead');
+
+        List<Summit_Events_Email__c> testPreSelectionEmail = [SELECT Id, Name, Org_Email_Id__c, Letterhead_Id__c FROM Summit_Events_Email__c WHERE Event__c = :testEvent.Id];
+        System.assertEquals(testPreSelectionEmail[0].Org_Email_Id__c, null);
+        System.assertEquals(testPreSelectionEmail[0].Letterhead_Id__c, null);
 
         //Create fake brandTemplate since SF won't let you insert one
         BrandTemplate fakeBrandTemplate = new BrandTemplate(
@@ -35,7 +41,11 @@ public with sharing class SummitEventsLetterheadLookup_TEST {
         emailController.oweList = new Map<Id, OrgWideEmailAddress>();
         emailController.oweList.put(fakeOrgWideEmailAddress.Id, fakeOrgWideEmailAddress);
         emailController.SummitEvt.Org_Email_Id__c = fakeOrgWideEmailAddress.Id;
+
         emailController.save();
+        List<Summit_Events_Email__c> testSummitEventsEmail = [SELECT Id, Name, Letterhead__c, Letterhead_Id__c, Org_Email_Id__c FROM Summit_Events_Email__c WHERE Event__c = :testEvent.Id];
+        System.assertNotEquals(testSummitEventsEmail[0].Org_Email_Id__c, null);
+        System.assertNotEquals(testSummitEventsEmail[0].Letterhead_Id__c, null);
         Test.stopTest();
     }
 }

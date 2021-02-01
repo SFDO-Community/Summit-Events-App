@@ -20,9 +20,9 @@ private class SummitEventsSubmit_TEST {
 
         //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
         SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
-        submitCtrl.checkEventDetails();
-        submitCtrl.previousPage();
-        submitCtrl.submitRegistration();
+        System.assertEquals(submitCtrl.checkEventDetails(), null);
+        System.assertEquals(submitCtrl.previousPage().getUrl(), '/apex/summiteventsregister?adminopen=true');
+        System.assertEquals(submitCtrl.submitRegistration().getUrl(), '/apex/summiteventsconfirmation?adminopen=true');
         Test.stopTest();
     }
 
@@ -47,6 +47,8 @@ private class SummitEventsSubmit_TEST {
 
         //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
         SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
+        System.assertEquals(submitCtrl.previousPage().getUrl(), '/apex/summiteventsregisterappointments');
+        System.assertEquals(submitCtrl.submitRegistration().getUrl(), '/apex/summiteventsconfirmation');
         Test.stopTest();
 
     }
@@ -55,6 +57,8 @@ private class SummitEventsSubmit_TEST {
     @IsTest static void testSubmitWithFees() {
         SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        List<Summit_Events_Fee_Allocation__c> testFeeAllocations = SummitEventsTestSharedDataFactory.AddFeesToEvent(seaTestInstances[1].Event__c);
+        SummitEventsTestSharedDataFactory.AddDonationsToEvents(seaTestInstances[1].Event__c, testFeeAllocations);
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
         //Get all the variations of user input to make a appointment type for each
@@ -84,6 +88,8 @@ private class SummitEventsSubmit_TEST {
 
         //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
         SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
+        System.assertEquals(submitCtrl.previousPage().getUrl(), '/apex/summiteventsdonation');
+        System.assertEquals(submitCtrl.submitRegistration().getUrl(), '/apex/summiteventsconfirmation');
         Test.stopTest();
 
     }

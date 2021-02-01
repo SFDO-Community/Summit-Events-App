@@ -10,7 +10,19 @@ public class SummitEventsAddToCalendar_TEST {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Test.startTest();
         ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
-        new SummitEventsAddToCalendarController();
+        SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
+        String startString = calendarController.formattedGmtVersionOfDate(seaTestInstances[1].Instance_Start_Date__c, seaTestInstances[1].Instance_Start_Time__c);
+        System.assertEquals(calendarController.DTStart, startString);
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testForNullReturns() {
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Test.startTest();
+        SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
+        System.assertEquals(calendarController.calendarType(), null);
+        System.assertEquals(SummitEventsAddToCalendarController.getTimeZoneDisplay(null,false),'');
         Test.stopTest();
     }
 
@@ -21,7 +33,10 @@ public class SummitEventsAddToCalendar_TEST {
         ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
         ApexPages.currentPage().getParameters().put('type', 'google');
         SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
-        calendarController.calendarType();
+        String startDate = calendarController.DTStart;
+        String endDate = calendarController.DTEnd;
+        String comparePageReference = 'http://www.google.com/calendar/event?action=TEMPLATE&ctz=America%2FChicago&dates=' + startDate + '%2F' + endDate + '&details=Test+Event+-+Test+Event+Session+0%3Cbr%2F%3E%3Cbr%2F%3EA+location%3Cbr%2F%3E123+Electric+Ave.%3Cbr%2F%3EMap+Link+1%3Cbr%2F%3E%3Cbr%2F%3Enull&location=123+Electric+Ave.&sprop=%5Bevent_source_url%5DMap+Link+1&text=Test+Event+-+Test+Event+Session+0';
+        system.assertEquals(calendarController.calendarType().getUrl(), comparePageReference);
         Test.stopTest();
     }
 
@@ -32,7 +47,10 @@ public class SummitEventsAddToCalendar_TEST {
         ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
         ApexPages.currentPage().getParameters().put('type', 'yahoo');
         SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
-        calendarController.calendarType();
+        String startDate = calendarController.DTStart;
+        String endDate = calendarController.DTEnd;
+        String testCalendarURL = 'https://calendar.yahoo.com?desc=Test+Event+-+Test+Event+Session+0%0A%0AA+location%0A123+Electric+Ave.%0AMap+Link+1%0A%0Anull&et=' + endDate + '&in_csz=America%2FChicago&in_loc=A+location&in_st=123+Electric+Ave.&st=' + startDate + '&title=Test+Event+-+Test+Event+Session+0&v=60';
+        system.assertEquals(calendarController.calendarType().getUrl(), testCalendarURL);
         Test.stopTest();
     }
 
@@ -43,7 +61,7 @@ public class SummitEventsAddToCalendar_TEST {
         ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
         ApexPages.currentPage().getParameters().put('type', 'ical');
         SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
-        calendarController.calendarType();
+        System.assertEquals(calendarController.calendarType(), null);
         Test.stopTest();
     }
 
@@ -54,7 +72,7 @@ public class SummitEventsAddToCalendar_TEST {
         ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
         ApexPages.currentPage().getParameters().put('type', 'outlook');
         SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
-        calendarController.calendarType();
+        System.assertEquals(calendarController.calendarType(), null);
         Test.stopTest();
     }
 
@@ -65,7 +83,23 @@ public class SummitEventsAddToCalendar_TEST {
         ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
         ApexPages.currentPage().getParameters().put('type', 'outlookweb');
         SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
-        calendarController.calendarType();
+
+        SummitEventsShared SEShared = new SummitEventsShared();
+        String timezoneString = SEShared.getTimeZonePick(seaTestInstances[1].Instance_Time_Zone__c);
+        TimeZone tz = TimeZone.getTimeZone(timezoneString);
+        Date startD = seaTestInstances[1].Instance_Start_Date__c;
+        Time startT = seaTestInstances[1].Instance_Start_Time__c;
+        Date endD = seaTestInstances[1].Instance_End_Date__c;
+        Time endT = seaTestInstances[1].Instance_End_Time__c;
+        Datetime startDateTime = Datetime.newInstanceGmt(startD.year(), startD.month(), startD.day(), startT.hour(), startT.minute(), startT.second());
+        Datetime endDateTime = Datetime.newInstanceGmt(endD.year(), endD.month(), endD.day(), endT.hour(), endT.minute(), endT.second());
+        startDateTime = startDateTime.addSeconds(-(tz.getOffset(startDateTime) / 1000));
+        endDateTime = endDateTime.addSeconds(-(tz.getOffset(endDateTime) / 1000));
+        String formattedStartDate = EncodingUtil.urlEncode(startDateTime.formatGmt('yyyy-MM-dd\'T\'HH:mm:SS') + 'Z', 'UTF-8');
+        String formattedEndDate = EncodingUtil.urlEncode(endDateTime.formatGmt('yyyy-MM-dd\'T\'HH:mm:SS') + 'Z', 'UTF-8');
+
+        String testCalendarURL = 'https://outlook.office.com/owa/?body=Test+Event+-+Test+Event+Session+0%3Cbr%2F%3E%3Cbr%2F%3EA+location%3Cbr%2F%3E123+Electric+Ave.%3Cbr%2F%3EMap+Link+1%3Cbr%2F%3E%3Cbr%2F%3Enull&enddt=' + formattedEndDate + '&location=A+location%2C++123+Electric+Ave.&path=%2Fcalendar%2Faction%2Fcompose&startdt=' + formattedStartDate + '&subject=Test+Event+-+Test+Event+Session+0';
+        System.assertEquals(calendarController.calendarType().getUrl(), testCalendarURL);
         Test.stopTest();
     }
 

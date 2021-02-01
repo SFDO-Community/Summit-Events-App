@@ -33,6 +33,8 @@ private class SummitEventsHostAssignment_TEST {
         hostController.hostId = testHosts[0].Id;
         hostController.hostAction = 'assign';
         hostController.assignHost();
+        Summit_Events_Host__c testAssignedHost = [SELECT Id, Assigned__c FROM Summit_Events_Host__c WHERE Id = :testHosts[0].Id];
+        System.assertEquals(testAssignedHost.Assigned__c, 1);
         //Get list with already assigned host
         hostController.getListHost();
 
@@ -40,11 +42,15 @@ private class SummitEventsHostAssignment_TEST {
         hostController.hostId = testHosts[0].Id;
         hostController.hostAction = 'unassign';
         hostController.assignHost();
+        testAssignedHost = [SELECT Id, Assigned__c FROM Summit_Events_Host__c WHERE Id = :testHosts[0].Id];
+        System.assertEquals(testAssignedHost.Assigned__c, 0);
 
         //Assign a host with capacity reached
         hostController.hostId = testHosts[1].Id;
         hostController.hostAction = 'assign';
         hostController.assignHost();
+        testAssignedHost = [SELECT Id, Assigned__c FROM Summit_Events_Host__c WHERE Id = :testHosts[1].Id];
+        System.assertEquals(testAssignedHost.Assigned__c, 10);
 
         Test.stopTest();
     }
