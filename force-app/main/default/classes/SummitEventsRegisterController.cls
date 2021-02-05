@@ -102,7 +102,7 @@ public with sharing class SummitEventsRegisterController {
             endTimeString = SeaShared.formatTime(evtInstance.Instance_End_Time__c, false);
         }
 
-        formattedStartDate = formattedGmtVersionOfDate(evtInstance.Instance_Start_Date__c, evtInstance.Instance_Start_Time__c, evtInstance.Instance_Time_Zone__c);
+        formattedStartDate = formattedGmtVersionOfDate(evtInstance.Instance_Start_Date__c, evtInstance.Instance_Start_Time__c);
 
         //Get Event Info off of instance master detail id
         if (!String.isBlank(eventInformation.eventId)) {
@@ -385,7 +385,7 @@ public with sharing class SummitEventsRegisterController {
         return cpl;
     }
 
-    public String formattedGmtVersionOfDate(Date aDate, Time aTime, String timeZoneString) {
+    public String formattedGmtVersionOfDate(Date aDate, Time aTime) {
         String formattedString = '';
         Datetime newDateTime = Datetime.newInstanceGmt(aDate.year(), aDate.month(), aDate.day(), aTime.hour(), aTime.minute(), aTime.second());
         formattedString = newDateTime.formatGmt('EEEE MMMM dd, ') + newDateTime.year();
@@ -525,32 +525,39 @@ public with sharing class SummitEventsRegisterController {
     private without sharing class registrationCRUD {
 
         public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c eventRegistration, Id incomingEventRegistrationId, String registrantAudience, List<Summit_Events_Fee__c> upsertFees) {
-            try {
-                if (String.isNotBlank(incomingEventRegistrationId)) {
-                    eventRegistration.Id = incomingEventRegistrationId;
-                    update eventRegistration;
-                } else {
-                    insert eventRegistration;
-                }
-            } catch (Exception ex) {
-                System.debug(ex.getMessage());
-            }
+            System.debug('reg creatable : ' + Schema.SObjectType.Summit_Events_Registration__c.isCreateable());
+            System.debug('reg updatable : ' + Schema.SObjectType.Summit_Events_Registration__c.isUndeletable());
+            System.debug('reg deletable : ' + Schema.SObjectType.Summit_Events_Registration__c.isDeletable());
 
-            //Save fees
-            if (upsertFees.size() > 0) {
-                for (Integer ff = 0; ff < upsertFees.size(); ff++) {
-                    upsertFees[ff].Event_Registration__c = eventRegistration.Id;
-                }
+            if (Schema.SObjectType.Summit_Events_Registration__c.isCreateable()) {
                 try {
-                    upsert upsertFees;
+                    if (String.isNotBlank(incomingEventRegistrationId)) {
+                        eventRegistration.Id = incomingEventRegistrationId;
+                        update eventRegistration;
+                    } else {
+                        insert eventRegistration;
+                    }
                 } catch (Exception ex) {
                     System.debug(ex.getMessage());
                 }
             }
 
+            //Save fees
+            if (Schema.SObjectType.Summit_Events_Fee__c.isCreateable()) {
+                if (upsertFees.size() > 0) {
+                    for (Integer ff = 0; ff < upsertFees.size(); ff++) {
+                        upsertFees[ff].Event_Registration__c = eventRegistration.Id;
+                    }
+                    try {
+                        upsert upsertFees;
+                    } catch (Exception ex) {
+                        System.debug(ex.getMessage());
+                    }
+                }
+            }
+
             //Update encrypted cookie
             SummitEventsShared SeaShared = new SummitEventsShared();
-            System.debug('Before CRUD cookie creation: ' + JSON.serializePretty(eventRegistration));
             SeaShared.createEncryptedCookie(registrantAudience, eventRegistration.Event_Instance__c, eventRegistration.Event__c, eventRegistration.Id);
 
             return eventRegistration;

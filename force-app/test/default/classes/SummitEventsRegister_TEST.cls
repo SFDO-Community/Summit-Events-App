@@ -7,35 +7,39 @@
 private class SummitEventsRegister_TEST {
     @IsTest static void testRegPicklists() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        Test.startTest();
-        //Add instance ID to register page
-        PageReference pageRef = Page.SummitEventsRegister;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
-        ApexPages.currentPage().getParameters().put('adminopen', 'true');
-        SummitEventsRegisterController registerController = new SummitEventsRegisterController();
-        System.assert(registerController.getSexDD().size() > 0);
-        System.assert(registerController.getStateDD().size() > 0);
-        System.assert(registerController.getCountryDD().size() > 0);
-        System.assert(registerController.getTimeFrame().size() > 0);
-        System.assert(registerController.getThirdPartyStatus().size() > 0);
-        System.assert(registerController.getApplicantTypeDD().size() > 0);
-        System.assert(registerController.getRelationshipDD().size() > 0);
-        System.assert(registerController.getPronounDD().size() > 0);
-        System.assertEquals(registerController.checkEventDetails(), null);
-        registerController.eventRegistration.Registrant_First_Name__c = 'Test';
-        registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
-        registerController.eventRegistration.Registrant_Email__c = 'test@test.com';
-        registerController.saveContactRegistration();
-        List<Summit_Events_Registration__c> registrations = [
-                SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
-                FROM Summit_Events_Registration__c
-                WHERE Registrant_Email__c = 'test@test.com'
-                AND Registrant_First_Name__c = 'Test'
-                AND Registrant_Last_Name__c = 'Tester'
-        ];
-        System.assertEquals(registrations.size(), 1);
-        Test.stopTest();
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', true);
+
+        System.runAs(testUser) {
+            Test.startTest();
+            //Add instance ID to register page
+            PageReference pageRef = Page.SummitEventsRegister;
+            Test.setCurrentPage(pageRef);
+            ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
+            ApexPages.currentPage().getParameters().put('adminopen', 'true');
+            SummitEventsRegisterController registerController = new SummitEventsRegisterController();
+            System.assert(registerController.getSexDD().size() > 0);
+            System.assert(registerController.getStateDD().size() > 0);
+            System.assert(registerController.getCountryDD().size() > 0);
+            System.assert(registerController.getTimeFrame().size() > 0);
+            System.assert(registerController.getThirdPartyStatus().size() > 0);
+            System.assert(registerController.getApplicantTypeDD().size() > 0);
+            System.assert(registerController.getRelationshipDD().size() > 0);
+            System.assert(registerController.getPronounDD().size() > 0);
+            System.assertEquals(registerController.checkEventDetails(), null);
+            registerController.eventRegistration.Registrant_First_Name__c = 'Test';
+            registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
+            registerController.eventRegistration.Registrant_Email__c = 'test@test.com';
+            registerController.saveContactRegistration();
+            List<Summit_Events_Registration__c> registrations = [
+                    SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
+                    FROM Summit_Events_Registration__c
+                    WHERE Registrant_Email__c = 'test@test.com'
+                    AND Registrant_First_Name__c = 'Test'
+                    AND Registrant_Last_Name__c = 'Tester'
+            ];
+            System.assertEquals(registrations.size(), 1);
+            Test.stopTest();
+        }
     }
 
     @IsTest static void testEventWithEmailRestrictionsOnInstance() {

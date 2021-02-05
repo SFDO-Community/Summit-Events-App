@@ -308,18 +308,18 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             submitPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
         }
 
-        Summit_Events_Appointments__c[] deleteAppt = [
+        List<Summit_Events_Appointments__c> deleteAppointments = [
                 SELECT Id, Event_Registration__c, Client_Created_Appointment__c, Chosen_State__c, Do_Not_Show_Time__c
                 FROM Summit_Events_Appointments__c
                 WHERE Event_Registration__c = :eventInformation.registrationId
                 AND Client_Created_Appointment__c = TRUE
                 WITH SECURITY_ENFORCED
         ];
-        doCRUD.deleteAppointments(deleteAppt);
+        doCRUD.deleteAppointments(deleteAppointments);
 
         List<incomingAppt> deserializedInvoices = (List<incomingAppt>) JSON.deserialize(incomingAppointmentJSON, List<incomingAppt>.class);
 
-        List<Summit_Events_Appointments__c> apptToAdd = new List<Summit_Events_Appointments__c>();
+        List<Summit_Events_Appointments__c> appointmentsToAdd = new List<Summit_Events_Appointments__c>();
         for (incomingAppt appt : deserializedInvoices) {
             Summit_Events_Appointments__c addAppt = new Summit_Events_Appointments__c();
             addAppt.Event_Registration__c = eventInformation.registrationId;
@@ -358,11 +358,11 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             addAppt.Description__c = appt.appDesc;
             addAppt.Registrant_Input__c = appt.appInput;
 
-            apptToAdd.add(addAppt);
+            appointmentsToAdd.add(addAppt);
         }
 
-        if (apptToAdd.size() > 0) {
-            doCRUD.updateAppointments(apptToAdd);
+        if (appointmentsToAdd.size() > 0) {
+            doCRUD.updateAppointments(appointmentsToAdd);
         }
         return submitPage;
     }

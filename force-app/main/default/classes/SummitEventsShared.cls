@@ -67,11 +67,6 @@ public with sharing class SummitEventsShared {
             }
         }
 
-        // Make sure registration id isn't the string null
-//        if (eventInformation.registrationId.equalsIgnoreCase('null')) {
-//            eventInformation.registrationId = '';
-//        }
-
         //check if registration id is there and whether status it is set to registered. IF so reset cookie if it is.
         if (String.isNotBlank(eventInformation.registrationId)) {
             Summit_Events_Registration__c evtReg = [
