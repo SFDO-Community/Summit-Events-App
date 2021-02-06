@@ -18,8 +18,8 @@ public with sharing class SummitEventsLetterheadLookup_TEST {
         List<SelectOption> templateList = emailController.getLetterheads();
         System.assertEquals(templateList[1].getLabel(), 'SummitEvents Test Letterhead');
 
-        List<Summit_Events_Email__c> testPreSelectionEmail = [SELECT Id, Name, Org_Email_Id__c, Letterhead_Id__c FROM Summit_Events_Email__c WHERE Event__c = :testEvent.Id];
-        System.assertEquals(testPreSelectionEmail[0].Org_Email_Id__c, null);
+        List<Summit_Events_Email__c> testPreSelectionEmail = [SELECT Id, Name, Org_Email_Id__c, Letterhead_Id__c, Letterhead_Name__c FROM Summit_Events_Email__c WHERE Event__c = :testEvent.Id];
+        System.assertEquals(testPreSelectionEmail[0].Letterhead_Name__c, null);
         System.assertEquals(testPreSelectionEmail[0].Letterhead_Id__c, null);
 
         //Create fake brandTemplate since SF won't let you insert one

@@ -12,31 +12,34 @@ private class SummitEventsParkingPass_TEST {
         testEventRegistration.Status__c = 'Registered';
         testEventRegistration.Registrant_Preferred_First_Name__c = 'Frank';
         update testEventRegistration;
-        Test.startTest();
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        System.runAs(testUser) {
+            Test.startTest();
 
-        //Valid Parking pass
-        ApexPages.currentPage().getParameters().put('regId', testEventRegistration.Id);
-        SummitEventsParkingPassController parkingCtrl = new SummitEventsParkingPassController();
-        System.assertEquals(parkingCtrl.warning, '');
+            //Valid Parking pass
+            ApexPages.currentPage().getParameters().put('regId', testEventRegistration.Id);
+            SummitEventsParkingPassController parkingCtrl = new SummitEventsParkingPassController();
+            System.assertEquals(parkingCtrl.warning, '');
 
-        //Not registered parking pass
-        ApexPages.currentPage().getParameters().remove('regId');
-        ApexPages.currentPage().getParameters().put('regId', testEventRegistration2.Id);
-        parkingCtrl = new SummitEventsParkingPassController();
-        System.assertNotEquals(parkingCtrl.warning, '');
+            //Not registered parking pass
+            ApexPages.currentPage().getParameters().remove('regId');
+            ApexPages.currentPage().getParameters().put('regId', testEventRegistration2.Id);
+            parkingCtrl = new SummitEventsParkingPassController();
+            System.assertNotEquals(parkingCtrl.warning, '');
 
-        //Registered now with not preferred first name
-        testEventRegistration2.Status__c = 'Registered';
-        upsert testEventRegistration2;
-        parkingCtrl = new SummitEventsParkingPassController();
-        System.assertEquals(parkingCtrl.warning, '');
+            //Registered now with not preferred first name
+            testEventRegistration2.Status__c = 'Registered';
+            upsert testEventRegistration2;
+            parkingCtrl = new SummitEventsParkingPassController();
+            System.assertEquals(parkingCtrl.warning, '');
 
-        //Tried to pass a bad id through the URL
-        ApexPages.currentPage().getParameters().remove('regId');
-        ApexPages.currentPage().getParameters().put('regId', 'BADID');
-        parkingCtrl = new SummitEventsParkingPassController();
-        System.assertNotEquals(parkingCtrl.warning, '');
+            //Tried to pass a bad id through the URL
+            ApexPages.currentPage().getParameters().remove('regId');
+            ApexPages.currentPage().getParameters().put('regId', 'BADID');
+            parkingCtrl = new SummitEventsParkingPassController();
+            System.assertNotEquals(parkingCtrl.warning, '');
 
-        Test.stopTest();
+            Test.stopTest();
+        }
     }
 }

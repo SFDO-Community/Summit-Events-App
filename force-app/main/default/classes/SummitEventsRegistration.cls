@@ -48,7 +48,6 @@ public class SummitEventsRegistration {
                 WHERE Event__r.Id IN :affectedIds.values()
                 AND Action_Status__c != NULL
                 AND Action_Status__c != '--Inactive--'
-                WITH SECURITY_ENFORCED
         ];
 
         List<Task> activityUpdates = new List<Task>();
@@ -150,7 +149,8 @@ public class SummitEventsRegistration {
 
 
         if (activityUpdates.size() > 0) {
-            insert activityUpdates;
+            doCRUD  crudToDo = new doCRUD();
+            crudToDo.savTask(activityUpdates);
         }
     }
 
@@ -178,5 +178,16 @@ public class SummitEventsRegistration {
         Messaging.SendEmailResult [] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[]{
                 mail
         });
+    }
+
+    private without sharing class doCRUD {
+
+        public void savTask(List<Task> taskToSave) {
+            try {
+                insert taskToSave;
+            } catch(Exception e) {
+                System.debug(e.getMessage());
+            }
+        }
     }
 }

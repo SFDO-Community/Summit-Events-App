@@ -316,7 +316,7 @@ public with sharing class SummitEventsRegisterController {
 
     public Summit_Events_Registration__c getEventRegistration(Id eventRegistrationId) {
         Summit_Events_Registration__c oldEventRegistration = [
-                SELECT  Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c, Number_of_Guests__c,
+                SELECT Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c, Number_of_Guests__c,
                         Registrant_Gender__c, Registrant_Street_1__c, Registrant_Street_2__c, Registrant_State__c, Registrant_City__c, Preferred_Visit_Time__c,
                         Registrant_Zip__c, Registrant_Phone__c, Registrant_Mobile_Phone__c, Registrant_College__c, Registrant_College_Code__c, Registrant_College_Year__c,
                         Registrant_High_School__c, Registrant_High_School_Code__c, Registrant_Receive_Texts__c, Registrant_High_School_Grad_Year__c, Registrant_High_School_Not_Found__c,
@@ -469,6 +469,7 @@ public with sharing class SummitEventsRegisterController {
                 AND Event_Fee_Type__c != 'Appointment Additional'
                 AND Event_Fee_Type__c != 'Optional Donation'
                 AND Event_Registration__c = :eventInformation.registrationId
+                WITH SECURITY_ENFORCED
         ];
         if (recordedEventFeeList.size() > 0) {
             //Fees already exist so checks need to be made if current fees are there
@@ -489,6 +490,7 @@ public with sharing class SummitEventsRegisterController {
                     AND Event_Fee_Type__c != 'Optional Donation'
                     AND Event_Registration__c = :eventInformation.registrationId
                     AND Id NOT IN :recordedUsedIds
+                    WITH SECURITY_ENFORCED
             ];
             if (deleteEventFees.size() > 0) {
                 rCRUD.deleteFees(deleteEventFees);
@@ -525,9 +527,6 @@ public with sharing class SummitEventsRegisterController {
     private without sharing class registrationCRUD {
 
         public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c eventRegistration, Id incomingEventRegistrationId, String registrantAudience, List<Summit_Events_Fee__c> upsertFees) {
-            System.debug('reg creatable : ' + Schema.SObjectType.Summit_Events_Registration__c.isCreateable());
-            System.debug('reg updatable : ' + Schema.SObjectType.Summit_Events_Registration__c.isUndeletable());
-            System.debug('reg deletable : ' + Schema.SObjectType.Summit_Events_Registration__c.isDeletable());
 
             if (Schema.SObjectType.Summit_Events_Registration__c.isCreateable()) {
                 try {
@@ -543,18 +542,17 @@ public with sharing class SummitEventsRegisterController {
             }
 
             //Save fees
-            if (Schema.SObjectType.Summit_Events_Fee__c.isCreateable()) {
-                if (upsertFees.size() > 0) {
-                    for (Integer ff = 0; ff < upsertFees.size(); ff++) {
-                        upsertFees[ff].Event_Registration__c = eventRegistration.Id;
-                    }
-                    try {
-                        upsert upsertFees;
-                    } catch (Exception ex) {
-                        System.debug(ex.getMessage());
-                    }
+            if (upsertFees.size() > 0) {
+                for (Integer ff = 0; ff < upsertFees.size(); ff++) {
+                    upsertFees[ff].Event_Registration__c = eventRegistration.Id;
+                }
+                try {
+                    upsert upsertFees;
+                } catch (Exception ex) {
+                    System.debug(ex.getMessage());
                 }
             }
+
 
             //Update encrypted cookie
             SummitEventsShared SeaShared = new SummitEventsShared();
@@ -565,9 +563,7 @@ public with sharing class SummitEventsRegisterController {
 
         public void deleteFees(List<Summit_Events_Fee__c> deletableFees) {
             try {
-                if (Schema.SObjectType.Summit_Events_Fee__c.isDeletable()) {
-                    delete deletableFees;
-                }
+                delete deletableFees;
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
             }

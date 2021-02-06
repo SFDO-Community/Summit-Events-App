@@ -14,7 +14,6 @@ public with sharing class SummitEventsContactMatching {
                 SELECT Id, Contact_Matching_Rules__c
                 FROM Summit_Events__c
                 WHERE Id IN :matchingRules.keySet()
-                WITH SECURITY_ENFORCED
         ]) {
             matchingRules.put(event.Id, event);
         }
@@ -73,7 +72,6 @@ public with sharing class SummitEventsContactMatching {
                         FROM Summit_Events_Registration__c
                         WHERE Id IN :newRegistrations
                 )
-                WITH SECURITY_ENFORCED
         ]) {
             String duplicateRuleName = event.Contact_Creation_Duplicate_Rule__c;
             duplicateRuleName = duplicateRuleName.replaceAll(' ', '_');
@@ -137,7 +135,6 @@ public with sharing class SummitEventsContactMatching {
                             FROM Summit_Events_Contact_Matching_Mapping__mdt
                             WHERE Contact_Matching_Method__c = :event.Custom_Metadata_Contact_Matching_Method__c
                             AND Matching_Only__c = TRUE
-                            WITH SECURITY_ENFORCED
                     ]) {
                         c.put(mapping.Contact_Field_API_Name__c, null);
                     }
@@ -233,7 +230,6 @@ public with sharing class SummitEventsContactMatching {
                 WHERE Contact_Matching_Method__c = :matchingMethod
                 AND Source_Object__c = 'summit__Summit_Events_Registration__c'
                 AND Source_Type__c = 'Field'
-                WITH SECURITY_ENFORCED
         ]) {
             System.debug('mapping - ' + mapping);
             c.put(mapping.Contact_Field_API_Name__c, reg.get(mapping.Source_Value__c));
@@ -244,7 +240,6 @@ public with sharing class SummitEventsContactMatching {
                 FROM Summit_Events_Contact_Matching_Mapping__mdt
                 WHERE Contact_Matching_Method__c = :matchingMethod
                 AND Source_Type__c = 'Hardcoded'
-                WITH SECURITY_ENFORCED
         ]) {
             c.put(mapping.Contact_Field_API_Name__c, mapping.Source_Value__c);
         }

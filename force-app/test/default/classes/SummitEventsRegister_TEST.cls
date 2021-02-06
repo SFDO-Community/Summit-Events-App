@@ -7,8 +7,7 @@
 private class SummitEventsRegister_TEST {
     @IsTest static void testRegPicklists() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', true);
-
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
         System.runAs(testUser) {
             Test.startTest();
             //Add instance ID to register page
@@ -50,23 +49,26 @@ private class SummitEventsRegister_TEST {
         update seaTestEvent;
         seaTestRegistration.Status__c = 'Registered';
         update seaTestRegistration;
-        Test.startTest();
-        PageReference pageRef = Page.SummitEventsRegister;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
-        ApexPages.currentPage().getParameters().put('audience', 'Transfer');
-        SummitEventsRegisterController registerController = new SummitEventsRegisterController();
-        registerController.eventRegistration.Registrant_First_Name__c = 'Test';
-        registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
-        registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
-        registerController.saveContactRegistration();
-        List<Summit_Events_Registration__c> registrations = [
-                SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
-                FROM Summit_Events_Registration__c
-        ];
-        //There should be only one registration, the first one inserted as data. The second should have been restricted and not allowed through
-        System.assertEquals(registrations.size(), 1);
-        Test.stopTest();
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEventsRegister;
+            Test.setCurrentPage(pageRef);
+            ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
+            ApexPages.currentPage().getParameters().put('audience', 'Transfer');
+            SummitEventsRegisterController registerController = new SummitEventsRegisterController();
+            registerController.eventRegistration.Registrant_First_Name__c = 'Test';
+            registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
+            registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
+            registerController.saveContactRegistration();
+            List<Summit_Events_Registration__c> registrations = [
+                    SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
+                    FROM Summit_Events_Registration__c
+            ];
+            //There should be only one registration, the first one inserted as data. The second should have been restricted and not allowed through
+            System.assertEquals(registrations.size(), 1);
+            Test.stopTest();
+        }
     }
 
     @IsTest static void testEventWithAppointments() {
@@ -74,22 +76,25 @@ private class SummitEventsRegister_TEST {
         Summit_Events__c seaTestEvent = SummitEventsTestSharedDataFactory.getEventRecord(seaTestInstances[1].Event__c);
         List<Summit_Events_Appointment_Type__c> testAppointmentTypes = SummitEventsTestSharedDataFactory.createAppointmentTypes(seaTestInstances[1].Event__c);
         update testAppointmentTypes;
-        Test.startTest();
-        PageReference pageRef = Page.SummitEventsRegister;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
-        SummitEventsRegisterController registerController = new SummitEventsRegisterController();
-        registerController.eventRegistration.Registrant_First_Name__c = 'Test';
-        registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
-        registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
-        registerController.saveContactRegistration();
-        List<Summit_Events_Registration__c> registrations = [
-                SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
-                FROM Summit_Events_Registration__c
-        ];
-        //There should be only one registration, the first one inserted as data. The second should have been restricted and not allowed through
-        System.assertEquals(registrations.size(), 1);
-        Test.stopTest();
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEventsRegister;
+            Test.setCurrentPage(pageRef);
+            ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
+            SummitEventsRegisterController registerController = new SummitEventsRegisterController();
+            registerController.eventRegistration.Registrant_First_Name__c = 'Test';
+            registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
+            registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
+            registerController.saveContactRegistration();
+            List<Summit_Events_Registration__c> registrations = [
+                    SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
+                    FROM Summit_Events_Registration__c
+            ];
+            //There should be only one registration, the first one inserted as data. The second should have been restricted and not allowed through
+            System.assertEquals(registrations.size(), 1);
+            Test.stopTest();
+        }
     }
 
     @IsTest static void testEventWithAdditionalQuestions() {
@@ -118,27 +123,30 @@ private class SummitEventsRegister_TEST {
         testEvent.Ask_Phone__c = 'Ask with type';
 
         update testEvent;
-        Test.startTest();
-        PageReference pageRef = Page.SummitEventsRegister;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
-        SummitEventsRegisterController registerController = new SummitEventsRegisterController();
-        registerController.eventRegistration.Registrant_First_Name__c = 'Test';
-        registerController.phoneType = 'mobile';
-        registerController.eventRegistration.Registrant_Mobile_Phone__c = '(555)555-5555';
-        registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
-        registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
-        registerController.eventRegistration.Add_Info_Answer_1__c = 'Test Answer';
-        registerController.saveContactRegistration();
-        List<Summit_Events_Registration__c> registrations = [
-                SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
-                FROM Summit_Events_Registration__c
-                WHERE Registrant_Mobile_Phone__c = '(555)555-5555'
-                AND Registrant_First_Name__c = 'Test'
-        ];
-        //There should be only one registration, the first one inserted as data. The second should have been restricted and not allowed through
-        System.assertEquals(registrations.size(), 1);
-        Test.stopTest();
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEventsRegister;
+            Test.setCurrentPage(pageRef);
+            ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
+            SummitEventsRegisterController registerController = new SummitEventsRegisterController();
+            registerController.eventRegistration.Registrant_First_Name__c = 'Test';
+            registerController.phoneType = 'mobile';
+            registerController.eventRegistration.Registrant_Mobile_Phone__c = '(555)555-5555';
+            registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
+            registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
+            registerController.eventRegistration.Add_Info_Answer_1__c = 'Test Answer';
+            registerController.saveContactRegistration();
+            List<Summit_Events_Registration__c> registrations = [
+                    SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
+                    FROM Summit_Events_Registration__c
+                    WHERE Registrant_Mobile_Phone__c = '(555)555-5555'
+                    AND Registrant_First_Name__c = 'Test'
+            ];
+            //There should be only one registration, the first one inserted as data. The second should have been restricted and not allowed through
+            System.assertEquals(registrations.size(), 1);
+            Test.stopTest();
+        }
     }
 
     @IsTest static void testEventWithEmailRestrictionsOnEvent() {
@@ -155,102 +163,111 @@ private class SummitEventsRegister_TEST {
         update seaTestEvent;
         seaTestRegistration.Status__c = 'Registered';
         update seaTestRegistration;
-        Test.startTest();
-        PageReference pageRef = Page.SummitEventsRegister;
-        Test.setCurrentPage(pageRef);
-        //Try to register on different instance
-        ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[2].Id);
-        ApexPages.currentPage().getParameters().put('audience', 'High School Senior');
-        SummitEventsRegisterController registerController = new SummitEventsRegisterController();
-        registerController.eventRegistration.Registrant_First_Name__c = 'Test';
-        registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
-        registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
-        registerController.saveContactRegistration();
-        List<Summit_Events_Registration__c> registrations = [
-                SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
-                FROM Summit_Events_Registration__c
-        ];
-        //There should be only one registration, the first one inserted as data. The second should have been restricted and not allowed through
-        System.assertEquals(registrations.size(), 1);
-        Test.stopTest();
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEventsRegister;
+            Test.setCurrentPage(pageRef);
+            //Try to register on different instance
+            ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[2].Id);
+            ApexPages.currentPage().getParameters().put('audience', 'High School Senior');
+            SummitEventsRegisterController registerController = new SummitEventsRegisterController();
+            registerController.eventRegistration.Registrant_First_Name__c = 'Test';
+            registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
+            registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
+            registerController.saveContactRegistration();
+            List<Summit_Events_Registration__c> registrations = [
+                    SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
+                    FROM Summit_Events_Registration__c
+            ];
+            //There should be only one registration, the first one inserted as data. The second should have been restricted and not allowed through
+            System.assertEquals(registrations.size(), 1);
+            Test.stopTest();
+        }
     }
 
     @IsTest static void testWithRegistrationStarted() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Test', 'Tester', 'test@test.net', '55555', '1971-03-22', '2012', null);
-        Test.startTest();
-        PageReference pageRef = Page.SummitEventsRegister;
-        Test.setCurrentPage(pageRef);
-        //Try to register on different instance
-        SummitEventsShared SEShared = new SummitEventsShared();
-        SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
-        SummitEventsRegisterController registerController = new SummitEventsRegisterController();
-        //Change current registration information
-        registerController.eventRegistration.Registrant_First_Name__c = 'Test2';
-        registerController.eventRegistration.Registrant_Last_Name__c = 'Tester2';
-        registerController.eventRegistration.Registrant_Email__c = 'test2@test.net';
-        registerController.saveContactRegistration();
-        List<Summit_Events_Registration__c> registrations = [
-                SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
-                FROM Summit_Events_Registration__c
-                WHERE Registrant_First_Name__c = 'Test'
-                AND Registrant_Last_Name__c = 'Tester'
-                AND Registrant_Email__c = 'test@test.net'
-        ];
-        //Original registration details have changed so old data should not exist.
-        System.assertEquals(registrations.size(), 0);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEventsRegister;
+            Test.setCurrentPage(pageRef);
+            //Try to register on different instance
+            SummitEventsShared SEShared = new SummitEventsShared();
+            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsRegisterController registerController = new SummitEventsRegisterController();
+            //Change current registration information
+            registerController.eventRegistration.Registrant_First_Name__c = 'Test2';
+            registerController.eventRegistration.Registrant_Last_Name__c = 'Tester2';
+            registerController.eventRegistration.Registrant_Email__c = 'test2@test.net';
+            registerController.saveContactRegistration();
+            List<Summit_Events_Registration__c> registrations = [
+                    SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
+                    FROM Summit_Events_Registration__c
+                    WHERE Registrant_First_Name__c = 'Test'
+                    AND Registrant_Last_Name__c = 'Tester'
+                    AND Registrant_Email__c = 'test@test.net'
+            ];
+            //Original registration details have changed so old data should not exist.
+            System.assertEquals(registrations.size(), 0);
 
-        registrations = [
-                SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
-                FROM Summit_Events_Registration__c
-                WHERE Registrant_First_Name__c = 'Test2'
-                AND Registrant_Last_Name__c = 'Tester2'
-                AND Registrant_Email__c = 'test2@test.net'
-        ];
-        //Original registration details have changed so new data should have replaced it.
-        System.assertEquals(registrations.size(), 1);
+            registrations = [
+                    SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
+                    FROM Summit_Events_Registration__c
+                    WHERE Registrant_First_Name__c = 'Test2'
+                    AND Registrant_Last_Name__c = 'Tester2'
+                    AND Registrant_Email__c = 'test2@test.net'
+            ];
+            //Original registration details have changed so new data should have replaced it.
+            System.assertEquals(registrations.size(), 1);
 
-        Test.stopTest();
+            Test.stopTest();
+        }
     }
 
     @IsTest static void testWithEventWithFees() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         List<Summit_Events_Fee_Allocation__c> seaTestFeeAllocations = SummitEventsTestSharedDataFactory.AddFeesToEvent(seaTestInstances[1].Event__c);
-        Test.startTest();
-        PageReference pageRef = Page.SummitEventsRegister;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
-        //Try to register on different instance
-        SummitEventsRegisterController registerController = new SummitEventsRegisterController();
-        //Change current registration information
-        registerController.eventRegistration.Registrant_First_Name__c = 'Test';
-        registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
-        registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
-        registerController.saveContactRegistration();
-        List<Summit_Events_Fee__c> fees = [
-                SELECT Id, Event_Fee_Allocation__c, Event_Registration__c
-                FROM Summit_Events_Fee__c
-                WHERE Event_Registration__c = :registerController.eventRegistration.Id
-        ];
-        //Fees records should have been added.
-        System.assertEquals(fees.size(), 2);
-        //Add a fee amount to cause deletion
-        Summit_events_Fee__c strayTestFee = new Summit_Events_Fee__c(
-                Event_Registration__c = registerController.eventRegistration.Id,
-                Event_Fee__c = 10,
-                Event_Fee_Allocation__c = seaTestFeeAllocations[5].Id,
-                Event_Fee_Type__c = 'Event Fee'
-        );
-        insert strayTestFee;
-        registerController.saveContactRegistration();
-        fees = [
-                SELECT Id, Event_Fee_Allocation__c, Event_Registration__c
-                FROM Summit_Events_Fee__c
-                WHERE Event_Registration__c = :registerController.eventRegistration.Id
-        ];
-        //Extra added fee should be deleted and two should remain
-        System.assertEquals(fees.size(), 2);
-        Test.stopTest();
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEventsRegister;
+            Test.setCurrentPage(pageRef);
+            ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
+            //Try to register on different instance
+            SummitEventsRegisterController registerController = new SummitEventsRegisterController();
+            //Change current registration information
+            registerController.eventRegistration.Registrant_First_Name__c = 'Test';
+            registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
+            registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
+            registerController.saveContactRegistration();
+            List<Summit_Events_Fee__c> fees = [
+                    SELECT Id, Event_Fee_Allocation__c, Event_Registration__c
+                    FROM Summit_Events_Fee__c
+                    WHERE Event_Registration__c = :registerController.eventRegistration.Id
+            ];
+            //Fees records should have been added.
+            System.assertEquals(fees.size(), 2);
+            //Add a fee amount to cause deletion
+            Summit_events_Fee__c strayTestFee = new Summit_Events_Fee__c(
+                    Event_Registration__c = registerController.eventRegistration.Id,
+                    Event_Fee__c = 10,
+                    Event_Fee_Allocation__c = seaTestFeeAllocations[5].Id,
+                    Event_Fee_Type__c = 'Event Fee'
+            );
+            insert strayTestFee;
+            registerController.saveContactRegistration();
+            fees = [
+                    SELECT Id, Event_Fee_Allocation__c, Event_Registration__c
+                    FROM Summit_Events_Fee__c
+                    WHERE Event_Registration__c = :registerController.eventRegistration.Id
+            ];
+            //Extra added fee should be deleted and two should remain
+            System.assertEquals(fees.size(), 2);
+            Test.stopTest();
+        }
     }
 
     @IsTest static void testWithEventWithFeesLocationOverride() {
@@ -264,27 +281,30 @@ private class SummitEventsRegister_TEST {
         seaTestInstances[1].Location_Address_Override__c = 'New Address';
         seaTestInstances[1].Location_Map_Link_Override__c = 'New Map Link';
         update seaTestInstances[1];
-        Test.startTest();
-        PageReference pageRef = Page.SummitEventsRegister;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
-        //Try to register on different instance
-        SummitEventsRegisterController registerController = new SummitEventsRegisterController();
-        //Change current registration information
-        registerController.eventRegistration.Registrant_First_Name__c = 'Test';
-        registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
-        registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
-        registerController.saveContactRegistration();
-        List<Summit_Events_Fee__c> fees = [
-                SELECT Id, Event_Fee_Allocation__c, Event_Registration__c, Event_Fee__c
-                FROM Summit_Events_Fee__c
-                WHERE Event_Registration__c = :registerController.eventRegistration.Id
-        ];
-        //Fees records should have been added.
-        System.assertEquals(fees[1].Event_Fee__c, 777.00);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEventsRegister;
+            Test.setCurrentPage(pageRef);
+            ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
+            //Try to register on different instance
+            SummitEventsRegisterController registerController = new SummitEventsRegisterController();
+            //Change current registration information
+            registerController.eventRegistration.Registrant_First_Name__c = 'Test';
+            registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
+            registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
+            registerController.saveContactRegistration();
+            List<Summit_Events_Fee__c> fees = [
+                    SELECT Id, Event_Fee_Allocation__c, Event_Registration__c, Event_Fee__c
+                    FROM Summit_Events_Fee__c
+                    WHERE Event_Registration__c = :registerController.eventRegistration.Id
+            ];
+            //Fees records should have been added.
+            System.assertEquals(fees[0].Event_Fee__c, 777.00);
 
-        registerController.saveContactRegistration();
-        Test.stopTest();
+            registerController.saveContactRegistration();
+            Test.stopTest();
+        }
     }
 
 }

@@ -12,10 +12,15 @@ private class SummitEventsRegisterAppointment_TEST {
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         List<Summit_Events_Appointment_Type__c> testAppointmentTypes = SummitEventsTestSharedDataFactory.createAppointmentTypes(seaTestInstances[1].Event__c);
 
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', true);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
 
         System.runAs(testUser) {
             Test.startTest();
+
+            String namespace = SummitEventsNamespace.getNamespace();
+            if (String.isNotBlank(namespace)) {
+                namespace = namespace + '__';
+            }
 
             PageReference pageRef = Page.SummitEventsRegisterAppointments;
             pageRef.getParameters().put('adminopen', 'true');
@@ -29,7 +34,7 @@ private class SummitEventsRegisterAppointment_TEST {
             //optionsCtrl.checkEventDetails();
             pageRef.getParameters().remove('adminopen');
             pageRef.getParameters().put('adminopen', 'true');
-            System.assertEquals(optionsCtrl.previousPage().getUrl(), '/apex/summiteventsregister?adminopen=true');
+            System.assertEquals(optionsCtrl.previousPage().getUrl(), '/apex/' + namespace + 'summiteventsregister?adminopen=true');
 
             List<Summit_Events_Appointments__c> testAppointments = [SELECT Id, Event_Registration__c FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :seaTestRegistration.Id];
             System.assertEquals(testAppointments.size(), 0);

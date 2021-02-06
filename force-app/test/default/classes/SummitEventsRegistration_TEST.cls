@@ -12,6 +12,7 @@ public class SummitEventsRegistration_TEST {
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Test', 'Tester', 'test@test.net', '55555', '1971-03-22', '2012', null);
         Summit_Events__c seaTestEvent = SummitEventsTestSharedDataFactory.getEventRecord(seaTestInstances[1].Event__c);
 
+        Test.startTest();
         Summit_Events_Email__c email1 = new Summit_Events_Email__c();
         email1.Event__c = seaTestInstances[1].Event__c;
         email1.Action_Status__c = 'Registered';
@@ -47,6 +48,6 @@ public class SummitEventsRegistration_TEST {
 
         //Two tasks should have been created when both status emails were sent
         System.assertEquals(emailTasks.size(), 2);
-
+        Test.stopTest();
     }
 }

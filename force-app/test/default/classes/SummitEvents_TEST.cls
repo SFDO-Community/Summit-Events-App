@@ -8,30 +8,33 @@ private class SummitEvents_TEST {
     @IsTest
     static void testBehavior() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        Test.startTest();
-        PageReference pageRef = Page.SummitEvents;
-        pageRef.getParameters().put('adminopen', 'true');
-        Test.setCurrentPage(pageRef);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEvents;
+            pageRef.getParameters().put('adminopen', 'true');
+            Test.setCurrentPage(pageRef);
 
-        SummitEventsController submitCtrl = new SummitEventsController();
-        String namespace = SummitEventsNamespace.getNamespace();
-        if(String.isNotBlank(namespace)) {
-            System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/' + namespace + '/summiteventsfeed');
-        } else {
-            System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/summiteventsfeed');
+            SummitEventsController submitCtrl = new SummitEventsController();
+            String namespace = SummitEventsNamespace.getNamespace();
+            if (String.isNotBlank(namespace)) {
+                System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/' + namespace + '/summiteventsfeed');
+            } else {
+                System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/summiteventsfeed');
+            }
+
+            Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
+            //no trailing slash
+            SummitEventsSettings.Community_Base_URL__c = 'http://google.com';
+            upsert SummitEventsSettings;
+            submitCtrl = new SummitEventsController();
+            if (String.isNotBlank(namespace)) {
+                System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/' + namespace + '/summiteventsfeed');
+            } else {
+                System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/summiteventsfeed');
+            }
+
+            Test.stopTest();
         }
-
-        Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
-        //no trailing slash
-        SummitEventsSettings.Community_Base_URL__c = 'http://google.com';
-        upsert SummitEventsSettings;
-        submitCtrl = new SummitEventsController();
-        if(String.isNotBlank(namespace)) {
-            System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/' + namespace + '/summiteventsfeed');
-        } else {
-            System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/summiteventsfeed');
-        }
-
-        Test.stopTest();
     }
 }

@@ -288,7 +288,8 @@ public with sharing class SummitEventsTestSharedDataFactory {
         );
     }
 
-    public static User userToRunWith(String profileName, Boolean addPermissionSet) {
+    public static User userToRunWith(String profileName, String PermissionSetToAdd) {
+
         User u2 = buildUser('example1@sfdx-test.com', 'lm', 'System Administrator');
         System.debug(JSON.serializePretty(u2));
         insert u2;
@@ -296,8 +297,8 @@ public with sharing class SummitEventsTestSharedDataFactory {
         System.runAs(u2) {
             User u3 = buildUser('example2@sfdx-test.com', 'ceo', profileName);
             insert u3;
-            if (addPermissionSet) {
-                List<PermissionSet> seaGuestPermissions = [SELECT Id, Name FROM PermissionSet WHERE Name = 'Summit_Events_Registrant'];
+            if (String.isNotBlank(PermissionSetToAdd)) {
+                List<PermissionSet> seaGuestPermissions = [SELECT Id, Name FROM PermissionSet WHERE Name = :PermissionSetToAdd];
                 Id permId = seaGuestPermissions[0].Id;
                 PermissionSetAssignment permissionSetChange = new PermissionSetAssignment();
                 permissionSetChange.AssigneeId = u3.Id;
@@ -308,40 +309,5 @@ public with sharing class SummitEventsTestSharedDataFactory {
         }
         return null;
     }
-
-
-    public static User getPortalUser(User userWithRole, Boolean doInsert) {
-        Set<String> customerUserTypes = new Set<String>{
-                'CSPLiteUser', 'PowerPartner', 'PowerCustomerSuccess', 'CustomerSuccess'
-        };
-        Account acc1 = new Account (
-                Name = 'newAcc1'
-        );
-        insert acc1;
-        Contact conCase = new Contact (
-                AccountId = acc1.id,
-                LastName = 'portalTestUserv1'
-        );
-        insert conCase;
-        //Create user
-
-        Profile prfile = [select Id,name from Profile where UserType in :customerUserTypes limit 1];
-
-        User newUser1 = new User(
-                profileId = prfile.id,
-                username = 'newUser@yahoo.com',
-                email = 'pb@f.com',
-                emailencodingkey = 'UTF-8',
-                localesidkey = 'en_US',
-                languagelocalekey = 'en_US',
-                timezonesidkey = 'America/Los_Angeles',
-                alias = 'nuser',
-                lastname = 'lastname',
-                contactId = conCase.id
-        );
-        insert newUser1;
-        return newUser1;
-    }
-
 
 }
