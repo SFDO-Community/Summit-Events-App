@@ -67,7 +67,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             <!-- Location Title -->
                             <apex:outputPanel layout="none" rendered="{!IF(!ISBLANK(eventPage.Location_Title__c) || !ISBLANK(evtInstance.Location_Title_Override__c), true, false)}">
                                 <p class="slds-text-body_large slds-p-vertical_xx-small">
-                                    <apex:outputText escape="false" value="{!IF(!ISBLANK(evtInstance.Location_Title_Override__c), evtInstance.Location_Title_Override__c, eventPage.Location_Title__c)}"/>
+                                    <apex:outputText value="{!IF(!ISBLANK(evtInstance.Location_Title_Override__c), evtInstance.Location_Title_Override__c, eventPage.Location_Title__c)}"/>
                                 </p>
                             </apex:outputPanel>
                             <!-- Location Date/Time -->
@@ -96,8 +96,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                     <!-- Location Address shows as address if available or Map if no address given but map link -->
                                     <apex:outputText escape="false" rendered="{!If(!ISBLANK(evtInstance.Location_Address_Override__c), true,false)}" value="{!evtInstance.Location_Address_Override__c}>"/>
-                                    <apex:outputText escape="false" rendered="{!If(!ISBLANK(eventPage.Location_Address__c) && ISBLANK(evtInstance.Location_Address_Override__c),true, false)}" value="{!eventPage.Location_Address__c}"/>
-                                    <apex:outputText escape="false" rendered="{!If((ISBLANK(eventPage.Location_Address__c) && ISBLANK(evtInstance.Location_Address_Override__c)) && (!ISBLANK(eventPage.Location_Map_Link__c) || !ISBLANK(evtInstance.Location_Map_Link_Override__c)),true, false)}" value="Map"/>
+                                    <apex:outputText rendered="{!If(!ISBLANK(eventPage.Location_Address__c) && ISBLANK(evtInstance.Location_Address_Override__c),true, false)}" value="{!eventPage.Location_Address__c}"/>
+                                    <apex:outputText rendered="{!If((ISBLANK(eventPage.Location_Address__c) && ISBLANK(evtInstance.Location_Address_Override__c)) && (!ISBLANK(eventPage.Location_Map_Link__c) || !ISBLANK(evtInstance.Location_Map_Link_Override__c)),true, false)}" value="Map"/>
 
                                     <!-- End of Map link if it exists -->
                                     <apex:outputText escape="false" rendered="{!If(!ISBLANK(eventPage.Location_Map_Link__c) || !ISBLANK(evtInstance.Location_Map_Link_Override__c), true, false)}" value="</a>"/>
@@ -108,7 +108,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                         <apex:outputPanel layout="block" rendered="{!IF(totalEventCost!= 0,true,false)}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
                             <h3 class="slds-text-heading_medium">Event Cost</h3>
-                            <p class="slds-text-body">$<apex:outputText value="{!totalEventCost}"></apex:outputText>
+                            <p class="slds-text-body">$
+                                <apex:outputText value="{!totalEventCost}"></apex:outputText>
                             </p>
                         </apex:outputPanel>
 

@@ -72,8 +72,9 @@ public with sharing class SummitEventsSubmitController {
             if (chosenAppointments.size() > 0) {
                 chosenFormatted += '<ul id="chosenAppointments" class="slds-list_dotted">';
                 for (Summit_Events_Appointments__c appointment : chosenAppointments) {
+                    String appointmentTitle = appointment.Appointment_Title__c;
                     chosenFormatted += '<li>';
-                    chosenFormatted += appointment.Appointment_Title__c;
+                    chosenFormatted += appointmentTitle;
                     if (!String.isEmpty(appointment.Appointment_Type__c)) {
                         chosenFormatted += '<br/><em>' + appointment.Appointment_Type__c + '</em>';
                     } else if (!String.isEmpty(appointment.Description__c)) {
@@ -119,7 +120,7 @@ public with sharing class SummitEventsSubmitController {
                         if (!fee.Event_Fee_Type__c.equalsIgnoreCase('Event') || !fee.Event_Fee_Type__c.equalsIgnoreCase('Event Additional')) {
                             if (fee.Event_Fee_Type__c.equalsIgnoreCase('Appointment')) {
                                 paymentItemized += '<tr class="eventAppointmentCost">';
-                                paymentItemized += '<td>' + fee.Event_Appointment_Type__r.Title__c + '</td>';
+                                paymentItemized += '<td>' + String.valueOf(fee.Event_Appointment_Type__r.Title__c) + '</td>';
                                 paymentItemized += '<td>' + prettyCurrencyString(fee.Event_Fee__c) + '</td>';
                                 paymentItemized += '</tr>';
                             } else if (fee.Event_Fee_Type__c.equalsIgnoreCase('Optional Donation')) {
@@ -180,6 +181,7 @@ public with sharing class SummitEventsSubmitController {
         numberOut = '$' + String.format(numberIn.format(), args);
         return numberOut;
     }
+
     public PageReference checkEventDetails() {
         return seaShared.checkForEvent();
     }

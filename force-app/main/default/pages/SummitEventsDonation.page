@@ -33,7 +33,7 @@ Created by Thaddaeus Dahlberg on 2/10/2020.
 
                     <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                         <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
-                            <apex:outputText escape="false" value="{!eventPage.Donation_Title__c}"/>
+                            <apex:outputText value="{!eventPage.Donation_Title__c}"/>
                         </h2>
                     </div>
 

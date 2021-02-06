@@ -7,7 +7,6 @@ public with sharing class SummitEventsRegisterController {
     public String test { get; set; }
     public Summit_Events_Instance__c evtInstance { get; set; }
     public Summit_Events__c eventPage { get; set; }
-    public String contactId { get; set; }
     public String instanceName { get; set; }
     public List<SelectOption> guestAmt { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
@@ -304,7 +303,7 @@ public with sharing class SummitEventsRegisterController {
                 }
                 //    newEvtReg.Registrant_Receive_Texts__c = true;
                 if (String.isBlank(userContact.Id)) {
-                    contactId = userContact.Id;
+                    eventRegistration.Contact__c = userContact.Id;
                 }
                 contactSet = true;
             }
@@ -501,7 +500,7 @@ public with sharing class SummitEventsRegisterController {
         eventRegistration.Event_Instance_Date_Time_Formatted__c = SeaShared.navBreadcrumbBuilder(evtInstance, true);
         eventRegistration.Event__c = eventInformation.eventId;
         eventRegistration.Event_Instance__c = eventInformation.instanceId;
-        eventRegistration.Contact__c = contactId;
+
         eventRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience, eventFeeList);
         eventInformation.registrationId = eventRegistration.Id;
 
@@ -528,17 +527,17 @@ public with sharing class SummitEventsRegisterController {
 
         public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c eventRegistration, Id incomingEventRegistrationId, String registrantAudience, List<Summit_Events_Fee__c> upsertFees) {
 
-            if (Schema.SObjectType.Summit_Events_Registration__c.isCreateable()) {
-                try {
-                    if (String.isNotBlank(incomingEventRegistrationId)) {
-                        eventRegistration.Id = incomingEventRegistrationId;
-                        update eventRegistration;
-                    } else {
+            try {
+                if (String.isNotBlank(incomingEventRegistrationId)) {
+                    eventRegistration.Id = incomingEventRegistrationId;
+                    update eventRegistration;
+                } else {
+                    if (Schema.sObjectType.Summit_Events_Registration__c.isCreateable()) {
                         insert eventRegistration;
                     }
-                } catch (Exception ex) {
-                    System.debug(ex.getMessage());
                 }
+            } catch (Exception ex) {
+                System.debug(ex.getMessage());
             }
 
             //Save fees
@@ -547,7 +546,9 @@ public with sharing class SummitEventsRegisterController {
                     upsertFees[ff].Event_Registration__c = eventRegistration.Id;
                 }
                 try {
-                    upsert upsertFees;
+                    if (Schema.sObjectType.Summit_Events_Registration__c.isCreateable()) {
+                        insert upsertFees;
+                    }
                 } catch (Exception ex) {
                     System.debug(ex.getMessage());
                 }

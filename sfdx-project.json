@@ -10,7 +10,6 @@
             "ancestorId": "04t4P000002T5zDQAS"
         }
     ],
-    "namespace": "summit",
     "sfdcLoginUrl": "https://login.salesforce.com",
     "sourceApiVersion": "48.0",
     "packageAliases": {

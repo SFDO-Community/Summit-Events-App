@@ -21,10 +21,10 @@ Created by Thaddaeus Dahlberg on 10/30/2018.
             <apex:pageMessages id="errorMessages"/>
 
             <apex:pageBlockSection title="Event and appointment information" columns="1" collapsible="false">
-                <apex:outputText escape="false" value="{!Summit_Events_Appointments__c.Event_Registration__r.Event_Instance__r.Event_Name__c}" rendered="{!IF(!ISBLANK(Summit_Events_Appointments__c.Event_Registration__r.Event_Instance__r.Event_Name__c),true, false)}"></apex:outputText>
-                <apex:outputText escape="false" value="{!Summit_Events_Appointments__c.Appointment_Title__c}" rendered="{!IF(!ISBLANK(Summit_Events_Appointments__c.Appointment_Title__c),true, false)}"></apex:outputText>
-                <apex:outputText escape="false" value="{!Summit_Events_Appointments__c.Appointment_Category__c}" rendered="{!IF(!ISBLANK(Summit_Events_Appointments__c.Appointment_Category__c),true, false)}"></apex:outputText>
-                <apex:outputText escape="false" value="{!Summit_Events_Appointments__c.Appointment_Type__c}" rendered="{!IF(!ISBLANK(Summit_Events_Appointments__c.Appointment_Type__c),true, false)}"></apex:outputText>
+                <apex:outputText value="{!Summit_Events_Appointments__c.Event_Registration__r.Event_Instance__r.Event_Name__c}" rendered="{!IF(!ISBLANK(Summit_Events_Appointments__c.Event_Registration__r.Event_Instance__r.Event_Name__c),true, false)}"/>
+                <apex:outputText value="{!Summit_Events_Appointments__c.Appointment_Title__c}" rendered="{!IF(!ISBLANK(Summit_Events_Appointments__c.Appointment_Title__c),true, false)}"/>
+                <apex:outputText value="{!Summit_Events_Appointments__c.Appointment_Category__c}" rendered="{!IF(!ISBLANK(Summit_Events_Appointments__c.Appointment_Category__c),true, false)}"/>
+                <apex:outputText value="{!Summit_Events_Appointments__c.Appointment_Type__c}" rendered="{!IF(!ISBLANK(Summit_Events_Appointments__c.Appointment_Type__c),true, false)}"/>
                 <apex:selectList label="Host type" id="typeSelector" value="{!recordTypeId}" onChange="changeType()" multiSelect="false" size="1" rendered="{!IF(ISBLANK(Summit_Events_Appointments__c.Event_Host__c), true, false)}">
                     <apex:selectOptions value="{!RecordTypes}"/>
                 </apex:selectList>
@@ -53,7 +53,7 @@ Created by Thaddaeus Dahlberg on 10/30/2018.
 
                         <apex:column headerValue="Last Name" headerClass="TableTitle" value="{!host.Last_Name__c}"/>
 
-                        <apex:column headerValue="Course" headerClass="TableTitle" value="{!host.Course_Name__c}" />
+                        <apex:column headerValue="Course" headerClass="TableTitle" value="{!host.Course_Name__c}"/>
 
                         <apex:column headerValue="Type" headerClass="TableTitle" value="{!host.RecordType.Name}"/>
 

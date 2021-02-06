@@ -125,26 +125,33 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                         //build chosen appointments for list
 
+                        String chosenAppointmentEventType = cappt.Event_Appointment_Type__c;
+                        String chosenAppointmentCategory = cappt.Appointment_Category__c;
+                        String chosenAppointmentType = cappt.Appointment_Type__c;
+                        String chosenAppointmentTitle = cappt.Appointment_Title__c;
+                        String chosenAppointmentState = cappt.Chosen_State__c;
+                        String chosenAppointmentRegistrantInput = cappt.Registrant_Input__c;
+                        String chosenAppointmentDescription = cappt.Description__c;
                         chosenFormatted += '<div id="appt-' + cappt.Id + '"';
-                        chosenFormatted += ' data-apptid="' + cappt.Event_Appointment_Type__c + '"';
-                        chosenFormatted += ' data-apptcat="' + cappt.Appointment_Category__c + '"';
-                        chosenFormatted += ' data-appttype="' + cappt.Appointment_Type__c + '"';
-                        chosenFormatted += ' data-appttitle="' + cappt.Appointment_Title__c + '"';
-                        chosenFormatted += ' data-appchosenstate="' + cappt.Chosen_State__c + '"';
-                        chosenFormatted += ' data-appsort="' + cappt.Sort_Order__c + '"';
-                        chosenFormatted += ' data-appreginput="' + cappt.Registrant_Input__c + '"';
+                        chosenFormatted += ' data-apptid="' + chosenAppointmentEventType + '"';
+                        chosenFormatted += ' data-apptcat="' + chosenAppointmentCategory + '"';
+                        chosenFormatted += ' data-appttype="' + chosenAppointmentType + '"';
+                        chosenFormatted += ' data-appttitle="' + chosenAppointmentTitle + '"';
+                        chosenFormatted += ' data-appchosenstate="' + chosenAppointmentState + '"';
+                        chosenFormatted += ' data-appsort="' + String.valueOf(cappt.Sort_Order__c) + '"';
+                        chosenFormatted += ' data-appreginput="' + chosenAppointmentRegistrantInput + '"';
                         chosenFormatted += ' class="appointmentChosen slds-box slds-box_small slds-m-vertical_x-small"';
                         if (cappt.Chosen_State__c == 'Added but not shown') {
                             chosenFormatted += ' style="display:none" ';
                         }
                         chosenFormatted += ' >';
-                        chosenFormatted += '<p class="appointmentTitle">' + cappt.Appointment_Title__c + '</p>';
+                        chosenFormatted += '<p class="appointmentTitle">' + chosenAppointmentTitle + '</p>';
                         if (!String.isEmpty(cappt.Appointment_Type__c)) {
-                            chosenFormatted += '<p class="appointmentDesc">' + cappt.Appointment_Type__c + '</p>';
+                            chosenFormatted += '<p class="appointmentDesc">' + chosenAppointmentType + '</p>';
                         } else if (!String.isBlank(cappt.Description__c)) {
-                            chosenFormatted += '<p class="appointmentDesc">' + cappt.Description__c + '</p>';
+                            chosenFormatted += '<p class="appointmentDesc">' + chosenAppointmentDescription + '</p>';
                         }
-                        if (cappt.Chosen_State__c != 'Added and Required' && cappt.Chosen_State__c != 'Added but not shown') {
+                        if (cappt.Chosen_State__c != 'Added and Required' && chosenAppointmentState != 'Added but not shown') {
                             chosenFormatted += '<a href="javascript:;" class="appointmentRemove slds-button slds-button_neutral" title="Remove Appointment">Remove</a>';
                         }
 
@@ -164,15 +171,22 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     apptLimit = apptLimit - (Integer.valueOf(apptCount.get(apt.Id)));
                 }
 
+                String appointmentCategory = apt.Appointment_Category__c;
+                String appointmentType = apt.Appointment_Type__c;
+                String appointmentTitle = apt.Title__c;
+                String appointmentChosenState = apt.Chosen_State__c;
+                String appointmentRegistrantInput = apt.Registrant_Input__c;
+                String appointmentDescription = apt.Description__c;
+                String appointmentCustomPicklist = apt.Custom_Picklist__c;
                 appointments += '<section  id="' + apt.Id + '"';
                 appointments += ' name="' + apt.Id + '"';
                 appointments += ' data-apptid="' + apt.Id + '"';
-                appointments += ' data-apptcat="' + apt.Appointment_Category__c + '"';
-                appointments += ' data-appttype="' + apt.Appointment_Type__c + '"';
-                appointments += ' data-appttitle="' + apt.Title__c + '"';
-                appointments += ' data-appchosenstate="' + apt.Chosen_State__c + '"';
-                appointments += ' data-appsort="' + apt.Sort_Order__c + '"';
-                appointments += ' data-appinput="' + apt.Registrant_Input__c + '"';
+                appointments += ' data-apptcat="' + appointmentCategory + '"';
+                appointments += ' data-appttype="' + appointmentType + '"';
+                appointments += ' data-appttitle="' + appointmentTitle + '"';
+                appointments += ' data-appchosenstate="' + appointmentChosenState + '"';
+                appointments += ' data-appsort="' + String.valueOf(apt.Sort_Order__c) + '"';
+                appointments += ' data-appinput="' + appointmentRegistrantInput + '"';
                 appointments += ' data-limit=' + String.valueOf(apptLimit) + ' ';
 
                 if (apptLimit <= 0) {
@@ -193,8 +207,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                 appointments += '<svg class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true">';
                 appointments += '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#switch"></use>';
                 appointments += '</svg>';
-                appointments += '<span class="slds-truncate appointmentTitle" title="' + apt.Title__c + '">';
-                appointments += apt.Title__c;
+                appointments += '<span class="slds-truncate appointmentTitle" title="' + appointmentTitle + '">';
+                appointments += appointmentTitle;
                 if (apt.Required_Appointment__c) {
                     requiredAppt = true;
                     appointments += ' *';
@@ -207,15 +221,15 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                 appointments += '<div class="slds-accordion__content" id="accordion-details-01">';
 
-                if (String.isNotBlank(apt.Registrant_Input__c) && apt.Registrant_Input__c.toLowerCase().contains('required')) {
+                if (String.isNotBlank(appointmentRegistrantInput) && appointmentRegistrantInput.toLowerCase().contains('required')) {
                     appointments += '<div class="slds-form-element slds-is-required">';
                 } else {
                     appointments += '<div class="slds-form-element">';
                 }
 
-                if (!String.isBlank(apt.Description__c)) {
+                if (!String.isBlank(appointmentDescription)) {
                     appointments += '<label class="slds-form-element__label slds-text-body_regular slds-p-vertical_x-small" for="input' + apt.Id + '">';
-                    appointments += apt.Description__c;
+                    appointments += appointmentDescription;
                     appointments += '</label>';
                 }
 
@@ -236,7 +250,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     }
                 }
 
-                if (apt.Registrant_Input__c == 'Text box' || apt.Registrant_Input__c == 'Required text box') {
+                if (appointmentRegistrantInput == 'Text box' || appointmentRegistrantInput == 'Required text box') {
                     appointments += '<textarea';
                     if (apt.Registrant_Input__c == 'Required text box') {
                         appointments += ' required="required" class="appointmentCustomInput required slds-textarea" ';
@@ -247,8 +261,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     appointments += '</textarea>';
                 }
 
-                if (apt.Registrant_Input__c == 'Custom pick list' || apt.Registrant_Input__c == 'Required custom pick list') {
-                    if (!String.isBlank(apt.Custom_Picklist__c)) {
+                if (appointmentRegistrantInput == 'Custom pick list' || appointmentRegistrantInput == 'Required custom pick list') {
+                    if (!String.isBlank(appointmentCustomPicklist)) {
                         appointments += '<div class="slds-select_container">';
                         appointments += '<select id="input' + apt.Id + '" name="input' + apt.Id + '"';
                         if (apt.Registrant_Input__c == 'Required custom pick list') {
@@ -258,7 +272,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         }
                         appointments += '>';
                         appointments += '<option value="">Select...</option>';
-                        String custPickListText = apt.Custom_Picklist__c;
+                        String custPickListText = appointmentCustomPicklist;
                         custPickListText = custPickListText.trim();
                         custPickListText = custPickListText.replace('\n\n', '\n');
                         String[] custPckListList = custPickListText.split('\n');
@@ -390,9 +404,9 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
         public void deleteAppointments(List<Summit_Events_Appointments__c> appointments) {
             try {
-               // if (Schema.sObjectType.Summit_Events_Appointments__c.isDeletable()) {
-                    delete appointments;
-              //  }
+                // if (Schema.sObjectType.Summit_Events_Appointments__c.isDeletable()) {
+                delete appointments;
+                //  }
             } catch (Exception ex) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
