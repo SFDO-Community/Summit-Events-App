@@ -25,7 +25,7 @@ public with sharing class SummitEventsConfirmationController {
                             Hand_Raise_Action__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
-                    LIMIT 1
+                    WITH SECURITY_ENFORCED
             ];
 
             templateSelected = seaShared.getTemplate(eventPage.Template__c);
@@ -50,26 +50,18 @@ public with sharing class SummitEventsConfirmationController {
 
     }
 
-    public PageReference checkEventDetails() {
-        //PageReference resultPageRef =  SEShared.checkForEvent();
+    public void checkEventDetails() {
         eventInformation = seaShared.getSummitEventsInfo();
 
         if (!eventIsClosed) {
             String eventTitle = '';
             if (!String.isBlank(eventInformation.registrationId)) {
                 Summit_Events_Registration__c evtReg = [
-                        SELECT Id, Status__c, Contact__c, Event_Name__c, Event_Instance_Title__c, Event_Instance__c,
-                                Registrant_First_Name__c, Registrant_Last_Name__c,Registrant_Gender__c,
-                                Event_Instance_Date__c, Registrant_Street_1__c, Registrant_Street_2__c, Registrant_City__c,
-                                Registrant_State__c, Registrant_Zip__c, Registrant_Email__c, Registrant_High_School_Grad_Year__c,
-                                Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c,
-                                Registrant_Program_Interest__c
+                        SELECT Id, Status__c, Event_Name__c, Event_Instance_Title__c
                         FROM Summit_Events_Registration__c
                         WHERE Id = :eventInformation.registrationId
-                        LIMIT 1
+                        WITH SECURITY_ENFORCED
                 ];
-
-                System.debug('EVENT ON LOAD INFO: ' + JSON.serializePretty(evtReg));
 
                 if (!String.isBlank(evtReg.Event_Instance_Title__c)) {
                     eventTitle = evtReg.Event_Name__c + ' - ' + evtReg.Event_Instance_Title__c ;
@@ -85,7 +77,6 @@ public with sharing class SummitEventsConfirmationController {
                 seaShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, '');
             }
         }
-        return null;
     }
 
     private without sharing class registrationCRUD {

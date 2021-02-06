@@ -40,14 +40,14 @@ public class SummitEventsNamespace {
     /******************************************************************************************************
     * @description String helper property for getNamespace() method.
     *******************************************************************************************************/
-    @TestVisible private static string plainNamespace;
+    @TestVisible private static String plainNamespace;
     /*******************************************************************************************************
     * @description Finds the namespace for the current context.
     * @return string The current namespace as a string, or a blank string if we're not in a namespaced context.
     ********************************************************************************************************/
-    public static string getNamespace() {
+    public static String getNamespace() {
         if (plainNamespace == null) {
-            string withDotNotation = SummitEventsNamespace.class.getName();
+            String withDotNotation = SummitEventsNamespace.class.getName();
 
             if (withDotNotation.contains('.')) {
                 plainNamespace = withDotNotation.substringBefore('.');
@@ -64,7 +64,7 @@ public class SummitEventsNamespace {
     * @param str Token name.
     * @return Token name, with namespace prefix and double underscore if in a managed package.
     ********************************************************************************************************/
-    public static string StrTokenNSPrefix(string str) {
+    public static String StrTokenNSPrefix(String str) {
         if (getNamespace() == '') return str;
         return getNamespace() + '__' + str;
     }
@@ -75,7 +75,7 @@ public class SummitEventsNamespace {
     * @param str Token name.
     * @return Token name, with namespace prefix and dot notation if in a managed package.
     ********************************************************************************************************/
-    public static string StrTokenNSPrefixDotNotation(string str) {
+    public static String StrTokenNSPrefixDotNotation(String str) {
         if (getNamespace() == '') return str;
         return getNamespace() + '.' + str;
     }
@@ -88,11 +88,13 @@ public class SummitEventsNamespace {
     * @param str token name
     * @return token name, with namespace prefix removed, if present.
     ********************************************************************************************************/
-    public static string StrTokenRemoveNSPrefix(string str) {
-        if (str.startsWith('npsp__'))
+    public static String StrTokenRemoveNSPrefix(String str) {
+        if (str.startsWith('npsp__')) {
             str = str.replaceFirst('npsp__', '');
-        if (getNamespace() != '' && str.startsWith(getNamespace() + '__'))
+        }
+        if (getNamespace() != '' && str.startsWith(getNamespace() + '__')) {
             str = str.replaceFirst(getNamespace() + '__', '');
+        }
         return str;
     }
 
@@ -104,9 +106,9 @@ public class SummitEventsNamespace {
     * @param str string that contains 0 or more token names
     * @return same string with token names, namespace prefixed, if required.
     ********************************************************************************************************/
-    public static string StrAllNSPrefix(string str) {
+    public static String StrAllNSPrefix(String str) {
         if (getNamespace() == '') return str;
-        Pattern pat = Pattern.Compile('[a-zA-z0-9]*__c');
+        Pattern pat = Pattern.compile('[a-zA-z0-9]*__c');
         Matcher match = pat.matcher(str);
         return match.replaceAll(getNamespace() + '__$0');
     }
@@ -116,7 +118,7 @@ public class SummitEventsNamespace {
     * @return true if running in sandbox. false otherwise.
     ********************************************************************************************************/
     public static Boolean isSandbox() {
-        return URL.getSalesforceBaseUrl().getHost().left(2).equalsignorecase('cs');
+        return Url.getSalesforceBaseUrl().getHost().left(2).equalsIgnoreCase('cs');
     }
 
     /*******************************************************************************************************

@@ -34,7 +34,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     <!-- EVENT CLOSED MESSAGE -->
                     <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
                         <p class="slds-text-body">
-                            <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"></apex:outputText>
+                            <apex:outputText value="{!eventPage.Event_Full_Text__c}"></apex:outputText>
                         </p>
                     </apex:outputPanel>
                     <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">

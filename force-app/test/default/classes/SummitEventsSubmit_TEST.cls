@@ -10,20 +10,28 @@ private class SummitEventsSubmit_TEST {
         SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
-        Test.startTest();
-        PageReference pageRef = Page.SummitEventsSubmit;
-        pageRef.getParameters().put('adminopen', 'true');
-        Test.setCurrentPage(pageRef);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        //Get namespace if packaged
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEventsSubmit;
+            pageRef.getParameters().put('adminopen', 'true');
+            Test.setCurrentPage(pageRef);
 
-        SummitEventsShared SEShared = new SummitEventsShared();
-        SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared SEShared = new SummitEventsShared();
+            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
 
-        //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
-        SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
-        submitCtrl.checkEventDetails();
-        submitCtrl.previousPage();
-        submitCtrl.submitRegistration();
-        Test.stopTest();
+            //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
+            SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
+            System.assertEquals(submitCtrl.checkEventDetails(), null);
+            System.assertEquals(submitCtrl.previousPage().getUrl(), '/apex/' + namespace + 'summiteventsregister?adminopen=true');
+            System.assertEquals(submitCtrl.submitRegistration().getUrl(), '/apex/' + namespace + 'summiteventsconfirmation?adminopen=true');
+            Test.stopTest();
+        }
     }
 
     @IsTest static void testSubmitWithAppointments() {
@@ -38,23 +46,32 @@ private class SummitEventsSubmit_TEST {
             testAppointments.add(appointment);
         }
         insert testAppointments;
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEventsSubmit;
+            Test.setCurrentPage(pageRef);
+            SummitEventsShared SEShared = new SummitEventsShared();
+            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
 
-        Test.startTest();
-        PageReference pageRef = Page.SummitEventsSubmit;
-        Test.setCurrentPage(pageRef);
-        SummitEventsShared SEShared = new SummitEventsShared();
-        SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
-
-        //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
-        SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
-        Test.stopTest();
-
+            //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
+            SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
+            System.assertEquals(submitCtrl.previousPage().getUrl(), '/apex/' + namespace + 'summiteventsregisterappointments');
+            System.assertEquals(submitCtrl.submitRegistration().getUrl(), '/apex/' + namespace + 'summiteventsconfirmation');
+            Test.stopTest();
+        }
     }
 
 
     @IsTest static void testSubmitWithFees() {
         SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        List<Summit_Events_Fee_Allocation__c> testFeeAllocations = SummitEventsTestSharedDataFactory.AddFeesToEvent(seaTestInstances[1].Event__c);
+        SummitEventsTestSharedDataFactory.AddDonationsToEvents(seaTestInstances[1].Event__c, testFeeAllocations);
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
         //Get all the variations of user input to make a appointment type for each
@@ -75,16 +92,24 @@ private class SummitEventsSubmit_TEST {
             testFees.add(fee);
         }
         insert testFees;
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEventsSubmit;
+            Test.setCurrentPage(pageRef);
+            SummitEventsShared SEShared = new SummitEventsShared();
+            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
 
-        Test.startTest();
-        PageReference pageRef = Page.SummitEventsSubmit;
-        Test.setCurrentPage(pageRef);
-        SummitEventsShared SEShared = new SummitEventsShared();
-        SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
-
-        //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
-        SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
-        Test.stopTest();
+            //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
+            SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
+            System.assertEquals(submitCtrl.previousPage().getUrl(), '/apex/' + namespace + 'summiteventsdonation');
+            System.assertEquals(submitCtrl.submitRegistration().getUrl(), '/apex/' + namespace + 'summiteventsconfirmation');
+            Test.stopTest();
+        }
 
     }
 

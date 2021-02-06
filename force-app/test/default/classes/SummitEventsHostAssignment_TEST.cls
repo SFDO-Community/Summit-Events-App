@@ -18,34 +18,42 @@ private class SummitEventsHostAssignment_TEST {
             testAppointments.add(appointment);
         }
         insert testAppointments;
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Admin');
+        System.runAs(testUser) {
+            Test.startTest();
+            // ApexPages.currentPage().getParameters().put('instanceID', testInstance.Id);
+            List<Summit_Events_Appointments__c> updateRegistrationAppointments = [SELECT Id, Event_Registration__r.Event_Instance__r.Id, Event_Host__c FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :seaTestRegistration.Id];
+            ApexPages.StandardController sc = new ApexPages.StandardController(updateRegistrationAppointments[0]);
+            SummitEventsHostAssignmentExtension hostController = new SummitEventsHostAssignmentExtension(sc);
+            hostController.getRecordTypes();
+            hostController.getListHost();
+            hostController.assignHost();
 
-        Test.startTest();
-        // ApexPages.currentPage().getParameters().put('instanceID', testInstance.Id);
-        List<Summit_Events_Appointments__c> updateRegistrationAppointments = [SELECT Id, Event_Registration__r.Event_Instance__r.Id, Event_Host__c FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :seaTestRegistration.Id];
-        ApexPages.StandardController sc = new ApexPages.StandardController(updateRegistrationAppointments[0]);
-        SummitEventsHostAssignmentExtension hostController = new SummitEventsHostAssignmentExtension(sc);
-        hostController.getRecordTypes();
-        hostController.getListHost();
-        hostController.assignHost();
+            testHosts = [SELECT Id FROM Summit_Events_Host__c WHERE Event_Instance__c = :seaTestInstances[1].Id];
+            //Assign a host from test data
+            hostController.hostId = testHosts[0].Id;
+            hostController.hostAction = 'assign';
+            hostController.assignHost();
+            Summit_Events_Host__c testAssignedHost = [SELECT Id, Assigned__c FROM Summit_Events_Host__c WHERE Id = :testHosts[0].Id];
+            System.assertEquals(testAssignedHost.Assigned__c, 1);
+            //Get list with already assigned host
+            hostController.getListHost();
 
-        testHosts = [SELECT Id FROM Summit_Events_Host__c WHERE Event_Instance__c = :seaTestInstances[1].Id];
-        //Assign a host from test data
-        hostController.hostId = testHosts[0].Id;
-        hostController.hostAction = 'assign';
-        hostController.assignHost();
-        //Get list with already assigned host
-        hostController.getListHost();
+            //Unassign current host
+            hostController.hostId = testHosts[0].Id;
+            hostController.hostAction = 'unassign';
+            hostController.assignHost();
+            testAssignedHost = [SELECT Id, Assigned__c FROM Summit_Events_Host__c WHERE Id = :testHosts[0].Id];
+            System.assertEquals(testAssignedHost.Assigned__c, 0);
 
-        //Unassign current host
-        hostController.hostId = testHosts[0].Id;
-        hostController.hostAction = 'unassign';
-        hostController.assignHost();
+            //Assign a host with capacity reached
+            hostController.hostId = testHosts[1].Id;
+            hostController.hostAction = 'assign';
+            hostController.assignHost();
+            testAssignedHost = [SELECT Id, Assigned__c FROM Summit_Events_Host__c WHERE Id = :testHosts[1].Id];
+            System.assertEquals(testAssignedHost.Assigned__c, 10);
 
-        //Assign a host with capacity reached
-        hostController.hostId = testHosts[1].Id;
-        hostController.hostAction = 'assign';
-        hostController.assignHost();
-
-        Test.stopTest();
+            Test.stopTest();
+        }
     }
 }

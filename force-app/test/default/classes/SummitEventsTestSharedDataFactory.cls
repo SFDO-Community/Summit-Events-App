@@ -157,15 +157,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
         if (oweList.size() > 0) {
             testEvtEmail.Org_Email_Id__c = oweList[0].Id;
         }
-/*
-        SELECT Action_Status__c, Action_Sub_status__c, Event__r.id, Letterhead_HTML__c, Email_Subject__c,
-        Email_Content__c, Letterhead_Id__c, Org_Email_Id__c, BCC_Email__c
-        FROM Summit_Events_Email__c
-        WHERE Event__r.Id IN :affectedIds.values()
-                AND Action_status__c != Null
-                AND Action_Status__c != '--Inactive--'
 
-                */
         insert testEvtEmail;
 
         return testEvtEmail;
@@ -229,22 +221,6 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 '0'.repeat(12 - result.length()) + result;
     }
 
-    public static Summit_Events_Registration__c createEventRegistrationObj(String firstName, String preferredFirst, String lastName, String Email, String Zip, String Phone, String DOB, String ClassYear) {
-        Summit_Events_Registration__c eReg = new Summit_Events_Registration__c(
-                Registrant_First_Name__c = firstName,
-                Registrant_Preferred_First_Name__c = preferredFirst,
-                Registrant_Last_Name__c = lastName,
-                Registrant_Email__c = Email,
-                Registrant_Zip__c = Zip,
-                Registrant_Phone__c = Phone,
-                Preferred_Class_Year__c = ClassYear
-        );
-        if (String.isNotBlank(DOB)) {
-            eReg.Registrant_Date_of_Birth__c = Date.valueOf(DOB);
-        }
-        return eReg;
-    }
-
     public static List<Summit_Events_Fee_Allocation__c> AddFeesToEvent(Id eventId) {
         Summit_Events__c seaTestEvent = [
                 SELECT Id, Event_Fee__c, Event_Fee_Additional__c, Event_Fee_Allocation__c, Event_Fee_Additional_Allocation__c
@@ -290,6 +266,48 @@ public with sharing class SummitEventsTestSharedDataFactory {
         seaTestEvent.Donation_Allocation_5__c = testFeeAllocations[5].Id;
 
         upsert seaTestEvent;
+    }
+
+    private static User buildUser(String username, String alias, String profileName) {
+        // Profile p = [SELECT Id, Name FROM Profile WHERE Name = :profileName];
+        Profile p;
+
+        p = [select Id,name from Profile where Name = :profileName];
+
+        System.debug(p.Id);
+        return new User(
+                Alias = alias,
+                Username = username,
+                LastName = 'LM',
+                Email = 'example@example-213213.com',
+                EmailEncodingKey = 'UTF-8',
+                LanguageLocaleKey = 'en_US',
+                LocaleSidKey = 'en_US',
+                TimeZoneSidKey = 'America/Chicago',
+                ProfileId = p.Id
+        );
+    }
+
+    public static User userToRunWith(String profileName, String PermissionSetToAdd) {
+
+        User u2 = buildUser('example1@sfdx-test.com', 'lm', 'System Administrator');
+        System.debug(JSON.serializePretty(u2));
+        insert u2;
+
+        System.runAs(u2) {
+            User u3 = buildUser('example2@sfdx-test.com', 'ceo', profileName);
+            insert u3;
+            if (String.isNotBlank(PermissionSetToAdd)) {
+                List<PermissionSet> seaGuestPermissions = [SELECT Id, Name FROM PermissionSet WHERE Name = :PermissionSetToAdd];
+                Id permId = seaGuestPermissions[0].Id;
+                PermissionSetAssignment permissionSetChange = new PermissionSetAssignment();
+                permissionSetChange.AssigneeId = u3.Id;
+                permissionSetChange.PermissionSetId = permId;
+                insert permissionSetChange;
+            }
+            return u3;
+        }
+        return null;
     }
 
 }

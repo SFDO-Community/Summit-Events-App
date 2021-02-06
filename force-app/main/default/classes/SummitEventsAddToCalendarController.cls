@@ -69,12 +69,8 @@ public with sharing class SummitEventsAddToCalendarController {
 
     public String formattedGmtVersionOfDate(Date aDate, Time aTime) {
         String formattedString = '';
-        System.debug('TIME: ' + aTime);
         Datetime newDateTime = Datetime.newInstanceGmt(aDate.year(), aDate.month(), aDate.day(), aTime.hour(), aTime.minute(), aTime.second());
-        System.debug('new Datetime: ' + newDateTime);
         //Integer eventStartOffset = tz.getOffset(startDateDate,'');
-        formattedString = newDateTime.formatGmt('yyyyMMdd\'T\'HHmmss');
-        System.debug('Formatted: ' + formattedString);
         return formattedString;
     }
 
@@ -174,6 +170,7 @@ public with sharing class SummitEventsAddToCalendarController {
                         Event__r.Building__c, Event__r.Event_description__c
                 FROM Summit_Events_Instance__c
                 WHERE Id = :eventId
+                WITH SECURITY_ENFORCED
         ];
 
         if (eventInstanceList.size() > 0) {
@@ -272,13 +269,11 @@ public with sharing class SummitEventsAddToCalendarController {
                     endDateTime = endDateTime.addSeconds(-(tz.getOffset(endDateTime) / 1000));
                     String formattedStartDate = startDateTime.formatGmt('yyyy-MM-dd\'T\'HH:mm:SS') + 'Z';
                     String formattedEndDate = endDateTime.formatGmt('yyyy-MM-dd\'T\'HH:mm:SS') + 'Z';
-                    System.debug('FOMRATED ZURIK TIME: ' + formattedStartDate);
                     urlCalendarLink += '&startdt=' + formattedStartDate;
 
                     // End date in zurich gmt time (YYYY-MM-DDTHH:mm:SSZ) or date (YYYY-MM-DD, for all-day events)
                     urlCalendarLink += '&enddt=' + formattedEndDate;
 
-                    System.debug(urlCalendarLink);
                     linkPage = new PageReference(urlCalendarLink);
                     linkPage.setRedirect(true);
                     return linkPage;

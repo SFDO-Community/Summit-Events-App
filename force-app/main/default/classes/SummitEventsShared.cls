@@ -36,8 +36,19 @@ public with sharing class SummitEventsShared {
     public SummitEventsInfo getSummitEventsInfo() {
         //{"audience":"High School Senior","instanceId":"a320m000000A5fOAAS","registrationId":"a350m0000008q63AAA,"eventId":"a330m0000001SOrAAM"}
         SummitEventsInfo eventInformation = new SummitEventsInfo();
-        String URLAudience = ApexPages.currentPage().getParameters().get('audience');
-        String URLInstanceID = ApexPages.currentPage().getParameters().get('instanceID');
+        String URLAudience = '';
+        if(String.isNotBlank(ApexPages.currentPage().getParameters().get('audience'))) {
+            URLAudience = String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('audience'));
+        }
+        Id URLInstanceID = null;
+        If (String.isNotBlank(ApexPages.currentPage().getParameters().get('instanceID'))) {
+            try {
+                URLInstanceID = (Id) String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('instanceID'));
+            } catch (Exception e) {
+                System.debug(e.getMessage());
+            }
+        }
+
         String jsonInput = getDecryptCookie();
 
         //See if a cookie exists
@@ -55,8 +66,7 @@ public with sharing class SummitEventsShared {
         }
 
         //check if URL instance has changed
-        if (String.isNotBlank(URLInstanceID)) {
-            if (URLInstanceID.length() > 14) {
+        if (URLInstanceID != null) {
                 if (URLInstanceID != eventInformation.instanceId) {
                     eventInformation.instanceId = URLInstanceID;
                     eventInformation.registrationId = '';
@@ -64,24 +74,28 @@ public with sharing class SummitEventsShared {
                         eventInformation.audience = URLAudience;
                     }
                 }
-            }
         }
-
-        // Make sure registration id isn't the string null
-//        if (eventInformation.registrationId.equalsIgnoreCase('null')) {
-//            eventInformation.registrationId = '';
-//        }
 
         //check if registration id is there and whether status it is set to registered. IF so reset cookie if it is.
         if (String.isNotBlank(eventInformation.registrationId)) {
-            Summit_Events_Registration__c evtReg = [SELECT Status__c FROM Summit_Events_Registration__c WHERE Id = :eventInformation.registrationId][0];
+            Summit_Events_Registration__c evtReg = [
+                    SELECT Status__c
+                    FROM Summit_Events_Registration__c
+                    WHERE Id = :eventInformation.registrationId
+                    WITH SECURITY_ENFORCED
+            ];
             if (evtReg.Status__c != 'Started') {
                 eventInformation.registrationId = '';
             }
         }
 
         if (String.isBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
-            Summit_Events_Instance__c instanceInfo = [SELECT Id, Event__c FROM Summit_Events_Instance__c WHERE Id = :eventInformation.instanceId];
+            Summit_Events_Instance__c instanceInfo = [
+                    SELECT Id, Event__c
+                    FROM Summit_Events_Instance__c
+                    WHERE Id = :eventInformation.instanceId
+                    WITH SECURITY_ENFORCED
+            ];
             if (instanceInfo != null) {
                 eventInformation.eventId = instanceInfo.Event__c;
             }
@@ -108,11 +122,16 @@ public with sharing class SummitEventsShared {
 
         //Get home page link if it exists
         String eventHomeLink = '';
-        String newInstanceId = eventInformation.instanceId;
+        Id newInstanceId = eventInformation.instanceId;
         String newRegistrationId = eventInformation.registrationId;
 
         if (String.isNotBlank(newInstanceId)) {
-            Summit_Events_Instance__c eventPage = [SELECT Event__r.Event_Home_Link_URL__c FROM Summit_Events_Instance__c WHERE Id = :newInstanceId];
+            Summit_Events_Instance__c eventPage = [
+                    SELECT Event__r.Event_Home_Link_URL__c
+                    FROM Summit_Events_Instance__c
+                    WHERE Id = :newInstanceId
+                    WITH SECURITY_ENFORCED
+            ];
             if (eventPage != null) {
                 eventHomeLink = eventPage.Event__r.Event_Home_Link_URL__c;
             }
@@ -125,8 +144,13 @@ public with sharing class SummitEventsShared {
 
         if (onRegistrationPage) {
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('instanceID'))) {
-                String URLInstanceID = ApexPages.currentPage().getParameters().get('instanceID');
-                if (String.isNotBlank(newInstanceId) && !newInstanceId.equals(URLInstanceID)) {
+                Id URLInstanceID = null;
+                try {
+                    URLInstanceID = (Id) String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('instanceID'));
+                } catch (Exception e) {
+                    System.debug(e.getMessage());
+                }
+                if (newInstanceId != null && !newInstanceId.equals(URLInstanceID)) {
                     System.debug('Registration page change');
                     newInstanceId = URLInstanceID;
                     newUrl = communityBaseURL + 'SummitEventsRegister?instanceID=' + URLInstanceID;
@@ -271,7 +295,7 @@ public with sharing class SummitEventsShared {
 
     public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance, Boolean dateTimeOnly) {
         String instanceDate = '';
-        Time noTime = Time.newInstance(0,0,0,0);
+        Time noTime = Time.newInstance(0, 0, 0, 0);
         if (eventInstance.Instance_Start_Date__c != null && eventInstance.Instance_End_Date__c != null) {
             Datetime convertedStartDate = Datetime.newInstanceGmt(
                     eventInstance.Instance_Start_Date__c.year(),
@@ -330,13 +354,15 @@ public with sharing class SummitEventsShared {
         }
 
         String crumb = '';
+        String eventTitle = eventInstance.Event__r.Event_Name__c;
+        String eventInstanceTitle = eventInstance.Instance_Title__c;
         crumb += '<nav role="navigation" aria-label="Breadcrumbs">';
         crumb += '   <ol class="slds-breadcrumb slds-list--horizontal">';
         if (String.isNotBlank(eventInstance.Event__r.Event_Name__c)) {
-            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a>' + eventInstance.Event__r.Event_Name__c + '</a></li>';
+            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a>' + eventTitle + '</a></li>';
         }
         if (String.isNotBlank(eventInstance.Instance_Title__c)) {
-            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a>' + eventInstance.Instance_Title__c + '</a></li>';
+            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a>' + eventInstanceTitle + '</a></li>';
         }
         if (String.isNotBlank(instanceDate)) {
             crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps"><a>' + instanceDate + '</a></li>';

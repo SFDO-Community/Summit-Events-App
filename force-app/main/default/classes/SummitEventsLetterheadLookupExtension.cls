@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 // Created by Thaddaeus Dahlberg on 10/11/2018.
 
-public class SummitEventsLetterheadLookupExtension {
+public with sharing class SummitEventsLetterheadLookupExtension {
     public Summit_Events_Email__c SummitEvt;
     public Map<Id, BrandTemplate> brandTemplates;
     public Map<Id, OrgWideEmailAddress> oweList;
@@ -13,7 +13,13 @@ public class SummitEventsLetterheadLookupExtension {
     }
 
     public List<SelectOption> getOrgWideEmail() {
-        oweList = new Map<Id, OrgWideEmailAddress>([select Id, Address,DisplayName, IsAllowAllProfiles from OrgWideEmailAddress WHERE IsAllowAllProfiles = true]);
+        oweList = new Map<Id, OrgWideEmailAddress>(
+        [
+                SELECT Id, Address,DisplayName, IsAllowAllProfiles
+                FROM OrgWideEmailAddress
+                WHERE IsAllowAllProfiles = TRUE
+                WITH SECURITY_ENFORCED
+        ]);
         List<SelectOption> owe = new List<SelectOption>();
         owe.add(new SelectOption('', 'Select...'));
         for (OrgWideEmailAddress e : oweList.values()) {
@@ -23,7 +29,14 @@ public class SummitEventsLetterheadLookupExtension {
     }
 
     public List<SelectOption> getLetterheads() {
-        brandTemplates = new Map<Id, BrandTemplate>([SELECT Id, Name, Value FROM BrandTemplate WHERE IsActive = true]);
+        brandTemplates = new Map<Id, BrandTemplate>(
+        [
+                SELECT Id, Name, Value
+                FROM BrandTemplate
+                WHERE IsActive = TRUE
+                WITH SECURITY_ENFORCED
+        ]
+        );
         List<SelectOption> brandOptions = new List<SelectOption>();
         brandOptions.add(new SelectOption('', 'Select...'));
         for (BrandTemplate bo : brandTemplates.values()) {
@@ -42,7 +55,7 @@ public class SummitEventsLetterheadLookupExtension {
     }
 
     public PageReference save() {
-        Apexpages.addMessage(new ApexPages.Message(ApexPages.SEVERITY.INFO, 'Your letterhead settings have been saved.'));
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'Your letterhead settings have been saved.'));
         if (!String.isBlank(SummitEvt.Org_Email_Id__c)) {
             SummitEvt.Org_Email__c = String.valueOf(oweList.get(SummitEvt.Org_Email_Id__c).Address);
         }
@@ -64,9 +77,9 @@ public class SummitEventsLetterheadLookupExtension {
         Integer matchCounter = 0;
         while (matcher2.find() == true) {
             if (matchCounter == 0) {
-                headerImg = '<img src="' + URL.getSalesforceBaseUrl().toExternalForm() + matcher2.group(1) + '"/>';
+                headerImg = '<img src="' + Url.getSalesforceBaseUrl().toExternalForm() + matcher2.group(1) + '"/>';
             } else if (matchCounter == 1) {
-                footerImg = '<img src="' + URL.getSalesforceBaseUrl().toExternalForm() + matcher2.group(1) + '"/>';
+                footerImg = '<img src="' + Url.getSalesforceBaseUrl().toExternalForm() + matcher2.group(1) + '"/>';
             }
             matchCounter++;
         }
@@ -118,7 +131,7 @@ public class SummitEventsLetterheadLookupExtension {
             while (styleMatcher2.find() == true) {
                 so.height = styleMatcher2.group(1);
             }
-            if (!String.IsBlank(so.location)) {
+            if (!String.isBlank(so.location)) {
                 styles.put(so.location, so);
             }
         }
@@ -210,28 +223,28 @@ public class SummitEventsLetterheadLookupExtension {
         SummitEvt.Letterhead_HTML__c = generatedLH;
         update SummitEvt;
 
-        return apexpages.currentpage();
+        return ApexPages.currentPage();
     }
 
-    public String generateStyles(styleObject stylesIn, boolean includeID) {
+    public String generateStyles(styleObject stylesIn, Boolean includeID) {
         String sOut = '';
-        if (!String.IsBlank(stylesIn.location) && includeID) {
+        if (!String.isBlank(stylesIn.location) && includeID) {
             sOut += ' id="' + stylesIn.location + '" ';
         }
         sOut += ' style="';
-        if (!String.IsBlank(stylesIn.backgroundColor)) {
+        if (!String.isBlank(stylesIn.backgroundColor)) {
             sOut += ' background-color:' + stylesIn.backgroundColor + '; ';
         }
-        if (!String.IsBlank(stylesIn.fontFam)) {
+        if (!String.isBlank(stylesIn.fontFam)) {
             sOut += ' font-family:' + stylesIn.fontFam + '; ';
         }
-        if (!String.IsBlank(stylesIn.fontSize)) {
+        if (!String.isBlank(stylesIn.fontSize)) {
             sOut += ' font-size:' + stylesIn.fontSize + '; ';
         }
-        if (!String.IsBlank(stylesIn.color)) {
+        if (!String.isBlank(stylesIn.color)) {
             sOut += ' color:' + stylesIn.color + '; ';
         }
-        if (!String.IsBlank(stylesIn.height)) {
+        if (!String.isBlank(stylesIn.height)) {
             sOut += ' height:' + stylesIn.height + 'px; ';
         }
         sOut += '" ';
