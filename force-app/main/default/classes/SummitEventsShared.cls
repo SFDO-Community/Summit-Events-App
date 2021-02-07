@@ -34,6 +34,53 @@ public with sharing class SummitEventsShared {
         return templateName;
     }
 
+    public List<String> pageFlow(Id eventId, String instanceTitle) {
+        Map<String, PageReference> pageMovement = New Map<String, PageReference>();
+
+        List<String> pagesInEvent = List<String>();
+        String namespace = SummitEventsNamespace.getNamespace();
+
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+
+        List<Summit_Events_Appointment_Type__c> appointmentTypes = [
+                SELECT Id, Chosen_State__c, Restrict_To_Instance_Title__r.Instance_Title__c
+                FROM Summit_Events_Appointment_Type__c
+                WHERE Summit_Events__c = :eventId
+                AND Chosen_State__c != 'Added but not shown'
+                AND (
+                        Restrict_To_Instance_Title__r.Instance_Title__c = :instanceTitle
+                        OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
+                WITH SECURITY_ENFORCED
+        ];
+
+        Summit_Events__c eventInformation = [
+                SELECT Id, Display_Optional_Donation__c FROM Summit_Events__c WHERE Id = :eventId
+                WITH SECURITY_ENFORCED
+        ];
+
+
+        pagesInEvent.add(namespace+ 'SummitEventsRegister');
+        //check for if event has guests
+        pagesInEvent.add(namespace+ 'SummitEventsRegisterGuest');
+        //check for if event has appointments
+        if (appointmentTypes.size() > 0) {
+            pagesInEvent.add(namespace + 'SummitEventsRegisterAppointments');
+        }
+        //check for if event has donation
+        if (eventInformation.Display_Optional_Donation__c) {
+            pagesInEvent.add(namespace + 'SummitEventsDonation');
+        }
+        //If event has more than 1 item in list then submit page
+        if (pagesInEvent.size() > 0) {
+            pagesInEvent.add(namespace + 'SummitEventsSubmit');
+        }
+        pagesInEvent.add(namespace+ 'SummitEventsConfirmation');
+        return pagesInEvent;
+
+    }
+
     public SummitEventsInfo getSummitEventsInfo() {
         //{"audience":"High School Senior","instanceId":"a320m000000A5fOAAS","registrationId":"a350m0000008q63AAA,"eventId":"a330m0000001SOrAAM"}
         SummitEventsInfo eventInformation = new SummitEventsInfo();
