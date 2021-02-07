@@ -1,0 +1,60 @@
+<!--
+ - Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas on 2/7/2021.
+ -->
+
+<apex:page id="SummitEventsGuestRegistration" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" docType="html-5.0" cache="false" controller="SummitEventsGuestRegistrationController" action="{!checkEventDetails}">
+    <apex:composition template="{!templateSelected}">
+        <apex:define name="metaPageTitle">
+            {!eventPage.Event_Name__c}
+            <apex:outputText rendered="{!!ISBLANK(eventInstance.Instance_Title__c)}" value="{! ' - ' + eventInstance.Instance_Title__c}"/>
+            - Guest Registration
+        </apex:define>
+        <apex:define name="pageTitle"><a href="{!eventPage.Event_Home_Link_URL__c}">{!eventPage.Event_Home_Link_Title__c}</a></apex:define>
+        <apex:define name="scriptsHead">
+<!--            <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>-->
+<!--            <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/donation.js')}" type="text/javascript"></script>-->
+        </apex:define>
+        <apex:define name="sectionNav"/>
+        <apex:define name="body">
+            <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
+                    <apex:messages />
+                </div>
+                <apex:form id="GuestRegistration" styleClass="slds-grid slds-wrap">
+                    <!-- EVENT BREADCRUMB -->
+                    <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
+                        <apex:outputText escape="false" value="{!navBreadCrumb}"/>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                        <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
+                            <apex:outputText value="{!eventPage.Donation_Title__c}"/>
+                        </h2>
+                    </div>
+
+                    <!-- EVENT CLOSED MESSAGE -->
+                    <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
+                        <p class="slds-text-body">
+                            <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>
+                        </p>
+                    </apex:outputPanel>
+
+                    <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
+                        <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
+<!--                            <apex:outputText escape="false" value="{!eventPage.Donation_Description__c}"/>-->
+                        </div>
+
+
+                        <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
+                            <p class="slds-text-body slds-p-vertical_xx-small">
+                                <apex:commandLink action="{!saveGuests}" onClick="fadeout();" Value="Next" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                            </p>
+                        </div>
+                    </apex:outputPanel>
+                </apex:form>
+            </div>
+        </apex:define>
+
+    </apex:composition>
+</apex:page>
