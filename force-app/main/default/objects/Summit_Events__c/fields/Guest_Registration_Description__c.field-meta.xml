@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Guest_Registration_Description__c</fullName>
+    <description>Descriptive text that appears under the title of the Guest Registration page.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Descriptive text that appears under the title of the Guest Registration page.</inlineHelpText>
+    <label>Guest Registration Description</label>
+    <length>8000</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Html</type>
+    <visibleLines>25</visibleLines>
+</CustomField>

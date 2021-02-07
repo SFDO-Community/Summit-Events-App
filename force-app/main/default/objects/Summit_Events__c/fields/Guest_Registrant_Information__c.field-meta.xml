@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Guest_Registrant_Information__c</fullName>
+    <description>What information would you liked gathered from each guest registrant.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>What information would you liked gathered from each guest registrant.</inlineHelpText>
+    <label>Guest Registrant Information</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>First name</fullName>
+                <default>false</default>
+                <label>First name</label>
+            </value>
+            <value>
+                <fullName>Last name</fullName>
+                <default>false</default>
+                <label>Last name</label>
+            </value>
+            <value>
+                <fullName>Preferred name</fullName>
+                <default>false</default>
+                <label>Preferred name</label>
+            </value>
+            <value>
+                <fullName>Email</fullName>
+                <default>false</default>
+                <label>Email</label>
+            </value>
+            <value>
+                <fullName>Nametag</fullName>
+                <default>false</default>
+                <label>Nametag</label>
+            </value>
+            <value>
+                <fullName>Relationship to registrant</fullName>
+                <default>false</default>
+                <label>Relationship to registrant</label>
+            </value>
+            <value>
+                <fullName>Address</fullName>
+                <default>false</default>
+                <label>Address</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>
