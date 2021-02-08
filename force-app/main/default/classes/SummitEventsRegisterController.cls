@@ -39,6 +39,7 @@ public with sharing class SummitEventsRegisterController {
     public String EvtUserType { get; set; }
     public Id incomingEventRegistrationId { get; set; }
     public String formattedStartDate { get; set; }
+    public Map<String, PageReference> pageFlow {get;set;}
 
     public SummitEventsRegisterController() {
         //array for looping through additional information questions
@@ -125,6 +126,9 @@ public with sharing class SummitEventsRegisterController {
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
             ];
+
+            pageFlow = SeaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage());
+            System.debug(pageFlow);
 
             if (String.isNotBlank(eventPage.Ask_Phone__c)) {
                 if (eventPage.Ask_Phone__c.containsIgnoreCase('with type') && String.isNotBlank(eventRegistration.Registrant_Mobile_Phone__c) && String.isBlank(eventRegistration.Registrant_Phone__c)) {
@@ -506,20 +510,21 @@ public with sharing class SummitEventsRegisterController {
         eventRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience, eventFeeList);
         eventInformation.registrationId = eventRegistration.Id;
 
-        if (evtHasAppointments) {
-            optionPage = Page.SummitEventsRegisterAppointments;
-        } else if (eventPage.Display_Optional_Donation__c) {
-            optionPage = Page.SummitEventsDonation;
-        } else if (eventFeeList.size() > 0) {
-            optionPage = Page.SummitEventsSubmit;
-        } else {
-            optionPage = Page.SummitEventsConfirmation;
-        }
-
-        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-            optionPage.setRedirect(true);
-            optionPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
-        }
+        optionPage = pageFlow.get('Next');
+//        if (evtHasAppointments) {
+//            optionPage = Page.SummitEventsRegisterAppointments;
+//        } else if (eventPage.Display_Optional_Donation__c) {
+//            optionPage = Page.SummitEventsDonation;
+//        } else if (eventFeeList.size() > 0) {
+//            optionPage = Page.SummitEventsSubmit;
+//        } else {
+//            optionPage = Page.SummitEventsConfirmation;
+//        }
+//
+//        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+//            optionPage.setRedirect(true);
+//            optionPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
+//        }
 
         return optionPage;
     }

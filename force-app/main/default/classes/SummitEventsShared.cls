@@ -34,15 +34,32 @@ public with sharing class SummitEventsShared {
         return templateName;
     }
 
-    public List<String> pageFlow(Id eventId, String instanceTitle) {
-        Map<String, PageReference> pageMovement = New Map<String, PageReference>();
+    public Map<String, PageReference> getPageFlow(Id eventId, String instanceTitle, pageReference currentPage) {
 
-        List<String> pagesInEvent = List<String>();
+        //Get the url without anchors
+        String currentUrl = currentPage.getUrl();
+        currentUrl = currentUrl.replace('#', '?');
+        List<String> currentUrlSplit = currentUrl.split('\\?');
+        currentUrl = currentUrlSplit[0];
+
+        currentUrlSplit = currentUrl.split('/');
+        String currentPageName = currentUrlSplit[currentUrlSplit.size() - 1];
+
         String namespace = SummitEventsNamespace.getNamespace();
-
         if (String.isNotBlank(namespace)) {
             namespace = namespace + '__';
         }
+
+        Map<String, PageReference> pageMovement = New Map<String, PageReference>();
+        Map<String, String> currentPageParameters = currentPage.getParameters();
+        List<String> pagesInEvent = new List<String>();
+        Map<String, PageReference> allPageReferences = new Map<String, PageReference>();
+        allPageReferences.put(namespace + 'SummitEventsRegister', Page.SummitEventsRegister);
+        allPageReferences.put(namespace + 'SummitEventsRegisterGuests', Page.SummitEventsRegisterGuests);
+        allPageReferences.put(namespace + 'SummitEventsRegisterAppointments', Page.SummitEventsRegisterAppointments);
+        allPageReferences.put(namespace + 'SummitEventsDonation', Page.SummitEventsDonation);
+        allPageReferences.put(namespace + 'SummitEventsSubmit', Page.SummitEventsSubmit);
+        allPageReferences.put(namespace + 'SummitEventsConfirmation', Page.SummitEventsConfirmation);
 
         List<Summit_Events_Appointment_Type__c> appointmentTypes = [
                 SELECT Id, Chosen_State__c, Restrict_To_Instance_Title__r.Instance_Title__c
@@ -56,28 +73,73 @@ public with sharing class SummitEventsShared {
         ];
 
         Summit_Events__c eventInformation = [
-                SELECT Id, Display_Optional_Donation__c FROM Summit_Events__c WHERE Id = :eventId
+                SELECT Id, Display_Optional_Donation__c, Display_Guest_Registration__c
+                FROM Summit_Events__c
+                WHERE Id = :eventId
                 WITH SECURITY_ENFORCED
         ];
 
-
-        pagesInEvent.add(namespace+ 'SummitEventsRegister');
+        pagesInEvent.add(namespace + 'SummitEventsRegister');
         //check for if event has guests
-        pagesInEvent.add(namespace+ 'SummitEventsRegisterGuest');
+
+        if (eventInformation.Display_Guest_Registration__c) {
+            pagesInEvent.add(namespace + 'SummitEventsRegisterGuests');
+        }
+
         //check for if event has appointments
         if (appointmentTypes.size() > 0) {
             pagesInEvent.add(namespace + 'SummitEventsRegisterAppointments');
         }
+
         //check for if event has donation
         if (eventInformation.Display_Optional_Donation__c) {
             pagesInEvent.add(namespace + 'SummitEventsDonation');
         }
+
         //If event has more than 1 item in list then submit page
         if (pagesInEvent.size() > 0) {
             pagesInEvent.add(namespace + 'SummitEventsSubmit');
         }
-        pagesInEvent.add(namespace+ 'SummitEventsConfirmation');
-        return pagesInEvent;
+        pagesInEvent.add(namespace + 'SummitEventsConfirmation');
+
+        Integer currentPageLocation = 0;
+        for (Integer x = 0; x < pagesInEvent.size(); x++) {
+            if (currentPageName.equalsIgnoreCase(pagesInEvent[x])) {
+                currentPageLocation = x;
+            }
+        }
+
+        System.debug(pagesInEvent);
+        System.debug(currentPage);
+        System.debug(currentPageLocation);
+
+        if (currentUrl.equalsIgnoreCase(allPageReferences.get(namespace + 'SummitEventsRegister').getUrl())) {
+            pageMovement.put('Previous', Page.SummitEventsRegister);
+        } else {
+            pageMovement.put('Previous', allPageReferences.get(pagesInEvent[currentPageLocation - 1]));
+        }
+
+        if (currentUrl.equalsIgnoreCase(allPageReferences.get(namespace + 'SummitEventsConfirmation').getUrl())) {
+            pageMovement.put('Previous', Page.SummitEventsRegister);
+            pageMovement.put('Next', Page.SummitEventsRegister);
+        } else {
+            pageMovement.put('Next', allPageReferences.get(pagesInEvent[currentPageLocation + 1]));
+        }
+
+        List<String> validParameters = new List<String>{
+                'adminopen', 'instanceID', 'audience'
+        };
+        for (String parameterKey : currentPageParameters.keySet()) {
+            System.debug(currentPageParameters);
+            if (validParameters.contains(parameterKey)) {
+                for (String key : pageMovement.keySet()) {
+                    PageReference addBackParameters = pageMovement.get(key);
+                    addBackParameters.getParameters().put(parameterKey, currentPageParameters.get(parameterKey));
+                }
+            }
+        }
+
+        return pageMovement;
 
     }
 
