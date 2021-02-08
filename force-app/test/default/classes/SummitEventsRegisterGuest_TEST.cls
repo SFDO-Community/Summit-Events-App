@@ -4,7 +4,7 @@
 
 
 @IsTest
-private class SummitEventsGuestRegistration_TEST {
+private class SummitEventsRegisterGuest_TEST {
     @IsTest
     static void testBehavior() {
     }

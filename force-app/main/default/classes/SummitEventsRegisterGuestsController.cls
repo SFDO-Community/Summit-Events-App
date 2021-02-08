@@ -3,7 +3,7 @@
  */
 
 
-public with sharing class SummitEventsGuestRegistrationController {
+public with sharing class SummitEventsRegisterGuestsController {
 
     public SummitEventsShared seaShared = new SummitEventsShared();
     public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
@@ -13,13 +13,16 @@ public with sharing class SummitEventsGuestRegistrationController {
     public Boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
     public Summit_Events__c eventPage { get; set; }
+    public Map<String, PageReference> pageFlow {get;set;}
 
-    public SummitEventsGuestRegistrationController() {
+    public SummitEventsRegisterGuestsController() {
         eventInformation = seaShared.getSummitEventsInfo();
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
             eventPage = [
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
-                            Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c
+                            Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
+                            Guest_Registration_Title__c, Guest_Max_Amount__c,Guest_Registrant_Information__c, Guest_Registration_Description__c, Guest_Table_Size__c, Guest_Tables_Available__c,
+                            Display_Guest_Registration__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -33,6 +36,9 @@ public with sharing class SummitEventsGuestRegistrationController {
                     WITH SECURITY_ENFORCED
             ];
 
+            pageFlow = SeaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage());
+            System.debug('PAGE FLOW : ' + pageFlow);
+
             templateSelected = seaShared.getTemplate(eventPage.Template__c);
 
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
@@ -41,9 +47,7 @@ public with sharing class SummitEventsGuestRegistrationController {
             } else {
                 eventIsClosed = seaShared.isEventClosed(eventPage, eventInstance);
             }
-
             navBreadCrumb = seaShared.navBreadcrumbBuilder(eventInstance, false);
-
         }
     }
 
@@ -52,47 +56,10 @@ public with sharing class SummitEventsGuestRegistrationController {
     }
 
     public PageReference saveGuests() {
-
-        PageReference nextPage;
-        List<Summit_Events_Appointment_Type__c> appointmentTypes = null;
-
-        appointmentTypes = [
-                SELECT Id
-                FROM Summit_Events_Appointment_Type__c
-                WHERE Summit_Events__c = :eventInformation.eventId
-                AND (
-                        Restrict_To_Instance_Title__r.Instance_Title__c = :eventInstance.Instance_Title__c
-                        OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
-        ];
-
-        if (appointmentTypes.size() == 0) {
-            //If no options skip that step
-            nextPage = Page.SummitEventsRegister;
-        } else {
-            nextPage = Page.SummitEventsRegisterAppointments;
-        }
-        return void;
+        return pageFlow.get('Next');
     }
 
     public PageReference previousPage() {
-
-
-
-
-        PageReference lastPage;
-
-//        if (appointmentTypes.size() == 0) {
-//            //If no options skip that step
-//            lastPage = Page.SummitEventsRegister;
-//        } else {
-//            lastPage = Page.SummitEventsRegisterAppointments;
-//        }
-
-        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-            lastPage.setRedirect(true);
-            lastPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
-        }
-        return lastPage;
-
+        return pageFlow.get('Previous');
     }
 }
