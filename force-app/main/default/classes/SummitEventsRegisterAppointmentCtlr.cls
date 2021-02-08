@@ -20,6 +20,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     public Boolean requiredApp { get; set; }
     public String formattedNavDate { get; set; }
     public List<incomingAppointments> allAvailableAppointments { get; set; }
+    public Map<String, PageReference> pageFlow {get;set;}
 
     public class incomingAppointments {
         public String appId { get; set; }
@@ -34,7 +35,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         public Boolean appRequired { get; set; }
         public List<String> picklistItemList { get; set; }
     }
-
+    
     public SummitEventsRegisterAppointmentCtlr() {
         eventIsClosed = false;
         test = '';
@@ -66,6 +67,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         WHERE Id = :eventInformation.instanceId
                         WITH SECURITY_ENFORCED
                 ];
+
+                pageFlow = SeaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage());
 
                 if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
                     adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
@@ -193,17 +196,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     public PageReference saveOptions() {
         //remove old client created appointments
         crudToDo doCRUD = new crudToDo();
-        PageReference submitPage = null;
-        if (eventPage.Display_Optional_Donation__c) {
-            submitPage = Page.SummitEventsDonation;
-        } else {
-            submitPage = Page.SummitEventsSubmit;
-        }
-
-        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-            submitPage.setRedirect(true);
-            submitPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
-        }
 
         List<Summit_Events_Appointments__c> deleteAppointments = [
                 SELECT Id, Event_Registration__c, Client_Created_Appointment__c, Chosen_State__c, Do_Not_Show_Time__c
@@ -262,17 +254,11 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         if (appointmentsToAdd.size() > 0) {
             doCRUD.updateAppointments(appointmentsToAdd);
         }
-        return submitPage;
+        return pageFLow.get('Next');
     }
 
     public PageReference previousPage() {
-
-        PageReference registerPage = Page.SummitEventsRegister;
-        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-            registerPage.setRedirect(true);
-            registerPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
-        }
-        return registerPage;
+        return pageFLow.get('Previous');
     }
 
     /**

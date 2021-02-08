@@ -2,7 +2,7 @@
  - Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas on 2/7/2021.
  -->
 
-<apex:page id="SummitEventsGuestRegistration" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" docType="html-5.0" cache="false" controller="SummitEventsGuestRegistrationController" action="{!checkEventDetails}">
+<apex:page id="SummitEventsRegisterGuests" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" docType="html-5.0" cache="false" controller="SummitEventsRegisterGuestsController" action="{!checkEventDetails}">
     <apex:composition template="{!templateSelected}">
         <apex:define name="metaPageTitle">
             {!eventPage.Event_Name__c}
@@ -11,7 +11,7 @@
         </apex:define>
         <apex:define name="pageTitle"><a href="{!eventPage.Event_Home_Link_URL__c}">{!eventPage.Event_Home_Link_Title__c}</a></apex:define>
         <apex:define name="scriptsHead">
-<!--            <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>-->
+            <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
 <!--            <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/donation.js')}" type="text/javascript"></script>-->
         </apex:define>
         <apex:define name="sectionNav"/>
@@ -28,7 +28,7 @@
 
                     <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                         <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
-                            <apex:outputText value="{!eventPage.Donation_Title__c}"/>
+                            <apex:outputText value="{!eventPage.Guest_Registration_Title__c}"/>
                         </h2>
                     </div>
 
@@ -41,7 +41,7 @@
 
                     <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
                         <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-<!--                            <apex:outputText escape="false" value="{!eventPage.Donation_Description__c}"/>-->
+                            <apex:outputText escape="false" value="{!eventPage.Guest_Registration_Description__c}"/>
                         </div>
 
 
