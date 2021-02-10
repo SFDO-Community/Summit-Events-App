@@ -13,6 +13,18 @@ public with sharing class SummitEventsConfirmationController {
     public Boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
 
+    public class guestJSONMap {
+        String First_name { get; set; }
+        String Last_name { get; set; }
+        String Email { get; set; }
+        String Relationship { get; set; }
+        String Address { get; set; }
+        String City { get; set; }
+        String State { get; set; }
+        String Zip { get; set; }
+        String Country { get; set; }
+    }
+
     public SummitEventsConfirmationController() {
         eventIsClosed = false;
         eventInformation = seaShared.getSummitEventsInfo();
@@ -56,42 +68,101 @@ public with sharing class SummitEventsConfirmationController {
         if (!eventIsClosed) {
             String eventTitle = '';
             if (!String.isBlank(eventInformation.registrationId)) {
-                Summit_Events_Registration__c evtReg = [
-                        SELECT Id, Status__c, Event_Name__c, Event_Instance_Title__c
+                Summit_Events_Registration__c eventsRegistration = [
+                        SELECT Id, Status__c, Event_Name__c, Event_Instance_Title__c, Guest_JSON__c
                         FROM Summit_Events_Registration__c
                         WHERE Id = :eventInformation.registrationId
                         WITH SECURITY_ENFORCED
                 ];
 
-                if (!String.isBlank(evtReg.Event_Instance_Title__c)) {
-                    eventTitle = evtReg.Event_Name__c + ' - ' + evtReg.Event_Instance_Title__c ;
+                if (!String.isBlank(eventsRegistration.Event_Instance_Title__c)) {
+                    eventTitle = eventsRegistration.Event_Name__c + ' - ' + eventsRegistration.Event_Instance_Title__c ;
                 } else {
-                    eventTitle = evtReg.Event_Name__c;
+                    eventTitle = eventsRegistration.Event_Name__c;
                 }
-                evtReg.Status__c = 'Registered';
+                eventsRegistration.Status__c = 'Registered';
+
+
+                List<Summit_Events_Registration__c> guestRegistrations = new List<Summit_Events_Registration__c>();
+                if (String.isNotBlank(eventsRegistration.Guest_JSON__c)) {
+                    List<guestJSONMap> guests = (List<guestJSONMap>) JSON.deserialize(eventsRegistration.Guest_JSON__c, List<guestJSONMap>.class);
+                    for (guestJSONMap guest : guests) {
+                        Summit_Events_Registration__c guestRegistration = new Summit_Events_Registration__c();
+                        guestRegistration.Event__c = eventInformation.eventId;
+                        guestRegistration.Event_Instance__c = eventInformation.instanceId;
+                        guestRegistration.Status__c = 'Registered';
+                        guestRegistration.Guest_Host_Status__c = 'Guest hosted registrant';
+                        guestRegistration.Guest_Host__c = eventInformation.registrationId;
+                        if (String.isNotBlank(guest.First_name)) {
+                            guestRegistration.Registrant_First_Name__c = String.escapeSingleQuotes(guest.First_name.unescapeHtml4());
+                        }
+                        if (String.isNotBlank(guest.Last_name)) {
+                            guestRegistration.Registrant_Last_Name__c = String.escapeSingleQuotes(guest.Last_name.unescapeHtml4());
+                        }
+                        if (String.isNotBlank(guest.Email)) {
+                            String emailIn = String.escapeSingleQuotes(guest.Email.unescapeHtml4());
+                            if (validateEmail(emailIn)) {
+                                guestRegistration.Registrant_Email__c = emailIn;
+                            }
+                        }
+                        if (String.isNotBlank(guest.Relationship)) {
+                            guestRegistration.Registrant_Other_Relationship__c = String.escapeSingleQuotes(guest.Relationship.unescapeHtml4());
+                        }
+                        if (String.isNotBlank(guest.Address)) {
+                            guestRegistration.Registrant_Street_1__c = String.escapeSingleQuotes(guest.Address.unescapeHtml4());
+                        }
+
+                        if (String.isNotBlank(guest.City)) {
+                            guestRegistration.Registrant_City__c = String.escapeSingleQuotes(guest.City.unescapeHtml4());
+                        }
+
+                        if (String.isNotBlank(guest.Zip)) {
+                            guestRegistration.Registrant_Zip__c = String.escapeSingleQuotes(guest.Zip.unescapeHtml4());
+                        }
+                        guestRegistrations.add(guestRegistration);
+                    }
+                }
 
                 String encryptedString = SEAShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, eventInformation.registrationId);
 
                 System.debug(encryptedString);
                 if (encryptedString.length() > 255) {
                     System.debug('bigger than 255');
-                    evtReg.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);
-                    evtReg.Encrypted_Registration_Id_2__c = encryptedString.substring(255, encryptedString.length());
+                    eventsRegistration.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);
+                    eventsRegistration.Encrypted_Registration_Id_2__c = encryptedString.substring(255, encryptedString.length());
                 } else {
                     System.debug('less than 255');
-                    evtReg.Encrypted_Registration_Id_1__c = encryptedString;
+                    eventsRegistration.Encrypted_Registration_Id_1__c = encryptedString;
                 }
 
-                registrationCRUD regCRUD = new registrationCRUD();
-                evtReg = regCRUD.updateRegistration(evtReg);
+                confirmationCRUD regCRUD = new confirmationCRUD();
+                eventsRegistration = regCRUD.updateRegistration(eventsRegistration);
+
+                if (guestRegistrations.size() > 0) {
+                    regCRUD.addGuestRegistration(guestRegistrations);
+                }
 
                 SummitEventsShared SEAShared = new SummitEventsShared();
 
                 //Remove the registration ID from the cookie so back button will redirect to the correct page.
                 seaShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, '');
+
+
             }
         }
     }
+
+    public static Boolean validateEmail(String email) {
+        Boolean isEmail = true;
+        String emailRegex = '^[a-zA-Z0-9._|\\\\%#~`=?&/$^*!}{+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'; // source: http://www.regular-expressions.info/email.html
+        Pattern MyPattern = Pattern.compile(emailRegex);
+        Matcher MyMatcher = MyPattern.matcher(email);
+        if (!MyMatcher.matches()) {
+            isEmail = false;
+        }
+        return isEmail;
+    }
+
 
     /**
      * Summit Events is a multi-step, guest user, registration solution so CRUD work needs to be done on records where guest record ownership is lost between steps.
@@ -113,5 +184,14 @@ public with sharing class SummitEventsConfirmationController {
             return newEvtReg;
         }
 
+        public void addGuestRegistration(List<Summit_Events_Registration__c> guestRegistrations) {
+            try {
+                insert guestRegistrations;
+            } catch (Exception ex) {
+                System.debug(ex.getMessage());
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
+            }
+
+        }
     }
 }
