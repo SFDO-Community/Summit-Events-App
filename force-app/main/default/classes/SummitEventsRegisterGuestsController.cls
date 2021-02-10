@@ -19,9 +19,16 @@ public with sharing class SummitEventsRegisterGuestsController {
     public Map<String, PageReference> pageFlow { get; set; }
     public String guestJSON { get; set; }
     public Id oldRegId { get; set; }
+    public String statePicklist { get; set; }
+    public String countryPicklist { get; set; }
+    public String namespace { get; set; }
 
     public SummitEventsRegisterGuestsController() {
         eventInformation = seaShared.getSummitEventsInfo();
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace.toLowerCase() + '__';
+        }
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
             eventPage = [
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
@@ -64,7 +71,34 @@ public with sharing class SummitEventsRegisterGuestsController {
                 eventIsClosed = seaShared.isEventClosed(eventPage, eventInstance);
             }
             navBreadCrumb = seaShared.navBreadcrumbBuilder(eventInstance, false);
+
+            statePicklist = buildPicklist('State');
+
+            countryPicklist = buildPicklist('Country');
         }
+    }
+
+    public String buildPicklist(String htmlId) {
+        String htmlSelect = '<div class="slds-select_container">';
+        htmlSelect += '<select id="' + htmlId + '" name="' + htmlId + '" class="slds-select">';
+        Schema.DescribeFieldResult F;
+        if (htmlId.equalsIgnoreCase('state')) {
+            F = Summit_Events_Registration__c.Registrant_State_Global__c.getDescribe();
+        }
+        if (htmlId.equalsIgnoreCase('Country')) {
+            F = Summit_Events_Registration__c.Registrant_Country__c.getDescribe();
+        }
+
+        Schema.sObjectField T = F.getSObjectField();
+        //List<PicklistEntry> entries = T.getDescribe().getPicklistValues();
+        htmlSelect += '<option value="">Select</option>';
+        for (Schema.PicklistEntry PicklistValue : T.getDescribe().getPicklistValues()) {
+            htmlSelect += '<option value="' + PicklistValue.getValue() + '">' + PicklistValue.getLabel() + '</option>';
+        }
+        htmlSelect += '</div>';
+        htmlSelect += '</select>';
+        System.debug(htmlSelect);
+        return htmlSelect;
     }
 
     public List<String> getGuestRequirements() {
@@ -83,7 +117,7 @@ public with sharing class SummitEventsRegisterGuestsController {
 
     public PageReference saveGuests() {
         doCRUD crudToDo = new doCRUD();
-        crudToDo.updateRegistration(guestJSON, eventRegistration,oldRegId);
+        crudToDo.updateRegistration(guestJSON, eventRegistration, oldRegId);
         return pageFlow.get('Next');
     }
 
