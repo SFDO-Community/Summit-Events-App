@@ -34,14 +34,14 @@
                 <label>Email</label>
             </value>
             <value>
-                <fullName>Nametag</fullName>
+                <fullName>Name tag</fullName>
                 <default>false</default>
-                <label>Nametag</label>
+                <label>Name tag</label>
             </value>
             <value>
-                <fullName>Relationship to registrant</fullName>
+                <fullName>Relationship</fullName>
                 <default>false</default>
-                <label>Relationship to registrant</label>
+                <label>Relationship</label>
             </value>
             <value>
                 <fullName>Address</fullName>
