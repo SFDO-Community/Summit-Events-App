@@ -51,6 +51,7 @@ let serializeForm = function (form) {
     let newId = uniqueId();
     obj['id'] = newId;
     var formData = new FormData(form);
+    console.log(JSON.stringify(formData));
     for (var key of formData.keys()) {
         obj[key] = escape(formData.get(key));
         if (key.toLowerCase() === 'first_name') {
@@ -59,7 +60,8 @@ let serializeForm = function (form) {
             lastname = escape(formData.get(key));
         } else {
             if (formData.get(key)) {
-                restOfData += formData.get(key) + ' | ';
+                console.log(key + ' ' + formData.get(key));
+                restOfData += '<span class="slds-badge slds-badge_lightest">' + formData.get(key) + '</span>';
             }
         }
     }
@@ -67,9 +69,12 @@ let serializeForm = function (form) {
     //Put the new guest in the list;
     let guestListWrap = document.getElementById('guestList');
     let fullName = (firstname + ' ' + lastname).trim();
-    //const guestTemplate = guestListTemplate(guestInfo);
-    let guestListItem = guestListTemplate(fullName, uniqueId, restOfData);
+    if (document.contains(document.getElementById("noGuestPlaceholder"))) {
+        document.getElementById("noGuestPlaceholder").remove();
+    }
+    let guestListItem = guestListTemplate(fullName, newId, restOfData);
     guestListWrap.insertAdjacentHTML("beforeend", guestListItem);
+    console.log(obj);
     return obj;
 };
 
@@ -90,36 +95,43 @@ function handleGuestInput(event) {
 
 function loadUpPreviousData() {
     let guestJSON = document.querySelector("[id$='guestJSON']").value;
-    console.log(JSON.parse(guestJSON));
-    allGuests = JSON.parse(guestJSON);
-    let guestListWrap = document.getElementById('guestList');
+    if (guestJSON) {
+        allGuests = JSON.parse(guestJSON);
+        let guestListWrap = document.getElementById('guestList');
 
-    for (let i = 0; i < allGuests.length; i++) {
-        let firstname = '';
-        let lastname = '';
-        let restOfData = '';
-        for (let key in allGuests[i]) {
-            if (key.toLowerCase() === 'first_name') {
-                firstname = escape(allGuests[i][key]);
-            } else if (key.toLowerCase() === 'last_name') {
-                lastname = escape(allGuests[i][key]);
-            } else if (key.toLowerCase() !== 'id') {
-                if (allGuests[i][key]) {
-                    restOfData += allGuests[i][key] + ' | ';
+        for (let i = 0; i < allGuests.length; i++) {
+            let firstname = '';
+            let lastname = '';
+            let restOfData = '';
+            for (let key in allGuests[i]) {
+                if (key.toLowerCase() === 'first_name') {
+                    firstname = escape(allGuests[i][key]);
+                } else if (key.toLowerCase() === 'last_name') {
+                    lastname = escape(allGuests[i][key]);
+                } else if (key.toLowerCase() !== 'id') {
+                    if (allGuests[i][key]) {
+                        restOfData += '<span class="slds-badge slds-badge_lightest">' + allGuests[i][key] + '</span>';
+                    }
                 }
             }
+            restOfData = restOfData.slice(0, -2);
+            let fullName = (firstname + ' ' + lastname).trim();
+            let guestListItem = guestListTemplate(fullName, allGuests[i]['id'], restOfData);
+            if (document.contains(document.getElementById("noGuestPlaceholder"))) {
+                document.getElementById("noGuestPlaceholder").remove();
+            }
+            guestListWrap.insertAdjacentHTML("beforeend", guestListItem);
         }
-        restOfData = restOfData.slice(0, -2);
-        let fullName = (firstname + ' ' + lastname).trim();
-        //const guestTemplate = guestListTemplate(guestInfo);
-        let guestListItem = guestListTemplate(fullName, allGuests[i]['id'], restOfData);
-        guestListWrap.insertAdjacentHTML("beforeend", guestListItem);
     }
+
+
 }
 
 function removeById(idToRemove, element) {
     let removeIndex = allGuests.map(item => item.id).indexOf(idToRemove);
     ~removeIndex && allGuests.splice(removeIndex, 1);
+    console.log(allGuests);
+
     let guestJSON = document.querySelector("[id$='guestJSON']");
     guestJSON.value = JSON.stringify(allGuests);
     let itemWrapper = element.closest('article');
