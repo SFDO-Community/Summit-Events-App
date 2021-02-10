@@ -802,6 +802,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.Guest_JSON__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Last_Name_as_Student__c</field>
         <readable>true</readable>
     </fieldPermissions>
