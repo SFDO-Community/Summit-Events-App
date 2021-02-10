@@ -19,7 +19,7 @@
 
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages />
+                    <apex:messages/>
                 </div>
 
                 <!-- EVENT BREADCRUMB -->
@@ -34,75 +34,83 @@
                 </div>
 
                 <!-- EVENT CLOSED MESSAGE -->
-                <apex:outputPanel styleClass="slds-col slds-p-vertical_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
-                    <p class="slds-text-body">
-                        <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>
-                    </p>
-                </apex:outputPanel>
-
-                <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
-
-                    <div class="slds-col slds-p-vertical_x-small slds-size_1-of-1">
-                        <apex:outputText escape="false" value="{!eventPage.Guest_Registration_Description__c}"/>
-                    </div>
-
-                    <div class="slds-col slds-p-vertical_x-small slds-size_1-of-1" id="guestList">
-                        <p class="slds-text-body slds-p-vertical_xx-small" id="noGuestPlaceholder">
-                            No guest added yet.
+                <div class="slds-grid slds-wrap">
+                    <apex:outputPanel styleClass="slds-col slds-p-vertical_x-small slds-size_1-of-1 slds-medium-size_12-of-12 slds-large-size_12-of-12" rendered="{!eventIsClosed}">
+                        <p class="slds-text-body">
+                            <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>
                         </p>
-                    </div>
-                    <form id="guestInput" styleClass="slds-grid slds-wrap slds-p-vertical_x-small slds-size_1-of-1">
-                        <article class="slds-card slds-col slds-size_1-of-1">
-                            <div class="slds-card__header slds-grid slds-assistive-text">
-                                <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                                    <div class="slds-media__body">
-                                        <h2 class="slds-card__header-title">
-                                            <a href="#" class="slds-card__header-link slds-truncate" title="Guest registrant form">
-                                                <span>Guest registrant form</span>
-                                            </a>
-                                        </h2>
-                                    </div>
-                                </header>
-                            </div>
-                            <div class="slds-card__body slds-card__body_inner">
-                                <apex:repeat value="{!guestRequirements}" var="q">
+                    </apex:outputPanel>
 
-                                    <div class="slds-form-element">
-                                        <label class="slds-form-element__label" for="{!q}">
-                                            {!SUBSTITUTE(q, "_", " ")}
-                                        </label>
-                                        <div class="slds-form-element__control">
-                                            <input type="{!If(q = 'Email','email','text')}" id="{!q}" name="{!q}" placeholder="{!SUBSTITUTE(q, "_", " ")}" required="" class="slds-input"/>
-                                        </div>
+                    <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
+                        <div class="slds-col slds-p-bottom_large slds-p-bottom_x-small slds-size_1-of-1 slds-medium-size_12-of-12 slds-large-size_12-of-12">
+                            <apex:outputText escape="false" value="{!eventPage.Guest_Registration_Description__c}"/>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12 slds-p-right_medium">
+                            <form id="guestInput">
+                                <article class="slds-card slds-col slds-size_1-of-1">
+                                    <div class="slds-card__header slds-grid slds-assistive-text">
+                                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                            <div class="slds-media__body">
+                                                <h2 class="slds-card__header-title">
+                                                    <a href="#" class="slds-card__header-link slds-truncate" title="Guest registrant form">
+                                                        <span>Guest registrant form</span>
+                                                    </a>
+                                                </h2>
+                                            </div>
+                                        </header>
                                     </div>
-                                </apex:repeat>
-                                <p class="slds-text-body slds-p-vertical_xx-small">
-                                    Anything can go into the card body
-                                </p>
-                            </div>
-                            <footer class="slds-card__footer">
-                                <button class="slds-button slds-button_neutral slds-button_stateful slds-not-selected" aria-live="assertive" type="submit">
+                                    <div class="slds-card__body slds-card__body_inner">
+                                        <apex:repeat value="{!guestRequirements}" var="q">
+
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="{!q}">
+                                                    <apex:outputPanel rendered="{!IF(q = 'First_name' || q = 'Last_name', true, false)}" layout="none">
+                                                        <abbr class="slds-required" title="required">* </abbr>
+                                                    </apex:outputPanel>
+                                                    {!SUBSTITUTE(q, "_", " ")}
+                                                </label>
+                                                <div class="slds-form-element__control">
+                                                    <apex:outputPanel layout="none" rendered="{!(IF(NOT(q == 'Country' || q == 'State'), true, false))}">
+                                                        <input type="{!If(q = 'Email','email','text')}" id="{!q}" name="{!q}" placeholder="{!SUBSTITUTE(q, "_", " ")}" required="{!IF(q = 'First_name' || q = 'Last_name', 'required', '')}" class="slds-input"/>
+                                                    </apex:outputPanel>
+                                                    <apex:outputText escape="false" value="{!statePicklist}" rendered="{!(IF(q == 'State', true, false))}"/>
+                                                    <apex:outputText escape="false" value="{!countryPicklist}" rendered="{!(IF(q == 'Country', true, false))}"/>
+                                                </div>
+                                            </div>
+                                        </apex:repeat>
+                                        <p class=" slds-text-body slds-p-vertical_xx-small noGuestAlert">
+
+                                        </p>
+                                    </div>
+                                    <footer class="slds-card__footer">
+                                        <button class="slds-button slds-button_neutral slds-button_stateful slds-not-selected" aria-live="assertive" type="submit">
                                 <span class="slds-text-not-selected">
                                     <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
                                       <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
                                     </svg>
                                     Add a guest
                                 </span>
-                                </button>
-                            </footer>
-                        </article>
-                    </form>
-                    <apex:form id="GuestRegistration" styleClass="slds-grid slds-wrap slds-p-vertical_x-small slds-size_1-of-1">
-                        <apex:inputHidden value="{!guestJSON}" id="guestJSON"/>
-                        <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
-                            <p class="slds-text-body slds-p-vertical_xx-small">
-                                <apex:commandLink action="{!saveGuests}" onClick="fadeout();" Value="Next" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
-                                <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                        </button>
+                                    </footer>
+                                </article>
+                            </form>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_8-of-12 slds-large-size_8-of-12" id="guestList">
+                            <p class="slds-text-body slds-p-vertical_xx-small" id="noGuestPlaceholder">
+                                No guest added yet.
                             </p>
                         </div>
-                    </apex:form>
-                </apex:outputPanel>
-
+                        <apex:form id="GuestRegistration" styleClass="slds-grid slds-wrap slds-p-vertical_x-small slds-size_1-of-1">
+                            <apex:inputHidden value="{!guestJSON}" id="guestJSON"/>
+                            <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
+                                <p class="slds-text-body slds-p-vertical_xx-small">
+                                    <apex:commandLink action="{!saveGuests}" onClick="fadeout();" Value="Next" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                    <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                </p>
+                            </div>
+                        </apex:form>
+                    </apex:outputPanel>
+                </div>
             </div>
         </apex:define>
 

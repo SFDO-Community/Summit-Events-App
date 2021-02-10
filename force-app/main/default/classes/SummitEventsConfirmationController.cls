@@ -23,6 +23,8 @@ public with sharing class SummitEventsConfirmationController {
         String State { get; set; }
         String Zip { get; set; }
         String Country { get; set; }
+        String Preferred_first_name { get; set; }
+        String Name_tag { get; set; }
     }
 
     public SummitEventsConfirmationController() {
@@ -119,6 +121,19 @@ public with sharing class SummitEventsConfirmationController {
                         if (String.isNotBlank(guest.Zip)) {
                             guestRegistration.Registrant_Zip__c = String.escapeSingleQuotes(guest.Zip.unescapeHtml4());
                         }
+
+                        if (String.isNotBlank(guest.Name_tag)) {
+                            guestRegistration.Registrant_Name_Tag__c = String.escapeSingleQuotes(guest.Name_tag.unescapeHtml4());
+                        }
+
+                        if(String.isNotBlank(guest.Preferred_first_name)) {
+                            guestRegistration.Registrant_Preferred_First_Name__c = String.escapeSingleQuotes(guest.Preferred_first_name.unescapeHtml4());
+                        }
+
+                        if(String.isNotBlank(guest.State)) {
+                            guestRegistration.Registrant_State__c = String.escapeSingleQuotes(guest.State.unescapeHtml4());
+                        }
+
                         guestRegistrations.add(guestRegistration);
                     }
                 }

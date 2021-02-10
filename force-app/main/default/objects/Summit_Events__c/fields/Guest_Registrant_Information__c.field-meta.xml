@@ -24,9 +24,9 @@
                 <label>Last name</label>
             </value>
             <value>
-                <fullName>Preferred name</fullName>
+                <fullName>Preferred first name</fullName>
                 <default>false</default>
-                <label>Preferred name</label>
+                <label>Preferred first name</label>
             </value>
             <value>
                 <fullName>Email</fullName>
