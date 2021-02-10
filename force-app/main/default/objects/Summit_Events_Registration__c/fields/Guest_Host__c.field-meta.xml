@@ -7,8 +7,8 @@
     <inlineHelpText>The host that registered this guest if a host exists.</inlineHelpText>
     <label>Guest Host</label>
     <referenceTo>Summit_Events_Registration__c</referenceTo>
-    <relationshipLabel>Summit Events Registrations</relationshipLabel>
-    <relationshipName>Summit_Events_Registrations</relationshipName>
+    <relationshipLabel>Hosted Registrations</relationshipLabel>
+    <relationshipName>Hosted_Registrations</relationshipName>
     <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

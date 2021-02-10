@@ -124,7 +124,6 @@ function removeById(idToRemove, element) {
     guestJSON.value = JSON.stringify(allGuests);
     let itemWrapper = element.closest('article');
     itemWrapper.remove();
-
 }
 
 
