@@ -51,7 +51,7 @@
                             No guest added yet.
                         </p>
                     </div>
-                    <form id="guestInput">
+                    <form id="guestInput" styleClass="slds-grid slds-wrap slds-p-vertical_x-small slds-size_1-of-1">
                         <article class="slds-card slds-col slds-size_1-of-1">
                             <div class="slds-card__header slds-grid slds-assistive-text">
                                 <header class="slds-media slds-media_center slds-has-flexi-truncate">
