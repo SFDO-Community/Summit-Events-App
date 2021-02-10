@@ -7,13 +7,18 @@ public with sharing class SummitEventsRegisterGuestsController {
 
     public SummitEventsShared seaShared = new SummitEventsShared();
     public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+
     public String navBreadCrumb { get; set; }
+    public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
+    public Summit_Events_Registration__c eventRegistration { get; set; }
+
     public String templateSelected { get; set; }
     public Boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
-    public Summit_Events__c eventPage { get; set; }
-    public Map<String, PageReference> pageFlow {get;set;}
+    public Map<String, PageReference> pageFlow { get; set; }
+    public String guestJSON { get; set; }
+    public Id oldRegId { get; set; }
 
     public SummitEventsRegisterGuestsController() {
         eventInformation = seaShared.getSummitEventsInfo();
@@ -36,6 +41,17 @@ public with sharing class SummitEventsRegisterGuestsController {
                     WITH SECURITY_ENFORCED
             ];
 
+            eventRegistration = [
+                    SELECT Id, Guest_JSON__c
+                    FROM Summit_Events_Registration__c
+                    WHERE Id = :eventInformation.registrationId
+                    WITH SECURITY_ENFORCED
+            ];
+            guestJSON = eventRegistration.Guest_JSON__c;
+            oldRegId = eventRegistration.Id;
+            eventRegistration.Id = null;
+
+
             pageFlow = SeaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage());
             System.debug('PAGE FLOW : ' + pageFlow);
 
@@ -51,15 +67,43 @@ public with sharing class SummitEventsRegisterGuestsController {
         }
     }
 
+    public List<String> getGuestRequirements() {
+        String guestRequirements = eventPage.Guest_Registrant_Information__c;
+        if (String.isNotBlank(guestRequirements)) {
+            guestRequirements = guestRequirements.replace(' ', '_');
+            guestRequirements = guestRequirements.replace('Address', 'Address;City;State;Zip;Country;');
+            return guestRequirements.split(';');
+        }
+        return new List<String>();
+    }
+
     public PageReference checkEventDetails() {
         return seaShared.checkForEvent();
     }
 
     public PageReference saveGuests() {
+        doCRUD crudToDo = new doCRUD();
+        crudToDo.updateRegistration(guestJSON, eventRegistration,oldRegId);
         return pageFlow.get('Next');
     }
 
     public PageReference previousPage() {
         return pageFlow.get('Previous');
     }
+
+    private without sharing class doCRUD {
+
+        public void updateRegistration(String jsonOut, Summit_Events_Registration__c eventRegistration, Id oldRegId) {
+            eventRegistration.Id = oldRegId;
+            eventRegistration.Guest_JSON__c = jsonOut;
+            try {
+                upsert eventRegistration;
+            } catch (Exception e) {
+                System.debug(e.getMessage());
+            }
+        }
+
+    }
+
+
 }
