@@ -14,19 +14,19 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Guest host attending</fullName>
+                <fullName>Host attending</fullName>
                 <default>false</default>
-                <label>Guest host attending</label>
+                <label>Host attending</label>
             </value>
             <value>
-                <fullName>Guest host not attending</fullName>
+                <fullName>Host not attending</fullName>
                 <default>false</default>
-                <label>Guest host not attending</label>
+                <label>Host not attending</label>
             </value>
             <value>
-                <fullName>Guest hosted registrant</fullName>
+                <fullName>Hosted registrant</fullName>
                 <default>false</default>
-                <label>Guest hosted registrant</label>
+                <label>Hosted registrant</label>
             </value>
         </valueSetDefinition>
     </valueSet>

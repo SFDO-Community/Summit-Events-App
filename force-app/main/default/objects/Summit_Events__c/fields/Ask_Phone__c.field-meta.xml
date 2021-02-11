@@ -29,6 +29,11 @@
                 <label>Ask with type require</label>
             </value>
             <value>
+                <fullName>Ask with type require but not guests</fullName>
+                <default>false</default>
+                <label>Ask with type require but not guests</label>
+            </value>
+            <value>
                 <fullName>Ask home and mobile</fullName>
                 <default>false</default>
                 <label>Ask home and mobile</label>
@@ -39,9 +44,19 @@
                 <label>Ask home and mobile require one</label>
             </value>
             <value>
+                <fullName>Ask home and mobile require one but not guests</fullName>
+                <default>false</default>
+                <label>Ask home and mobile require one but not guests</label>
+            </value>
+            <value>
                 <fullName>Ask home and mobile require both</fullName>
                 <default>false</default>
                 <label>Ask home and mobile require both</label>
+            </value>
+            <value>
+                <fullName>Ask home and mobile require both but not guests</fullName>
+                <default>false</default>
+                <label>Ask home and mobile require both but not guests</label>
             </value>
         </valueSetDefinition>
     </valueSet>
