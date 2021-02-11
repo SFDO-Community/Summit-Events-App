@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Question_Pick_List__c</fullName>
+    <description>Return separated list that will be converted to a picklist for the registrant to choose (If pick-list is chosen a the question type).</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Return separated list that will be converted to a picklist for the registrant to choose (If pick-list is chosen a the question type).</inlineHelpText>
+    <label>Question Pick List</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

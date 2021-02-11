@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Question_Text__c</fullName>
+    <description>The text that displays as a question to the registrant.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The text that displays as a question to the registrant.</inlineHelpText>
+    <label>Question text</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

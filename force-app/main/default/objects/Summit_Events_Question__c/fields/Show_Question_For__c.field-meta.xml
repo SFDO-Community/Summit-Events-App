@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Show_Question_For__c</fullName>
+    <description>Determine if this question appears for just the registrant or/and the guest registrant the host is entering (If you have allowed for that in the event configuration)</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Determine if this question appears for just the registrant or/and the guest registrant the host is entering (If you have allowed for that in the event configuration)</inlineHelpText>
+    <label>Show question for</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Registrant only</fullName>
+                <default>false</default>
+                <label>Registrant only</label>
+            </value>
+            <value>
+                <fullName>Registrant and hosted guest</fullName>
+                <default>false</default>
+                <label>Registrant and hosted guest</label>
+            </value>
+            <value>
+                <fullName>Hosted guest only</fullName>
+                <default>false</default>
+                <label>Hosted guest only</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
