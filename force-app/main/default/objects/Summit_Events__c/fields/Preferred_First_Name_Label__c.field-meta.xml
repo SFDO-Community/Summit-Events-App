@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Preferred_First_Name_Label__c</fullName>
+    <defaultValue>&quot;Preferred First Name&quot;</defaultValue>
+    <description>Label for the Preferred First Name field in the Registration Form</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Label for the Preferred First Name field in the Registration Form</inlineHelpText>
+    <label>Preferred First Name Label</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
