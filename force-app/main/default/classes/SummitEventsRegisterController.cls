@@ -124,7 +124,8 @@ public with sharing class SummitEventsRegisterController {
                             Applicant_Type_Label__c,Company_Organization_Label__c,Date_Of_Birth_Label__c,Email_Label__c,
                             First_Name_Label__c,Gender_Label__c,Last_Name_As_Student_Label__c,Last_Name_Label__c,Mailing_Address_Label__c,
                             Phone_Label__c,Phone_Type_Label__c,Preferred_First_Name_Label__c,Pronouns_Label__c,Registrant_Receive_Texts_Label__c,
-                            Relationship_To_Institution_Label__c,Third_Party_Registrant_Label__c,Title_Label__c
+                            Relationship_To_Institution_Label__c,Third_Party_Registrant_Label__c,Title_Label__c,Preferred_Class_Year_Label__c,
+                            Registrant_Relationship_Label__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED

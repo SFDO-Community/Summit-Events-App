@@ -251,7 +251,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                                         <div class="slds-form-element">
-                                            <apex:outputLabel value="Your relationship to the participant" for="otherRelated" styleClass="slds-form-element__label"/>
+                                            <apex:outputLabel value="{!eventPage.Registrant_Relationship_Label__c}" for="otherRelated" styleClass="slds-form-element__label"/>
                                             <div class="slds-form-element__control">
                                                 <apex:inputText value="{!eventRegistration.Registrant_Other_Relationship__c}" id="otherRelated" styleClass="slds-input" maxLength="80"/>
                                             </div>
@@ -521,7 +521,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6" rendered="{!IF(eventPage.Ask_Preferred_Class_Year__c != 'Do not ask' && eventPage.Ask_Preferred_Class_Year__c != null, true, false)}">
                             <div class="slds-form-element {!IF(eventPage.Ask_Preferred_Class_Year__c == 'Ask and require', 'slds-is-required', '')}">
                                 <apex:outputLabel for="preferredClassYear" styleClass="slds-form-element__label">
-                                    Preferred Class Year
+                                    {!eventPage.Preferred_Class_Year_Label__c}
                                     <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Preferred_Class_Year__c == 'Ask and require', true, false)}">
                                         <abbr class="slds-required" title="required">*</abbr>
                                     </apex:outputText>
