@@ -5,6 +5,7 @@
 
 public with sharing class SummitEventsRegisterController {
     public Summit_Events_Instance__c evtInstance { get; set; }
+    public List<Summit_Events_Question__c> eventQuestions { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public List<SelectOption> guestAmt { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
@@ -35,7 +36,9 @@ public with sharing class SummitEventsRegisterController {
     public String EvtUserType { get; set; }
     public Id incomingEventRegistrationId { get; set; }
     public String formattedStartDate { get; set; }
-    public Map<String, PageReference> pageFlow {get;set;}
+    public Map<String, PageReference> pageFlow { get; set; }
+    public String picklistStringToFormat { get; set; }
+    public String placeholderValue { get; set; }
 
     public SummitEventsRegisterController() {
         //array for looping through additional information questions
@@ -118,6 +121,15 @@ public with sharing class SummitEventsRegisterController {
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
             ];
+            eventQuestions = new List<Summit_Events_Question__c>();
+            eventQuestions = [
+                    SELECT Id, Name, Question_Text__c, Question_Type__c, Question_Pick_List__c, Show_Question_For__c, Event__c,
+                            Required_For_Hosted_Guest_Registrations__c, Required_For_Registrant__c
+                    FROM Summit_Events_Question__c
+                    WHERE Event__c = :eventInformation.eventId
+                    WITH SECURITY_ENFORCED
+            ];
+            System.debug('Question amount:' + eventQuestions.size());
 
             pageFlow = SeaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage());
             System.debug(pageFlow);
@@ -313,6 +325,10 @@ public with sharing class SummitEventsRegisterController {
         }
     }
 
+    public List<SelectOption> getCreateVFPicklist() {
+        return createPicklists(picklistStringToFormat);
+    }
+
     public Summit_Events_Registration__c getEventRegistration(Id eventRegistrationId) {
         Summit_Events_Registration__c oldEventRegistration = [
                 SELECT Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c, Number_of_Guests__c, Registrant_Applicant_Type__c,
@@ -506,20 +522,6 @@ public with sharing class SummitEventsRegisterController {
         eventInformation.registrationId = eventRegistration.Id;
 
         optionPage = pageFlow.get('Next');
-//        if (evtHasAppointments) {
-//            optionPage = Page.SummitEventsRegisterAppointments;
-//        } else if (eventPage.Display_Optional_Donation__c) {
-//            optionPage = Page.SummitEventsDonation;
-//        } else if (eventFeeList.size() > 0) {
-//            optionPage = Page.SummitEventsSubmit;
-//        } else {
-//            optionPage = Page.SummitEventsConfirmation;
-//        }
-//
-//        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-//            optionPage.setRedirect(true);
-//            optionPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
-//        }
 
         return optionPage;
     }

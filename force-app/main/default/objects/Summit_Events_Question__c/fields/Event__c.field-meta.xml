@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <description>Event this question will be asked in the registration.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Event this question will be asked in the registration.</inlineHelpText>
+    <label>Event</label>
+    <referenceTo>Summit_Events__c</referenceTo>
+    <relationshipLabel>Summit Events Questions</relationshipLabel>
+    <relationshipName>Summit_Events_Questions</relationshipName>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

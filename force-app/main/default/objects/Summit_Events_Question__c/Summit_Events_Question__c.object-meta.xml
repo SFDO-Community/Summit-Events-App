@@ -140,27 +140,26 @@
         <formFactor>Small</formFactor>
         <type>Default</type>
     </actionOverrides>
-    <allowInChatterGroups>true</allowInChatterGroups>
+    <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <description>The business codes and behind the fees</description>
+    <description>Define questions that will appear on the application</description>
     <enableActivities>true</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
-    <enableHistory>true</enableHistory>
+    <enableHistory>false</enableHistory>
     <enableLicensing>false</enableLicensing>
     <enableReports>true</enableReports>
-    <enableSearch>true</enableSearch>
+    <enableSearch>false</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <externalSharingModel>Private</externalSharingModel>
-    <label>Summit Events Fee Allocation</label>
+    <label>Summit Events Question</label>
     <nameField>
-        <label>Summit Events Fee Allocation Name</label>
-        <trackHistory>false</trackHistory>
+        <label>Summit Events Questions Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Summit Events Fees Allocations</pluralLabel>
+    <pluralLabel>Summit Events Questions</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
