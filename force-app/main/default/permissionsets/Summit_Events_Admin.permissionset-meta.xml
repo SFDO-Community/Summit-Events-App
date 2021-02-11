@@ -1960,6 +1960,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events__c.Preferred_Class_Year_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events__c.Preferred_First_Name_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1991,6 +1996,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events__c.Registrant_Receive_Texts_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Registrant_Relationship_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
