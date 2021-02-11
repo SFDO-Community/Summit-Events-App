@@ -28,6 +28,11 @@
                 <default>false</default>
                 <label>Ask and require</label>
             </value>
+            <value>
+                <fullName>Ask and require but not guests</fullName>
+                <default>false</default>
+                <label>Ask and require but not guests</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

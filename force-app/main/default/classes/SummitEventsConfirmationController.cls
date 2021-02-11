@@ -93,7 +93,7 @@ public with sharing class SummitEventsConfirmationController {
                         guestRegistration.Event__c = eventInformation.eventId;
                         guestRegistration.Event_Instance__c = eventInformation.instanceId;
                         guestRegistration.Status__c = 'Registered';
-                        guestRegistration.Guest_Host_Status__c = 'Guest hosted registrant';
+                        guestRegistration.Guest_Host_Status__c = 'Hosted registrant';
                         guestRegistration.Guest_Host__c = eventInformation.registrationId;
                         if (String.isNotBlank(guest.First_name)) {
                             guestRegistration.Registrant_First_Name__c = String.escapeSingleQuotes(guest.First_name.unescapeHtml4());
