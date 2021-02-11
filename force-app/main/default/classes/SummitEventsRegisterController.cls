@@ -120,7 +120,11 @@ public with sharing class SummitEventsRegisterController {
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c,
                             Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c, Ask_Pronoun__c, Keep_Registration_Open_During_Event__c,
                             Close_Event_Days_Before__c, Ask_Title__c, Ask_Company_Organization__c, Event_Fee__c, Event_Fee_Additional__c,
-                            Event_Fee_Additional_Allocation__c, Event_Fee_Allocation__c, Display_Optional_Donation__c
+                            Event_Fee_Additional_Allocation__c, Event_Fee_Allocation__c, Display_Optional_Donation__c,
+                            Applicant_Type_Label__c,Company_Organization_Label__c,Date_Of_Birth_Label__c,Email_Label__c,
+                            First_Name_Label__c,Gender_Label__c,Last_Name_As_Student_Label__c,Last_Name_Label__c,Mailing_Address_Label__c,
+                            Phone_Label__c,Phone_Type_Label__c,Preferred_First_Name_Label__c,Pronouns_Label__c,Registrant_Receive_Texts_Label__c,
+                            Relationship_To_Institution_Label__c,Third_Party_Registrant_Label__c,Title_Label__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
