@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>start_date_before_end_date</fullName>
+    <active>true</active>
+    <description>The instance start date must not be greater than the instance end date</description>
+    <errorConditionFormula>Instance_Start_Date__c &gt; Instance_End_Date__c</errorConditionFormula>
+    <errorDisplayField>Instance_End_Date__c</errorDisplayField>
+    <errorMessage>The Instance End Date must be same as or later than the Instance Start Date</errorMessage>
+</ValidationRule>
