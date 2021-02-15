@@ -6,6 +6,7 @@
     <inlineHelpText>Auto populate this appointment time when this appointment is added to a registration</inlineHelpText>
     <label>Auto Add Time</label>
     <required>false</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Time</type>
 </CustomField>

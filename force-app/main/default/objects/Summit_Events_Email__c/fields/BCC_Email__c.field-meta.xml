@@ -6,6 +6,7 @@
     <inlineHelpText>Comma separated list of emails to blind carbon copy this email.</inlineHelpText>
     <label>BCC Email</label>
     <length>1000</length>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>LongTextArea</type>
     <visibleLines>3</visibleLines>

@@ -7,6 +7,10 @@
                 <value>false</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
+                <name>enableActionsConfiguration</name>
+                <value>false</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
                 <name>hideChatterActions</name>
                 <value>false</value>
             </componentInstanceProperties>
@@ -21,45 +25,225 @@
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>relatedListComponentOverride</name>
-                <value>NONE</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>rowsToDisplay</name>
-                <value>10</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>showActionBar</name>
-                <value>true</value>
-            </componentInstanceProperties>
-            <componentName>force:relatedListContainer</componentName>
-        </componentInstances>
-        <mode>Replace</mode>
-        <name>relatedTabContent</name>
+        <name>Facet-7df4c164-4b9d-4598-9bdf-12ff17edfcbb</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <componentInstances>
-            <componentName>force:detailPanel</componentName>
-        </componentInstances>
-        <mode>Replace</mode>
-        <name>detailTabContent</name>
+        <name>Facet-a9e51d6b-0cb4-4f7f-b3f6-90e2911bbf6c</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>relatedTabContent</value>
+                <value>Facet-7df4c164-4b9d-4598-9bdf-12ff17edfcbb</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-a9e51d6b-0cb4-4f7f-b3f6-90e2911bbf6c</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <name>Facet-d353231c-f775-46af-8e03-d4944f8ae1a3</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-3fc54caf-74f5-42b9-ae36-2fec335c08f4</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-da21a4d9-775f-4d80-8ef4-3298d68c12e3</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-3fc54caf-74f5-42b9-ae36-2fec335c08f4</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-da21a4d9-775f-4d80-8ef4-3298d68c12e3</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <name>Facet-172a2bbb-f580-4b95-8424-4c71757652a0</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-7974676d-11f9-489c-9318-64c8d7bee8eb</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-7974676d-11f9-489c-9318-64c8d7bee8eb</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <name>Facet-c2900bd8-985f-45c1-be4f-cb702b00cd59</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-287f3696-6e6a-4ef9-9bce-caf8995e75e0</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-9f82f311-b935-4109-8ea0-bc913e80bf3f</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-287f3696-6e6a-4ef9-9bce-caf8995e75e0</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-9f82f311-b935-4109-8ea0-bc913e80bf3f</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <name>Facet-0b5ed57b-be99-43b5-8fef-a23f5833bb6e</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>columns</name>
+                <value>Facet-d353231c-f775-46af-8e03-d4944f8ae1a3</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
-                <name>title</name>
-                <value>Standard.Tab.relatedLists</value>
+                <name>label</name>
+                <value>Event Appointment Type Information</value>
             </componentInstanceProperties>
-            <componentName>flexipage:tab</componentName>
+            <componentName>flexipage:fieldSection</componentName>
         </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>columns</name>
+                <value>Facet-172a2bbb-f580-4b95-8424-4c71757652a0</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>Appointment Options</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:fieldSection</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>columns</name>
+                <value>Facet-c2900bd8-985f-45c1-be4f-cb702b00cd59</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>Appointment Details</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:fieldSection</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>columns</name>
+                <value>Facet-0b5ed57b-be99-43b5-8fef-a23f5833bb6e</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>Appointment Restrictions</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:fieldSection</componentName>
+        </componentInstances>
+        <name>Facet-f98ab000-811c-4721-a965-203f7d20ede4</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-859da954-905d-4205-96f4-27b4dc01dd53</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-ec01d368-73a0-4331-8546-c5fdd89b76aa</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-859da954-905d-4205-96f4-27b4dc01dd53</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-ec01d368-73a0-4331-8546-c5fdd89b76aa</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <name>Facet-48fc0496-a111-48a1-9e06-628a215c8dde</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-d6699eff-fd5f-4e10-a7e4-6c0ce18647c2</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-0980c61d-d566-4337-b967-22e830f4e163</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-d6699eff-fd5f-4e10-a7e4-6c0ce18647c2</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-0980c61d-d566-4337-b967-22e830f4e163</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <name>Facet-4f9f69a9-08c7-4bcb-b9a5-f99d4815a29b</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>columns</name>
+                <value>Facet-48fc0496-a111-48a1-9e06-628a215c8dde</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>Appointment Fees</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:fieldSection</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>columns</name>
+                <value>Facet-4f9f69a9-08c7-4bcb-b9a5-f99d4815a29b</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>System Information</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:fieldSection</componentName>
+        </componentInstances>
+        <name>Facet-d39c77fc-ef24-47e2-bd68-04c3291b18f6</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
                 <name>active</name>
@@ -67,25 +251,38 @@
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>detailTabContent</value>
+                <value>Facet-f98ab000-811c-4721-a965-203f7d20ede4</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>title</name>
-                <value>Standard.Tab.detail</value>
+                <value>Appointment Type Info</value>
             </componentInstanceProperties>
             <componentName>flexipage:tab</componentName>
         </componentInstances>
-        <mode>Replace</mode>
-        <name>maintabs</name>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-d39c77fc-ef24-47e2-bd68-04c3291b18f6</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>title</name>
+                <value>Fees</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:tab</componentName>
+        </componentInstances>
+        <name>Facet-a0de1359-8c9b-4f8f-af95-1344eaaa4417</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
                 <name>tabs</name>
-                <value>maintabs</value>
+                <value>Facet-a0de1359-8c9b-4f8f-af95-1344eaaa4417</value>
             </componentInstanceProperties>
             <componentName>flexipage:tabset</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentName>force:recordDetailPanelMobile</componentName>
         </componentInstances>
         <mode>Replace</mode>
         <name>main</name>
@@ -120,6 +317,21 @@
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>relatedListComponentOverride</name>
+                <value>NONE</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>rowsToDisplay</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showActionBar</name>
+                <value>true</value>
+            </componentInstanceProperties>
+            <componentName>force:relatedListContainer</componentName>
+        </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
                 <name>tabs</name>

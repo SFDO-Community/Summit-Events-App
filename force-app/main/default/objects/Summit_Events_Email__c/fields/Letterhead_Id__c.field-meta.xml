@@ -7,6 +7,7 @@
     <label>Letterhead Id</label>
     <length>30</length>
     <required>false</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Text</type>
     <unique>false</unique>

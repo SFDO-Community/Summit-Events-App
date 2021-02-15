@@ -6,6 +6,7 @@
     <inlineHelpText>The letterhead of the email in which the content will be placed</inlineHelpText>
     <label>Letterhead HTML</label>
     <length>32000</length>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>LongTextArea</type>
     <visibleLines>25</visibleLines>

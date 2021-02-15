@@ -6,6 +6,7 @@
     <inlineHelpText>Sub status to use for email trigger. Combines with status if one is selected.</inlineHelpText>
     <label>Action Sub status</label>
     <required>false</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>

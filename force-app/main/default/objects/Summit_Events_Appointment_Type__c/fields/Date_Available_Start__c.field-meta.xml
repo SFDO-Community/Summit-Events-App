@@ -6,6 +6,7 @@
     <inlineHelpText>The date this appointment type will begin to be available (if blank it will always be available).</inlineHelpText>
     <label>Date Available Start</label>
     <required>false</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>DateTime</type>
 </CustomField>

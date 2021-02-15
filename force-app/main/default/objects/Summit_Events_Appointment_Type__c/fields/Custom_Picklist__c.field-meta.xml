@@ -6,6 +6,7 @@
     <inlineHelpText>If registrant input is set to pick list this is where you enter a return separated list of items you wish to appear in that list.</inlineHelpText>
     <label>Custom Picklist</label>
     <length>1000</length>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>LongTextArea</type>
     <visibleLines>3</visibleLines>

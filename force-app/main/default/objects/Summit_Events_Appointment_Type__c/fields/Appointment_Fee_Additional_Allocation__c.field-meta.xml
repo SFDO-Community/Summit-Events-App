@@ -8,6 +8,7 @@
     <relationshipLabel>Summit Events Appointment Types (Appointment Fee Additional Allocation)</relationshipLabel>
     <relationshipName>Summit_Events_Appointment_Types1</relationshipName>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Lookup</type>
 </CustomField>

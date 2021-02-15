@@ -6,6 +6,7 @@
     <inlineHelpText>Auto assign this building to a requested appointment.</inlineHelpText>
     <label>Auto add building</label>
     <required>false</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>

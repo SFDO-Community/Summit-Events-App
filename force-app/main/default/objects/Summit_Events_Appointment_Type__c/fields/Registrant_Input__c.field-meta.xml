@@ -6,6 +6,7 @@
     <inlineHelpText>Optional: Choose a type of input you wish to record from the registrant upon appointment registration.</inlineHelpText>
     <label>Registrant Input</label>
     <required>false</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>

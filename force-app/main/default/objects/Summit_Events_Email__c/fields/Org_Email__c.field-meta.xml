@@ -6,6 +6,7 @@
     <inlineHelpText>Organizational email to send from</inlineHelpText>
     <label>Org Email</label>
     <required>false</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Email</type>
     <unique>false</unique>

@@ -6,6 +6,7 @@
     <inlineHelpText>This option will only be available on the defined days of the week. It will be available all days if no items are selected.</inlineHelpText>
     <label>Day of Week Availability</label>
     <required>false</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>MultiselectPicklist</type>
     <valueSet>

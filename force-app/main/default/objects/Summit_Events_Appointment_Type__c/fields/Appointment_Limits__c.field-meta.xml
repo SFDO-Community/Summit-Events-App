@@ -7,6 +7,7 @@
     <inlineHelpText>The amount of appointments that can be made by this appointment type. Example Lunch would only be once, but you could have multiple coach visit (but you want a limit).</inlineHelpText>
     <label>Appointment Limits</label>
     <required>false</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>

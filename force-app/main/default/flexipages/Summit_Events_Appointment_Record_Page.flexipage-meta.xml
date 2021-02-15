@@ -11,12 +11,16 @@
                 <value>false</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
+                <name>enableActionsInNative</name>
+                <value>false</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
                 <name>hideChatterActions</name>
                 <value>false</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>numVisibleActions</name>
-                <value>3</value>
+                <value>8</value>
             </componentInstanceProperties>
             <componentName>force:highlightsPanel</componentName>
         </componentInstances>
@@ -25,184 +29,321 @@
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <name>Facet-a8ae9f5d-0f68-4b21-ad48-879639c70a89</name>
+        <name>Facet-c470502d-2fd1-4979-902e-9b6132007cef</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <name>Facet-5d33df11-3385-4971-965d-cbe9118fdf72</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>body</name>
-                <value>Facet-a8ae9f5d-0f68-4b21-ad48-879639c70a89</value>
-            </componentInstanceProperties>
-            <componentName>flexipage:column</componentName>
-        </componentInstances>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>body</name>
-                <value>Facet-5d33df11-3385-4971-965d-cbe9118fdf72</value>
-            </componentInstanceProperties>
-            <componentName>flexipage:column</componentName>
-        </componentInstances>
-        <name>Facet-d7188057-19a3-4ce8-ada1-bc8a5b352b85</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <name>Facet-9621decd-965c-4337-88c8-5f6675c703e0</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <name>Facet-a32ba81d-9bdc-44ea-b7d6-0b083f22a6c2</name>
+        <name>Facet-ab7e88b2-c207-4a98-bd1a-55c2c276f1d8</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>Facet-9621decd-965c-4337-88c8-5f6675c703e0</value>
+                <value>Facet-c470502d-2fd1-4979-902e-9b6132007cef</value>
             </componentInstanceProperties>
             <componentName>flexipage:column</componentName>
         </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>Facet-a32ba81d-9bdc-44ea-b7d6-0b083f22a6c2</value>
+                <value>Facet-ab7e88b2-c207-4a98-bd1a-55c2c276f1d8</value>
             </componentInstanceProperties>
             <componentName>flexipage:column</componentName>
         </componentInstances>
-        <name>Facet-c756c8f3-45d4-45c0-a380-0dcd0993e9cb</name>
+        <name>Facet-63761055-2813-4f08-a79e-08cd51384b92</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <name>Facet-5ac4dbbe-d285-4a3b-a5b0-25311b4b6b7b</name>
+        <name>Facet-6c05cd25-3365-4d2c-abc9-1088f1e27e5f</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <name>Facet-345a1962-4fd3-4070-88f4-3d2fafb56ba6</name>
+        <name>Facet-38580c6d-70af-4a85-902d-5e34e4f38d55</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>Facet-5ac4dbbe-d285-4a3b-a5b0-25311b4b6b7b</value>
+                <value>Facet-6c05cd25-3365-4d2c-abc9-1088f1e27e5f</value>
             </componentInstanceProperties>
             <componentName>flexipage:column</componentName>
         </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>Facet-345a1962-4fd3-4070-88f4-3d2fafb56ba6</value>
+                <value>Facet-38580c6d-70af-4a85-902d-5e34e4f38d55</value>
             </componentInstanceProperties>
             <componentName>flexipage:column</componentName>
         </componentInstances>
-        <name>Facet-ab1aaaaf-6877-4e4e-9219-b502578580b7</name>
+        <name>Facet-7e716741-1fb1-42ec-8f93-d82f0b9c0c2b</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <name>Facet-3e548c8e-3b6f-4b9a-bf93-12de26e33e0d</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <name>Facet-8d60c3b6-0905-4b6f-a55e-ce5be7603d84</name>
+        <name>Facet-95ec8a64-8012-4d14-bf53-7b7dfe1f0d10</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>Facet-3e548c8e-3b6f-4b9a-bf93-12de26e33e0d</value>
+                <value>Facet-95ec8a64-8012-4d14-bf53-7b7dfe1f0d10</value>
             </componentInstanceProperties>
             <componentName>flexipage:column</componentName>
         </componentInstances>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>body</name>
-                <value>Facet-8d60c3b6-0905-4b6f-a55e-ce5be7603d84</value>
-            </componentInstanceProperties>
-            <componentName>flexipage:column</componentName>
-        </componentInstances>
-        <name>Facet-66ec4f60-5831-4ec2-b5f0-8c8afc213fb9</name>
+        <name>Facet-cb37a7b5-1e06-43df-b39f-b5ea77105021</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <name>Facet-c566c42e-9145-4a71-8b1d-9435605f06c1</name>
+        <name>Facet-0f03916c-a57c-4d40-9fc9-c4c95133ed11</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <name>Facet-86336b80-d4c9-4eb7-92ba-a7102cda7ca1</name>
+        <name>Facet-196446be-9026-41a5-aca4-ec4159075a17</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>Facet-c566c42e-9145-4a71-8b1d-9435605f06c1</value>
+                <value>Facet-0f03916c-a57c-4d40-9fc9-c4c95133ed11</value>
             </componentInstanceProperties>
             <componentName>flexipage:column</componentName>
         </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>Facet-86336b80-d4c9-4eb7-92ba-a7102cda7ca1</value>
+                <value>Facet-196446be-9026-41a5-aca4-ec4159075a17</value>
             </componentInstanceProperties>
             <componentName>flexipage:column</componentName>
         </componentInstances>
-        <name>Facet-4e6eab50-7c93-4174-b20b-d4280f54d25c</name>
+        <name>Facet-b766b04d-ac7d-48b5-a4a2-7d44f8716ad1</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-ea456ef9-81f5-4217-8268-3f7bcb954c41</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-c82ebdf4-fbde-4536-b2d9-fa40bca27047</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-ea456ef9-81f5-4217-8268-3f7bcb954c41</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-c82ebdf4-fbde-4536-b2d9-fa40bca27047</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <name>Facet-b15344ca-c3a0-42e3-a6d5-67505eb5a70b</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-7efa00ae-0dea-4fa3-bab4-b6b94d3945f6</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-ca174b57-65e6-4c45-8848-1f474aac48f0</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-7efa00ae-0dea-4fa3-bab4-b6b94d3945f6</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-ca174b57-65e6-4c45-8848-1f474aac48f0</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <name>Facet-74ff907b-c5e3-4f3f-bab4-c73bb89c2001</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-f1c749a2-c0ca-4616-b619-dc22be9a5fe9</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-587291de-b745-40ba-a7b8-6d74d0f60723</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-f1c749a2-c0ca-4616-b619-dc22be9a5fe9</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-587291de-b745-40ba-a7b8-6d74d0f60723</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <name>Facet-a030cb93-a6aa-4f1d-a4b0-e4ca7ac61d32</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-d218d29d-dacf-40f1-96ab-0e6932d76ebb</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-9864fdb7-bcfe-45ce-826a-bcd5c91ddfa0</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-d218d29d-dacf-40f1-96ab-0e6932d76ebb</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-9864fdb7-bcfe-45ce-826a-bcd5c91ddfa0</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <name>Facet-1745411b-43ec-4b7e-b14f-48d479ce8e9f</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-90c20dc3-3e77-4a66-9fc4-ec63a0febc6a</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Facet-91d4ad05-c8e5-4440-b8b1-9c5eabd9c2ff</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-90c20dc3-3e77-4a66-9fc4-ec63a0febc6a</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-91d4ad05-c8e5-4440-b8b1-9c5eabd9c2ff</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:column</componentName>
+        </componentInstances>
+        <name>Facet-3ed4e178-2814-46fc-9a3c-09639238626d</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
                 <name>columns</name>
-                <value>Facet-d7188057-19a3-4ce8-ada1-bc8a5b352b85</value>
+                <value>Facet-63761055-2813-4f08-a79e-08cd51384b92</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>label</name>
-                <value>Summit Event Payment Information</value>
+                <value>Event Appointment Information</value>
             </componentInstanceProperties>
             <componentName>flexipage:fieldSection</componentName>
         </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
                 <name>columns</name>
-                <value>Facet-c756c8f3-45d4-45c0-a380-0dcd0993e9cb</value>
+                <value>Facet-7e716741-1fb1-42ec-8f93-d82f0b9c0c2b</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>label</name>
-                <value>Payment Method</value>
+                <value>Appointment Contact</value>
             </componentInstanceProperties>
             <componentName>flexipage:fieldSection</componentName>
         </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
                 <name>columns</name>
-                <value>Facet-ab1aaaaf-6877-4e4e-9219-b502578580b7</value>
+                <value>Facet-cb37a7b5-1e06-43df-b39f-b5ea77105021</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>label</name>
-                <value>Customer</value>
+                <value>Appointment Description</value>
             </componentInstanceProperties>
             <componentName>flexipage:fieldSection</componentName>
         </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
                 <name>columns</name>
-                <value>Facet-66ec4f60-5831-4ec2-b5f0-8c8afc213fb9</value>
+                <value>Facet-b766b04d-ac7d-48b5-a4a2-7d44f8716ad1</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>label</name>
-                <value>Payment Gateway</value>
+                <value>Appointment Request</value>
             </componentInstanceProperties>
             <componentName>flexipage:fieldSection</componentName>
         </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
                 <name>columns</name>
-                <value>Facet-4e6eab50-7c93-4174-b20b-d4280f54d25c</value>
+                <value>Facet-b15344ca-c3a0-42e3-a6d5-67505eb5a70b</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>Event Registration</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:fieldSection</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>columns</name>
+                <value>Facet-74ff907b-c5e3-4f3f-bab4-c73bb89c2001</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>Host</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:fieldSection</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>columns</name>
+                <value>Facet-a030cb93-a6aa-4f1d-a4b0-e4ca7ac61d32</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>Appointment Location</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:fieldSection</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>columns</name>
+                <value>Facet-1745411b-43ec-4b7e-b14f-48d479ce8e9f</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>Visit Details</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:fieldSection</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>columns</name>
+                <value>Facet-3ed4e178-2814-46fc-9a3c-09639238626d</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>label</name>
@@ -210,26 +351,19 @@
             </componentInstanceProperties>
             <componentName>flexipage:fieldSection</componentName>
         </componentInstances>
-        <componentInstances>
-            <componentName>force:recordDetailPanelMobile</componentName>
-        </componentInstances>
         <mode>Replace</mode>
-        <name>detailTabContent</name>
+        <name>relatedTabContent</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
-                <name>active</name>
-                <value>true</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
                 <name>body</name>
-                <value>detailTabContent</value>
+                <value>relatedTabContent</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>title</name>
-                <value>Summit Event Payment</value>
+                <value>Event Appointment info</value>
             </componentInstanceProperties>
             <componentName>flexipage:tab</componentName>
         </componentInstances>
@@ -244,6 +378,9 @@
                 <value>maintabs</value>
             </componentInstanceProperties>
             <componentName>flexipage:tabset</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentName>force:recordDetailPanelMobile</componentName>
         </componentInstances>
         <mode>Replace</mode>
         <name>main</name>
@@ -261,7 +398,7 @@
         <componentInstances>
             <componentInstanceProperties>
                 <name>active</name>
-                <value>false</value>
+                <value>true</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>body</name>
@@ -304,9 +441,9 @@
         <name>sidebar</name>
         <type>Region</type>
     </flexiPageRegions>
-    <masterLabel>Summit Events Payment Record Page</masterLabel>
+    <masterLabel>Summit Events Appointment Record Page</masterLabel>
     <parentFlexiPage>flexipage__default_rec_L</parentFlexiPage>
-    <sobjectType>Summit_Events_Payment__c</sobjectType>
+    <sobjectType>Summit_Events_Appointments__c</sobjectType>
     <template>
         <name>flexipage:recordHomeTemplateDesktop</name>
     </template>

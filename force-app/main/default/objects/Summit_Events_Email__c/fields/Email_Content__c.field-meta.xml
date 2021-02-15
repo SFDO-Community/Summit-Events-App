@@ -6,6 +6,7 @@
     <inlineHelpText>Main content of the email. Can include registration information.</inlineHelpText>
     <label>Email Content</label>
     <length>32768</length>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Html</type>
     <visibleLines>25</visibleLines>

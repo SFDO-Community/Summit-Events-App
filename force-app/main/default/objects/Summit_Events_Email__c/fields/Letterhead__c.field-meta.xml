@@ -6,6 +6,7 @@
     <inlineHelpText>Choose the letterhead you would like to wrap your email message.</inlineHelpText>
     <label>Letterhead</label>
     <required>false</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>

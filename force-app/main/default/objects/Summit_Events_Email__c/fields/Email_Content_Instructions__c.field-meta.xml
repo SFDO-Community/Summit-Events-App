@@ -7,6 +7,7 @@
     <inlineHelpText>Hooks of registrant information you can add to the email.</inlineHelpText>
     <label>Email Content Instructions</label>
     <length>1000</length>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>LongTextArea</type>
     <visibleLines>3</visibleLines>

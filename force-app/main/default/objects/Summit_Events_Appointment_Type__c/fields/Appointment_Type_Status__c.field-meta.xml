@@ -6,6 +6,7 @@
     <inlineHelpText>If an appointment is inactive it will cease to an option on all event instances. Defaults to active.</inlineHelpText>
     <label>Appointment Type Status</label>
     <required>true</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>

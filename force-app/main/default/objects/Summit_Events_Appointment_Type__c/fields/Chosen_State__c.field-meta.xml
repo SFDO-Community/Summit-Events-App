@@ -6,6 +6,7 @@
     <inlineHelpText>Defines the state of the appointment. None: must be selected by user, Added: Added to selected appointments but can be removed, Added and Required: Added to appointments and can not be removed.</inlineHelpText>
     <label>Chosen State</label>
     <required>false</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>

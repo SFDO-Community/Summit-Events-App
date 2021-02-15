@@ -6,6 +6,7 @@
     <inlineHelpText>The status setting of and event registration that you wish to have this email sent.</inlineHelpText>
     <label>Action Status</label>
     <required>false</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>

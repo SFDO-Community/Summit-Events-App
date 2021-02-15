@@ -6,6 +6,7 @@
     <externalId>false</externalId>
     <inlineHelpText>Do not show this appointment&apos;s time on itinerary generation.</inlineHelpText>
     <label>Do Not Show Time</label>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Checkbox</type>
 </CustomField>

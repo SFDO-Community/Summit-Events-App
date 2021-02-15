@@ -6,6 +6,7 @@
     <inlineHelpText>Rich text description of event that can include links and formatting.</inlineHelpText>
     <label>Description</label>
     <length>32768</length>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Html</type>
     <visibleLines>10</visibleLines>

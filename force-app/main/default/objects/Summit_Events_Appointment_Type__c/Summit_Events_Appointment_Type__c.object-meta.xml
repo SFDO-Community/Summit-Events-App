@@ -154,7 +154,7 @@
     <enableBulkApi>true</enableBulkApi>
     <enableEnhancedLookup>true</enableEnhancedLookup>
     <enableFeeds>false</enableFeeds>
-    <enableHistory>false</enableHistory>
+    <enableHistory>true</enableHistory>
     <enableLicensing>false</enableLicensing>
     <enableReports>true</enableReports>
     <enableSearch>true</enableSearch>
@@ -165,6 +165,7 @@
     <nameField>
         <displayFormat>AT-{0000}</displayFormat>
         <label>UG Event Appointment Type</label>
+        <trackHistory>true</trackHistory>
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Summit Events Appointment Types</pluralLabel>

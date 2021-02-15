@@ -6,6 +6,7 @@
     <inlineHelpText>The date when this appointment type will not longer be an option. Leaving blank means this appointment will be indefinitely available.</inlineHelpText>
     <label>Date Available End</label>
     <required>false</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>DateTime</type>
 </CustomField>

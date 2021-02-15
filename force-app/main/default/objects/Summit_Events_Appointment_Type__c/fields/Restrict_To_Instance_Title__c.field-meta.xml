@@ -19,6 +19,7 @@
     <relationshipLabel>Summit Event Appointment Types</relationshipLabel>
     <relationshipName>Summit_Events_Appointment_Types</relationshipName>
     <required>false</required>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Lookup</type>
 </CustomField>
