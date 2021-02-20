@@ -4,7 +4,7 @@ project:
     package:
         name:  SummitEventsDX
         namespace:  summit
-        api_version: '48.0'
+        api_version: '51.0'
     source_format: sfdx
 
 tasks:
