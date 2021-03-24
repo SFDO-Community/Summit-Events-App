@@ -1663,6 +1663,12 @@
         <field>Summit_Events__c.Display_Guest_Registration__c</field>
         <readable>true</readable>
     </fieldPermissions>
+        </fieldPermissions>
+        <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Date_Of_Birth_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events__c.Display_Optional_Donation__c</field>
