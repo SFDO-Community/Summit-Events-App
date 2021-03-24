@@ -542,7 +542,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Question__c.Question_Type__c</field>
+        <field>Summit_Events_Question__c.Question_Text__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -557,7 +557,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Question__c.Required_for_registrant__c</field>
+        <field>Summit_Events_Question__c.Required_For_Registrant__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1402,7 +1402,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Display_Guest_Registration__c</field>
+        <field>Summit_Events__c.Date_Of_Birth_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1587,6 +1587,16 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.First_Name_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Gender_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.Guest_Max_Amount__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1603,16 +1613,6 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Guest_Registration_Title__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events__c.Guest_Table_Size__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events__c.Guest_Tables_Available__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

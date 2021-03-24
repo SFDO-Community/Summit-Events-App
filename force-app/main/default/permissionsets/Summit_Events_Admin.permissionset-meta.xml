@@ -1645,7 +1645,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Summit_Events__c.Display_Guest_Registration__c</field>
+        <field>Summit_Events__c.Date_Of_Birth_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
