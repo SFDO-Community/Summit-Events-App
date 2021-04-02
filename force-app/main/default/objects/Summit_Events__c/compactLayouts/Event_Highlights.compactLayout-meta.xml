@@ -3,7 +3,9 @@
     <fullName>Event_Highlights</fullName>
     <fields>Event_Name__c</fields>
     <fields>Event_Type__c</fields>
+    <fields>Location_Type__c</fields>
     <fields>Start_Date__c</fields>
+    <fields>End_Date__c</fields>
     <fields>Event_Status__c</fields>
     <label>Event Highlights</label>
 </CompactLayout>
