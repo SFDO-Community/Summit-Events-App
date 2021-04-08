@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Summit_Events_Instance__c</fullName>
+    <description>The Summit Events Instance to show on the &apos;My Events&apos; calendar of subscribers</description>
+    <externalId>false</externalId>
+    <label>Summit Events Instance</label>
+    <referenceTo>Summit_Events_Instance__c</referenceTo>
+    <relationshipLabel>Summit Events Calendar Subscriptions</relationshipLabel>
+    <relationshipName>Summit_Events_Calendar_Subscriptions</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>
