@@ -11,12 +11,10 @@ global with sharing class SummitEventsCalendarSubController {
 
   public String Summit_Instance_Name { get; private set; }
   public String Summit_Org_Domain { get; private set; }
-  public String User_Time_Zone { get; private set; }
 
   public SummitEventsCalendarSubController() {
     Summit_Instance_Name = [SELECT InstanceName FROM Organization LIMIT 1].InstanceName.toLowerCase();
     Summit_Org_Domain = URL.getOrgDomainUrl().getHost().toLowerCase().split('\\.')[0];
-    User_Time_Zone = UserInfo.getTimeZone().getDisplayName();
   }
 
   @HttpGet
@@ -41,11 +39,11 @@ global with sharing class SummitEventsCalendarSubController {
       }
 
       if (eventInstance.Instance_Start_Date__c != null) {
-        s_event.start = combineDateAndTime(eventInstance.Instance_Start_Date__c, eventInstance.Instance_Start_Time__c, '');
+        s_event.start = combineDateAndTime(eventInstance.Instance_Start_Date__c, eventInstance.Instance_Start_Time__c);
       }
 
       if (eventInstance.Instance_End_Date__c != null) {
-        s_event.end_date = combineDateAndTime(eventInstance.Instance_End_Date__c, eventInstance.Instance_End_Time__c, '');
+        s_event.end_date = combineDateAndTime(eventInstance.Instance_End_Date__c, eventInstance.Instance_End_Time__c);
       }
 
       summit_events.add(s_event);
@@ -79,14 +77,20 @@ global with sharing class SummitEventsCalendarSubController {
     String serialized_json;
 
     String query_string = '';
-    query_string += 'SELECT Id, Event__r.Name, 	Event__r.Event_Name__c, Event__r.Event_Status__c, Active_Status__c, Instance_Title__c, Instance_Short_Description__c, ';
-    query_string += 'Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c, ';
-    query_string += '(SELECT Calendar_Subscriber__c FROM Summit_Events_Calendar_Subscriptions__r) ';
+    query_string += 'SELECT Id, Event__r.Name, Event__r.Event_Name__c, Event__r.Event_Status__c, Active_Status__c, Instance_Title__c, Instance_Short_Description__c, ';
+    query_string += 'Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c ';
+
+    if(is_personal) {
+      query_string += ', (SELECT Calendar_Subscriber__c FROM Summit_Events_Calendar_Subscriptions__r WHERE Calendar_Subscriber__c = :user_id) ';
+    }
+
     query_string += 'FROM Summit_Events_Instance__c ';
     query_string += 'WHERE Instance_Start_Date__c >= ' + start.format('yyyy-MM-dd') + ' ';
     query_string += 'AND Instance_Start_Date__c <= ' + end_date.format('yyyy-MM-dd') + ' ';
+
     query_string += 'AND Event__R.Event_Status__c = \'Active\' ';
     query_string += 'AND Active_Status__c = \'Active\'';
+    query_string += 'WITH SECURITY_ENFORCED';
 
     List<Summit_Events_Instance__c> event_instances = database.query(query_string);
 
@@ -94,9 +98,7 @@ global with sharing class SummitEventsCalendarSubController {
       List<Summit_Events_Instance__c> my_instances = new List<Summit_Events_Instance__c>();
       for(Summit_Events_Instance__c instance : event_instances) {
         for(Summit_Events_Calendar_Subscription__c sub : instance.Summit_Events_Calendar_Subscriptions__r) {
-          if(sub.Calendar_Subscriber__c == user_id) {
-            my_instances.add(instance);
-          }
+          my_instances.add(instance);
         }
       }
       return my_instances;
@@ -105,7 +107,7 @@ global with sharing class SummitEventsCalendarSubController {
     return event_instances;
   }
 
-  private static Datetime combineDateAndTime(Date date_in, Time time_in, String timezone_string) {
+  private static Datetime combineDateAndTime(Date date_in, Time time_in) {
     if (time_in == null) {
       time_in = Time.newInstance(1, 12, 3, 4);
     }
