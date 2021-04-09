@@ -11,10 +11,12 @@ global with sharing class SummitEventsCalendarSubController {
 
   public String Summit_Instance_Name { get; private set; }
   public String Summit_Org_Domain { get; private set; }
+  public String User_Time_Zone { get; private set; }
 
   public SummitEventsCalendarSubController() {
     Summit_Instance_Name = [SELECT InstanceName FROM Organization LIMIT 1].InstanceName.toLowerCase();
     Summit_Org_Domain = URL.getOrgDomainUrl().getHost().toLowerCase().split('\\.')[0];
+    User_Time_Zone = UserInfo.getTimeZone().getDisplayName().split('\\(')[2].split('\\)')[0];
   }
 
   @HttpGet

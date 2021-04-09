@@ -4,7 +4,9 @@
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.css" type="text/css" rel="stylesheet" />
       <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400:700|Zilla+Slab" rel="stylesheet" />
+      <script src='https://cdn.jsdelivr.net/npm/luxon@1.26.0/build/global/luxon.min.js'></script>
       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.js"></script>
+      <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/luxon@5.6.0/main.global.min.js'></script>
       <style>
         body {
           padding: 20px;
@@ -100,6 +102,7 @@
           let feed_url = "https://{!summit_org_domain}.{!summit_instance_name}.force.com/services/apexrest/summiteventscalendar/getevents",
               calendar_el = document.getElementById('calendar'),
               calendar = new FullCalendar.Calendar(calendar_el, {
+                timeZone: '{!User_Time_Zone}',
                 initialView: 'dayGridMonth',
                 events: getEvents,
                 slotDuration: '00:15:00',
