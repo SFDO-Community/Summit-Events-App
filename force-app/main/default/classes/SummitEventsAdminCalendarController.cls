@@ -55,6 +55,7 @@ global with sharing class SummitEventsAdminCalendarController {
     serialized_json = serialized_json.replace('"end_date":', '"end":');
     RestResponse res = RestContext.response;
     res.addHeader('Content-Type', 'application/json');
+    res.statusCode = 200;
     res.responseBody = Blob.valueOf(serialized_json);
   }
 
