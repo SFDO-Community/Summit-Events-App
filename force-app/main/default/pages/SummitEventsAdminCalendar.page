@@ -1,4 +1,4 @@
-<apex:page title="Summit Events Calendar" id="SummitEventSubscriberCalendar" controller="SummitEventsCalendarSubController" lightningStyleSheets="true" sidebar="false" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
+<apex:page title="Summit Events Calendar" id="SummitEventSubscriberCalendar" controller="SummitEventsAdminCalendarController" lightningStyleSheets="true" sidebar="false" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
   <html>
     <head>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
