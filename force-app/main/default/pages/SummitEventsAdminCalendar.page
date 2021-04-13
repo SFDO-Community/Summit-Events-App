@@ -99,7 +99,7 @@
       <script>
         (function() {
           var is_first_run = true;
-          let feed_url = "https://{!summit_org_domain}.{!summit_instance_name}.force.com/services/apexrest/summiteventscalendar/getevents",
+          let feed_url = "/services/apexrest/summiteventscalendar/getevents",
               calendar_el = document.getElementById('calendar'),
               calendar = new FullCalendar.Calendar(calendar_el, {
                 timeZone: '{!User_Time_Zone}',
@@ -208,7 +208,7 @@
 
           function saveEvent(info) {
             showLoading();
-            let url = 'https://{!summit_org_domain}.{!summit_instance_name}.force.com/services/apexrest/summiteventscalendar/updateevent',
+            let url = '/services/apexrest/summiteventscalendar/updateevent',
                 data = {
                   instance_id: info.event.extendedProps.ID,
                   start_date_time: info.event.startStr.substring(0, 19).replace('T', ' '),

@@ -9,12 +9,10 @@ global with sharing class SummitEventsAdminCalendarController {
     public Datetime end_date { get; set; }
   }
 
-  public String Summit_Instance_Name { get; private set; }
   public String Summit_Org_Domain { get; private set; }
   public String User_Time_Zone { get; private set; }
 
   public SummitEventsAdminCalendarController() {
-    Summit_Instance_Name = [SELECT InstanceName FROM Organization LIMIT 1].InstanceName.toLowerCase();
     Summit_Org_Domain = URL.getOrgDomainUrl().getHost().toLowerCase().split('\\.')[0];
     User_Time_Zone = UserInfo.getTimeZone().getDisplayName().split('\\(')[2].split('\\)')[0];
   }
@@ -24,7 +22,6 @@ global with sharing class SummitEventsAdminCalendarController {
     RestRequest req = RestContext.request;
     List<Summit_Events_Instance__c> events = getSummitEvents();
     List<SummitEvent> summit_events = new List<SummitEvent>();
-    String my_user_id = UserInfo.getUserId();
 
     for (Summit_Events_Instance__c eventInstance : events) {
       SummitEvent s_event = new SummitEvent();
