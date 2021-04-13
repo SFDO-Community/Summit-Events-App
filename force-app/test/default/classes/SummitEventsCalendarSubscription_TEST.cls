@@ -47,7 +47,6 @@ public class SummitEventsCalendarSubscription_TEST {
             RestContext.response = res;
             
             SummitEventsAdminCalendarController cont = new SummitEventsAdminCalendarController();
-            System.assert(cont.Summit_Instance_Name.length() != 0);
             System.assert(cont.Summit_Org_Domain.length() != 0);
             System.assert(cont.User_Time_Zone.length() != 0);
 
@@ -85,7 +84,6 @@ public class SummitEventsCalendarSubscription_TEST {
             RestContext.response = res;
             
             SummitEventsAdminCalendarController cont = new SummitEventsAdminCalendarController();
-            System.assert(cont.Summit_Instance_Name.length() != 0);
             System.assert(cont.Summit_Org_Domain.length() != 0);
             System.assert(cont.User_Time_Zone.length() != 0);
 
@@ -128,7 +126,6 @@ public class SummitEventsCalendarSubscription_TEST {
             System.assertEquals(updated_instance.Instance_End_Time__c.minute(), 30);
             System.assertEquals(updated_instance.Instance_Start_Time__c.second(), 0);
             System.assertEquals(updated_instance.Instance_End_Time__c.second(), 0);
-
             Test.stopTest();
         }
     }
