@@ -203,8 +203,22 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Status__c = 'Started',
                 Registrant_Third_Party_Status__c = 'Primary Registrant'
         );
-
         insert testRegistration;
+
+        //create encrypted string
+        SummitEventsShared SEAShared = new SummitEventsShared();
+        String encryptedString = SEAShared.createEncryptedCookie('', testRegistration.Event_Instance__c, testRegistration.Event__c, testRegistration.Id);
+
+        System.debug(encryptedString);
+        if (encryptedString.length() > 255) {
+            System.debug('bigger than 255');
+            testRegistration.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);
+            testRegistration.Encrypted_Registration_Id_2__c = encryptedString.substring(255, encryptedString.length());
+        } else {
+            System.debug('less than 255');
+            testRegistration.Encrypted_Registration_Id_1__c = encryptedString;
+        }
+        update testRegistration;
 
         if (optionalContactLinkId != null) {
             testRegistration.Contact__c = optionalContactLinkId;

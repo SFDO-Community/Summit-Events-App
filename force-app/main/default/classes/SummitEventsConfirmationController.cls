@@ -70,8 +70,22 @@ public with sharing class SummitEventsConfirmationController {
                 }
                 evtReg.Status__c = 'Registered';
 
+                String encryptedString = SEAShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, eventInformation.registrationId);
+
+                System.debug(encryptedString);
+                if (encryptedString.length() > 255) {
+                    System.debug('bigger than 255');
+                    evtReg.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);
+                    evtReg.Encrypted_Registration_Id_2__c = encryptedString.substring(255, encryptedString.length());
+                } else {
+                    System.debug('less than 255');
+                    evtReg.Encrypted_Registration_Id_1__c = encryptedString;
+                }
+
                 registrationCRUD regCRUD = new registrationCRUD();
                 evtReg = regCRUD.updateRegistration(evtReg);
+
+                SummitEventsShared SEAShared = new SummitEventsShared();
 
                 //Remove the registration ID from the cookie so back button will redirect to the correct page.
                 seaShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, '');

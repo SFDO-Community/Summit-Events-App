@@ -10,6 +10,7 @@ public with sharing class SummitEventsShared {
         public String instanceId { get; set; }
         public String eventId { get; set; }
         public String registrationId { get; set; }
+        public String dt { get; set; }
     }
 
     public SummitEventsShared() {
@@ -37,7 +38,7 @@ public with sharing class SummitEventsShared {
         //{"audience":"High School Senior","instanceId":"a320m000000A5fOAAS","registrationId":"a350m0000008q63AAA,"eventId":"a330m0000001SOrAAM"}
         SummitEventsInfo eventInformation = new SummitEventsInfo();
         String URLAudience = '';
-        if(String.isNotBlank(ApexPages.currentPage().getParameters().get('audience'))) {
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('audience'))) {
             URLAudience = String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('audience'));
         }
         Id URLInstanceID = null;
@@ -67,13 +68,13 @@ public with sharing class SummitEventsShared {
 
         //check if URL instance has changed
         if (URLInstanceID != null) {
-                if (URLInstanceID != eventInformation.instanceId) {
-                    eventInformation.instanceId = URLInstanceID;
-                    eventInformation.registrationId = '';
-                    if (!String.isBlank(URLAudience)) {
-                        eventInformation.audience = URLAudience;
-                    }
+            if (URLInstanceID != eventInformation.instanceId) {
+                eventInformation.instanceId = URLInstanceID;
+                eventInformation.registrationId = '';
+                if (!String.isBlank(URLAudience)) {
+                    eventInformation.audience = URLAudience;
                 }
+            }
         }
 
         //check if registration id is there and whether status it is set to registered. IF so reset cookie if it is.
@@ -189,8 +190,7 @@ public with sharing class SummitEventsShared {
         instanceId = (String.isNotBlank(instanceId) && !instanceId.equalsIgnoreCase('null')) ? instanceId : '';
         eventId = (String.isNotBlank(eventId) && !eventId.equalsIgnoreCase('null')) ? eventId : '';
         registrationId = (String.isNotBlank(registrationId) && !registrationId.equalsIgnoreCase('null')) ? registrationId : '';
-
-        String CookieValue = '{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '"}';
+        String CookieValue = '{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '","dt":"' + String.valueOf(Datetime.now()) + '"}';
         String encodedCipherText = '';
         String key = getCookieKey();
         if (String.isNotBlank(String.valueOf(key))) {
@@ -208,16 +208,25 @@ public with sharing class SummitEventsShared {
 
     public String getDecryptCookie() {
         String CookieName = 'SummitEvents';
-        String key = getCookieKey();
         Cookie encodedCipherText = ApexPages.currentPage().getCookies().get(CookieName);
-        if (encodedCipherText != null && String.isNotBlank(String.valueOf(key))) {
+        //System.debug('CIPHER TEXT: ' + encodedCipherText.getValue());
+        if (encodedCipherText != null) {
+            return decryptString(encodedCipherText.getValue(), true);
+        }
+        return '';
+    }
+
+    public String decryptString(String encryptedString, Boolean urlDecodeString) {
+        String key = getCookieKey();
+        if (String.isNotBlank(encryptedString) && String.isNotBlank(String.valueOf(key))) {
+            if (urlDecodeString) {
+                encryptedString = EncodingUtil.urlDecode(encryptedString, 'UTF-8');
+            }
             try {
                 Blob decrypted = Crypto.decryptWithManagedIV(
                         'AES256',
                         Blob.valueOf(key),
-                        EncodingUtil.base64Decode(
-                                EncodingUtil.urlDecode(encodedCipherText.getValue(), 'UTF-8')
-                        )
+                        EncodingUtil.base64Decode(encryptedString)
                 );
                 return decrypted.toString();
             } catch (Exception e) {
