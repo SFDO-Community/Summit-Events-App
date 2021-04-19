@@ -1,3 +1,1 @@
-function helloWorld() {
-
-}
+//deprecated

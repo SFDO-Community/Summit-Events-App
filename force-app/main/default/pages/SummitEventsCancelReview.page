@@ -12,7 +12,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
             <apex:outputText rendered="{!!ISBLANK(evtInstance.Instance_Title__c)}" value="{! ' - ' + evtInstance.Instance_Title__c}"/>
             - Cancel
         </apex:define>
-        <apex:define name="pageTitle"><a href="{!evt.Event__r.Event_Home_Link_URL__c}">{!evt.Event__r.Event_Home_Link_Title__c}</a></apex:define>
+        <apex:define name="pageTitle"><a href="{!eventRegistration.Event__r.Event_Home_Link_URL__c}">{!eventRegistration.Event__r.Event_Home_Link_Title__c}</a></apex:define>
         <apex:define name="scriptsHead">
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
         </apex:define>
@@ -21,27 +21,27 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
             <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                 <apex:messages/>
             </div>
-            <apex:form id="SummitEventsRegistrationCancelReview" rendered="{!!eventOver && !eventNotFound}" styleClass="slds-grid slds-wrap">
+            <apex:form id="SummitEventsRegistrationCancelReview" rendered="{!!eventOver && !eventNotFound && eventRegistration.Status__c != 'Cancelled'}" styleClass="slds-grid slds-wrap">
                 <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                     <apex:outputText escape="false" value="{!navBreadCrumb}"/>
                 </div>
                 <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                     <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
-                        <apex:outputText value="{!evt.Event__r.Event_Cancel_Review_Title__c}"></apex:outputText>
+                        <apex:outputText value="{!eventRegistration.Event__r.Event_Cancel_Review_Title__c}"></apex:outputText>
                     </h2>
                     <p class="slds-text-body slds-p-vertical_xx-small">
-                        <apex:outputText value="{!evt.Event__r.Event_Cancel_Review_Description__c}" escape="false"></apex:outputText>
+                        <apex:outputText value="{!eventRegistration.Event__r.Event_Cancel_Review_Description__c}" escape="false"></apex:outputText>
                     </p>
                 </div>
                 <div id="reviewWrapper" class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                     <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">
-                        <apex:outputText value="{!evt.Event__r.Name}"></apex:outputText>
+                        <apex:outputText value="{!eventRegistration.Event__r.Name}"></apex:outputText>
                     </h3>
                     <p class="slds-text-body slds-p-vertical_xx-small">
-                        <apex:outputText escape="false" value="{!evt.Event__r.Event_description__c}"></apex:outputText>
+                        <apex:outputText escape="false" value="{!eventRegistration.Event__r.Event_description__c}"></apex:outputText>
                     </p>
                     <ul class="slds-list_dotted">
-                        <apex:repeat value="{!appt}" var="ap">
+                        <apex:repeat value="{!appointments}" var="ap">
                             <li>
                                 <apex:outputText value="{!ap.Appointment_Title__c}"></apex:outputText>
                                 <apex:outputText value="{!ap.Appointment_Category__c}" rendered="{!IF(!ISBLANK(ap.Appointment_Category__c), true, false)}"></apex:outputText>
@@ -64,6 +64,10 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                 </div>
             </apex:form>
+            <apex:outputPanel layout="block" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small" rendered="{!eventRegistration.Status__c = 'Cancelled'}">
+                <h2 class="slds-text-heading_large slds-p-vertical_xx-small">Your registration has been Cancelled</h2>
+                <p class="slds-text-body slds-p-vertical_xx-small">The registration record we have on file has been cancelled.</p>
+            </apex:outputPanel>
             <apex:outputPanel layout="block" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small" rendered="{!eventNotFound && !eventOver}">
                 <h2 class="slds-text-heading_large slds-p-vertical_xx-small">No event found</h2>
                 <p class="slds-text-body slds-p-vertical_xx-small">The link you followed doesn't contain information to any registration we have on file.</p>
@@ -72,7 +76,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 <h2 class="slds-text-heading_large slds-p-vertical_xx-small">Event over</h2>
                 <p class="slds-text-body slds-p-vertical_xx-small">We're sorry, the event {!evt.Event_Name__c} {!IF(!ISBLANK(evt.Event_Instance_Title__c), ' - ' + evt.Event_Instance_Title__c, '')} has already occured and your registration can not be cancelled.</p>
             </apex:outputPanel>
-            <apex:outputText escape="false" value="{!evt.Event__r.Tracking_Cancel_Registration__c}"></apex:outputText>
+            <apex:outputText escape="false" value="{!eventRegistration.Event__r.Tracking_Cancel_Registration__c}"></apex:outputText>
         </apex:define>
     </apex:composition>
 </apex:page>
