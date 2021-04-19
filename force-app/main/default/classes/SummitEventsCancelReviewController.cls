@@ -7,7 +7,7 @@ public with sharing class SummitEventsCancelReviewController {
     public SummitEventsShared SEShared = new SummitEventsShared();
     public Summit_Events_Registration__c eventRegistration { get; set; }
     public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
-    public List<Summit_Events_Appointments__c> appt { get; set; }
+    public List<Summit_Events_Appointments__c> appointments { get; set; }
     public String templateSelected { get; set; }
     public Boolean eventOver { get; set; }
     public Boolean eventNotFound { get; set; }
@@ -22,7 +22,6 @@ public with sharing class SummitEventsCancelReviewController {
 
         if (!String.isBlank(eventParameter)) {
             String decryptedParameter = SEShared.decryptString(eventParameter, false);
-
             if (String.isNotBlank(decryptedParameter)) {
                 try {
                     eventInformation = (SummitEventsShared.SummitEventsInfo) JSON.deserialize(decryptedParameter, SummitEventsShared.SummitEventsInfo.class);
@@ -51,13 +50,12 @@ public with sharing class SummitEventsCancelReviewController {
 
                         SummitEventsShared SEShared = new SummitEventsShared();
 
-                        appt = [
+                        appointments = [
                                 SELECT Id, Appointment_Title__c, Appointment_Category__c, Appointment_Type__c
                                 FROM Summit_Events_Appointments__c
                                 WHERE Event_Registration__c = :eventParameter
                                 WITH SECURITY_ENFORCED
                         ];
-
 
                         List<Summit_Events_Instance__c> eventInstance = [
                                 SELECT Id, Event__r.Event_Name__c, Instance_Title__c,
@@ -71,7 +69,7 @@ public with sharing class SummitEventsCancelReviewController {
                             eventOver = true;
                         }
 
-                        If (eventInstance.size() > 0) {
+                        if (eventInstance.size() > 0) {
                             navBreadCrumb = SEShared.navBreadcrumbBuilder(eventInstance[0], false);
                         }
                         eventNotFound = false;
@@ -86,12 +84,10 @@ public with sharing class SummitEventsCancelReviewController {
         if (eventRegistration != null) {
             eventRegistration.Status__c = 'Cancelled';
             eventRegistration = regCrud.updateRegistration(eventRegistration);
-            System.debug('reg cancelled');
         }
-        pageReference pg = new pageReference(ApexPages.currentPage().getURL());
-        eventParameter = EncodingUtil.urlEncode(eventParameter, 'UTF-8');
+        PageReference pg = Page.SummitEventsCancelReview;
         pg.getParameters().put('eventInfo', eventParameter);
-        pg.setRedirect(TRUE);
+        pg.setRedirect(true);
         return pg;
     }
 
@@ -99,7 +95,7 @@ public with sharing class SummitEventsCancelReviewController {
 
         public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c newEvtReg) {
             try {
-                upsert newEvtReg;
+                update newEvtReg;
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
             }

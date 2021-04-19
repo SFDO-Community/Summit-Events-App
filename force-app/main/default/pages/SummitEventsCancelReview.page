@@ -41,7 +41,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         <apex:outputText escape="false" value="{!eventRegistration.Event__r.Event_description__c}"></apex:outputText>
                     </p>
                     <ul class="slds-list_dotted">
-                        <apex:repeat value="{!appt}" var="ap">
+                        <apex:repeat value="{!appointments}" var="ap">
                             <li>
                                 <apex:outputText value="{!ap.Appointment_Title__c}"></apex:outputText>
                                 <apex:outputText value="{!ap.Appointment_Category__c}" rendered="{!IF(!ISBLANK(ap.Appointment_Category__c), true, false)}"></apex:outputText>

@@ -126,10 +126,12 @@ public with sharing class SummitEventsRegisterController {
                     WITH SECURITY_ENFORCED
             ];
 
-            if (eventPage.Ask_Phone__c.containsIgnoreCase('with type') && String.isNotBlank(eventRegistration.Registrant_Mobile_Phone__c) && String.isBlank(eventRegistration.Registrant_Phone__c)) {
-                phoneType = 'mobile';
-            } else if (String.isBlank(eventRegistration.Registrant_Mobile_Phone__c) && String.isNotBlank(eventRegistration.Registrant_Phone__c)) {
-                phoneType = 'home';
+            if (String.isNotBlank(eventPage.Ask_Phone__c)) {
+                if (eventPage.Ask_Phone__c.containsIgnoreCase('with type') && String.isNotBlank(eventRegistration.Registrant_Mobile_Phone__c) && String.isBlank(eventRegistration.Registrant_Phone__c)) {
+                    phoneType = 'mobile';
+                } else if (String.isBlank(eventRegistration.Registrant_Mobile_Phone__c) && String.isNotBlank(eventRegistration.Registrant_Phone__c)) {
+                    phoneType = 'home';
+                }
             }
 
             if (String.isBlank(eventRegistration.Registrant_Country__c)) {

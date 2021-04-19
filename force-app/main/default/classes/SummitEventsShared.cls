@@ -54,7 +54,6 @@ public with sharing class SummitEventsShared {
 
         //See if a cookie exists
         if (String.isNotBlank(jsonInput)) {
-            System.debug('cookie decrypted: ' + JSON.serializePretty(jsonInput));
             try {
                 eventInformation = (SummitEventsInfo) JSON.deserialize(jsonInput, SummitEventsInfo.class);
             } catch (Exception e) {
@@ -108,14 +107,12 @@ public with sharing class SummitEventsShared {
     public PageReference checkForEvent() {
         PageReference myVFPage;
         SummitEventsInfo eventInformation = getSummitEventsInfo();
-        System.debug('eventInfo from check event 1: ' + JSON.serializePretty(eventInformation));
 
         Boolean onRegistrationPage = false;
         String[] currentURL = ApexPages.currentPage().getUrl().split('\\?');
         if (currentURL[0].endsWithIgnoreCase('SummitEventsRegister')) {
             onRegistrationPage = true;
         }
-        System.debug('ON registration page: ' + onRegistrationPage);
 
         //Make sure there is a cookie encryption key. If no make one.
         crudToDo doCRUD = new crudToDo();
@@ -152,21 +149,16 @@ public with sharing class SummitEventsShared {
                     System.debug(e.getMessage());
                 }
                 if (newInstanceId != null && !newInstanceId.equals(URLInstanceID)) {
-                    System.debug('Registration page change');
                     newInstanceId = URLInstanceID;
                     newUrl = communityBaseURL + 'SummitEventsRegister?instanceID=' + URLInstanceID;
                 }
             }
         } else if (String.isBlank(newRegistrationId) && !onRegistrationPage) {
-            System.debug('eventInformation.registrationId 2: ' + newRegistrationId);
             if (String.isNotBlank(eventHomeLink)) {
-                System.debug('USING HOME LINK');
                 newUrl = eventHomeLink;
             } else if (String.isNotBlank(newInstanceId)) {
-                System.debug('USING instance link');
                 newUrl = communityBaseURL + 'SummitEventsRegister?instanceID=' + newInstanceId;
             } else {
-                System.debug('USING default site home link');
                 newUrl = communityBaseURL + 'SummitEvents';
             }
         }
@@ -174,7 +166,6 @@ public with sharing class SummitEventsShared {
             myVFPage = new PageReference(newUrl);
             myVFPage.setRedirect(true);
             newRegistrationId = '';
-            System.debug('eventInfo from check event 2 - page change: ' + JSON.serializePretty(eventInformation));
             createEncryptedCookie(eventInformation.audience, newInstanceId, eventInformation.eventId, newRegistrationId);
         } else if (onRegistrationPage) {
             createEncryptedCookie(eventInformation.audience, newInstanceId, eventInformation.eventId, newRegistrationId);
@@ -209,7 +200,6 @@ public with sharing class SummitEventsShared {
     public String getDecryptCookie() {
         String CookieName = 'SummitEvents';
         Cookie encodedCipherText = ApexPages.currentPage().getCookies().get(CookieName);
-        //System.debug('CIPHER TEXT: ' + encodedCipherText.getValue());
         if (encodedCipherText != null) {
             return decryptString(encodedCipherText.getValue(), true);
         }
@@ -230,6 +220,7 @@ public with sharing class SummitEventsShared {
                 );
                 return decrypted.toString();
             } catch (Exception e) {
+                System.debug('decrypt exception: ' + e.getMessage());
                 return '';
             }
         }
@@ -502,7 +493,7 @@ public with sharing class SummitEventsShared {
         return retVal;
     }
 
-    private String getCookieKey() {
+    public String getCookieKey() {
         String key = '';
         Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
         if (String.isNotBlank(SummitEventsSettings.Cookie_Encryption_Key__c)) {
