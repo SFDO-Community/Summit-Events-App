@@ -21,9 +21,9 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     ** Custom Javascript to embed Salesforce feed and format it (highlighted below)
             -->
             <!-- Copy this for Summit Events Fullcalendar display on any page. Insert anywhere before code below -->
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.3.0/main.min.css"/>
-            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.3.0/main.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/min/moment.min.js"></script>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.css"/>
+            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
             <script src="https://unpkg.com/@popperjs/core@2"></script>
             <script src="https://unpkg.com/tippy.js@6"></script>
             <!-- end copy -->
