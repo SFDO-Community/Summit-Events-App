@@ -5,13 +5,13 @@ license that can be found in the LICENSE file.
 Created by Thaddaeus Dahlberg on 5/1/2018.
 -->
 
-<apex:page id="SummitEvents" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" cache="false" docType="html-5.0" controller="SummitEventsController">
+<apex:page id="SummitEvents" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" lightningStylesheets="true" standardStylesheets="false" cache="false" docType="html-5.0" controller="SummitEventsController">
+    <apex:slds />
     <apex:composition template="GeneralSLDS">
         <apex:define name="metaPageTitle">Summit Events</apex:define>
         <apex:define name="pageTitle"><a href="/SummitEvents">Events</a></apex:define>
         <apex:define name="scriptsHead">
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
-
             <!--
                 The event calendar can be applied to any Web site. Just copy the highlighted code to any html file on the web.
                 This required code includes:
@@ -21,11 +21,15 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     ** Custom Javascript to embed Salesforce feed and format it (highlighted below)
             -->
             <!-- Copy this for Summit Events Fullcalendar display on any page. Insert anywhere before code below -->
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.3.0/main.min.css"/>
-            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.3.0/main.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/min/moment.min.js"></script>
-            <script src="https://unpkg.com/@popperjs/core@2"></script>
-            <script src="https://unpkg.com/tippy.js@6"></script>
+            <script>
+                const feedURL = '{!feedURL}';
+                const communityBaseURL = '{!communityBaseURL}';
+            </script>
+            <link href="{!URLFOR($Resource.SummitEventsAssets, '/fullcalendar/lib/main.css')}" rel="stylesheet" type="text/css"/>
+            <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/calendar.css')}" rel="stylesheet" type="text/css"/>
+            <script src="{!URLFOR($Resource.SummitEventsAssets, '/fullcalendar/lib/main.js')}"></script>
+            <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/moment.min.js')}"></script>
+            <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/calendar.js')}"></script>
             <!-- end copy -->
         </apex:define>
         <apex:define name="sectionNav"/>
@@ -56,264 +60,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 </div>
             </div>
             <!-- Copy this for Summit Events Fullcalendar display on any page. paste after fullCalendarView div -->
-            <style>
-                .SummitEventsItem {
-                    display: block;
-                    white-space: normal;
-                    padding: 4px 2px;
-                    font-size: 1.1em;
-                    line-height: 1.4em !important;
-                }
 
-                .SummitEventsItem:hover {
-                    text-decoration: none !important;
-                }
-
-                .fc-listMonth-view .SummitEventsItem {
-                    font-size: 1.1em;
-                    line-height: 1.4em !important;
-                }
-
-                .eventClosed .SummitEventsItem, .eventClosed .SummitEventsItem * {
-                    color: gray !important;
-                }
-
-                .SummitEventsItem .summitEventsTitle, .SummitEventItem .summitEventsDesc {
-                    display: block;
-                    margin: 0px 0px 4px 0px;
-                }
-
-                .SummitEventsItem .summitEventsTimes {
-                    display: block;
-                    font-size: .85em;
-                }
-
-                .tippy-box {
-                    background: #f9f9f9;
-                    font-family: 'Salesforce Sans', Arial, sans-serif;
-                    font-size: .8em;
-                    border: 1px solid #4f4f4f;
-                    color: #212121;
-                }
-
-                .tippy-box[data-placement^='top'] > .tippy-arrow::before {
-                    border-top-color: #4f4f4f;
-                }
-
-                .tippy-box[data-placement^='bottom'] > .tippy-arrow::before {
-                    border-bottom-color: #4f4f4f;
-                }
-
-                .tippy-box[data-placement^='left'] > .tippy-arrow::before {
-                    border-left-color: #4f4f4f;
-                }
-
-                .tippy-box[data-placement^='right'] > .tippy-arrow::before {
-                    border-right-color: #4f4f4f;
-                }
-            </style>
-            <script>
-                const feedURL = '{!feedURL}'
-                const calendarEl = document.getElementById('fullCalendarView');
-                const SESettings = JSON.parse(readCookie('SummitEvents'));
-                const audienceDD = document.getElementById('audienceDD');
-                const hideCalendarUntilAudience = false;
-                const hideInstanceTitle = true;
-                if (audienceDD) {
-                    loadAudienceDD();
-                }
-
-                function getCalView() {
-                    let initialView = 'dayGridMonth';
-                    if (window.innerWidth <= 900) {
-                        initialView = 'listMonth';
-                    }
-                    return initialView;
-                }
-
-                let calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: getCalView(),
-                    handleWindowResize: true,
-                    textColor: '#000',
-                    events: {
-                        url: feedURL,
-                        extraParams: function () {
-                            return {
-                                'feedType': 'eventList',
-                                'audience': getAudienceDDValue()
-                            }
-                        },
-                    },
-                    eventDataTransform: function (rawEventData) {
-                        return {
-                            id: rawEventData.Id,
-                            title: rawEventData.title,
-                            url: rawEventData.eventUrl,
-                            start: rawEventData.start.replace('Z', ''),
-                            end: rawEventData.end.replace('Z', ''),
-                            description: rawEventData.description,
-                            className: rawEventData.className,
-                        };
-                    },
-                    eventDisplay: 'auto',
-                    eventTextColor: '#000',
-                    eventContent: function (info) {
-                        let wrap = document.createElement('a');
-                        let eventTitle = info.event.title;
-                        if (hideInstanceTitle) {
-                            let eventTitleArr = eventTitle.split('-');
-                            eventTitle = '';
-                            for (let xx = 0; xx < eventTitleArr.length - 1; xx++) {
-                                if (xx > 0) {
-                                    eventTitle += ' - '
-                                }
-                                eventTitle += eventTitleArr[xx].trim();
-                            }
-                        }
-                        wrap.classList.add('SummitEventsItem');
-                        let titleWrap = document.createElement('span');
-                        titleWrap.classList.add('summitEventsTitle');
-                        console.log(JSON.stringify(info.event.classNames));
-                        if (info.event.classNames != 'eventClosed') {
-                            titleWrap.innerHTML = eventTitle
-                            wrap.href = info.event.url;
-                            wrap.target = '_blank';
-                        } else {
-                            titleWrap.innerHTML = eventTitle + '<br><em>Event is closed.</em>';
-                        }
-                        let descWrap = document.createElement('span');
-                        descWrap.classList.add('summitEventsDesc');
-                        descWrap.innerHTML = info.event.extendedProps.description;
-                        let timeWrap = document.createElement('span');
-                        timeWrap.classList.add('summitEventsTimes');
-                        let startTime = formatTimeString(info.event.start.toLocaleString());
-                        let endTime = formatTimeString(info.event.end.toLocaleString());
-                        timeWrap.innerHTML = startTime + ' - ' + endTime;
-                        wrap.append(titleWrap);
-                        if (info.view.type === 'dayGridMonth') {
-                            wrap.append(timeWrap);
-                        } else {
-                            wrap.append(descWrap);
-                        }
-                        let arrayOfDomNodes = [wrap]
-                        return {domNodes: arrayOfDomNodes}
-                    },
-                    eventMouseEnter: function (info) {
-                        let desc = info.event.extendedProps.description;
-                        tippy(info.el, {
-                            animate: 'fade',
-                            content: desc
-                        });
-                    },
-                    windowResize: function (arg) {
-                        this.changeView(getCalView());
-                        this.refetchEvents();
-                    }
-                });
-
-                calendar.render();
-
-                if (audienceDD) {
-                    audienceDD.addEventListener('change', function () {
-                        eraseCookie('SummitEvents');
-                        createCookie('SummitEvents', '{"audience" : "' + getAudienceDDValue() + '"}', '');
-                        if (getAudienceDDValue() == '' && hideCalendarUntilAudience) {
-                            calendarEl.style.visibility = "hidden";
-                        } else {
-                            calendarEl.style.visibility = "visible";
-                        }
-                        calendar.refetchEvents();
-                    });
-                }
-
-                function formatTimeString(stringIn) {
-                    let stringOut = '';
-                    stringIn = stringIn.split(',');
-                    stringIn = stringIn[stringIn.length - 1];
-                    let first = stringIn.indexOf(',');
-                    let last = stringIn.lastIndexOf(":");
-                    stringOut = stringIn.substring(stringIn, last);
-                    stringOut += stringIn.substring(last + 3, stringIn.length);
-                    return stringOut;
-                }
-
-                function getAudienceDDValue() {
-                    let audienceDDValue = '';
-                    if (audienceDD) {
-                        audienceDDValue = audienceDD.value;
-                    }
-                    if (audienceDDValue == 'Select...') {
-                        audienceDDValue = '';
-                    }
-                    return audienceDDValue;
-                }
-
-                function loadAudienceDD() {
-                    fetch(
-                        feedURL + "?feedType=audienceDD"
-                    ).then((resp) => resp.json())
-                        .then(function (data) {
-                            populateOptions(data, audienceDD)
-                            //preselect audience based on cookie
-                            if (SESettings != null) {
-                                if (SESettings.audience != null) {
-                                    audienceDD.value = SESettings.audience;
-                                }
-                            }
-                            calendar.refetchEvents();
-                            if (getAudienceDDValue() == '' && hideCalendarUntilAudience) {
-                                calendarEl.style.visibility = "hidden";
-                            }
-                        }).catch(function (error) {
-                        console.log(error);
-                    });
-                }
-
-                function populateOptions(data, selector, keyAsText) {
-                    selector.innerHTML = '';
-                    let opt1 = document.createElement("option");
-                    opt1.value = '';
-                    opt1.text = 'Select...';
-                    selector.append(opt1);
-                    for (const [key, value] of Object.entries(data)) {
-                        let opt2 = document.createElement("option");
-                        opt2.value = value;
-                        opt2.text = key;
-                        selector.append(opt2);
-                    }
-                }
-
-                function createCookie(name, value, days) {
-                    let expires;
-                    if (days) {
-                        let date = new Date();
-                        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                        expires = "; expires=" + date.toGMTString();
-                    } else {
-                        expires = "";
-                    }
-                    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
-                }
-
-                function readCookie(name) {
-                    let nameEQ = encodeURIComponent(name) + "=";
-                    let ca = document.cookie.split(';');
-                    for (let i = 0; i < ca.length; i++) {
-                        let c = ca[i];
-                        while (c.charAt(0) === ' ')
-                            c = c.substring(1, c.length);
-                        if (c.indexOf(nameEQ) === 0)
-                            return decodeURIComponent(c.substring(nameEQ.length, c.length));
-                    }
-                    return null;
-                }
-
-                function eraseCookie(name) {
-                    createCookie(name, "", -1);
-                }
-
-            </script>
-            <!-- end copy -->
         </apex:define>
     </apex:composition>
 </apex:page>

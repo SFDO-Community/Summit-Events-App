@@ -7,51 +7,52 @@ public with sharing class SummitEventsParkingPassController {
     public String couponOut { get; set; }
     public String firstName { get; set; }
     public String warning { get; set; }
+    public Summit_Events_Registration__c visitor { get; set; }
+    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
     private SummitEventsShared SEShared = new SummitEventsShared();
 
 
     public SummitEventsParkingPassController() {
-        warning = '';
+        warning = '<p>Sorry, this parking permit has expired or invalid.</p>';
         couponOut = '';
-        Boolean validId = true;
-        String regId = String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('regId'));
+        String eventParameter = ApexPages.currentPage().getParameters().get('eventInfo');
+        visitor = new Summit_Events_Registration__c();
 
-        try {
-            regId = (Id) regId;
-        } catch (Exception e) {
-            validId = false;
-        }
-        if (validId) {
-            Summit_Events_Registration__c visitor = new Summit_Events_Registration__c();
-            try {
-                visitor = [
-                        SELECT Event_Instance_Start_Date__c, Event_Instance_Time_Zone__c, Event_Instance_Start_Date_Text__c, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Preferred_First_Name__c, Status__c
-                        FROM Summit_Events_Registration__c
-                        WHERE Id = :regId
-                        WITH SECURITY_ENFORCED
-                ];
-            } catch (Exception e) {
-                System.debug(e.getMessage());
-            }
+        if (!String.isBlank(eventParameter)) {
+            String decryptedParameter = SEShared.decryptString(eventParameter, false);
 
-            Datetime todayDateTime = SEShared.adjustForTimeZone(Datetime.now(), visitor.Event_Instance_Time_Zone__c);
-            Date todayDate = Date.newInstance(todayDateTime.year(), todayDateTime.month(), todayDateTime.day());
-
-            if (todayDate <= visitor.Event_Instance_Start_Date__c && visitor.Status__c != 'Started' && visitor.Status__c != 'Cancelled') {
-                if (!String.isBlank(visitor.Registrant_Preferred_First_Name__c)) {
-                    firstName = visitor.Registrant_Preferred_First_Name__c;
-                } else {
-                    firstName = visitor.Registrant_First_Name__c;
+            if (String.isNotBlank(decryptedParameter)) {
+                try {
+                    eventInformation = (SummitEventsShared.SummitEventsInfo) JSON.deserialize(decryptedParameter, SummitEventsShared.SummitEventsInfo.class);
+                } catch (Exception e) {
+                    System.debug(e.getMessage());
                 }
-                couponOut += '<p>NAME:&nbsp; ' + firstName + ' ' + visitor.Registrant_Last_Name__c + '</p>';
-                couponOut += '<p>DATE VALID:&nbsp; ' + visitor.Event_Instance_Start_Date_Text__c + '</p>';
-            } else {
-                warning = '<p>Sorry, this parking permit has expired or invalid. (' + regId + ')</p>';
+
+                try {
+                    visitor = [
+                            SELECT Event_Instance_Start_Date__c, Event_Instance_Time_Zone__c, Event_Instance_Start_Date_Text__c, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Preferred_First_Name__c, Status__c
+                            FROM Summit_Events_Registration__c
+                            WHERE Id = :eventInformation.registrationId
+                            WITH SECURITY_ENFORCED
+                    ];
+                } catch (Exception e) {
+                    System.debug(e.getMessage());
+                }
+
+                Datetime todayDateTime = SEShared.adjustForTimeZone(Datetime.now(), visitor.Event_Instance_Time_Zone__c);
+                Date todayDate = Date.newInstance(todayDateTime.year(), todayDateTime.month(), todayDateTime.day());
+
+                if (todayDate <= visitor.Event_Instance_Start_Date__c && visitor.Status__c != 'Started' && visitor.Status__c != 'Cancelled') {
+                    if (!String.isBlank(visitor.Registrant_Preferred_First_Name__c)) {
+                        firstName = visitor.Registrant_Preferred_First_Name__c;
+                    } else {
+                        firstName = visitor.Registrant_First_Name__c;
+                    }
+                    couponOut += '<p>NAME:&nbsp; ' + firstName + ' ' + visitor.Registrant_Last_Name__c + '</p>';
+                    couponOut += '<p>DATE VALID:&nbsp; ' + visitor.Event_Instance_Start_Date_Text__c + '</p>';
+                    warning = '';
+                }
             }
-
-
-        } else {
-            warning = '<p>Sorry, We could not find your parking permit ID. (' + regId + ')</p>';
         }
     }
 }

@@ -1,0 +1,33 @@
+.SummitEventsItem {
+    display: block;
+    white-space: normal;
+    padding: 4px 2px;
+    font-size: 1.1em;
+    line-height: 1.4em !important;
+    width: 100%;
+    z-index: 0;
+}
+
+.SummitEventsItem:hover {
+    text-decoration: none !important;
+}
+
+.fc-listMonth-view .SummitEventsItem {
+    font-size: 1.1em;
+    line-height: 1.4em !important;
+}
+
+.eventClosed .SummitEventsItem, .eventClosed .SummitEventsItem * {
+    color: gray !important;
+}
+.slds-popover__body {
+    display:block;
+}
+.SummitEventsItem .summitEventsTitle {
+    z-index: 0;
+}
+
+.SummitEventsItem .summitEventsTimes {
+    font-size: .85em;
+    z-index: 0;
+}
