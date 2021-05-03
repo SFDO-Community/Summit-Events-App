@@ -92,12 +92,14 @@ function initCalendar() {
             let tooltip = document.createElement('div')
             tooltip.id = toolTipId;
             tooltip.classList.add('slds-popover', 'slds-popover_tooltip', 'slds-fall-into-ground');
+            tooltip.style.position = 'absolute';
             let tooltipDesc = document.createElement('div');
             tooltipDesc.classList.add('slds-popover__body');
+            tooltipDesc.style.whiteSpace = 'normal';
             tooltipDesc.innerHTML = info.event.extendedProps.description;
             tooltip.append(tooltipDesc);
-            wrap.append(tooltip);
-
+            let calWrap = document.getElementById('eventCalWrap');
+            calWrap.parentNode.insertBefore(tooltip, calWrap.nextSibling);
             let arrayOfDomNodes = [wrap]
             return {domNodes: arrayOfDomNodes}
         },
@@ -228,15 +230,16 @@ function activateTooltips() {
     document.querySelectorAll('.aria-describedby-tooltip').forEach(item => {
         let toolTipElement = document.getElementById(item.getAttribute('aria-describedby'));
         if (toolTipElement && getCalView() !== 'listMonth') {
+            toolTipElement.style.cssText = 'position:absolute; min-width:150px; max-width:250px; z-index:99';
             item.addEventListener('mousemove', function (e) {
                 let toolTipOffsetElem = toolTipElement.offsetParent;
                 toolTipElement.classList.remove('slds-fall-into-ground', 'slds-nubbin_left', 'slds-nubbin_right');
                 toolTipElement.classList.add('slds-rise-from-ground');
-                let leftPosition = (e.clientX - toolTipOffsetElem.getBoundingClientRect().x);
-                let topPosition = ((e.clientY - toolTipOffsetElem.getBoundingClientRect().y) -10);
+                let leftPosition = (e.clientX - toolTipOffsetElem.getBoundingClientRect().x + 15);
+                let topPosition = (e.clientY - toolTipOffsetElem.getBoundingClientRect().y + 25);
                 if (document.body.clientWidth < toolTipElement.clientWidth + e.clientX) {
                     toolTipElement.classList.add('slds-nubbin_top-right');
-                    leftPosition = leftPosition - (toolTipElement.clientWidth - 10);
+                    leftPosition = leftPosition - (toolTipElement.clientWidth);
                 } else {
                     toolTipElement.classList.add('slds-nubbin_top-left');
                     leftPosition = leftPosition - 10;

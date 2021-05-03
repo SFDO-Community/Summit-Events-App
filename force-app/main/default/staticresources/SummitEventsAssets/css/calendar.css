@@ -4,6 +4,8 @@
     padding: 4px 2px;
     font-size: 1.1em;
     line-height: 1.4em !important;
+    width: 100%;
+    z-index: 0;
 }
 
 .SummitEventsItem:hover {
@@ -18,37 +20,14 @@
 .eventClosed .SummitEventsItem, .eventClosed .SummitEventsItem * {
     color: gray !important;
 }
-
-.SummitEventsItem .summitEventsTitle, .SummitEventItem .summitEventsDesc {
-    display: block;
-    margin: 0px 0px 4px 0px;
+.slds-popover__body {
+    display:block;
+}
+.SummitEventsItem .summitEventsTitle {
+    z-index: 0;
 }
 
 .SummitEventsItem .summitEventsTimes {
-    display: block;
     font-size: .85em;
-}
-
-.tippy-box {
-    background: #f9f9f9;
-    font-family: 'Salesforce Sans', Arial, sans-serif;
-    font-size: .8em;
-    border: 1px solid #4f4f4f;
-    color: #212121;
-}
-
-.tippy-box[data-placement^='top'] > .tippy-arrow::before {
-    border-top-color: #4f4f4f;
-}
-
-.tippy-box[data-placement^='bottom'] > .tippy-arrow::before {
-    border-bottom-color: #4f4f4f;
-}
-
-.tippy-box[data-placement^='left'] > .tippy-arrow::before {
-    border-left-color: #4f4f4f;
-}
-
-.tippy-box[data-placement^='right'] > .tippy-arrow::before {
-    border-right-color: #4f4f4f;
+    z-index: 0;
 }

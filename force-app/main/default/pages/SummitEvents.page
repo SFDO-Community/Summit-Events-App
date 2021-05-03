@@ -23,6 +23,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
             <!-- Copy this for Summit Events Fullcalendar display on any page. Insert anywhere before code below -->
             <script>
                 const feedURL = '{!feedURL}';
+                const communityBaseURL = '{!communityBaseURL}';
             </script>
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/fullcalendar/lib/main.css')}" rel="stylesheet" type="text/css"/>
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/calendar.css')}" rel="stylesheet" type="text/css"/>
