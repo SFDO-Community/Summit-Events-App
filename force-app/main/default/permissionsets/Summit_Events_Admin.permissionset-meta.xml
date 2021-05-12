@@ -869,7 +869,7 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-            <editable>false</editable>
+        <editable>false</editable>
         <field>Summit_Events_Registration__c.Add_To_Google_Calendar_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
