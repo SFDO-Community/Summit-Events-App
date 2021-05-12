@@ -1,0 +1,231 @@
+<apex:page title="Summit Events Calendar" id="SummitEventSubscriberCalendar" controller="SummitEventsAdminCalendarController" lightningStyleSheets="true" sidebar="false" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
+  <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.css" type="text/css" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400:700|Zilla+Slab" rel="stylesheet" />
+      <script src='https://cdn.jsdelivr.net/npm/luxon@1.26.0/build/global/luxon.min.js'></script>
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.js"></script>
+      <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/luxon@5.6.0/main.global.min.js'></script>
+      <style>
+        body {
+          padding: 20px;
+          width: 100%;
+          height: 100%;
+        }
+
+        #page-wrapper {
+          position: relative;
+          width: 100%;
+          z-index: 1;
+        }
+
+        #calendar {
+          width: 1500px;
+          margin: 0 auto;
+        }
+
+        #loading {
+          position: fixed;
+          top: 0px;
+          left: 0px;
+          width: 100%;
+          height: 100%;
+          display: bock;
+          background: rgba(255, 255, 255, .3);
+          z-index: 100;
+          pointer-events: none;
+        }
+
+        #loading.hidden {
+          display: none;
+        }
+
+        .fc-button {
+          background-color: #532773 !important;
+          color: white;
+        }
+
+        .fc-button:focus,
+        .fc-button-active:focus,
+        .fc-button-primary:focus  {
+          box-shadow: none !important;
+        }
+
+        .fc-button-active,
+        .fc-button:hover {
+          background-color: #803f98 !important;
+        }
+
+        .fc-toolbar-chunk {
+          width: calc(100% / 3) !important;
+        }
+
+        .fc-toolbar-chunk:nth-child(2) {
+          text-align: center;
+        }
+
+        .fc-toolbar-chunk:last-child {
+          text-align: right;
+        }
+
+        .fc-toolbar-title {
+          color: #532773;
+        }
+        
+        .fc-timegrid-slot-label {
+          background-color: #eee;
+          color: #222;
+        }
+
+        .fc-col-header-cell,
+        .fc-col-header-cell a {
+          background-color: #803f98;
+          color: #fff !important;
+        }
+
+        .fc *:focus {
+          outline: none;
+        }
+      </style>
+    </head>
+    <body>
+      <div id="loading" class="hidden">
+      </div>
+      <div id="page-wrapper">
+        <div id="calendar">
+        </div>
+      </div>
+      <script>
+        (function() {
+          var is_first_run = true;
+          let feed_url = "/services/apexrest/summiteventscalendar/getevents",
+              calendar_el = document.getElementById('calendar'),
+              calendar = new FullCalendar.Calendar(calendar_el, {
+                timeZone: '{!User_Time_Zone}',
+                initialView: 'dayGridMonth',
+                events: getEvents,
+                slotDuration: '00:15:00',
+                slotMinTime: '06:00:00',
+                allDaySlot: false,
+                editable: true,
+                fixedWeekCount: false,
+                eventClick: goThere,
+                aspectRatio: 1.75,
+                eventDrop: saveEvent,
+                eventResize: saveEvent,
+                dateClick: goToDate,
+                customButtons: {
+                  myEventsBtn: {
+                    text: 'My Events',
+                    click: getMyEvents
+                  },
+                  allEventsBtn: {
+                    text: 'All Events',
+                    click: getAllEvents
+                  }
+                },
+                headerToolbar: {
+                  start: 'myEventsBtn,allEventsBtn',
+                  center: 'title',
+                  end: 'prev,today,next dayGridMonth,timeGridWeek'
+                }
+              });
+
+          calendar.render();
+          toggleCustomButtonOn('fc-myEventsBtn-button');
+
+          function getEvents(info, successCallback, failureCallback) {
+            showLoading();
+
+            let my_events_button = document.getElementsByClassName('fc-myEventsBtn-button'),
+                my_events_only = (my_events_button.length > 0 && my_events_button[0].classList.contains('fc-button-active')) || is_first_run,
+                start = info.startStr.substring(0, 10),
+                end = info.endStr.substring(0, 10),
+                params = '?start_date=' + start + '&end_date=' + end + '&my_events=' + my_events_only,
+                xhttp = new XMLHttpRequest();
+
+            is_first_run = false;
+            xhttp.open('GET', feed_url + params, true);
+            xhttp.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+            xhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+            xhttp.responseType = 'json';
+            xhttp.onload = function() {
+              successCallback(xhttp.response);
+              hideLoading();
+            }
+            xhttp.onerror = function() {
+              failureCallback(xhttp.response);
+              hideLoading();
+            }
+            xhttp.send();
+          }
+
+          function toggleCustomButtonOn(button_name) {
+            let new_button,
+                old_button;
+
+            if(button_name === 'fc-myEventsBtn-button') {
+              new_button = document.getElementsByClassName('fc-myEventsBtn-button')[0];
+              old_button = document.getElementsByClassName('fc-allEventsBtn-button')[0];
+            } else {
+              new_button = document.getElementsByClassName('fc-allEventsBtn-button')[0];
+              old_button = document.getElementsByClassName('fc-myEventsBtn-button')[0];
+            }
+            
+            old_button.classList.remove('fc-button-active');
+            new_button.classList.add('fc-button-active');
+          }
+
+          function getMyEvents() {
+            toggleCustomButtonOn('fc-myEventsBtn-button');
+            calendar.refetchEvents();
+          }
+
+          function getAllEvents() {
+            toggleCustomButtonOn('fc-allEventsBtn-button');
+            calendar.refetchEvents();
+          }
+
+          function goToDate(info) {
+            calendar.gotoDate(info.date);
+            calendar.changeView('timeGridWeek');
+          }
+
+          function goThere(info) {
+            window.open('https://{!summit_org_domain}.lightning.force.com/lightning/r/Summit_Events_Instance__c/' + info.event.extendedProps.ID + '/view', 'target=_blank');
+          }
+
+          function showLoading() {
+            let loading_div = document.getElementById('loading');
+            loading_div.classList.remove('hidden');
+          }
+
+          function hideLoading() {
+            let loading_div = document.getElementById('loading');
+            loading_div.classList.add('hidden');
+          }
+
+          function saveEvent(info) {
+            showLoading();
+            let url = '/services/apexrest/summiteventscalendar/updateevent',
+                data = {
+                  instance_id: info.event.extendedProps.ID,
+                  start_date_time: info.event.startStr.substring(0, 19).replace('T', ' '),
+                  end_date_time: info.event.endStr.substring(0, 19).replace('T', ' ')
+                },
+                xhttp = new XMLHttpRequest();
+
+            xhttp.open('PUT', url, true);
+            xhttp.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+            xhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+            xhttp.onloadend = function () {
+              calendar.refetchEvents();
+            }
+            xhttp.send(JSON.stringify(data));
+          }
+        })();
+      </script>
+    </body>
+  </html>
+</apex:page>

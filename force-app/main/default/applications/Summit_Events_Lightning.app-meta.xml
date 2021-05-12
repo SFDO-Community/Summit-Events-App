@@ -19,6 +19,7 @@
     <tabs>Summit_Events_Registration__c</tabs>
     <tabs>Summit_Events_Appointment_Type__c</tabs>
     <tabs>Summit_Events_Appointments__c</tabs>
+    <tabs>Summit_Events_Calendar</tabs>
     <tabs>standard-report</tabs>
     <uiType>Lightning</uiType>
 </CustomApplication>

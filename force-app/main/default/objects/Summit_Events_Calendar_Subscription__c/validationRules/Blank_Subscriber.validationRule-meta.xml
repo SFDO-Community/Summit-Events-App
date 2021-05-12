@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Blank_Subscriber</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISBLANK( Calendar_Subscriber__c )</errorConditionFormula>
+    <errorDisplayField>Calendar_Subscriber__c</errorDisplayField>
+    <errorMessage>Calendar Subscriber cannot be blank</errorMessage>
+</ValidationRule>
