@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Automatically_Subscribe_Calendar__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>If true, creating a Summit Event Instance will automatically create a Summit Event Calendar Subscription so that the Instance shows on the &apos;My Calendar&apos; view of Summit Events Calendar</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If true, creating a Summit Event Instance will automatically create a Summit Event Calendar Subscription so that the Instance shows on the &apos;My Calendar&apos; view of Summit Events Calendar</inlineHelpText>
+    <label>Auto-Subscribe Instances to My Calendar</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,5 +1,39 @@
 @IsTest
 public class SummitEventsCalendarSubscription_TEST {
+    @IsTest
+    public static void testSubscriptionCreationForNewInstance() {
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Admin');
+        System.runAs(testUser) {
+            Test.startTest();
+            Summit_Events_Settings__c custom_setting = Summit_Events_Settings__c.getInstance(testUser.Id);
+            custom_setting.Automatically_Subscribe_Calendar__c = true;
+            upsert custom_setting;
+
+            List<Summit_Events_Instance__c> my_instances = SummitEventsTestSharedDataFactory.createTestEvent();
+            Summit_Events_Instance__c first_instance = my_instances[0];
+            Summit_Events_Calendar_Subscription__c my_subscription = [SELECT Id, Calendar_Subscriber__c FROM Summit_Events_Calendar_Subscription__c WHERE Summit_Events_Instance__c = :first_instance.Id LIMIT 1];
+            System.assertNotEquals(null, my_subscription.Id);
+            System.assertEquals(my_subscription.Calendar_Subscriber__c, testUser.Id);            
+            Test.stopTest();
+        }
+    }
+
+    public static void testPreventSubscriptionForNewInstance() {
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Admin');
+
+        System.runAs(testUser) {
+            Test.startTest();
+            Summit_Events_Settings__c custom_setting = Summit_Events_Settings__c.getInstance(testUser.Id);
+            custom_setting.Automatically_Subscribe_Calendar__c = false;
+            upsert custom_setting;
+
+            List<Summit_Events_Instance__c> my_instances = SummitEventsTestSharedDataFactory.createTestEvent();
+            Summit_Events_Instance__c first_instance = my_instances[0];
+            Summit_Events_Calendar_Subscription__c my_subscription = [SELECT Id, Calendar_Subscriber__c FROM Summit_Events_Calendar_Subscription__c WHERE Summit_Events_Instance__c = :first_instance.Id LIMIT 1];
+            System.assertEquals(null, my_subscription.Id);
+            Test.stopTest();
+        }
+    }
 
     @IsTest
     public static void testSingleAndDuplicateSubscription() {
@@ -7,9 +41,9 @@ public class SummitEventsCalendarSubscription_TEST {
         System.runAs(testUser) {
             Test.startTest();
             List<Summit_Events_Instance__c> my_instances = SummitEventsTestSharedDataFactory.createTestEvent();
-           
-            Summit_Events_Calendar_Subscription__c new_subscription = new Summit_Events_Calendar_Subscription__c(Summit_Events_Instance__c = my_instances[0].Id, Calendar_Subscriber__c = testUser.Id);
-            Insert new_subscription;
+            System.assertNotEquals(null, my_instances[0].Id);
+            
+            Summit_Events_Calendar_Subscription__c new_subscription = [SELECT Id FROM Summit_Events_Calendar_Subscription__c WHERE Summit_Events_Instance__c = :my_instances[0].Id];
 
             Summit_Events_Calendar_Subscription__c duplicate_subscription = new Summit_Events_Calendar_Subscription__c(Summit_Events_Instance__c = my_instances[0].Id, Calendar_Subscriber__c = testUser.Id);
             
@@ -64,9 +98,7 @@ public class SummitEventsCalendarSubscription_TEST {
             Test.startTest();
             List<Summit_Events_Instance__c> my_instances = SummitEventsTestSharedDataFactory.createTestEvent();
             Summit_Events_Instance__c first_instance = my_instances[0];
-            Summit_Events_Calendar_Subscription__c my_sub = new Summit_Events_Calendar_Subscription__c(Summit_Events_Instance__c = first_instance.Id, Calendar_Subscriber__c = testUser.Id);
-            Insert my_sub;
-
+            
             RestRequest req = new RestRequest();
             RestResponse res = new RestResponse();
             Datetime today = Datetime.now();
