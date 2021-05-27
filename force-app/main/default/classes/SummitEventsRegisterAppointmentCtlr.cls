@@ -391,6 +391,14 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         return registerPage;
     }
 
+    /**
+     * Summit Events is a multi-step, guest user, registration solution so CRUD work needs to be done on records where guest record ownership is lost between steps.
+     * The security aspects of guest record updating is achieved by:
+     * - Using an encrypted cookie on the client browser to keep track of registration id, event id, instance id, and audience
+     * - Dividing each controller class into a "with sharing" logic area and a sub "without sharing" CRUD area for purposeful CRUD
+     * - When the encrypted cookie is not available as in the cancel registration link an encrypted string is provided through the URL to not expose the SF ID related to the record
+     **/
+
     private without sharing class crudToDo {
 
         public void updateAppointments(List<Summit_Events_Appointments__c> appointments) {
