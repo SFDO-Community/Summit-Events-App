@@ -66,7 +66,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </div>
                     </apex:outputPanel>
                 </apex:form>
-                <apex:outputText escape="false" value="{!eventPage.Tracking_Submit_Registration__c}"></apex:outputText>
             </div>
         </apex:define>
     </apex:composition>

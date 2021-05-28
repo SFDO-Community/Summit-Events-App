@@ -75,7 +75,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     </apex:outputPanel>
                 </apex:form>
             </div>
-            <apex:outputText escape="false" value="{!eventPage.Tracking_Options_Registration__c}"></apex:outputText>
         </apex:define>
     </apex:composition>
 </apex:page>
