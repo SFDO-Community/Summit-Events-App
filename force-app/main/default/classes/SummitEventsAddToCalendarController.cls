@@ -68,9 +68,11 @@ public with sharing class SummitEventsAddToCalendarController {
     }
 
     public String formattedGmtVersionOfDate(Date aDate, Time aTime) {
+        System.debug(aDate);
+        System.debug(aTime);
         String formattedString = '';
         Datetime newDateTime = Datetime.newInstanceGmt(aDate.year(), aDate.month(), aDate.day(), aTime.hour(), aTime.minute(), aTime.second());
-        //Integer eventStartOffset = tz.getOffset(startDateDate,'');
+        formattedString = newDateTime.formatGmt('yyyyMMdd\'T\'HHmmss');
         return formattedString;
     }
 
@@ -79,7 +81,7 @@ public with sharing class SummitEventsAddToCalendarController {
         if (String.isNotBlank(eventInformation.Instance_Title__c)) {
             eventTitle += ' - ' + eventInformation.Instance_Title__c;
         }
-        return eventTitle;
+        return eventTitle.escapeHtml4();
     }
 
     public String getEventDescription(Summit_Events_Instance__c eventInformation) {
@@ -144,7 +146,7 @@ public with sharing class SummitEventsAddToCalendarController {
         if (String.isBlank(locationTitle)) {
             return '';
         }
-        return locationTitle;
+        return locationTitle.escapeHtml4();
     }
 
     public String getEventLocationLink(Summit_Events_Instance__c eventInformation) {
@@ -172,7 +174,7 @@ public with sharing class SummitEventsAddToCalendarController {
                 WHERE Id = :eventId
                 WITH SECURITY_ENFORCED
         ];
-
+        System.debug(eventInstanceList);
         if (eventInstanceList.size() > 0) {
             return eventInstanceList[0];
         }
