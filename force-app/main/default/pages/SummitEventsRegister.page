@@ -21,7 +21,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages />
+                    <apex:messages/>
                 </div>
 
                 <apex:form id="SummitEventRegisterForm" styleClass="slds-grid slds-wrap" style="width:100%">
@@ -84,24 +84,24 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                               || !ISBLANK(eventPage.Location_Map_Link__c)
                                               || !ISBLANK(evtInstance.Location_Map_Link_Override__c)
                                               , true, false)}">
-                                <p class="slds-text-body_large slds-p-vertical_xx-small">
 
-                                    <!-- Start of Map link if it exists. Override first than regular if blank-->
-                                    <apex:outputText escape="false" rendered="{!If(!ISBLANK(evtInstance.Location_Map_Link_Override__c), true,false)}" value="<a href={0} target=_blank>">
-                                        <apex:param value="{!evtInstance.Location_Map_Link_Override__c}"/>
-                                    </apex:outputText>
-                                    <apex:outputText escape="false" rendered="{!If(!ISBLANK(eventPage.Location_Map_Link__c) && ISBLANK(evtInstance.Location_Map_Link_Override__c),true, false)}" value="<a href={0} target=_blank>">
-                                        <apex:param value="{!eventPage.Location_Map_Link__c}"/>
-                                    </apex:outputText>
+                                <apex:outputText escape="false" rendered="{!If(!ISBLANK(eventPage.Location_Map_Link__c) || !ISBLANK(evtInstance.Location_Map_Link_Override__c), true, false)}">
+                                    <p class="slds-text-body_large slds-p-vertical_xx-small">
+                                        <a href='{!IF(!ISBLANK(evtInstance.Location_Map_Link_Override__c), evtInstance.Location_Map_Link_Override__c, eventPage.Location_Map_Link__c)}'>
+                                            {!If(!ISBLANK(evtInstance.Location_Address_Override__c), evtInstance.Location_Address_Override__c,'')}
+                                            {!If(!ISBLANK(eventPage.Location_Address__c) && ISBLANK(evtInstance.Location_Address_Override__c),eventPage.Location_Address__c, '')}
+                                            {!If((ISBLANK(eventPage.Location_Address__c) && ISBLANK(evtInstance.Location_Address_Override__c)) && (!ISBLANK(eventPage.Location_Map_Link__c) || !ISBLANK(evtInstance.Location_Map_Link_Override__c)),'Map', '')}
+                                        </a>
+                                    </p>
+                                </apex:outputText>
 
-                                    <!-- Location Address shows as address if available or Map if no address given but map link -->
-                                    <apex:outputText escape="false" rendered="{!If(!ISBLANK(evtInstance.Location_Address_Override__c), true,false)}" value="{!evtInstance.Location_Address_Override__c}>"/>
-                                    <apex:outputText rendered="{!If(!ISBLANK(eventPage.Location_Address__c) && ISBLANK(evtInstance.Location_Address_Override__c),true, false)}" value="{!eventPage.Location_Address__c}"/>
-                                    <apex:outputText rendered="{!If((ISBLANK(eventPage.Location_Address__c) && ISBLANK(evtInstance.Location_Address_Override__c)) && (!ISBLANK(eventPage.Location_Map_Link__c) || !ISBLANK(evtInstance.Location_Map_Link_Override__c)),true, false)}" value="Map"/>
+                                <apex:outputText escape="false" rendered="{!If(ISBLANK(eventPage.Location_Map_Link__c) && ISBLANK(evtInstance.Location_Map_Link_Override__c), true, false)}">
+                                    <p class="slds-text-body_large slds-p-vertical_xx-small">
+                                        {!If(!ISBLANK(evtInstance.Location_Address_Override__c), evtInstance.Location_Address_Override__c,'')}
+                                        {!If(!ISBLANK(eventPage.Location_Address__c) && ISBLANK(evtInstance.Location_Address_Override__c),eventPage.Location_Address__c, '')}
+                                    </p>
+                                </apex:outputText>
 
-                                    <!-- End of Map link if it exists -->
-                                    <apex:outputText escape="false" rendered="{!If(!ISBLANK(eventPage.Location_Map_Link__c) || !ISBLANK(evtInstance.Location_Map_Link_Override__c), true, false)}" value="</a>"/>
-                                </p>
                             </apex:outputPanel>
 
                         </apex:outputPanel>
@@ -113,14 +113,14 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </p>
                         </apex:outputPanel>
 
-                        <!-- LOGGED IN TO PORTAL MESSAGE -->
-                        <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                            <apex:outputText rendered="{!If(EvtUserType != 'Guest',true,false)}" escape="false">
+                        <apex:outputText rendered="{!If(EvtUserType != 'Guest',true,false)}" escape="false">
+                            <!-- LOGGED IN TO PORTAL MESSAGE -->
+                            <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                                 <p class="errorMessage">You are currently logged into a Portal and therefore your portal information is pre-filled below and cannot be changed.
                                 </p>
-                            </apex:outputText>
-                        </div>
-
+                            </div>
+                        </apex:outputText>
+                        
                         <!-- THIRD PARTY REGISTRANTS -->
                         <apex:outputPanel layout="block" id="thirdPartyRegistrant" styleClass="slds-col slds-size_1-of-1" rendered="{!eventPage.Ask_Third_Party_Registrant__c != null}">
 
