@@ -27,29 +27,41 @@ Created by Thaddaeus Dahlberg on 2/10/2020.
                 <apex:form id="OptionalDonation" styleClass="slds-grid slds-wrap">
 
                     <!-- EVENT BREADCRUMB -->
-                    <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                        <apex:outputText escape="false" value="{!navBreadCrumb}"/>
+                    <div class="slds-col slds-p-vertical-small slds-size_1-of-1">
+                        <nav role="navigation" aria-label="Breadcrumbs">
+                            <ol class="slds-breadcrumb slds-list_horizontal">
+                                <apex:outputPanel rendered="{!!ISBLANK(eventPage.Event_Name__c)}" layout="none">
+                                    <li class="slds-breadcrumb__item slds-text-title_caps slds-p-right_x-small">{!eventPage.Event_Name__c}</li>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!!ISBLANK(eventInstance.Instance_Title__c)}" layout="none">
+                                    <li class="slds-breadcrumb__item slds-text-title_caps slds-p-horizontal_x-small">{!eventInstance.Instance_Title__c}</li>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!!ISBLANK(formattedNavDate)}" layout="none">
+                                    <li class="slds-breadcrumb__item slds-text-title_caps slds-p-horizontal_x-small">{!formattedNavDate}</li>
+                                </apex:outputPanel>
+                            </ol>
+                        </nav>
                     </div>
 
-                    <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                    <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small">
                         <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
                             <apex:outputText value="{!eventPage.Donation_Title__c}"/>
                         </h2>
                     </div>
 
                     <!-- EVENT CLOSED MESSAGE -->
-                    <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
+                    <apex:outputPanel styleClass="slds-col slds-p-vertical_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
                         <p class="slds-text-body">
                             <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>
                         </p>
                     </apex:outputPanel>
 
                     <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
-                        <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
+                        <div class="slds-col slds-p-vertical_x-small slds-size_1-of-1">
                             <apex:outputText escape="false" value="{!eventPage.Donation_Description__c}"/>
                         </div>
 
-                        <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6">
+                        <div class="slds-col slds-p-vertical_x-small slds-p-right_x-small slds-size_1-of-1 slds-large-size_3-of-6">
                             <div class="slds-form-element">
                                 <apex:outputLabel for="donationAmountSel" styleClass="slds-form-element__label">
                                     Amount
@@ -65,7 +77,7 @@ Created by Thaddaeus Dahlberg on 2/10/2020.
                             </div>
                         </div>
 
-                        <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6">
+                        <div class="slds-col slds-p-vertical_x-small slds-p-right_x-small slds-size_1-of-1 slds-large-size_3-of-6">
                             <div class="slds-form-element">
                                 <apex:outputLabel for="donationFund" styleClass="slds-form-element__label">
                                     Designation
@@ -80,7 +92,7 @@ Created by Thaddaeus Dahlberg on 2/10/2020.
                             </div>
                         </div>
 
-                        <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6" id="donationAmount" style="display:none;">
+                        <div class="slds-col slds-p-vertical_x-small slds-p-right_x-small slds-size_1-of-1 slds-large-size_3-of-6" id="donationAmount" style="display:none;">
                             <div class="slds-form-element">
                                 <apex:outputLabel for="lastName" styleClass="slds-form-element__label">
                                     Enter Amount

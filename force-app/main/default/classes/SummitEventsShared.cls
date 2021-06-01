@@ -13,6 +13,10 @@ public with sharing class SummitEventsShared {
         public String dt { get; set; }
     }
 
+    public class navTitle {
+
+    }
+
     public SummitEventsShared() {
 
     }
@@ -293,7 +297,7 @@ public with sharing class SummitEventsShared {
         return displayName;
     }
 
-    public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance, Boolean dateTimeOnly) {
+    public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance) {
         String instanceDate = '';
         Time noTime = Time.newInstance(0, 0, 0, 0);
         if (eventInstance.Instance_Start_Date__c != null && eventInstance.Instance_End_Date__c != null) {
@@ -348,28 +352,9 @@ public with sharing class SummitEventsShared {
                 String timeZoneDisplay = getTimeZoneDisplay(eventInstance.Instance_Time_Zone__c, true);
                 instanceDate += ' ' + timeZoneDisplay;
             }
-            if (dateTimeOnly) {
-                return instanceDate;
-            }
-        }
 
-        String crumb = '';
-        String eventTitle = eventInstance.Event__r.Event_Name__c;
-        String eventInstanceTitle = eventInstance.Instance_Title__c;
-        crumb += '<nav role="navigation" aria-label="Breadcrumbs">';
-        crumb += '   <ol class="slds-breadcrumb slds-list--horizontal">';
-        if (String.isNotBlank(eventInstance.Event__r.Event_Name__c)) {
-            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps slds-p-right_x-small">' +  eventTitle.escapeHtml4() + '</li>';
         }
-        if (String.isNotBlank(eventInstance.Instance_Title__c)) {
-            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps slds-p-horizontal_x-small">' + eventInstanceTitle.escapeHtml4() + '</li>';
-        }
-        if (String.isNotBlank(instanceDate)) {
-            crumb += '       <li class="slds-breadcrumb__item slds-text-title--caps slds-p-horizontal_x-small">' + instanceDate.escapeHtml4() + '</li>';
-        }
-        crumb += '   </ol>';
-        crumb += '</nav>';
-        return crumb;
+        return instanceDate;
     }
 
     public Datetime adjustForTimeZone(Datetime dt, String timezoneString) {

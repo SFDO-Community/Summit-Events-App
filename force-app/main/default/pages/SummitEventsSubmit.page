@@ -25,8 +25,20 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 <apex:form id="SummitEventsRegisterSubmitForm" styleClass="slds-grid slds-wrap">
 
                     <!-- EVENT BREADCRUMB -->
-                    <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                        <apex:outputText escape="false" value="{!navBreadCrumb}"/>
+                    <div class="slds-col slds-p-vertical-small slds-size_1-of-1">
+                        <nav role="navigation" aria-label="Breadcrumbs">
+                            <ol class="slds-breadcrumb slds-list_horizontal">
+                                <apex:outputPanel rendered="{!!ISBLANK(eventPage.Event_Name__c)}" layout="none">
+                                    <li class="slds-breadcrumb__item slds-text-title_caps slds-p-right_x-small">{!eventPage.Event_Name__c}</li>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!!ISBLANK(eventInstance.Instance_Title__c)}" layout="none">
+                                    <li class="slds-breadcrumb__item slds-text-title_caps slds-p-horizontal_x-small">{!eventInstance.Instance_Title__c}</li>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!!ISBLANK(formattedNavDate)}" layout="none">
+                                    <li class="slds-breadcrumb__item slds-text-title_caps slds-p-horizontal_x-small">{!formattedNavDate}</li>
+                                </apex:outputPanel>
+                            </ol>
+                        </nav>
                     </div>
 
                     <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
@@ -45,12 +57,69 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             <p class="slds-text-body slds-p-vertical_xx-small">
                                 <apex:outputText escape="false" value="{!eventPage.Event_Submit_Description__c}"/>
                             </p>
-                            <apex:outputText escape="false" value="{!chosenFormatted}"/>
+                            <!-- Show selected appointments -->
+                            <apex:outputPanel rendered="{!IF(chosenAppointments.size>0, true, false)}">
+                                <ul id="chosenAppointments" class="slds-list_dotted">
+                                    <apex:repeat var="appointment" value="{!chosenAppointments}">
+                                        <li>
+                                            {!appointment.Appointment_Title__c}
+                                            <apex:outputPanel layout="none" rendered="{!!ISBLANK(appointment.Appointment_Type__c)}">
+                                                <br/><em>{!appointment.Appointment_Type__c}</em>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel layout="none" rendered="{!!ISBLANK(appointment.Description__c)}">
+                                                <br/><em>{!appointment.Description__c}</em>
+                                            </apex:outputPanel>
+                                        </li>
+                                    </apex:repeat>
+                                </ul>
+                            </apex:outputPanel>
                         </div>
 
                         <apex:outputPanel layout="block" rendered="{!showPaymentButton}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
                             <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">Event Cost</h3>
-                            <apex:outputText escape="false" value="{!paymentItemized}"/>
+
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Item">Item</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Fee">Fee</div>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!eventFees}" var="fee">
+                                    <apex:outputPanel rendered="{!fee.Event_Fee_Type__c != 'Event'}">
+                                        <tr>
+                                            <td>
+                                                <apex:outputPanel rendered="{!fee.Event_Fee_Type__c == 'Appointment'}" layout="none">
+                                                    {!fee.Event_Appointment_Type__r.Title__c}
+                                                </apex:outputPanel>
+                                                <apex:outputPanel rendered="{!fee.Event_Fee_Type__c == 'Optional Donation'}" layout="none">
+                                                    {!fee.Event_Fee_Type__c}
+                                                    {!IF(!ISBLANK(fee.Event_Fee_Allocation__r.Name), ' - ' + fee.Event_Fee_Allocation__r.Name, '')}
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td>
+                                                <apex:outputText value="{0, number, Currency }">
+                                                    <apex:param value="{!fee.Event_Fee__c}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                    </apex:outputPanel>
+                                </apex:repeat>
+                                <tr class="eventOnlyCost">
+                                    <td>General Event</td>
+                                    <td>{!eventOnlyPaymentAmountFormatted}</td>
+                                </tr>
+                                <tr class="eventTotalCost">
+                                    <td><strong>Total Cost</strong></td>
+                                    <td><strong>{!totalPaymentAmountFormatted}</strong></td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </apex:outputPanel>
 
                         <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">

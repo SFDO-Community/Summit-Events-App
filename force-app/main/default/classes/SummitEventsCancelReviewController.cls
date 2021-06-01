@@ -11,14 +11,13 @@ public with sharing class SummitEventsCancelReviewController {
     public String templateSelected { get; set; }
     public Boolean eventOver { get; set; }
     public Boolean eventNotFound { get; set; }
-    public String navBreadCrumb { get; set; }
+    public String formattedNavDate { get; set; }
     public String eventParameter { get; set; }
 
     public SummitEventsCancelReviewController() {
         eventParameter = ApexPages.currentPage().getParameters().get('eventInfo');
         eventNotFound = true;
         eventOver = false;
-        navBreadCrumb = '';
 
         if (!String.isBlank(eventParameter)) {
             String decryptedParameter = SEShared.decryptString(eventParameter, false);
@@ -70,7 +69,7 @@ public with sharing class SummitEventsCancelReviewController {
                         }
 
                         if (eventInstance.size() > 0) {
-                            navBreadCrumb = SEShared.navBreadcrumbBuilder(eventInstance[0], false);
+                            formattedNavDate = SEShared.navBreadcrumbBuilder(eventInstance[0]);
                         }
                         eventNotFound = false;
                     }

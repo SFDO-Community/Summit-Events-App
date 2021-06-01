@@ -19,7 +19,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     public String templateSelected { get; set; }
     public Boolean noOptionalAppointments { get; set; }
     public Boolean requiredAppt { get; set; }
-    public String navBreadCrumb { get; set; }
+    public String formattedNavDate { get; set; }
 
     public class incomingAppt {
         String apptId;
@@ -91,7 +91,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             ORDER BY Sort_Order__c ASC NULLS LAST
                     ]);
 
-                    navBreadCrumb = seaShared.navBreadcrumbBuilder(evtInstance, false);
+                    formattedNavDate = seaShared.navBreadcrumbBuilder(evtInstance);
 
                     //Check if the user gets to select any appointments or they are all auto added
                     for (Summit_Events_Appointment_Type__c chosenCheck : appts.values()) {
