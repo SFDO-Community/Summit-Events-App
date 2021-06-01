@@ -13,10 +13,6 @@ public with sharing class SummitEventsShared {
         public String dt { get; set; }
     }
 
-    public class navTitle {
-
-    }
-
     public SummitEventsShared() {
 
     }

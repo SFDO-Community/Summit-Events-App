@@ -71,7 +71,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                         <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
                             <apex:outputText escape="false" value="{!eventPage.Event_description__c}"></apex:outputText>
-                            <apex:outputText escape="false" value="{!locationCrumb}" rendered="{!IF(!ISBLANK(locationCrumb), true, false)}"/>
                         </div>
 
                         <!-- Location Inforamation -->
@@ -98,7 +97,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                               || !ISBLANK(evtInstance.Location_Map_Link_Override__c)
                                               , true, false)}">
 
-                                <apex:outputText escape="false" rendered="{!If(!ISBLANK(eventPage.Location_Map_Link__c) || !ISBLANK(evtInstance.Location_Map_Link_Override__c), true, false)}">
+                                <apex:outputPanel layout="none" rendered="{!If(!ISBLANK(eventPage.Location_Map_Link__c) || !ISBLANK(evtInstance.Location_Map_Link_Override__c), true, false)}">
                                     <p class="slds-text-body_large slds-p-vertical_xx-small">
                                         <a href='{!IF(!ISBLANK(evtInstance.Location_Map_Link_Override__c), evtInstance.Location_Map_Link_Override__c, eventPage.Location_Map_Link__c)}'>
                                             {!If(!ISBLANK(evtInstance.Location_Address_Override__c), evtInstance.Location_Address_Override__c,'')}
@@ -106,14 +105,14 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                             {!If((ISBLANK(eventPage.Location_Address__c) && ISBLANK(evtInstance.Location_Address_Override__c)) && (!ISBLANK(eventPage.Location_Map_Link__c) || !ISBLANK(evtInstance.Location_Map_Link_Override__c)),'Map', '')}
                                         </a>
                                     </p>
-                                </apex:outputText>
+                                </apex:outputPanel>
 
-                                <apex:outputText escape="false" rendered="{!If(ISBLANK(eventPage.Location_Map_Link__c) && ISBLANK(evtInstance.Location_Map_Link_Override__c), true, false)}">
+                                <apex:outputPanel layout="none" rendered="{!If(ISBLANK(eventPage.Location_Map_Link__c) && ISBLANK(evtInstance.Location_Map_Link_Override__c), true, false)}">
                                     <p class="slds-text-body_large slds-p-vertical_xx-small">
                                         {!If(!ISBLANK(evtInstance.Location_Address_Override__c), evtInstance.Location_Address_Override__c,'')}
                                         {!If(!ISBLANK(eventPage.Location_Address__c) && ISBLANK(evtInstance.Location_Address_Override__c),eventPage.Location_Address__c, '')}
                                     </p>
-                                </apex:outputText>
+                                </apex:outputPanel>
 
                             </apex:outputPanel>
 

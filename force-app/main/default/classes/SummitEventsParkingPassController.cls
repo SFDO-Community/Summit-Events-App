@@ -4,7 +4,6 @@
 // Created by Thaddaeus Dahlberg on 5/1/2018.
 
 public with sharing class SummitEventsParkingPassController {
-    public String couponOut { get; set; }
     public String firstName { get; set; }
     public String warning { get; set; }
     public Summit_Events_Registration__c visitor { get; set; }
@@ -13,8 +12,7 @@ public with sharing class SummitEventsParkingPassController {
 
 
     public SummitEventsParkingPassController() {
-        warning = '<p>Sorry, this parking permit has expired or invalid.</p>';
-        couponOut = '';
+        warning = 'Sorry, this parking permit has expired or invalid.';
         String eventParameter = ApexPages.currentPage().getParameters().get('eventInfo');
         visitor = new Summit_Events_Registration__c();
 
@@ -48,8 +46,6 @@ public with sharing class SummitEventsParkingPassController {
                     } else {
                         firstName = visitor.Registrant_First_Name__c;
                     }
-                    couponOut += '<p>NAME:&nbsp; ' + firstName + ' ' + visitor.Registrant_Last_Name__c + '</p>';
-                    couponOut += '<p>DATE VALID:&nbsp; ' + visitor.Event_Instance_Start_Date_Text__c + '</p>';
                     warning = '';
                 }
             }
