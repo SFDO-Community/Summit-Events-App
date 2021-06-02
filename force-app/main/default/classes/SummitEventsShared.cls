@@ -490,7 +490,7 @@ public with sharing class SummitEventsShared {
                 Blob cryptoKey = Crypto.generateAesKey(256);
                 String encryptionString = EncodingUtil.base64Encode(cryptoKey).substring(0, 32);
                 SummitEventsSettings.Cookie_Encryption_Key__c = encryptionString;
-                upsert SummitEventsSettings;
+                update SummitEventsSettings;
             }
         }
     }

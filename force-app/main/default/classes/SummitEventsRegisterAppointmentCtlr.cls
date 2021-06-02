@@ -287,7 +287,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
         public void updateAppointments(List<Summit_Events_Appointments__c> appointments) {
             try {
-                upsert appointments;
+                insert appointments;
             } catch (Exception ex) {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage());
                 ApexPages.addMessage(myMsg);

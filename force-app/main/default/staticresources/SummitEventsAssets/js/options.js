@@ -44,9 +44,7 @@ appointmentsReady(() => {
 
 
     //Initiate add buttons in chooser column
-    let allAppAddButtons = chooser.querySelectorAll(".appointmentAdd");
-
-    allAppAddButtons.forEach(function (appButton) {
+    chooser.querySelectorAll(".appointmentAdd").forEach(function (appButton) {
         appButton.addEventListener("click", (addApp) => {
             addApp.preventDefault();
             let App = appButton.closest(".appointment");
@@ -99,6 +97,7 @@ appointmentsReady(() => {
                 }
 
                 if (desc) {
+                    desc = desc.replace(regExDouble, '\"').replace(regExSingle, '\'');
                     let appDesc = document.createElement('p');
                     appDesc.classList.add('appointmentDesc', 'slds-text-body', 'slds-p-vertical_small');
                     appDesc.textContent = desc;
@@ -170,8 +169,9 @@ function populateAppJSON() {
         app['appSort'] = chosen.dataset.appsort;
         app['appInput'] = chosen.dataset.appinput;
         let appDesc = chosen.querySelector('.appointmentDesc');
+        appDesc = appDesc;
         if (appDesc) {
-            app['appDesc'] = appDesc.textContent;
+            app['appDesc'] = appDesc.textContent.replace(regExDouble, '\"').replace(regExSingle, '\'');
         }
         jsonOut.push(app);
     });
