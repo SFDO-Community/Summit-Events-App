@@ -1,9 +1,12 @@
 // SummitEventsRegistrationOptionScripts
 
-var appointmentsReady = (callback) => {
+const appointmentsReady = (callback) => {
     if (document.readyState !== "loading") callback();
     else document.addEventListener("DOMContentLoaded", callback);
 }
+
+const regExSingle = /'*'/g;
+const regExDouble = /"*"/g;
 
 appointmentsReady(() => {
 
@@ -31,6 +34,13 @@ appointmentsReady(() => {
             removeSelectedOption(removeBtn);
         });
     });
+
+    document.querySelectorAll('.appointmentDesc').forEach(title => {
+        title.innerHTML = title.innerHTML.replaceAll('&amp;#39;', '\'');
+        title.innerHTML = title.innerHTML.replaceAll('&amp;quot;', '\"');
+        title.innerHTML = title.innerHTML.replace(regExSingle, '\'');
+        title.innerHTML = title.innerHTML.replace(regExDouble, '\"');
+    })
 
 
     //Initiate add buttons in chooser column

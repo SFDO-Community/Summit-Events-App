@@ -254,7 +254,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             }
             addApp.Description__c = app.appDesc;
             if(String.isNotBlank(addApp.Registrant_Input__c)) {
-                addApp.Registrant_Input__c = app.appInput.escapeHtml4();
+                addApp.Registrant_Input__c = app.appInput;
             }
             appointmentsToAdd.add(addApp);
         }
