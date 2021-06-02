@@ -578,7 +578,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     <apex:inputHidden value="{!eventRegistration.Relationship_to_Institution__c}" id="relationshipToInstitution" required="{!IF(eventPage.Ask_Relationship_To_Institution__c == 'Ask and require',true, false)}"/>
                                     <ol class="selectableOL" id="rel2UST" data-hiddendataid="relationshipToInstitution" html-aria-describedby="relationshipToInstitution-required">
                                         <apex:repeat value="{!relationshipDD}" var="account">
-                                            <apex:outputText escape="false" value="<li>{!account.value}</li>"/>
+                                            <li><apex:outputText value="{!account.value}"/></li>
                                         </apex:repeat>
                                     </ol>
                                 </div>
