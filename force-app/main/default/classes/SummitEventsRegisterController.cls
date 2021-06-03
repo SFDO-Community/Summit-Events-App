@@ -30,7 +30,7 @@ public with sharing class SummitEventsRegisterController {
     public Decimal totalEventCost { get; set; }
     public List<Summit_Events_Fee__c> eventFeeList { get; set; }
     public String phoneType { get; set; }
-    public String navBreadCrumb { get; set; }
+    public String formattedNavDate { get; set; }
     public Boolean showLocation { get; set; }
     public String startTimeString { get; set; }
     public String endTimeString { get; set; }
@@ -198,7 +198,7 @@ public with sharing class SummitEventsRegisterController {
                 locationAddress = eventPage.Location_Title__c;
             }
 
-            navBreadCrumb = SeaShared.navBreadcrumbBuilder(evtInstance, false);
+            formattedNavDate = SeaShared.navBreadcrumbBuilder(evtInstance);
 
             //Check if the Event has appointments and therefore we have to redirect to the appointment page.
             evtHasAppointments = false;
@@ -499,7 +499,7 @@ public with sharing class SummitEventsRegisterController {
         }
 
         eventRegistration.Status__c = 'Started';
-        eventRegistration.Event_Instance_Date_Time_Formatted__c = SeaShared.navBreadcrumbBuilder(evtInstance, true);
+        eventRegistration.Event_Instance_Date_Time_Formatted__c = SeaShared.navBreadcrumbBuilder(evtInstance);
         eventRegistration.Event__c = eventInformation.eventId;
         eventRegistration.Event_Instance__c = eventInformation.instanceId;
 

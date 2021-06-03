@@ -93,7 +93,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:image value="{!URLFOR($Resource.SummitEventsAssets, '/img/UGParkingPass.gif')}" styleClass="backImg"/>
         <div class="textReference">
             <div id="coupon">
-                <apex:outputText value="{!couponOut}" escape="false" styleClass="firstNameGreeting"></apex:outputText>
+                <p>NAME:&nbsp; {!firstName} {!visitor.Registrant_Last_Name__c}</p>
+                <p>DATE VALID:&nbsp; {!visitor.Event_Instance_Start_Date_Text__c}</p>
                 <p>VALID IN LOT:&nbsp; B</p>
                 <p class="reg purpleText"><strong>If parking lot B is full</strong>, please exit the campus by turning left
                     (west) on Selby Avenue. Then turn left (south)
@@ -139,7 +140,9 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
     <apex:outputPanel layout="block" id="pdfWrapWarning" styleClass="pdfWrap" rendered="{!IF(warning != '', true, false)}">
         <div id="coupon">
             <h1>Parking pass error</h1>
-            <apex:outputText escape="false" value="{!warning}"></apex:outputText>
+            <p style="{!IF(ISBLANK(warning),'display:none','')}">
+                <apex:outputText value="{!warning}"></apex:outputText>
+            </p>
             <table>
                 <th colspan="2">Contact Information:</th>
                 <tr>

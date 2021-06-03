@@ -1,9 +1,12 @@
 // SummitEventsRegistrationOptionScripts
 
-var appointmentsReady = (callback) => {
-    if (document.readyState != "loading") callback();
+const appointmentsReady = (callback) => {
+    if (document.readyState !== "loading") callback();
     else document.addEventListener("DOMContentLoaded", callback);
 }
+
+const regExSingle = /'*'/g;
+const regExDouble = /"*"/g;
 
 appointmentsReady(() => {
 
@@ -32,31 +35,36 @@ appointmentsReady(() => {
         });
     });
 
+    document.querySelectorAll('.appointmentDesc').forEach(title => {
+        title.innerHTML = title.innerHTML.replaceAll('&amp;#39;', '\'');
+        title.innerHTML = title.innerHTML.replaceAll('&amp;quot;', '\"');
+        title.innerHTML = title.innerHTML.replace(regExSingle, '\'');
+        title.innerHTML = title.innerHTML.replace(regExDouble, '\"');
+    })
+
 
     //Initiate add buttons in chooser column
-    let allApptAddButtons = chooser.querySelectorAll(".appointmentAdd");
-
-    allApptAddButtons.forEach(function (apptButton) {
-        apptButton.addEventListener("click", (addAppt) => {
-            addAppt.preventDefault();
-            let Appt = apptButton.closest(".appointment");
+    chooser.querySelectorAll(".appointmentAdd").forEach(function (appButton) {
+        appButton.addEventListener("click", (addApp) => {
+            addApp.preventDefault();
+            let App = appButton.closest(".appointment");
 
             //check for required fields
             let error = false;
-            let requiredInputs = Appt.querySelectorAll('.slds-is-required');
+            let requiredInputs = App.querySelectorAll('.slds-is-required');
             requiredInputs.forEach(function (reqs) {
-                let reqAppt = reqs.closest(".appointment");
+                let reqApp = reqs.closest(".appointment");
                 let incomingValue = '';
-                if (reqAppt.querySelector(".appointmentType")) {
-                    let selType = Appt.querySelector(".appointmentType");
+                if (reqApp.querySelector(".appointmentType")) {
+                    let selType = App.querySelector(".appointmentType");
                     incomingValue = selType.options[selType.selectedIndex].value;
                 }
-                if (reqAppt.querySelector(".appointmentCustomInput")) {
-                    let inputType = Appt.querySelector(".appointmentCustomInput");
+                if (reqApp.querySelector(".appointmentCustomInput")) {
+                    let inputType = App.querySelector(".appointmentCustomInput");
                     incomingValue = inputType.value;
                 }
                 if (!incomingValue) {
-                    reqAppt.classList.add('slds-has-error');
+                    reqApp.classList.add('slds-has-error');
                     error = true;
                 }
             });
@@ -65,34 +73,35 @@ appointmentsReady(() => {
                 //move and adjust data
                 let chosenArea = document.getElementById("chosen");
 
-                let limit = Appt.dataset.limit;
+                let limit = App.dataset.limit;
 
-                addAppt = document.createElement('div');
-                addAppt.classList.add('slds-box', 'slds-box_small', 'slds-m-vertical_x-small', 'appointmentChosen');
-                Object.assign(addAppt.dataset, Appt.dataset);
+                addApp = document.createElement('div');
+                addApp.classList.add('slds-box', 'slds-box_small', 'slds-m-vertical_x-small', 'appointmentChosen');
+                Object.assign(addApp.dataset, App.dataset);
 
                 let appTitle = document.createElement('p');
-                addAppt.classList.add('appointmentTitle', 'slds-text-body', 'slds-m-vertical_small');
-                let findTitle = Appt.querySelector(".appointmentTitle");
+                addApp.classList.add('appointmentTitle', 'slds-text-body', 'slds-m-vertical_small');
+                let findTitle = App.querySelector(".appointmentTitle");
                 appTitle.textContent = findTitle.textContent;
-                addAppt.append(appTitle);
+                addApp.append(appTitle);
 
                 let desc = '';
-                if (Appt.querySelector(".appointmentType")) {
-                    let selType = Appt.querySelector(".appointmentType");
+                if (App.querySelector(".appointmentType")) {
+                    let selType = App.querySelector(".appointmentType");
                     desc += selType.options[selType.selectedIndex].value;
                 }
 
-                if (Appt.querySelector(".appointmentCustomInput")) {
-                    let inputType = Appt.querySelector(".appointmentCustomInput");
+                if (App.querySelector(".appointmentCustomInput")) {
+                    let inputType = App.querySelector(".appointmentCustomInput");
                     desc += inputType.value;
                 }
 
                 if (desc) {
-                    let apptDesc = document.createElement('p');
-                    apptDesc.classList.add('appointmentDesc', 'slds-text-body', 'slds-p-vertical_small');
-                    apptDesc.textContent = desc;
-                    addAppt.append(apptDesc);
+                    desc = desc.replace(regExDouble, '\"').replace(regExSingle, '\'');
+                    let appDesc = document.createElement('p');
+                    appDesc.classList.add('appointmentDesc', 'slds-text-body', 'slds-p-vertical_small');
+                    appDesc.textContent = desc;
+                    addApp.append(appDesc);
                 }
 
                 //Create the remove button
@@ -103,30 +112,30 @@ appointmentsReady(() => {
                     evt.preventDefault();
                     removeSelectedOption(removeButton)
                 });
-                addAppt.appendChild(removeButton);
+                addApp.appendChild(removeButton);
 
-                addAppt.id = 'appt' + limit + '-' + Appt.id;
-                Appt.dataset.limit = String(limit - 1);
+                addApp.id = 'app' + limit + '-' + App.id;
+                App.dataset.limit = String(limit - 1);
 
-                chosenArea.append(addAppt);
+                chosenArea.append(addApp);
 
                 //remove all values from hidden appointments.
-                if (Appt.classList.contains('slds-has-error')) {
-                    Appt.classList.remove('slds-has-error');
+                if (App.classList.contains('slds-has-error')) {
+                    App.classList.remove('slds-has-error');
                 }
 
-                if (Appt.querySelector(".appointmentType")) {
-                    let selType = Appt.querySelector(".appointmentType");
+                if (App.querySelector(".appointmentType")) {
+                    let selType = App.querySelector(".appointmentType");
                     desc += selType.options[selType.selectedIndex].value = '';
                 }
 
-                if (Appt.querySelector(".appointmentCustomInput")) {
-                    let inputType = Appt.querySelector(".appointmentCustomInput");
+                if (App.querySelector(".appointmentCustomInput")) {
+                    let inputType = App.querySelector(".appointmentCustomInput");
                     desc += inputType.value = '';
                 }
 
-                if (Appt.dataset.limit < 1) {
-                    Appt.style.display = "none";
+                if (App.dataset.limit < 1) {
+                    App.style.display = "none";
                 }
 
             }
@@ -138,37 +147,37 @@ appointmentsReady(() => {
 function removeSelectedOption(removeButton) {
     let chooserArea = document.getElementById("chooser");
     let chosenArea = document.getElementById("chosen");
-    let rmvAppt = removeButton.closest(".appointmentChosen");
-    let origAppt = chooserArea.querySelector('#' + rmvAppt.dataset.apptid);
-    origAppt.classList.remove('slds-is-open');
-    origAppt.style.display = "block";
-    chosenArea.removeChild(rmvAppt);
+    let rmvApp = removeButton.closest(".appointmentChosen");
+    let origApp = chooserArea.querySelector('#' + rmvApp.dataset.appid);
+    origApp.classList.remove('slds-is-open');
+    origApp.style.display = "block";
+    chosenArea.removeChild(rmvApp);
 }
 
 
-function populateApptJSON() {
+function populateAppJSON() {
     let jsonOut = [];
     let chosen = document.getElementById('chosen');
-    let allChosen = chosen.querySelectorAll('.appointmentChosen');
+    chosen.querySelectorAll('.appointmentChosen').forEach(chosen => {
+        let app = {};
+        app['appId'] = chosen.dataset.appid;
+        app['appCategory'] = chosen.dataset.appcat;
+        app['appType'] = chosen.dataset.apptype;
+        app['appText'] = chosen.dataset.apptext;
+        app['appTitle'] = chosen.dataset.apptitle;
+        app['appChosenState'] = chosen.dataset.appchosenstate;
+        app['appSort'] = chosen.dataset.appsort;
+        app['appInput'] = chosen.dataset.appinput;
+        let appDesc = chosen.querySelector('.appointmentDesc');
+        appDesc = appDesc;
+        if (appDesc) {
+            app['appDesc'] = appDesc.textContent.replace(regExDouble, '\"').replace(regExSingle, '\'');
+        }
+        jsonOut.push(app);
+    });
     let pWithPad = document.createElement('p');
     pWithPad.classList.add('slds-p-vertical_small');
-    allChosen.forEach(function (appointment) {
-        let appt = {};
-        appt['apptId'] = appointment.dataset.apptid;
-        appt['apptCatagory'] = appointment.dataset.apptcat;
-        appt['apptType'] = appointment.dataset.appttype;
-        appt['apptText'] = appointment.dataset.appttext;
-        appt['apptTitle'] = appointment.dataset.appttitle;
-        appt['appChosenState'] = appointment.dataset.appchosenstate;
-        appt['appSort'] = appointment.dataset.appsort;
-        appt['appInput'] = appointment.dataset.appinput;
-        let apptDesc = appointment.querySelector('.appointmentDesc');
-        if (apptDesc) {
-            appt['appDesc'] = apptDesc.textContent;
-        }
-        jsonOut.push(appt);
-    });
-    let hiddenData = document.querySelectorAll('[id$=outgoingApptJSon]');
+    let hiddenData = document.querySelectorAll('[id$=outgoingAppJSon]');
     hiddenData.forEach(function (hidedata) {
         hidedata.value = JSON.stringify(jsonOut);
     });
@@ -178,16 +187,16 @@ function populateApptJSON() {
 function checkForRequiredAppointments() {
     let chooser = document.getElementById('chooser');
     let requiredAppointments = chooser.querySelectorAll('.appointmentRequired');
-    let allApptGood = true;
-    requiredAppointments.forEach(function (appt) {
-        if (window.getComputedStyle(appt).display !== "none") {
-            allApptGood =  false;
-            appt.classList.add('slds-has-error');
-            if (!appt.classList.contains('slds-is-open')) {
-                appt.classList.add('slds-is-open');
+    let allAppGood = true;
+    requiredAppointments.forEach(function (app) {
+        if (window.getComputedStyle(app).display !== "none") {
+            allAppGood = false;
+            app.classList.add('slds-has-error');
+            if (!app.classList.contains('slds-is-open')) {
+                app.classList.add('slds-is-open');
             }
             fadein();
         }
     });
-    return allApptGood;
+    return allAppGood;
 }

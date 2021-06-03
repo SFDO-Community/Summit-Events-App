@@ -47,11 +47,11 @@ private class SummitEventsRegisterAppointment_TEST {
             String jsonAppointments = '[';
             for (Summit_Events_Appointment_Type__c at : testAppointmentTypes) {
                 jsonAppointments += '{';
-                jsonAppointments += '"apptId":"' + at.Id + '",';
-                jsonAppointments += '"apptCategory":"' + at.Appointment_Category__c + '",';
-                jsonAppointments += '"apptType":"' + at.Appointment_Type__c + '",';
-                jsonAppointments += '"apptText":"",';
-                jsonAppointments += '"apptTitle":"' + at.Title__c + '"';
+                jsonAppointments += '"appId":"' + at.Id + '",';
+                jsonAppointments += '"appCategory":"' + at.Appointment_Category__c + '",';
+                jsonAppointments += '"appType":"' + at.Appointment_Type__c + '",';
+                jsonAppointments += '"appText":"",';
+                jsonAppointments += '"appTitle":"' + at.Title__c + '"';
                 jsonAppointments += '},';
             }
             jsonAppointments = jsonAppointments.removeEnd(',');

@@ -6,7 +6,7 @@ Created by Thaddaeus Dahlberg on 10/25/2017.
 -->
 
 <apex:page id="CastorTemplate2017" lightningStyleSheets="true" sidebar="false" showHeader="false" standardStylesheets="false" cache="false" applyHtmlTag="false">
-    <apex:slds/>
+    <apex:slds />
     <html class="no-js" lang="" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <head>
         <meta charset="utf-8"/>
