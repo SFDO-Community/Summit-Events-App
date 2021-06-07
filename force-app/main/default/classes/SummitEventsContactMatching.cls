@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 // Created by Thaddaeus Dahlberg on 2/27/2019.
 
-public without sharing class SummitEventsContactMatching {
+public with sharing class SummitEventsContactMatching {
     
     public static void matchContacts(List<Summit_Events_Registration__c> newRegistrations) {
         Map<Id, Summit_Events__c> matchingRules = new Map<Id, Summit_Events__c>();
