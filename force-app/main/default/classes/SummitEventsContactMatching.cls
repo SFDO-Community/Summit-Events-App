@@ -100,13 +100,13 @@ public with sharing class SummitEventsContactMatching {
                 '</tr></thead>';
             
             List<Datacloud.FindDuplicatesResult> results = new List<Datacloud.FindDuplicatesResult>();
-            
+            doCrud crud = new doCrud();
+
             try { // Datacloud.FindDuplicates returns an error if no matching rules are active
                 List<Contact> cons = new List<Contact>();
                 cons.add(c);
-                results = Datacloud.FindDuplicates.findDuplicates(cons);
-            } catch (Exception e) {
-            }
+                results = crud.findDuplicateContacts(cons);
+            } catch (Exception e) {}
             
             List<Contact> matchContacts = new List<Contact>();
             for (Datacloud.DuplicateResult dr : results[0].getDuplicateResults()) {
@@ -274,5 +274,62 @@ public with sharing class SummitEventsContactMatching {
         mOut += '</tr>';
         return mOut;
     }
-    
+
+    private without sharing class doCRUD {
+
+        public List<Contact> findContacts(string query) {
+            try {
+                List<Contact> contactsFound = database.query(query);
+                return contactsFound;
+            } catch (Exception ex) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
+            }
+            return null;
+        }
+
+        public Contact addContact(Contact contactToAdd) {
+            try {
+                upsert contactToAdd;
+                return contactToAdd;
+            } catch (Exception ex) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
+            }
+            return null;
+        }
+
+        Public List<Contact> emailLastMatch(String email, String last) {
+            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :last AND Email = :email];
+            return foundContacts;
+        }
+
+        Public List<Contact> possibleEmailLastMatches(String last, List<String> possibleEmails) {
+            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :last AND Email IN :possibleEmails];
+            return foundContacts;
+        }
+
+        Public List<Contact> possibleEmailMatches(String[] possibleEmails) {
+            List<Contact> foundContacts = [SELECT Id, Email FROM Contact WHERE Email IN :possibleEmails];
+            return foundContacts;
+        }
+
+        public List<Contact> emailOnlyMatch(string email) {
+            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE Email = :email];
+            return foundContacts;
+        }
+
+        public List<Contact> zipFirstLastMatch(String zip, String last, String first) {
+            List<Contact> foundContacts = [
+                SELECT Id, LastName, FirstName, Email, MailingPostalCode
+                FROM Contact
+                WHERE FirstName = :first
+                AND LastName = :last
+                AND MailingPostalCode = :zip
+            ];
+            return foundContacts;
+        }
+
+        public List<Datacloud.FindDuplicatesResult> findDuplicateContacts(List<Contact> cons) {
+            return Datacloud.FindDuplicates.findDuplicates(cons);
+        }
+    }
 }
