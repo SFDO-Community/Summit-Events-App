@@ -8,7 +8,7 @@ public with sharing class SummitEventsRegisterGuestsController {
     public SummitEventsShared seaShared = new SummitEventsShared();
     public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
 
-    public String navBreadCrumb { get; set; }
+    public String formattedNavDate { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
@@ -70,7 +70,7 @@ public with sharing class SummitEventsRegisterGuestsController {
             } else {
                 eventIsClosed = seaShared.isEventClosed(eventPage, eventInstance);
             }
-            navBreadCrumb = seaShared.navBreadcrumbBuilder(eventInstance, false);
+            formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
 
             statePicklist = buildPicklist('State');
 
