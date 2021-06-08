@@ -9,7 +9,7 @@ public with sharing class SummitEventsConfirmationController {
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public String templateSelected { get; set; }
-    public String navBreadCrumb { get; set; }
+    public String formattedNavDate { get; set; }
     public Boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
 
@@ -45,7 +45,7 @@ public with sharing class SummitEventsConfirmationController {
                 eventIsClosed = seaShared.isEventClosed(eventPage, eventInstance);
             }
 
-            navBreadCrumb = seaShared.navBreadcrumbBuilder(eventInstance, false);
+            formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
         }
 
     }
@@ -105,7 +105,7 @@ public with sharing class SummitEventsConfirmationController {
 
         public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c newEvtReg) {
             try {
-                upsert newEvtReg;
+                update newEvtReg;
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));

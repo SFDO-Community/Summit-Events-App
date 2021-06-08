@@ -8,7 +8,7 @@ Created by Thaddaeus Dahlberg on 11/12/2018.
 <apex:page id="SummitEventsAddToCalendar" title="event.ics" contentType="text/calendar" cache="false" controller="SummitEventsAddToCalendarController" action="{!calendarType}">
 BEGIN:VCALENDAR
 VERSION:2.0
-<apex:outputText escape="false" rendered="{!!ISBLANK(VTIMEZONE)}" value="{!VTIMEZONE}"/>
+<apex:outputText rendered="{!!ISBLANK(VTIMEZONE)}" value="{!VTIMEZONE}"/>
 BEGIN:VEVENT
 DTSTAMP:{!DTStamp}
 STATUS:CONFIRMED

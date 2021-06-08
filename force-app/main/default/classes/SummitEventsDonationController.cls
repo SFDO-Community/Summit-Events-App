@@ -8,7 +8,6 @@ public with sharing class SummitEventsDonationController {
 
     public SummitEventsShared seaShared = new SummitEventsShared();
     public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
-    public String navBreadCrumb { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public String templateSelected { get; set; }
     public String donationAllocation { get; set; }
@@ -18,6 +17,7 @@ public with sharing class SummitEventsDonationController {
     public Boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
     public Summit_Events__c eventPage { get; set; }
+    public String formattedNavDate { get; set; }
 
     public SummitEventsDonationController() {
         eventInformation = seaShared.getSummitEventsInfo();
@@ -68,7 +68,7 @@ public with sharing class SummitEventsDonationController {
                 eventIsClosed = seaShared.isEventClosed(eventPage, eventInstance);
             }
 
-            navBreadCrumb = seaShared.navBreadcrumbBuilder(eventInstance, false);
+            formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
         }
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Template__c</fullName>
-    <defaultValue>&apos;CastorTemplate2017&apos;</defaultValue>
+    <defaultValue>&apos;GeneralSLDS&apos;</defaultValue>
     <description>Chose a pre-programmed template for your event site</description>
     <externalId>false</externalId>
     <inlineHelpText>Chose a pre-programmed template for your event site</inlineHelpText>
@@ -15,23 +15,26 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>CastorTemplate2017</fullName>
-                <default>false</default>
-                <label>CastorTemplate2017</label>
-            </value>
-            <value>
-                <fullName>OPUSTemplate2018</fullName>
-                <default>false</default>
-                <label>OPUSTemplate2018</label>
-            </value>
-            <value>
                 <fullName>GeneralSLDS</fullName>
                 <default>false</default>
                 <label>GeneralSLDS</label>
             </value>
             <value>
+                <fullName>CastorTemplate2017</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>CastorTemplate2017</label>
+            </value>
+            <value>
+                <fullName>OPUSTemplate2018</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>OPUSTemplate2018</label>
+            </value>
+            <value>
                 <fullName>crowncollege2020</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>crowncollege2020</label>
             </value>
         </valueSetDefinition>
