@@ -552,11 +552,6 @@
             <actionType>StandardButton</actionType>
             <sortOrder>2</sortOrder>
         </platformActionListItems>
-        <platformActionListItems>
-            <actionName>Preview_Event_Webform</actionName>
-            <actionType>CustomButton</actionType>
-            <sortOrder>3</sortOrder>
-        </platformActionListItems>
     </platformActionList>
     <relatedLists>
         <fields>NAME</fields>
@@ -623,7 +618,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h11000003sXOU</masterLabel>
+        <masterLabel>00h1D0000045UfG</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
