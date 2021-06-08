@@ -17,7 +17,5 @@
     <showsLocation>false</showsLocation>
     <showsStatus>false</showsStatus>
     <url>{!URLFOR(
-Summit_Events__c.Community_Base_URL__c 
-+ IF($Setup.Summit_Events_Settings__c.Managed_Package__c, &apos;summit__&apos;,&apos;&apos;)
-+ &apos;SummitEvents&apos;)}</url>
+Summit_Events__c.Community_Base_URL__c )}</url>
 </WebLink>

@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 // Created by Thaddaeus Dahlberg on 2/27/2019.
 
-public without sharing class SummitEventsContactMatching {
+public with sharing class SummitEventsContactMatching {
     
     public static void matchContacts(List<Summit_Events_Registration__c> newRegistrations) {
         Map<Id, Summit_Events__c> matchingRules = new Map<Id, Summit_Events__c>();
@@ -100,13 +100,13 @@ public without sharing class SummitEventsContactMatching {
                 '</tr></thead>';
             
             List<Datacloud.FindDuplicatesResult> results = new List<Datacloud.FindDuplicatesResult>();
-            
+            doCRUD crud = new doCRUD();
+
             try { // Datacloud.FindDuplicates returns an error if no matching rules are active
                 List<Contact> cons = new List<Contact>();
                 cons.add(c);
-                results = Datacloud.FindDuplicates.findDuplicates(cons);
-            } catch (Exception e) {
-            }
+                results = crud.findDuplicateContacts(cons);
+            } catch (Exception e) {}
             
             List<Contact> matchContacts = new List<Contact>();
             for (Datacloud.DuplicateResult dr : results[0].getDuplicateResults()) {
@@ -120,35 +120,25 @@ public without sharing class SummitEventsContactMatching {
                 }
             }
             
-            if (!matchContacts.isEmpty() && Schema.sObjectType.Contact.isAccessible()) {
-                matchContacts = [
-                    SELECT Id, LastName, FirstName, Email, MailingPostalCode
-                    FROM Contact
-                    WHERE Id IN :matchContacts
-                    WITH SECURITY_ENFORCED
-                    ORDER BY LastModifiedDate DESC
-                ];
+            if (!matchContacts.isEmpty()){
+                String query = 'SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE Id IN (';
+                for (Contact con : matchContacts) {
+                    query += '\'' + con.Id + '\',';
+                }
+                query = query.removeEnd(',') + ') ORDER BY LastModifiedDate DESC';
+                matchContacts = crud.findContacts(query);
             }
             if (matchContacts == null || matchContacts.isEmpty()) { // SOQL queries return null instead of empty lists
                 if (event.Contact_Matching_No_Match_Behavior__c == 'Create Contact') {
-                    
-                    if (Schema.sObjectType.Summit_Events_Contact_Matching_Mapping__mdt.isAccessible()) {
-                        for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
-                            SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
-                            FROM Summit_Events_Contact_Matching_Mapping__mdt
-                            WHERE Contact_Matching_Method__c = :event.Custom_Metadata_Contact_Matching_Method__c
-                            AND Matching_Only__c = TRUE
-                        ]) {
-                            c.put(mapping.Contact_Field_API_Name__c, null);
-                        }
+                    for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
+                        SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
+                        FROM Summit_Events_Contact_Matching_Mapping__mdt
+                        WHERE Contact_Matching_Method__c = :event.Custom_Metadata_Contact_Matching_Method__c AND Matching_Only__c = TRUE])
+                    {
+                        c.put(mapping.Contact_Field_API_Name__c, null);
                     }
                     
-                    try {
-                        insert c;
-                    } catch (Exception ex) {
-                        System.debug(ex.getMessage());
-                    }
-                    
+                    crud.addContact(c);
                     
                     reg.New_Contact_Created__c = true;
                     reg.Contact__c = c.Id;
@@ -234,7 +224,7 @@ public without sharing class SummitEventsContactMatching {
         
         c.Created_with_Summit_Events__c = true;
         
-        if (Schema.sObjectType.Summit_Events_Contact_Matching_Mapping__mdt.isAccessible()) {
+        if (Schema.SObjectType.Summit_Events_Contact_Matching_Mapping__mdt.isAccessible()) {
             for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
                 SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
                 FROM Summit_Events_Contact_Matching_Mapping__mdt
@@ -274,5 +264,62 @@ public without sharing class SummitEventsContactMatching {
         mOut += '</tr>';
         return mOut;
     }
-    
+
+    private without sharing class doCRUD {
+
+        public List<Contact> findContacts(String query) {
+            try {
+                List<Contact> contactsFound = database.query(query);
+                return contactsFound;
+            } catch (Exception ex) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
+            }
+            return null;
+        }
+
+        public Contact addContact(Contact contactToAdd) {
+            try {
+                upsert contactToAdd;
+                return contactToAdd;
+            } catch (Exception ex) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
+            }
+            return null;
+        }
+
+        public List<Contact> emailLastMatch(String email, String last) {
+            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :last AND Email = :email];
+            return foundContacts;
+        }
+
+        public List<Contact> possibleEmailLastMatches(String last, List<String> possibleEmails) {
+            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE LastName = :last AND Email IN :possibleEmails];
+            return foundContacts;
+        }
+
+        public List<Contact> possibleEmailMatches(String[] possibleEmails) {
+            List<Contact> foundContacts = [SELECT Id, Email FROM Contact WHERE Email IN :possibleEmails];
+            return foundContacts;
+        }
+
+        public List<Contact> emailOnlyMatch(String email) {
+            List<Contact> foundContacts = [SELECT Id, LastName, FirstName, Email, MailingPostalCode FROM Contact WHERE Email = :email];
+            return foundContacts;
+        }
+
+        public List<Contact> zipFirstLastMatch(String zip, String last, String first) {
+            List<Contact> foundContacts = [
+                SELECT Id, LastName, FirstName, Email, MailingPostalCode
+                FROM Contact
+                WHERE FirstName = :first
+                AND LastName = :last
+                AND MailingPostalCode = :zip
+            ];
+            return foundContacts;
+        }
+
+        public List<Datacloud.FindDuplicatesResult> findDuplicateContacts(List<Contact> cons) {
+            return Datacloud.FindDuplicates.findDuplicates(cons);
+        }
+    }
 }
