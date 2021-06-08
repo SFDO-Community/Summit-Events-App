@@ -547,7 +547,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Question__c.Question_text__c</field>
+        <field>Summit_Events_Question__c.Question_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -992,6 +992,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.Registrant_Name_Tag__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Registrant_Other_Email__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1407,6 +1412,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Display_Guest_Registration__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.Display_Optional_Donation__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1613,6 +1623,16 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Guest_Registration_Title__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Guest_Table_Size__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Guest_Tables_Available__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
