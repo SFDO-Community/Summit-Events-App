@@ -147,7 +147,7 @@ public with sharing class SummitEventsConfirmationController {
                     evtReg.Encrypted_Registration_Id_1__c = encryptedString;
                 }
 
-                confirmationCRUD regCRUD = new confirmationCRUD();
+                registrationCRUD regCRUD = new registrationCRUD();
                 eventsRegistration = regCRUD.updateRegistration(eventsRegistration);
 
                 if (guestRegistrations.size() > 0) {
