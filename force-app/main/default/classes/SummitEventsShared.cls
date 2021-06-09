@@ -134,9 +134,19 @@ public with sharing class SummitEventsShared {
                 eventHomeLink = eventPage.Event__r.Event_Home_Link_URL__c;
             }
         }
+
         //Get community base URL from custom settings
         Summit_Events_Settings__c myUserSetting = Summit_Events_Settings__c.getInstance(UserInfo.getUserId());
         String communityBaseURL = myUserSetting.Community_Base_URL__c;
+
+        if (!communityBaseURL.endsWith('/')) {
+            communityBaseURL += '/';
+        }
+
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
 
         String newUrl = '';
 
@@ -150,16 +160,16 @@ public with sharing class SummitEventsShared {
                 }
                 if (newInstanceId != null && !newInstanceId.equals(URLInstanceID)) {
                     newInstanceId = URLInstanceID;
-                    newUrl = communityBaseURL + 'SummitEventsRegister?instanceID=' + URLInstanceID;
+                    newUrl = communityBaseURL + namespace + 'SummitEventsRegister?instanceID=' + URLInstanceID;
                 }
             }
         } else if (String.isBlank(newRegistrationId) && !onRegistrationPage) {
             if (String.isNotBlank(eventHomeLink)) {
                 newUrl = eventHomeLink;
             } else if (String.isNotBlank(newInstanceId)) {
-                newUrl = communityBaseURL + 'SummitEventsRegister?instanceID=' + newInstanceId;
+                newUrl = communityBaseURL + namespace + 'SummitEventsRegister?instanceID=' + newInstanceId;
             } else {
-                newUrl = communityBaseURL + 'SummitEvents';
+                newUrl = communityBaseURL + namespace + 'SummitEvents';
             }
         }
         if (String.isNotBlank(newUrl)) {
