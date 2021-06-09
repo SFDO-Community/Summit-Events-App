@@ -5,9 +5,9 @@
             "default": true,
             "package": "Summit Events App",
             "versionName": "June 2021",
-            "versionNumber": "0.17.0.NEXT",
+            "versionNumber": "0.18.0.NEXT",
             "definitionFile": "orgs/dev.json",
-            "ancestorId": "04t4P000002fPbuQAE"
+            "ancestorId": "04t4P000002fPkoQAE"
         }
     ],
     "namespace": "summit",
