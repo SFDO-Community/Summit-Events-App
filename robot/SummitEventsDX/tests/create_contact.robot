@@ -7,8 +7,9 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Via API
-    ${first_name} =       Generate Random String
-    ${last_name} =        Generate Random String
+    [Tags]                sample
+    ${first_name} =       Get fake data    first_name
+    ${last_name} =        Get fake data    last_name
     ${contact_id} =       Salesforce Insert  Contact
     ...                     FirstName=${first_name}
     ...                     LastName=${last_name}
@@ -16,8 +17,9 @@ Via API
     Validate Contact      ${contact_id}  ${first_name}  ${last_name}
 
 Via UI
-    ${first_name} =       Generate Random String
-    ${last_name} =        Generate Random String
+    [Tags]                sample
+    ${first_name} =       Get fake data    first_name
+    ${last_name} =        Get fake data    last_name
     Go To Object Home     Contact
     Click Object Button   New
     Populate Form
@@ -39,7 +41,7 @@ Validate Contact
     Page Should Contain  ${first_name} ${last_name}
     # Validate via API
     &{contact} =     Salesforce Get  Contact  ${contact_id}
-    Should Be Equal  ${first_name}  &{contact}[FirstName]
-    Should Be Equal  ${last_name}  &{contact}[LastName]
+    Should Be Equal  ${first_name}  ${contact}[FirstName]
+    Should Be Equal  ${last_name}  ${contact}[LastName]
 
 
