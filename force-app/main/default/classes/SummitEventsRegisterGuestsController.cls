@@ -18,10 +18,19 @@ public with sharing class SummitEventsRegisterGuestsController {
     public Boolean adminOpen { get; set; }
     public Map<String, PageReference> pageFlow { get; set; }
     public String guestJSON { get; set; }
+    public String guestQuestionJSON { get; set; }
     public Id oldRegId { get; set; }
     public String statePicklist { get; set; }
     public String countryPicklist { get; set; }
     public String namespace { get; set; }
+
+    public class question {
+        String Name { get; set; }
+        String Type { get; set; }
+        String Question { get; set; }
+        Boolean Required { get; set; }
+        List<String> picklist { get; set; }
+    }
 
     public SummitEventsRegisterGuestsController() {
         eventInformation = seaShared.getSummitEventsInfo();
@@ -48,6 +57,30 @@ public with sharing class SummitEventsRegisterGuestsController {
                     WITH SECURITY_ENFORCED
             ];
 
+
+            List<Summit_Events_Question__c> eventGuestQuestions = [
+                    SELECT Name, Question_Type__c, Question_Text__c, Show_Question_For__c, Required_For_Hosted_Guest_Registrations__c, Question_Pick_List__c
+                    FROM Summit_Events_Question__c
+                    WHERE Event__c = :eventInformation.eventId
+                    AND Show_Question_For__c LIKE '%Hosted%'
+                    WITH SECURITY_ENFORCED
+            ];
+
+            List<question> questionList = new List<question>();
+            for (Summit_Events_Question__c seaQuestion : eventGuestQuestions) {
+                question q = new question();
+                q.Name = seaQuestion.Name;
+                q.Question = seaQuestion.Question_Text__c;
+                q.Type = seaQuestion.Question_Type__c;
+                q.Required = seaQuestion.Required_For_Hosted_Guest_Registrations__c;
+                if (String.isNotBlank(seaQuestion.Question_Pick_List__c)) {
+                    q.picklist = createPicklists(seaQuestion.Question_Pick_List__c);
+                }
+                questionList.add(q);
+            }
+
+            guestQuestionJSON = JSON.serialize(questionList);
+
             eventRegistration = [
                     SELECT Id, Guest_JSON__c
                     FROM Summit_Events_Registration__c
@@ -55,9 +88,9 @@ public with sharing class SummitEventsRegisterGuestsController {
                     WITH SECURITY_ENFORCED
             ];
             guestJSON = eventRegistration.Guest_JSON__c;
+
             oldRegId = eventRegistration.Id;
             eventRegistration.Id = null;
-
 
             pageFlow = SeaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage());
             System.debug('PAGE FLOW : ' + pageFlow);
@@ -76,6 +109,21 @@ public with sharing class SummitEventsRegisterGuestsController {
 
             countryPicklist = buildPicklist('Country');
         }
+    }
+
+    public List<String> createPicklists(String returnSepStringList) {
+        List<String> cpl = new List<String>();
+        if (!String.isBlank(returnSepStringList)) {
+            cpl.add('Select...');
+            returnSepStringList = returnSepStringList.trim();
+            returnSepStringList = returnSepStringList.replace('\n\n', '\n');
+            String[] splitList = returnSepStringList.split('\n');
+            for (String p : splitList) {
+                p = p.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', '');
+                cpl.add(p);
+            }
+        }
+        return cpl;
     }
 
     public String buildPicklist(String htmlId) {

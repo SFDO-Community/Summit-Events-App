@@ -13,6 +13,9 @@
         <apex:define name="scriptsHead">
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
             <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/guestRegistration.js')}" type="text/javascript"></script>
+            <script>
+                const guestQuestionJSON = {!guestQuestionJSON};
+            </script>
         </apex:define>
         <apex:define name="sectionNav"/>
         <apex:define name="body">
@@ -71,37 +74,37 @@
                                             </div>
                                         </header>
                                     </div>
-                                    <div class="slds-card__body slds-card__body_inner">
-                                        <apex:repeat value="{!guestRequirements}" var="q">
+                                    <div class="slds-card__body slds-card__body_inner" id="questQuestions">
+<!--                                        <apex:repeat value="{!guestRequirements}" var="q">-->
 
-                                            <div class="slds-form-element">
-                                                <label class="slds-form-element__label" for="{!q}">
-                                                    <apex:outputPanel rendered="{!IF(q = 'First_name' || q = 'Last_name', true, false)}" layout="none">
-                                                        <abbr class="slds-required" title="required">* </abbr>
-                                                    </apex:outputPanel>
-                                                    {!SUBSTITUTE(q, "_", " ")}
-                                                </label>
-                                                <div class="slds-form-element__control">
-                                                    <apex:outputPanel layout="none" rendered="{!(IF(NOT(q == 'Country' || q == 'State'), true, false))}">
-                                                        <input type="{!If(q = 'Email','email','text')}" id="{!q}" name="{!q}" placeholder="{!SUBSTITUTE(q, "_", " ")}" required="{!IF(q = 'First_name' || q = 'Last_name', 'required', '')}" class="slds-input"/>
-                                                    </apex:outputPanel>
-                                                    <apex:outputText escape="false" value="{!statePicklist}" rendered="{!(IF(q == 'State', true, false))}"/>
-                                                    <apex:outputText escape="false" value="{!countryPicklist}" rendered="{!(IF(q == 'Country', true, false))}"/>
-                                                </div>
-                                            </div>
-                                        </apex:repeat>
+<!--                                            <div class="slds-form-element">-->
+<!--                                                <label class="slds-form-element__label" for="{!q}">-->
+<!--                                                    <apex:outputPanel rendered="{!IF(q = 'First_name' || q = 'Last_name', true, false)}" layout="none">-->
+<!--                                                        <abbr class="slds-required" title="required">* </abbr>-->
+<!--                                                    </apex:outputPanel>-->
+<!--                                                    {!SUBSTITUTE(q, "_", " ")}-->
+<!--                                                </label>-->
+<!--                                                <div class="slds-form-element__control">-->
+<!--                                                    <apex:outputPanel layout="none" rendered="{!(IF(NOT(q == 'Country' || q == 'State'), true, false))}">-->
+<!--                                                        <input type="{!If(q = 'Email','email','text')}" id="{!q}" name="{!q}" placeholder="{!SUBSTITUTE(q, "_", " ")}" required="{!IF(q = 'First_name' || q = 'Last_name', 'required', '')}" class="slds-input"/>-->
+<!--                                                    </apex:outputPanel>-->
+<!--                                                    <apex:outputText escape="false" value="{!statePicklist}" rendered="{!(IF(q == 'State', true, false))}"/>-->
+<!--                                                    <apex:outputText escape="false" value="{!countryPicklist}" rendered="{!(IF(q == 'Country', true, false))}"/>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </apex:repeat>-->
                                         <p class=" slds-text-body slds-p-vertical_xx-small noGuestAlert">
 
                                         </p>
                                     </div>
                                     <footer class="slds-card__footer">
                                         <button class="slds-button slds-button_neutral slds-button_stateful slds-not-selected" aria-live="assertive" type="submit">
-                                <span class="slds-text-not-selected">
-                                    <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
-                                      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
-                                    </svg>
-                                    Add a guest
-                                </span>
+                                            <span class="slds-text-not-selected">
+                                                <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+                                                </svg>
+                                                Add a guest
+                                            </span>
                                         </button>
                                     </footer>
                                 </article>
