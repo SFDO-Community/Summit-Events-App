@@ -19,18 +19,23 @@ Via UI
     Go To Registration Page For Instance    ${instance_id}
     Select From List By Label    summit:I am...    Primary Registrant
 # Very difficult pattern break here: the phone "Type" select list has a label for attribute that doesn't match the SELECT
-#    Select From List By Label    id:SummitEventsRegister:GeneralSLDS:SummitEventRegisterForm:phoneType    Mobile
     Select From List By Label     summitx:Type    Mobile
     Input Text           summit:First Name    ${first_name}
     Input Text           summit:Last Name    ${last_name}
     Input Text           summit:Email    ${email}
+# Mobile Phone is not visible when the page is loaded. When "Mobile" is selected for "Type", it
+# dynamically is made visible
     Wait Until Element Is Visible    summit:Mobile Phone    5 seconds
     Input Text           summit:Mobile Phone    ${phone}
-# What's your favorite day of the week? has a single quote that can't be used with this syntax - it's a contains match so using key phrase
+# What's your favorite day of the week? has a single quote that can't be matched with Robot's xpath syntax
+# Current approach uses "contains" text matching because "equals" was problematic - so do a partial match
+# TODO: try jquery or css locator syntax - maybe more robust for matching arbitrary label text
     Input Text           summitx:your favorite day of the week    ${day_of_week}
 #    Click Button    Next
 
 *** Keywords ***
+
+# TODO Move the locators and Suite Setup keywords into a Resource file for reuse.
 
 Go To Registration Page For Instance 
     [Arguments]      ${instance_id}
