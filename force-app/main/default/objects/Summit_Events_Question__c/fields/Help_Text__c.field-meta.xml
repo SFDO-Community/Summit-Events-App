@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Help_Text__c</fullName>
+    <description>This field enables users to offer help text on a question that will display as a registrant hovers over field.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field enables users to offer help text on a question that will display as a registrant hovers over field.</inlineHelpText>
+    <label>Help Text</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
