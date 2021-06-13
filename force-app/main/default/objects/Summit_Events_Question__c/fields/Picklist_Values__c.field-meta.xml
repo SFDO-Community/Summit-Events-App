@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Picklist_Values__c</fullName>
+    <description>This field enables user to create Picklist values for a Picklist question, return/line separated.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field enables user to create Picklist values for a Picklist question, return/line separated.</inlineHelpText>
+    <label>Picklist Values</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

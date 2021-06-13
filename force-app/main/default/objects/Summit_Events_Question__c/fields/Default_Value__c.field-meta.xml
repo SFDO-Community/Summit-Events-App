@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Default_Value__c</fullName>
+    <description>This field enables users to set a default value that could be used for visible or hidden questions/responses.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field enables users to set a default value that could be used for visible or hidden questions/responses.</inlineHelpText>
+    <label>Default Value</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

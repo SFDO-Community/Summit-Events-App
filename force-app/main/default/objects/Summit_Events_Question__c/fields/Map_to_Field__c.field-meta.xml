@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Map_to_Field__c</fullName>
+    <description>This field looks to the Summit Event Registration field API Name to know where to map the response.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field looks to the Summit Event Registration field API Name to know where to map the response.</inlineHelpText>
+    <label>Map to Field</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
