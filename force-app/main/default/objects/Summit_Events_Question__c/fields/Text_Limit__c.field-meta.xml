@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Text_Limit__c</fullName>
+    <description>This field determines the field text limit/validation on a text question.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field determines the field text limit/validation on a text question.</inlineHelpText>
+    <label>Text Limit</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>
