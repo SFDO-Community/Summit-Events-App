@@ -317,7 +317,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     {!eventPage.Email_Label__c} <abbr class="slds-required" title="required">*</abbr>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:input type="email" value="{!eventRegistration.Registrant_Email__c}" id="email" html-aria-describedby="email-required" required="true" styleClass="slds-input {!IF(!contactSet,'required requiredText validEmail', '')}" disabled="{!contactSet}"/>
+                                    <apex:inputField type="email" value="{!eventRegistration.Registrant_Email__c}" id="email" html-aria-describedby="email-required" required="true" styleClass="slds-input {!IF(!contactSet,'required requiredText validEmail', '')}"/>
                                 </div>
                                 <div class="slds-form-element__help" id="email-required">This field is required</div>
                             </div>
@@ -761,7 +761,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     <div class="slds-form-element__control">
                                         <div class="slds-select_container">
                                             <apex:selectList size="1" value="{!eventRegistration.Number_of_Guests__c}" id="guests" styleClass="slds-select {!IF(!contactSet,'required requiredText', '')}">
-                                                <apex:selectOptions value="{!guestAmt}"></apex:selectOptions>
+                                                <apex:selectOptions value="{!guestAmt}"/>
                                             </apex:selectList>
                                         </div>
                                     </div>
@@ -837,7 +837,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                         <!--Text box-->
                                         <apex:outputPanel layout="block" styleClass="slds-form-element__control" rendered="{!IF(CONTAINS(qu.Question_Type__c,'Text box'), true, false)}">
-                                            <apex:inputText label="{!AddInfoLabel}" value="{!placeholderValue}" styleClass="slds-input"/>
+                                            <apex:inputField label="{!AddInfoLabel}" value="{!placeholderValue}" styleClass="slds-input"/>
                                         </apex:outputPanel>
 
                                         <!--Pick List-->
@@ -845,7 +845,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                             <apex:selectList label="{!AddInfoLabel}" value="{!placeholderValue}" size="1" styleClass="slds-select">
                                                 <apex:selectOptions value="{!getCreateVFPicklist}">
-                                                    <apex:param name="site" value="{!qu.Question_Pick_List__c}" assignTo="{!picklistStringToFormat}" />
+                                                    <apex:param name="site" value="{!qu.Question_Pick_List__c}" assignTo="{!picklistStringToFormat}"/>
                                                 </apex:selectOptions>
                                             </apex:selectList>
 
@@ -862,7 +862,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             <apex:commandLink action="{!saveContactRegistration}" onClick="fadeout(); return checkForm();" Value="{!IF(evtHasAppointments, 'Next', 'Register')}" id="submitReg1" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                         </div>
                         <div class="slds-col slds-p-vertical_medium slds-p-left_x-small slds-size_1-of-1">
-                            <apex:outputText escape="false" value="{!eventPage.Event_Footer__c}"></apex:outputText>
+                            <apex:outputText escape="false" value="{!eventPage.Event_Footer__c}"/>
                         </div>
                     </apex:outputPanel>
                 </apex:form>
