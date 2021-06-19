@@ -33,10 +33,10 @@ Created by Thaddaeus Dahlberg on 10/11/2018.
             </apex:pageBlockSection>
             <apex:pageBlockSection columns="2">
                 <apex:pageBlockSectionItem >
-                    <apex:commandButton value="Save" action="{!save}" onComplete="CloseAndRefresh();"></apex:commandButton>
+                    <apex:commandButton value="Save" action="{!save}" onComplete="CloseAndRefresh();"/>
                 </apex:pageBlockSectionItem>
                 <apex:pageBlockSectionItem >
-                    <apex:commandButton value="Close" onClick="window.top.close();"></apex:commandButton>
+                    <apex:commandButton value="Close" onClick="window.top.close();"/>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
         </apex:pageBlock>

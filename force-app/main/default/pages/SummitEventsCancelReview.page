@@ -42,26 +42,26 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 </div>
                 <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                     <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
-                        <apex:outputText value="{!eventRegistration.Event__r.Event_Cancel_Review_Title__c}"></apex:outputText>
+                        <apex:outputText value="{!eventRegistration.Event__r.Event_Cancel_Review_Title__c}"/>
                     </h2>
                     <p class="slds-text-body slds-p-vertical_xx-small">
-                        <apex:outputText value="{!eventRegistration.Event__r.Event_Cancel_Review_Description__c}" escape="false"></apex:outputText>
+                        <apex:outputText value="{!eventRegistration.Event__r.Event_Cancel_Review_Description__c}" escape="false"/>
                     </p>
                 </div>
                 <div id="reviewWrapper" class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                     <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">
-                        <apex:outputText value="{!eventRegistration.Event__r.Name}"></apex:outputText>
+                        <apex:outputText value="{!eventRegistration.Event__r.Name}"/>
                     </h3>
                     <p class="slds-text-body slds-p-vertical_xx-small">
-                        <apex:outputText escape="false" value="{!eventRegistration.Event__r.Event_description__c}"></apex:outputText>
+                        <apex:outputText escape="false" value="{!eventRegistration.Event__r.Event_description__c}"/>
                     </p>
                     <ul class="slds-list_dotted">
                         <apex:repeat value="{!appointments}" var="ap">
                             <li>
-                                <apex:outputText value="{!ap.Appointment_Title__c}"></apex:outputText>
-                                <apex:outputText value="{!ap.Appointment_Category__c}" rendered="{!IF(!ISBLANK(ap.Appointment_Category__c), true, false)}"></apex:outputText>
+                                <apex:outputText value="{!ap.Appointment_Title__c}"/>
+                                <apex:outputText value="{!ap.Appointment_Category__c}" rendered="{!IF(!ISBLANK(ap.Appointment_Category__c), true, false)}"/>
                                 <br/><em>
-                                    <apex:outputText value="{!ap.Appointment_Type__c}"></apex:outputText>
+                                    <apex:outputText value="{!ap.Appointment_Type__c}"/>
                                 </em>
                             </li>
                         </apex:repeat>

@@ -32,6 +32,11 @@ ready(() => {
     dynamicValidation();
     validYear();
 
+    //Makes textareas look like textboxes
+    document.querySelectorAll('textarea.input-textbox').forEach(textbox => {
+        textbox.rows = 1;
+    });
+
 });
 
 function dynamicValidation() {
