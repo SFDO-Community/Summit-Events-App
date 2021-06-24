@@ -230,7 +230,6 @@ public with sharing class SummitEventsShared {
                 );
                 return decrypted.toString();
             } catch (Exception e) {
-                System.debug('decrypt exception: ' + e.getMessage());
                 return '';
             }
         }

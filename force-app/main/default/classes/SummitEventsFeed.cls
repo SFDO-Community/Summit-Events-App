@@ -118,8 +118,6 @@ global with sharing class SummitEventsFeed {
             viewStart = Datetime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(-1);
         }
 
-        System.debug(viewStart);
-
         if (String.isNotBlank(req.params.get('viewEnd'))) {
             viewEnd = Date.valueOf(String.escapeSingleQuotes(req.params.get('viewEnd')));
         }
@@ -131,14 +129,10 @@ global with sharing class SummitEventsFeed {
 
         }
 
-        System.debug(viewEnd);
-
         formattedViewStart = viewStart.format('yyyy-MM-dd');
         formattedViewEnd = viewEnd.format('yyyy-MM-dd');
         eventQuery += ' AND Instance_Start_Date__c >= ' + formattedViewStart + ' ';
         eventQuery += ' AND Instance_Start_Date__c <= ' + formattedViewEnd + ' ';
-
-        System.debug(eventQuery);
 
         //get event based on event id
         String eventId = req.params.get('eventId');

@@ -173,7 +173,6 @@ public with sharing class SummitEventsContactMatching {
                 reg.Matching_Log__c = matchLog;
             } else {
                 if (event.Contact_Matching_Multiple_Match_Behavior__c == 'Skip matching') {
-                    System.debug('Matching skipped');
                     String matchLog = '<div class="slds-text-heading_small slds-m-vertical_medium">Multiple matches found using Salesforce Duplicate Rule <em>' + matchType.get(reg.Event__c).replaceAll('_', ' ') + '</em>, Contact matching skipped based on "Contact Matching Multiple Match Behavior" field value on Summit Events object</div>';
                     matchLog += matchLogHead;
                     matchLog += '<tbody>';
@@ -232,7 +231,6 @@ public with sharing class SummitEventsContactMatching {
                 AND Source_Object__c = 'summit__Summit_Events_Registration__c'
                 AND Source_Type__c = 'Field'
             ]) {
-                System.debug('mapping - ' + mapping);
                 c.put(mapping.Contact_Field_API_Name__c, reg.get(mapping.Source_Value__c));
             }
             

@@ -101,7 +101,6 @@ public with sharing class SummitEventsSubmitController {
                 eventOnlyPaymentAmountFormatted  = prettyCurrencyString(eventOnlyPaymentAmount);
                 totalPaymentAmountFormatted = prettyCurrencyString(totalPaymentAmount);
             }
-            System.debug(paymentItemized);
             if (totalPaymentAmount > 0) {
                 showPaymentButton = true;
             }

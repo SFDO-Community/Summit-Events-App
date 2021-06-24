@@ -68,8 +68,6 @@ public with sharing class SummitEventsAddToCalendarController {
     }
 
     public String formattedGmtVersionOfDate(Date aDate, Time aTime) {
-        System.debug(aDate);
-        System.debug(aTime);
         String formattedString = '';
         Datetime newDateTime = Datetime.newInstanceGmt(aDate.year(), aDate.month(), aDate.day(), aTime.hour(), aTime.minute(), aTime.second());
         formattedString = newDateTime.formatGmt('yyyyMMdd\'T\'HHmmss');
@@ -174,7 +172,7 @@ public with sharing class SummitEventsAddToCalendarController {
                 WHERE Id = :eventId
                 WITH SECURITY_ENFORCED
         ];
-        System.debug(eventInstanceList);
+
         if (eventInstanceList.size() > 0) {
             return eventInstanceList[0];
         }

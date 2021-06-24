@@ -39,7 +39,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         eventIsClosed = false;
         test = '';
         eventInformation = seaShared.getSummitEventsInfo();
-        System.debug('cookie reception on appointment page: ' + JSON.serializePretty(eventInformation));
         appointments = '';
         noOptionalAppointments = true;
 
@@ -142,7 +141,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     appLimit = appLimit - (Integer.valueOf(appCount.get(apt.Id)));
                 }
 
-                System.debug('evaluating values');
                 incomingAppointments addAppointment = new incomingAppointments();
 
                 addAppointment.appId = apt.Id;

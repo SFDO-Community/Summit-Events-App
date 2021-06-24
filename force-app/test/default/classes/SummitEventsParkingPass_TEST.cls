@@ -41,28 +41,24 @@ private class SummitEventsParkingPass_TEST {
             //Valid Parking pass
             ApexPages.currentPage().getParameters().put('eventInfo', encryptedString);
             SummitEventsParkingPassController parkingCtrl = new SummitEventsParkingPassController();
-            System.debug('Parking info 1: ' + JSON.serializePretty(parkingCtrl.visitor));
             System.assertEquals(parkingCtrl.warning, '');
 
             //Not registered parking pass
             ApexPages.currentPage().getParameters().remove('eventInfo');
             ApexPages.currentPage().getParameters().put('eventInfo', encryptedString2);
             parkingCtrl = new SummitEventsParkingPassController();
-            System.debug('Parking info 2: ' + JSON.serializePretty(parkingCtrl.visitor));
             System.assertNotEquals(parkingCtrl.warning, '');
 
             //Registered now with not preferred first name
             seaTestRegistration2.Status__c = 'Registered';
             upsert seaTestRegistration2;
             parkingCtrl = new SummitEventsParkingPassController();
-            System.debug('Parking info 3: ' + JSON.serializePretty(parkingCtrl.visitor));
             System.assertEquals(parkingCtrl.warning, '');
 
             //Tried to pass a bad id through the URL
             ApexPages.currentPage().getParameters().remove('eventInfo');
             ApexPages.currentPage().getParameters().put('eventInfo', encryptedString + 'TAMPER');
             parkingCtrl = new SummitEventsParkingPassController();
-            System.debug('Parking info 4: ' + JSON.serializePretty(parkingCtrl.visitor));
             System.assertNotEquals(parkingCtrl.warning, '');
 
             Test.stopTest();
