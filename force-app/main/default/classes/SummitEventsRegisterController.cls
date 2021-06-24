@@ -542,7 +542,7 @@ public with sharing class SummitEventsRegisterController {
                     eventRegistration.Id = incomingEventRegistrationId;
                     update eventRegistration;
                 } else {
-                    if (Schema.sObjectType.Summit_Events_Registration__c.isCreateable()) {
+                    if (Schema.SObjectType.Summit_Events_Registration__c.isCreateable()) {
                         insert eventRegistration;
                     }
                 }
@@ -556,7 +556,7 @@ public with sharing class SummitEventsRegisterController {
                     upsertFees[ff].Event_Registration__c = eventRegistration.Id;
                 }
                 try {
-                    if (Schema.sObjectType.Summit_Events_Registration__c.isCreateable()) {
+                    if (Schema.SObjectType.Summit_Events_Registration__c.isCreateable()) {
                         insert upsertFees;
                     }
                 } catch (Exception ex) {

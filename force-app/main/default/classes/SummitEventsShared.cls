@@ -42,7 +42,7 @@ public with sharing class SummitEventsShared {
             URLAudience = String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('audience'));
         }
         Id URLInstanceID = null;
-        If (String.isNotBlank(ApexPages.currentPage().getParameters().get('instanceID'))) {
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('instanceID'))) {
             try {
                 URLInstanceID = (Id) String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('instanceID'));
             } catch (Exception e) {

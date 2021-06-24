@@ -200,7 +200,7 @@ public with sharing class SummitEventsDonationController {
         }
 
         public void deleteFee(Summit_Events_Fee__c feeIn) {
-            if (Summit_Events_Fee__c.sObjectType.getDescribe().isDeletable()) {
+            if (Summit_Events_Fee__c.SObjectType.getDescribe().isDeletable()) {
                 delete feeIn;
             }
         }

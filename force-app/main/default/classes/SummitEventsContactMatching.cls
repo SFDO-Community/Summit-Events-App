@@ -10,7 +10,7 @@ public with sharing class SummitEventsContactMatching {
         for (Summit_Events_Registration__c reg : newRegistrations) {
             matchingRules.put(reg.Event__c, null);
         }
-        if (Schema.sObjectType.Summit_Events__c.isAccessible()) {
+        if (Schema.SObjectType.Summit_Events__c.isAccessible()) {
             for (Summit_Events__c event : [
                 SELECT Id, Contact_Matching_Rules__c
                 FROM Summit_Events__c
@@ -66,7 +66,7 @@ public with sharing class SummitEventsContactMatching {
         // Make it easy to tell what Matching Rule we're basing this off of
         Map<Id, String> matchType = new Map<Id, String>();
         Map<Id, Summit_Events__c> allEvents = new Map<Id, Summit_Events__c>();
-        if (Schema.sObjectType.Summit_Events__c.isAccessible()) {
+        if (Schema.SObjectType.Summit_Events__c.isAccessible()) {
             for (Summit_Events__c event : [
                 SELECT Id, Contact_Creation_Duplicate_Rule__c, Custom_Metadata_Contact_Matching_Method__c, Contact_Matching_Multiple_Match_Behavior__c, Contact_Matching_No_Match_Behavior__c
                 FROM Summit_Events__c
@@ -267,7 +267,7 @@ public with sharing class SummitEventsContactMatching {
 
         public List<Contact> findContacts(String query) {
             try {
-                List<Contact> contactsFound = database.query(query);
+                List<Contact> contactsFound = Database.query(query);
                 return contactsFound;
             } catch (Exception ex) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));

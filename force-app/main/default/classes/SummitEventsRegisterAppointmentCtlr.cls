@@ -251,7 +251,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                 addApp.Appointment_Time__c = appDefinition.Auto_Add_Time__c;
             }
             addApp.Description__c = app.appDesc;
-            if(String.isNotBlank(addApp.Registrant_Input__c)) {
+            if (String.isNotBlank(addApp.Registrant_Input__c)) {
                 addApp.Registrant_Input__c = app.appInput;
             }
             appointmentsToAdd.add(addApp);
