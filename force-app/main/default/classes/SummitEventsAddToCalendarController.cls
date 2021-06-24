@@ -21,8 +21,18 @@ public with sharing class SummitEventsAddToCalendarController {
     public SummitEventsAddToCalendarController() {
         DTStart = DTEnd = DTStamp = SUMMARY = LOCATION = DESCRIPTION = TIMEZONE2 = DTStartStandard = DTStartDaylight = '';
         UUID = NewGuid().replace('-', '') + 'Summit';
-        String URLInstanceID = ApexPages.currentPage().getParameters().get('instanceID');
-        if (String.isNotBlank(URLInstanceID)) {
+
+        //Strongly type instanceID parameter to Id to prevent URL tampering
+        Id URLInstanceID = null;
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('instanceID'))) {
+            try {
+                URLInstanceID = (Id) String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('instanceID'));
+            } catch (Exception e) {
+                System.debug(e.getMessage());
+            }
+        }
+
+        if (URLInstanceID != null) {
             Summit_Events_Instance__c eventInformation = getEventInformation(URLInstanceID);
 
             if (eventInformation != null) {
@@ -187,10 +197,20 @@ public with sharing class SummitEventsAddToCalendarController {
     }
 
     public PageReference calendarType() {
-        String URLInstanceID = ApexPages.currentPage().getParameters().get('instanceID');
+
+        //Strongly type instanceID parameter to Id to prevent URL tampering
+        Id URLInstanceID = null;
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('instanceID'))) {
+            try {
+                URLInstanceID = (Id) String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('instanceID'));
+            } catch (Exception e) {
+                System.debug(e.getMessage());
+            }
+        }
+
         PageReference linkPage = null;
         String urlCalendarLink = '';
-        if (String.isNotBlank(URLInstanceID)) {
+        if (URLInstanceID != null) {
             Summit_Events_Instance__c eventInformation = getEventInformation(URLInstanceID);
             String type = '';
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('type'))) {
