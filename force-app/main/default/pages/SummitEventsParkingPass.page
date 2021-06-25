@@ -141,7 +141,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <div id="coupon">
             <h1>Parking pass error</h1>
             <p style="{!IF(ISBLANK(warning),'display:none','')}">
-                <apex:outputText value="{!warning}"></apex:outputText>
+                <apex:outputText value="{!warning}"/>
             </p>
             <table>
                 <th colspan="2">Contact Information:</th>

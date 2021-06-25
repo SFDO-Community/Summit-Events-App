@@ -47,7 +47,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     <!-- EVENT CLOSED MESSAGE -->
                     <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
                         <p class="slds-text-body">
-                            <apex:outputText value="{!eventPage.Event_Full_Text__c}"></apex:outputText>
+                            <apex:outputText value="{!eventPage.Event_Full_Text__c}"/>
                         </p>
                     </apex:outputPanel>
                     <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
@@ -58,7 +58,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </div>
                         <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
                             <p class="slds-text-body ">
-                                <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"></apex:outputText>
+                                <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"/>
                             </p>
                         </div>
                     </apex:outputPanel>

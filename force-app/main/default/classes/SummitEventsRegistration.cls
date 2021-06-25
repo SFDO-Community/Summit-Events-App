@@ -149,7 +149,7 @@ public class SummitEventsRegistration {
 
 
         if (activityUpdates.size() > 0) {
-            doCRUD  crudToDo = new doCRUD();
+            doCRUD crudToDo = new doCRUD();
             crudToDo.savTask(activityUpdates);
         }
     }
@@ -185,7 +185,7 @@ public class SummitEventsRegistration {
         public void savTask(List<Task> taskToSave) {
             try {
                 insert taskToSave;
-            } catch(Exception e) {
+            } catch (Exception e) {
                 System.debug(e.getMessage());
             }
         }

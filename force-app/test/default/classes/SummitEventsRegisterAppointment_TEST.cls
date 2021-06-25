@@ -39,8 +39,6 @@ private class SummitEventsRegisterAppointment_TEST {
             List<Summit_Events_Appointments__c> testAppointments = [SELECT Id, Event_Registration__c FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :seaTestRegistration.Id];
             System.assertEquals(testAppointments.size(), 0);
 
-            System.debug(optionsCtrl.checkEventDetails());
-
             optionsCtrl.incomingAppointmentJSON = '[]';
             optionsCtrl.saveOptions();
 

@@ -1,12 +1,48 @@
-.slds-is-required label {font-weight: bold;}
-.slds-form-element .slds-form-element__help {display:none;}
-.slds-has-error {border-color:red!important;}
-.validationError, ul[role=alert] li { color: red !important; }
-ul[role=alert] li { font-weight:bold}   .validationError input { border: 1px solid red; }
-label.required { font-weight: bold; }
-.yearError {color: red; display: block; margin: -20px 0px -5px 0px; font-style: italic; }
+.slds-is-required label {
+    font-weight: bold;
+}
 
-#chosen .appointmentChosen p   {margin:6px 0px;}
+.slds-form-element .slds-form-element__help {
+    display: none;
+}
+
+.slds-has-error {
+    border-color: red !important;
+}
+
+.validationError, ul[role=alert] li {
+    color: red !important;
+}
+
+ul[role=alert] li {
+    font-weight: bold
+}
+
+.validationError input {
+    border: 1px solid red;
+}
+
+label.required {
+    font-weight: bold;
+}
+
+.yearError {
+    color: red;
+    display: block;
+    margin: -20px 0px -5px 0px;
+    font-style: italic;
+}
+
+textarea.input-textbox {
+    resize: none;
+    white-space: nowrap;
+    overflow-x: hidden;
+}
+
+#chosen .appointmentChosen p {
+    margin: 6px 0px;
+}
+
 .eventClosed, .eventClosed * {
     color: gray !important;
 }
@@ -15,6 +51,7 @@ label.required { font-weight: bold; }
     border: solid 1px red;
     color: #a70000;
 }
+
 #reviewWrapper {
     background-color: #fdfdfd;
     padding: 3px 20px;
@@ -55,7 +92,7 @@ label.required { font-weight: bold; }
 
 .selectableOL li.selOl-selected {
     background-color: #4f4f4f;
-    color:#fff;
+    color: #fff;
 }
 
 .slds-has-error .selectableOL li {

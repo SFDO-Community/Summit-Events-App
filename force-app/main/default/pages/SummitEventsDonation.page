@@ -98,7 +98,7 @@ Created by Thaddaeus Dahlberg on 2/10/2020.
                                     Enter Amount
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:inputText value="{!donationAmount}" id="donationAmountEnter" styleClass="slds-input"/>
+                                    <apex:inputField value="{!donationAmount}" id="donationAmountEnter" styleClass="slds-input"/>
                                 </div>
                             </div>
                         </div>
