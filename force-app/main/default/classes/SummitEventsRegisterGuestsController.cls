@@ -30,6 +30,7 @@ public with sharing class SummitEventsRegisterGuestsController {
         String Question { get; set; }
         Boolean Required { get; set; }
         List<String> picklist { get; set; }
+        String mapTo { get; set; }
     }
 
     public SummitEventsRegisterGuestsController() {
@@ -59,10 +60,11 @@ public with sharing class SummitEventsRegisterGuestsController {
 
 
             List<Summit_Events_Question__c> eventGuestQuestions = [
-                    SELECT Name, Question_Type__c, Question_Text__c, Show_Question_For__c, Required_For_Hosted_Guest_Registrations__c, Question_Pick_List__c
+                    SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
+                            Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c
                     FROM Summit_Events_Question__c
                     WHERE Event__c = :eventInformation.eventId
-                    AND Show_Question_For__c LIKE '%Hosted%'
+                    AND Registrant_Type__c = 'Guest'
                     WITH SECURITY_ENFORCED
             ];
 
@@ -70,12 +72,13 @@ public with sharing class SummitEventsRegisterGuestsController {
             for (Summit_Events_Question__c seaQuestion : eventGuestQuestions) {
                 question q = new question();
                 q.Name = seaQuestion.Name;
-                q.Question = seaQuestion.Question_Text__c;
-                q.Type = seaQuestion.Question_Type__c;
-                q.Required = seaQuestion.Required_For_Hosted_Guest_Registrations__c;
-                if (String.isNotBlank(seaQuestion.Question_Pick_List__c)) {
-                    q.picklist = createPicklists(seaQuestion.Question_Pick_List__c);
+                q.Question = seaQuestion.Question_Label__c;
+                q.Type = seaQuestion.Question_Field_type__c;
+                q.Required = seaQuestion.Required__c;
+                if (String.isNotBlank(seaQuestion.Picklist_Values__c)) {
+                    q.picklist = createPicklists(seaQuestion.Picklist_Values__c);
                 }
+                q.mapTo = seaShared.encryptString(seaQuestion.Map_to_Field__c);
                 questionList.add(q);
             }
 

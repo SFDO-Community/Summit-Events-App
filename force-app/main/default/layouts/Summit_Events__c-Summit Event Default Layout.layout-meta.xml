@@ -639,6 +639,10 @@
         <sortOrder>Asc</sortOrder>
     </relatedLists>
     <relatedLists>
+        <fields>NAME</fields>
+        <relatedList>Summit_Events_Question__c.Event__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <fields>Title__c</fields>
         <fields>Appointment_Limits__c</fields>
         <fields>Description__c</fields>

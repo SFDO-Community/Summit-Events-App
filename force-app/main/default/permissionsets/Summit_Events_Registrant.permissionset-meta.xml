@@ -578,7 +578,7 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events_Question__c.Picklist_Values__c</field>
-        <readable>false</readable>
+        <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
