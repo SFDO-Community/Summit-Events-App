@@ -141,10 +141,10 @@ public with sharing class SummitEventsConfirmationController {
                 String encryptedString = seaShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, eventInformation.registrationId);
 
                 if (encryptedString.length() > 255) {
-                    evtReg.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);
-                    evtReg.Encrypted_Registration_Id_2__c = encryptedString.substring(255, encryptedString.length());
+                    eventsRegistration.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);
+                    eventsRegistration.Encrypted_Registration_Id_2__c = encryptedString.substring(255, encryptedString.length());
                 } else {
-                    evtReg.Encrypted_Registration_Id_1__c = encryptedString;
+                    eventsRegistration.Encrypted_Registration_Id_1__c = encryptedString;
                 }
 
                 registrationCRUD regCRUD = new registrationCRUD();
