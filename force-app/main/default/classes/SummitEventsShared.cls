@@ -294,26 +294,17 @@ public with sharing class SummitEventsShared {
     }
 
     public String createEncryptedCookie(String audience, String instanceId, String eventId, String registrationId) {
-
         //Check everything to not let nulls through to JSON string
         audience = (String.isNotBlank(audience) && !audience.equalsIgnoreCase('null')) ? audience : '';
         instanceId = (String.isNotBlank(instanceId) && !instanceId.equalsIgnoreCase('null')) ? instanceId : '';
         eventId = (String.isNotBlank(eventId) && !eventId.equalsIgnoreCase('null')) ? eventId : '';
         registrationId = (String.isNotBlank(registrationId) && !registrationId.equalsIgnoreCase('null')) ? registrationId : '';
-        String CookieValue = '{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '","dt":"' + String.valueOf(Datetime.now()) + '"}';
-        String encodedCipherText = '';
-        String key = getCookieKey();
-        if (String.isNotBlank(String.valueOf(key))) {
-            Blob data = Blob.valueOf(CookieValue);
-            Blob encrypted = Crypto.encryptWithManagedIV('AES256', Blob.valueOf(key), data);
-            encodedCipherText = EncodingUtil.base64Encode(encrypted);
-            encodedCipherText = EncodingUtil.urlEncode(encodedCipherText, 'UTF-8');
-            Cookie SummitEventsCookie = new Cookie('SummitEvents', encodedCipherText, null, -1, false);
-            ApexPages.currentPage().setCookies(new Cookie[]{
-                    SummitEventsCookie
-            });
-        }
-        return encodedCipherText;
+        String CookieValue = encryptString('{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '","dt":"' + String.valueOf(Datetime.now()) + '"}');
+        Cookie SummitEventsCookie = new Cookie('SummitEvents', CookieValue, null, -1, false);
+        ApexPages.currentPage().setCookies(new Cookie[]{
+                SummitEventsCookie
+        });
+        return CookieValue;
     }
 
     public String getDecryptCookie() {
@@ -323,6 +314,18 @@ public with sharing class SummitEventsShared {
             return decryptString(encodedCipherText.getValue(), true);
         }
         return '';
+    }
+
+    public String encryptString(String toEncrypt) {
+        String key = getCookieKey();
+        String encryptedText = '';
+        if (String.isNotBlank(String.valueOf(key))) {
+            Blob data = Blob.valueOf(toEncrypt);
+            Blob encrypted = Crypto.encryptWithManagedIV('AES256', Blob.valueOf(key), data);
+            encryptedText = EncodingUtil.base64Encode(encrypted);
+            encryptedText = EncodingUtil.urlEncode(encryptedText, 'UTF-8');
+        }
+        return encryptedText;
     }
 
     public String decryptString(String encryptedString, Boolean urlDecodeString) {

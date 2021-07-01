@@ -604,6 +604,10 @@
         <sortOrder>Asc</sortOrder>
     </relatedLists>
     <relatedLists>
+        <fields>NAME</fields>
+        <relatedList>Summit_Events_Question__c.Event__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <fields>Title__c</fields>
         <fields>Appointment_Limits__c</fields>
         <fields>Description__c</fields>
@@ -657,7 +661,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h1D0000045UfG</masterLabel>
+        <masterLabel>00h0x000001lutH</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
