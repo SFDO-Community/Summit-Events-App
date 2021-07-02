@@ -33,7 +33,17 @@ public with sharing class SummitEventsRegisterGuestsController {
         List<String> picklist { get; set; }
         String help { get; set; }
         String instructions { get; set; }
-        String mapTo { get; set; }
+    }
+
+    private class questionData {
+        String guestId { get; set; }
+        List<Questions> questions { get; set; }
+    }
+
+    private class Questions {
+        String id { get; set; }
+        String value { get; set; }
+        String question { get; set; }
     }
 
     public SummitEventsRegisterGuestsController() {
@@ -76,7 +86,7 @@ public with sharing class SummitEventsRegisterGuestsController {
             Integer idInt = 0;
             for (Summit_Events_Question__c seaQuestion : eventGuestQuestions) {
                 question q = new question();
-                q.id = 'QQQQ__' + seaQuestion.Question_Field_type__c.replace(' ', '-') + '_' + String.valueOf(idInt);
+                q.id = seaShared.encryptString(seaQuestion.Id);
                 q.name = seaQuestion.Name;
                 q.question = seaQuestion.Question_Label__c;
                 q.type = seaQuestion.Question_Field_type__c;
@@ -84,12 +94,6 @@ public with sharing class SummitEventsRegisterGuestsController {
                 if (String.isNotBlank(seaQuestion.Picklist_Values__c)) {
                     q.picklist = createPicklists(seaQuestion.Picklist_Values__c);
                 }
-                if (String.isNotBlank(seaQuestion.Map_to_Field__c)) {
-                    q.mapTo = seaQuestion.Map_to_Field__c.replace('__c', '');
-                } else {
-                    q.mapTo = q.id;
-                }
-
                 q.help = seaQuestion.Help_Text__c;
                 q.instructions = seaQuestion.Instructions__c;
                 questionList.add(q);
@@ -181,6 +185,14 @@ public with sharing class SummitEventsRegisterGuestsController {
 
     public PageReference saveGuests() {
         doCRUD crudToDo = new doCRUD();
+        //sanitize data
+        List<questionData> guestAnswers = (List<questionData>) JSON.deserialize(guestJSON, List<questionData>.class);
+        for (Integer xx = 0; xx < guestAnswers.size(); xx++) {
+            for (Questions q : guestAnswers[xx].questions) {
+                q.id = seaShared.decryptString(q.id, true);
+            }
+        }
+        system.debug(JSON.serializePretty(guestAnswers));
         crudToDo.updateRegistration(guestJSON, eventRegistration, oldRegId);
         return pageFlow.get('Next');
     }
