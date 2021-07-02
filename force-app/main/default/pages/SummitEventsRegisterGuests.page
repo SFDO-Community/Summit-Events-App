@@ -13,6 +13,7 @@
         <apex:define name="scriptsHead">
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
             <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/guestRegistration.js')}" type="text/javascript"></script>
+            <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/sldsHelper.js')}" type="text/javascript"></script>
             <script>
                 const guestQuestionJSON = {!guestQuestionJSON};
             </script>
@@ -75,26 +76,7 @@
                                         </header>
                                     </div>
                                     <div class="slds-card__body slds-card__body_inner" id="questQuestions">
-<!--                                        <apex:repeat value="{!guestRequirements}" var="q">-->
-
-<!--                                            <div class="slds-form-element">-->
-<!--                                                <label class="slds-form-element__label" for="{!q}">-->
-<!--                                                    <apex:outputPanel rendered="{!IF(q = 'First_name' || q = 'Last_name', true, false)}" layout="none">-->
-<!--                                                        <abbr class="slds-required" title="required">* </abbr>-->
-<!--                                                    </apex:outputPanel>-->
-<!--                                                    {!SUBSTITUTE(q, "_", " ")}-->
-<!--                                                </label>-->
-<!--                                                <div class="slds-form-element__control">-->
-<!--                                                    <apex:outputPanel layout="none" rendered="{!(IF(NOT(q == 'Country' || q == 'State'), true, false))}">-->
-<!--                                                        <input type="{!If(q = 'Email','email','text')}" id="{!q}" name="{!q}" placeholder="{!SUBSTITUTE(q, "_", " ")}" required="{!IF(q = 'First_name' || q = 'Last_name', 'required', '')}" class="slds-input"/>-->
-<!--                                                    </apex:outputPanel>-->
-<!--                                                    <apex:outputText escape="false" value="{!statePicklist}" rendered="{!(IF(q == 'State', true, false))}"/>-->
-<!--                                                    <apex:outputText escape="false" value="{!countryPicklist}" rendered="{!(IF(q == 'Country', true, false))}"/>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </apex:repeat>-->
                                         <p class=" slds-text-body slds-p-vertical_xx-small noGuestAlert">
-
                                         </p>
                                     </div>
                                     <footer class="slds-card__footer">

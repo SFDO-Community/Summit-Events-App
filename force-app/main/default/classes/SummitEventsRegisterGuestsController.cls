@@ -25,11 +25,14 @@ public with sharing class SummitEventsRegisterGuestsController {
     public String namespace { get; set; }
 
     public class question {
-        String Name { get; set; }
-        String Type { get; set; }
-        String Question { get; set; }
-        Boolean Required { get; set; }
+        String id { get; set; }
+        String name { get; set; }
+        String type { get; set; }
+        String question { get; set; }
+        Boolean required { get; set; }
         List<String> picklist { get; set; }
+        String help { get; set; }
+        String instructions { get; set; }
         String mapTo { get; set; }
     }
 
@@ -61,24 +64,34 @@ public with sharing class SummitEventsRegisterGuestsController {
 
             List<Summit_Events_Question__c> eventGuestQuestions = [
                     SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
-                            Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c
+                            Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c
                     FROM Summit_Events_Question__c
                     WHERE Event__c = :eventInformation.eventId
                     AND Registrant_Type__c = 'Guest'
                     WITH SECURITY_ENFORCED
+                    ORDER BY Display_Order__c NULLS LAST
             ];
 
             List<question> questionList = new List<question>();
+            Integer idInt = 0;
             for (Summit_Events_Question__c seaQuestion : eventGuestQuestions) {
                 question q = new question();
-                q.Name = seaQuestion.Name;
-                q.Question = seaQuestion.Question_Label__c;
-                q.Type = seaQuestion.Question_Field_type__c;
-                q.Required = seaQuestion.Required__c;
+                q.id = 'QQQQ__' + seaQuestion.Question_Field_type__c.replace(' ', '-') + '_' + String.valueOf(idInt);
+                q.name = seaQuestion.Name;
+                q.question = seaQuestion.Question_Label__c;
+                q.type = seaQuestion.Question_Field_type__c;
+                q.required = seaQuestion.Required__c;
                 if (String.isNotBlank(seaQuestion.Picklist_Values__c)) {
                     q.picklist = createPicklists(seaQuestion.Picklist_Values__c);
                 }
-                q.mapTo = seaShared.encryptString(seaQuestion.Map_to_Field__c);
+                if (String.isNotBlank(seaQuestion.Map_to_Field__c)) {
+                    q.mapTo = seaQuestion.Map_to_Field__c.replace('__c', '');
+                } else {
+                    q.mapTo = q.id;
+                }
+
+                q.help = seaQuestion.Help_Text__c;
+                q.instructions = seaQuestion.Instructions__c;
                 questionList.add(q);
             }
 
