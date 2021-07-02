@@ -320,10 +320,13 @@ public with sharing class SummitEventsShared {
         String key = getCookieKey();
         String encryptedText = '';
         if (String.isNotBlank(String.valueOf(key))) {
-            Blob data = Blob.valueOf(toEncrypt);
-            Blob encrypted = Crypto.encryptWithManagedIV('AES256', Blob.valueOf(key), data);
-            encryptedText = EncodingUtil.base64Encode(encrypted);
-            encryptedText = EncodingUtil.urlEncode(encryptedText, 'UTF-8');
+            if (String.isNotBlank(toEncrypt)) {
+                Blob data = Blob.valueOf(toEncrypt);
+                Blob encrypted = Crypto.encryptWithManagedIV('AES256', Blob.valueOf(key), data);
+                encryptedText = EncodingUtil.base64Encode(encrypted);
+                encryptedText = EncodingUtil.urlEncode(encryptedText, 'UTF-8');
+
+            }
         }
         return encryptedText;
     }

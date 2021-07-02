@@ -14,24 +14,24 @@ ready(() => {
 
 
 let serializeForm = function (form) {
+    form.reportValidity();
     let obj = {};
     let firstname = '';
     let lastname = '';
     let restOfData = ''
     let newId = uniqueId();
     obj['id'] = newId;
-    var formData = new FormData(form);
-    console.log(JSON.stringify(formData));
-    for (var key of formData.keys()) {
-        obj[key] = escape(formData.get(key));
-        if (key.toLowerCase() === 'first_name') {
-            firstname = escape(formData.get(key));
-        } else if (key.toLowerCase() === 'last_name') {
-            lastname = escape(formData.get(key));
+    let formData = new FormData(form);
+    for (let key of formData.keys()) {
+        let formValue = escape(formData.get(key).replace(/<[^>]*>/ig, ""));
+        obj[key] = formValue;
+        if (key.toLowerCase() === 'registrants_first_name') {
+            firstname = formValue;
+        } else if (key.toLowerCase() === 'registrants_last_name') {
+            lastname = formValue;
         } else {
             if (formData.get(key)) {
-                console.log(key + ' ' + formData.get(key));
-                restOfData += '<span class="slds-badge slds-badge_lightest">' + formData.get(key) + '</span>';
+                restOfData += '<span class="slds-badge slds-badge_lightest">' + formValue + '</span>';
             }
         }
     }
@@ -74,9 +74,9 @@ function loadUpPreviousData() {
             let lastname = '';
             let restOfData = '';
             for (let key in allGuests[i]) {
-                if (key.toLowerCase() === 'first_name') {
+                if (key.toLowerCase() === 'registrants_first_name') {
                     firstname = escape(allGuests[i][key]);
-                } else if (key.toLowerCase() === 'last_name') {
+                } else if (key.toLowerCase() === 'registrants_last_name') {
                     lastname = escape(allGuests[i][key]);
                 } else if (key.toLowerCase() !== 'id') {
                     if (allGuests[i][key]) {
@@ -106,34 +106,60 @@ function buildGuestForm() {
             qWrapOuter.classList.add('slds-col', 'slds-p-vertical_x-small', 'slds-size_1-of-1');
             let qWrap = document.createElement('div');
             qWrap.classList.add('slds-form-element');
-            if (q['Required']) {
+            if (q['required']) {
                 qWrap.classList.add('slds-is-required')
             }
-            qWrap.setAttribute('data-type', q['Type']);
-            qWrap.setAttribute('data-object', q['Type']);
-            qWrap.setAttribute('data-field', q['Type']);
+            qWrap.setAttribute('data-type', q['type']);
+            qWrap.setAttribute('data-object', q['type']);
+            qWrap.setAttribute('data-field', q['type']);
             let label = document.createElement('label');
             label.classList.add('slds-form-element__label');
-            if (!q['Required']) {
-                label.innerHTML = q['Question'];
-            } else {
-                label.innerHTML = q['Question'] + '<abbr className="slds-required" title="required"> * </abbr>';
+            label.innerHTML = q['question'];
+
+            if (q['required']) {
+                let requiredInput = document.createElement('abbr');
+                requiredInput.title = 'required';
+                requiredInput.classList.add('slds-required');
+                requiredInput.innerHTML = ' * ';
+                label.appendChild(requiredInput);
             }
             qWrap.appendChild(label);
+
+            if (q['help']) {
+                let helpInfo = helpTextTemplate(q['help'], q['id'] + '_help');
+                qWrap.insertAdjacentHTML('beforeend', helpInfo);
+            }
+
             let formElement = document.createElement('div');
             formElement.classList.add('slds-form-element__control');
-            switch (q['Type']) {
-                case 'Pick-list':
-                    formElement.innerHTML = buildPicklist(q);
+            switch (q['type'].toLowerCase()) {
+                case 'picklist':
+                    formElement.appendChild(buildPicklist(q));
                     break;
-                case 'Text box':
-                    formElement.innerHTML = buildInputBox(q);
+                case 'textbox':
+                    formElement.appendChild(buildInputBox(q, 'text'));
                     break;
-                case 'Text area':
-                    formElement.innerHTML = buildTextarea(q);
+                case 'email':
+                    formElement.appendChild(buildInputBox(q, 'email'));
+                    break;
+                case 'date':
+                    formElement.appendChild(buildInputBox(q, 'date'));
+                    break;
+                case 'text area':
+                    formElement.appendChild(buildTextarea(q));
                     break;
             }
+
             qWrap.appendChild(formElement);
+
+            if (q['instructions']) {
+                let instruct = document.createElement('div');
+                instruct.classList.add('slds-form-element__help');
+                instruct.innerHTML = q['instructions'];
+                instruct.id = q['id'] + '_error';
+                qWrap.appendChild(instruct);
+            }
+
             qWrapOuter.appendChild(qWrap);
             formInputs.appendChild(qWrapOuter);
             qNum++;
@@ -141,40 +167,50 @@ function buildGuestForm() {
     }
 }
 
-function buildInputBox(question) {
-    let inputBox = '<input class="slds-input';
-    if (question['Required']) {
-        inputBox += ' required '
+function buildInputBox(question, inputType) {
+    let inputBox = document.createElement('input');
+    inputBox.classList.add('slds-input');
+    inputBox.type = inputType;
+    inputBox.name = question['mapTo'];
+    if (question['required']) {
+        inputBox.classList.add('required');
+        inputBox.required = true;
     }
-    inputBox += '" ';
-    if (question['Required']) {
-        inputBox += ' required="required" ';
-    }
-    inputBox += '>'
     return inputBox;
 }
 
 function buildPicklist(question) {
-    let picklist = '<div className="slds-select_container">';
-    picklist += '<select class="slds-select">';
+    let picklistWrap = document.createElement('div');
+    picklistWrap.classList.add('slds-select_container');
+    let picklist = document.createElement('select');
+    if (question['required']) {
+        picklist.classList.add('required');
+        picklist.required = true;
+    }
+    picklist.classList.add('slds-select');
+    picklist.name = question['mapTo'];
     question['picklist'].forEach(item => {
-        picklist += '<option value="' + item + '">' + item + '</option>';
+        let selectOption = document.createElement('option');
+        selectOption.text = item;
+        if (item === 'Select...') {
+            selectOption.value = '';
+        } else {
+            selectOption.value = item;
+        }
+        picklist.add(selectOption);
     });
-    picklist += '</select>';
-    picklist += '</div>';
-    return picklist;
+    picklistWrap.appendChild(picklist);
+    return picklistWrap;
 }
 
 function buildTextarea(question) {
-    let inputBox = '<textarea class="slds-textarea';
-    if (question['Required']) {
-        inputBox += ' required '
+    let inputBox = document.createElement('textarea');
+    inputBox.classList.add('slds-textarea');
+    inputBox.name = question['mapTo'];
+    if (question['required']) {
+        inputBox.classList.add('required');
+        inputBox.required = true;
     }
-    inputBox += '" ';
-    if (question['Required']) {
-        inputBox += ' required="required" ';
-    }
-    inputBox += '></textarea>';
     return inputBox;
 }
 
@@ -189,37 +225,50 @@ function removeById(idToRemove, element) {
     itemWrapper.remove();
 }
 
+const helpTextTemplate = (helpText, id) => `
+<div class="slds-form-element__icon">
+  <button class="slds-button slds-button_icon helpButton" aria-describedby="${id}">
+    <svg class="slds-button__icon" aria-hidden="true">
+      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#info"></use>
+    </svg>
+    <span class="slds-assistive-text">Help</span>
+  </button>
+  <div class="slds-popover slds-fall-into-ground slds-nubbin_bottom-left" role="tooltip" id="${id}" style="position:absolute;top:-45px;left:-15px;width:200px">
+    <div class="slds-popover__body">${helpText}</div>
+  </div>
+</div>
+`
 
 const guestListTemplate = (fullName, uniqueId, restOfData) => `
-    <article class="slds-card">
-        <div class="slds-card__header slds-grid">
-            <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                <div class="slds-media__figure">
-                <span class="slds-icon_container slds-icon-standard-account" title="Guest">
-                    <svg class="slds-icon slds-icon_small" aria-hidden="true">
-                      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/standard-sprite/svg/symbols.svg#account"></use>
+<article class="slds-card">
+    <div class="slds-card__header slds-grid">
+        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-user slds-p-around_xx-small" title="Guest">
+                <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#user"></use>
+                </svg>
+              <span class="slds-assistive-text guestName">${fullName}</span>
+            </span>
+            </div>
+            <div class="slds-media__body">
+                <h2 class="slds-card__header-title">
+                    <span class="slds-card__header-link slds-truncate" title="${fullName}">
+                        <span class="guestName" style="margin-top:-109">${fullName}</span>
+                    </span>
+                </h2>
+            </div>
+            <div class="slds-no-flex">
+                <button class="slds-button slds-p-around_xx-small" title="Delete guest" style="background-color:orangered;" onclick="javascript:removeById('${uniqueId}', this);">
+                    <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#delete"></use>
                     </svg>
-                  <span class="slds-assistive-text guestName">${fullName}</span>
-                </span>
-                </div>
-                <div class="slds-media__body slds-button__icon_x-small">
-                    <h2 class="slds-card__header-title">
-                        <a href="#" class="slds-card__header-link slds-truncate" title="${fullName}">
-                            <span class="guestName">${fullName}</span>
-                        </a>
-                    </h2>
-                </div>
-                <div class="slds-no-flex">
-                    <button class="slds-button" title="Delete guest" style="background-color:orangered;" onclick="javascript:removeById('${uniqueId}', this);">
-                        <svg class="slds-icon slds-icon_small" aria-hidden="true">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#delete"></use>
-                        </svg>
-                    </button>
-                </div>
-            </header>
-        </div>
-        <div class="slds-card__body slds-card__body_inner">${restOfData}</div>
-    </article>
+                </button>
+            </div>
+        </header>
+    </div>
+    <div class="slds-card__body slds-card__body_inner">${restOfData}</div>
+</article>
 `
 
 
