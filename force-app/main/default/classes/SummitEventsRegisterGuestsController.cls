@@ -112,7 +112,7 @@ public with sharing class SummitEventsRegisterGuestsController {
             oldRegId = eventRegistration.Id;
             eventRegistration.Id = null;
 
-            pageFlow = SeaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage());
+            pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage());
             System.debug('PAGE FLOW : ' + pageFlow);
 
             templateSelected = seaShared.getTemplate(eventPage.Template__c);
@@ -167,16 +167,6 @@ public with sharing class SummitEventsRegisterGuestsController {
         htmlSelect += '</select>';
         System.debug(htmlSelect);
         return htmlSelect;
-    }
-
-    public List<String> getGuestRequirements() {
-        String guestRequirements = eventPage.Guest_Registrant_Information__c;
-        if (String.isNotBlank(guestRequirements)) {
-            guestRequirements = guestRequirements.replace(' ', '_');
-            guestRequirements = guestRequirements.replace('Address', 'Address;City;State;Zip;Country;');
-            return guestRequirements.split(';');
-        }
-        return new List<String>();
     }
 
     public PageReference checkEventDetails() {
