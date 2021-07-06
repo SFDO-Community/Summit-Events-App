@@ -19,9 +19,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="sectionNav"/>
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
-                <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
-                    <apex:messages />
-                </div>
                 <apex:form id="SummitEventsConfirmationForm" styleClass="slds-grid slds-wrap">
                     <!-- EVENT BREADCRUMB -->
                     <div class="slds-col slds-p-vertical-small slds-size_1-of-1">
@@ -39,29 +36,35 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </ol>
                         </nav>
                     </div>
+
                     <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
-                        <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
-                            {!eventPage.Event_Confirmation_Title__c}
-                        </h2>
+                        <apex:messages layout="list" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small"/>
                     </div>
+
                     <!-- EVENT CLOSED MESSAGE -->
                     <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
                         <p class="slds-text-body">
-                            <apex:outputText value="{!eventPage.Event_Full_Text__c}"/>
+                        <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
+                            {!eventPage.Event_Confirmation_Title__c}
+                        </h2>
+                        <apex:outputText value="{!eventPage.Event_Full_Text__c}"/>
                         </p>
                     </apex:outputPanel>
-                    <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
-                        <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
-                            <p class="slds-text-body slds-p-vertical_xx-small">
-                                <apex:outputText escape="false" value="{!eventPage.Event_Confirmation_Description__c}"/>
-                            </p>
-                        </div>
-                        <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
-                            <p class="slds-text-body ">
-                                <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"/>
-                            </p>
-                        </div>
+
+                    <apex:outputPanel rendered="{!!eventIsClosed}" layout="block" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                        <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
+                            {!eventPage.Event_Confirmation_Title__c}
+                        </h2>
+                        <p class="slds-text-body slds-p-vertical_xx-small">
+                            <apex:outputText escape="false" value="{!eventPage.Event_Confirmation_Description__c}"/>
+                        </p>
                     </apex:outputPanel>
+
+                    <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
+                        <p class="slds-text-body ">
+                            <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"/>
+                        </p>
+                    </div>
                 </apex:form>
             </div>
         </apex:define>
