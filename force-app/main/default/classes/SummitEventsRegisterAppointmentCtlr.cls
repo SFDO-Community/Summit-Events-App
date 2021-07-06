@@ -67,7 +67,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         WITH SECURITY_ENFORCED
                 ];
 
-                pageFlow = SeaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage());
+                pageFlow = seaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage());
 
                 if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
                     adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
@@ -252,11 +252,11 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         if (appointmentsToAdd.size() > 0) {
             doCRUD.updateAppointments(appointmentsToAdd);
         }
-        return pageFLow.get('Next');
+        return pageFlow.get('Next');
     }
 
     public PageReference previousPage() {
-        return pageFLow.get('Previous');
+        return pageFlow.get('Previous');
     }
 
     /**

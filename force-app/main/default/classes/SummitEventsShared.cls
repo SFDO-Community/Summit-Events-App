@@ -34,7 +34,7 @@ public with sharing class SummitEventsShared {
         return templateName;
     }
 
-    public Map<String, PageReference> getPageFlow(Id eventId, String instanceTitle, pageReference currentPage) {
+    public Map<String, PageReference> getPageFlow(Id eventId, String instanceTitle, PageReference currentPage) {
 
         //Get the url without anchors
         String currentUrl = currentPage.getUrl();
@@ -50,7 +50,7 @@ public with sharing class SummitEventsShared {
             namespace = namespace + '__';
         }
 
-        Map<String, PageReference> pageMovement = New Map<String, PageReference>();
+        Map<String, PageReference> pageMovement = new Map<String, PageReference>();
         Map<String, String> currentPageParameters = currentPage.getParameters();
         List<String> pagesInEvent = new List<String>();
         Map<String, PageReference> allPageReferences = new Map<String, PageReference>();
@@ -108,10 +108,6 @@ public with sharing class SummitEventsShared {
                 currentPageLocation = x;
             }
         }
-
-        System.debug(pagesInEvent);
-        System.debug(currentPage);
-        System.debug(currentPageLocation);
 
         if (currentUrl.equalsIgnoreCase(allPageReferences.get(namespace + 'SummitEventsRegister').getUrl())) {
             pageMovement.put('Previous', Page.SummitEventsRegister);

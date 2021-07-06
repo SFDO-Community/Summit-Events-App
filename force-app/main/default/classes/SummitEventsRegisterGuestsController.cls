@@ -83,13 +83,13 @@ public with sharing class SummitEventsRegisterGuestsController {
             ];
 
             List<question> questionList = new List<question>();
-            Integer idInt = 0;
+
             for (Summit_Events_Question__c seaQuestion : eventGuestQuestions) {
                 question q = new question();
                 q.id = seaShared.encryptString(seaQuestion.Id);
                 q.name = seaQuestion.Name;
                 q.question = seaQuestion.Question_Label__c;
-                q.type = seaQuestion.Question_Field_type__c;
+                q.type = seaQuestion.Question_Field_Type__c;
                 q.required = seaQuestion.Required__c;
                 if (String.isNotBlank(seaQuestion.Picklist_Values__c)) {
                     q.picklist = createPicklists(seaQuestion.Picklist_Values__c);
@@ -157,7 +157,7 @@ public with sharing class SummitEventsRegisterGuestsController {
             F = Summit_Events_Registration__c.Registrant_Country__c.getDescribe();
         }
 
-        Schema.sObjectField T = F.getSObjectField();
+        Schema.SObjectField T = F.getSobjectField();
         //List<PicklistEntry> entries = T.getDescribe().getPicklistValues();
         htmlSelect += '<option value="">Select</option>';
         for (Schema.PicklistEntry PicklistValue : T.getDescribe().getPicklistValues()) {
@@ -186,14 +186,41 @@ public with sharing class SummitEventsRegisterGuestsController {
     public PageReference saveGuests() {
         doCRUD crudToDo = new doCRUD();
         //sanitize data
-        List<questionData> guestAnswers = (List<questionData>) JSON.deserialize(guestJSON, List<questionData>.class);
-        for (Integer xx = 0; xx < guestAnswers.size(); xx++) {
-            for (Questions q : guestAnswers[xx].questions) {
-                q.id = seaShared.decryptString(q.id, true);
+        Map<Id, Summit_Events_Question__c> availableQuestions = new Map<Id, Summit_Events_Question__c>([
+                SELECT Id, Map_to_Field__c, Question_Field_Type__c
+                FROM Summit_Events_Question__c
+                WHERE Event__c = :eventInformation.eventId
+        ]);
+        System.debug(JSON.serializePretty(availableQuestions));
+
+        if (String.isNotBlank(guestJSON)) {
+            List<questionData> guestAnswers = (List<questionData>) JSON.deserialize(guestJSON, List<questionData>.class);
+            for (Integer xx = 0; xx < guestAnswers.size(); xx++) {
+                for (Questions q : guestAnswers[xx].questions) {
+                    Id questionId = null;
+                    try {
+                        questionId = seaShared.decryptString(q.id, true);
+                    } catch (Exception e) {
+                        System.debug(e.getMessage());
+                    }
+                    if (questionId != null) {
+                        Summit_Events_Question__c questionParameters = availableQuestions.get(questionId);
+                        //Remove all html tags from user input (done in javascript, but making sure on the back end)
+                        q.value = q.value.replaceAll('<[^>]+>', '').trim();
+                        //q.value = String.escapeSingleQuotes(q.value);
+                        //q.value = q.value.escapeHtml4();
+                        String fieldType = questionParameters.Question_Field_Type__c;
+                        if (fieldType.equalsIgnoreCase('Text box')) {
+
+                        }
+                    }
+
+                }
             }
+            System.debug(JSON.serializePretty(guestAnswers));
+            guestJSON = JSON.serialize(guestAnswers);
+            crudToDo.updateRegistration(guestJSON, eventRegistration, oldRegId);
         }
-        system.debug(JSON.serializePretty(guestAnswers));
-        crudToDo.updateRegistration(guestJSON, eventRegistration, oldRegId);
         return pageFlow.get('Next');
     }
 
