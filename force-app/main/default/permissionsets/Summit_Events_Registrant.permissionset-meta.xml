@@ -1662,11 +1662,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Guest_Registrant_Information__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Summit_Events__c.Guest_Registration_Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
