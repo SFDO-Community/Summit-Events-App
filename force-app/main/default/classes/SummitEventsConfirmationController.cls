@@ -142,14 +142,15 @@ public with sharing class SummitEventsConfirmationController {
                                     if (String.isNotBlank(mapToField)) {
                                         mapToField = String.escapeSingleQuotes(mapToField).escapeHtml4();
                                         Boolean fieldExists = true;
+                                        Object nextField;
                                         try {
-                                            Object nextField = Schema.sObjectType.Summit_Events_Registration__c.fields.getMap().get(mapToField).getDescribe();
+                                            nextField = Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(mapToField).getDescribe();
                                         } catch (Exception e) {
                                             fieldExists = false;
                                         }
-                                        if (fieldExists && Schema.sObjectType.Summit_Events_Registration__c.isAccessible() &&
-                                                Schema.sObjectType.Summit_Events_Registration__c.fields.getMap().get(mapToField).getDescribe().isAccessible() &&
-                                                Schema.sObjectType.Summit_Events_Registration__c.fields.getMap().get(mapToField).getDescribe().isCreateable()) {
+                                        if (fieldExists && Schema.SObjectType.Summit_Events_Registration__c.isAccessible() &&
+                                                Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(mapToField).getDescribe().isAccessible() &&
+                                                Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(mapToField).getDescribe().isCreateable()) {
                                             guestRegistration.put(mapToField, q.value);
                                         } else {
                                             eventRegistrationSuccess = false;
