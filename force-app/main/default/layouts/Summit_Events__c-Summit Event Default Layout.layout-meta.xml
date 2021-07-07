@@ -232,10 +232,6 @@
                 <behavior>Edit</behavior>
                 <field>Guest_Max_Amount__c</field>
             </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Guest_Registrant_Information__c</field>
-            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
