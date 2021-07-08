@@ -672,6 +672,12 @@
         <relatedList>Summit_Events_Fee__c.Event_Registration__c</relatedList>
     </relatedLists>
     <relatedLists>
+        <fields>NAME</fields>
+        <fields>Registrant_First_Name__c</fields>
+        <fields>Registrant_Last_Name__c</fields>
+        <relatedList>Summit_Events_Registration__c.Guest_Host__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <fields>TASK.SUBJECT</fields>
         <fields>TASK.WHO_NAME</fields>
         <fields>ACTIVITY.TASK</fields>

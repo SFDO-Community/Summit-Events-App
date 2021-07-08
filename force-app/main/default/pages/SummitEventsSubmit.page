@@ -42,24 +42,52 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </nav>
                     </div>
 
-                    <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                    <!-- EVENT CLOSED MESSAGE -->
+                    <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
                         <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
                             <apex:outputText value="{!eventPage.Event_Submit_Title__c}"/>
                         </h2>
-                    </div>
-                    <!-- EVENT CLOSED MESSAGE -->
-                    <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
                         <p class="slds-text-body">
                             <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>
                         </p>
                     </apex:outputPanel>
+
                     <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
                         <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+
+                            <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
+                                <apex:outputText value="{!eventPage.Event_Submit_Title__c}"/>
+                            </h2>
+
                             <p class="slds-text-body slds-p-vertical_xx-small">
                                 <apex:outputText escape="false" value="{!eventPage.Event_Submit_Description__c}"/>
                             </p>
+
+                            <!-- Show Selected guest -->
+                            <apex:outputPanel layout="none" rendered="{!IF(guestAnswers.size>0, true, fale)}">
+                                <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium slds-clearfix">Additional guest registered</h2>
+                                <apex:variable value="{!0}" var="guestNum"/>
+                                <apex:repeat var="guests" value="{!guestAnswers}">
+                                    <article class="slds-card slds-clearfix slds-p-vertical_none">
+                                        <div class="slds-card__body slds-card__body_inner slds-clearfix slds-m-vertical_x-small slds-p-horizontal_small">
+                                            <apex:repeat var="f" value="{!guests.questions}">
+                                                <div class="slds-float_left slds-m-right_large slds-p-bottom_x-small">
+                                                    <label class="slds-form-element__label">
+                                                        {!f.question}
+                                                    </label>
+                                                    <div class="slds-float_none slds-text-body_regular">
+                                                        {!f.value}
+                                                    </div>
+                                                </div>
+                                            </apex:repeat>
+                                        </div>
+                                    </article>
+                                </apex:repeat>
+                            </apex:outputPanel>
+
                             <!-- Show selected appointments -->
-                            <apex:outputPanel rendered="{!IF(chosenAppointments.size>0, true, false)}">
+                            <apex:outputPanel layout="none" rendered="{!IF(chosenAppointments.size>0, true, false)}">
+                                <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium slds-clearfix">Appointments/Options/Whatever</h2>
                                 <ul id="chosenAppointments" class="slds-list_dotted">
                                     <apex:repeat var="appointment" value="{!chosenAppointments}">
                                         <li>
@@ -74,6 +102,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </apex:repeat>
                                 </ul>
                             </apex:outputPanel>
+
                         </div>
 
                         <apex:outputPanel layout="block" rendered="{!showPaymentButton}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">

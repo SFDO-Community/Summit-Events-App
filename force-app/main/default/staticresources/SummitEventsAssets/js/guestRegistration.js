@@ -130,7 +130,6 @@ function buildGuestForm() {
                     formElement.appendChild(buildInputBox(q, 'textarea'));
                     break;
             }
-
             qWrap.appendChild(formElement);
 
             if (q['instructions']) {
@@ -156,11 +155,17 @@ function buildInputBox(question, inputType) {
         inputBox = document.createElement('input');
         inputBox.type = inputType;
     }
-    inputBox.setAttribute('data-type', question['type']);
+    if (question.defaultValue) {
+        inputBox.value = question.defaultValue;
+    }
+    if (question.textLimit)  {
+        inputBox.maxLength = question.textLimit;
+    }
+    inputBox.setAttribute('data-type', question.type);
     inputBox.classList.add('slds-input');
-    inputBox.name = question['id'];
-    inputBox.id = question['id'];
-    if (question['required']) {
+    inputBox.name = question.id;
+    inputBox.id = question.id;
+    if (question.required) {
         inputBox.classList.add('required');
         inputBox.required = true;
     }
@@ -171,20 +176,23 @@ function buildPicklist(question) {
     let picklistWrap = document.createElement('div');
     picklistWrap.classList.add('slds-select_container');
     let picklist = document.createElement('select');
-    if (question['required']) {
+    if (question.required) {
         picklist.classList.add('required');
         picklist.required = true;
     }
     picklist.classList.add('slds-select');
-    picklist.setAttribute('data-type', question['type']);
-    picklist.name = question['id'];
-    picklist.id = question['id'];
+    picklist.setAttribute('data-type', question.type);
+    picklist.name = question.id;
+    picklist.id = question.id;
     question['picklist'].forEach(item => {
         let selectOption = document.createElement('option');
         selectOption.text = item;
         if (item === 'Select...') {
             selectOption.value = '';
         } else {
+            if (question.defaultValue === item) {
+                selectOption.selected = true;
+            }
             selectOption.value = item;
         }
         picklist.add(selectOption);

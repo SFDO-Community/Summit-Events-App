@@ -636,6 +636,8 @@
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
+        <fields>Map_to_Field__c</fields>
+        <fields>Question_Label__c</fields>
         <relatedList>Summit_Events_Question__c.Event__c</relatedList>
     </relatedLists>
     <relatedLists>
@@ -692,7 +694,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h17000007jSSZ</masterLabel>
+        <masterLabel>00h55000002gYma</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

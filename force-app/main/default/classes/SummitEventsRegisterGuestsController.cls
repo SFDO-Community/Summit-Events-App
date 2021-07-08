@@ -34,6 +34,7 @@ public with sharing class SummitEventsRegisterGuestsController {
         String help { get; set; }
         String instructions { get; set; }
         String defaultValue { get; set; }
+        Integer textLimit { get; set; }
     }
 
     private class questionGuestData {
@@ -99,7 +100,7 @@ public with sharing class SummitEventsRegisterGuestsController {
                 q.help = seaQuestion.Help_Text__c;
                 q.instructions = seaQuestion.Instructions__c;
                 q.defaultValue = seaQuestion.Default_Value__c;
-                System.debug(seaQuestion.Is_Visible__c);
+                q.textLimit = (Integer) seaQuestion.Text_Limit__c;
                 if (seaQuestion.Is_Visible__c) {
                     questionList.add(q);
                 } else {
@@ -137,7 +138,6 @@ public with sharing class SummitEventsRegisterGuestsController {
                         if (questionId != null) {
                             Summit_Events_Question__c questionParameters = eventGuestQuestions.get(questionId);
                             if (!questionParameters.Is_Visible__c) {
-                                System.debug('not visible');
                                 //remove NOT visible questions so they do not appear to front end user
                                 guestAnswers[xx].questions.remove(yy);
                             }
@@ -145,7 +145,6 @@ public with sharing class SummitEventsRegisterGuestsController {
                         questionCount++;
                     }
                 }
-                
                 guestJSON = JSON.serialize(guestAnswers);
             }
 

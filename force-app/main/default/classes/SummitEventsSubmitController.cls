@@ -21,9 +21,21 @@ public with sharing class SummitEventsSubmitController {
     public Double existingPaymentAmount { get; set; }
     public Double eventOnlyPaymentAmount { get; set; }
     public String eventOnlyPaymentAmountFormatted { get; set; }
+    public List<questionGuestData> guestAnswers { get; set; }
     public String paymentItemized { get; set; }
     public Boolean showPaymentButton { get; set; }
-    public Map<String, PageReference> pageFlow {get;set;}
+    public Map<String, PageReference> pageFlow { get; set; }
+
+    public class questionGuestData {
+        public String guestId { get; set; }
+        public List<questionData> questions { get; set; }
+    }
+
+    public class questionData {
+        public String id { get; set; }
+        public String value { get; set; }
+        public String question { get; set; }
+    }
 
     public SummitEventsSubmitController() {
         showPaymentButton = false;
@@ -65,6 +77,49 @@ public with sharing class SummitEventsSubmitController {
         }
 
         if (!String.isBlank(eventInformation.registrationId)) {
+
+            Summit_Events_Registration__c eventRegistration = [
+                    SELECT Id, Guest_JSON__c
+                    FROM Summit_Events_Registration__c
+                    WHERE Id = :eventInformation.registrationId
+            ];
+
+            if (String.isNotBlank(eventRegistration.Guest_JSON__c)) {
+
+                Map<Id, Summit_Events_Question__c> eventGuestQuestions = new Map<Id, Summit_Events_Question__c>([
+                        SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
+                                Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c
+                        FROM Summit_Events_Question__c
+                        WHERE Event__c = :eventInformation.eventId
+                        AND Registrant_Type__c = 'Guest'
+                        WITH SECURITY_ENFORCED
+                        ORDER BY Display_Order__c NULLS LAST
+                ]);
+
+                guestAnswers = (List<questionGuestData>) JSON.deserialize(eventRegistration.Guest_JSON__c, List<questionGuestData>.class);
+                for (Integer xx = 0; xx < guestAnswers.size(); xx++) {
+                    Integer questionCount = 0;
+                    for (Integer yy = 0; yy < guestAnswers[xx].questions.size(); yy++) {
+                        Id questionId = null;
+                        try {
+                            questionId = seaShared.decryptString(guestAnswers[xx].questions[yy].Id, true);
+                        } catch (Exception e) {
+                            System.debug(e.getMessage());
+                        }
+                        if (questionId != null) {
+                            Summit_Events_Question__c questionParameters = eventGuestQuestions.get(questionId);
+                            if (!questionParameters.Is_Visible__c) {
+                                System.debug('not visible');
+                                //remove NOT visible questions so they do not appear to front end user
+                                guestAnswers[xx].questions.remove(yy);
+                            }
+                        }
+                        questionCount++;
+                    }
+                }
+
+            }
+
             chosenAppointments = [
                     SELECT Id, Appointment_Category__c, Event_Appointment_Type__c, Appointment_Type__c, Description__c, Appointment_Title__c, Chosen_State__c
                     FROM Summit_Events_Appointments__c
