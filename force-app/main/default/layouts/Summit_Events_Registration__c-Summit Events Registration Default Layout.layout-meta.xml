@@ -667,6 +667,12 @@
         <relatedList>Summit_Events_Fee__c.Event_Registration__c</relatedList>
     </relatedLists>
     <relatedLists>
+        <fields>NAME</fields>
+        <fields>Registrant_First_Name__c</fields>
+        <fields>Registrant_Last_Name__c</fields>
+        <relatedList>Summit_Events_Registration__c.Guest_Host__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <fields>TASK.SUBJECT</fields>
         <fields>TASK.WHO_NAME</fields>
         <fields>ACTIVITY.TASK</fields>
@@ -681,7 +687,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h1D000003cIzE</masterLabel>
+        <masterLabel>00h55000002gYmZ</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
