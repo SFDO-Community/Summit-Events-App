@@ -7,12 +7,11 @@ public with sharing class SummitEventsRegisterGuestsController {
 
     public SummitEventsShared seaShared = new SummitEventsShared();
     public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
-
     public String formattedNavDate { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
-
+    public Map<Id, Summit_Events_Question__c> eventGuestQuestions { get; set; }
     public String templateSelected { get; set; }
     public Boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
@@ -23,6 +22,7 @@ public with sharing class SummitEventsRegisterGuestsController {
     public String statePicklist { get; set; }
     public String countryPicklist { get; set; }
     public String namespace { get; set; }
+    public List<questionData> hiddenQuestions { get; set; }
 
     public class question {
         String id { get; set; }
@@ -33,14 +33,15 @@ public with sharing class SummitEventsRegisterGuestsController {
         List<String> picklist { get; set; }
         String help { get; set; }
         String instructions { get; set; }
+        String defaultValue { get; set; }
+    }
+
+    private class questionGuestData {
+        String guestId { get; set; }
+        List<questionData> questions { get; set; }
     }
 
     private class questionData {
-        String guestId { get; set; }
-        List<Questions> questions { get; set; }
-    }
-
-    private class Questions {
         String id { get; set; }
         String value { get; set; }
         String question { get; set; }
@@ -71,20 +72,21 @@ public with sharing class SummitEventsRegisterGuestsController {
                     WITH SECURITY_ENFORCED
             ];
 
-
-            List<Summit_Events_Question__c> eventGuestQuestions = [
+            eventGuestQuestions = new Map<Id, Summit_Events_Question__c>([
                     SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
-                            Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c
+                            Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c
                     FROM Summit_Events_Question__c
                     WHERE Event__c = :eventInformation.eventId
                     AND Registrant_Type__c = 'Guest'
                     WITH SECURITY_ENFORCED
                     ORDER BY Display_Order__c NULLS LAST
-            ];
+            ]);
 
             List<question> questionList = new List<question>();
+            hiddenQuestions = new List<questionData>();
 
-            for (Summit_Events_Question__c seaQuestion : eventGuestQuestions) {
+            for (Id key : eventGuestQuestions.keySet()) {
+                Summit_Events_Question__c seaQuestion = eventGuestQuestions.get(key);
                 question q = new question();
                 q.id = seaShared.encryptString(seaQuestion.Id);
                 q.name = seaQuestion.Name;
@@ -96,7 +98,17 @@ public with sharing class SummitEventsRegisterGuestsController {
                 }
                 q.help = seaQuestion.Help_Text__c;
                 q.instructions = seaQuestion.Instructions__c;
-                questionList.add(q);
+                q.defaultValue = seaQuestion.Default_Value__c;
+                System.debug(seaQuestion.Is_Visible__c);
+                if (seaQuestion.Is_Visible__c) {
+                    questionList.add(q);
+                } else {
+                    questionData hiddenQuestion = new questionData();
+                    hiddenQuestion.id = seaShared.encryptString(seaQuestion.Id);
+                    hiddenQuestion.value = seaQuestion.Default_Value__c;
+                    hiddenQuestion.question = seaQuestion.Question_Label__c;
+                    hiddenQuestions.add(hiddenQuestion);
+                }
             }
 
             guestQuestionJSON = JSON.serialize(questionList);
@@ -107,14 +119,39 @@ public with sharing class SummitEventsRegisterGuestsController {
                     WHERE Id = :eventInformation.registrationId
                     WITH SECURITY_ENFORCED
             ];
+
             guestJSON = eventRegistration.Guest_JSON__c;
+
+            //remove hidden inputs
+            if (String.isNotEmpty(guestJSON)) {
+                List<questionGuestData> guestAnswers = (List<questionGuestData>) JSON.deserialize(guestJSON, List<questionGuestData>.class);
+                for (Integer xx = 0; xx < guestAnswers.size(); xx++) {
+                    Integer questionCount = 0;
+                    for (Integer yy = 0; yy < guestAnswers[xx].questions.size(); yy++) {
+                        Id questionId = null;
+                        try {
+                            questionId = seaShared.decryptString(guestAnswers[xx].questions[yy].Id, true);
+                        } catch (Exception e) {
+                            System.debug(e.getMessage());
+                        }
+                        if (questionId != null) {
+                            Summit_Events_Question__c questionParameters = eventGuestQuestions.get(questionId);
+                            if (!questionParameters.Is_Visible__c) {
+                                System.debug('not visible');
+                                //remove NOT visible questions so they do not appear to front end user
+                                guestAnswers[xx].questions.remove(yy);
+                            }
+                        }
+                        questionCount++;
+                    }
+                }
+                
+                guestJSON = JSON.serialize(guestAnswers);
+            }
 
             oldRegId = eventRegistration.Id;
             eventRegistration.Id = null;
-
             pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage());
-            System.debug('PAGE FLOW : ' + pageFlow);
-
             templateSelected = seaShared.getTemplate(eventPage.Template__c);
 
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
@@ -165,7 +202,6 @@ public with sharing class SummitEventsRegisterGuestsController {
         }
         htmlSelect += '</div>';
         htmlSelect += '</select>';
-        System.debug(htmlSelect);
         return htmlSelect;
     }
 
@@ -176,17 +212,11 @@ public with sharing class SummitEventsRegisterGuestsController {
     public PageReference saveGuests() {
         doCRUD crudToDo = new doCRUD();
         //sanitize data
-        Map<Id, Summit_Events_Question__c> availableQuestions = new Map<Id, Summit_Events_Question__c>([
-                SELECT Id, Map_to_Field__c, Question_Field_Type__c
-                FROM Summit_Events_Question__c
-                WHERE Event__c = :eventInformation.eventId
-        ]);
-        System.debug(JSON.serializePretty(availableQuestions));
-
         if (String.isNotBlank(guestJSON)) {
-            List<questionData> guestAnswers = (List<questionData>) JSON.deserialize(guestJSON, List<questionData>.class);
+            List<questionGuestData> guestAnswers = (List<questionGuestData>) JSON.deserialize(guestJSON, List<questionGuestData>.class);
             for (Integer xx = 0; xx < guestAnswers.size(); xx++) {
-                for (Questions q : guestAnswers[xx].questions) {
+                Integer questionCount = 0;
+                for (questionData q : guestAnswers[xx].questions) {
                     Id questionId = null;
                     try {
                         questionId = seaShared.decryptString(q.id, true);
@@ -194,18 +224,18 @@ public with sharing class SummitEventsRegisterGuestsController {
                         System.debug(e.getMessage());
                     }
                     if (questionId != null) {
-                        Summit_Events_Question__c questionParameters = availableQuestions.get(questionId);
+                        Summit_Events_Question__c questionParameters = eventGuestQuestions.get(questionId);
                         //Remove all html tags from user input (done in javascript, but making sure on the back end)
                         q.value = q.value.replaceAll('<[^>]+>', '').trim();
                         //q.value = String.escapeSingleQuotes(q.value);
                         //q.value = q.value.escapeHtml4();
                         String fieldType = questionParameters.Question_Field_Type__c;
                         if (fieldType.equalsIgnoreCase('Text box')) {
-
                         }
                     }
-
+                    questionCount++;
                 }
+                guestAnswers[xx].questions.addAll(hiddenQuestions);
             }
             System.debug(JSON.serializePretty(guestAnswers));
             guestJSON = JSON.serialize(guestAnswers);

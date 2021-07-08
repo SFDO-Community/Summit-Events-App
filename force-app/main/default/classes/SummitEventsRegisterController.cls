@@ -134,15 +134,6 @@ public with sharing class SummitEventsRegisterController {
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
             ];
-//            eventQuestions = new List<Summit_Events_Question__c>();
-//            eventQuestions = [
-//                    SELECT Id, Name, Question_Text__c, Question_Type__c, Question_Pick_List__c, Show_Question_For__c, Event__c,
-//                            Required_For_Hosted_Guest_Registrations__c, Required_For_Registrant__c
-//                    FROM Summit_Events_Question__c
-//                    WHERE Event__c = :eventInformation.eventId
-//                    WITH SECURITY_ENFORCED
-//            ];
-//            System.debug('Question amount:' + eventQuestions.size());
 
             pageFlow = SeaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage());
             System.debug(pageFlow);
