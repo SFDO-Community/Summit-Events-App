@@ -172,7 +172,15 @@ public with sharing class SummitEventsConfirmationController {
                         }
 
                         if (guestRegistrations.size() > 0) {
-                            regCRUD.addGuestRegistration(guestRegistrations);
+                            if (Schema.SObjectType.Summit_Events_Registration__c.isAccessible() && Schema.SObjectType.Summit_Events_Registration__c.isCreateable()) {
+                                try {
+                                    insert guestRegistrations;
+                                } catch (Exception ex) {
+                                    System.debug(ex.getMessage());
+                                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
+                                }
+                            }
+                            // regCRUD.addGuestRegistration(guestRegistrations);
                             //TODO: Ask original registrant if they are attending the event and enter value below.
                             eventRegistration.Guest_Host_Status__c = 'Host attending';
                         } else {
@@ -240,7 +248,7 @@ public with sharing class SummitEventsConfirmationController {
             return newEvtReg;
         }
 
-        public void addGuestRegistration(List<Summit_Events_Registration__c> guestRegistrations) {
+/*        public void addGuestRegistration(List<Summit_Events_Registration__c> guestRegistrations) {
             try {
                 insert guestRegistrations;
             } catch (Exception ex) {
@@ -248,6 +256,6 @@ public with sharing class SummitEventsConfirmationController {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
 
-        }
+        }*/
     }
 }

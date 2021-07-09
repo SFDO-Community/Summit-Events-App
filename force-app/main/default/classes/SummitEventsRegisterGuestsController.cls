@@ -22,7 +22,7 @@ public with sharing class SummitEventsRegisterGuestsController {
     public String statePicklist { get; set; }
     public String countryPicklist { get; set; }
     public String namespace { get; set; }
-    public List<questionData> hiddenQuestions { get; set; }
+    private List<questionData> hiddenQuestions { get; set; }
 
     public class question {
         String id { get; set; }
@@ -125,13 +125,13 @@ public with sharing class SummitEventsRegisterGuestsController {
 
             //remove hidden inputs
             if (String.isNotEmpty(guestJSON)) {
-                List<questionGuestData> guestAnswers = (List<questionGuestData>) JSON.deserialize(guestJSON, List<questionGuestData>.class);
-                for (Integer xx = 0; xx < guestAnswers.size(); xx++) {
+                List<questionGuestData> hostedGuests = (List<questionGuestData>) JSON.deserialize(guestJSON, List<questionGuestData>.class);
+                for (Integer xx = 0; xx < hostedGuests.size(); xx++) {
                     Integer questionCount = 0;
-                    for (Integer yy = 0; yy < guestAnswers[xx].questions.size(); yy++) {
+                    for (Integer yy = 0; yy < hostedGuests[xx].questions.size(); yy++) {
                         Id questionId = null;
                         try {
-                            questionId = seaShared.decryptString(guestAnswers[xx].questions[yy].Id, true);
+                            questionId = seaShared.decryptString(hostedGuests[xx].questions[yy].Id, true);
                         } catch (Exception e) {
                             System.debug(e.getMessage());
                         }
@@ -139,13 +139,13 @@ public with sharing class SummitEventsRegisterGuestsController {
                             Summit_Events_Question__c questionParameters = eventGuestQuestions.get(questionId);
                             if (!questionParameters.Is_Visible__c) {
                                 //remove NOT visible questions so they do not appear to front end user
-                                guestAnswers[xx].questions.remove(yy);
+                                hostedGuests[xx].questions.remove(yy);
                             }
                         }
                         questionCount++;
                     }
                 }
-                guestJSON = JSON.serialize(guestAnswers);
+                guestJSON = JSON.serialize(hostedGuests);
             }
 
             oldRegId = eventRegistration.Id;

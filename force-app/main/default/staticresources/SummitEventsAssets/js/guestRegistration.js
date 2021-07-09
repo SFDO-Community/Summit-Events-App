@@ -4,6 +4,7 @@ let ready = (callback) => {
 }
 
 let allGuests = [];
+let currentGuestAmount = 0;
 
 ready(() => {
     const guestInputForm = document.getElementById("guestInput");
@@ -56,16 +57,37 @@ function handleGuestInput(event) {
     allGuests.push(newGuest);
     let guestJSON = document.querySelector("[id$='guestJSON']");
     guestJSON.value = JSON.stringify(allGuests);
+    setGuestRemaining();
     event.target.reset();
+
+}
+
+function lockForm(lock) {
+    let form = document.getElementById("guestInput");
+    let button = document.getElementById("registerGuestButton");
+    let elements = form.elements;
+    if (lock) {
+        for (let i = 0, len = elements.length; i < len; ++i) {
+            elements[i].setAttribute('disabled', 'disabled');
+        }
+        button.setAttribute('disabled', 'disabled');
+    } else {
+        for (let i = 0, len = elements.length; i < len; ++i) {
+            elements[i].removeAttribute('disabled');
+        }
+        button.removeAttribute('disabled');
+    }
 }
 
 function loadUpPreviousData() {
+    currentGuestAmount = 0;
     let guestJSON = document.querySelector("[id$='guestJSON']").value;
     if (guestJSON) {
         allGuests = JSON.parse(guestJSON);
         let guestListWrap = document.getElementById('guestList');
         let restOfData = '';
-        for (let i = 0; i < allGuests.length; i++) {
+        currentGuestAmount = allGuests.length;
+        for (let i = 0; i < currentGuestAmount; i++) {
             for (let y = 0; y < allGuests[i]['questions'].length; y++) {
                 let question = allGuests[i]['questions'][y];
                 restOfData += answerTemplate(question.question, question.value);
@@ -78,7 +100,7 @@ function loadUpPreviousData() {
             guestListWrap.insertAdjacentHTML("beforeend", guestListItem);
         }
     }
-
+    setGuestRemaining();
 }
 
 function buildGuestForm() {
@@ -87,7 +109,7 @@ function buildGuestForm() {
         let qNum = 0;
         guestQuestionJSON.forEach(q => {
             let qWrapOuter = document.createElement('div');
-            qWrapOuter.classList.add('slds-col', 'slds-p-vertical_x-small', 'slds-size_1-of-1');
+            qWrapOuter.classList.add('slds-col', 'slds-p-vertical_xx-small', 'slds-size_1-of-1');
             let qWrap = document.createElement('div');
             qWrap.classList.add('slds-form-element');
             if (q['required']) {
@@ -118,16 +140,17 @@ function buildGuestForm() {
                     formElement.appendChild(buildPicklist(q));
                     break;
                 case 'textbox':
+                case 'text area':
                     formElement.appendChild(buildInputBox(q, 'text'));
+                    break;
+                case 'phone':
+                    formElement.appendChild(buildInputBox(q, 'tel'));
                     break;
                 case 'email':
                     formElement.appendChild(buildInputBox(q, 'email'));
                     break;
                 case 'date':
                     formElement.appendChild(buildInputBox(q, 'date'));
-                    break;
-                case 'text area':
-                    formElement.appendChild(buildInputBox(q, 'textarea'));
                     break;
             }
             qWrap.appendChild(formElement);
@@ -147,6 +170,20 @@ function buildGuestForm() {
     }
 }
 
+function setGuestRemaining() {
+    if (guestMaxAmount) {
+        const guestCountWrap = document.getElementById("guestRemaining");
+        const guestListWrap = document.getElementById("guestList");
+        let guestArticleCount = guestListWrap.querySelectorAll('article').length;
+        guestCountWrap.innerHTML = guestArticleCount + ' - ' + guestMaxAmount;
+        if (guestArticleCount === guestMaxAmount) {
+            lockForm(true)
+        } else {
+            lockForm(false)
+        }
+    }
+}
+
 function buildInputBox(question, inputType) {
     let inputBox;
     if (inputType === 'textarea') {
@@ -158,10 +195,13 @@ function buildInputBox(question, inputType) {
     if (question.defaultValue) {
         inputBox.value = question.defaultValue;
     }
-    if (question.textLimit)  {
+    if (question.textLimit) {
         inputBox.maxLength = question.textLimit;
     }
     inputBox.setAttribute('data-type', question.type);
+    if (inputType === 'tel') {
+        //inputBox.setAttribute('pattern', '[\\+]\\d{2}[\\(]\\d{2}[\\)]\\d{4}[\\-]\\d{4}');
+    }
     inputBox.classList.add('slds-input');
     inputBox.name = question.id;
     inputBox.id = question.id;
@@ -210,6 +250,7 @@ function removeById(idToRemove, element) {
     guestJSON.value = JSON.stringify(allGuests);
     let itemWrapper = element.closest('article');
     itemWrapper.remove();
+    setGuestRemaining();
 }
 
 const helpTextTemplate = (helpText, id) => `
@@ -230,10 +271,11 @@ const guestListTemplate = (fullName, uniqueId, restOfData) => `
 <article class="slds-card slds-clearfix slds-p-vertical_none">
     <div class="slds-card__body slds-card__body_inner slds-clearfix slds-m-vertical_x-small slds-p-horizontal_small">
         <div class="slds-no-flex slds-float_right">
-            <button class="slds-button slds-p-around_xx-small" title="Delete guest" style="background-color:orangered;" onclick="removeById('${uniqueId}', this);">
-                <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+            <button class="slds-button slds-p-around_xx-small slds-button_neutral" title="Delete" style="" onclick="removeById('${uniqueId}', this);">
+                <svg class="slds-icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#delete"></use>
                 </svg>
+                <span class="slds-assistive-text">Delete</span>
             </button>
         </div>
         ${restOfData}
