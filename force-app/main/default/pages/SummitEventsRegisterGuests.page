@@ -12,19 +12,19 @@
         <apex:define name="pageTitle"><a href="{!eventPage.Event_Home_Link_URL__c}">{!eventPage.Event_Home_Link_Title__c}</a></apex:define>
         <apex:define name="scriptsHead">
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
-            <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/guestRegistration.js')}" type="text/javascript"></script>
-            <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/sldsHelper.js')}" type="text/javascript"></script>
             <script>
                 const guestQuestionJSON = {!guestQuestionJSON};
                 const guestMaxAmount = {!eventPage.Guest_Max_Amount__c};
             </script>
+            <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/guestRegistration.js')}" type="text/javascript"></script>
+            <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/sldsHelper.js')}" type="text/javascript"></script>
         </apex:define>
         <apex:define name="sectionNav"/>
         <apex:define name="body">
 
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages />
+                    <apex:messages/>
                 </div>
 
                 <!-- EVENT BREADCRUMB -->
@@ -64,24 +64,15 @@
                         </div>
                         <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12 slds-p-right_medium">
                             <form id="guestInput">
-                                <article class="slds-card slds-col slds-size_1-of-1">
-                                    <div class="slds-card__header slds-grid slds-assistive-text">
-                                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                                            <div class="slds-media__body">
-                                                <h2 class="slds-card__header-title">
-                                                    <a href="#" class="slds-card__header-link slds-truncate" title="Guest registrant form">
-                                                        <span>Guest registrant form</span>
-                                                    </a>
-                                                </h2>
-                                            </div>
-                                        </header>
-                                    </div>
+                                <article class="slds-card slds-col slds-size_1-of-1 slds-m-bottom_medium">
                                     <div class="slds-card__body slds-card__body_inner" id="questQuestions">
                                         <p class=" slds-text-body slds-p-vertical_xx-small noGuestAlert">
                                         </p>
                                     </div>
-                                    <footer class="slds-card__footer">
-                                        <button class="slds-button slds-button_neutral slds-button_stateful slds-not-selected" aria-live="assertive" type="submit">
+                                    <footer class="slds-card__footer slds-p-top_none slds-p-bottom_large">
+                                        <div id="guestRemaining" class="slds-align_absolute-center slds-clearfix slds-p-bottom_small">
+                                        </div>
+                                        <button class="slds-button slds-button_neutral slds-button_stateful slds-not-selected slds-align_absolute-center slds-clearfix" aria-live="assertive" type="submit" id="registerGuestButton">
                                             <span class="slds-text-not-selected">
                                                 <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
                                                   <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
