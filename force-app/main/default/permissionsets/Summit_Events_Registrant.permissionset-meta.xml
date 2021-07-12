@@ -557,6 +557,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events_Question__c.Error_Assist_Text__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events_Question__c.Help_Text__c</field>
         <readable>true</readable>
     </fieldPermissions>
