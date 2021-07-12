@@ -37,6 +37,11 @@
                 <default>false</default>
                 <label>Textbox</label>
             </value>
+            <value>
+                <fullName>Phone</fullName>
+                <default>false</default>
+                <label>Phone</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

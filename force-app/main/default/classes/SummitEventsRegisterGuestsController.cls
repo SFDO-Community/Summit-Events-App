@@ -33,6 +33,7 @@ public with sharing class SummitEventsRegisterGuestsController {
         List<String> picklist { get; set; }
         String help { get; set; }
         String instructions { get; set; }
+        String assist { get; set; }
         String defaultValue { get; set; }
         Integer textLimit { get; set; }
     }
@@ -75,7 +76,7 @@ public with sharing class SummitEventsRegisterGuestsController {
 
             eventGuestQuestions = new Map<Id, Summit_Events_Question__c>([
                     SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
-                            Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c
+                            Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c
                     FROM Summit_Events_Question__c
                     WHERE Event__c = :eventInformation.eventId
                     AND Registrant_Type__c = 'Guest'
@@ -101,6 +102,7 @@ public with sharing class SummitEventsRegisterGuestsController {
                 q.instructions = seaQuestion.Instructions__c;
                 q.defaultValue = seaQuestion.Default_Value__c;
                 q.textLimit = (Integer) seaQuestion.Text_Limit__c;
+                q.assist = seaQuestion.Error_Assist_Text__c;
                 if (seaQuestion.Is_Visible__c) {
                     questionList.add(q);
                 } else {

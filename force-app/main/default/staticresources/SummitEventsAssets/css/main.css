@@ -143,6 +143,10 @@ textarea.input-textbox {
     font-size: 1em;
 }
 
+.slds-form-element.slds-has-error .slds-form-element__help {
+    display: block;
+}
+
 @-webkit-keyframes loadspin {
     75% {
         -webkit-transform: rotateY(360deg);

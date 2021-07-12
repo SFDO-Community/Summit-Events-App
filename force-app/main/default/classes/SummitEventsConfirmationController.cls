@@ -101,7 +101,7 @@ public with sharing class SummitEventsConfirmationController {
                 ];
 
                 //Make sure there is returned registration information
-                if (eventRegistrationSuccess != null) {
+                if (eventRegistration != null) {
 
                     registrationCRUD regCRUD = new registrationCRUD();
 
@@ -118,7 +118,7 @@ public with sharing class SummitEventsConfirmationController {
 
                         //Get all questions defined for the event that are for guests
                         Map<Id, Summit_Events_Question__c> availableQuestions = new Map<Id, Summit_Events_Question__c>([
-                                SELECT Id, Map_to_Field__c, Question_Field_Type__c, Display_Order__c
+                                SELECT Id, Map_to_Field__c, Question_Field_Type__c, Display_Order__c, Question_Label__c
                                 FROM Summit_Events_Question__c
                                 WHERE Event__c = :eventInformation.eventId
                                 AND Registrant_Type__c = 'Guest'
@@ -129,6 +129,8 @@ public with sharing class SummitEventsConfirmationController {
                         List<questionData> guestAnswers = (List<questionData>) JSON.deserialize(eventRegistration.Guest_JSON__c, List<questionData>.class);
                         for (Integer xx = 0; xx < guestAnswers.size(); xx++) {
                             Summit_Events_Registration__c guestRegistration = new Summit_Events_Registration__c();
+                            SObjectType seaObject = Summit_Events_Registration__c.getSObjectType();
+                            DescribeSObjectResult seaObjectResults = seaObject.getDescribe();
                             for (Questions q : guestAnswers[xx].questions) {
                                 Id questionId = null;
                                 try {
@@ -139,6 +141,7 @@ public with sharing class SummitEventsConfirmationController {
                                 if (questionId != null) {
                                     Summit_Events_Question__c questionParameters = availableQuestions.get(questionId);
                                     String mapToField = questionParameters.Map_to_Field__c;
+                                    String questionLabel = questionParameters.Question_Label__c;
                                     if (String.isNotBlank(mapToField)) {
                                         mapToField = String.escapeSingleQuotes(mapToField).escapeHtml4();
                                         Boolean fieldExists = true;
@@ -148,17 +151,58 @@ public with sharing class SummitEventsConfirmationController {
                                         } catch (Exception e) {
                                             fieldExists = false;
                                         }
-                                        if (fieldExists && Schema.SObjectType.Summit_Events_Registration__c.isAccessible() &&
-                                                Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(mapToField).getDescribe().isAccessible() &&
-                                                Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(mapToField).getDescribe().isCreateable()) {
-                                            guestRegistration.put(mapToField, q.value);
+
+                                        if (fieldExists && seaObjectResults.isAccessible() &&
+                                                seaObjectResults.fields.getMap().get(mapToField).getDescribe().isAccessible() &&
+                                                seaObjectResults.fields.getMap().get(mapToField).getDescribe().isCreateable()) {
+                                            Integer inputLength = seaObjectResults.fields.getMap().get(mapToField).getDescribe().length;
+                                            String valueIn = q.value.trim();
+                                            if (String.isNotBlank(valueIn)) {
+                                                String fieldType = String.valueOf(seaObjectResults.fields.getMap().get(mapToField).getDescribe().getType()).toLowerCase();
+                                                System.debug(seaObjectResults.fields.getMap().get(mapToField).getDescribe().getType() + ' : ' + fieldType + ' : ' + valueIn);
+                                                try {
+                                                    switch on fieldType {
+                                                        when 'date' {
+                                                            guestRegistration.put(mapToField, Date.valueOf(valueIn));
+                                                        }
+                                                        when 'datetime' {
+                                                            Date incomingDate = Date.valueOf(valueIn);
+                                                            DateTime dateAndTime = DateTime.newInstance(incomingDate.year(), incomingDate.month(), incomingDate.day(), 0, 0, 0);
+                                                            guestRegistration.put(mapToField, dateAndTime);
+                                                        }
+                                                        when 'integer' {
+                                                            guestRegistration.put(mapToField, Integer.valueOf(valueIn));
+                                                        }
+                                                        when 'double' {
+                                                            guestRegistration.put(mapToField, Decimal.valueOf(valueIn));
+                                                        }
+                                                        when else {
+                                                            switch on fieldType {
+                                                                when 'email' {
+                                                                    inputLength = 80;
+                                                                }
+                                                                when 'phone' {
+                                                                    inputLength = 40;
+                                                                }
+                                                            }
+                                                            if (inputLength > 0) {
+                                                                guestRegistration.put(mapToField, valueIn.abbreviate(inputLength));
+                                                            }
+                                                        }
+                                                    }
+                                                } catch (Exception e) {
+                                                    //eventRegistrationSuccess = false;
+                                                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Hosted Record: Could not covert response (' + fieldType + ') on question "' + questionLabel + '"'));
+                                                }
+                                            }
                                         } else {
-                                            eventRegistrationSuccess = false;
-                                            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Hosted Record: Insufficient Access to ' + mapToField));
+                                            //eventRegistrationSuccess = false;
+                                            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Hosted Record: Insufficient Access to field for question: ' + questionLabel));
                                         }
                                     }
                                 }
                             }
+
                             if (guestRegistration != null) {
                                 guestRegistration.Event_Instance__c = eventInformation.InstanceId;
                                 guestRegistration.Event__c = eventInformation.eventId;
@@ -166,25 +210,16 @@ public with sharing class SummitEventsConfirmationController {
                                 guestRegistration.Status__c = 'Registered';
                                 //Get original registration id for host
                                 guestRegistration.Guest_Host__c = eventInformation.registrationId;
-
                                 guestRegistrations.add(guestRegistration);
                             }
                         }
 
-                        if (guestRegistrations.size() > 0) {
-                            if (Schema.SObjectType.Summit_Events_Registration__c.isAccessible() && Schema.SObjectType.Summit_Events_Registration__c.isCreateable()) {
-                                try {
-                                    insert guestRegistrations;
-                                } catch (Exception ex) {
-                                    System.debug(ex.getMessage());
-                                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
-                                }
-                            }
-                            // regCRUD.addGuestRegistration(guestRegistrations);
+                        system.debug('GUEST REG: ' + JSON.serializePretty(guestRegistrations));
+
+                        if (guestRegistrations.size() > 0 && eventRegistrationSuccess) {
+                            eventRegistrationSuccess = regCRUD.addGuestRegistration(guestRegistrations);
                             //TODO: Ask original registrant if they are attending the event and enter value below.
                             eventRegistration.Guest_Host_Status__c = 'Host attending';
-                        } else {
-                            eventRegistrationSuccess = false;
                         }
 
                     }
@@ -207,12 +242,12 @@ public with sharing class SummitEventsConfirmationController {
 
                         //Remove the registration ID from the cookie so back button will redirect to the correct page.
                         SEAShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, '');
+                    } else {
+                        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Hosted guest record(s) could not be saved.'));
                     }
                 }
             }
 
-        } else {
-            eventRegistrationSuccess = false;
         }
     }
 
@@ -248,14 +283,16 @@ public with sharing class SummitEventsConfirmationController {
             return newEvtReg;
         }
 
-/*        public void addGuestRegistration(List<Summit_Events_Registration__c> guestRegistrations) {
+        public Boolean addGuestRegistration(List<Summit_Events_Registration__c> guestRegistrations) {
+            System.debug(JSON.serializePretty(guestRegistrations));
             try {
                 insert guestRegistrations;
+                return true;
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
-
-        }*/
+            return false;
+        }
     }
 }
