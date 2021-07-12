@@ -736,7 +736,7 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Date_All_Appointments_Confirmed_del__c</field>
         <readable>true</readable>
     </fieldPermissions>
