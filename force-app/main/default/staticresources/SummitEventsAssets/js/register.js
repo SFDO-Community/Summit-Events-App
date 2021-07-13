@@ -88,20 +88,26 @@ function checkForm() {
     document.querySelectorAll(".slds-is-required .slds-input, .slds-is-required .slds-textarea").forEach(item => {
         let inputWrap = item.closest('.slds-form-element');
         let inputRequired = inputWrap.classList.contains('slds-is-required');
-        let inputType = item.type.toLowerCase();
-        if (inputRequired && !item.value) {
-            inputWrap.classList.add("slds-has-error");
-            inputWrap.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
-                errorHelp.style.display = "block"
-            });
-            addErrorFixerListener(item, inputWrap, 'change');
-            error_count++;
-        }
-        if (inputType == 'email' && inputRequired || inputType == 'email' && item.value) {
-            if (!emailReg.test(item.value)) {
+        if (item) {
+            let inputType = '';
+            if (item.type) {
+                inputType = item.type.toLowerCase();
+            }
+
+            if (inputRequired && !item.value) {
                 inputWrap.classList.add("slds-has-error");
+                inputWrap.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
+                    errorHelp.style.display = "block"
+                });
                 addErrorFixerListener(item, inputWrap, 'change');
                 error_count++;
+            }
+            if (inputType == 'email' && inputRequired || inputType == 'email' && item.value) {
+                if (!emailReg.test(item.value)) {
+                    inputWrap.classList.add("slds-has-error");
+                    addErrorFixerListener(item, inputWrap, 'change');
+                    error_count++;
+                }
             }
         }
     });

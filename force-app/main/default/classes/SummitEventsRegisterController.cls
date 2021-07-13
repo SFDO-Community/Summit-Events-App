@@ -4,10 +4,8 @@
 // Created by Thaddaeus Dahlberg on 5/1/2018.
 
 public with sharing class SummitEventsRegisterController {
-    public String test { get; set; }
     public Summit_Events_Instance__c evtInstance { get; set; }
     public Summit_Events__c eventPage { get; set; }
-    public String instanceName { get; set; }
     public List<SelectOption> guestAmt { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
     private SummitEventsShared SeaShared = new SummitEventsShared();
@@ -22,8 +20,6 @@ public with sharing class SummitEventsRegisterController {
     public List<SelectOption> addPick3 { get; set; }
     public List<SelectOption> addPick4 { get; set; }
     public List<SelectOption> addPick5 { get; set; }
-    public Boolean showAddress { get; set; }
-    public Boolean showPhone { get; set; }
     public String applicantType { get; set; }
     public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
@@ -46,12 +42,9 @@ public with sharing class SummitEventsRegisterController {
                 '1', '2', '3', '4', '5'
         };
 
-        test = '';
         contactSet = false;
         eventIsClosed = false;
         additionalQuestions = false;
-        showAddress = false;
-        showPhone = false;
         EvtUserType = UserInfo.getUserType();
         //Get cookie or URL string variable
         eventInformation = SeaShared.getSummitEventsInfo();
@@ -96,7 +89,6 @@ public with sharing class SummitEventsRegisterController {
 
             //define Event ID from instanceInfo data
             eventInformation.eventId = evtInstance.Event__r.Id;
-            instanceName = evtInstance.Name;
             startTimeString = SeaShared.formatTime(evtInstance.Instance_Start_Time__c, false);
             endTimeString = SeaShared.formatTime(evtInstance.Instance_End_Time__c, false);
         }
@@ -504,6 +496,7 @@ public with sharing class SummitEventsRegisterController {
         eventRegistration.Event_Instance__c = eventInformation.instanceId;
 
         eventRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience, eventFeeList);
+
         eventInformation.registrationId = eventRegistration.Id;
 
         if (evtHasAppointments) {
@@ -563,7 +556,6 @@ public with sharing class SummitEventsRegisterController {
                     System.debug(ex.getMessage());
                 }
             }
-
 
             //Update encrypted cookie
             SummitEventsShared SeaShared = new SummitEventsShared();
