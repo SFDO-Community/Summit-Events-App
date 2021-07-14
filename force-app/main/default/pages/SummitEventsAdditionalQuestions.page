@@ -1,0 +1,117 @@
+<!--
+ - Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas on 7/13/2021.
+ -->
+
+<apex:page id="SummitEventsAdditionalQuestions" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" docType="html-5.0" cache="false" controller="SummitEventsAdditionalQuestionsCtlr" action="{!checkEventDetails}">
+    <apex:composition template="{!templateSelected}">
+        <apex:define name="metaPageTitle">
+            {!eventInstance.Event__r.Event_Name__c}
+            <apex:outputText rendered="{!!ISBLANK(eventInstance.Instance_Title__c)}" value="{! ' - ' + eventInstance.Instance_Title__c}"/>
+            - Additional Questions
+        </apex:define>
+        <apex:define name="pageTitle"><a href="{!eventPage.Event_home_Link_URL__c}">{!eventPage.Event_Home_Link_Title__c}</a></apex:define>
+        <apex:define name="scriptsHead">
+            <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
+            <!--            <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/register.js')}" type="text/javascript"></script>-->
+        </apex:define>
+        <apex:define name="sectionNav"/>
+        <apex:define name="body">
+
+            <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
+                    <apex:messages/>
+                </div>
+                <apex:form id="SummitEventQuestionForm" styleClass="slds-grid slds-wrap" style="width:100%">
+
+                    <!-- EVENT BREADCRUMB -->
+                    <div class="slds-col slds-p-vertical-small slds-size_1-of-1">
+                        <nav role="navigation" aria-label="Breadcrumbs">
+                            <ol class="slds-breadcrumb slds-list_horizontal">
+                                <apex:outputPanel rendered="{!!ISBLANK(eventPage.Event_Name__c)}" layout="none">
+                                    <li class="slds-breadcrumb__item slds-text-title_caps slds-p-right_x-small">{!eventPage.Event_Name__c}</li>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!!ISBLANK(eventInstance.Instance_Title__c)}" layout="none">
+                                    <li class="slds-breadcrumb__item slds-text-title_caps slds-p-horizontal_x-small">{!eventInstance.Instance_Title__c}</li>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!!ISBLANK(formattedNavDate)}" layout="none">
+                                    <li class="slds-breadcrumb__item slds-text-title_caps slds-p-horizontal_x-small">{!formattedNavDate}</li>
+                                </apex:outputPanel>
+                            </ol>
+                        </nav>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small">
+                        <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
+                            <apex:outputText value="{!eventPage.Event_Name__c}"/>
+                        </h2>
+                    </div>
+
+                    <!-- EVENT CLOSED MESSAGE -->
+                    <apex:outputPanel styleClass="slds-col slds-p-vertical_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
+                        <p class="slds-text-body">
+                            <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>
+                        </p>
+                    </apex:outputPanel>
+
+                    <apex:outputPanel rendered="{!!eventIsClosed && mapToList.size > 0}" layout="none">
+                        <apex:repeat value="{!questionWrapper}" var="qu">
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
+                                <apex:outputPanel layout="block" styleClass="slds-form-element {!IF(qu.required, 'slds-is-required', '')}">
+
+                                    <apex:outputLabel styleClass="slds-form-element__label">
+                                        {!qu.question}
+                                        <apex:outputText escape="false" rendered="{!isRequired}">
+                                            <abbr class="slds-required" title="required">*</abbr>
+                                        </apex:outputText>
+                                    </apex:outputLabel>
+
+                                    <apex:outputPanel layout="block" styleClass="slds-form-element__control">
+
+                                        <!--Textbox -->
+                                        <apex:outputPanel layout="block" styleClass="slds-form-element__control" rendered="{!If(qu.type = 'Textbox',true,false)}">
+                                            <apex:inputText value="{!eventRegistration[qu.mapTo]}" styleClass="slds-textarea"/>
+                                        </apex:outputPanel>
+
+                                        <!--                                        &lt;!&ndash;Text box&ndash;&gt;-->
+                                        <!--                                        <apex:outputPanel layout="block" styleClass="slds-form-element__control" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'],'Text box'), true, false)}">-->
+                                        <!--                                            <apex:inputField label="{!'AddInfo' + q}" value="{!eventRegistration[qu.Map_to_Field__c]}" styleClass="slds-input input-textbox"/>-->
+                                        <!--                                        </apex:outputPanel>-->
+
+                                        <!--                                        &lt;!&ndash;Text area &ndash;&gt;-->
+                                        <!--                                        <apex:outputPanel layout="block" styleClass="slds-form-element__control" rendered="{!IF(CONTAINS(qu.Question_Field_Type__c, 'Text area'), true, false)}">-->
+                                        <!--                                            <apex:inputTextarea label="{!AddInfoLabel}" value="{!placeholderValue}" styleClass="slds-textarea"/>-->
+                                        <!--                                        </apex:outputPanel>-->
+
+                                        <!--                                        &lt;!&ndash;Text box&ndash;&gt;-->
+                                        <!--                                        <apex:outputPanel layout="block" styleClass="slds-form-element__control" rendered="{!IF(CONTAINS(qu.Question_Type__c,'Textbox'), true, false)}">-->
+                                        <!--                                            <apex:inputField label="{!AddInfoLabel}" value="{!placeholderValue}" styleClass="slds-input"/>-->
+                                        <!--                                        </apex:outputPanel>-->
+
+                                        <!--                                        &lt;!&ndash;Pick List&ndash;&gt;-->
+                                        <!--                                        <apex:outputPanel layout="block" styleClass="slds-select_container" rendered="{!IF(CONTAINS(qu.Question_Type__c, 'Picklist'), true, false)}">-->
+
+                                        <!--                                            <apex:selectList label="{!AddInfoLabel}" value="{!placeholderValue}" size="1" styleClass="slds-select">-->
+                                        <!--                                                <apex:selectOptions value="{!getCreateVFPicklist}">-->
+                                        <!--                                                    <apex:param name="site" value="{!qu.Picklist_Values__c}" assignTo="{!picklistStringToFormat}"/>-->
+                                        <!--                                                </apex:selectOptions>-->
+                                        <!--                                            </apex:selectList>-->
+
+                                        <!--                                        </apex:outputPanel>-->
+
+                                    </apex:outputPanel>
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                        </apex:repeat>
+                        <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
+                            <p class="slds-text-body slds-p-vertical_xx-small">
+                                <apex:commandLink action="{!submitAdditionalQuestions}" onClick="fadeout();" Value="Next" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                            </p>
+                        </div>
+                    </apex:outputPanel>
+
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>
