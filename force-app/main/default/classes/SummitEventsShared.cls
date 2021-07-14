@@ -55,6 +55,7 @@ public with sharing class SummitEventsShared {
         List<String> pagesInEvent = new List<String>();
         Map<String, PageReference> allPageReferences = new Map<String, PageReference>();
         allPageReferences.put(namespace + 'SummitEventsRegister', Page.SummitEventsRegister);
+        allPageReferences.put(namespace + 'SummitEventsAdditionalQuestions', Page.SummitEventsAdditionalQuestions);
         allPageReferences.put(namespace + 'SummitEventsRegisterGuests', Page.SummitEventsRegisterGuests);
         allPageReferences.put(namespace + 'SummitEventsRegisterAppointments', Page.SummitEventsRegisterAppointments);
         allPageReferences.put(namespace + 'SummitEventsDonation', Page.SummitEventsDonation);
@@ -72,6 +73,13 @@ public with sharing class SummitEventsShared {
                 WITH SECURITY_ENFORCED
         ];
 
+        List<Summit_Events_Question__c> additionalQuestions = [
+                SELECT Id
+                FROM Summit_Events_Question__c
+                WHERE Event__c = :eventId
+                AND Registrant_Type__c = 'Registrant'
+        ];
+
         Summit_Events__c eventInformation = [
                 SELECT Id, Display_Optional_Donation__c, Display_Guest_Registration__c
                 FROM Summit_Events__c
@@ -80,8 +88,14 @@ public with sharing class SummitEventsShared {
         ];
 
         pagesInEvent.add(namespace + 'SummitEventsRegister');
-        //check for if event has guests
 
+        //Check for additional questions
+
+        if(additionalQuestions.size() > 0) {
+            pagesInEvent.add(namespace + 'SummitEventsAdditionalQuestions');
+        }
+
+        //check for if event has guests
         if (eventInformation.Display_Guest_Registration__c) {
             pagesInEvent.add(namespace + 'SummitEventsRegisterGuests');
         }
