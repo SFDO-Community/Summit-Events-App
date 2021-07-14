@@ -81,8 +81,14 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     WHERE Event__c = :eventInformation.eventId
                     AND Registrant_Type__c = 'Registrant'
                     WITH SECURITY_ENFORCED
-                    ORDER BY Display_Order__c NULLS LAST
+                    ORDER BY Display_Order__c, Question_Label__c NULLS LAST
             ];
+
+            //Get namespace if packaged
+            String namespace = SummitEventsNamespace.getNamespace();
+            if (String.isNotBlank(namespace)) {
+                namespace = namespace + '__';
+            }
 
 
             eventRegistration = new Summit_Events_Registration__c();
@@ -92,7 +98,9 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 eventRegistration.Id = eventInformation.registrationId;
 
                 mapToList = new List<String>();
-
+                mapToList.add('Id');
+                mapToList.add(namespace + 'Event__c');
+                mapToList.add(namespace + 'Event_Instance__c');
                 questionWrapper = new List<questionItem>();
                 for (Summit_Events_Question__c question : additionalQuestions) {
                     Object nextField;
@@ -162,26 +170,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
     public PageReference submitAdditionalQuestions() {
 
-/*        doCRUD CRUDToDo = new doCRUD();
-        if (String.isNotBlank(donationAmount)) {
-            //Build fee on what we have for donation information
-            Summit_Events_Fee__c newFee = new Summit_Events_Fee__c();
-            newFee.Event_Fee_Allocation__c = donationAllocation;
-            newFee.Event_Fee__c = cleanFeeStringToDecimal(donationAmount);
-            newFee.Event_Registration__c = eventInformation.registrationId;
-            newFee.Summit_Events__c = eventInformation.eventId;
-            newFee.Event_Fee_Type__c = 'Optional Donation';
-            //If there is an incoming fee already for a donation just update it by applying the id
-            if (incomingFee != null) {
-                newFee.Id = incomingFee.Id;
-            }
-            CRUDToDo.upsertFee(newFee);
-        } else {
-            //If there is no amount and a fee exists than delete it.
-            if (incomingFee != null) {
-                CRUDToDo.deleteFee(incomingFee);
-            }
-        }*/
+        doCRUD CRUDToDo = new doCRUD();
+        CRUDToDo.saveRegistration(eventRegistration, incomingRegId);
 
         return pageFlow.get('Next');
     }
@@ -204,8 +194,9 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
     private without sharing class doCRUD {
 
-        public void saveRegistration(Summit_Events_Registration__c eventRegistration) {
-            upsert eventRegistration;
+        public void saveRegistration(Summit_Events_Registration__c eventRegistration, Id incomingId) {
+            eventRegistration.Id = incomingId;
+            update eventRegistration;
         }
 
     }

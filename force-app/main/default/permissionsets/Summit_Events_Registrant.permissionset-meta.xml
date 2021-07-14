@@ -1926,6 +1926,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>SummitEventsAdditionalQuestions</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>SummitEventsCancelReview</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
