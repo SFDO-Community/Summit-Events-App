@@ -20,7 +20,7 @@
 
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages/>
+                    <apex:messages />
                 </div>
 
                 <!-- EVENT BREADCRUMB -->
@@ -42,7 +42,7 @@
 
                 <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
                     <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
-                        <apex:outputText value="{!eventPage.Event_Name__c}"/>
+                        <apex:outputText value="{!eventPage.Event_Additional_Question_Title__c}"/>
                     </h2>
                 </div>
 
@@ -52,7 +52,12 @@
                         <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>
                     </p>
                 </apex:outputPanel>
+
                 <apex:form id="SummitEventQuestionForm" styleClass="slds-grid slds-wrap" style="width:100%">
+
+                    <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
+                        <apex:outputText escape="false" value="{!eventPage.Event_Additional_Questions_Description__c}"/>
+                    </div>
 
                     <apex:outputPanel rendered="{!!eventIsClosed && mapToList.size > 0}" layout="none">
                         <apex:variable var="qNum" value="{!0}"/>
@@ -86,6 +91,12 @@
 
                                         <!--Textarea -->
                                         <apex:inputTextarea value="{!eventRegistration[qu.mapTo]}" styleClass="slds-textarea" rendered="{!If(qu.type = 'Text Area',true,false)}"/>
+
+                                        <!--Email -->
+                                        <apex:input type="email" value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Email',true,false)}"/>
+
+                                        <!--Date -->
+                                        <apex:input type="date" value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Date',true,false)}"/>
 
                                         <!--Pick List-->
                                         <apex:outputPanel layout="block" styleClass="slds-select_container" rendered="{!IF(qu.type = 'Picklist', true, false)}">

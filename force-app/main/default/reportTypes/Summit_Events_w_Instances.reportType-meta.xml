@@ -482,6 +482,11 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Event_Additional_Question_Title__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Lead_Matching_Rule_Description__c</field>
             <table>Summit_Events__c</table>
         </columns>
@@ -503,6 +508,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Custom_Metadata_Lead_Matching_Method__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Additional_Questions_Description__c</field>
             <table>Summit_Events__c</table>
         </columns>
         <masterLabel>Summit Events</masterLabel>

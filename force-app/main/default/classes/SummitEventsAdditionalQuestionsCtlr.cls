@@ -43,7 +43,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
             eventPage = [
                     SELECT Name, Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Full_Text__c, Event_home_Link_URL__c, Event_Home_Link_Title__c,
-                            Template__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c
+                            Template__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Event_Additional_Question_Title__c, Event_Additional_Questions_Description__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -81,7 +81,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     WHERE Event__c = :eventInformation.eventId
                     AND Registrant_Type__c = 'Registrant'
                     WITH SECURITY_ENFORCED
-                    ORDER BY Display_Order__c, Question_Label__c NULLS LAST
+                    ORDER BY Display_Order__c NULLS LAST
             ];
 
             //Get namespace if packaged
