@@ -20,7 +20,7 @@
 
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages />
+                    <apex:messages/>
                 </div>
 
                 <!-- EVENT BREADCRUMB -->
@@ -87,25 +87,26 @@
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__control">
 
                                         <!--Textbox -->
-                                        <apex:inputText value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Textbox',true,false)}"/>
+                                        <apex:inputText value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Textbox',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}"/>
 
                                         <!--Textarea -->
-                                        <apex:inputTextarea value="{!eventRegistration[qu.mapTo]}" styleClass="slds-textarea" rendered="{!If(qu.type = 'Text Area',true,false)}"/>
+                                        <apex:inputTextarea value="{!eventRegistration[qu.mapTo]}" styleClass="slds-textarea" rendered="{!If(qu.type = 'Text Area',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}"/>
 
                                         <!--Email -->
-                                        <apex:input type="email" value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Email',true,false)}"/>
+                                        <apex:input type="email" value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Email',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}"/>
 
                                         <!--Date -->
-                                        <apex:input type="date" value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Date',true,false)}"/>
+                                        <apex:input type="date" value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Date',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}"/>
 
                                         <!--Pick List-->
                                         <apex:outputPanel layout="block" styleClass="slds-select_container" rendered="{!IF(qu.type = 'Picklist', true, false)}">
-                                            <apex:selectList value="{!eventRegistration[qu.mapTo]}" size="1" styleClass="slds-select">
+                                            <apex:selectList value="{!eventRegistration[qu.mapTo]}" size="1" styleClass="slds-select" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}">
                                                 <apex:selectOptions value="{!qu.picklist}"/>
                                             </apex:selectList>
                                         </apex:outputPanel>
 
                                     </apex:outputPanel>
+                                    <div class="slds-form-element__help" id="error-message-{!quNum}">{!qu.assist}</div>
                                 </apex:outputPanel>
                                 <apex:outputPanel layout="block" rendered="{!!ISBLANK(qu.instructions)}">
                                     <p class="slds-text-body_regular slds-p-top_xxx-small">
@@ -119,7 +120,7 @@
                         </apex:repeat>
                         <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-around_x-small slds-p-vertical_xx-small">
                             <p class="slds-text-body slds-p-vertical_xx-small">
-                                <apex:commandLink action="{!submitAdditionalQuestions}" onClick="fadeout();" Value="Next" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                <apex:commandButton action="{!submitAdditionalQuestions}" onClick="fadeout();" Value="Next" id="submitQuestions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                                 <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                             </p>
                         </div>
