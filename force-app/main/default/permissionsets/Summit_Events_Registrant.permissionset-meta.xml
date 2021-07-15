@@ -1528,12 +1528,12 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Event_Additional_Question_Title__c</field>
-        <readable>false</readable>
+        <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Event_Additional_Questions_Description__c</field>
-        <readable>false</readable>
+        <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
