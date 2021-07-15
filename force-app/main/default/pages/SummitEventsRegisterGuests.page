@@ -14,7 +14,7 @@
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
             <script>
                 const guestQuestionJSON = {!guestQuestionJSON};
-                const guestMaxAmount = {!eventPage.Guest_Max_Amount__c};
+                const guestMaxAmount = {!If(ISBLANK(eventPage.Guest_Max_Amount__c), 'null', eventPage.Guest_Max_Amount__c)};
             </script>
             <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/guestRegistration.js')}" type="text/javascript"></script>
             <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/sldsHelper.js')}" type="text/javascript"></script>
@@ -24,7 +24,7 @@
 
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages />
+                    <apex:messages/>
                 </div>
 
                 <!-- EVENT BREADCRUMB -->
