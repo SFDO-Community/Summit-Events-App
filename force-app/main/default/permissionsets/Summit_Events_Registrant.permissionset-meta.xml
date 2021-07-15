@@ -1507,6 +1507,16 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Event_Additional_Question_Title__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Event_Additional_Questions_Description__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.Event_Appointment_Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1923,6 +1933,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>SummitEventsAddToCalendar</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>SummitEventsAdditionalQuestions</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
