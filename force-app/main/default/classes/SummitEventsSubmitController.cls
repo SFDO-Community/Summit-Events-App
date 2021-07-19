@@ -78,11 +78,14 @@ public with sharing class SummitEventsSubmitController {
 
         if (!String.isBlank(eventInformation.registrationId)) {
 
+            guestAnswers = new List<questionGuestData>();
+
             Summit_Events_Registration__c eventRegistration = [
                     SELECT Id, Guest_JSON__c
                     FROM Summit_Events_Registration__c
                     WHERE Id = :eventInformation.registrationId
             ];
+
 
             if (String.isNotBlank(eventRegistration.Guest_JSON__c)) {
 
