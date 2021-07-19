@@ -6,6 +6,7 @@ let readySLDS = (callback) => {
 readySLDS(() => {
     activateTooltips();
     activateHelpButton();
+    adjustLabelsFor();
 });
 
 /* Tooltip */
@@ -51,5 +52,36 @@ function activateHelpButton() {
             toolTipElement.classList.remove('slds-fall-into-ground', 'slds-rise-from-ground');
             toolTipElement.classList.add('slds-fall-into-ground');
         });
+    });
+}
+
+function adjustLabelsFor() {
+
+    document.querySelectorAll('.slds-input, .slds-select, .slds-textarea').forEach(inputFound => {
+        let inputWrapper = inputFound.closest('.slds-form-element')
+        let inputLabel = inputWrapper.querySelector('label')
+        let helpText = inputWrapper.querySelector('.slds-form-element__help');
+
+        if (inputLabel) {
+            if (inputFound.getAttribute('id')) {
+                inputLabel.htmlFor = inputFound.getAttribute('id');
+            } else if (inputFound.getAttribute('name')) {
+                inputFound.setAttribute('id', inputFound.getAttribute('name'))
+                inputLabel.htmlFor = inputFound.getAttribute('id');
+            }
+        }
+        if (inputFound && helpText) {
+            if (helpText) {
+                inputFound.setAttribute('aria-describedby', helpText.getAttribute('id'));
+                inputFound.setAttribute('aria-invalid', 'false');
+            }
+            if (inputWrapper.dataset.placeholder) {
+                field.setAttribute('placeholder', placeholders[inputId])
+                inputFound.setAttribute('placeholder', inputWrapper.dataset.placeholder);
+            }
+            if (inputWrapper.dataset.maxlength) {
+                inputFound.setAttribute('maxlength', inputWrapper.dataset.maxlength);
+            }
+        }
     });
 }
