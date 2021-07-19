@@ -166,7 +166,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                 Parent {!eventPage.First_Name_Label__c} <abbr class="slds-required" title="required">*</abbr>
                                             </apex:outputLabel>
                                             <div class="slds-form-element__control">
-                                                <apex:inputField value="{!eventRegistration.Registrant_Parent_First_Name__c}" id="parentFirstName" html-aria-describedby="parentFirstName-required" required="true" styleClass="slds-input"/>
+                                                <apex:inputText value="{!eventRegistration.Registrant_Parent_First_Name__c}" id="parentFirstName" html-aria-describedby="parentFirstName-required" required="true" styleClass="slds-input"/>
                                             </div>
                                             <div class="slds-form-element__help" id="parentFirstName-required">This field is required</div>
                                         </div>
@@ -178,7 +178,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                 Parent {!eventPage.Last_Name_Label__c} <abbr class="slds-required" title="required">*</abbr>
                                             </apex:outputLabel>
                                             <div class="slds-form-element__control">
-                                                <apex:inputField value="{!eventRegistration.Registrant_Parent_Last_Name__c}" html-aria-describedby="parentLastName-required" id="parentLastName" required="true" styleClass="required requiredText slds-input"/>
+                                                <apex:inputText value="{!eventRegistration.Registrant_Parent_Last_Name__c}" html-aria-describedby="parentLastName-required" id="parentLastName" required="true" styleClass="required requiredText slds-input"/>
                                             </div>
                                             <div class="slds-form-element__help" id="parentLastName-required">This field is required</div>
                                         </div>
@@ -222,7 +222,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                 {!eventPage.First_Name_Label__c} <abbr class="slds-required" title="required">*</abbr>
                                             </apex:outputLabel>
                                             <div class="slds-form-element__control">
-                                                <apex:inputField value="{!eventRegistration.Registrant_Other_First_Name__c}" id="otherFirstName" html-aria-describedby="otherFirstName-required" required="true" styleClass="required requiredText slds-input"/>
+                                                <apex:inputText value="{!eventRegistration.Registrant_Other_First_Name__c}" id="otherFirstName" html-aria-describedby="otherFirstName-required" required="true" styleClass="required requiredText slds-input"/>
                                             </div>
                                             <div class="slds-form-element__help" id="otherFirstName-required">This field is required</div>
                                         </div>
@@ -234,7 +234,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                 {!eventPage.Last_Name_Label__c} <abbr class="slds-required" title="required">*</abbr>
                                             </apex:outputLabel>
                                             <div class="slds-form-element__control">
-                                                <apex:inputField value="{!eventRegistration.Registrant_Other_Last_Name__c}" id="otherLastName" html-aria-describedby="otherLastName-required" required="true" styleClass="required requiredText slds-input"/>
+                                                <apex:inputText value="{!eventRegistration.Registrant_Other_Last_Name__c}" id="otherLastName" html-aria-describedby="otherLastName-required" required="true" styleClass="required requiredText slds-input"/>
                                             </div>
                                             <div class="slds-form-element__help" id="otherLastName-required">This field is required</div>
                                         </div>
@@ -265,7 +265,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                         <div class="slds-form-element">
                                             <apex:outputLabel value="{!eventPage.Registrant_Relationship_Label__c}" for="otherRelated" styleClass="slds-form-element__label"/>
                                             <div class="slds-form-element__control">
-                                                <apex:inputField value="{!eventRegistration.Registrant_Other_Relationship__c}" id="otherRelated" styleClass="slds-input"/>
+                                                <apex:inputTextarea value="{!eventRegistration.Registrant_Other_Relationship__c}" id="otherRelated" styleClass="slds-input"/>
                                             </div>
                                         </div>
                                     </div>
@@ -291,7 +291,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     {!eventPage.First_Name_Label__c} <abbr class="slds-required" title="required">*</abbr>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:inputField value="{!eventRegistration.Registrant_First_Name__c}" html-aria-describedby="firstName-required" id="firstName" required="true" styleClass="slds-input {!IF(!contactSet,'required requiredText', '')} {!IF(contactSet, 'disable', '')}"/>
+                                    <apex:inputText value="{!eventRegistration.Registrant_First_Name__c}" html-aria-describedby="firstName-required" id="firstName" required="true" styleClass="slds-input {!IF(!contactSet,'required requiredText', '')} {!IF(contactSet, 'disable', '')}"/>
                                 </div>
                                 <div class="slds-form-element__help" id="firstName-required">This field is required</div>
                             </div>
@@ -304,7 +304,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     {!eventPage.Last_Name_Label__c} <abbr class="slds-required" title="required">*</abbr>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:inputField value="{!eventRegistration.Registrant_Last_Name__c}" id="lastName" html-aria-describedby="lastName-required" required="true" styleClass="slds-input {!IF(contactSet, 'disable', '')}"/>
+                                    <apex:inputText value="{!eventRegistration.Registrant_Last_Name__c}" id="lastName" html-aria-describedby="lastName-required" required="true" styleClass="slds-input {!IF(contactSet, 'disable', '')}"/>
                                 </div>
                                 <div class="slds-form-element__help" id="lastName-required">This field is required</div>
                             </div>
@@ -333,7 +333,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </apex:outputText>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:inputField value="{!eventRegistration.Registrant_Preferred_First_Name__c}" id="preferredFirstName" html-aria-describedby="preferredFirstName-required" required="{!IF(eventPage.Ask_Preferred_First_Name__c == 'Ask and require', true, false)}" styleClass="slds-input {!IF(contactSet, 'disable', '')}"/>
+                                    <apex:inputText value="{!eventRegistration.Registrant_Preferred_First_Name__c}" id="preferredFirstName" html-aria-describedby="preferredFirstName-required" required="{!IF(eventPage.Ask_Preferred_First_Name__c == 'Ask and require', true, false)}" styleClass="slds-input {!IF(contactSet, 'disable', '')}"/>
                                 </div>
                                 <div class="slds-form-element__help" id="preferredFirstName-required">
                                     {!IF(eventPage.Ask_Preferred_First_Name__c == 'Ask and require', 'This field is required', '')}
@@ -350,7 +350,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </apex:outputText>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:inputField value="{!eventRegistration.Last_Name_as_Student__c}" html-aria-describedby="lastNameAsStudent-required" id="lastNameAsStudent" styleClass="slds-input {!IF(contactSet, 'disable', '')}" required="{!IF(eventPage.Ask_Last_Name_As_Student__c == 'Ask and require', true, false)}"/>
+                                    <apex:inputText value="{!eventRegistration.Last_Name_as_Student__c}" html-aria-describedby="lastNameAsStudent-required" id="lastNameAsStudent" styleClass="slds-input {!IF(contactSet, 'disable', '')}" required="{!IF(eventPage.Ask_Last_Name_As_Student__c == 'Ask and require', true, false)}"/>
                                 </div>
                                 <div class="slds-form-element__help" id="lastNameAsStudent-required">
                                     {!IF(eventPage.Ask_Last_Name_As_Student__c == 'Ask and require', 'This field is required', '')}
@@ -486,7 +486,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </apex:outputText>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:inputField value="{!eventRegistration.Registrant_Title__c}" id="title" html-aria-describedby="title-required" required="{!IF(eventPage.Ask_Title__c == 'Ask and require', true, false)}" styleClass="slds-input {!IF(eventPage.Ask_Title__c == 'Ask and require', 'required', '')} {!IF(contactSet, 'disable', '')}"/>
+                                    <apex:inputText value="{!eventRegistration.Registrant_Title__c}" id="title" html-aria-describedby="title-required" required="{!IF(eventPage.Ask_Title__c == 'Ask and require', true, false)}" styleClass="slds-input {!IF(eventPage.Ask_Title__c == 'Ask and require', 'required', '')} {!IF(contactSet, 'disable', '')}"/>
                                 </div>
                             </div>
                         </apex:outputPanel>
@@ -501,7 +501,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </apex:outputText>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:inputField value="{!eventRegistration.Registrant_Company_Organization__c}" id="companyorganization" html-aria-describedby="companyorganization" required="{!IF(eventPage.Ask_Company_Organization__c == 'Ask and require', true, false)}" styleClass="slds-select {!IF(eventPage.Ask_Company_Organization__c == 'Ask and require', 'required', '')} {!IF(contactSet, 'disable', '')}"/>
+                                    <apex:inputText value="{!eventRegistration.Registrant_Company_Organization__c}" id="companyorganization" html-aria-describedby="companyorganization" required="{!IF(eventPage.Ask_Company_Organization__c == 'Ask and require', true, false)}" styleClass="slds-input {!IF(eventPage.Ask_Company_Organization__c == 'Ask and require', 'required', '')} {!IF(contactSet, 'disable', '')}"/>
                                 </div>
                             </div>
                         </apex:outputPanel>
@@ -516,9 +516,11 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </apex:outputText>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:selectList multiSelect="false" value="{!ApplicantType}" id="applicantType" html-aria-describedby="applicantType-required" size="1" styleClass="slds-select" required="{!IF(eventPage.Ask_Applicant_Type__c == 'Ask and require', true, false)}">
-                                        <apex:selectOptions value="{!ApplicantTypeDD}"/>
-                                    </apex:selectList>
+                                    <div class="slds-select_container">
+                                        <apex:selectList multiSelect="false" value="{!ApplicantType}" id="applicantType" html-aria-describedby="applicantType-required" size="1" styleClass="slds-select" required="{!IF(eventPage.Ask_Applicant_Type__c == 'Ask and require', true, false)}">
+                                            <apex:selectOptions value="{!ApplicantTypeDD}"/>
+                                        </apex:selectList>
+                                    </div>
                                 </div>
                                 <div class="slds-form-element__help" id="applicantType-required">
                                     {!IF(eventPage.Ask_Last_Name_As_Student__c == 'Ask and require', 'This field is required', '')}
@@ -537,7 +539,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </apex:outputText>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:inputField value="{!eventRegistration.Preferred_Class_Year__c}" html-aria-describedby="preferredClassYear-required" id="preferredClassYear" styleClass="slds-input validYear {!IF(contactSet, 'disable', '')}" required="{!IF(eventPage.Ask_Preferred_Class_Year__c == 'Ask and require', true, false)}"/>
+                                    <apex:input type="number" value="{!eventRegistration.Preferred_Class_Year__c}" html-aria-describedby="preferredClassYear-required" id="preferredClassYear" styleClass="slds-input validYear {!IF(contactSet, 'disable', '')}" required="{!IF(eventPage.Ask_Preferred_Class_Year__c == 'Ask and require', true, false)}"/>
                                 </div>
                                 <div class="slds-form-element__help" id="preferredClassYear-required">
                                     {!IF(eventPage.Ask_Preferred_Class_Year__c == 'Ask and require', 'This field is required', '')}
@@ -555,7 +557,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </apex:outputText>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:input type="date" value="{!birthDateString}" id="dateOfBirth" html-aria-describedby="dateOfBirth-required" styleClass=" slds-input {!IF(!contactSet,'required requiredText', '')} mmddyyyy" disabled="{!contactSet}" required="{!IF(eventPage.Ask_Date_Of_Birth__c == 'Ask and require', true, false)}" html-placeholder="MM/DD/YYYY"/>
+                                    <apex:input type="date" value="{!eventRegistration.Registrant_Date_of_Birth__c}" id="dateOfBirth" html-aria-describedby="dateOfBirth-required" styleClass=" slds-input {!IF(!contactSet,'required requiredText', '')} mmddyyyy" disabled="{!contactSet}" required="{!IF(eventPage.Ask_Date_Of_Birth__c == 'Ask and require', true, false)}" html-placeholder="MM/DD/YYYY"/>
                                 </div>
                                 <div class="slds-form-element__help" id="dateOfBirth-required">
                                     {!IF(eventPage.Ask_Date_Of_Birth__c == 'Ask and require', 'This field is required', '')}
@@ -604,7 +606,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                         </apex:outputText>
                                     </apex:outputLabel>
                                     <div class="slds-form-element__control">
-                                        <apex:inputField value="{!eventRegistration.Registrant_Street_1__c}" id="street" required="{!IF(CONTAINS(eventPage.Ask_Mailing_Address__c, 'require'), true, false)}" styleClass="slds-input {!IF(contactSet, 'disable', '')}"/>
+                                        <apex:inputText value="{!eventRegistration.Registrant_Street_1__c}" id="street" required="{!IF(CONTAINS(eventPage.Ask_Mailing_Address__c, 'require'), true, false)}" styleClass="slds-input {!IF(contactSet, 'disable', '')}"/>
                                     </div>
                                 </div>
                             </div>
@@ -613,7 +615,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 <div class="slds-form-element">
                                     <apex:outputLabel value="Street Line 2 (Optional)" for="street2" styleClass="slds-form-element__label"/>
                                     <div class="slds-form-element__control">
-                                        <apex:inputField value="{!eventRegistration.Registrant_Street_2__c}" id="street2" styleClass="slds-input {!IF(contactSet, 'disable', '')}"/>
+                                        <apex:inputText value="{!eventRegistration.Registrant_Street_2__c}" id="street2" styleClass="slds-input {!IF(contactSet, 'disable', '')}"/>
                                     </div>
                                 </div>
                             </div>
@@ -649,7 +651,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                 </apex:outputText>
                                             </apex:outputLabel>
                                             <div class="slds-form-element__control">
-                                                <apex:inputField value="{!eventRegistration.Registrant_Zip__c}" id="zip" required="{!IF(CONTAINS(eventPage.Ask_Mailing_Address__c, 'require'), true, false)}" styleClass="slds-input {!IF(!contactSet,'required requiredText', '')} {!IF(contactSet, 'disable', '')}"/>
+                                                <apex:inputText value="{!eventRegistration.Registrant_Zip__c}" id="zip" required="{!IF(CONTAINS(eventPage.Ask_Mailing_Address__c, 'require'), true, false)}" styleClass="slds-input {!IF(!contactSet,'required requiredText', '')} {!IF(contactSet, 'disable', '')}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -663,7 +665,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                 </apex:outputText>
                                             </apex:outputLabel>
                                             <div class="slds-form-element__control">
-                                                <apex:inputField value="{!eventRegistration.Registrant_City__c}" id="city" required="{!IF(CONTAINS(eventPage.Ask_Mailing_Address__c, 'require'), true, false)}" styleClass="slds-input {!IF(!contactSet,'required requiredText', '')} {!IF(contactSet, 'disable', '')}"/>
+                                                <apex:inputText value="{!eventRegistration.Registrant_City__c}" id="city" required="{!IF(CONTAINS(eventPage.Ask_Mailing_Address__c, 'require'), true, false)}" styleClass="slds-input {!IF(!contactSet,'required requiredText', '')} {!IF(contactSet, 'disable', '')}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -699,7 +701,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                 </apex:outputText>
                                             </apex:outputLabel>
                                             <div class="slds-form-element__control">
-                                                <apex:inputField value="{!eventRegistration.Registrant_City__c}" id="city2" required="{!IF(CONTAINS(eventPage.Ask_Mailing_Address__c, 'require'), true, false)}" styleClass="slds-input {!IF(!contactSet,'required requiredText', '')} {!IF(contactSet, 'disable', '')}"/>
+                                                <apex:inputText value="{!eventRegistration.Registrant_City__c}" id="city2" required="{!IF(CONTAINS(eventPage.Ask_Mailing_Address__c, 'require'), true, false)}" styleClass="slds-input {!IF(!contactSet,'required requiredText', '')} {!IF(contactSet, 'disable', '')}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -713,7 +715,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                 </apex:outputText>
                                             </apex:outputLabel>
                                             <div class="slds-form-element__control">
-                                                <apex:inputField value="{!eventRegistration.Registrant_State_Province__c}" id="stateProvince" required="false" styleClass="slds-input {!IF(contactSet, 'disable', '')}"/>
+                                                <apex:inputText value="{!eventRegistration.Registrant_State_Province__c}" id="stateProvince" required="false" styleClass="slds-input {!IF(contactSet, 'disable', '')}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -722,7 +724,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                         <div class="slds-form-element">
                                             <apex:outputLabel value="Postal Code" for="postalCode" styleClass="slds-form-element__label"/>
                                             <div class="slds-form-element__control">
-                                                <apex:inputField value="{!eventRegistration.Registrant_Postal_Code__c}" id="postalCode" required="false" styleClass="slds-input {!IF(contactSet, 'disable', '')}"/>
+                                                <apex:inputText value="{!eventRegistration.Registrant_Postal_Code__c}" id="postalCode" required="false" styleClass="slds-input {!IF(contactSet, 'disable', '')}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -776,7 +778,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                         <div class="slds-form-element {!IF(isRequired, 'slds-is-required', '')}">
 
-                                            <apex:outputLabel for="{!'AddInfo' + q}" styleClass="slds-form-element__label">
+                                            <apex:outputLabel styleClass="slds-form-element__label">
                                                 {!eventPage['Add_Info_Question_Text_' + q + '__c']}
                                                 <apex:outputText escape="false" rendered="{!isRequired}">
                                                     <abbr class="slds-required" title="required">*</abbr>
@@ -787,17 +789,17 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                                 <!--Text area -->
                                                 <apex:outputPanel layout="block" styleClass="slds-form-element__control" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'], 'Text area'), true, false)}">
-                                                    <apex:inputField label="{!'AddInfo' + q}" value="{!eventRegistration['Add_Info_Answer_' + q + '__c']}" styleClass="slds-textarea"/>
+                                                    <apex:inputText value="{!eventRegistration['Add_Info_Answer_' + q + '__c']}" styleClass="slds-textarea"/>
                                                 </apex:outputPanel>
 
                                                 <!--Text box-->
                                                 <apex:outputPanel layout="block" styleClass="slds-form-element__control" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'],'Text box'), true, false)}">
-                                                    <apex:inputField label="{!'AddInfo' + q}" value="{!eventRegistration['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input input-textbox" />
+                                                    <apex:inputTextarea value="{!eventRegistration['Add_Info_Answer_' + q + '__c']}" styleClass="slds-input input-textbox"/>
                                                 </apex:outputPanel>
 
                                                 <!--Pick List-->
                                                 <apex:outputPanel layout="block" styleClass="slds-select_container" rendered="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'], 'Pick-list'), true, false)}">
-                                                    <apex:selectList label="{!'AddInfo' + q}" value="{!eventRegistration['Add_Info_Answer_' + q + '__c']}" size="1" styleClass="slds-select">
+                                                    <apex:selectList value="{!eventRegistration['Add_Info_Answer_' + q + '__c']}" size="1" styleClass="slds-select">
                                                         <apex:selectOptions value="{!CASE(q, '1', addPick1, '2', addPick2, '3', addPick3, '4', addPick4, addPick5) }"/>
                                                     </apex:selectList>
                                                 </apex:outputPanel>

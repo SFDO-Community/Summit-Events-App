@@ -5,9 +5,9 @@
             "default": true,
             "package": "Summit Events App",
             "versionName": "June 2021",
-            "versionNumber": "0.20.0.NEXT",
+            "versionNumber": "0.21.0.NEXT",
             "definitionFile": "orgs/dev.json",
-            "ancestorId": "04t4P000002fPl8QAE"
+            "ancestorId": "04t4P000002fPn4QAE"
         }
     ],
     "sfdcLoginUrl": "https://login.salesforce.com",
@@ -33,6 +33,7 @@
         "Summit Events App@0.16.0-1": "04t4P000002fPbuQAE",
         "Summit Events App@0.17.0-2": "04t4P000002fPktQAE",
         "Summit Events App@0.19.0-1": "04t4P000002fPl8QAE",
-        "Summit Events App@0.20.0-1": "04t4P000002fPn4QAE"
+        "Summit Events App@0.20.0-1": "04t4P000002fPn4QAE",
+        "Summit Events App@0.21.0-1": "04t4P000002fPobQAE"
     }
 }

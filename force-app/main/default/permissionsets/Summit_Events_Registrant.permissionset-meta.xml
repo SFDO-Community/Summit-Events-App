@@ -832,6 +832,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events_Registration__c.Event_Type__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events_Registration__c.Event__c</field>
         <readable>true</readable>
     </fieldPermissions>
