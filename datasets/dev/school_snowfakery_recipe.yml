@@ -1,0 +1,34 @@
+- object: Account
+  count: 400
+  fields:
+    Name:
+      random_choice:
+        - choice:
+            probability: 50%
+            pick:
+              random_choice:
+                - choice:
+                    probability: 50%
+                    pick: ${{fake.last_name}} High School
+                - choice:
+                    probability: 50%
+                    pick: ${{fake.city}} High School
+        - choice:
+            probability: 50%
+            pick:
+              random_choice:
+                - choice:
+                    probability: 50%
+                    pick: ${{fake.last_name}} University
+                - choice:
+                    probability: 50%
+                    pick: ${{fake.city}} University
+    BillingCity:
+      fake: city
+    BillingStreet:
+      fake: street_address
+    BillingState:
+      fake: state
+    BillingCountry:
+      fake: country
+    Industry: Education
