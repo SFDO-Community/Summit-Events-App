@@ -34,6 +34,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         public String defaultValue { get; set; }
         public Integer textLimit { get; set; }
         public String mapTo { get; set; }
+        private String recordQuery { get; set; }
     }
 
     public SummitEventsAdditionalQuestionsCtlr() {
@@ -182,6 +183,54 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
     public PageReference checkEventDetails() {
         return SeaShared.checkForEvent();
+    }
+
+    @RemoteAction
+    public static List<SObject> lookupSearch(String sObj, String sObjFilter, String sObjNameField, String term) {
+        return new ActionWithSharing().lookupSearchWithSharing(sObj, sObjFilter, sObjNameField, term);
+    }
+    public with sharing class ActionWithSharing {
+        public List<SObject> lookupSearchWithSharing(String sObj, String sObjFilter, String sObjNameField, String term) {
+            if (Schema.getGlobalDescribe().get(sObj).getDescribe().isAccessible()) {
+                if (String.isBlank(sObjNameField)) {
+                    sObjNameField = 'Name';
+                }
+                List<String> sObjNameFields = sObjNameField.split(',');
+
+                for (Integer x = 0; x < sObjNameFields.size(); x++) {
+                    sObjNameFields[x] = sObjNameFields[x].trim();
+                }
+
+                String fieldList = String.join(sObjNameFields, ', ');
+                String likeStatement = '';
+
+                for (String sField : sObjNameFields) {
+                    likeStatement += sField + ' LIKE \'%' + String.escapeSingleQuotes(term) + '%\' OR ';
+                }
+                likeStatement = ' ( ' + likeStatement.removeEnd(' OR ') + ' )';
+
+                String query = 'SELECT Id, ' + fieldList;
+                query += ' FROM ' + sObj;
+                query += ' WHERE ' + likeStatement;
+                if (String.isNotBlank(sObjFilter)) {
+                    query += ' AND ' + sObjFilter;
+                }
+                query += ' ORDER BY ' + fieldList + ' ASC';
+                query += ' LIMIT 50';
+                System.debug('Query -- ' + query);
+                System.debug(UserInfo.getProfileId());
+                System.debug(UserInfo.getUserRoleId());
+                System.debug(UserInfo.getUserType());
+
+                try {
+                    return Database.query(query);
+                } catch (Exception e) {
+                    System.debug('Error --- ' + e.getMessage());
+                    return new List<SObject>();
+                }
+            }
+            return new List<SObject>();
+        }
     }
 
     /**
