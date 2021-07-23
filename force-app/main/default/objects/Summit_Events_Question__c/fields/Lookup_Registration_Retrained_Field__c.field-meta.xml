@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Lookup_Registration_Retrained_Field__c</fullName>
+    <description>API name of the field you wish to retain on the registrants registration. If this is a lookup a custom lookup field needs to be created on the registration record.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>API name of the field you wish to retain on the registrants registration. If this is a lookup a custom lookup field needs to be created on the registration record.</inlineHelpText>
+    <label>Lookup Registration Retrained Field</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

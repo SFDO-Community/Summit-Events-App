@@ -167,7 +167,7 @@ public with sharing class SummitEventsConfirmationController {
                                                         }
                                                         when 'datetime' {
                                                             Date incomingDate = Date.valueOf(valueIn);
-                                                            DateTime dateAndTime = DateTime.newInstance(incomingDate.year(), incomingDate.month(), incomingDate.day(), 0, 0, 0);
+                                                            Datetime dateAndTime = Datetime.newInstance(incomingDate.year(), incomingDate.month(), incomingDate.day(), 0, 0, 0);
                                                             guestRegistration.put(mapToField, dateAndTime);
                                                         }
                                                         when 'integer' {
@@ -204,7 +204,7 @@ public with sharing class SummitEventsConfirmationController {
                             }
 
                             if (guestRegistration != null) {
-                                guestRegistration.Event_Instance__c = eventInformation.InstanceId;
+                                guestRegistration.Event_Instance__c = eventInformation.instanceId;
                                 guestRegistration.Event__c = eventInformation.eventId;
                                 guestRegistration.Guest_Host_Status__c = 'Hosted registrant';
                                 guestRegistration.Status__c = 'Registered';
@@ -214,7 +214,7 @@ public with sharing class SummitEventsConfirmationController {
                             }
                         }
 
-                        system.debug('GUEST REG: ' + JSON.serializePretty(guestRegistrations));
+                        System.debug('GUEST REG: ' + JSON.serializePretty(guestRegistrations));
 
                         if (guestRegistrations.size() > 0 && eventRegistrationSuccess) {
                             eventRegistrationSuccess = regCRUD.addGuestRegistration(guestRegistrations);

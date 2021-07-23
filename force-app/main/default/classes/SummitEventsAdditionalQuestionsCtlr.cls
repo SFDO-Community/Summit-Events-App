@@ -20,10 +20,11 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public Boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
     public List<String> mapToList { get; set; }
-    public List<questionItem> questionWrapper { get; set; }
+    public static List<questionItem> questionWrapper { get; set; }
     private Id incomingRegId { get; set; }
 
     public class questionItem {
+        public String questionId { get; set; }
         public String type { get; set; }
         public String question { get; set; }
         public Boolean required { get; set; }
@@ -34,7 +35,13 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         public String defaultValue { get; set; }
         public Integer textLimit { get; set; }
         public String mapTo { get; set; }
-        private String recordQuery { get; set; }
+        public String lookup { get; set; }
+    }
+
+    public class queryReturn {
+        public String lineOne { get; set; }
+        public String lineTwo { get; set; }
+        public String retainValue { get; set; }
     }
 
     public SummitEventsAdditionalQuestionsCtlr() {
@@ -43,7 +50,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
 
             eventPage = [
-                    SELECT Name, Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Full_Text__c, Event_home_Link_URL__c, Event_Home_Link_Title__c,
+                    SELECT Name, Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Full_Text__c, Event_Home_Link_URL__c, Event_Home_Link_Title__c,
                             Template__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Event_Additional_Question_Title__c, Event_Additional_Questions_Description__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
@@ -77,7 +84,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
             additionalQuestions = [
                     SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
-                            Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c
+                            Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c,
+                            Lookup_Object__c, Lookup_Fields__c, Lookup_Registration_Retrained_Field__c, Lookup_Where_Clause__c
                     FROM Summit_Events_Question__c
                     WHERE Event__c = :eventInformation.eventId
                     AND Registrant_Type__c = 'Registrant'
@@ -121,6 +129,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
                         //build wrapper class to type and make picklist lists
                         questionItem quest = new questionItem();
+                        quest.questionId = SeaShared.encryptString(question.Id);
                         quest.type = question.Question_Field_Type__c;
                         quest.question = question.Question_Label__c;
                         quest.required = question.Required__c;
@@ -131,12 +140,19 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                         quest.defaultValue = question.Default_Value__c;
                         quest.textLimit = Integer.valueOf(question.Text_Limit__c);
                         quest.mapTo = question.Map_to_Field__c;
+                        if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
+                            Map<String, String> queryInfo = new Map<String, String>();
+                            queryInfo.put('Lookup_Object__c', question.Lookup_Object__c);
+                            queryInfo.put('Lookup_Fields__c', question.Lookup_Fields__c);
+                            queryInfo.put('Lookup_Where_Clause__c', question.Lookup_Where_Clause__c);
+                            queryInfo.put('Lookup_Registration_Retrained_Field__c', question.Lookup_Registration_Retrained_Field__c);
+                            quest.lookup = SeaShared.encryptString(JSON.serialize(queryInfo));
+                        }
                         questionWrapper.add(quest);
                     }
                 }
 
                 String regQuery = '';
-
                 if (mapToList.size() > 0) {
                     regQuery += 'SELECT ';
                     regQuery += String.join(mapToList, ' , ');
@@ -186,51 +202,106 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     }
 
     @RemoteAction
-    public static List<SObject> lookupSearch(String sObj, String sObjFilter, String sObjNameField, String term) {
-        return new ActionWithSharing().lookupSearchWithSharing(sObj, sObjFilter, sObjNameField, term);
-    }
-    public with sharing class ActionWithSharing {
-        public List<SObject> lookupSearchWithSharing(String sObj, String sObjFilter, String sObjNameField, String term) {
-            if (Schema.getGlobalDescribe().get(sObj).getDescribe().isAccessible()) {
-                if (String.isBlank(sObjNameField)) {
-                    sObjNameField = 'Name';
-                }
-                List<String> sObjNameFields = sObjNameField.split(',');
-
-                for (Integer x = 0; x < sObjNameFields.size(); x++) {
-                    sObjNameFields[x] = sObjNameFields[x].trim();
-                }
-
-                String fieldList = String.join(sObjNameFields, ', ');
-                String likeStatement = '';
-
-                for (String sField : sObjNameFields) {
-                    likeStatement += sField + ' LIKE \'%' + String.escapeSingleQuotes(term) + '%\' OR ';
-                }
-                likeStatement = ' ( ' + likeStatement.removeEnd(' OR ') + ' )';
-
-                String query = 'SELECT Id, ' + fieldList;
-                query += ' FROM ' + sObj;
-                query += ' WHERE ' + likeStatement;
-                if (String.isNotBlank(sObjFilter)) {
-                    query += ' AND ' + sObjFilter;
-                }
-                query += ' ORDER BY ' + fieldList + ' ASC';
-                query += ' LIMIT 50';
-                System.debug('Query -- ' + query);
-                System.debug(UserInfo.getProfileId());
-                System.debug(UserInfo.getUserRoleId());
-                System.debug(UserInfo.getUserType());
-
+    public static List<queryReturn> lookupSearch(String question, String term) {
+        SummitEventsShared SeaShared = new SummitEventsShared();
+        List<queryReturn> returnValues = new List<queryReturn>();
+        if (String.isNotBlank(question) && String.isNotBlank(term)) {
+            question = SeaShared.decryptString(question, true);
+            Map<String, String> queryInfo = (Map<String, String>) JSON.deserialize(question, Map<String, String>.class);
+            if (queryInfo.size() > 0) {
+                String lookupQuery = '';
+                DescribeSObjectResult lookupObjectDesc = null;
                 try {
-                    return Database.query(query);
+                    //Define lookup object
+                    lookupObjectDesc = Schema.getGlobalDescribe().get(queryInfo.get('Lookup_Object__c').trim()).getDescribe();
                 } catch (Exception e) {
-                    System.debug('Error --- ' + e.getMessage());
-                    return new List<SObject>();
+                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Lookup object is inaccessible.' + e.getMessage()));
+                }
+                if (lookupObjectDesc != null) {
+                    //Is lookup object accessible?
+                    if (lookupObjectDesc.isAccessible()) {
+                        //Check each fields accessibility and add it to the query
+                        List<String> lookupFields = queryInfo.get('Lookup_Fields__c').split(',');
+                        List<String> validLookupFields = new List<String>();
+
+                        if (lookupFields.size() > 0) {
+                            for (String fieldName : lookupFields) {
+                                if (String.isNotBlank(fieldName)) {
+                                    if (lookupObjectDesc.fields.getMap().get(fieldName.trim()).getDescribe().isAccessible()) {
+                                        validLookupFields.add(fieldName.trim());
+                                    }
+                                }
+                            }
+                            if (validLookupFields.size() == 0) {
+                                //Alert if any of the fields don't make the accessibility cut
+                                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'One or more of your lookup fields was inaccessible.'));
+                            } else {
+                                lookupQuery = 'SELECT Id, ' + String.join(validLookupFields, ', ') + ' FROM ' + queryInfo.get('Lookup_Object__c').trim() + ' ';
+                                if (String.isNotBlank(lookupQuery) && String.isNotBlank(queryInfo.get('Lookup_Where_Clause__c'))) {
+                                    if (queryInfo.get('Lookup_Where_Clause__c').contains('WHERE ')) {
+                                        lookupQuery = lookupQuery + ' ' + queryInfo.get('Lookup_Where_Clause__c');
+                                    } else {
+                                        lookupQuery = lookupQuery + ' WHERE ' + queryInfo.get('Lookup_Where_Clause__c');
+                                    }
+                                    String likeStatement = '';
+
+                                    for (String sField : validLookupFields) {
+                                        likeStatement += sField.trim() + ' LIKE \'%' + String.escapeSingleQuotes(term) + '%\' OR ';
+                                    }
+                                    lookupQuery += ' AND ( ' + likeStatement.removeEnd(' OR ') + ' )';
+
+                                    lookupQuery += ' ORDER BY ' + String.join(validLookupFields, ', ') + ' ASC';
+                                    lookupQuery += ' LIMIT 50';
+
+                                    List<SObject> foundValues = new List<SObject>();
+
+                                    System.debug(lookupQuery);
+                                    try {
+                                        foundValues = Database.query(lookupQuery);
+                                    } catch (Exception e) {
+                                        System.debug(e.getMessage());
+                                    }
+                                    for (SObject obj : foundValues) {
+                                        queryReturn qr = new queryReturn();
+                                        String lineOne = '';
+                                        String lineTwo = '';
+                                        String retainValue = '';
+                                        for (Integer xx = 0; xx < validLookupFields.size(); xx++) {
+                                            String fieldType = String.valueOf(Schema.getGlobalDescribe().get(queryInfo.get('Lookup_Object__c')).getDescribe().fields.getMap().get(validLookupFields[xx]).getDescribe().getType()).toLowerCase();
+                                            if (fieldType != 'id') {
+                                                if (xx == 0) {
+                                                    lineOne = (String) obj.get(validLookupFields[xx]);
+                                                } else {
+                                                    lineTwo += (String) obj.get(validLookupFields[xx]) + ', ';
+                                                }
+                                            }
+                                            if (validLookupFields[xx] == queryInfo.get('Lookup_Registration_Retrained_Field__c').trim()) {
+                                                retainValue = (String) obj.get(validLookupFields[xx]);
+                                            }
+                                        }
+                                        lineTwo = lineTwo.removeEnd(', ');
+                                        qr.lineOne = lineOne;
+                                        qr.lineTwo = lineTwo;
+                                        qr.retainValue = retainValue;
+                                        returnValues.add(qr);
+                                    }
+
+                                } else {
+                                    lookupQuery = '';
+                                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Lookup where clause missing.'));
+                                }
+                            }
+
+                        } else {
+                            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Lookup object is inaccessible.'));
+                        }
+
+
+                    }
                 }
             }
-            return new List<SObject>();
         }
+        return returnValues;
     }
 
     /**
