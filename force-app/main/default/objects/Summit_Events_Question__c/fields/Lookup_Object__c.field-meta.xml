@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Lookup_Object__c</fullName>
+    <description>The API name of the object you wish to allow registrants to lookup a record in. Sharing rules and permissions must be in place for this object.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The API name of the object you wish to allow registrants to lookup a record in. Sharing rules and permissions must be in place for this object.</inlineHelpText>
+    <label>Lookup Object</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

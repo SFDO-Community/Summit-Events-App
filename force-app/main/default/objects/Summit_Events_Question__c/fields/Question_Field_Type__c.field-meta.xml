@@ -11,7 +11,12 @@
     <valueSet>
         <restricted>true</restricted>
         <valueSetDefinition>
-            <sorted>false</sorted>
+            <sorted>true</sorted>
+            <value>
+                <fullName>Checkbox</fullName>
+                <default>false</default>
+                <label>Checkbox</label>
+            </value>
             <value>
                 <fullName>Date</fullName>
                 <default>false</default>
@@ -21,6 +26,16 @@
                 <fullName>Email</fullName>
                 <default>false</default>
                 <label>Email</label>
+            </value>
+            <value>
+                <fullName>Lookup</fullName>
+                <default>false</default>
+                <label>Lookup</label>
+            </value>
+            <value>
+                <fullName>Phone</fullName>
+                <default>false</default>
+                <label>Phone</label>
             </value>
             <value>
                 <fullName>Picklist</fullName>
@@ -36,11 +51,6 @@
                 <fullName>Textbox</fullName>
                 <default>false</default>
                 <label>Textbox</label>
-            </value>
-            <value>
-                <fullName>Phone</fullName>
-                <default>false</default>
-                <label>Phone</label>
             </value>
         </valueSetDefinition>
     </valueSet>

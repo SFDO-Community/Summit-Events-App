@@ -60,58 +60,58 @@ function adjustLabelsFor() {
 
     document.querySelectorAll('.slds-input, .slds-select, .slds-textarea, .slds-checkbox input').forEach(inputFound => {
         let inputWrapper = inputFound.closest('.slds-form-element');
-        let inputLabel = inputWrapper.querySelector('label')
-        let helpText = inputWrapper.querySelector('.slds-form-element__help');
+        if (inputWrapper) {
+            let inputLabel = inputWrapper.querySelector('label')
+            let helpText = inputWrapper.querySelector('.slds-form-element__help');
 
-        if (inputLabel) {
-            if (inputFound.getAttribute('id')) {
-                inputLabel.htmlFor = inputFound.getAttribute('id');
-            } else if (inputFound.getAttribute('name')) {
-                inputFound.setAttribute('id', inputFound.getAttribute('name'))
-                inputLabel.htmlFor = inputFound.getAttribute('id');
-            }
-        }
-
-        if (inputFound.classList.contains('slds-checkbox')) {
-            inputLabel.addEventListener('click', function (e) {
-                if (inputFound.getAttribute('checked')) {
-                    inputFound.removeAttribute('checked')
-                } else {
-                    inputFound.setAttribute('checked', 'checked');
+            if (inputLabel) {
+                if (inputFound.getAttribute('id')) {
+                    inputLabel.htmlFor = inputFound.getAttribute('id');
+                } else if (inputFound.getAttribute('name')) {
+                    inputFound.setAttribute('id', inputFound.getAttribute('name'))
+                    inputLabel.htmlFor = inputFound.getAttribute('id');
                 }
-            });
-        }
+            }
 
-        if (inputFound && helpText) {
-            if (helpText) {
-                inputFound.setAttribute('aria-describedby', helpText.getAttribute('id'));
-                inputFound.setAttribute('aria-invalid', 'false');
+            if (inputFound.classList.contains('slds-checkbox')) {
+                inputLabel.addEventListener('click', function (e) {
+                    if (inputFound.getAttribute('checked')) {
+                        inputFound.removeAttribute('checked')
+                    } else {
+                        inputFound.setAttribute('checked', 'checked');
+                    }
+                });
             }
-            if (inputWrapper.dataset.placeholder) {
-                field.setAttribute('placeholder', placeholders[inputId])
-                inputFound.setAttribute('placeholder', inputWrapper.dataset.placeholder);
-            }
-            if (inputWrapper.dataset.maxlength) {
-                inputFound.setAttribute('maxlength', inputWrapper.dataset.maxlength);
+
+            if (inputFound && helpText) {
+                if (helpText) {
+                    inputFound.setAttribute('aria-describedby', helpText.getAttribute('id'));
+                    inputFound.setAttribute('aria-invalid', 'false');
+                }
+                if (inputWrapper.dataset.placeholder) {
+                    field.setAttribute('placeholder', placeholders[inputId])
+                    inputFound.setAttribute('placeholder', inputWrapper.dataset.placeholder);
+                }
+                if (inputWrapper.dataset.maxlength) {
+                    inputFound.setAttribute('maxlength', inputWrapper.dataset.maxlength);
+                }
             }
         }
     });
+
 }
 
 function activateAutoComplete() {
 
     document.querySelectorAll('.bind-autocomplete').forEach(autoItem => {
-
-        let originObjId = autoItem.id;
         let comboBoxContainer = autoItem.closest('.slds-combobox_container');
-        let hiddenInput = comboBoxContainer.querySelector('.inputHidden');
         let comboBox = comboBoxContainer.querySelector('.slds-combobox');
-        let objectType = comboBox.dataset.objtype;
-        let objectTypeFilter = comboBox.dataset.objtypefilter;
-        let objectTypeNameField = comboBox.dataset.objtypenamefield;
+        let hiddenInput = comboBoxContainer.querySelector('.inputHidden');
         let removeButton = comboBox.querySelector('.refRemoveButton');
         let magGlass = comboBox.querySelector('.refMagGlass');
         let resultList = comboBox.querySelector('.slds-listbox');
+        let originObjId = autoItem.id;
+        let lookup = comboBox.dataset.lookup;
 
         /* Remote reference lookup */
         const resultListTemplate = (title, subtitle, icon, originObjId, resultId) => `
@@ -153,26 +153,14 @@ function activateAutoComplete() {
 
         function lookupResultsFormatter(data, originObjId) {
             let outputList = ''
-            let fieldNames = comboBox.dataset.objtypenamefield.replace(' ', '').split(',');
+            // let fieldNames = comboBox.dataset.objtypenamefield.replace(' ', '').split(',');
+            console.log(JSON.stringify(data));
             data.forEach(result => {
-                let resultName = '';
-                let subTitle = '';
-                let resultId = '';
+                let resultName = result['lineOne'];
+                let subTitle = result['lineTwo'];
+                let resultId = result['lineTwo'];
                 if (result['Id']) {
                     resultId = result['Id'];
-                }
-                for (let x = 0; x < fieldNames.length; x++) {
-                    let fieldName = fieldNames[x].trim();
-                    if (x === 0) {
-                        resultName = result[fieldName];
-                    } else {
-                        if (result[fieldName]) {
-                            subTitle += result[fieldName] + ', ';
-                        }
-                    }
-                }
-                if (subTitle) {
-                    subTitle = subTitle.substr(0, subTitle.length - 2);
                 }
                 outputList += resultListTemplate(resultName, subTitle, comboBox.dataset.listicon, originObjId, resultId);
             });
@@ -187,16 +175,9 @@ function activateAutoComplete() {
 
             resultList.querySelectorAll('li').forEach(refItem => {
                 refItem.addEventListener('click', function (e) {
-                    if (refItem.dataset.title === '**createnew**') {
-                        if (typeof window['setCreatingNewRelatedRecordAF' + groupId] === "function" && recordId && resultId) {
-                            window['setCreatingNewRelatedRecordAF' + groupId](recordId, resultId)
-                            console.log('result function called!');
-                        }
-                    } else {
-                        hiddenInput.value = refItem.dataset.resultid;
-                        autoItem.value = refItem.dataset.title;
-                        refValueAdded();
-                    }
+                    hiddenInput.value = refItem.dataset.resultid;
+                    autoItem.value = refItem.dataset.title;
+                    refValueAdded();
                 });
             });
         }
@@ -217,8 +198,11 @@ function activateAutoComplete() {
 
         autoItem.addEventListener('keyup', (e) => {
             let searchTerm = autoItem.value;
-            if (objectType && objectTypeFilter && objectTypeNameField && searchTerm.length > 2) {
-                lookupSearchJS(objectType, objectTypeFilter, objectTypeNameField, searchTerm, lookupResultsFormatter, originObjId);
+            if (lookup && searchTerm.length > 2) {
+                console.log(lookup);
+                console.log(searchTerm);
+                console.log(originObjId);
+                lookupSearchJS(lookup, searchTerm, lookupResultsFormatter, originObjId);
             }
         });
 
