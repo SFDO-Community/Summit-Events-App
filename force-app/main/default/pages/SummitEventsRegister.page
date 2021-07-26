@@ -91,6 +91,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             <p class="slds-text-body">
                                 {!formattedNavDate}
                             </p>
+
                             <!-- Location Address/Map Link -->
                             <apex:outputPanel layout="none"
                                               rendered="{!IF(!ISBLANK(eventPage.Location_Address__c)
