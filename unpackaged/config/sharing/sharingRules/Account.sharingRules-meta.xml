@@ -12,6 +12,5 @@
             <operation>equals</operation>
             <value>Education</value>
         </criteriaItems>
-        <includeHVUOwnedRecords>false</includeHVUOwnedRecords>
     </sharingGuestRules>
 </SharingRules>
