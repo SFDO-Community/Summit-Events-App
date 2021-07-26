@@ -62,8 +62,8 @@ public with sharing class SummitEventsShared {
         allPageReferences.put(namespace + 'SummitEventsSubmit', Page.SummitEventsSubmit);
         allPageReferences.put(namespace + 'SummitEventsConfirmation', Page.SummitEventsConfirmation);
 
-        List<Summit_Events_Appointment_Type__c> appointmentTypes = [
-                SELECT Id, Chosen_State__c, Restrict_To_Instance_Title__r.Instance_Title__c
+        Integer appointmentTypes = [
+                SELECT COUNT()
                 FROM Summit_Events_Appointment_Type__c
                 WHERE Summit_Events__c = :eventId
                 AND Chosen_State__c != 'Added but not shown'
@@ -73,11 +73,12 @@ public with sharing class SummitEventsShared {
                 WITH SECURITY_ENFORCED
         ];
 
-        List<Summit_Events_Question__c> additionalQuestions = [
-                SELECT Id
+        Integer additionalQuestions = [
+                SELECT COUNT()
                 FROM Summit_Events_Question__c
                 WHERE Event__c = :eventId
                 AND Registrant_Type__c = 'Registrant'
+                WITH SECURITY_ENFORCED
         ];
 
         Summit_Events__c eventInformation = [
@@ -91,7 +92,7 @@ public with sharing class SummitEventsShared {
 
         //Check for additional questions
 
-        if(additionalQuestions.size() > 0) {
+        if (additionalQuestions > 0) {
             pagesInEvent.add(namespace + 'SummitEventsAdditionalQuestions');
         }
 
@@ -101,7 +102,7 @@ public with sharing class SummitEventsShared {
         }
 
         //check for if event has appointments
-        if (appointmentTypes.size() > 0) {
+        if (appointmentTypes > 0) {
             pagesInEvent.add(namespace + 'SummitEventsRegisterAppointments');
         }
 
@@ -149,6 +150,7 @@ public with sharing class SummitEventsShared {
             }
         }
 
+        system.debug(pageMovement);
         return pageMovement;
 
     }
