@@ -431,6 +431,7 @@ public with sharing class SummitEventsShared {
     }
 
     public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance) {
+
         String instanceDate = '';
         Time noTime = Time.newInstance(0, 0, 0, 0);
         if (eventInstance.Instance_Start_Date__c != null && eventInstance.Instance_End_Date__c != null) {

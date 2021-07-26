@@ -89,12 +89,9 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </apex:outputPanel>
                             <!-- Location Date/Time -->
                             <p class="slds-text-body">
-                                {!formattedStartDate}
+                                {!formattedNavDate}
                             </p>
-                            <p class="slds-text-body">
-                                {!startTimeString} - {!endTimeString}
-                            </p>
-                            <!-- Location Address/Map Link -->
+
                             <apex:outputPanel layout="none"
                                               rendered="{!IF(!ISBLANK(eventPage.Location_Address__c)
                                               || !ISBLANK(evtInstance.Location_Address_Override__c)

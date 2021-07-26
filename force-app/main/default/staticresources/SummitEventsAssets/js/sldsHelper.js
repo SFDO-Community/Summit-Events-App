@@ -4,6 +4,7 @@ let readySLDS = (callback) => {
 }
 
 readySLDS(() => {
+    createRequiredSelects();
     activateTooltips();
     activateHelpButton();
     adjustLabelsFor();
@@ -53,6 +54,12 @@ function activateHelpButton() {
             toolTipElement.classList.remove('slds-fall-into-ground', 'slds-rise-from-ground');
             toolTipElement.classList.add('slds-fall-into-ground');
         });
+    });
+}
+
+function createRequiredSelects() {
+    document.querySelectorAll('.slds-is-required select').forEach(selectFound => {
+        selectFound.setAttribute('required', 'required');
     });
 }
 
