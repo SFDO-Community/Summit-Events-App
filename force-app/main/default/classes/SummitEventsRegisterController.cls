@@ -38,12 +38,14 @@ public with sharing class SummitEventsRegisterController {
     public String nextUrl { get; set; }
     public String picklistStringToFormat { get; set; }
     public String placeholderValue { get; set; }
+    public String timezoneDisplay { get; set; }
 
     public SummitEventsRegisterController() {
         //array for looping through additional information questions
         questionNum = new List<String>{
                 '1', '2', '3', '4', '5'
         };
+
         contactSet = false;
         eventIsClosed = false;
         additionalQuestions = false;
