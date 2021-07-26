@@ -19,6 +19,12 @@ tasks:
             path: unpackaged/config/site
             unmanaged: True
 
+    create_fake_school_data:
+        description: Makes fake account data to mimic schools with Educaiton as industry
+        class_path: cumulusci.tasks.bulkdata.snowfakery.Snowfakery
+        options:
+            recipe: datasets/dev/school_snowfakery_recipe.yml
+
     deploy_guest_sharing_rules:
         description: Deploys configuration for Development.
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -106,14 +112,16 @@ flows:
             3:
                 task: deploy_dev_event_records
             4:
-                task: deploy_permission_set
+                task: create_fake_school_data
             5:
-                task: deploy_site_config
+                task: deploy_permission_set
             6:
-                task: deploy_site_settings
+                task: deploy_site_config
             7:
-                task: deploy_guest_permission_set
+                task: deploy_site_settings
             8:
+                task: deploy_guest_permission_set
+            9:
                 task: deploy_guest_sharing_rules
 
     config_dev:
@@ -121,14 +129,16 @@ flows:
             3:
                 task: deploy_dev_event_records
             4:
-                task: deploy_permission_set
+                task: create_fake_school_data
             5:
-                task: deploy_site_config
+                task: deploy_permission_set
             6:
-                task: deploy_site_settings
+                task: deploy_site_config
             7:
-                task: deploy_guest_permission_set
+                task: deploy_site_settings
             8:
+                task: deploy_guest_permission_set
+            9:
                 task: deploy_guest_sharing_rules
 
     customer_org:

@@ -4,5 +4,9 @@
         <members>Summit_Events__c</members>
         <name>SharingRules</name>
     </types>
+    <types>
+        <members>Account</members>
+        <name>SharingRules</name>
+    </types>
     <version>51.0</version>
 </Package>
