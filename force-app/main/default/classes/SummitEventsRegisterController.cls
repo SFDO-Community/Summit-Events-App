@@ -22,7 +22,6 @@ public with sharing class SummitEventsRegisterController {
     public List<SelectOption> addPick4 { get; set; }
     public List<SelectOption> addPick5 { get; set; }
     public String applicantType { get; set; }
-    public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
     public Decimal totalEventCost { get; set; }
     public List<Summit_Events_Fee__c> eventFeeList { get; set; }
@@ -37,6 +36,7 @@ public with sharing class SummitEventsRegisterController {
     public Id incomingEventRegistrationId { get; set; }
     public String formattedStartDate { get; set; }
     public Map<String, PageReference> pageFlow { get; set; }
+    public String nextUrl { get; set; }
     public String picklistStringToFormat { get; set; }
     public String placeholderValue { get; set; }
 
@@ -45,7 +45,6 @@ public with sharing class SummitEventsRegisterController {
         questionNum = new List<String>{
                 '1', '2', '3', '4', '5'
         };
-
         contactSet = false;
         eventIsClosed = false;
         additionalQuestions = false;
@@ -129,6 +128,7 @@ public with sharing class SummitEventsRegisterController {
 
             pageFlow = SeaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage());
             System.debug(pageFlow);
+            nextUrl = pageFlow.get('Next').getUrl().toLowerCase();
 
             if (String.isNotBlank(eventPage.Ask_Phone__c)) {
                 if (eventPage.Ask_Phone__c.containsIgnoreCase('with type') && String.isNotBlank(eventRegistration.Registrant_Mobile_Phone__c) && String.isBlank(eventRegistration.Registrant_Phone__c)) {
@@ -206,19 +206,6 @@ public with sharing class SummitEventsRegisterController {
 
             formattedNavDate = SeaShared.navBreadcrumbBuilder(evtInstance);
 
-            //Check if the Event has appointments and therefore we have to redirect to the appointment page.
-            evtHasAppointments = false;
-            List<Summit_Events_Appointment_Type__c> appointmentTypes = [
-                    SELECT Id
-                    FROM Summit_Events_Appointment_Type__c
-                    WHERE Summit_Events__c = :eventInformation.eventId
-                    AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
-                    WITH SECURITY_ENFORCED
-            ];
-            if (appointmentTypes.size() > 0) {
-                evtHasAppointments = true;
-            }
-
             //Grab the template if defined
             templateSelected = SeaShared.getTemplate(eventPage.Template__c);
 
@@ -230,14 +217,6 @@ public with sharing class SummitEventsRegisterController {
                     }
                 }
             }
-
-            //Get appointment types for event
-            appointmentTypes = [
-                    SELECT Id, Title__c, Appointment_Category__c, Appointment_Type__c, Description__c
-                    FROM Summit_Events_Appointment_Type__c
-                    WHERE Summit_Events__c = :eventInformation.eventId
-                    WITH SECURITY_ENFORCED
-            ];
 
             addPick1 = createPicklists(eventPage.Add_Info_Question_Pick_List_1__c);
             addPick2 = createPicklists(eventPage.Add_Info_Question_Pick_List_2__c);
