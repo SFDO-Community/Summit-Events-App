@@ -1,7 +1,7 @@
 BEGIN TRANSACTION;
 CREATE TABLE "Contact" (
-	id INTEGER NOT NULL,
-	"FirstName" VARCHAR(255),
+	id INTEGER NOT NULL, 
+	"FirstName" VARCHAR(255), 
 	"LastName" VARCHAR(255), 
 	"ReportsToId" VARCHAR(255), 
 	PRIMARY KEY (id)
@@ -9,6 +9,8 @@ CREATE TABLE "Contact" (
 CREATE TABLE "Summit_Events_Appointment_Type__c" (
 	id INTEGER NOT NULL, 
 	"Appointment_Category__c" VARCHAR(255), 
+	"Appointment_Fee_Additional__c" VARCHAR(255), 
+	"Appointment_Fee__c" VARCHAR(255), 
 	"Appointment_Limits__c" VARCHAR(255), 
 	"Appointment_Type_Status__c" VARCHAR(255), 
 	"Appointment_Type__c" VARCHAR(255), 
@@ -26,20 +28,22 @@ CREATE TABLE "Summit_Events_Appointment_Type__c" (
 	"Required_Appointment__c" VARCHAR(255), 
 	"Sort_Order__c" VARCHAR(255), 
 	"Title__c" VARCHAR(255), 
+	"Appointment_Fee_Additional_Allocation__c" VARCHAR(255), 
+	"Appointment_Fee_Allocation__c" VARCHAR(255), 
 	"Restrict_To_Instance_Title__c" VARCHAR(255), 
 	"Summit_Events__c" VARCHAR(255), 
 	PRIMARY KEY (id)
 );
-INSERT INTO "Summit_Events_Appointment_Type__c" VALUES(1,'','1','Active','','','False','','','','','','','<p>Get yourself some quiet time in our library.</p>','False','','False','1.0','Demo Appointment 0 - Quiet Time','','1');
-INSERT INTO "Summit_Events_Appointment_Type__c" VALUES(2,'','1','Active','','','False','','','','','','','There is such a thing!','False','','False','30.0','Demo Appointment 3 - Free Lunch','','1');
-INSERT INTO "Summit_Events_Appointment_Type__c" VALUES(3,'','1','Active','','','False','','','Chocolate
+INSERT INTO "Summit_Events_Appointment_Type__c" VALUES(1,'','','','1','Active','','','False','','','','','','','<p>Get yourself some quiet time in our library.</p>','False','','False','1.0','Demo Appointment 0 - Quiet Time','','','','2');
+INSERT INTO "Summit_Events_Appointment_Type__c" VALUES(2,'','','','1','Active','','','False','','','','','','','There is such a thing!','False','','False','30.0','Demo Appointment 3 - Free Lunch','','','','2');
+INSERT INTO "Summit_Events_Appointment_Type__c" VALUES(3,'','','','1','Active','','','False','','','Chocolate
 
 Vanilla
 
 Strawberry
 
-Lactose Free','','','','Choose the ice cream you could prefer to consume during your visit','False','Custom pick list','False','10.0','Demo Appointment 1 - Ice Cream with Counselor','','1');
-INSERT INTO "Summit_Events_Appointment_Type__c" VALUES(4,'','2','Active','','','False','','','','','','','What is your definition of the meaning of life?','False','Required text box','False','20.0','Demo Appointment 2 - Meaning of life','','1');
+Lactose Free','','','','Choose the ice cream you could prefer to consume during your visit','False','Custom pick list','False','10.0','Demo Appointment 1 - Ice Cream with Counselor','','','','2');
+INSERT INTO "Summit_Events_Appointment_Type__c" VALUES(4,'','','','2','Active','','','False','','','','','','','What is your definition of the meaning of life?','False','Required text box','False','20.0','Demo Appointment 2 - Meaning of life','','','','2');
 CREATE TABLE "Summit_Events_Appointments__c" (
 	id INTEGER NOT NULL, 
 	"Appointment_Category__c" VARCHAR(255), 
@@ -86,6 +90,23 @@ CREATE TABLE "Summit_Events_Email__c" (
 	"Event__c" VARCHAR(255), 
 	PRIMARY KEY (id)
 );
+CREATE TABLE "Summit_Events_Fee_Allocation__c" (
+	id INTEGER NOT NULL, 
+	"Name" VARCHAR(255), 
+	PRIMARY KEY (id)
+);
+CREATE TABLE "Summit_Events_Fee__c" (
+	id INTEGER NOT NULL, 
+	"Description__c" VARCHAR(255), 
+	"Event_Fee_Type__c" VARCHAR(255), 
+	"Event_Fee__c" VARCHAR(255), 
+	"Event_Appointment_Type__c" VARCHAR(255), 
+	"Event_Fee_Allocation__c" VARCHAR(255), 
+	"Event_Registration__c" VARCHAR(255), 
+	"Summit_Events_Payment__c" VARCHAR(255), 
+	"Summit_Events__c" VARCHAR(255), 
+	PRIMARY KEY (id)
+);
 CREATE TABLE "Summit_Events_Host__c" (
 	id INTEGER NOT NULL, 
 	"Additional_Comments__c" VARCHAR(255), 
@@ -120,6 +141,8 @@ CREATE TABLE "Summit_Events_Instance__c" (
 	"Capacity_Control__c" VARCHAR(255), 
 	"Capacity__c" VARCHAR(255), 
 	"Category__c" VARCHAR(255), 
+	"Event_Fee_Additional_Override__c" VARCHAR(255), 
+	"Event_Fee_Override__c" VARCHAR(255), 
 	"Feed_Registration_Button_Text_Override__c" VARCHAR(255), 
 	"Instance_End_Date__c" VARCHAR(255), 
 	"Instance_End_Time__c" VARCHAR(255), 
@@ -133,12 +156,77 @@ CREATE TABLE "Summit_Events_Instance__c" (
 	"Location_Title_Override__c" VARCHAR(255), 
 	"Location_Type_Override__c" VARCHAR(255), 
 	"Private_Instance__c" VARCHAR(255), 
-	"Virtual_Meeting_Link__c" VARCHAR(255),
+	"Virtual_Appointment_Link__c" VARCHAR(255), 
+	"Virtual_Meeting_Link__c" VARCHAR(255), 
+	"Event_Fee_Additional_Allocation_Override__c" VARCHAR(255), 
+	"Event_Fee_Allocation_Override__c" VARCHAR(255), 
 	"Event__c" VARCHAR(255), 
 	PRIMARY KEY (id)
 );
-INSERT INTO "Summit_Events_Instance__c" VALUES(1,'Active','','False','','Registrants plus Guests','100.0','','','2020-09-25','15:30:00.000Z','A short description','2020-09-25','08:00:00.000Z','Central Daylight Time (America/Chicago)','Secondary Title','','','','','False','','1');
-INSERT INTO "Summit_Events_Instance__c" VALUES(2,'Active','','False','','Registrants plus Guests','100.0','','','2020-10-02','13:15:00.000Z','A short description','2020-10-02','09:00:00.000Z','Central Daylight Time (America/Chicago)','A special Title','','','','','False','','1');
+INSERT INTO "Summit_Events_Instance__c" VALUES(1,'Active','','False','','Registrants plus Guests','100.0','','','','','2020-10-04','12:30:00.000Z','Testing additional questions with this event.','2020-10-04','08:00:00.000Z','Central Daylight Time (America/Chicago)','Secondary Title','','','','','False','','','','','1');
+INSERT INTO "Summit_Events_Instance__c" VALUES(2,'Active','','False','','Registrants plus Guests','100.0','','','','','2020-09-25','15:30:00.000Z','A short description','2020-09-25','08:00:00.000Z','Central Daylight Time (America/Chicago)','Secondary Title','','','','','False','','','','','2');
+INSERT INTO "Summit_Events_Instance__c" VALUES(3,'Active','','False','','Registrants plus Guests','100.0','','','','','2020-10-02','13:15:00.000Z','A short description','2020-10-02','09:00:00.000Z','Central Daylight Time (America/Chicago)','A special Title','','','','','False','','','','','2');
+CREATE TABLE "Summit_Events_Payment__c" (
+	id INTEGER NOT NULL, 
+	"Account_Number__c" VARCHAR(255), 
+	"Address_1__c" VARCHAR(255), 
+	"Address_2__c" VARCHAR(255), 
+	"Card_Type__c" VARCHAR(255), 
+	"City__c" VARCHAR(255), 
+	"Country__c" VARCHAR(255), 
+	"Email_Address__c" VARCHAR(255), 
+	"GatewayApprovalCode__c" VARCHAR(255), 
+	"Gateway_Session_Identifier__c" VARCHAR(255), 
+	"Method_of_Payment__c" VARCHAR(255), 
+	"Name_On_Account__c" VARCHAR(255), 
+	"Payment_Amount__c" VARCHAR(255), 
+	"Payment_Defer_Date__c" VARCHAR(255), 
+	"Payment_Dispute__c" VARCHAR(255), 
+	"Payment_Email_Address__c" VARCHAR(255), 
+	"Payment_Forfeit_Date__c" VARCHAR(255), 
+	"Payment_Method_Expiration_Date__c" VARCHAR(255), 
+	"Payment_Method__c" VARCHAR(255), 
+	"Payment_Received_Date__c" VARCHAR(255), 
+	"Payment_Refund_Date__c" VARCHAR(255), 
+	"Payment_Returned_Date__c" VARCHAR(255), 
+	"Payment_Status__c" VARCHAR(255), 
+	"Phone__c" VARCHAR(255), 
+	"State__c" VARCHAR(255), 
+	"TouchnetReceiptNumber__c" VARCHAR(255), 
+	"Zip__c" VARCHAR(255), 
+	"Event_Registration__c" VARCHAR(255), 
+	PRIMARY KEY (id)
+);
+CREATE TABLE "Summit_Events_Question__c" (
+	id INTEGER NOT NULL, 
+	"Controlling_Logic__c" VARCHAR(255), 
+	"Default_Value__c" VARCHAR(255), 
+	"Display_Order__c" VARCHAR(255), 
+	"Error_Assist_Text__c" VARCHAR(255), 
+	"Help_Text__c" VARCHAR(255), 
+	"Instructions__c" VARCHAR(255), 
+	"Is_Visible__c" VARCHAR(255), 
+	"Lookup_Fields__c" VARCHAR(255), 
+	"Lookup_Object__c" VARCHAR(255), 
+	"Lookup_Registration_Retrained_Field__c" VARCHAR(255), 
+	"Lookup_Where_Clause__c" VARCHAR(255), 
+	"Map_to_Field__c" VARCHAR(255), 
+	"Name" VARCHAR(255), 
+	"Picklist_Values__c" VARCHAR(255), 
+	"Question_Field_Type__c" VARCHAR(255), 
+	"Question_Label__c" VARCHAR(255), 
+	"Registrant_Type__c" VARCHAR(255), 
+	"Required__c" VARCHAR(255), 
+	"Text_Limit__c" VARCHAR(255), 
+	"Controlling_Question__c" VARCHAR(255), 
+	"Event__c" VARCHAR(255), 
+	PRIMARY KEY (id)
+);
+INSERT INTO "Summit_Events_Question__c" VALUES(1,'','','1.0','A pet type is required. Please choose one.','If you don''t like pets than choose the on you dislike the least.','','True','','','','','Add_Info_Answer_1__c','Test Registrant Favorite Pet','Dog
+Cat
+Hamster
+Chicken
+Snake','Picklist','What is your favorite pet?','Registrant','True','','','1');
 CREATE TABLE "Summit_Events_Registration__c" (
 	id INTEGER NOT NULL, 
 	"Actual_Number_of_Guests__c" VARCHAR(255), 
@@ -158,10 +246,14 @@ CREATE TABLE "Summit_Events_Registration__c" (
 	"Confirmation_Call_Result__c" VARCHAR(255), 
 	"Date_All_Appointments_Confirmed_del__c" VARCHAR(255), 
 	"Display_Attendance_Publicly__c" VARCHAR(255), 
+	"Encrypted_Registration_Id_1__c" VARCHAR(255), 
+	"Encrypted_Registration_Id_2__c" VARCHAR(255), 
 	"Event_Instance_Date_Time_Formatted__c" VARCHAR(255), 
 	"Event_Registration_Requested_Date__c" VARCHAR(255), 
 	"Generated_Itinerary__c" VARCHAR(255), 
 	"Generated_Requested_Appointments__c" VARCHAR(255), 
+	"Guest_Host_Status__c" VARCHAR(255), 
+	"Guest_JSON__c" VARCHAR(255), 
 	"Last_Name_as_Student__c" VARCHAR(255), 
 	"Matching_Log__c" VARCHAR(255), 
 	"New_Contact_Created__c" VARCHAR(255), 
@@ -177,6 +269,7 @@ CREATE TABLE "Summit_Events_Registration__c" (
 	"Registrant_College_Not_Found__c" VARCHAR(255), 
 	"Registrant_College_Year__c" VARCHAR(255), 
 	"Registrant_College__c" VARCHAR(255), 
+	"Registrant_Company_Organization__c" VARCHAR(255), 
 	"Registrant_Country__c" VARCHAR(255), 
 	"Registrant_Date_of_Birth__c" VARCHAR(255), 
 	"Registrant_Do_Not_Call__c" VARCHAR(255), 
@@ -189,6 +282,7 @@ CREATE TABLE "Summit_Events_Registration__c" (
 	"Registrant_High_School__c" VARCHAR(255), 
 	"Registrant_Last_Name__c" VARCHAR(255), 
 	"Registrant_Mobile_Phone__c" VARCHAR(255), 
+	"Registrant_Name_Tag__c" VARCHAR(255), 
 	"Registrant_Other_Email__c" VARCHAR(255), 
 	"Registrant_Other_First_Name__c" VARCHAR(255), 
 	"Registrant_Other_Last_Name__c" VARCHAR(255), 
@@ -210,6 +304,7 @@ CREATE TABLE "Summit_Events_Registration__c" (
 	"Registrant_Street_1__c" VARCHAR(255), 
 	"Registrant_Street_2__c" VARCHAR(255), 
 	"Registrant_Third_Party_Status__c" VARCHAR(255), 
+	"Registrant_Title__c" VARCHAR(255), 
 	"Registrant_Zip__c" VARCHAR(255), 
 	"Relationship_To_Institution__c" VARCHAR(255), 
 	"Reminder_Call_Complete__c" VARCHAR(255), 
@@ -219,6 +314,7 @@ CREATE TABLE "Summit_Events_Registration__c" (
 	"Contact__c" VARCHAR(255), 
 	"Event_Instance__c" VARCHAR(255), 
 	"Event__c" VARCHAR(255), 
+	"Guest_Host__c" VARCHAR(255), 
 	PRIMARY KEY (id)
 );
 CREATE TABLE "Summit_Events__c" (
@@ -243,7 +339,9 @@ CREATE TABLE "Summit_Events__c" (
 	"Add_Info_Question_Type_5__c" VARCHAR(255), 
 	"Allow_Other_Attendees__c" VARCHAR(255), 
 	"Alternate_Registration_URL__c" VARCHAR(255), 
+	"Applicant_Type_Label__c" VARCHAR(255), 
 	"Ask_Applicant_Type__c" VARCHAR(255), 
+	"Ask_Company_Organization__c" VARCHAR(255), 
 	"Ask_Date_Of_Birth__c" VARCHAR(255), 
 	"Ask_Gender__c" VARCHAR(255), 
 	"Ask_If_Parent__c" VARCHAR(255), 
@@ -256,15 +354,28 @@ CREATE TABLE "Summit_Events__c" (
 	"Ask_Registrant_Program_Of_Interest__c" VARCHAR(255), 
 	"Ask_Relationship_To_Institution__c" VARCHAR(255), 
 	"Ask_Third_Party_Registrant__c" VARCHAR(255), 
+	"Ask_Title__c" VARCHAR(255), 
 	"Audience__c" VARCHAR(255), 
 	"Building__c" VARCHAR(255), 
 	"Close_Event_Days_Before__c" VARCHAR(255), 
 	"College_High_School_Ask__c" VARCHAR(255), 
+	"Company_Organization_Label__c" VARCHAR(255), 
 	"Contact_Creation_Duplicate_Rule__c" VARCHAR(255), 
 	"Contact_Creation__c" VARCHAR(255), 
+	"Contact_Matching_Multiple_Match_Behavior__c" VARCHAR(255), 
+	"Contact_Matching_No_Match_Behavior__c" VARCHAR(255), 
 	"Contact_Matching_Rules__c" VARCHAR(255), 
 	"Custom_Metadata_Contact_Matching_Method__c" VARCHAR(255), 
+	"Date_Of_Birth_Label__c" VARCHAR(255), 
+	"Display_Guest_Registration__c" VARCHAR(255), 
+	"Display_Optional_Donation__c" VARCHAR(255), 
+	"Donation_Description__c" VARCHAR(255), 
+	"Donation_Suggested_Amount_List__c" VARCHAR(255), 
+	"Donation_Title__c" VARCHAR(255), 
+	"Email_Label__c" VARCHAR(255), 
 	"End_Date__c" VARCHAR(255), 
+	"Event_Additional_Question_Title__c" VARCHAR(255), 
+	"Event_Additional_Questions_Description__c" VARCHAR(255), 
 	"Event_Appointment_Description__c" VARCHAR(255), 
 	"Event_Appointment_Title__c" VARCHAR(255), 
 	"Event_Cancel_Review_Description__c" VARCHAR(255), 
@@ -272,6 +383,8 @@ CREATE TABLE "Summit_Events__c" (
 	"Event_Cancelled_Notification_Text__c" VARCHAR(255), 
 	"Event_Confirmation_Description__c" VARCHAR(255), 
 	"Event_Confirmation_Title__c" VARCHAR(255), 
+	"Event_Fee_Additional__c" VARCHAR(255), 
+	"Event_Fee__c" VARCHAR(255), 
 	"Event_Footer__c" VARCHAR(255), 
 	"Event_Full_Text__c" VARCHAR(255), 
 	"Event_Home_Link_Title__c" VARCHAR(255), 
@@ -285,34 +398,62 @@ CREATE TABLE "Summit_Events__c" (
 	"Event_Type__c" VARCHAR(255), 
 	"Event_description__c" VARCHAR(255), 
 	"Feed_Registration_Button_Text__c" VARCHAR(255), 
+	"First_Name_Label__c" VARCHAR(255), 
+	"Gender_Label__c" VARCHAR(255), 
+	"Guest_Max_Amount__c" VARCHAR(255), 
+	"Guest_Registration_Description__c" VARCHAR(255), 
+	"Guest_Registration_Title__c" VARCHAR(255), 
+	"Guest_Table_Size__c" VARCHAR(255), 
+	"Guest_Tables_Available__c" VARCHAR(255), 
 	"Hand_Raise_Action__c" VARCHAR(255), 
 	"Include_Time_frame_List__c" VARCHAR(255), 
 	"Keep_Registration_Open_During_Event__c" VARCHAR(255), 
+	"Last_Name_As_Student_Label__c" VARCHAR(255), 
+	"Last_Name_Label__c" VARCHAR(255), 
 	"Location_Address__c" VARCHAR(255), 
 	"Location_Map_Link__c" VARCHAR(255), 
 	"Location_Title__c" VARCHAR(255), 
 	"Location_Type__c" VARCHAR(255), 
+	"Mailing_Address_Label__c" VARCHAR(255), 
 	"Max_Other_Attendees__c" VARCHAR(255), 
 	"Name" VARCHAR(255), 
+	"Phone_Label__c" VARCHAR(255), 
+	"Phone_Type_Label__c" VARCHAR(255), 
+	"Preferred_Class_Year_Label__c" VARCHAR(255), 
+	"Preferred_First_Name_Label__c" VARCHAR(255), 
 	"Private_Event__c" VARCHAR(255), 
 	"Program_Filter_2__c" VARCHAR(255), 
 	"Program_Filter_3__c" VARCHAR(255), 
 	"Program_Filter__c" VARCHAR(255), 
+	"Pronouns_Label__c" VARCHAR(255), 
+	"Registrant_Receive_Texts_Label__c" VARCHAR(255), 
+	"Registrant_Relationship_Label__c" VARCHAR(255), 
 	"Registration_Email_Restriction__c" VARCHAR(255), 
+	"Relationship_To_Institution_Label__c" VARCHAR(255), 
 	"Start_Date__c" VARCHAR(255), 
 	"Template__c" VARCHAR(255), 
+	"Third_Party_Registrant_Label__c" VARCHAR(255), 
+	"Title_Label__c" VARCHAR(255), 
 	"Tracking_Cancel_Registration__c" VARCHAR(255), 
 	"Tracking_Confirmation_Registration__c" VARCHAR(255), 
 	"Tracking_Event_Registration__c" VARCHAR(255), 
 	"Tracking_Options_Registration__c" VARCHAR(255), 
 	"Tracking_Submit_Registration__c" VARCHAR(255), 
+	"Donation_Allocation_1__c" VARCHAR(255), 
+	"Donation_Allocation_2__c" VARCHAR(255), 
+	"Donation_Allocation_3__c" VARCHAR(255), 
+	"Donation_Allocation_4__c" VARCHAR(255), 
+	"Donation_Allocation_5__c" VARCHAR(255), 
+	"Event_Fee_Additional_Allocation__c" VARCHAR(255), 
+	"Event_Fee_Allocation__c" VARCHAR(255), 
 	PRIMARY KEY (id)
 );
-INSERT INTO "Summit_Events__c" VALUES(1,'','','','Red
+INSERT INTO "Summit_Events__c" VALUES(1,'','','','','','','','','','','','','','','','','','','True','','Application Type','Do not ask','Do not ask','Do not ask','Do not ask','False','Do not ask','Ask','Ask with type require','Do not ask','Do not ask','Ask','Do not ask','Do not ask','Parent/Guardian;Other','Do not ask','General Public','','0.0','','Company or Organization','','Full matching contact creation with duplicate management','Match with most recently modified','Create Contact','','','Date of Birth','False','False','','','','Email','2020-10-18','','','Body text for the appointment/options page explains what these appointments are about.','This is the header of the appointment/options page.','What does it mean to cancel a event.','Online Cancel of Registration Heading','The event has been cancelled.','Explain the registration has been received from the client at this point and is complete','Registration has been received title.','','','This footer appears on every event registration page in the footer.','Explain here that the event has reached capacity and is closed.','Event Home','','Test Event Additional Questions','This description appears in feed and should be concise','','Active','Description of submission being the final act in the registration play.','Heading for the Submit Page','Admissions Event','<p><strong>Rich Text</strong> description of the event that appears on the first registration page.</p>','Register','First Name','Gender','','','','','False','Touchpoint','False','False','Last Name As Student','Last Name','123 Evergreen Blvd., St. Paul, MN','https://g.page/sociablecider?share','The best place in the World','','Registrant Address','5.0','Test Event Additional Questions','Please provide either a home or mobile number','Type','Preferred Class Year','Preferred First Name','False','','','','Pronouns','I am willing to receive text messages on my mobile phone about this event','Your relationship to the participant','No limit','Relationship (select all that apply)','2020-08-18','GeneralSLDS','I am...','Title','','','','','','','','','','','','');
+INSERT INTO "Summit_Events__c" VALUES(2,'','','','Red
 
 Yellow
 
 Green
 
-Blue','','','','','What is your favorite color?','What''s up?','What''s your favorite day of the week?','','','Pick-list','Text area','Text box required','','','True','','Do not ask','Do not ask','Do not ask','True','Do not ask','Ask','Ask with type require','Do not ask','Do not ask','Ask','Ask but do not require','Do not ask','Parent/Guardian;Other','General Public','','0.0','Don''t ask','','Full matching contact creation with duplicate management','','','2020-10-18','Body text for the appointment/options page explains what these appointments are about.','This is the header of the appointment/options page.','What does it mean to cancel a event.','Online Cancel of Registration Heading','The event has been cancelled.','Explain the registration has been received from the client at this point and is complete','Registration has been received title.','This footer appears on every event registration page in the footer.','Explain here that the event has reached capacity and is closed.','Event Home','','Test Event','This description appears in feed and should be concise','','Active','Description of submission being the final act in the registration play.','Heading for the Submit Page','Admissions Event','<p><strong>Rich Text</strong> description of the event that appears on the first registration page.</p>','Register','Touchpoint','False','False','123 Evergreen Blvd., St. Paul, MN','https://g.page/sociablecider?share','The best place in the World','','5.0','Test Event','False','','','','No limit','2020-08-18','GeneralSLDS','','','','','');
+Blue','','','','','What is your favorite color?','What''s up?','What''s your favorite day of the week?','','','Pick-list','Text area','Text box required','','','True','','Application Type','Do not ask','Do not ask','Do not ask','Do not ask','True','Do not ask','Ask','Ask with type require','Do not ask','Do not ask','Ask','Ask but do not require','Do not ask','Parent/Guardian;Other','Do not ask','General Public','','0.0','Don''t ask','Company or Organization','','Full matching contact creation with duplicate management','Match with most recently modified','Create Contact','','','Date of Birth','False','False','','','','Email','2020-10-18','','','Body text for the appointment/options page explains what these appointments are about.','This is the header of the appointment/options page.','What does it mean to cancel a event.','Online Cancel of Registration Heading','The event has been cancelled.','Explain the registration has been received from the client at this point and is complete','Registration has been received title.','','','This footer appears on every event registration page in the footer.','Explain here that the event has reached capacity and is closed.','Event Home','','Test Event','This description appears in feed and should be concise','','Active','Description of submission being the final act in the registration play.','Heading for the Submit Page','Admissions Event','<p><strong>Rich Text</strong> description of the event that appears on the first registration page.</p>','Register','First Name','Gender','','','','','False','Touchpoint','False','False','Last Name As Student','Last Name','123 Evergreen Blvd., St. Paul, MN','https://g.page/sociablecider?share','The best place in the World','','Registrant Address','5.0','Test Event','Please provide either a home or mobile number','Type','Preferred Class Year','Preferred First Name','False','','','','Pronouns','I am willing to receive text messages on my mobile phone about this event','Your relationship to the participant','No limit','Relationship (select all that apply)','2020-08-18','GeneralSLDS','I am...','Title','','','','','','','','','','','','');
 COMMIT;

@@ -112,9 +112,10 @@ public with sharing class SummitEventsShared {
         }
 
         //If event has more than 1 item in list then submit page
-        if (pagesInEvent.size() > 0) {
+        if (pagesInEvent.size() > 1) {
             pagesInEvent.add(namespace + 'SummitEventsSubmit');
         }
+
         pagesInEvent.add(namespace + 'SummitEventsConfirmation');
 
         Integer currentPageLocation = 0;

@@ -7,6 +7,10 @@ Insert Contact:
     ReportsToId:
       table: Contact
       after: Insert Contact
+Insert Summit_Events_Fee_Allocation__c:
+  sf_object: Summit_Events_Fee_Allocation__c
+  fields:
+  - Name
 Insert Summit_Events__c:
   sf_object: Summit_Events__c
   fields:
@@ -30,7 +34,9 @@ Insert Summit_Events__c:
   - Add_Info_Question_Type_5__c
   - Allow_Other_Attendees__c
   - Alternate_Registration_URL__c
+  - Applicant_Type_Label__c
   - Ask_Applicant_Type__c
+  - Ask_Company_Organization__c
   - Ask_Date_Of_Birth__c
   - Ask_Gender__c
   - Ask_If_Parent__c
@@ -43,15 +49,28 @@ Insert Summit_Events__c:
   - Ask_Registrant_Program_Of_Interest__c
   - Ask_Relationship_To_Institution__c
   - Ask_Third_Party_Registrant__c
+  - Ask_Title__c
   - Audience__c
   - Building__c
   - Close_Event_Days_Before__c
   - College_High_School_Ask__c
+  - Company_Organization_Label__c
   - Contact_Creation_Duplicate_Rule__c
   - Contact_Creation__c
+  - Contact_Matching_Multiple_Match_Behavior__c
+  - Contact_Matching_No_Match_Behavior__c
   - Contact_Matching_Rules__c
   - Custom_Metadata_Contact_Matching_Method__c
+  - Date_Of_Birth_Label__c
+  - Display_Guest_Registration__c
+  - Display_Optional_Donation__c
+  - Donation_Description__c
+  - Donation_Suggested_Amount_List__c
+  - Donation_Title__c
+  - Email_Label__c
   - End_Date__c
+  - Event_Additional_Question_Title__c
+  - Event_Additional_Questions_Description__c
   - Event_Appointment_Description__c
   - Event_Appointment_Title__c
   - Event_Cancel_Review_Description__c
@@ -59,6 +78,8 @@ Insert Summit_Events__c:
   - Event_Cancelled_Notification_Text__c
   - Event_Confirmation_Description__c
   - Event_Confirmation_Title__c
+  - Event_Fee_Additional__c
+  - Event_Fee__c
   - Event_Footer__c
   - Event_Full_Text__c
   - Event_Home_Link_Title__c
@@ -72,27 +93,62 @@ Insert Summit_Events__c:
   - Event_Type__c
   - Event_description__c
   - Feed_Registration_Button_Text__c
+  - First_Name_Label__c
+  - Gender_Label__c
+  - Guest_Max_Amount__c
+  - Guest_Registration_Description__c
+  - Guest_Registration_Title__c
+  - Guest_Table_Size__c
+  - Guest_Tables_Available__c
   - Hand_Raise_Action__c
   - Include_Time_frame_List__c
   - Keep_Registration_Open_During_Event__c
+  - Last_Name_As_Student_Label__c
+  - Last_Name_Label__c
   - Location_Address__c
   - Location_Map_Link__c
   - Location_Title__c
   - Location_Type__c
+  - Mailing_Address_Label__c
   - Max_Other_Attendees__c
   - Name
+  - Phone_Label__c
+  - Phone_Type_Label__c
+  - Preferred_Class_Year_Label__c
+  - Preferred_First_Name_Label__c
   - Private_Event__c
   - Program_Filter_2__c
   - Program_Filter_3__c
   - Program_Filter__c
+  - Pronouns_Label__c
+  - Registrant_Receive_Texts_Label__c
+  - Registrant_Relationship_Label__c
   - Registration_Email_Restriction__c
+  - Relationship_To_Institution_Label__c
   - Start_Date__c
   - Template__c
+  - Third_Party_Registrant_Label__c
+  - Title_Label__c
   - Tracking_Cancel_Registration__c
   - Tracking_Confirmation_Registration__c
   - Tracking_Event_Registration__c
   - Tracking_Options_Registration__c
   - Tracking_Submit_Registration__c
+  lookups:
+    Donation_Allocation_1__c:
+      table: Summit_Events_Fee_Allocation__c
+    Donation_Allocation_2__c:
+      table: Summit_Events_Fee_Allocation__c
+    Donation_Allocation_3__c:
+      table: Summit_Events_Fee_Allocation__c
+    Donation_Allocation_4__c:
+      table: Summit_Events_Fee_Allocation__c
+    Donation_Allocation_5__c:
+      table: Summit_Events_Fee_Allocation__c
+    Event_Fee_Additional_Allocation__c:
+      table: Summit_Events_Fee_Allocation__c
+    Event_Fee_Allocation__c:
+      table: Summit_Events_Fee_Allocation__c
   anchor_date: '2020-09-18'
 Insert Summit_Events_Email__c:
   sf_object: Summit_Events_Email__c
@@ -124,6 +180,8 @@ Insert Summit_Events_Instance__c:
   - Capacity_Control__c
   - Capacity__c
   - Category__c
+  - Event_Fee_Additional_Override__c
+  - Event_Fee_Override__c
   - Feed_Registration_Button_Text_Override__c
   - Instance_End_Date__c
   - Instance_End_Time__c
@@ -137,8 +195,42 @@ Insert Summit_Events_Instance__c:
   - Location_Title_Override__c
   - Location_Type_Override__c
   - Private_Instance__c
+  - Virtual_Appointment_Link__c
   - Virtual_Meeting_Link__c
   lookups:
+    Event_Fee_Additional_Allocation_Override__c:
+      table: Summit_Events_Fee_Allocation__c
+    Event_Fee_Allocation_Override__c:
+      table: Summit_Events_Fee_Allocation__c
+    Event__c:
+      table: Summit_Events__c
+  anchor_date: '2020-09-18'
+Insert Summit_Events_Question__c:
+  sf_object: Summit_Events_Question__c
+  fields:
+  - Controlling_Logic__c
+  - Default_Value__c
+  - Display_Order__c
+  - Error_Assist_Text__c
+  - Help_Text__c
+  - Instructions__c
+  - Is_Visible__c
+  - Lookup_Fields__c
+  - Lookup_Object__c
+  - Lookup_Registration_Retrained_Field__c
+  - Lookup_Where_Clause__c
+  - Map_to_Field__c
+  - Name
+  - Picklist_Values__c
+  - Question_Field_Type__c
+  - Question_Label__c
+  - Registrant_Type__c
+  - Required__c
+  - Text_Limit__c
+  lookups:
+    Controlling_Question__c:
+      table: Summit_Events_Question__c
+      after: Insert Summit_Events_Question__c
     Event__c:
       table: Summit_Events__c
   anchor_date: '2020-09-18'
@@ -146,6 +238,8 @@ Insert Summit_Events_Appointment_Type__c:
   sf_object: Summit_Events_Appointment_Type__c
   fields:
   - Appointment_Category__c
+  - Appointment_Fee_Additional__c
+  - Appointment_Fee__c
   - Appointment_Limits__c
   - Appointment_Type_Status__c
   - Appointment_Type__c
@@ -164,6 +258,10 @@ Insert Summit_Events_Appointment_Type__c:
   - Sort_Order__c
   - Title__c
   lookups:
+    Appointment_Fee_Additional_Allocation__c:
+      table: Summit_Events_Fee_Allocation__c
+    Appointment_Fee_Allocation__c:
+      table: Summit_Events_Fee_Allocation__c
     Restrict_To_Instance_Title__c:
       table: Summit_Events_Instance__c
     Summit_Events__c:
@@ -212,10 +310,14 @@ Insert Summit_Events_Registration__c:
   - Confirmation_Call_Result__c
   - Date_All_Appointments_Confirmed_del__c
   - Display_Attendance_Publicly__c
+  - Encrypted_Registration_Id_1__c
+  - Encrypted_Registration_Id_2__c
   - Event_Instance_Date_Time_Formatted__c
   - Event_Registration_Requested_Date__c
   - Generated_Itinerary__c
   - Generated_Requested_Appointments__c
+  - Guest_Host_Status__c
+  - Guest_JSON__c
   - Last_Name_as_Student__c
   - Matching_Log__c
   - New_Contact_Created__c
@@ -231,6 +333,7 @@ Insert Summit_Events_Registration__c:
   - Registrant_College_Not_Found__c
   - Registrant_College_Year__c
   - Registrant_College__c
+  - Registrant_Company_Organization__c
   - Registrant_Country__c
   - Registrant_Date_of_Birth__c
   - Registrant_Do_Not_Call__c
@@ -243,6 +346,7 @@ Insert Summit_Events_Registration__c:
   - Registrant_High_School__c
   - Registrant_Last_Name__c
   - Registrant_Mobile_Phone__c
+  - Registrant_Name_Tag__c
   - Registrant_Other_Email__c
   - Registrant_Other_First_Name__c
   - Registrant_Other_Last_Name__c
@@ -264,6 +368,7 @@ Insert Summit_Events_Registration__c:
   - Registrant_Street_1__c
   - Registrant_Street_2__c
   - Registrant_Third_Party_Status__c
+  - Registrant_Title__c
   - Registrant_Zip__c
   - Relationship_To_Institution__c
   - Reminder_Call_Complete__c
@@ -277,6 +382,9 @@ Insert Summit_Events_Registration__c:
       table: Summit_Events_Instance__c
     Event__c:
       table: Summit_Events__c
+    Guest_Host__c:
+      table: Summit_Events_Registration__c
+      after: Insert Summit_Events_Registration__c
   anchor_date: '2020-09-18'
 Insert Summit_Events_Appointments__c:
   sf_object: Summit_Events_Appointments__c
@@ -309,4 +417,55 @@ Insert Summit_Events_Appointments__c:
       table: Summit_Events_Host__c
     Event_Registration__c:
       table: Summit_Events_Registration__c
+  anchor_date: '2020-09-18'
+Insert Summit_Events_Payment__c:
+  sf_object: Summit_Events_Payment__c
+  fields:
+  - Account_Number__c
+  - Address_1__c
+  - Address_2__c
+  - Card_Type__c
+  - City__c
+  - Country__c
+  - Email_Address__c
+  - GatewayApprovalCode__c
+  - Gateway_Session_Identifier__c
+  - Method_of_Payment__c
+  - Name_On_Account__c
+  - Payment_Amount__c
+  - Payment_Defer_Date__c
+  - Payment_Dispute__c
+  - Payment_Email_Address__c
+  - Payment_Forfeit_Date__c
+  - Payment_Method_Expiration_Date__c
+  - Payment_Method__c
+  - Payment_Received_Date__c
+  - Payment_Refund_Date__c
+  - Payment_Returned_Date__c
+  - Payment_Status__c
+  - Phone__c
+  - State__c
+  - TouchnetReceiptNumber__c
+  - Zip__c
+  lookups:
+    Event_Registration__c:
+      table: Summit_Events_Registration__c
+  anchor_date: '2020-09-18'
+Insert Summit_Events_Fee__c:
+  sf_object: Summit_Events_Fee__c
+  fields:
+  - Description__c
+  - Event_Fee_Type__c
+  - Event_Fee__c
+  lookups:
+    Event_Appointment_Type__c:
+      table: Summit_Events_Appointment_Type__c
+    Event_Fee_Allocation__c:
+      table: Summit_Events_Fee_Allocation__c
+    Event_Registration__c:
+      table: Summit_Events_Registration__c
+    Summit_Events_Payment__c:
+      table: Summit_Events_Payment__c
+    Summit_Events__c:
+      table: Summit_Events__c
   anchor_date: '2020-09-18'
