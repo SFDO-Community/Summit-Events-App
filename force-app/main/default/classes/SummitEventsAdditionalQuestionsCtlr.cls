@@ -20,7 +20,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public Boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
     public List<String> mapToList { get; set; }
-    public static List<questionItem> questionWrapper { get; set; }
+    public List<questionItem> questionWrapper { get; set; }
     private Id incomingRegId { get; set; }
 
     public class questionItem {
@@ -47,6 +47,10 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public SummitEventsAdditionalQuestionsCtlr() {
         eventIsClosed = false;
         eventInformation = SeaShared.getSummitEventsInfo();
+        questionWrapper = new List<questionItem>();
+
+        System.debug(JSON.serializePretty(eventInformation));
+
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
 
             eventPage = [
@@ -110,7 +114,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 mapToList.add('Id');
                 mapToList.add(namespace + 'Event__c');
                 mapToList.add(namespace + 'Event_Instance__c');
-                questionWrapper = new List<questionItem>();
+
                 for (Summit_Events_Question__c question : additionalQuestions) {
                     Object nextField;
                     Boolean fieldExists = true;
@@ -164,8 +168,6 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     incomingRegId = eventRegistration.Id;
                     eventRegistration.Id = null;
                 }
-
-                System.debug(JSON.serializePretty(mapToList));
             }
         }
     }
@@ -186,10 +188,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     }
 
     public PageReference submitAdditionalQuestions() {
-
         doCRUD CRUDToDo = new doCRUD();
         CRUDToDo.saveRegistration(eventRegistration, incomingRegId);
-
         return pageFlow.get('Next');
     }
 
@@ -215,6 +215,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     //Define lookup object
                     lookupObjectDesc = Schema.getGlobalDescribe().get(queryInfo.get('Lookup_Object__c').trim()).getDescribe();
                 } catch (Exception e) {
+                    System.debug(e.getMessage());
                     ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Lookup object is inaccessible.' + e.getMessage()));
                 }
                 if (lookupObjectDesc != null) {
@@ -249,7 +250,6 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                         likeStatement += sField.trim() + ' LIKE \'%' + String.escapeSingleQuotes(term) + '%\' OR ';
                                     }
                                     lookupQuery += ' AND ( ' + likeStatement.removeEnd(' OR ') + ' )';
-
                                     lookupQuery += ' ORDER BY ' + String.join(validLookupFields, ', ') + ' ASC';
                                     lookupQuery += ' LIMIT 50';
 
@@ -266,7 +266,9 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                         String lineOne = '';
                                         String lineTwo = '';
                                         String retainValue = '';
+                                        validLookupFields.add('Id');
                                         for (Integer xx = 0; xx < validLookupFields.size(); xx++) {
+                                            //Don't ever show Ids in the returned value list
                                             String fieldType = String.valueOf(Schema.getGlobalDescribe().get(queryInfo.get('Lookup_Object__c')).getDescribe().fields.getMap().get(validLookupFields[xx]).getDescribe().getType()).toLowerCase();
                                             if (fieldType != 'id') {
                                                 if (xx == 0) {
@@ -275,7 +277,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                                     lineTwo += (String) obj.get(validLookupFields[xx]) + ', ';
                                                 }
                                             }
-                                            if (validLookupFields[xx] == queryInfo.get('Lookup_Registration_Retrained_Field__c').trim()) {
+                                            System.debug(validLookupFields[xx] + ' = ' + queryInfo.get('Lookup_Registration_Retrained_Field__c').trim());
+                                            if (validLookupFields[xx].equalsIgnoreCase(queryInfo.get('Lookup_Registration_Retrained_Field__c').trim())) {
                                                 retainValue = (String) obj.get(validLookupFields[xx]);
                                             }
                                         }

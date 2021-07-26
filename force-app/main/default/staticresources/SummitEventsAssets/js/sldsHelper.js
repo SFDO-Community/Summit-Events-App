@@ -106,7 +106,7 @@ function activateAutoComplete() {
     document.querySelectorAll('.bind-autocomplete').forEach(autoItem => {
         let comboBoxContainer = autoItem.closest('.slds-combobox_container');
         let comboBox = comboBoxContainer.querySelector('.slds-combobox');
-        let hiddenInput = comboBoxContainer.querySelector('.inputHidden');
+        let hiddenInput = comboBoxContainer.querySelector('[id$=lookupValue]');
         let removeButton = comboBox.querySelector('.refRemoveButton');
         let magGlass = comboBox.querySelector('.refMagGlass');
         let resultList = comboBox.querySelector('.slds-listbox');
@@ -158,10 +158,7 @@ function activateAutoComplete() {
             data.forEach(result => {
                 let resultName = result['lineOne'];
                 let subTitle = result['lineTwo'];
-                let resultId = result['lineTwo'];
-                if (result['Id']) {
-                    resultId = result['Id'];
-                }
+                let resultId = result['retainValue'];
                 outputList += resultListTemplate(resultName, subTitle, comboBox.dataset.listicon, originObjId, resultId);
             });
             resultList.innerHTML = '';

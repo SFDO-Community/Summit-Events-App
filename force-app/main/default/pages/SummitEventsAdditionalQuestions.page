@@ -71,7 +71,7 @@
 
                 <apex:form id="SummitEventQuestionForm" styleClass="slds-grid slds-wrap" style="width:100%">
 
-                    <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!ISBLANK(eventPage.Event_Additional_Questions_Description__c)}">
+                    <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!!ISBLANK(eventPage.Event_Additional_Questions_Description__c)}">
                         <apex:outputText escape="false" value="{!eventPage.Event_Additional_Questions_Description__c}"/>
                     </apex:outputPanel>
 
@@ -122,38 +122,34 @@
                                         </apex:outputPanel>
 
                                         <!-- Record Lookup -->
-                                        <apex:outputPanel rendered="{!qu.type = 'Lookup'}" layout="block" styleClass="referenceLookup">
-                                            <div class="slds-form-element__control">
-                                                <div class="slds-combobox_container">
-                                                    <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox" data-lookup="{!qu.lookup}" data-listicon="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#account')}">
-                                                        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
-                                                            <input value="{!eventRegistration[qu.mapTo]}" id="combobox" class="bind-autocomplete slds-input slds-combobox__input" autocomplete="off" role="textbox" aria-autocomplete="list"/>
-                                                            <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right refRemoveButton" title="Remove selected option" style="display:none;">
-                                                                <svg class="slds-button__icon" aria-hidden="true">
-                                                                    <use xxmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
-                                                                </svg>
-                                                                <span class="slds-assistive-text">Remove selected option</span>
-                                                            </button>
-                                                            <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right refMagGlass">
+                                        <apex:outputPanel rendered="{!qu.type = 'Lookup'}" layout="block" styleClass="referenceLookup slds-combobox_container">
+                                            <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox" data-lookup="{!qu.lookup}" data-listicon="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#account')}">
+                                                <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                                                    <apex:inputText value="{!eventRegistration[qu.mapTo]}" id="combobox" styleClass="bind-autocomplete slds-input slds-combobox__input" html-autocomplete="off" html-role="textbox" html-aria-autocomplete="list"/>
+                                                    <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right refRemoveButton" title="Remove selected option" style="display:none;">
+                                                        <svg class="slds-button__icon" aria-hidden="true">
+                                                            <use xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                                        </svg>
+                                                        <span class="slds-assistive-text">Remove selected option</span>
+                                                    </button>
+                                                    <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right refMagGlass">
                                                           <svg class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default " aria-hidden="true">
                                                             <use xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#search')}"></use>
                                                           </svg>
                                                     </span>
-                                                        </div>
-                                                        <div class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
-                                                            <ul class="slds-listbox slds-listbox_vertical" role="presentation">
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <apex:inputHidden html-class="inputHidden" value="{!eventRegistration[qu.mapTo]}"/>
+                                                </div>
+                                                <div class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
+                                                    <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                                    </ul>
                                                 </div>
                                             </div>
-
+                                            <apex:inputHidden value="{!eventRegistration[qu.mapTo]}" id="lookupValue"/>
                                         </apex:outputPanel>
 
                                     </apex:outputPanel>
                                     <div class="slds-form-element__help" id="error-message-{!quNum}">{!qu.assist}</div>
                                 </apex:outputPanel>
+
                                 <apex:outputPanel layout="block" rendered="{!!ISBLANK(qu.instructions)}">
                                     <p class="slds-text-body_regular slds-p-top_xxx-small">
                                         {!qu.instructions}
@@ -205,7 +201,7 @@
                         <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-around_x-small slds-p-vertical_xx-small">
                             <p class="slds-text-body slds-p-vertical_xx-small">
                                 <apex:commandButton action="{!submitAdditionalQuestions}" onClick="fadeout();" Value="Next" id="submitQuestions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
-                                <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small" immediate="true"/>
                             </p>
                         </div>
                     </apex:outputPanel>
