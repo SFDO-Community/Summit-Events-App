@@ -434,34 +434,23 @@ public with sharing class SummitEventsShared {
         String instanceDate = '';
 
         if (eventInstance.Instance_Start_Date__c != null && eventInstance.Instance_End_Date__c != null) {
+            //Get timezone to check if offset is not 0 (not GMT)
             TimeZone tz = UserInfo.getTimeZone();
             Integer timezoneOffset = tz.getOffset(Datetime.now());
-            Date startDate = eventInstance.Instance_Start_Date__c;
-            Date endDate = eventInstance.Instance_End_Date__c;
-            Datetime convertedStartDate;
-            Datetime convertedEndDate;
+
+            Datetime convertedStartDate = Datetime.newInstance(
+                    eventInstance.Instance_Start_Date__c,
+                    eventInstance.Instance_Start_Time__c
+            );
+            Datetime convertedEndDate = Datetime.newInstanceGmt(
+                    eventInstance.Instance_End_Date__c,
+                    eventInstance.Instance_End_Time__c
+            );
 
             //If the user is logged in and offset for user is not GMT than adjust datetime to act like GMT by removing the offset
             if (timezoneOffset != 0) {
-                convertedStartDate = Datetime.newInstance(
-                        startDate,
-                        eventInstance.Instance_Start_Time__c
-                );
-                convertedEndDate = Datetime.newInstanceGmt(
-                        endDate,
-                        eventInstance.Instance_End_Time__c
-                );
                 convertedStartDate = convertedStartDate.addSeconds(-(timezoneOffset) / 1000);
                 convertedEndDate = convertedEndDate.addSeconds(-(timezoneOffset) / 1000);
-            } else {
-                convertedStartDate = Datetime.newInstanceGmt(
-                        startDate,
-                        noTime
-                );
-                convertedEndDate = Datetime.newInstanceGmt(
-                        endDate,
-                        noTime
-                );
             }
 
             String monthStart = convertedStartDate.format('MMMM');
