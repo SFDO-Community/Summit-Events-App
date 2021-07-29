@@ -42,6 +42,10 @@
                 <behavior>Edit</behavior>
                 <field>Actual_Number_of_Guests__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>High_School_Account__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

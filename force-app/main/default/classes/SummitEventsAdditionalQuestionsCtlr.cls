@@ -37,6 +37,11 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         public Integer textLimit { get; set; }
         public String mapTo { get; set; }
         public String lookup { get; set; }
+        public String icon { get; set; }
+        public String secondaryLinkText { get; set; }
+        public String secondaryQuestion { get; set; }
+        public String secondaryMapTop { get; set; }
+        public String secondaryNoResults { get; set; }
     }
 
     public class queryReturn {
@@ -89,7 +94,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             additionalQuestions = [
                     SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
                             Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c,
-                            Lookup_Object__c, Lookup_Fields__c, Lookup_Registration_Retrained_Field__c, Lookup_Where_Clause__c
+                            Lookup_Object__c, Lookup_Fields__c, Lookup_Where_Clause__c, Lookup_No_Results_Label__c, Lookup_Secondary_Input_Link_Text__c, Lookup_Secondary_Value_Field__c,
+                            Lookup_Secondary_Input_Question__c, Lookup_Results_Icon__c
                     FROM Summit_Events_Question__c
                     WHERE Event__c = :eventInformation.eventId
                     AND Registrant_Type__c = 'Registrant'
@@ -147,6 +153,20 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                         quest.defaultValue = question.Default_Value__c;
                         quest.textLimit = Integer.valueOf(question.Text_Limit__c);
                         quest.mapTo = question.Map_to_Field__c;
+                        if(String.isNotBlank(question.Lookup_Results_Icon__c)) {
+                            quest.icon = question.Lookup_Results_Icon__c.trim();
+                        } else {
+                            quest.icon = 'account';
+                        }
+                        quest.secondaryLinkText = question.Lookup_Secondary_Input_Link_Text__c;
+                        quest.secondaryQuestion = question.Lookup_Secondary_Input_Question__c;
+                        quest.secondaryMapTop = question.Lookup_Secondary_Value_Field__c;
+                        if(String.isNotBlank(question.Lookup_No_Results_Label__c)) {
+                            quest.secondaryNoResults = question.Lookup_No_Results_Label__c;
+                        } else {
+                            quest.secondaryNoResults = 'No results found.';
+                        }
+
 
                         if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
                             lookupHoldingValues.put(question.Map_to_Field__c, question.Lookup_Fields__c);
@@ -154,14 +174,13 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             queryInfo.put('Lookup_Object__c', question.Lookup_Object__c);
                             queryInfo.put('Lookup_Fields__c', question.Lookup_Fields__c);
                             queryInfo.put('Lookup_Where_Clause__c', question.Lookup_Where_Clause__c);
-                            queryInfo.put('Lookup_Registration_Retrained_Field__c', question.Lookup_Registration_Retrained_Field__c);
                             quest.lookup = SeaShared.encryptString(JSON.serialize(queryInfo));
 
                             //Build query for getting values later
                             String lookupField = question.Map_to_Field__c.trim();
                             lookupField = lookupField.removeEnd('__c');
                             lookupField = lookupField + '__r.';
-                            List<String> lookupFieldsRelation = question.Lookup_fields__c.split(',');
+                            List<String> lookupFieldsRelation = question.Lookup_Fields__c.split(',');
                             String lookupQuery = '';
                             for (String field : lookupFieldsRelation) {
                                 lookupQuery += lookupField + field.trim() + ', ';
@@ -201,9 +220,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
                             String holding = '';
                             for (String field : lookupFieldsRelation) {
-                                if (String.IsNotBlank(eventRegistration.getSobject(lookupField.trim()).get(field.trim()).toString())) {
-                                    holding += (String) eventRegistration.getSobject(lookupField.trim()).get(field.trim());
-                                    holding += ', ';
+                                if (String.isNotBlank(eventRegistration.getSObject(lookupField.trim()).get(field.trim()).toString())) {
+                                    holding += (String) eventRegistration.getSObject(lookupField.trim()).get(field.trim()) + ', ';
                                 }
                             }
                             holding = holding.removeEnd(', ');
@@ -327,9 +345,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                                     lineTwo += (String) obj.get(validLookupFields[xx]) + ', ';
                                                 }
                                             }
-                                            if (validLookupFields[xx].equalsIgnoreCase(queryInfo.get('Lookup_Registration_Retrained_Field__c').trim())) {
-                                                retainValue = (String) obj.get(validLookupFields[xx]);
-                                            }
+                                            retainValue = (String) obj.get('Id');
                                         }
                                         lineTwo = lineTwo.removeEnd(', ');
                                         qr.lineOne = lineOne;
