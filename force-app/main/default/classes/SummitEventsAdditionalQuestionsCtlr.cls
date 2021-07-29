@@ -22,6 +22,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public List<String> mapToList { get; set; }
     public List<questionItem> questionWrapper { get; set; }
     private Id incomingRegId { get; set; }
+    public Map<String, String> lookupHoldingValues { get; set; }
 
     public class questionItem {
         public String questionId { get; set; }
@@ -39,6 +40,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     }
 
     public class queryReturn {
+        public String searchTerm { get; set; }
         public String lineOne { get; set; }
         public String lineTwo { get; set; }
         public String retainValue { get; set; }
@@ -48,8 +50,6 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         eventIsClosed = false;
         eventInformation = SeaShared.getSummitEventsInfo();
         questionWrapper = new List<questionItem>();
-
-        System.debug(JSON.serializePretty(eventInformation));
 
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
 
@@ -111,9 +111,12 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 eventRegistration.Id = eventInformation.registrationId;
 
                 mapToList = new List<String>();
+                lookupHoldingValues = new Map<String, String>();
                 mapToList.add('Id');
                 mapToList.add(namespace + 'Event__c');
                 mapToList.add(namespace + 'Event_Instance__c');
+
+                Map<String, String> queryLookupFields = new Map<String, String>();
 
                 for (Summit_Events_Question__c question : additionalQuestions) {
                     Object nextField;
@@ -144,13 +147,27 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                         quest.defaultValue = question.Default_Value__c;
                         quest.textLimit = Integer.valueOf(question.Text_Limit__c);
                         quest.mapTo = question.Map_to_Field__c;
+
                         if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
+                            lookupHoldingValues.put(question.Map_to_Field__c, question.Lookup_Fields__c);
                             Map<String, String> queryInfo = new Map<String, String>();
                             queryInfo.put('Lookup_Object__c', question.Lookup_Object__c);
                             queryInfo.put('Lookup_Fields__c', question.Lookup_Fields__c);
                             queryInfo.put('Lookup_Where_Clause__c', question.Lookup_Where_Clause__c);
                             queryInfo.put('Lookup_Registration_Retrained_Field__c', question.Lookup_Registration_Retrained_Field__c);
                             quest.lookup = SeaShared.encryptString(JSON.serialize(queryInfo));
+
+                            //Build query for getting values later
+                            String lookupField = question.Map_to_Field__c.trim();
+                            lookupField = lookupField.removeEnd('__c');
+                            lookupField = lookupField + '__r.';
+                            List<String> lookupFieldsRelation = question.Lookup_fields__c.split(',');
+                            String lookupQuery = '';
+                            for (String field : lookupFieldsRelation) {
+                                lookupQuery += lookupField + field.trim() + ', ';
+                            }
+                            lookupQuery = lookupQuery.removeEnd(', ');
+                            queryLookupFields.put(question.Lookup_Object__c.trim(), lookupQuery);
                         }
                         questionWrapper.add(quest);
                     }
@@ -160,11 +177,41 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 if (mapToList.size() > 0) {
                     regQuery += 'SELECT ';
                     regQuery += String.join(mapToList, ' , ');
+                    //Lookup values added
+                    if (queryLookupFields.size() > 0) {
+                        regQuery += ', ';
+                        for (String key : queryLookupFields.keySet()) {
+                            regQuery += queryLookupFields.get(key) + ', ';
+                        }
+                    }
+                    regQuery = regQuery.removeEnd(', ');
                     regQuery += ' FROM Summit_Events_Registration__c ';
                     regQuery += ' WHERE Id = \'' + String.escapeSingleQuotes(eventInformation.registrationId) + '\'';
                 }
+                System.debug(regQuery);
                 if (String.isNotBlank(regQuery)) {
                     eventRegistration = Database.query(regQuery);
+                    //Get the holding values if there are any
+                    for (String key : lookupHoldingValues.keySet()) {
+                        String lookupField = key.trim();
+                        if (String.isNotBlank((String) eventRegistration.get(lookupField.trim()))) {
+                            lookupField = lookupField.removeEnd('__c');
+                            lookupField = lookupField + '__r';
+                            List<String> lookupFieldsRelation = lookupHoldingValues.get(key).split(',');
+
+                            String holding = '';
+                            for (String field : lookupFieldsRelation) {
+                                if (String.IsNotBlank(eventRegistration.getSobject(lookupField.trim()).get(field.trim()).toString())) {
+                                    holding += (String) eventRegistration.getSobject(lookupField.trim()).get(field.trim());
+                                    holding += ', ';
+                                }
+                            }
+                            holding = holding.removeEnd(', ');
+                            lookupHoldingValues.put(key, holding);
+                        } else {
+                            lookupHoldingValues.put(key, '');
+                        }
+                    }
                     incomingRegId = eventRegistration.Id;
                     eventRegistration.Id = null;
                 }
@@ -188,6 +235,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     }
 
     public PageReference submitAdditionalQuestions() {
+
+        System.debug(JSON.serializePretty(eventRegistration));
         doCRUD CRUDToDo = new doCRUD();
         CRUDToDo.saveRegistration(eventRegistration, incomingRegId);
         return pageFlow.get('Next');
@@ -256,6 +305,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                     List<SObject> foundValues = new List<SObject>();
 
                                     System.debug(lookupQuery);
+
                                     try {
                                         foundValues = Database.query(lookupQuery);
                                     } catch (Exception e) {
@@ -277,7 +327,6 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                                     lineTwo += (String) obj.get(validLookupFields[xx]) + ', ';
                                                 }
                                             }
-                                            System.debug(validLookupFields[xx] + ' = ' + queryInfo.get('Lookup_Registration_Retrained_Field__c').trim());
                                             if (validLookupFields[xx].equalsIgnoreCase(queryInfo.get('Lookup_Registration_Retrained_Field__c').trim())) {
                                                 retainValue = (String) obj.get(validLookupFields[xx]);
                                             }
@@ -286,6 +335,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                         qr.lineOne = lineOne;
                                         qr.lineTwo = lineTwo;
                                         qr.retainValue = retainValue;
+                                        qr.searchTerm = term;
                                         returnValues.add(qr);
                                     }
 

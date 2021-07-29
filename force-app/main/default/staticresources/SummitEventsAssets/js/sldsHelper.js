@@ -108,6 +108,18 @@ function adjustLabelsFor() {
 
 }
 
+const spinner = `
+<div class="sea-spinner" style="height:1.5rem;position:relative">
+    <div class="slds-spinner_container">
+        <div role="status" class="slds-spinner slds-spinner_x-small">
+            <span class="slds-assistive-text">Loading</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </div>
+</div>
+`;
+
 function activateAutoComplete() {
 
     document.querySelectorAll('.bind-autocomplete').forEach(autoItem => {
@@ -158,42 +170,65 @@ function activateAutoComplete() {
             resultList.innerHTML = '';
         }
 
-        function lookupResultsFormatter(data, originObjId) {
-            let outputList = ''
-            // let fieldNames = comboBox.dataset.objtypenamefield.replace(' ', '').split(',');
-            console.log(JSON.stringify(data));
-            data.forEach(result => {
-                let resultName = result['lineOne'];
-                let subTitle = result['lineTwo'];
-                let resultId = result['retainValue'];
-                outputList += resultListTemplate(resultName, subTitle, comboBox.dataset.listicon, originObjId, resultId);
-            });
-            resultList.innerHTML = '';
-
-            comboBox.classList.remove('slds-is-open');
-            if (outputList) {
-                comboBox.classList.add('slds-is-open');
+        async function fetchLookupResults(lookup, searchTerm) {
+            try {
+                let data = await lookupSearchJS(lookup, searchTerm);
+                updateLookupUI(data);
+            } catch (ex) {
+                if (ex.name === 'AbortError') {
+                    return; // Continuation logic has already been skipped, so return normally
+                }
+                resultList.innerHTML = ex.message;
             }
+        }
 
-            resultList.insertAdjacentHTML("beforeend", outputList);
+        const updateLookupUI = (data) => {
+            let outputList = ''
+            console.log(JSON.stringify(data));
+            if (data.length) {
+                //make sure the promise with the latest seach term is turned into data
+                if (data[0]['searchTerm'] === autoItem.value) {
+                    data.forEach(result => {
+                        let resultName = result['lineOne'];
+                        let subTitle = result['lineTwo'];
+                        let resultId = result['retainValue'];
+                        outputList += resultListTemplate(resultName, subTitle, comboBox.dataset.listicon, originObjId, resultId);
+                    });
 
-            resultList.querySelectorAll('li').forEach(refItem => {
-                refItem.addEventListener('click', function (e) {
-                    hiddenInput.value = refItem.dataset.resultid;
-                    autoItem.value = refItem.dataset.title;
-                    refValueAdded();
-                });
-            });
+                    comboBox.classList.remove('slds-is-open');
+                    if (outputList) {
+                        comboBox.classList.add('slds-is-open');
+                    }
+                    resultList.innerHTML = outputList;
+                    resultList.querySelectorAll('li').forEach(refItem => {
+                        refItem.addEventListener('click', function (e) {
+                            hiddenInput.value = refItem.dataset.resultid;
+                            autoItem.value = refItem.dataset.title;
+                            refValueAdded();
+                        });
+                    });
+                }
+            } else {
+                resultList.innerHTML = 'No results found...';
+            }
         }
 
         if (autoItem.value) {
+            autoItem.classList.remove('slds-has-focus');
+            comboBox.classList.remove('slds-is-open');
             refValueAdded();
         }
 
         autoItem.addEventListener('focusin', (e) => {
             autoItem.classList.add('slds-has-focus');
             comboBox.classList.add('slds-is-open');
+            resultList.innerHTML = spinner;
         });
+
+        // autoItem.addEventListener('focusout', (e) => {
+        //     autoItem.classList.remove('slds-has-focus');
+        //     comboBox.classList.remove('slds-is-open');
+        // });
 
         removeButton.addEventListener('click', function (e) {
             e.preventDefault();
@@ -203,19 +238,10 @@ function activateAutoComplete() {
         autoItem.addEventListener('keyup', (e) => {
             let searchTerm = autoItem.value;
             if (lookup && searchTerm.length > 2) {
-                console.log(lookup);
-                console.log(searchTerm);
-                console.log(originObjId);
-                lookupSearchJS(lookup, searchTerm, lookupResultsFormatter, originObjId);
+                fetchLookupResults(lookup, searchTerm);
             }
         });
 
-
-        // comboBox.addEventListener('focusout', (e) => {
-        //     console.log('focus out of combo box');
-        //     autoItem.classList.remove('slds-has-focus');
-        //     comboBox.classList.remove('slds-is-open');
-        // });
     });
 
 }
