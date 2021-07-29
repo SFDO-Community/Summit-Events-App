@@ -108,33 +108,22 @@ function adjustLabelsFor() {
 
 }
 
-const spinner = `
-<div class="sea-spinner" style="height:1.5rem;position:relative">
-    <div class="slds-spinner_container">
-        <div role="status" class="slds-spinner slds-spinner_x-small">
-            <span class="slds-assistive-text">Loading</span>
-            <div class="slds-spinner__dot-a"></div>
-            <div class="slds-spinner__dot-b"></div>
-        </div>
-    </div>
-</div>
-`;
-
 function activateAutoComplete() {
 
     document.querySelectorAll('.bind-autocomplete').forEach(autoItem => {
-        let comboBoxContainer = autoItem.closest('.slds-combobox_container');
-        let comboBox = comboBoxContainer.querySelector('.slds-combobox');
-        let hiddenInput = comboBoxContainer.querySelector('[id$=lookupValue]');
-        let removeButton = comboBox.querySelector('.refRemoveButton');
-        let magGlass = comboBox.querySelector('.refMagGlass');
-        let resultList = comboBox.querySelector('.slds-listbox');
-        let originObjId = autoItem.id;
-        let lookup = comboBox.dataset.lookup;
+        const comboBoxContainer = autoItem.closest('.slds-combobox_container');
+        const comboBox = comboBoxContainer.querySelector('.slds-combobox');
+        const spinner = comboBox.querySelector('.slds-modal');
+        const hiddenInput = comboBoxContainer.querySelector('[id$=lookupValue]');
+        const removeButton = comboBox.querySelector('.refRemoveButton');
+        const magGlass = comboBox.querySelector('.refMagGlass');
+        const resultList = comboBox.querySelector('.slds-listbox');
+        const originObjId = autoItem.id;
+        const lookup = comboBox.dataset.lookup;
 
         /* Remote reference lookup */
         const resultListTemplate = (title, subtitle, icon, originObjId, resultId) => `
-            <li role="presentation" class="slds-listbox__item" data-title="${title} ${subtitle}" data-origId="${originObjId}" data-resultId="${resultId}">
+            <li role="presentation" class="slds-listbox__item" data-title="${title}, ${subtitle}" data-origId="${originObjId}" data-resultId="${resultId}">
                 <div id="option1" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
                   <span class="slds-media__figure slds-listbox__option-icon">
                     <span class="slds-icon_container slds-icon-standard-account">
@@ -180,6 +169,10 @@ function activateAutoComplete() {
                 }
                 resultList.innerHTML = ex.message;
             }
+            setTimeout(() => {
+                spinner.classList.remove('slds-fade-in-open');
+                spinner.style.zIndex = '-1'
+            }, 1000);
         }
 
         const updateLookupUI = (data) => {
@@ -209,7 +202,8 @@ function activateAutoComplete() {
                     });
                 }
             } else {
-                resultList.innerHTML = 'No results found...';
+
+                resultList.innerHTML = '<li role="presentation" class="slds-listbox__item"><div class="slds-listbox__option_entity" role="option">'+ comboBox.dataset.noresults +'<span class="slds-media__body"></span></div></li>';
             }
         }
 
@@ -222,13 +216,7 @@ function activateAutoComplete() {
         autoItem.addEventListener('focusin', (e) => {
             autoItem.classList.add('slds-has-focus');
             comboBox.classList.add('slds-is-open');
-            resultList.innerHTML = spinner;
         });
-
-        // autoItem.addEventListener('focusout', (e) => {
-        //     autoItem.classList.remove('slds-has-focus');
-        //     comboBox.classList.remove('slds-is-open');
-        // });
 
         removeButton.addEventListener('click', function (e) {
             e.preventDefault();
@@ -236,6 +224,8 @@ function activateAutoComplete() {
         });
 
         autoItem.addEventListener('keyup', (e) => {
+            spinner.style.zIndex = null;
+            spinner.classList.add('slds-fade-in-open');
             let searchTerm = autoItem.value;
             if (lookup && searchTerm.length > 2) {
                 fetchLookupResults(lookup, searchTerm);

@@ -34,7 +34,7 @@
 
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages/>
+                    <apex:messages />
                 </div>
 
                 <!-- EVENT BREADCRUMB -->
@@ -121,7 +121,7 @@
 
                                         <!-- Record Lookup -->
                                         <apex:outputPanel rendered="{!qu.type = 'Lookup'}" layout="block" styleClass="referenceLookup slds-combobox_container">
-                                            <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox" data-lookup="{!qu.lookup}" data-listicon="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#account')}">
+                                            <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox" data-lookup="{!qu.lookup}" data-noresults="{!qu.secondaryNoResults}" data-listicon="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#' + qu.icon)}">
                                                 <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                                                     <apex:inputText value="{!lookupHoldingValues[qu.mapTo]}" id="combobox" styleClass="bind-autocomplete slds-input slds-combobox__input" html-autocomplete="off" html-role="textbox" html-aria-autocomplete="list"/>
                                                     <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right refRemoveButton" title="Remove selected option" style="display:none;">
@@ -145,12 +145,29 @@
                                                         </div>
                                                     </span>
                                                 </div>
-                                                <div class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
+                                                <div class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox" style="min-height: 2rem;">
                                                     <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                                        <li role="presentation" class="slds-listbox__item">
+                                                            <div id="option1" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                                             <span class="slds-media__body">
+                                                                ...
+                                                              </span>
+                                                            </div>
+                                                        </li>
                                                     </ul>
+                                                    <div class="sea-spinner slds-modal">
+                                                        <div class="slds-spinner_container">
+                                                            <div role="status" class="slds-spinner slds-spinner_x-small">
+                                                                <span class="slds-assistive-text">Loading</span>
+                                                                <div class="slds-spinner__dot-a"></div>
+                                                                <div class="slds-spinner__dot-b"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <apex:inputHidden value="{!eventRegistration[qu.mapTo]}" id="lookupValue"/>
+
                                         </apex:outputPanel>
 
                                     </apex:outputPanel>
