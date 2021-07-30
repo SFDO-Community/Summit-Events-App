@@ -34,7 +34,7 @@
 
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages />
+                    <apex:messages/>
                 </div>
 
                 <!-- EVENT BREADCRUMB -->
@@ -120,8 +120,11 @@
                                         </apex:outputPanel>
 
                                         <!-- Record Lookup -->
-                                        <apex:outputPanel rendered="{!qu.type = 'Lookup'}" layout="block" styleClass="referenceLookup slds-combobox_container">
-                                            <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox" data-lookup="{!qu.lookup}" data-noresults="{!qu.secondaryNoResults}" data-listicon="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#' + qu.icon)}">
+                                        <apex:outputPanel rendered="{!qu.type = 'Lookup'}" layout="block" styleClass="referenceLookup slds-combobox_container" html-data-lookup="{!qu.lookup}" html-data-noresults="{!qu.secondaryNoResults}" html-data-secondarylinktext="{!qu.secondaryLinkText}" html-data-listicon="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#' + qu.icon)}">
+                                            <apex:outputText value="Configuration error: Lookup Secondary Value Field not entered." rendered="{!ISBLANK(qu.secondaryMapTo)}" styleClass="validationError"/>
+
+                                            <!-- Record lookup up main. Does not show if secondary input has been entered or requested -->
+                                            <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox" style="{!IF(!ISBLANK(eventRegistration[qu.secondaryMapTo]), 'display:none;', '')}">
                                                 <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                                                     <apex:inputText value="{!lookupHoldingValues[qu.mapTo]}" id="combobox" styleClass="bind-autocomplete slds-input slds-combobox__input" html-autocomplete="off" html-role="textbox" html-aria-autocomplete="list"/>
                                                     <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right refRemoveButton" title="Remove selected option" style="display:none;">
@@ -168,7 +171,18 @@
                                             </div>
                                             <apex:inputHidden value="{!eventRegistration[qu.mapTo]}" id="lookupValue"/>
 
+                                            <!--Secondary Input Text Box - Used for requested manual entry of record and mapped to secondary field-->
+                                            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right sea-secondary-input" role="none" style="{!IF(ISBLANK(eventRegistration[qu.secondaryMapTo]), 'display:none', '')}">
+                                                <apex:inputText value="{!eventRegistration[qu.secondaryMapTo]}" styleClass="slds-input slds-m-horizontal_none sea-alternate-input" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}"/>
+                                                <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right removeButtonSecondary" title="Remove selected option">
+                                                    <svg class="slds-button__icon" aria-hidden="true">
+                                                        <use xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                                    </svg>
+                                                    <span class="slds-assistive-text">Remove selected option</span>
+                                                </button>
+                                            </div>
                                         </apex:outputPanel>
+
 
                                     </apex:outputPanel>
                                     <div class="slds-form-element__help" id="error-message-{!quNum}">{!qu.assist}</div>

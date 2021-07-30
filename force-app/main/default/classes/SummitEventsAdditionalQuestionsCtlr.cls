@@ -40,7 +40,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         public String icon { get; set; }
         public String secondaryLinkText { get; set; }
         public String secondaryQuestion { get; set; }
-        public String secondaryMapTop { get; set; }
+        public String secondaryMapTo { get; set; }
         public String secondaryNoResults { get; set; }
     }
 
@@ -153,15 +153,23 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                         quest.defaultValue = question.Default_Value__c;
                         quest.textLimit = Integer.valueOf(question.Text_Limit__c);
                         quest.mapTo = question.Map_to_Field__c;
-                        if(String.isNotBlank(question.Lookup_Results_Icon__c)) {
+                        if (String.isNotBlank(question.Lookup_Results_Icon__c)) {
                             quest.icon = question.Lookup_Results_Icon__c.trim();
                         } else {
                             quest.icon = 'account';
                         }
-                        quest.secondaryLinkText = question.Lookup_Secondary_Input_Link_Text__c;
+                        if (String.isNotBlank(question.Lookup_Secondary_Input_Link_Text__c)) {
+                            quest.secondaryLinkText = question.Lookup_Secondary_Input_Link_Text__c;
+                        } else {
+                            quest.secondaryLinkText = 'Manually enter information.';
+                        }
+
                         quest.secondaryQuestion = question.Lookup_Secondary_Input_Question__c;
-                        quest.secondaryMapTop = question.Lookup_Secondary_Value_Field__c;
-                        if(String.isNotBlank(question.Lookup_No_Results_Label__c)) {
+                        quest.secondaryMapTo = question.Lookup_Secondary_Value_Field__c;
+                        if (String.isNotBlank(question.Lookup_Secondary_Value_Field__c)) {
+                            mapToList.add(question.Lookup_Secondary_Value_Field__c);
+                        }
+                        if (String.isNotBlank(question.Lookup_No_Results_Label__c)) {
                             quest.secondaryNoResults = question.Lookup_No_Results_Label__c;
                         } else {
                             quest.secondaryNoResults = 'No results found.';
