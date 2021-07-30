@@ -111,15 +111,23 @@ function adjustLabelsFor() {
 function activateAutoComplete() {
 
     document.querySelectorAll('.bind-autocomplete').forEach(autoItem => {
-        const comboBoxContainer = autoItem.closest('.slds-combobox_container');
-        const comboBox = comboBoxContainer.querySelector('.slds-combobox');
-        const spinner = comboBox.querySelector('.slds-modal');
-        const hiddenInput = comboBoxContainer.querySelector('[id$=lookupValue]');
-        const removeButton = comboBox.querySelector('.refRemoveButton');
-        const magGlass = comboBox.querySelector('.refMagGlass');
-        const resultList = comboBox.querySelector('.slds-listbox');
-        const originObjId = autoItem.id;
-        const lookup = comboBox.dataset.lookup;
+        let comboBoxContainer = autoItem.closest('.slds-combobox_container');
+        let comboBox = comboBoxContainer.querySelector('.slds-combobox');
+        let spinner = comboBox.querySelector('.slds-modal');
+        let hiddenInput = comboBoxContainer.querySelector('[id$=lookupValue]');
+        let removeButton = comboBox.querySelector('.refRemoveButton');
+        let magGlass = comboBox.querySelector('.refMagGlass');
+        let resultList = comboBox.querySelector('.slds-listbox');
+        let originObjId = autoItem.id;
+        let lookup = comboBoxContainer.dataset.lookup;
+        let secondaryInputLink = document.createElement('a');
+        let secondaryInput = document.querySelector('.sea-secondary-input')
+        secondaryInputLink.innerText = comboBoxContainer.dataset.secondarylinktext;
+        secondaryInputLink.addEventListener('click', () => {
+            secondaryInput.style.display = 'block';
+            comboBox.style.display = 'none';
+        });
+        let removeButtonSecondary = comboBoxContainer.querySelector('.removeButtonSecondary');
 
         /* Remote reference lookup */
         const resultListTemplate = (title, subtitle, icon, originObjId, resultId) => `
@@ -185,7 +193,7 @@ function activateAutoComplete() {
                         let resultName = result['lineOne'];
                         let subTitle = result['lineTwo'];
                         let resultId = result['retainValue'];
-                        outputList += resultListTemplate(resultName, subTitle, comboBox.dataset.listicon, originObjId, resultId);
+                        outputList += resultListTemplate(resultName, subTitle, comboBoxContainer.dataset.listicon, originObjId, resultId);
                     });
 
                     comboBox.classList.remove('slds-is-open');
@@ -202,8 +210,8 @@ function activateAutoComplete() {
                     });
                 }
             } else {
-
-                resultList.innerHTML = '<li role="presentation" class="slds-listbox__item"><div class="slds-listbox__option_entity" role="option">'+ comboBox.dataset.noresults +'<span class="slds-media__body"></span></div></li>';
+                resultList.innerHTML = '<li role="presentation" class="slds-listbox__item "><div class="slds-listbox__option_entity no-results" role="option">' + comboBoxContainer.dataset.noresults + ' <span class="slds-media__body"></span></div></li>';
+                comboBoxContainer.querySelector('.no-results').append(secondaryInputLink);
             }
         }
 
@@ -221,6 +229,13 @@ function activateAutoComplete() {
         removeButton.addEventListener('click', function (e) {
             e.preventDefault();
             refValueRemoved();
+        });
+
+        removeButtonSecondary.addEventListener('click', function (e) {
+            e.preventDefault();
+            secondaryInput.querySelector('input').value = '';
+            secondaryInput.style.display = 'none';
+            comboBox.style.display = 'block';
         });
 
         autoItem.addEventListener('keyup', (e) => {
