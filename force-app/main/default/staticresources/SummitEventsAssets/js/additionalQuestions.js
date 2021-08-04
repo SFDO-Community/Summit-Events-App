@@ -10,13 +10,17 @@ ready(() => {
         let allInputs = document.querySelectorAll('input, select, textarea');
         allInputs.forEach(input => {
             if (!input.validity.valid) {
-                fadein();
-                input.setAttribute('aria-invalid', 'true')
-                input.closest('.slds-form-element').classList.add('slds-has-error');
-                input.addEventListener('change', () => {
-                    input.closest('.slds-form-element').classList.remove('slds-has-error');
-                    input.removeAttribute('aria-invalid')
-                });
+                if (input.classList.contains('sea-alternate-input') || input.classList.contains('slds-combobox__input') || input.classList.contains('sea-lookup-input')) {
+
+                } else {
+                    fadein();
+                    input.setAttribute('aria-invalid', 'true')
+                    input.closest('.slds-form-element').classList.add('slds-has-error');
+                    input.addEventListener('change', () => {
+                        input.closest('.slds-form-element').classList.remove('slds-has-error');
+                        input.removeAttribute('aria-invalid')
+                    });
+                }
             }
         });
     }, true)
