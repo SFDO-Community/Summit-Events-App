@@ -169,7 +169,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <apex:inputHidden value="{!eventRegistration[qu.mapTo]}" id="lookupValue"/>
+                                            <apex:inputHidden value="{!eventRegistration[qu.mapTo]}" id="lookupValue" html-class="sea-lookup-input"/>
 
                                             <!--Secondary Input Text Box - Used for requested manual entry of record and mapped to secondary field-->
                                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right sea-secondary-input" role="none" style="{!IF(ISBLANK(eventRegistration[qu.secondaryMapTo]), 'display:none', '')}">
