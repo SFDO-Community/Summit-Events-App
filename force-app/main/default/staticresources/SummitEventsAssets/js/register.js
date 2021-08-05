@@ -29,6 +29,7 @@ ready(() => {
     }
 
     //make sure phone is formated correctly
+    adjustLabelsFor();
     dynamicValidation();
     validYear();
 
@@ -85,7 +86,7 @@ function checkForm() {
     var error_count = 0;
     var emailReg = /^([a-zA-Z0-9_.\-.'.+])+@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
-    document.querySelectorAll(".slds-is-required .slds-input, .slds-is-required .slds-textarea").forEach(item => {
+    document.querySelectorAll(".slds-is-required .slds-input, .slds-is-required .slds-textarea, .slds-is-required .slds-select").forEach(item => {
         let inputWrap = item.closest('.slds-form-element');
         let inputRequired = inputWrap.classList.contains('slds-is-required');
         if (item) {
@@ -372,27 +373,29 @@ ready(() => {
         let data2Id = selOl.dataset.hiddendataid;
         //iterate over all the li in the current ol and if the value is in the array make it selected on load
         let selOlSelected = document.querySelector("[id$=" + data2Id + "]");
-        let oldSelArray = '';
+        let oldSelArray = [];
+
         if (selOlSelected.value != null) {
             oldSelArray = selOlSelected.value.split(';');
         }
 
         selOl.querySelectorAll('li').forEach(selLi => {
+            let textValue = selLi.innerText.trim();
+            if (oldSelArray.includes(textValue)) {
+                console.log('found: ' + textValue);
+                selLi.classList.add('selOl-selected');
+            }
             selLi.addEventListener("click", (e) => {
                 let selArray = selOlSelected.value.split(';');
                 if (selLi.classList.contains('selOl-selected')) {
                     selLi.classList.remove('selOl-selected');
-                    selArray = arrayRemove(selArray, selLi.textContent);
+                    selArray = arrayRemove(selArray, textValue);
                 } else {
                     selLi.classList.add('selOl-selected');
-                    selArray.push(selLi.textContent);
+                    selArray.push(textValue);
                 }
                 selOlSelected.value = selArray.join(';');
             });
-
-            if (oldSelArray.includes(selLi.textContent)) {
-                selLi.classList.add('selOl-selected');
-            }
         });
 
     });
@@ -401,6 +404,37 @@ ready(() => {
 function arrayRemove(arr, value) {
     return arr.filter(function (ele) {
         return ele != value;
+    });
+}
+
+function adjustLabelsFor() {
+
+    document.querySelectorAll('.slds-input, .slds-select, .slds-textarea').forEach(inputFound => {
+        let inputWrapper = inputFound.closest('.slds-form-element')
+        let inputLabel = inputWrapper.querySelector('label')
+        let helpText = inputWrapper.querySelector('.slds-form-element__help');
+
+        if (inputLabel) {
+            if (inputFound.getAttribute('id')) {
+                inputLabel.htmlFor = inputFound.getAttribute('id');
+            } else if (inputFound.getAttribute('name')) {
+                inputFound.setAttribute('id', inputFound.getAttribute('name'))
+                inputLabel.htmlFor = inputFound.getAttribute('id');
+            }
+        }
+        if (inputFound && helpText) {
+            if (helpText) {
+                inputFound.setAttribute('aria-describedby', helpText.getAttribute('id'));
+                inputFound.setAttribute('aria-invalid', 'false');
+            }
+            if (inputWrapper.dataset.placeholder) {
+                field.setAttribute('placeholder', placeholders[inputId])
+                inputFound.setAttribute('placeholder', inputWrapper.dataset.placeholder);
+            }
+            if (inputWrapper.dataset.maxlength) {
+                inputFound.setAttribute('maxlength', inputWrapper.dataset.maxlength);
+            }
+        }
     });
 }
 
