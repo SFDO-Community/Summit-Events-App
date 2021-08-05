@@ -57,6 +57,11 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         <h2 class="slds-text-heading_large">
                             <apex:outputText value="{!eventPage.Event_Name__c}"/>
                         </h2>
+                        <apex:outputPanel layout="none" rendered="{!!ISBLANK(evtInstance.Instance_Title__c)}">
+                            <h3 class="slds-text-heading_medium">
+                                {!evtInstance.Instance_Title__c}
+                            </h3>
+                        </apex:outputPanel>
                     </div>
 
                     <!-- EVENT CLOSED MESSAGE -->
@@ -84,10 +89,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </apex:outputPanel>
                             <!-- Location Date/Time -->
                             <p class="slds-text-body">
-                                {!formattedStartDate}
-                            </p>
-                            <p class="slds-text-body">
-                                {!startTimeString} - {!endTimeString}
+                                {!formattedNavDate}
                             </p>
                             <!-- Location Address/Map Link -->
                             <apex:outputPanel layout="none"
