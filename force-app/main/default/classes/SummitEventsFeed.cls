@@ -118,8 +118,6 @@ global with sharing class SummitEventsFeed {
             viewStart = Datetime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(-1);
         }
 
-        System.debug(viewStart);
-
         if (String.isNotBlank(req.params.get('viewEnd'))) {
             viewEnd = Date.valueOf(String.escapeSingleQuotes(req.params.get('viewEnd')));
         }
@@ -131,14 +129,10 @@ global with sharing class SummitEventsFeed {
 
         }
 
-        System.debug(viewEnd);
-
         formattedViewStart = viewStart.format('yyyy-MM-dd');
         formattedViewEnd = viewEnd.format('yyyy-MM-dd');
         eventQuery += ' AND Instance_Start_Date__c >= ' + formattedViewStart + ' ';
         eventQuery += ' AND Instance_Start_Date__c <= ' + formattedViewEnd + ' ';
-
-        System.debug(eventQuery);
 
         //get event based on event id
         String eventId = req.params.get('eventId');
@@ -187,7 +181,6 @@ global with sharing class SummitEventsFeed {
                 eventQuery += ' Event__r.Location_Title__c LIKE \'%' + f + '%\' OR ';
                 eventQuery += ' Event__r.Location_Address__c LIKE \'%' + f + '%\' OR ';
                 eventQuery += ' Event__r.Building__c LIKE \'%' + f + '%\' OR ';
-//                eventQuery += ' Event__r.School__r.Name LIKE \'%' + f + '%\' OR ';
             }
             eventQuery = eventQuery.removeEnd('OR ');
             eventQuery += ' ) ';
@@ -213,26 +206,27 @@ global with sharing class SummitEventsFeed {
             }
             eventItem evt = new eventItem();
             evt.ID = eventInstance.Id;
+
             if (eventInstance.Event__r.Event_Name__c != null) {
-                evt.title = eventInstance.Event__r.Event_Name__c;
+                evt.title = removeHTMLandEscape(eventInstance.Event__r.Event_Name__c, true);
             } else {
-                evt.title = eventInstance.Event__r.Name;
+                evt.title = removeHTMLandEscape(eventInstance.Event__r.Name, true);
             }
 
             if (eventInstance.Instance_Title__c != null) {
-                evt.title += ' - ' + eventInstance.Instance_Title__c;
+                evt.title += ' - ' + removeHTMLandEscape(eventInstance.Instance_Title__c, true);
             }
 
             if (!String.isBlank(eventInstance.Instance_Short_Description__c)) {
-                evt.instanceDesc = eventInstance.Instance_Short_Description__c;
+                evt.instanceDesc = removeHTMLandEscape(eventInstance.Instance_Short_Description__c, true);
             } else {
                 evt.instanceDesc = '';
             }
 
             if (!String.isBlank(eventInstance.Feed_Registration_Button_Text_Override__c)) {
-                evt.feedButtonText = eventInstance.Feed_Registration_Button_Text_Override__c;
+                evt.feedButtonText = removeHTMLandEscape(eventInstance.Feed_Registration_Button_Text_Override__c, true);
             } else if (!String.isBlank(eventInstance.Event__r.Feed_Registration_Button_Text__c)) {
-                evt.feedButtonText = eventInstance.Event__r.Feed_Registration_Button_Text__c;
+                evt.feedButtonText = removeHTMLandEscape(eventInstance.Event__r.Feed_Registration_Button_Text__c, true);
             } else {
                 evt.feedButtonText = 'Register';
             }
@@ -242,7 +236,7 @@ global with sharing class SummitEventsFeed {
             }
 
             if (!String.isBlank(eventInstance.Location_Type_Override__c)) {
-                evt.locationType = eventInstance.Location_Type_Override__c;
+                evt.locationType = removeHTMLandEscape(eventInstance.Location_Type_Override__c, true);
             } else if (!String.isBlank(eventInstance.Event__r.Location_Type__c)) {
                 evt.locationType = eventInstance.Event__r.Location_Type__c;
             } else {
@@ -262,7 +256,7 @@ global with sharing class SummitEventsFeed {
             }
 
             if (!String.isBlank(eventInstance.Event__r.Event_Short_Listing_Description__c)) {
-                evt.description = eventInstance.Event__r.Event_Short_Listing_Description__c;
+                evt.description = removeHTMLandEscape(eventInstance.Event__r.Event_Short_Listing_Description__c, true);
             } else {
                 evt.description = '';
             }
@@ -295,9 +289,9 @@ global with sharing class SummitEventsFeed {
 
             if (!String.isBlank(eventInstance.Event__r.Location_Title__c) || !String.isBlank(eventInstance.Location_Title_Override__c)) {
                 if (!String.isBlank(eventInstance.Location_Title_Override__c)) {
-                    evt.locationTitle = eventInstance.Location_Title_Override__c;
+                    evt.locationTitle = removeHTMLandEscape(eventInstance.Location_Title_Override__c, true);
                 } else {
-                    evt.locationTitle = eventInstance.Event__r.Location_Title__c;
+                    evt.locationTitle = removeHTMLandEscape(eventInstance.Event__r.Location_Title__c, true);
                 }
             } else {
                 evt.locationTitle = '';
@@ -305,9 +299,9 @@ global with sharing class SummitEventsFeed {
 
             if (!String.isBlank(eventInstance.Event__r.Location_Address__c) || !String.isBlank(eventInstance.Location_Address_Override__c)) {
                 if (!String.isBlank(eventInstance.Location_Address_Override__c)) {
-                    evt.locationAddress = eventInstance.Location_Address_Override__c;
+                    evt.locationAddress = removeHTMLandEscape(eventInstance.Location_Address_Override__c, true);
                 } else {
-                    evt.locationAddress = eventInstance.Event__r.Location_Address__c;
+                    evt.locationAddress = removeHTMLandEscape(eventInstance.Event__r.Location_Address__c, true);
                 }
             } else {
                 evt.locationAddress = '';
@@ -315,9 +309,9 @@ global with sharing class SummitEventsFeed {
 
             if (!String.isBlank(eventInstance.Event__r.Location_Map_Link__c) || !String.isBlank(eventInstance.Location_Map_Link_Override__c)) {
                 if (!String.isBlank(eventInstance.Location_Map_Link_Override__c)) {
-                    evt.locationMapLink = eventInstance.Location_Map_Link_Override__c;
+                    evt.locationMapLink = removeHTMLandEscape(eventInstance.Location_Map_Link_Override__c, false);
                 } else {
-                    evt.locationMapLink = eventInstance.Event__r.Location_Map_Link__c;
+                    evt.locationMapLink = removeHTMLandEscape(eventInstance.Event__r.Location_Map_Link__c, false);
                 }
             } else {
                 evt.locationMapLink = '';
@@ -334,9 +328,9 @@ global with sharing class SummitEventsFeed {
                 evt.eventClosed = false;
                 if (!String.isBlank(eventInstance.Event__r.Alternate_Registration_URL__c) || !String.isBlank(eventInstance.Alternate_Registration_URL_Override__c)) {
                     if (!String.isBlank(eventInstance.Alternate_Registration_URL_Override__c)) {
-                        evt.eventUrl = eventInstance.Alternate_Registration_URL_Override__c;
+                        evt.eventUrl = removeHTMLandEscape(eventInstance.Alternate_Registration_URL_Override__c, false);
                     } else {
-                        evt.eventUrl = eventInstance.Event__r.Alternate_Registration_URL__c;
+                        evt.eventUrl = removeHTMLandEscape(eventInstance.Event__r.Alternate_Registration_URL__c, false);
                     }
 
                 } else {
@@ -349,6 +343,13 @@ global with sharing class SummitEventsFeed {
         return EventList;
     }
 
+    public static String removeHTMLandEscape(String incomingString, Boolean escapeHTML) {
+        incomingString = incomingString.replaceAll('<[^>]+>', '').trim();
+        if (escapeHTML) {
+            incomingString = incomingString.escapeHtml4();
+        }
+        return incomingString;
+    }
     private static Map<String, String> getAudienceDD(Schema.DescribeFieldResult fieldResult) {
         Map<String, String> fieldMap = new Map<String, String>();
         List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();

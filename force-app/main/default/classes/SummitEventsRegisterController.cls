@@ -4,10 +4,8 @@
 // Created by Thaddaeus Dahlberg on 5/1/2018.
 
 public with sharing class SummitEventsRegisterController {
-    public String test { get; set; }
     public Summit_Events_Instance__c evtInstance { get; set; }
     public Summit_Events__c eventPage { get; set; }
-    public String instanceName { get; set; }
     public List<SelectOption> guestAmt { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
     private SummitEventsShared SeaShared = new SummitEventsShared();
@@ -22,8 +20,6 @@ public with sharing class SummitEventsRegisterController {
     public List<SelectOption> addPick3 { get; set; }
     public List<SelectOption> addPick4 { get; set; }
     public List<SelectOption> addPick5 { get; set; }
-    public Boolean showAddress { get; set; }
-    public Boolean showPhone { get; set; }
     public String applicantType { get; set; }
     public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
@@ -46,12 +42,9 @@ public with sharing class SummitEventsRegisterController {
                 '1', '2', '3', '4', '5'
         };
 
-        test = '';
         contactSet = false;
         eventIsClosed = false;
         additionalQuestions = false;
-        showAddress = false;
-        showPhone = false;
         EvtUserType = UserInfo.getUserType();
         //Get cookie or URL string variable
         eventInformation = SeaShared.getSummitEventsInfo();
@@ -96,7 +89,6 @@ public with sharing class SummitEventsRegisterController {
 
             //define Event ID from instanceInfo data
             eventInformation.eventId = evtInstance.Event__r.Id;
-            instanceName = evtInstance.Name;
             startTimeString = SeaShared.formatTime(evtInstance.Instance_Start_Time__c, false);
             endTimeString = SeaShared.formatTime(evtInstance.Instance_End_Time__c, false);
         }
@@ -138,7 +130,9 @@ public with sharing class SummitEventsRegisterController {
                 eventRegistration.Registrant_Country__c = 'United States';
             }
 
-            if (!String.isBlank(eventPage.Ask_Applicant_Type__c)) {
+            if (String.isNotBlank(eventRegistration.Registrant_Applicant_Type__c)) {
+                applicantType = eventRegistration.Registrant_Applicant_Type__c;
+            } else if (!String.isBlank(eventPage.Ask_Applicant_Type__c)) {
                 //Important to start all of this with exact "Do not ask but assign " to assign correctly
                 if (eventPage.Ask_Applicant_Type__c.startsWith('Do not ask but assign ')) {
                     applicantType = eventPage.Ask_Applicant_Type__c.replace('Do not ask but assign ', '');
@@ -317,7 +311,7 @@ public with sharing class SummitEventsRegisterController {
 
     public Summit_Events_Registration__c getEventRegistration(Id eventRegistrationId) {
         Summit_Events_Registration__c oldEventRegistration = [
-                SELECT Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c, Number_of_Guests__c,
+                SELECT Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c, Number_of_Guests__c, Registrant_Applicant_Type__c,
                         Registrant_Gender__c, Registrant_Street_1__c, Registrant_Street_2__c, Registrant_State__c, Registrant_City__c, Preferred_Visit_Time__c,
                         Registrant_Zip__c, Registrant_Phone__c, Registrant_Mobile_Phone__c, Registrant_College__c, Registrant_College_Code__c, Registrant_College_Year__c,
                         Registrant_High_School__c, Registrant_High_School_Code__c, Registrant_Receive_Texts__c, Registrant_High_School_Grad_Year__c, Registrant_High_School_Not_Found__c,
@@ -504,6 +498,7 @@ public with sharing class SummitEventsRegisterController {
         eventRegistration.Event_Instance__c = eventInformation.instanceId;
 
         eventRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience, eventFeeList);
+
         eventInformation.registrationId = eventRegistration.Id;
 
         if (evtHasAppointments) {
@@ -542,7 +537,7 @@ public with sharing class SummitEventsRegisterController {
                     eventRegistration.Id = incomingEventRegistrationId;
                     update eventRegistration;
                 } else {
-                    if (Schema.sObjectType.Summit_Events_Registration__c.isCreateable()) {
+                    if (Schema.SObjectType.Summit_Events_Registration__c.isCreateable()) {
                         insert eventRegistration;
                     }
                 }
@@ -556,14 +551,13 @@ public with sharing class SummitEventsRegisterController {
                     upsertFees[ff].Event_Registration__c = eventRegistration.Id;
                 }
                 try {
-                    if (Schema.sObjectType.Summit_Events_Registration__c.isCreateable()) {
+                    if (Schema.SObjectType.Summit_Events_Registration__c.isCreateable()) {
                         insert upsertFees;
                     }
                 } catch (Exception ex) {
                     System.debug(ex.getMessage());
                 }
             }
-
 
             //Update encrypted cookie
             SummitEventsShared SeaShared = new SummitEventsShared();

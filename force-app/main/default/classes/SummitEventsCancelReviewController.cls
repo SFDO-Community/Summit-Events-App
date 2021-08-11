@@ -30,7 +30,7 @@ public with sharing class SummitEventsCancelReviewController {
 
                 if (String.isNotBlank(eventInformation.registrationId)) {
                     eventRegistration = [
-                            SELECT id, Status__c, Name, Event__r.Name, Event_Instance__c, Event__r.Event_Name__c, Event__r.Event_description__c,
+                            SELECT Id, Status__c, Name, Event__r.Name, Event_Instance__c, Event__r.Event_Name__c, Event__r.Event_description__c,
                                     Event__r.Event_Footer__c, Event__r.Event_Cancel_Review_Title__c, Event_Name__c, Event_Instance__r.Instance_Title__c,
                                     Event__r.Event_Cancel_Review_Description__c, Event__r.Event_Cancelled_Notification_Text__c,
                                     Event__r.Template__c, Event__r.Event_Home_Link_Title__c, Event__r.Event_Home_Link_URL__c,
@@ -38,7 +38,7 @@ public with sharing class SummitEventsCancelReviewController {
                                     Event_Instance__r.Instance_End_Date__c, Event_Instance__r.Instance_End_Time__c, Event_Instance__r.Instance_Time_Zone__c,
                                     Event__r.Tracking_Cancel_Registration__c
                             FROM Summit_Events_Registration__c
-                            WHERE id = :eventInformation.registrationId
+                            WHERE Id = :eventInformation.registrationId
                             WITH SECURITY_ENFORCED
                     ];
 

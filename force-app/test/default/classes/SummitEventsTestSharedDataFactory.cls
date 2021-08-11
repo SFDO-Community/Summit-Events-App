@@ -209,13 +209,10 @@ public with sharing class SummitEventsTestSharedDataFactory {
         SummitEventsShared SEAShared = new SummitEventsShared();
         String encryptedString = SEAShared.createEncryptedCookie('', testRegistration.Event_Instance__c, testRegistration.Event__c, testRegistration.Id);
 
-        System.debug(encryptedString);
         if (encryptedString.length() > 255) {
-            System.debug('bigger than 255');
             testRegistration.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);
             testRegistration.Encrypted_Registration_Id_2__c = encryptedString.substring(255, encryptedString.length());
         } else {
-            System.debug('less than 255');
             testRegistration.Encrypted_Registration_Id_1__c = encryptedString;
         }
         update testRegistration;
@@ -288,7 +285,6 @@ public with sharing class SummitEventsTestSharedDataFactory {
 
         p = [select Id,name from Profile where Name = :profileName];
 
-        System.debug(p.Id);
         return new User(
                 Alias = alias,
                 Username = username,
@@ -305,7 +301,6 @@ public with sharing class SummitEventsTestSharedDataFactory {
     public static User userToRunWith(String profileName, String PermissionSetToAdd) {
 
         User u2 = buildUser('example1@sfdx-test.com', 'lm', 'System Administrator');
-        System.debug(JSON.serializePretty(u2));
         insert u2;
 
         System.runAs(u2) {

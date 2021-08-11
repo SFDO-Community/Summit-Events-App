@@ -17,7 +17,7 @@ public with sharing class SummitEventsSubmitController {
     public Boolean adminOpen { get; set; }
     public List<Summit_Events_Fee__c> eventFees { get; set; }
     public Double totalPaymentAmount { get; set; }
-    public String totalPaymentAmountFormatted {get;set;}
+    public String totalPaymentAmountFormatted { get; set; }
     public Double existingPaymentAmount { get; set; }
     public Double eventOnlyPaymentAmount { get; set; }
     public String eventOnlyPaymentAmountFormatted { get; set; }
@@ -98,10 +98,9 @@ public with sharing class SummitEventsSubmitController {
                 if (existingPaymentAmount > 0) {
                     totalPaymentAmount = totalPaymentAmount - existingPaymentAmount;
                 }
-                eventOnlyPaymentAmountFormatted  = prettyCurrencyString(eventOnlyPaymentAmount);
+                eventOnlyPaymentAmountFormatted = prettyCurrencyString(eventOnlyPaymentAmount);
                 totalPaymentAmountFormatted = prettyCurrencyString(totalPaymentAmount);
             }
-            System.debug(paymentItemized);
             if (totalPaymentAmount > 0) {
                 showPaymentButton = true;
             }

@@ -20,10 +20,10 @@ Created by Thaddaeus Dahlberg on 2/26/2019.
     <tbody>
     <tr>
         <td>
-            <apex:outputText escape="false" value="{!Summit_Events_Registration__c.Generated_Itinerary__c}"></apex:outputText>
+            <apex:outputText escape="false" value="{!Summit_Events_Registration__c.Generated_Itinerary__c}"/>
         </td>
         <td>
-            <apex:outputText escape="false" value="{!Summit_Events_Registration__c.Generated_Requested_Appointments__c}"></apex:outputText>
+            <apex:outputText escape="false" value="{!Summit_Events_Registration__c.Generated_Requested_Appointments__c}"/>
         </td>
     </tr>
     </tbody>

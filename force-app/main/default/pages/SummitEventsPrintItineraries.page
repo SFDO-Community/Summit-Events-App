@@ -17,8 +17,8 @@ Created by Thaddaeus Dahlberg on 11/28/2018.
                 </apex:selectList>
             </apex:pageBlockSection>
             <apex:pageBlockButtons >
-                <apex:commandButton action="{!generatePDF}" value="Generate PDF"></apex:commandButton>
-                <apex:commandButton action="{!generateDoc}" value="Generate Word"></apex:commandButton>
+                <apex:commandButton action="{!generatePDF}" value="Generate PDF"/>
+                <apex:commandButton action="{!generateDoc}" value="Generate Word"/>
             </apex:pageBlockButtons>
         </apex:pageBlock>
     </apex:form>
@@ -30,7 +30,7 @@ Created by Thaddaeus Dahlberg on 11/28/2018.
             <apex:repeat value="{!eventRegs}" var="reg">
                 <apex:outputPanel layout="block" rendered="{!!ISBLANK(reg.Generated_Itinerary__c)}" style="page-break-after: always" styleClass="itWrap">
                     <h2>{!reg.Preferred_First_Name_Formatted__c}</h2>
-                    <apex:outputText escape="false" value="{!reg.Generated_Itinerary__c}"></apex:outputText>
+                    <apex:outputText escape="false" value="{!reg.Generated_Itinerary__c}"/>
                     <!--<apex:outputPanel layout="none" rendered="{!If(CONTAINS(reg.Generated_Itinerary__c, 'Stay Overnight'), true, false)}">-->
                         <!--<table>-->
                             <!--<tr>-->

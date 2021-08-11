@@ -30,20 +30,9 @@ tasks:
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         options:
             apex: >
-                String siteName = 'Summit_Events';
-
-                Site site = [
-                        SELECT GuestUserId
-                        FROM Site
-                        WHERE Name = :siteName
-                ];
-
-                String path = '/sites/servlet.SiteDebugMode';
-                PageReference pr = new PageReference(path);
-                pr.getParameters().put('guid', site.GuestUserId);
-                pr.getParameters().put('sitedebugmode', 'x');
-                String url = pr.getContent().toString().substringAfter('URL=').substringBefore(path);
-
+                Site mySite = [SELECT Id FROM Site WHERE Name = 'Summit_Events'];
+                SiteDetail mySiteDetail = [SELECT SecureURL FROM SiteDetail WHERE DurableId = :mySite.Id];
+                String url = mySiteDetail.SecureURL;
                 Summit_Events_Settings__c eventSettings = Summit_Events_Settings__c.getOrgDefaults();
                 eventSettings.Community_Base_URL__c = url;
                 eventSettings.Managed_Package__c = false;
