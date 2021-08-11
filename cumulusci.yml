@@ -1,8 +1,8 @@
 minimum_cumulusci_version: '2.5.5'
 project:
-    name: SummitEventsDX
+    name: SummitEventsApp
     package:
-        name:  SummitEventsDX
+        name:  Summit Events App
         namespace:  summit
         api_version: '51.0'
     source_format: sfdx
