@@ -1,8 +1,8 @@
 minimum_cumulusci_version: '2.5.5'
 project:
-    name: SummitEventsDX
+    name: SummitEventsApp
     package:
-        name:  SummitEventsDX
+        name:  Summit Events App
         namespace:  summit
         api_version: '51.0'
     source_format: sfdx
@@ -95,14 +95,14 @@ tasks:
 
     robot:
         options:
-            suites: robot/SummitEventsDX/tests
+            suites: robot/SummitEventsApp/tests
             options:
-                outputdir: robot/SummitEventsDX/results
+                outputdir: robot/SummitEventsApp/results
 
     robot_testdoc:
         options:
-            path: robot/SummitEventsDX/tests
-            output: robot/SummitEventsDX/doc/SummitEventsDX_tests.html
+            path: robot/SummitEventsApp/tests
+            output: robot/SummitEventsApp/doc/SummitEventsApp_tests.html
 
 flows:
     config_qa:
