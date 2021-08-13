@@ -34,7 +34,7 @@
 
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages/>
+                    <apex:messages />
                 </div>
 
                 <!-- EVENT BREADCRUMB -->
@@ -76,7 +76,18 @@
                     <apex:outputPanel rendered="{!!eventIsClosed && questionWrapper.size > 0}" layout="none">
                         <apex:variable var="qNum" value="{!0}"/>
                         <apex:repeat value="{!questionWrapper}" var="qu">
-                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 {!If(qu.type != 'Text Area','slds-large-size_3-of-6',false)}" rendered="{!If(qu.type != 'Checkbox', true, false)}">
+
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-error {!If(qu.type != 'Text Area','slds-large-size_3-of-6',false)}" rendered="{!qu.setupFail}">
+                                <apex:outputLabel styleClass="slds-form-element__label">
+                                    {!qu.question}
+                                    <apex:outputText escape="false" rendered="{!qu.required}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </apex:outputText>
+                                </apex:outputLabel>
+                                <p class="slds-text-color_error">{!qu.setupError}</p>
+                            </apex:outputPanel>
+
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 {!If(qu.type != 'Text Area','slds-large-size_3-of-6',false)}" rendered="{!If(qu.type != 'Checkbox' && !qu.setupFail, true, false)}">
                                 <apex:outputPanel layout="block" styleClass="slds-form-element {!IF(qu.required, 'slds-is-required', '')}">
 
                                     <apex:outputLabel styleClass="slds-form-element__label">
@@ -197,7 +208,7 @@
                             </apex:outputPanel>
 
                             <!-- Checkbox-->
-                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6" rendered="{!If(qu.type == 'Checkbox', true, false)}">
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6" rendered="{!If(qu.type == 'Checkbox' && !qu.setupFail, true, false)}">
                                 <apex:outputPanel layout="block" styleClass="slds-form-element {!IF(qu.required, 'slds-is-required', '')}">
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__control">
                                         <apex:outputPanel layout="block" styleClass="slds-checkbox">

@@ -582,12 +582,32 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events_Question__c.Lookup_No_Results_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events_Question__c.Lookup_Object__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Question__c.Lookup_Registration_Retrained_Field__c</field>
+        <field>Summit_Events_Question__c.Lookup_Results_Icon__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Question__c.Lookup_Secondary_Input_Link_Text__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Question__c.Lookup_Secondary_Input_Question__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Question__c.Lookup_Secondary_Value_Field__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
