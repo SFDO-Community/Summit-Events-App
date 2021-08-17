@@ -860,7 +860,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Question__c.Lookup_Secondary_Input_Question__c</field>
+        <field>Summit_Events_Question__c.Lookup_Secondary_Input_Instructions__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>

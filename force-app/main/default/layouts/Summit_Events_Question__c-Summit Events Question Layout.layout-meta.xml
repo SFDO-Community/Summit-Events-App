@@ -126,7 +126,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Lookup_Secondary_Input_Question__c</field>
+                <field>Lookup_Secondary_Input_Instructions__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
