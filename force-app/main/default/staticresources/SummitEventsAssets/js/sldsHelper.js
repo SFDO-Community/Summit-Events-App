@@ -1,5 +1,5 @@
 let readySLDS = (callback) => {
-    if (document.readyState != "loading") callback();
+    if (document.readyState !== "loading") callback();
     else document.addEventListener("DOMContentLoaded", callback);
 }
 
@@ -15,7 +15,7 @@ readySLDS(() => {
 function activateTooltips() {
     document.querySelectorAll('.aria-describedby-tooltip').forEach(item => {
         let toolTipElement = document.getElementById(item.getAttribute('aria-describedby'));
-        item.addEventListener('mousemove', function (e) {
+        item.addEventListener('mousemove', (e) => {
             let toolTipOffsetElem = toolTipElement.offsetParent;
             toolTipElement.classList.remove('slds-fall-into-ground', 'slds-nubbin_left', 'slds-nubbin_right');
             toolTipElement.classList.add('slds-rise-from-ground');
@@ -31,7 +31,7 @@ function activateTooltips() {
             toolTipElement.style.left = leftPosition + 'px';
             toolTipElement.style.top = topPosition + 'px';
         });
-        item.addEventListener('mouseleave', function (e) {
+        item.addEventListener('mouseleave', () => {
             toolTipElement.classList.remove('slds-rise-from-ground');
             toolTipElement.classList.add('slds-fall-into-ground');
         });
@@ -43,14 +43,14 @@ function activateHelpButton() {
     document.querySelectorAll('.helpButton').forEach(item => {
         let toolTipElement = document.getElementById(item.getAttribute('aria-describedby'));
 
-        item.addEventListener('click', function (e) {
+        item.addEventListener('click', (e) => {
             e.preventDefault();
         });
-        item.addEventListener('mouseover', function (e) {
+        item.addEventListener('mouseover', () => {
             toolTipElement.classList.remove('slds-fall-into-ground', 'slds-rise-from-ground');
             toolTipElement.classList.add('slds-rise-from-ground');
         });
-        item.addEventListener('mouseout', function (e) {
+        item.addEventListener('mouseout', () => {
             toolTipElement.classList.remove('slds-fall-into-ground', 'slds-rise-from-ground');
             toolTipElement.classList.add('slds-fall-into-ground');
         });
@@ -81,7 +81,7 @@ function adjustLabelsFor() {
             }
 
             if (inputFound.classList.contains('slds-checkbox')) {
-                inputLabel.addEventListener('click', function (e) {
+                inputLabel.addEventListener('click', () => {
                     if (inputFound.getAttribute('checked')) {
                         inputFound.removeAttribute('checked')
                     } else {
@@ -111,6 +111,9 @@ function adjustLabelsFor() {
 function activateAutoComplete() {
 
     document.querySelectorAll('.bind-autocomplete').forEach(autoItem => {
+        let inputWrapper = autoItem.closest('.slds-form-element');
+        let isRequired = inputWrapper.classList.contains('slds-is-required');
+        let alternateInput = inputWrapper.querySelector('.sea-alternate-input');
         let comboBoxContainer = autoItem.closest('.slds-combobox_container');
         let comboBox = comboBoxContainer.querySelector('.slds-combobox');
         let spinner = comboBox.querySelector('.slds-modal');
@@ -121,7 +124,7 @@ function activateAutoComplete() {
         let originObjId = autoItem.id;
         let lookup = comboBoxContainer.dataset.lookup;
         let secondaryInputLink = document.createElement('a');
-        let secondaryInput = document.querySelector('.sea-secondary-input')
+        let secondaryInput = document.querySelector('.sea-secondary-input');
         secondaryInputLink.innerText = comboBoxContainer.dataset.secondarylinktext;
         secondaryInputLink.addEventListener('click', () => {
             secondaryInput.style.display = 'block';
@@ -129,6 +132,9 @@ function activateAutoComplete() {
         });
         let removeButtonSecondary = comboBoxContainer.querySelector('.removeButtonSecondary');
 
+        if(isRequired) {
+            alternateInput.setAttribute('required', 'required');
+        }
         /* Remote reference lookup */
         const resultListTemplate = (title, subtitle, icon, originObjId, resultId) => `
             <li role="presentation" class="slds-listbox__item" data-title="${title}, ${subtitle}" data-origId="${originObjId}" data-resultId="${resultId}">
@@ -154,6 +160,10 @@ function activateAutoComplete() {
             comboBoxContainer.classList.add('slds-has-selection');
             removeButton.style.display = 'inline-flex';
             magGlass.style.display = 'none';
+            //if required remove required attribute of secondary input to prevent html5 validation error
+            if (isRequired) {
+                alternateInput.removeAttribute('required')
+            }
         }
 
         function refValueRemoved() {
@@ -165,6 +175,10 @@ function activateAutoComplete() {
             autoItem.value = '';
             hiddenInput.value = '';
             resultList.innerHTML = '';
+            //if required reset required attribute
+            if (isRequired) {
+                alternateInput.setAttribute('required', 'required');
+            }
         }
 
         async function fetchLookupResults(lookup, searchTerm) {
@@ -202,7 +216,7 @@ function activateAutoComplete() {
                     }
                     resultList.innerHTML = outputList;
                     resultList.querySelectorAll('li').forEach(refItem => {
-                        refItem.addEventListener('click', function (e) {
+                        refItem.addEventListener('click', () => {
                             hiddenInput.value = refItem.dataset.resultid;
                             autoItem.value = refItem.dataset.title;
                             refValueAdded();
@@ -221,24 +235,24 @@ function activateAutoComplete() {
             refValueAdded();
         }
 
-        autoItem.addEventListener('focusin', (e) => {
+        autoItem.addEventListener('focusin', () => {
             autoItem.classList.add('slds-has-focus');
             comboBox.classList.add('slds-is-open');
         });
 
-        removeButton.addEventListener('click', function (e) {
+        removeButton.addEventListener('click', (e) => {
             e.preventDefault();
             refValueRemoved();
         });
 
-        removeButtonSecondary.addEventListener('click', function (e) {
+        removeButtonSecondary.addEventListener('click', (e) => {
             e.preventDefault();
             secondaryInput.querySelector('input').value = '';
             secondaryInput.style.display = 'none';
             comboBox.style.display = 'block';
         });
 
-        autoItem.addEventListener('keyup', (e) => {
+        autoItem.addEventListener('keyup', () => {
             spinner.style.zIndex = null;
             spinner.classList.add('slds-fade-in-open');
             let searchTerm = autoItem.value;

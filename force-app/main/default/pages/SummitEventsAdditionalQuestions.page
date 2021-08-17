@@ -184,7 +184,7 @@
 
                                             <!--Secondary Input Text Box - Used for requested manual entry of record and mapped to secondary field-->
                                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right sea-secondary-input" role="none" style="{!IF(ISBLANK(eventRegistration[qu.secondaryMapTo]), 'display:none', '')}">
-                                                <apex:inputText value="{!eventRegistration[qu.secondaryMapTo]}" styleClass="slds-input slds-m-horizontal_none sea-alternate-input" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}"/>
+                                                <apex:inputText value="{!eventRegistration[qu.secondaryMapTo]}" styleClass="slds-input slds-m-horizontal_none sea-alternate-input" html-aria-describedby="error-message-{!quNum}"/>
                                                 <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right removeButtonSecondary" title="Remove selected option">
                                                     <svg class="slds-button__icon" aria-hidden="true">
                                                         <use xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>

@@ -207,8 +207,7 @@ CREATE TABLE "Summit_Events_Question__c" (
 	"Instructions__c" VARCHAR(255), 
 	"Is_Visible__c" VARCHAR(255), 
 	"Lookup_Fields__c" VARCHAR(255), 
-	"Lookup_Object__c" VARCHAR(255), 
-	"Lookup_Registration_Retrained_Field__c" VARCHAR(255), 
+	"Lookup_Object__c" VARCHAR(255),
 	"Lookup_Where_Clause__c" VARCHAR(255), 
 	"Map_to_Field__c" VARCHAR(255), 
 	"Name" VARCHAR(255), 
@@ -222,10 +221,14 @@ CREATE TABLE "Summit_Events_Question__c" (
 	"Event__c" VARCHAR(255), 
 	PRIMARY KEY (id)
 );
-INSERT INTO "Summit_Events_Question__c" VALUES(1,'','','1.0','A pet type is required. Please choose one.','If you don''t like pets than choose the on you dislike the least.','','True','','','','','Add_Info_Answer_1__c','Test Registrant Favorite Pet','Dog
-Cat
-Hamster
-Chicken
+INSERT INTO "Summit_Events_Question__c" VALUES(1,'','','1.0','A pet type is required. Please choose one.','If you don''t like pets than choose the on you dislike the least.','','True','','','','Add_Info_Answer_1__c','Test Registrant Favorite Pet','Dog
+
+Cat
+
+Hamster
+
+Chicken
+
 Snake','Picklist','What is your favorite pet?','Registrant','True','','','1');
 CREATE TABLE "Summit_Events_Registration__c" (
 	id INTEGER NOT NULL, 
