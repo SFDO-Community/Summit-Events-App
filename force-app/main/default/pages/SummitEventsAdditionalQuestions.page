@@ -34,7 +34,7 @@
 
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages />
+                    <apex:messages/>
                 </div>
 
                 <!-- EVENT BREADCRUMB -->
@@ -183,17 +183,25 @@
                                             <apex:inputHidden value="{!eventRegistration[qu.mapTo]}" id="lookupValue" html-class="sea-lookup-input"/>
 
                                             <!--Secondary Input Text Box - Used for requested manual entry of record and mapped to secondary field-->
-                                            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right sea-secondary-input" role="none" style="{!IF(ISBLANK(eventRegistration[qu.secondaryMapTo]), 'display:none', '')}">
-                                                <apex:inputText value="{!eventRegistration[qu.secondaryMapTo]}" styleClass="slds-input slds-m-horizontal_none sea-alternate-input" html-aria-describedby="error-message-{!quNum}"/>
-                                                <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right removeButtonSecondary" title="Remove selected option">
-                                                    <svg class="slds-button__icon" aria-hidden="true">
-                                                        <use xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
-                                                    </svg>
-                                                    <span class="slds-assistive-text">Remove selected option</span>
-                                                </button>
-                                            </div>
-                                        </apex:outputPanel>
+                                            <div class="sea-secondary-input" style="{!IF(ISBLANK(eventRegistration[qu.secondaryMapTo]), 'display:none', '')}">
+                                                <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right sea-secondary-input" role="none">
+                                                    <apex:inputText value="{!eventRegistration[qu.secondaryMapTo]}" styleClass="slds-input slds-m-horizontal_none sea-alternate-input" html-aria-describedby="error-message-{!quNum}"/>
+                                                    <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right removeButtonSecondary" title="Remove selected option">
+                                                        <svg class="slds-button__icon" aria-hidden="true">
+                                                            <use xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                                        </svg>
+                                                        <span class="slds-assistive-text">Remove selected option</span>
+                                                    </button>
 
+                                                </div>
+                                                <apex:outputPanel layout="block" rendered="{!!ISBLANK(qu.secondaryQuestion)}">
+                                                    <p class="slds-text-body_regular slds-p-top_xxx-small">
+                                                        <em>{!qu.secondaryQuestion}</em>
+                                                    </p>
+                                                </apex:outputPanel>
+                                            </div>
+
+                                        </apex:outputPanel>
 
                                     </apex:outputPanel>
                                     <div class="slds-form-element__help" id="error-message-{!quNum}">{!qu.assist}</div>

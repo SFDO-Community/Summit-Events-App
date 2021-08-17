@@ -98,7 +98,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
                             Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c,
                             Lookup_Object__c, Lookup_Fields__c, Lookup_Where_Clause__c, Lookup_No_Results_Label__c, Lookup_Secondary_Input_Link_Text__c, Lookup_Secondary_Value_Field__c,
-                            Lookup_Secondary_Input_Question__c, Lookup_Results_Icon__c
+                            Lookup_Secondary_Input_Instructions__c, Lookup_Results_Icon__c
                     FROM Summit_Events_Question__c
                     WHERE Event__c = :eventInformation.eventId
                     AND Registrant_Type__c = 'Registrant'
@@ -181,7 +181,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             //Deal with record lookup questions
                             if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
 
-                                quest.secondaryQuestion = question.Lookup_Secondary_Input_Question__c;
+                                quest.secondaryQuestion = question.Lookup_Secondary_Input_Instructions__c;
                                 quest.secondaryMapTo = question.Lookup_Secondary_Value_Field__c;
                                 if (String.isNotBlank(question.Lookup_Secondary_Value_Field__c)) {
                                     mapToList.add(question.Lookup_Secondary_Value_Field__c);
