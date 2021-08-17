@@ -199,7 +199,6 @@ function activateAutoComplete() {
 
         const updateLookupUI = (data) => {
             let outputList = ''
-            console.log(JSON.stringify(data));
             if (data.length) {
                 //make sure the promise with the latest seach term is turned into data
                 if (data[0]['searchTerm'] === autoItem.value) {

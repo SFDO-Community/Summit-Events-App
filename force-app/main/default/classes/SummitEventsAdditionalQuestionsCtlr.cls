@@ -57,6 +57,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         eventIsClosed = false;
         eventInformation = SeaShared.getSummitEventsInfo();
         questionWrapper = new List<questionItem>();
+        Map<String, String> hiddenValues = new Map<String, String>();
 
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
 
@@ -177,37 +178,68 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                 quest.secondaryLinkText = 'Manually enter information.';
                             }
 
-                            quest.secondaryQuestion = question.Lookup_Secondary_Input_Question__c;
-                            quest.secondaryMapTo = question.Lookup_Secondary_Value_Field__c;
-                            if (String.isNotBlank(question.Lookup_Secondary_Value_Field__c)) {
-                                mapToList.add(question.Lookup_Secondary_Value_Field__c);
-                            }
-                            if (String.isNotBlank(question.Lookup_No_Results_Label__c)) {
-                                quest.secondaryNoResults = question.Lookup_No_Results_Label__c;
-                            } else {
-                                quest.secondaryNoResults = 'No results found.';
-                            }
-
-
+                            //Deal with record lookup questions
                             if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
-                                lookupHoldingValues.put(question.Map_to_Field__c, question.Lookup_Fields__c);
-                                Map<String, String> queryInfo = new Map<String, String>();
-                                queryInfo.put('Lookup_Object__c', question.Lookup_Object__c);
-                                queryInfo.put('Lookup_Fields__c', question.Lookup_Fields__c);
-                                queryInfo.put('Lookup_Where_Clause__c', question.Lookup_Where_Clause__c);
-                                quest.lookup = SeaShared.encryptString(JSON.serialize(queryInfo));
 
-                                //Build query for getting values later
-                                String lookupField = question.Map_to_Field__c.trim();
-                                lookupField = lookupField.removeEnd('__c');
-                                lookupField = lookupField + '__r.';
-                                List<String> lookupFieldsRelation = question.Lookup_Fields__c.split(',');
-                                String lookupQuery = '';
-                                for (String field : lookupFieldsRelation) {
-                                    lookupQuery += lookupField + field.trim() + ', ';
+                                quest.secondaryQuestion = question.Lookup_Secondary_Input_Question__c;
+                                quest.secondaryMapTo = question.Lookup_Secondary_Value_Field__c;
+                                if (String.isNotBlank(question.Lookup_Secondary_Value_Field__c)) {
+                                    mapToList.add(question.Lookup_Secondary_Value_Field__c);
                                 }
-                                lookupQuery = lookupQuery.removeEnd(', ');
-                                queryLookupFields.put(question.Lookup_Object__c.trim(), lookupQuery);
+                                if (String.isNotBlank(question.Lookup_No_Results_Label__c)) {
+                                    quest.secondaryNoResults = question.Lookup_No_Results_Label__c;
+                                } else {
+                                    quest.secondaryNoResults = 'No results found.';
+                                }
+
+                                String lookupObject = question.Lookup_Object__c.trim();
+                                List<String> lookupFields = question.Lookup_Fields__c.split(',');
+
+                                //Check if lookup object is accessible
+                                Boolean lookupObjectAccessible = false;
+                                try {
+                                    lookupObjectAccessible = Schema.getGlobalDescribe().get(lookupObject).getDescribe().isAccessible();
+                                } catch (Exception e) {
+                                    lookupObjectAccessible = false;
+                                }
+
+
+                                if (lookupObjectAccessible) {
+                                    Boolean allFieldsAccessible = true;
+                                    for (String lookUpField : lookupFields) {
+                                        try {
+                                            System.debug(lookUpField);
+                                            allFieldsAccessible = Schema.getGlobalDescribe().get(lookupObject).getDescribe().fields.getMap().get(lookUpField.trim()).getDescribe().isAccessible();
+                                        } catch (Exception e) {
+                                            allFieldsAccessible = false;
+                                            break;
+                                        }
+                                    }
+                                    if (allFieldsAccessible) {
+                                        lookupHoldingValues.put(question.Map_to_Field__c, question.Lookup_Fields__c);
+                                        Map<String, String> queryInfo = new Map<String, String>();
+                                        queryInfo.put('Lookup_Object__c', question.Lookup_Object__c.replaceAll('\\s+', ''));
+                                        queryInfo.put('Lookup_Fields__c', question.Lookup_Fields__c.replaceAll('\\s+', ''));
+                                        queryInfo.put('Lookup_Where_Clause__c', question.Lookup_Where_Clause__c);
+                                        quest.lookup = SeaShared.encryptString(JSON.serialize(queryInfo));
+
+                                        //Build query for getting values later
+                                        String lookupField = question.Map_to_Field__c.trim();
+                                        lookupField = lookupField.removeEnd('__c');
+                                        lookupField = lookupField + '__r.';
+                                        List<String> lookupFieldsRelation = question.Lookup_Fields__c.split(',');
+                                        String lookupQuery = '';
+                                        for (String field : lookupFieldsRelation) {
+                                            lookupQuery += lookupField + field.trim() + ', ';
+                                        }
+                                        lookupQuery = lookupQuery.removeEnd(', ');
+                                        queryLookupFields.put(question.Lookup_Object__c.trim(), lookupQuery);
+                                    } else {
+                                        quest.setupError += 'Lookup fields provided are inaccessible. ';
+                                    }
+                                } else {
+                                    quest.setupError += 'Lookup Object is inaccessible. ';
+                                }
                             }
 
                         } else {
@@ -219,7 +251,15 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                         quest.setupError = 'Question setup issue: ' + quest.setupError;
                         quest.setupFail = true;
                     }
-                    questionWrapper.add(quest);
+
+                    //add question to question wrapper if it is visible, otherwise apply default value to the event registration.
+                    if (question.Is_Visible__c) {
+                        questionWrapper.add(quest);
+                    } else {
+                        if (String.isNotBlank(question.Default_Value__c)) {
+                            hiddenValues.put(question.Map_to_Field__c, question.Default_Value__c);
+                        }
+                    }
 
                 }
 
@@ -245,6 +285,14 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
                 if (String.isNotBlank(regQuery)) {
                     eventRegistration = Database.query(regQuery);
+                    //Apply hidden values
+
+                    for (String key: hiddenValues.keySet()) {
+                        eventRegistration.put(key, hiddenValues.get(key));
+                    }
+
+                   // hiddenValues.put(question.Map_to_Field__c, question.Default_Value__c);
+
                     //Get the holding values if there are any
                     for (String key : lookupHoldingValues.keySet()) {
                         String lookupField = key.trim();
