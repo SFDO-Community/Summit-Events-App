@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Registrant_Type__c</fullName>
-    <defaultValue>(&quot;Guest&quot;)</defaultValue>
     <description>This field indicates which type of registrant the field is displayed to.</description>
     <externalId>false</externalId>
     <inlineHelpText>This field indicates which type of registrant the field is displayed to.</inlineHelpText>
@@ -22,6 +21,11 @@
                 <fullName>Registrant</fullName>
                 <default>false</default>
                 <label>Registrant</label>
+            </value>
+            <value>
+                <fullName>Registrant and Guest</fullName>
+                <default>false</default>
+                <label>Registrant and Guest</label>
             </value>
         </valueSetDefinition>
     </valueSet>
