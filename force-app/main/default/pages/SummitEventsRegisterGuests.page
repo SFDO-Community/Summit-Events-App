@@ -50,8 +50,9 @@
                     </h2>
                 </div>
 
-                <!-- EVENT CLOSED MESSAGE -->
                 <div class="slds-grid slds-wrap" style="width:100%;">
+
+                    <!-- EVENT CLOSED MESSAGE -->
                     <apex:outputPanel styleClass="slds-col slds-p-vertical_x-small slds-size_1-of-1 slds-medium-size_12-of-12 slds-large-size_12-of-12" rendered="{!eventIsClosed}">
                         <p class="slds-text-body">
                             <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>

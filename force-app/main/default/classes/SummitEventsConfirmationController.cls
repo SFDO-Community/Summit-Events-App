@@ -121,7 +121,7 @@ public with sharing class SummitEventsConfirmationController {
                                 SELECT Id, Map_to_Field__c, Question_Field_Type__c, Display_Order__c, Question_Label__c
                                 FROM Summit_Events_Question__c
                                 WHERE Event__c = :eventInformation.eventId
-                                AND Registrant_Type__c = 'Guest'
+                                AND  (Registrant_Type__c = 'Guest' OR Registrant_Type__c = 'Registrant and Guest')
                                 WITH SECURITY_ENFORCED
                                 ORDER BY Display_Order__c NULLS LAST
                         ]);

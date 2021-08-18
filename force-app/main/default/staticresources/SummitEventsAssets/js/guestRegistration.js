@@ -128,27 +128,36 @@ function buildGuestForm() {
 
             let formElement = document.createElement('div');
             formElement.classList.add('slds-form-element__control');
-            switch (q['type'].toLowerCase()) {
-                case 'picklist':
-                    formElement.appendChild(buildPicklist(q));
-                    break;
-                case 'textbox':
-                    formElement.appendChild(buildInputBox(q, 'text'));
-                    break;
-                case 'text area':
-                    formElement.appendChild(buildInputBox(q, 'textarea'));
-                    break;
-                case 'phone':
-                    formElement.appendChild(buildInputBox(q, 'tel'));
-                    break;
-                case 'email':
-                    formElement.appendChild(buildInputBox(q, 'email'));
-                    break;
-                case 'date':
-                    formElement.appendChild(buildInputBox(q, 'date'));
-                    break;
-            }
 
+
+            if (q['setupFail']) {
+                //alert(q['setupError']);
+                let errorText = document.createElement('p');
+                errorText.classList.add('slds-text-color_error');
+                errorText.textContent = q['setupError'];
+                formElement.appendChild(errorText);
+            } else {
+                switch (q['type'].toLowerCase()) {
+                    case 'picklist':
+                        formElement.appendChild(buildPicklist(q));
+                        break;
+                    case 'textbox':
+                        formElement.appendChild(buildInputBox(q, 'text'));
+                        break;
+                    case 'text area':
+                        formElement.appendChild(buildInputBox(q, 'textarea'));
+                        break;
+                    case 'phone':
+                        formElement.appendChild(buildInputBox(q, 'tel'));
+                        break;
+                    case 'email':
+                        formElement.appendChild(buildInputBox(q, 'email'));
+                        break;
+                    case 'date':
+                        formElement.appendChild(buildInputBox(q, 'date'));
+                        break;
+                }
+            }
             qWrap.appendChild(formElement);
 
             // maybe use for assistive text
