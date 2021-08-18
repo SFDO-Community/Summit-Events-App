@@ -94,7 +94,7 @@ public with sharing class SummitEventsSubmitController {
                                 Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c
                         FROM Summit_Events_Question__c
                         WHERE Event__c = :eventInformation.eventId
-                        AND Registrant_Type__c = 'Guest'
+                        AND (Registrant_Type__c = 'Guest' OR Registrant_Type__c = 'Registrant and Guest')
                         WITH SECURITY_ENFORCED
                         ORDER BY Display_Order__c NULLS LAST
                 ]);
