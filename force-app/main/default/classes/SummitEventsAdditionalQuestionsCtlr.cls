@@ -101,7 +101,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             Lookup_Secondary_Input_Instructions__c, Lookup_Results_Icon__c
                     FROM Summit_Events_Question__c
                     WHERE Event__c = :eventInformation.eventId
-                    AND Registrant_Type__c = 'Registrant'
+                    AND (Registrant_Type__c = 'Registrant' OR Registrant_Type__c = 'Registrant and Guest')
                     WITH SECURITY_ENFORCED
                     ORDER BY Display_Order__c NULLS LAST
             ];
@@ -287,11 +287,11 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     eventRegistration = Database.query(regQuery);
                     //Apply hidden values
 
-                    for (String key: hiddenValues.keySet()) {
+                    for (String key : hiddenValues.keySet()) {
                         eventRegistration.put(key, hiddenValues.get(key));
                     }
 
-                   // hiddenValues.put(question.Map_to_Field__c, question.Default_Value__c);
+                    // hiddenValues.put(question.Map_to_Field__c, question.Default_Value__c);
 
                     //Get the holding values if there are any
                     for (String key : lookupHoldingValues.keySet()) {
