@@ -36,6 +36,8 @@ public with sharing class SummitEventsRegisterGuestsController {
         String assist { get; set; }
         String defaultValue { get; set; }
         Integer textLimit { get; set; }
+        String setupError { get; set; }
+        Boolean setupFail { get; set; }
     }
 
     private class questionGuestData {
@@ -90,6 +92,23 @@ public with sharing class SummitEventsRegisterGuestsController {
             for (Id key : eventGuestQuestions.keySet()) {
                 Summit_Events_Question__c seaQuestion = eventGuestQuestions.get(key);
                 question q = new question();
+                //Check all mapTo fields before adding question
+                Boolean mapToFieldAccessible = true;
+                q.setupFail = false;
+                q.setupError = '';
+                try {
+                    mapToFieldAccessible = Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(eventGuestQuestions.get(key).Map_to_Field__c).getDescribe().isCreateable();
+                } catch (Exception e) {
+                    q.setupError += 'Map to field does not exist. ';
+                    q.setupFail = true;
+                }
+                if(!mapToFieldAccessible) {
+                    q.setupError += 'Map to field is not accessible. ';
+                    q.setupFail = true;
+                }
+
+                q.name = seaQuestion.Name;
+                q.question = seaQuestion.Question_Label__c;
                 q.id = seaShared.encryptString(seaQuestion.Id);
                 q.name = seaQuestion.Name;
                 q.question = seaQuestion.Question_Label__c;
@@ -133,7 +152,7 @@ public with sharing class SummitEventsRegisterGuestsController {
                     for (Integer yy = 0; yy < hostedGuests[xx].questions.size(); yy++) {
                         Id questionId = null;
                         try {
-                            questionId = seaShared.decryptString(hostedGuests[xx].questions[yy].Id, true);
+                            questionId = seaShared.decryptString(hostedGuests[xx].questions[yy].id, true);
                         } catch (Exception e) {
                             System.debug(e.getMessage());
                         }
