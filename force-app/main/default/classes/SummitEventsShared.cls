@@ -125,7 +125,9 @@ public with sharing class SummitEventsShared {
             }
         }
 
-        if (currentUrl.equalsIgnoreCase(allPageReferences.get(namespace + 'SummitEventsRegister').getUrl())) {
+        System.debug('Current page location:' + currentPageLocation);
+        System.debug('page In Event Size ' + pagesInEvent.size());
+        if (currentUrl.equalsIgnoreCase(allPageReferences.get(namespace + 'SummitEventsRegister').getUrl()) || pagesInEvent == null || currentPageLocation == 0) {
             pageMovement.put('Previous', Page.SummitEventsRegister);
         } else {
             pageMovement.put('Previous', allPageReferences.get(pagesInEvent[currentPageLocation - 1]));

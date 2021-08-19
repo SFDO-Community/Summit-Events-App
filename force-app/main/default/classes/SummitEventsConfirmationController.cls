@@ -84,7 +84,7 @@ public with sharing class SummitEventsConfirmationController {
         eventIsClosed = false;
         if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
             adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-            eventIsClosed = adminOpen;
+            eventIsClosed = !adminOpen;
         } else {
             eventIsClosed = seaShared.isEventClosed(eventPage, eventInstance);
         }
