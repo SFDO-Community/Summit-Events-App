@@ -64,7 +64,7 @@ public with sharing class SummitEventsSubmitController {
                     WITH SECURITY_ENFORCED
             ];
 
-            pageFlow = SeaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage());
+            pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage());
 
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
                 adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
@@ -105,7 +105,7 @@ public with sharing class SummitEventsSubmitController {
                     for (Integer yy = 0; yy < guestAnswers[xx].questions.size(); yy++) {
                         Id questionId = null;
                         try {
-                            questionId = seaShared.decryptString(guestAnswers[xx].questions[yy].Id, true);
+                            questionId = seaShared.decryptString(guestAnswers[xx].questions[yy].id, true);
                         } catch (Exception e) {
                             System.debug(e.getMessage());
                         }
