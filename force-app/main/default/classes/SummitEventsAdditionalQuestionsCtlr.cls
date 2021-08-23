@@ -425,7 +425,9 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                                 if (xx == 0) {
                                                     lineOne = (String) obj.get(validLookupFields[xx]);
                                                 } else {
-                                                    lineTwo += (String) obj.get(validLookupFields[xx]) + ', ';
+                                                    if(String.isNotBlank((String) obj.get(validLookupFields[xx]))) {
+                                                        lineTwo += (String) obj.get(validLookupFields[xx]) + ', ';
+                                                    }
                                                 }
                                             }
                                             retainValue = (String) obj.get('Id');
