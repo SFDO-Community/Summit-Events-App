@@ -188,6 +188,60 @@ public with sharing class SummitEventsTestSharedDataFactory {
 
     }
 
+    public static List<Summit_Events_Question__c> addQuestionsToEvent(Id eventId, String inputType, String registrantType) {
+        List<String> inputTypes = new List<String>();
+        List<Summit_Events_Question__c> questions = new List<Summit_Events_Question__c>();
+        if (String.isNotBlank(inputType)) {
+            inputTypes.add(inputType);
+        } else {
+            //Get all the variations of user input to make a question type for each
+            Schema.DescribeFieldResult fieldResult = Summit_Events_Question__c.Question_Field_Type__c.getDescribe();
+            List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+            for (Schema.PicklistEntry pickListVal : ple) {
+                inputTypes.add(pickListVal.getLabel());
+            }
+        }
+        //Get available mapping fields that are creatable and strings
+        Map <String, Schema.SObjectField> fieldMap = Schema.SObjectType.Summit_Events_Registration__c.fields.getMap();
+        List <String> fieldsCreatable = new List <String>();
+        for (Schema.SObjectField sField : fieldMap.values()) {
+            schema.DescribeFieldResult dField = sField.getDescribe();
+            if (dField.isCreateable() &&
+                    (String.valueOf(dField.getType()).equalsIgnoreCase('textarea') || String.valueOf(dField.getType()).equalsIgnoreCase('string'))) {
+                fieldsCreatable.add(dField.getName());
+            }
+        }
+        System.debug(JSON.serializePretty(fieldsCreatable));
+        Integer questionCount = 0;
+        for (Integer x = 0; x < inputTypes.size(); x++) {
+            for (Integer y = 0; y < 3; y++) {
+                Summit_Events_Question__c question = new Summit_Events_Question__c();
+                question.Event__c = eventId;
+                question.Question_Field_Type__c = inputTypes[x];
+                question.Name = 'Question Name ' + x + '.' + y ;
+                question.Question_Label__c = 'Question ' + x + '.' + y;
+                if (Math.mod(questionCount, 7) == 0) {
+                    question.Map_to_Field__c = fieldsCreatable[questionCount];
+                    question.Is_Visible__c = false;
+                }
+                if (Math.mod(y, 2) == 0) {
+                    question.Required__c = false;
+                } else {
+                    question.Required__c = true;
+                }
+                //Guest, Registrant, Registrant and Guest
+                question.Registrant_Type__c = registrantType;
+                question.Instructions__c = 'Instruction ' + x + '.' + y;
+                question.Help_Text__c = 'Help Text ' + x + '.' + y;
+                question.Error_Assist_Text__c = 'Error assist ' + x + '.' + y;
+                questionCount++;
+                questions.add(question);
+            }
+        }
+        insert questions;
+        return questions;
+    }
+
     public static Summit_Events_Registration__c createEventRegistration(Summit_Events_Instance__c evtI, String firstName, String lastName, String Email, String Zip, String DOB, String ClassYear, Id optionalContactLinkId) {
 
         Summit_Events_Registration__c testRegistration = new Summit_Events_Registration__c(
@@ -283,7 +337,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
         // Profile p = [SELECT Id, Name FROM Profile WHERE Name = :profileName];
         Profile p;
 
-        p = [select Id,name from Profile where Name = :profileName];
+        p = [SELECT Id,Name FROM Profile WHERE Name = :profileName];
 
         return new User(
                 Alias = alias,
