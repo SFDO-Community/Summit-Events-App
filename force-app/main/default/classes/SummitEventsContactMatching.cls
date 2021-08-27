@@ -240,9 +240,9 @@ public with sharing class SummitEventsContactMatching {
         matchRow += '<tr class="slds-hint-parent">';
         matchRow += '<td data-label="Last Name"><div class="slds-truncate"><a href="/' + ContactId + '" target="_blank">' + LastName + '</a></div></td>';
         matchRow += '<td data-label="First Name"><div class="slds-truncate"><a href="/' + ContactId + '" target="_blank">' + FirstName + '</a></div></td>';
-        matchRow += '<td data-label="Email"><div class="slds-truncate">' + Email + '</div></td>';
-        matchRow += '<td data-label="Zip"><div class="slds-truncate">' + Zip + '</div></td>';
-        matchRow += '<td data-label="Action"><div class="slds-truncate"> ' + Action + ' </div></td>';
+        matchRow += '<td data-label="Email"><div class="slds-truncate">' + (String.isNOtBlank(Email) ? Email : '') + '</div></td>';
+        matchRow += '<td data-label="Zip"><div class="slds-truncate">' + (String.isNOtBlank(Zip) ? Zip : '') + '</div></td>';
+        matchRow += '<td data-label="Action"><div class="slds-truncate"> ' + (String.isNOtBlank(Action) ? Action : '') + ' </div></td>';
         matchRow += '</tr>';
         return matchRow;
     }
