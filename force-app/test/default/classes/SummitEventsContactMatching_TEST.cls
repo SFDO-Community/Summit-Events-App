@@ -64,7 +64,14 @@ public class SummitEventsContactMatching_TEST {
             update seaTestRegistration;
 
             Summit_Events_Registration__c registration = [SELECT Id, Contact__c FROM Summit_Events_Registration__c WHERE Id = :seaTestRegistration.Id];
-            System.assert(String.isBlank(registration.Contact__c));
+            List<DuplicateRule> drs = [SELECT IsActive, Id FROM DuplicateRule WHERE MasterLabel = 'Standard Contact Duplicate Rule' AND IsActive = true];
+            if (drs.size() > 0) {
+                System.assert(String.isBlank(registration.Contact__c));
+            } else {
+                //Duplicate rules not in org
+                System.assert(String.isNotBlank(registration.Contact__c));
+            }
+
 
             seaTestEvent.Contact_Matching_Multiple_Match_Behavior__c = 'Match with most recently modified';
             update seaTestEvent;
