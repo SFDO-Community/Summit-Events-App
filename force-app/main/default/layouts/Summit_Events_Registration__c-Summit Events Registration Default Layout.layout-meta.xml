@@ -16,7 +16,8 @@
                 <field>Contact__c</field>
             </layoutItems>
             <layoutItems>
-                <emptySpace>true</emptySpace>
+                <behavior>Edit</behavior>
+                <field>Lead__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -217,6 +218,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>New_Contact_Created__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>New_Lead_Created__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -673,7 +678,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h1D000003cIzE</masterLabel>
+        <masterLabel>00h17000007jSEu</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
