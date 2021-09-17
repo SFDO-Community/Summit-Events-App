@@ -1164,6 +1164,11 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events_Registration__c.Lead__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events_Registration__c.Location_Address__c</field>
         <readable>true</readable>
@@ -1186,6 +1191,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Registration__c.New_Contact_Created__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events_Registration__c.New_Lead_Created__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
