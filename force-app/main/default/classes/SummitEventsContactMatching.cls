@@ -31,7 +31,7 @@ public with sharing class SummitEventsContactMatching {
             Summit_Events__c event = matchingRules.get(reg.Event__c);
             if (event.Contact_Matching_Rules__c == 'Use Salesforce Duplicate Rule' && String.isBlank(reg.Contact__c))
                 byDuplicateRule.add(reg);
-            else if (event.Lead_matching_rules__c == 'Use Salesforce Duplicate Rule' && String.isBlank(reg.Lead__c))
+            else if (event.Lead_matching_rules__c == 'Use Salesforce Duplicate Rule' && String.isBlank(reg.Contact__c) && String.isBlank(reg.Lead__c))
                 findLead.add(reg);
         }
         
