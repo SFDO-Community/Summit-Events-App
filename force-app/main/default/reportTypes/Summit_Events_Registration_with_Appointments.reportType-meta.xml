@@ -597,6 +597,16 @@ Requires the Registration to have Appointments</description>
             <field>Virtual_Meeting_URL__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Lead__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>New_Lead_Created__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
         <masterLabel>Summit Events Registrations</masterLabel>
     </sections>
     <sections>

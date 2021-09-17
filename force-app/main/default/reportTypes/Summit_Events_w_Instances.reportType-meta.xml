@@ -475,6 +475,36 @@
             <field>Tracking_Submit_Registration__c</field>
             <table>Summit_Events__c</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Lead_matching_rules__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Lead_Matching_Rule_Description__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Lead_Matching_No_Match_Behavior__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Lead_Matching_Multiple_Match_Behavior__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Lead_Creation_Duplicate_Rule__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Custom_Metadata_Lead_Matching_Method__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
         <masterLabel>Summit Events</masterLabel>
     </sections>
     <sections>

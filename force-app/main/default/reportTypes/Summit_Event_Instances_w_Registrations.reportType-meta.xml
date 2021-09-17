@@ -795,6 +795,16 @@ Must have a registration for the Instance to appear.</description>
             <field>Virtual_Meeting_URL__c</field>
             <table>Summit_Events_Instance__c.Event_Registrations__r</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Lead__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>New_Lead_Created__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
         <masterLabel>Summit Events Registrations</masterLabel>
     </sections>
     <sections>
