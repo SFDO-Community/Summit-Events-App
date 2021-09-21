@@ -64,7 +64,7 @@ public class SummitEventsContactMatching_TEST {
             update seaTestRegistration;
 
             Summit_Events_Registration__c registration = [SELECT Id, Contact__c FROM Summit_Events_Registration__c WHERE Id = :seaTestRegistration.Id];
-            List<DuplicateRule> drs = [SELECT IsActive, Id FROM DuplicateRule WHERE MasterLabel = 'Standard Contact Duplicate Rule' AND IsActive = true];
+            List<DuplicateRule> drs = [SELECT IsActive, Id FROM DuplicateRule WHERE MasterLabel = 'Standard Contact Duplicate Rule' AND IsActive = TRUE];
             if (drs.size() > 0) {
                 System.assert(String.isBlank(registration.Contact__c));
             } else {
@@ -89,7 +89,7 @@ public class SummitEventsContactMatching_TEST {
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Test', 'Record', 'test@example.com', '55555', '1971-03-22', '2012', null);
         Summit_Events__c seaTestEvent = SummitEventsTestSharedDataFactory.getEventRecord(seaTestInstances[1].Event__c);
         seaTestEvent.Contact_Matching_No_Match_Behavior__c = null;
-        seaTestEvent.Lead_Matching_Rules__c = 'Use Salesforce Duplicate Rule';
+        seaTestEvent.Lead_matching_rules__c = 'Use Salesforce Duplicate Rule';
         seaTestEvent.Lead_Creation_Duplicate_Rule__c = 'Standard Lead Duplicate Rule';
         seaTestEvent.Lead_Matching_No_Match_Behavior__c = 'Create Lead';
         seaTestEvent.Lead_Matching_Multiple_Match_Behavior__c = 'Match with most recently modified';
@@ -111,8 +111,8 @@ public class SummitEventsContactMatching_TEST {
             l.Email = 'test@example.com';
             l.Company = 'Big T Record';
             Database.DMLOptions dml = new Database.DMLOptions();
-            dml.DuplicateRuleHeader.allowSave = true;
-            dml.DuplicateRuleHeader.runAsCurrentUser = true; 
+            dml.duplicateRuleHeader.allowSave = true;
+            dml.duplicateRuleHeader.runAsCurrentUser = true;
             Database.SaveResult sr = Database.insert(l, dml); 
             
             seaTestRegistration.Lead__c = null;
