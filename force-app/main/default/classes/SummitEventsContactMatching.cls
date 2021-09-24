@@ -294,19 +294,12 @@ public with sharing class SummitEventsContactMatching {
         SObjectType r = ((SObject) (Type.forName('Schema.Contact').newInstance())).getSObjectType();
         DescribeSObjectResult d = r.getDescribe();
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
-
-        String sourceObject = namespace + 'Summit_Events_Registration__c';
-
         if (Schema.SObjectType.Summit_Events_Contact_Matching_Mapping__mdt.isAccessible()) {
             for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
                     SELECT Contact_Field_API_Name__c, Source_Value__c, Source_Type__c
                     FROM Summit_Events_Contact_Matching_Mapping__mdt
                     WHERE Contact_Matching_Method__c = :matchingMethod
-                    AND Source_Object__c = :sourceObject
+                    AND Source_Object__c = 'summit__Summit_Events_Registration__c'
                     AND Source_Type__c = 'Field'
             ]) {
                 Schema.DisplayType fieldType = d.fields.getMap().get(mapping.Contact_Field_API_Name__c).getDescribe().getType();
