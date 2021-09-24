@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Gateway__c</fullName>
+    <description>Payment gateways are installed as external packages. If you have installed a payment gateway outside of Summit Events App you can add the name of it here. Follow the instructions of your gateway install.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Payment gateways are installed as external packages. If you have installed a payment gateway outside of Summit Events App you can add the name of it here. Follow the instructions of your gateway install.</inlineHelpText>
+    <label>Payment Gateway</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>true</sorted>
+            <value>
+                <fullName>Touchnet</fullName>
+                <default>false</default>
+                <label>Touchnet</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
