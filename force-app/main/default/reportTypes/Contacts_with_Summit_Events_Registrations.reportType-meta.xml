@@ -883,6 +883,16 @@
             <field>Virtual_Appointment_URL__c</field>
             <table>Contact.Summit_Events_Registrations__r</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Lead__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>New_Lead_Created__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
         <masterLabel>Summit Events Registrations</masterLabel>
     </sections>
 </ReportType>
