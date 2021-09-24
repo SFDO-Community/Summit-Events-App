@@ -8,5 +8,5 @@
 ISPICKVAL(Custom_Metadata_Contact_Matching_Method__c, &apos;&apos;) ||
 ISPICKVAL(Contact_Creation_Duplicate_Rule__c, &apos;&apos;)
 )</errorConditionFormula>
-    <errorMessage>When using a Salesforce Duplicate Rule for matching, the Custom Metadata Contact Matching Method and Contact Creation Duplicate Rules are required</errorMessage>
+    <errorMessage>When using a Salesforce Duplicate Rule for matching Contacts, the Custom Metadata Contact Matching Method and Contact Creation Duplicate Rules are required</errorMessage>
 </ValidationRule>

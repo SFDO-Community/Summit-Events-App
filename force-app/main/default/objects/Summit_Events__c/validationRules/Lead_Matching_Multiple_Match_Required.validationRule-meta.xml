@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Lead_Matching_Multiple_Match_Required</fullName>
+    <active>true</active>
+    <errorConditionFormula>NOT(ISPICKVAL(Lead_matching_rules__c, &apos;&apos;)) &amp;&amp;
+ISPICKVAL(Lead_Matching_Multiple_Match_Behavior__c, &apos;&apos;)</errorConditionFormula>
+    <errorMessage>&quot;Lead Matching Multiple Match Behavior&quot; is required when using a &quot;Lead Matching Rule&quot;</errorMessage>
+</ValidationRule>
