@@ -842,6 +842,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.Payment_Gateway_Status__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Preferred_Class_Year__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1603,6 +1608,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Max_Other_Attendees__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Payment_Gateway__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

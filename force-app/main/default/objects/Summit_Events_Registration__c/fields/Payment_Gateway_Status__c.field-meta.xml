@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Gateway_Status__c</fullName>
+    <description>Used to set registration status via payment gateway to close registration if payment is required.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Used to set registration status via payment gateway to close registration if payment is required.</inlineHelpText>
+    <label>Payment Gateway Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>No payment necessary</fullName>
+                <default>false</default>
+                <label>No payment necessary</label>
+            </value>
+            <value>
+                <fullName>Payment required</fullName>
+                <default>false</default>
+                <label>Payment required</label>
+            </value>
+            <value>
+                <fullName>Payment received</fullName>
+                <default>false</default>
+                <label>Payment received</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
