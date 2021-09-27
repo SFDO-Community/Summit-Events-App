@@ -16,6 +16,26 @@
                 <default>false</default>
                 <label>Admissions</label>
             </value>
+            <value>
+                <fullName>Blue</fullName>
+                <default>false</default>
+                <label>Blue</label>
+            </value>
+            <value>
+                <fullName>Green</fullName>
+                <default>false</default>
+                <label>Green</label>
+            </value>
+            <value>
+                <fullName>Red</fullName>
+                <default>false</default>
+                <label>Red</label>
+            </value>
+            <value>
+                <fullName>Yellow</fullName>
+                <default>false</default>
+                <label>Yellow</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
