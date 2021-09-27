@@ -122,8 +122,12 @@ public with sharing class SummitEventsContactMatching {
                     if (matchType.get(reg.Event__c) == dr.getDuplicateRule()) {
                         for (Datacloud.MatchResult mr : dr.getMatchResults()) {
                             for (Datacloud.MatchRecord mRecord : mr.getMatchRecords()) {
-                                Contact con = (Contact) mRecord.getRecord();
-                                matchContacts.add(con);
+                                try {
+                                    Contact con = (Contact) mRecord.getRecord();
+                                    matchContacts.add(con);
+                                } catch (Exception e){
+                                    System.debug(e);
+                                }
                             }
                         }
                     }
@@ -223,8 +227,12 @@ public with sharing class SummitEventsContactMatching {
                 if (matchingRule == dr.getDuplicateRule()) {
                     for (Datacloud.MatchResult mr : dr.getMatchResults()) {
                         for (Datacloud.MatchRecord mRecord : mr.getMatchRecords()) {
-                            Lead led = (Lead) mRecord.getRecord();
-                            matchLeads.add(led);
+                            try {
+                                Lead led = (Lead) mRecord.getRecord();
+                                matchLeads.add(led);
+                            } catch (Exception e){
+                                System.debug(e);
+                            }
                         }
                     }
                 }
