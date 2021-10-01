@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Salesforce.org. All rights reserved.
 // Use of this source code is governed by a BSD 3-Clause.
 // License can be found found in the LICENSE file in this repository.
-// Created by Matt Hubert on 8/14/2020
+// Created by Matthew Hubert on 8/14/2020
 
 public class SummitEventsRegistration {
     public static void run(List<SObject> newlist, List<SObject> oldlist) {
