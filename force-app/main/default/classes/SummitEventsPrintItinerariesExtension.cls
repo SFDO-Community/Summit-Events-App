@@ -1,6 +1,6 @@
-// Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
-// Use of this source code is governed by a BSD Revised
-// license that can be found in the LICENSE file.
+// Copyright (c) 2020, Salesforce.org. All rights reserved.
+// Use of this source code is governed by a BSD 3-Clause.
+// License can be found found in the LICENSE file in this repository.
 // Created by Thaddaeus Dahlberg on 11/28/2018.
 
 public with sharing class SummitEventsPrintItinerariesExtension {
