@@ -1,8 +1,7 @@
-// Copyright 2019 University of St. Thomas - Minnesota. All rights reserved.
-// Use of this source code is governed by a BSD Revised
-// license that can be found in the LICENSE file.
+// Copyright (c) 2020, Salesforce.org. All rights reserved.
+// Use of this source code is governed by a BSD 3-Clause License
+// license that can be found in the LICENSE file'
 // Created by Thaddaeus Dahlberg on 2/10/2020.
-
 
 public with sharing class SummitEventsDonationController {
 
