@@ -128,3 +128,8 @@ flows:
                 task: deploy_guest_permission_set
             8:
                 task: deploy_guest_sharing_rules
+
+    customer_org:
+        steps:
+            1:
+                task: install_managed
