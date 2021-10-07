@@ -25,7 +25,7 @@ private class SummitEvents_TEST {
 
             Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
             //no trailing slash
-            SummitEventsSettings.Community_Base_URL__c = 'http://google.com';
+            SummitEventsSettings.Community_Base_URL__c = 'https://google.com';
             upsert SummitEventsSettings;
             submitCtrl = new SummitEventsController();
             if (String.isNotBlank(namespace)) {

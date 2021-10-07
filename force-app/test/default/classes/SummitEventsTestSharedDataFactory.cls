@@ -17,7 +17,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
             upsert SummitEventsSettings;
         }
         if (String.isBlank(SummitEventsSettings.Community_Base_URL__c)) {
-            SummitEventsSettings.Community_Base_URL__c = 'http://google.com/';
+            SummitEventsSettings.Community_Base_URL__c = 'https://google.com/';
             upsert SummitEventsSettings;
         }
 
