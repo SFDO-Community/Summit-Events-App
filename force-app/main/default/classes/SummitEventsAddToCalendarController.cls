@@ -118,11 +118,10 @@ public with sharing class SummitEventsAddToCalendarController {
 
         if (String.isNotBlank(eventInformation.Instance_Short_Description__c)) {
             fullDescription += '\\n' + eventInformation.Instance_Short_Description__c;
-        } else if (String.isBlank(eventInformation.Instance_Short_Description__c)) {
-            fullDescription += '\\n' + eventInformation.Event__r.Event_description__c;
-        }
-        if (String.isBlank(fullDescription)) {
-            return '';
+        } else if (String.isNotBlank(eventInformation.Event__r.Event_Short_Listing_Description__c)) {
+            fullDescription += '\\n' + eventInformation.Event__r.Event_Short_Listing_Description__c;
+        } else {
+            fullDescription = '';
         }
         return fullDescription;
     }
@@ -219,8 +218,8 @@ public with sharing class SummitEventsAddToCalendarController {
                 DTEnd = formattedGmtVersionOfDate(eventInformation.Instance_End_Date__c, eventInformation.Instance_End_Time__c);
                 if (type.equalsIgnoreCase('google')) {
                     //Google documentation: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/master/services/google.md
-                    //http://www.google.com/calendar/event?action=TEMPLATE&text=[event-title]&dates=[start-custom format='Ymd\\THi00\\Z']/[end-custom format='Ymd\\THi00\\Z']&details=[description]&location=[location]&trp=false&sprop=&sprop=name:" target="_blank" rel="nofollow
-                    urlCalendarLink = 'http://www.google.com/calendar/event';
+                    //https://www.google.com/calendar/event?action=TEMPLATE&text=[event-title]&dates=[start-custom format='Ymd\\THi00\\Z']/[end-custom format='Ymd\\THi00\\Z']&details=[description]&location=[location]&trp=false&sprop=&sprop=name:" target="_blank" rel="nofollow
+                    urlCalendarLink = 'https://www.google.com/calendar/event';
                     //Default template
                     urlCalendarLink += '?action=TEMPLATE';
                     //Title of event
@@ -266,7 +265,7 @@ public with sharing class SummitEventsAddToCalendarController {
                     return linkPage;
                 } else if (type.equalsIgnoreCase('outlookweb')) {
                     //outlook web link docs: https://interactiondesignfoundation.github.io/add-event-to-calendar-docs/services/outlook-web.html
-                    urlCalendarLink = 'https://outlook.office.com/owa/';
+                    urlCalendarLink = 'https://outlook.office.com/calendar/0/deeplink/compose';
                     //compose action
                     urlCalendarLink += '?path=/calendar/action/compose';
                     //subject
