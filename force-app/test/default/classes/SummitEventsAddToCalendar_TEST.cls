@@ -48,7 +48,7 @@ public class SummitEventsAddToCalendar_TEST {
             SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
             String startDate = calendarController.DTStart;
             String endDate = calendarController.DTEnd;
-            String comparePageReference = 'http://www.google.com/calendar/event?action=TEMPLATE&ctz=America%2FChicago&dates=' + startDate + '%2F' + endDate + '&details=Test+Event+-+Test+Event+Session+0%3Cbr%2F%3E%3Cbr%2F%3EA+location%3Cbr%2F%3E123+Electric+Ave.%3Cbr%2F%3EMap+Link+1%3Cbr%2F%3E%3Cbr%2F%3Enull&location=123+Electric+Ave.&sprop=%5Bevent_source_url%5DMap+Link+1&text=Test+Event+-+Test+Event+Session+0';
+            String comparePageReference = 'https://www.google.com/calendar/event?action=TEMPLATE&ctz=America%2FChicago&dates=' + startDate + '%2F' + endDate + '&details=&location=123+Electric+Ave.&sprop=%5Bevent_source_url%5DMap+Link+1&text=Test+Event+-+Test+Event+Session+0';
             system.assertEquals(calendarController.calendarType().getUrl(), comparePageReference);
             Test.stopTest();
         }
@@ -67,7 +67,7 @@ public class SummitEventsAddToCalendar_TEST {
             SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
             String startDate = calendarController.DTStart;
             String endDate = calendarController.DTEnd;
-            String testCalendarURL = 'https://calendar.yahoo.com?desc=Test+Event+-+Test+Event+Session+0%0A%0AA+location%0A123+Electric+Ave.%0AMap+Link+1%0A%0Anull&et=' + endDate + '&in_csz=America%2FChicago&in_loc=A+location&in_st=123+Electric+Ave.&st=' + startDate + '&title=Test+Event+-+Test+Event+Session+0&v=60';
+            String testCalendarURL = 'https://calendar.yahoo.com?desc=&et=' + endDate + '&in_csz=America%2FChicago&in_loc=A+location&in_st=123+Electric+Ave.&st=' + startDate + '&title=Test+Event+-+Test+Event+Session+0&v=60';
             system.assertEquals(calendarController.calendarType().getUrl(), testCalendarURL);
             Test.stopTest();
         }
@@ -131,7 +131,7 @@ public class SummitEventsAddToCalendar_TEST {
             String formattedStartDate = EncodingUtil.urlEncode(startDateTime.formatGmt('yyyy-MM-dd\'T\'HH:mm:SS') + 'Z', 'UTF-8');
             String formattedEndDate = EncodingUtil.urlEncode(endDateTime.formatGmt('yyyy-MM-dd\'T\'HH:mm:SS') + 'Z', 'UTF-8');
 
-            String testCalendarURL = 'https://outlook.office.com/owa/?body=Test+Event+-+Test+Event+Session+0%3Cbr%2F%3E%3Cbr%2F%3EA+location%3Cbr%2F%3E123+Electric+Ave.%3Cbr%2F%3EMap+Link+1%3Cbr%2F%3E%3Cbr%2F%3Enull&enddt=' + formattedEndDate + '&location=A+location%2C++123+Electric+Ave.&path=%2Fcalendar%2Faction%2Fcompose&startdt=' + formattedStartDate + '&subject=Test+Event+-+Test+Event+Session+0';
+            String testCalendarURL = 'https://outlook.office.com/calendar/0/deeplink/compose?body=&enddt=' + formattedEndDate + '&location=A+location%2C++123+Electric+Ave.&path=%2Fcalendar%2Faction%2Fcompose&startdt=' + formattedStartDate + '&subject=Test+Event+-+Test+Event+Session+0';
             System.assertEquals(calendarController.calendarType().getUrl(), testCalendarURL);
             Test.stopTest();
         }
