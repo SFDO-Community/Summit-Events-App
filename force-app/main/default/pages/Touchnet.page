@@ -1,6 +1,0 @@
-<!--
- - Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas on 10/12/2021.
- -->
-
-<apex:page id="Touchnet" controller="Touchnet">
-</apex:page>
