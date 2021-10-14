@@ -13,9 +13,9 @@
         <valueSetDefinition>
             <sorted>true</sorted>
             <value>
-                <fullName>Touchnet</fullName>
-                <default>false</default>
-                <label>Touchnet</label>
+                <fullName>None</fullName>
+                <default>true</default>
+                <label>None</label>
             </value>
         </valueSetDefinition>
     </valueSet>
