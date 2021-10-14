@@ -34,7 +34,7 @@ public with sharing class SummitEventsSubmitController {
             eventPage = [
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
                             Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
-                            Donation_Description__c, Display_Optional_Donation__c
+                            Donation_Description__c, Display_Optional_Donation__c, Payment_Gateway__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -72,7 +72,11 @@ public with sharing class SummitEventsSubmitController {
             ];
 
             /** Check for preexisting payment **/
-            List<Summit_Events_Payment__c> existingPayment = [SELECT Id, Payment_Amount__c, TouchnetReceiptNumber__c FROM Summit_Events_Payment__c WHERE Event_Registration__c = :eventInformation.registrationId];
+            List<Summit_Events_Payment__c> existingPayment = [
+                    SELECT Id, Payment_Amount__c, TouchnetReceiptNumber__c
+                    FROM Summit_Events_Payment__c
+                    WHERE Event_Registration__c = :eventInformation.registrationId
+            ];
             if (existingPayment.size() > 0) {
                 existingPaymentAmount = existingPayment[0].Payment_Amount__c;
             }
@@ -94,6 +98,10 @@ public with sharing class SummitEventsSubmitController {
                     if (fee.Event_Fee__c != null && fee.Event_Fee__c > 0) {
                         totalPaymentAmount += fee.Event_Fee__c;
                     }
+                    if (fee.Event_Fee_Type__c == 'Event' || fee.Event_Fee_Type__c == 'Event Additional') {
+                        eventOnlyPaymentAmount += fee.Event_Fee__c;
+                    }
+
                 }
                 if (existingPaymentAmount > 0) {
                     totalPaymentAmount = totalPaymentAmount - existingPaymentAmount;
@@ -123,6 +131,19 @@ public with sharing class SummitEventsSubmitController {
 
     public PageReference submitRegistration() {
         PageReference confirmPage = Page.SummitEventsConfirmation;
+        //Is there a payment gateway, are there fees
+        If (String.isNotBlank(eventPage.Payment_Gateway__c) && eventPage.Payment_Gateway__c != 'None') {
+            if (eventFees.size() > 0) {
+                //Get community base URL from custom settings
+                Summit_Events_Settings__c myUserSetting = Summit_Events_Settings__c.getInstance(UserInfo.getUserId());
+                String communityBaseURL = myUserSetting.Community_Base_URL__c;
+                if (!communityBaseURL.endsWith('/')) {
+                    communityBaseURL += '/';
+                }
+                confirmPage = new PageReference(communityBaseURL + 'c__' + eventPage.Payment_Gateway__c);
+            }
+        }
+
         if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
             confirmPage.setRedirect(true);
             confirmPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));

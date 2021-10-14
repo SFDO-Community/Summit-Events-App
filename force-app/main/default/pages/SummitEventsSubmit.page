@@ -92,7 +92,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 </thead>
                                 <tbody>
                                 <apex:repeat value="{!eventFees}" var="fee">
-                                    <apex:outputPanel rendered="{!fee.Event_Fee_Type__c != 'Event'}">
+                                    <apex:outputPanel rendered="{!fee.Event_Fee_Type__c != 'Event' && fee.Event_Fee_Type__c != 'Event Additional'}">
                                         <tr>
                                             <td class="feeAllocation">
                                                 <apex:outputPanel rendered="{!fee.Event_Fee_Type__c == 'Appointment'}" layout="none">
