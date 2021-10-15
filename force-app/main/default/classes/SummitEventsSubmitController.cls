@@ -22,10 +22,12 @@ public with sharing class SummitEventsSubmitController {
     public Double eventOnlyPaymentAmount { get; set; }
     public String eventOnlyPaymentAmountFormatted { get; set; }
     public String paymentItemized { get; set; }
-    public Boolean showPaymentButton { get; set; }
+    public Boolean hasPaymentGateway { get; set; }
+    public Boolean hasFees { get; set; }
 
     public SummitEventsSubmitController() {
-        showPaymentButton = false;
+        hasFees = false;
+
 
         //Get cookie or URL string variable
         eventInformation = seaShared.getSummitEventsInfo();
@@ -114,7 +116,7 @@ public with sharing class SummitEventsSubmitController {
                 totalPaymentAmountFormatted = prettyCurrencyString(totalPaymentAmount);
             }
             if (totalPaymentAmount > 0) {
-                showPaymentButton = true;
+                hasFees = true;
             }
         }
         ApexPages.Message[] pageMessages = ApexPages.getMessages();
@@ -143,6 +145,7 @@ public with sharing class SummitEventsSubmitController {
         If (String.isNotBlank(eventPage.Payment_Gateway__c) && eventPage.Payment_Gateway__c != 'None') {
             if (eventFees.size() > 0) {
                 //Get community base URL from custom settings
+                hasPaymentGateway = true;
                 Summit_Events_Settings__c myUserSetting = Summit_Events_Settings__c.getInstance(UserInfo.getUserId());
                 String communityBaseURL = myUserSetting.Community_Base_URL__c;
                 if (!communityBaseURL.endsWith('/')) {
