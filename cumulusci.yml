@@ -7,6 +7,10 @@ project:
     api_version: "51.0"
   source_format: sfdx
 
+    git:
+        default_branch: master
+        repo_url: https://github.com/SFDO-Community/Summit-Events-App
+
 tasks:
   deploy_site_config:
     description: Deploys configuration for Development.
