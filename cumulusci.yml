@@ -1,14 +1,16 @@
-minimum_cumulusci_version: '2.5.5'
+minimum_cumulusci_version: "2.5.5"
 project:
     name: SummitEventsApp
     package:
-        name:  Summit Events App
-        namespace:  summit
-        api_version: '51.0'
+        name: Summit Events App
+        namespace: summit
+        api_version: "51.0"
     source_format: sfdx
+    git:
+        default_branch: master
+        repo_url: https://github.com/SFDO-Community/Summit-Events-App
 
 tasks:
-
     deploy_site_config:
         description: Deploys configuration for Development.
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -133,3 +135,16 @@ flows:
         steps:
             1:
                 task: install_managed
+
+plans:
+    install:
+        slug: install
+        title: Base Plan
+        tier: primary
+        is_listed: True
+        preflight_message: This will install Summit Events App (SEA) into your org.
+        post_install_message: "Thanks for installing SEA. Please review the [post-install instructions](https://github.com/SFDO-Community-Sprints/Summit-Events-App/wiki/0a-%E2%80%93-Setting-Up-Summit-Events-After-Installing-Package) for next steps."
+        error_message: "If you experience an issue with the installation, please post in the [Power of Us Hub](https://powerofus.force.com/s/group/0F91E000000bo8OSAQ/community-project-summit-events-app)."
+        steps:
+            1:
+                flow: customer_org
