@@ -1,135 +1,147 @@
-minimum_cumulusci_version: '2.5.5'
+minimum_cumulusci_version: "2.5.5"
 project:
-    name: SummitEventsApp
-    package:
-        name:  Summit Events App
-        namespace:  summit
-        api_version: '51.0'
-    source_format: sfdx
+  name: SummitEventsApp
+  package:
+    name: Summit Events App
+    namespace: summit
+    api_version: "51.0"
+  source_format: sfdx
 
 tasks:
+  deploy_site_config:
+    description: Deploys configuration for Development.
+    class_path: cumulusci.tasks.salesforce.Deploy
+    options:
+      namespace_inject: $project_config.project__package__namespace
+      path: unpackaged/config/site
+      unmanaged: True
 
-    deploy_site_config:
-        description: Deploys configuration for Development.
-        class_path: cumulusci.tasks.salesforce.Deploy
-        options:
-            namespace_inject: $project_config.project__package__namespace
-            path: unpackaged/config/site
-            unmanaged: True
+  deploy_guest_sharing_rules:
+    description: Deploys configuration for Development.
+    class_path: cumulusci.tasks.salesforce.Deploy
+    options:
+      namespace_inject: $project_config.project__package__namespace
+      path: unpackaged/config/sharing
+      unmanaged: True
 
-    deploy_guest_sharing_rules:
-        description: Deploys configuration for Development.
-        class_path: cumulusci.tasks.salesforce.Deploy
-        options:
-            namespace_inject: $project_config.project__package__namespace
-            path: unpackaged/config/sharing
-            unmanaged: True
+  deploy_site_settings:
+    description: Setup the Custom Settings for the Event Site
+    class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+    options:
+      apex: >
+        Site mySite = [SELECT Id FROM Site WHERE Name = 'Summit_Events'];
+        SiteDetail mySiteDetail = [SELECT SecureURL FROM SiteDetail WHERE DurableId = :mySite.Id];
+        String url = mySiteDetail.SecureURL;
+        Summit_Events_Settings__c eventSettings = Summit_Events_Settings__c.getOrgDefaults();
+        eventSettings.Community_Base_URL__c = url;
+        eventSettings.Managed_Package__c = false;
+        upsert eventSettings;
 
-    deploy_site_settings:
-        description: Setup the Custom Settings for the Event Site
-        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
-        options:
-            apex: >
-                Site mySite = [SELECT Id FROM Site WHERE Name = 'Summit_Events'];
-                SiteDetail mySiteDetail = [SELECT SecureURL FROM SiteDetail WHERE DurableId = :mySite.Id];
-                String url = mySiteDetail.SecureURL;
-                Summit_Events_Settings__c eventSettings = Summit_Events_Settings__c.getOrgDefaults();
-                eventSettings.Community_Base_URL__c = url;
-                eventSettings.Managed_Package__c = false;
-                upsert eventSettings;
+  deploy_permission_set:
+    description: Give System Admins Event Admin Permission Set
+    class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+    options:
+      apex: >
+        List<PermissionSet> eventPermissionSets;
+        eventPermissionSets = [SELECT Name, Id FROM PermissionSet WHERE Name = 'Summit_Events_Admin'];
 
-    deploy_permission_set:
-        description: Give System Admins Event Admin Permission Set
-        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
-        options:
-            apex: >
-                List<PermissionSet> eventPermissionSets;
-                eventPermissionSets = [SELECT Name, Id FROM PermissionSet WHERE Name = 'Summit_Events_Admin'];
+        List<PermissionSetAssignment> permissionSetList = new List<PermissionSetAssignment>();
+        if (!eventPermissionSets.isEmpty()) {
+            for (User u: [ SELECT ID FROM User WHERE Profile.Name = 'System Administrator' ]) {
+                             permissionSetList.add(new PermissionSetAssignment(PermissionSetId = eventPermissionSets[0].Id, AssigneeId = u.Id));
+            }
+        }
+        if (!permissionSetList.isEmpty()) {
+            upsert permissionSetList;
+        }
 
-                List<PermissionSetAssignment> permissionSetList = new List<PermissionSetAssignment>();
-                if (!eventPermissionSets.isEmpty()) {
-                    for (User u: [ SELECT ID FROM User WHERE Profile.Name = 'System Administrator' ]) {
-                                     permissionSetList.add(new PermissionSetAssignment(PermissionSetId = eventPermissionSets[0].Id, AssigneeId = u.Id));
-                    }
-                }
-                if (!permissionSetList.isEmpty()) {
-                    upsert permissionSetList;
-                }
+  deploy_guest_permission_set:
+    description: Give System Admins Event Admin Permission Set
+    class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+    options:
+      apex: >
+        String siteName = 'Summit_Events';
 
-    deploy_guest_permission_set:
-        description: Give System Admins Event Admin Permission Set
-        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
-        options:
-            apex: >
-                String siteName = 'Summit_Events';
+        Site site = [
+                SELECT GuestUserId
+                FROM Site
+                WHERE Name = :siteName
+        ];
 
-                Site site = [
-                        SELECT GuestUserId
-                        FROM Site
-                        WHERE Name = :siteName
-                ];
+        List<PermissionSet> eventPermissionSets;
+        eventPermissionSets = [SELECT Name, Id FROM PermissionSet WHERE Name = 'Summit_Events_Registrant'];
 
-                List<PermissionSet> eventPermissionSets;
-                eventPermissionSets = [SELECT Name, Id FROM PermissionSet WHERE Name = 'Summit_Events_Registrant'];
+        List<PermissionSetAssignment> permissionSetList = new List<PermissionSetAssignment>();
+        if (!eventPermissionSets.isEmpty()) {
+                permissionSetList.add(new PermissionSetAssignment(PermissionSetId = eventPermissionSets[0].Id, AssigneeId = site.GuestUserId));
+        }
+        if (!permissionSetList.isEmpty()) {
+            upsert permissionSetList;
+        }
 
-                List<PermissionSetAssignment> permissionSetList = new List<PermissionSetAssignment>();
-                if (!eventPermissionSets.isEmpty()) {
-                        permissionSetList.add(new PermissionSetAssignment(PermissionSetId = eventPermissionSets[0].Id, AssigneeId = site.GuestUserId));
-                }
-                if (!permissionSetList.isEmpty()) {
-                    upsert permissionSetList;
-                }
+  deploy_dev_event_records:
+    description: Configure sample records for the Event app
+    class_path: cumulusci.tasks.bulkdata.load.LoadData
+    options:
+      mapping: datasets/dev/mapping.yml
+      sql_path: datasets/dev/data.sql
 
-    deploy_dev_event_records:
-        description: Configure sample records for the Event app
-        class_path: cumulusci.tasks.bulkdata.load.LoadData
-        options:
-            mapping: datasets/dev/mapping.yml
-            sql_path: datasets/dev/data.sql
+  robot:
+    options:
+      suites: robot/SummitEventsApp/tests
+      options:
+        outputdir: robot/SummitEventsApp/results
 
-    robot:
-        options:
-            suites: robot/SummitEventsApp/tests
-            options:
-                outputdir: robot/SummitEventsApp/results
-
-    robot_testdoc:
-        options:
-            path: robot/SummitEventsApp/tests
-            output: robot/SummitEventsApp/doc/SummitEventsApp_tests.html
+  robot_testdoc:
+    options:
+      path: robot/SummitEventsApp/tests
+      output: robot/SummitEventsApp/doc/SummitEventsApp_tests.html
 
 flows:
-    config_qa:
-        steps:
-            3:
-                task: deploy_dev_event_records
-            4:
-                task: deploy_permission_set
-            5:
-                task: deploy_site_config
-            6:
-                task: deploy_site_settings
-            7:
-                task: deploy_guest_permission_set
-            8:
-                task: deploy_guest_sharing_rules
+  config_qa:
+    steps:
+      3:
+        task: deploy_dev_event_records
+      4:
+        task: deploy_permission_set
+      5:
+        task: deploy_site_config
+      6:
+        task: deploy_site_settings
+      7:
+        task: deploy_guest_permission_set
+      8:
+        task: deploy_guest_sharing_rules
 
-    config_dev:
-        steps:
-            3:
-                task: deploy_dev_event_records
-            4:
-                task: deploy_permission_set
-            5:
-                task: deploy_site_config
-            6:
-                task: deploy_site_settings
-            7:
-                task: deploy_guest_permission_set
-            8:
-                task: deploy_guest_sharing_rules
+  config_dev:
+    steps:
+      3:
+        task: deploy_dev_event_records
+      4:
+        task: deploy_permission_set
+      5:
+        task: deploy_site_config
+      6:
+        task: deploy_site_settings
+      7:
+        task: deploy_guest_permission_set
+      8:
+        task: deploy_guest_sharing_rules
 
-    customer_org:
-        steps:
-            1:
-                task: install_managed
+  customer_org:
+    steps:
+      1:
+        task: install_managed
+
+plans:
+  install:
+    slug: install
+    title: Base Plan
+    tier: primary
+    is_listed: True
+    preflight_message: This will install Summit Events App (SEA) into your org.
+    post_install_message: "Thanks for installing SEA. Please review the [post-install instructions](https://github.com/SFDO-Community-Sprints/Summit-Events-App/wiki/0a-%E2%80%93-Setting-Up-Summit-Events-After-Installing-Package) for next steps."
+    error_message: "If you experience an issue with the installation, please post in the [Power of Us Hub](https://powerofus.force.com/s/group/0F91E000000bo8OSAQ/community-project-summit-events-app)."
+    steps:
+      1:
+        flow: customer_org
