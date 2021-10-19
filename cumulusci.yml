@@ -143,7 +143,7 @@ plans:
         tier: primary
         is_listed: True
         preflight_message: This will install Summit Events App (SEA) into your org.
-        post_install_message: "Thanks for installing SEA. Please review the [post-install instructions](https://github.com/SFDO-Community-Sprints/Summit-Events-App/wiki/0a-%E2%80%93-Setting-Up-Summit-Events-After-Installing-Package) for next steps."
+        post_install_message: "Thanks for installing SEA. Please review the [post-install instructions](https://github.com/SFDO-Community/Summit-Events-App/wiki/0a-%E2%80%93-Setting-Up-Summit-Events-After-Installing-Package) for next steps."
         error_message: "If you experience an issue with the installation, please post in the [Power of Us Hub](https://powerofus.force.com/s/group/0F91E000000bo8OSAQ/community-project-summit-events-app)."
         steps:
             1:
