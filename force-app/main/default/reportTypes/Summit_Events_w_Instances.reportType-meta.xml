@@ -505,6 +505,11 @@
             <field>Custom_Metadata_Lead_Matching_Method__c</field>
             <table>Summit_Events__c</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Confirmation_Show_Add_To_Calendar__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
         <masterLabel>Summit Events</masterLabel>
     </sections>
     <sections>

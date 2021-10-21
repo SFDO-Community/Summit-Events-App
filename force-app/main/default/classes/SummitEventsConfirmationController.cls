@@ -22,7 +22,7 @@ public with sharing class SummitEventsConfirmationController {
                     SELECT Event_Confirmation_Title__c, Event_Name__c, Template__c, Event_Confirmation_Description__c, Event_Footer__c,
                             Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Confirmation_Registration__c, Event_Full_Text__c,
                             Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
-                            Hand_Raise_Action__c
+                            Hand_Raise_Action__c,Event_Confirmation_Show_Add_To_Calendar__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED

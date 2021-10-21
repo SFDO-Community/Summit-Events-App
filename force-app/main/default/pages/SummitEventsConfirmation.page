@@ -6,6 +6,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 -->
 
 <apex:page id="SummitEventsConfirmation" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" docType="html-5.0" cache="false" controller="SummitEventsConfirmationController" action="{!checkEventDetails}">
+    <apex:includeLightning/>
     <apex:composition template="{!templateSelected}">
         <apex:define name="metaPageTitle">
             {!eventPage.Event_Name__c}
@@ -56,6 +57,26 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 <apex:outputText escape="false" value="{!eventPage.Event_Confirmation_Description__c}"/>
                             </p>
                         </div>
+                        <div id="add2calendar"/>
+                        <script>
+                            if (<apex:outputText value="{!eventPage.Event_Confirmation_Show_Add_To_Calendar__c}"/>)
+                            $Lightning.use(
+                                "%%%NAMESPACE_OR_C%%%:add2calendarvf", 
+                                function() {
+                                    $Lightning.createComponent(
+                                        "%%%NAMESPACE_OR_C%%%:add2Calendar",
+                                        {
+                                            addToCalendarPage:"SummitEventsAddToCalendar",
+                                            addToCalendarInstanceId:'<apex:outputText value="{!eventInstance.Id}"/>'
+                                        },
+                                        "add2calendar",
+                                        function(cmp) {
+                                            console.log("Add to Calendar component added!");
+                                        }
+                                    );
+                                }
+                            );
+                        </script>
                         <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
                             <p class="slds-text-body ">
                                 <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"/>

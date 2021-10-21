@@ -1710,6 +1710,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events__c.Event_Confirmation_Show_Add_To_Calendar__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events__c.Event_Confirmation_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>

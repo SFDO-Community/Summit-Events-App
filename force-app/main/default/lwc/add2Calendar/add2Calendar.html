@@ -1,0 +1,20 @@
+<template>
+    <div class="slds-form-element">
+        <label class="slds-form-element__label" for="add2calendar-select">Add to your calendar:</label>
+        <div class="slds-form-element__control">
+            <div class="slds-select_container">
+                <select class="slds-select" id="add2calendar-select" onchange={handleChange}>
+                    <option value="">--Please choose an option--</option>
+                    <option value="ics">Apple Calendar</option>
+                    <option value="google">Google Calendar</option>
+                    <option value="ics">Outlook Calendar</option>
+                    <option value="outlookweb">Outlook Web Calendar</option>
+                    <option value="yahoo">Yahoo! Calendar</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="slds-form-element">
+        <a id="add2calendar-a" class={addToCalendarLinkClass} href={addToCalendarLink} role="button" target="_blank">Add Event to Calendar</a>
+    </div>
+</template>
