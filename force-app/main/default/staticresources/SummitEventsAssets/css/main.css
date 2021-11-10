@@ -13,6 +13,11 @@
 .validationError, ul[role=alert] li {
     color: red !important;
 }
+.slds-notify_alert .validationError, ul[role=alert] li {
+    color:inherit!important;
+    font-weight: inherit!important;
+    font-size: 1.1em;
+}
 
 ul[role=alert] li {
     font-weight: bold
@@ -29,7 +34,7 @@ label.required {
 .yearError {
     color: red;
     display: block;
-    margin: -20px 0px -5px 0px;
+    margin: -20px 0 -5px 0;
     font-style: italic;
 }
 
@@ -40,7 +45,7 @@ textarea.input-textbox {
 }
 
 #chosen .appointmentChosen p {
-    margin: 6px 0px;
+    margin: 6px 0;
 }
 
 .eventClosed, .eventClosed * {
@@ -55,7 +60,7 @@ textarea.input-textbox {
 #reviewWrapper {
     background-color: #fdfdfd;
     padding: 3px 20px;
-    margin: 15px 0px 15px 0px;
+    margin: 15px 0 15px 0;
     border: solid 1px #dededf;
 }
 
@@ -72,14 +77,14 @@ textarea.input-textbox {
 
 .selectableOL {
     list-style-type: none;
-    padding: 0px !important;
+    padding: 0 !important;
     position: relative;
     float: left;
     clear: both;
 }
 
 .selectableOL li {
-    margin: 1px 10px 10px 0px;
+    margin: 1px 10px 10px 0;
     padding: 5px 15px;
     display: inline-block;
     font-size: 1em;
