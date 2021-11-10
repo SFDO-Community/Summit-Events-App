@@ -13,9 +13,9 @@
         <valueSetDefinition>
             <sorted>true</sorted>
             <value>
-                <fullName>None</fullName>
+                <fullName>No Gateway</fullName>
                 <default>true</default>
-                <label>None</label>
+                <label>No Gateway</label>
             </value>
         </valueSetDefinition>
     </valueSet>
