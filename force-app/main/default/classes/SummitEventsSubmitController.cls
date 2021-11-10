@@ -21,7 +21,6 @@ public with sharing class SummitEventsSubmitController {
     public Double existingPaymentAmount { get; set; }
     public Double eventOnlyPaymentAmount { get; set; }
     public String eventOnlyPaymentAmountFormatted { get; set; }
-    public String paymentItemized { get; set; }
     public Boolean hasPaymentGateway { get; set; }
     public Boolean hasFees { get; set; }
 
@@ -58,6 +57,10 @@ public with sharing class SummitEventsSubmitController {
                 eventIsClosed = adminOpen;
             } else {
                 eventIsClosed = seaShared.isEventClosed(eventPage, eventInstance);
+            }
+
+            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('error'))) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ApexPages.currentPage().getParameters().get('error')));
             }
 
             formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
@@ -134,7 +137,7 @@ public with sharing class SummitEventsSubmitController {
     public PageReference submitRegistration() {
         PageReference confirmPage = Page.SummitEventsConfirmation;
         //Is there a payment gateway, are there fees
-        If (String.isNotBlank(eventPage.Payment_Gateway__c) && eventPage.Payment_Gateway__c != 'None') {
+        if (String.isNotBlank(eventPage.Payment_Gateway__c) && eventPage.Payment_Gateway__c != 'None') {
             if (eventFees.size() > 0) {
                 //Get community base URL from custom settings
                 hasPaymentGateway = true;
