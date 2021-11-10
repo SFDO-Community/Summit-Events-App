@@ -23,10 +23,11 @@ public with sharing class SummitEventsSubmitController {
     public String eventOnlyPaymentAmountFormatted { get; set; }
     public Boolean hasPaymentGateway { get; set; }
     public Boolean hasFees { get; set; }
+    public Boolean hasMessages { get; set; }
 
     public SummitEventsSubmitController() {
         hasFees = false;
-
+        hasMessages = false;
 
         //Get cookie or URL string variable
         eventInformation = seaShared.getSummitEventsInfo();
@@ -117,6 +118,10 @@ public with sharing class SummitEventsSubmitController {
             if (totalPaymentAmount > 0) {
                 hasFees = true;
             }
+        }
+        ApexPages.Message[] pageMessages = ApexPages.getMessages();
+        if (pageMessages.size() > 0) {
+            hasMessages = true;
         }
 
     }
