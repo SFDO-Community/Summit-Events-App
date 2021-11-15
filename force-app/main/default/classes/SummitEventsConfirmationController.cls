@@ -12,6 +12,16 @@ public with sharing class SummitEventsConfirmationController {
     public String formattedNavDate { get; set; }
     public Boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
+    public Map <String, String> feesByIndex { get; set; }
+    public List<Summit_Events_Fee__c> eventFees { get; set; }
+    public Double totalPaymentAmount { get; set; }
+    public String totalPaymentAmountFormatted { get; set; }
+    public Double existingPaymentAmount { get; set; }
+    public Double eventOnlyPaymentAmount { get; set; }
+    public String eventOnlyPaymentAmountFormatted { get; set; }
+    public Boolean hasFees { get; set; }
+    public Boolean hasMessages { get; set; }
+    public Boolean paymentReceived { get; set; }
 
     public SummitEventsConfirmationController() {
         eventIsClosed = false;
@@ -46,48 +56,131 @@ public with sharing class SummitEventsConfirmationController {
             }
 
             formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
+
+            gatherPaymentInformation();
         }
 
     }
 
-    public void checkEventDetails() {
+    public PageReference checkEventDetails() {
+
+        PageReference pageRef = null;
         eventInformation = seaShared.getSummitEventsInfo();
+
+        // Default to submit page, submit will redirect to beginning if no reg id is present. Prevents pre-filled forms in one step registrations.
+        ApexPages.currentPage().getHeaders().put('referer', Page.SummitEventsSubmit.getUrl());
 
         if (!eventIsClosed) {
             String eventTitle = '';
             if (!String.isBlank(eventInformation.registrationId)) {
-                Summit_Events_Registration__c evtReg = [
-                        SELECT Id, Status__c, Event_Name__c, Event_Instance_Title__c
+                Summit_Events_Registration__c eventReg = [
+                        SELECT Id, Status__c, Event_Name__c, Event_Instance_Title__c, Event__r.Payment_Gateway__c
                         FROM Summit_Events_Registration__c
                         WHERE Id = :eventInformation.registrationId
                         WITH SECURITY_ENFORCED
                 ];
 
-                if (!String.isBlank(evtReg.Event_Instance_Title__c)) {
-                    eventTitle = evtReg.Event_Name__c + ' - ' + evtReg.Event_Instance_Title__c ;
-                } else {
-                    eventTitle = evtReg.Event_Name__c;
-                }
-                evtReg.Status__c = 'Registered';
-
-                String encryptedString = seaShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, eventInformation.registrationId);
-
-                if (encryptedString.length() > 255) {
-                    evtReg.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);
-                    evtReg.Encrypted_Registration_Id_2__c = encryptedString.substring(255, encryptedString.length());
-                } else {
-                    evtReg.Encrypted_Registration_Id_1__c = encryptedString;
+                if (String.isNotBlank(eventReg.Event__r.Payment_Gateway__c) && eventReg.Event__r.Payment_Gateway__c != 'None') {
+                    pageRef = gatherPaymentInformation();
                 }
 
-                registrationCRUD regCRUD = new registrationCRUD();
-                evtReg = regCRUD.updateRegistration(evtReg);
+                if (pageRef == null) {
+                    if (!String.isBlank(eventReg.Event_Instance_Title__c)) {
+                        eventTitle = eventReg.Event_Name__c + ' - ' + eventReg.Event_Instance_Title__c ;
+                    } else {
+                        eventTitle = eventReg.Event_Name__c;
+                    }
+                    eventReg.Status__c = 'Registered';
 
-                SummitEventsShared SEAShared = new SummitEventsShared();
+                    String encryptedString = seaShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, eventInformation.registrationId);
 
-                //Remove the registration ID from the cookie so back button will redirect to the correct page.
-                SEAShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, '');
+                    if (encryptedString.length() > 255) {
+                        eventReg.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);
+                        eventReg.Encrypted_Registration_Id_2__c = encryptedString.substring(255, encryptedString.length());
+                    } else {
+                        eventReg.Encrypted_Registration_Id_1__c = encryptedString;
+                    }
+
+                    registrationCRUD regCRUD = new registrationCRUD();
+                    eventReg = regCRUD.updateRegistration(eventReg);
+
+                    SummitEventsShared SEAShared = new SummitEventsShared();
+
+                    //Remove the registration ID from the cookie so back button will redirect to the correct page.
+                    SEAShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, '');
+
+                }
+
             }
         }
+        return pageRef;
+    }
+
+    public PageReference gatherPaymentInformation() {
+        PageReference pageRef = null;
+
+        /* Check if there is a fee and a gateway set */
+        /** Collect Fees **/
+        eventFees = [
+                SELECT Name, Event_Fee__c, Event_Fee_Allocation__c, Description__c, Event_Fee_Type__c, Summit_Events__c, Event_Appointment_Type__c,
+                        Event_Appointment_Type__r.Title__c, Event_Fee_Allocation__r.Name
+                FROM Summit_Events_Fee__c
+                WHERE Event_Registration__c = :eventInformation.registrationId
+                WITH SECURITY_ENFORCED
+        ];
+
+        Integer payments = [
+                SELECT COUNT()
+                FROM Summit_Events_Payment__c
+                WHERE Event_Registration__c = :eventInformation.registrationId
+        ];
+
+        String errorMessage = '';
+
+        if (payments == 1) {
+            paymentReceived = true;
+            //Payment received. Get payment fees to display.
+            feesByIndex = new Map<String, String>();
+            eventOnlyPaymentAmount = 0;
+            totalPaymentAmount = 0;
+            for (Summit_Events_Fee__c fee : eventFees) {
+                if (fee.Event_Fee__c != null && fee.Event_Fee__c > 0) {
+                    totalPaymentAmount += fee.Event_Fee__c;
+                }
+                if (fee.Event_Fee_Type__c == 'Event' || fee.Event_Fee_Type__c == 'Event Additional') {
+                    eventOnlyPaymentAmount += fee.Event_Fee__c;
+                }
+
+            }
+            if (existingPaymentAmount > 0) {
+                totalPaymentAmount = totalPaymentAmount - existingPaymentAmount;
+            }
+            eventOnlyPaymentAmountFormatted = prettyCurrencyString(eventOnlyPaymentAmount);
+            totalPaymentAmountFormatted = prettyCurrencyString(totalPaymentAmount);
+            if (totalPaymentAmount > 0) {
+                hasFees = true;
+            }
+        } else if (payments == 0) {
+            errorMessage = 'Payment was not received. Please try again.';
+        } else {
+            pageRef = Page.SummitEventsSubmit;
+            errorMessage = 'Multiple payments were received. Please contact event .';
+        }
+        if (String.isNotBlank(errorMessage)) {
+            pageRef = Page.SummitEventsSubmit;
+            pageRef.getParameters().put('error', EncodingUtil.urlEncode(errorMessage, 'UTF-8'));
+            pageRef.setRedirect(true);
+        }
+        return pageRef;
+    }
+
+    public String prettyCurrencyString(Decimal numberIn) {
+        String numberOut = '';
+        List<String> args = new String[]{
+                '0', 'number', '###,###,##0.00'
+        };
+        numberOut = '$' + String.format(numberIn.format(), args);
+        return numberOut;
     }
 
     /**
