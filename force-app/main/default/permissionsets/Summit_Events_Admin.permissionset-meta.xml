@@ -844,31 +844,6 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events_Question__c.Lookup_No_Results_Label__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events_Question__c.Lookup_Results_Icon__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events_Question__c.Lookup_Secondary_Input_Link_Text__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events_Question__c.Lookup_Secondary_Input_Instructions__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events_Question__c.Lookup_Secondary_Value_Field__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Question__c.Map_to_Field__c</field>
         <readable>true</readable>
@@ -1500,11 +1475,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Registration__c.Virtual_Appointment_URL__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Summit_Events_Registration__c.Virtual_Meeting_URL__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1758,13 +1728,7 @@
         <field>Summit_Events__c.Custom_Metadata_Lead_Matching_Method__c</field>
         <readable>true</readable>
     </fieldPermissions>
-        <fieldPermissions>
-        <editable>true</editable>
-        <field>Summit_Events__c.Display_Guest_Registration__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-        </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events__c.Date_Of_Birth_Label__c</field>
         <readable>true</readable>
@@ -2011,6 +1975,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events__c.Last_Name_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events__c.Lead_Creation_Duplicate_Rule__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -2032,11 +2001,6 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events__c.Lead_matching_rules__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Summit_Events__c.Last_Name_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

@@ -597,12 +597,12 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Question__c.Lookup_Secondary_Input_Link_Text__c</field>
+        <field>Summit_Events_Question__c.Lookup_Secondary_Input_Instructions__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events_Question__c.Lookup_Secondary_Input_Instructions__c</field>
+        <field>Summit_Events_Question__c.Lookup_Secondary_Input_Link_Text__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1497,12 +1497,12 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Date_Of_Birth_Label__c</field>
+        <field>Summit_Events__c.Custom_Metadata_Lead_Matching_Method__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Custom_Metadata_Lead_Matching_Method__c</field>
+        <field>Summit_Events__c.Date_Of_Birth_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1752,12 +1752,17 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Lead_Creation_Duplicate_Rule__c</field>
+        <field>Summit_Events__c.Last_Name_As_Student_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Last_Name_As_Student_Label__c</field>
+        <field>Summit_Events__c.Last_Name_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Lead_Creation_Duplicate_Rule__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1778,11 +1783,6 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Lead_matching_rules__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events__c.Last_Name_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
