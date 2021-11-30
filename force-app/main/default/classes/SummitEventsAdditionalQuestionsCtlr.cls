@@ -156,7 +156,9 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                         if (Schema.SObjectType.Summit_Events_Registration__c.isAccessible() &&
                                 Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(question.Map_to_Field__c).getDescribe().isAccessible() &&
                                 Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(question.Map_to_Field__c).getDescribe().isCreateable()) {
-                            mapToList.add(question.Map_to_Field__c);
+                            if(String.isNotBlank(question.Map_to_Field__c.trim())) {
+                                mapToList.add(question.Map_to_Field__c);
+                            }
                             //build wrapper class to type and make picklist lists
                             quest.questionId = SeaShared.encryptString(question.Id);
                             quest.type = question.Question_Field_Type__c;
@@ -178,6 +180,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                 quest.secondaryLinkText = 'Manually enter information.';
                             }
 
+                            System.debug(question.Question_Field_Type__c);
                             //Deal with record lookup questions
                             if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
 
@@ -192,8 +195,15 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                     quest.secondaryNoResults = 'No results found.';
                                 }
 
-                                String lookupObject = question.Lookup_Object__c.trim();
-                                List<String> lookupFields = question.Lookup_Fields__c.split(',');
+                                String lookupObject = '';
+                                if (String.isNotBlank(question.Lookup_Object__c)) {
+                                    lookupObject = question.Lookup_Object__c.trim();
+                                }
+
+                                List<String> lookupFields = new List<String>();
+                                if (String.isNotBlank(question.Lookup_Fields__c)) {
+                                    lookupFields = question.Lookup_Fields__c.split(',');
+                                }
 
                                 //Check if lookup object is accessible
                                 Boolean lookupObjectAccessible = false;
@@ -219,15 +229,23 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                         lookupHoldingValues.put(question.Map_to_Field__c, question.Lookup_Fields__c);
                                         Map<String, String> queryInfo = new Map<String, String>();
                                         queryInfo.put('Lookup_Object__c', question.Lookup_Object__c.replaceAll('\\s+', ''));
-                                        queryInfo.put('Lookup_Fields__c', question.Lookup_Fields__c.replaceAll('\\s+', ''));
-                                        queryInfo.put('Lookup_Where_Clause__c', question.Lookup_Where_Clause__c);
+                                        if (String.isNotBlank(question.Lookup_Fields__c)) {
+                                            queryInfo.put('Lookup_Fields__c', question.Lookup_Fields__c.replaceAll('\\s+', ''));
+                                        }
+                                        if (String.isNotBlank(question.Lookup_Where_Clause__c)) {
+                                            queryInfo.put('Lookup_Where_Clause__c', question.Lookup_Where_Clause__c);
+                                        }
+
                                         quest.lookup = SeaShared.encryptString(JSON.serialize(queryInfo));
 
                                         //Build query for getting values later
                                         String lookupField = question.Map_to_Field__c.trim();
                                         lookupField = lookupField.removeEnd('__c');
                                         lookupField = lookupField + '__r.';
-                                        List<String> lookupFieldsRelation = question.Lookup_Fields__c.split(',');
+                                        List<String> lookupFieldsRelation = new List<String>();
+                                        if (String.isNotBlank(question.Lookup_Fields__c)) {
+                                            lookupFieldsRelation = question.Lookup_Fields__c.split(',');
+                                        }
                                         String lookupQuery = '';
                                         for (String field : lookupFieldsRelation) {
                                             lookupQuery += lookupField + field.trim() + ', ';
@@ -246,7 +264,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             quest.setupError += 'Map to field is not accessible with current permissions. ';
                         }
                     }
-                    System.debug(quest.setupError);
+
                     if (quest.setupError != '') {
                         quest.setupError = 'Question setup issue: ' + quest.setupError;
                         quest.setupFail = true;
@@ -268,15 +286,20 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 String regQuery = '';
                 if (mapToList.size() > 0) {
                     regQuery += 'SELECT ';
-                    regQuery += String.join(mapToList, ' , ');
+                    regQuery += String.join(mapToList, ',');
                     //Lookup values added
                     if (queryLookupFields.size() > 0) {
                         regQuery += ', ';
                         for (String key : queryLookupFields.keySet()) {
-                            regQuery += queryLookupFields.get(key) + ', ';
+                            if(String.isNotBlank(queryLookupFields.get(key))) {
+                                regQuery += queryLookupFields.get(key) + ',';
+                            }
                         }
                     }
-                    regQuery = regQuery.removeEnd(', ');
+                    System.debug(regQuery);
+                    regQuery = regQuery.trim();
+                    regQuery = regQuery.removeEndIgnoreCase(',');
+                    System.debug(regQuery);
                     regQuery += ' FROM Summit_Events_Registration__c ';
                     regQuery += ' WHERE Id = \'' + String.escapeSingleQuotes(eventInformation.registrationId) + '\'';
                 }
@@ -336,8 +359,6 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     }
 
     public PageReference submitAdditionalQuestions() {
-
-        System.debug(JSON.serializePretty(eventRegistration));
         doCRUD CRUDToDo = new doCRUD();
         CRUDToDo.saveRegistration(eventRegistration, incomingRegId);
         return pageFlow.get('Next');
@@ -425,7 +446,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                                 if (xx == 0) {
                                                     lineOne = (String) obj.get(validLookupFields[xx]);
                                                 } else {
-                                                    if(String.isNotBlank((String) obj.get(validLookupFields[xx]))) {
+                                                    if (String.isNotBlank((String) obj.get(validLookupFields[xx]))) {
                                                         lineTwo += (String) obj.get(validLookupFields[xx]) + ', ';
                                                     }
                                                 }

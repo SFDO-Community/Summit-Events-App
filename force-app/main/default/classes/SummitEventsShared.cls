@@ -153,7 +153,7 @@ public with sharing class SummitEventsShared {
             }
         }
 
-        system.debug(pageMovement);
+        System.debug(pageMovement);
         return pageMovement;
 
     }
@@ -310,11 +310,16 @@ public with sharing class SummitEventsShared {
 
     public String createEncryptedCookie(String audience, String instanceId, String eventId, String registrationId) {
         //Check everything to not let nulls through to JSON string
+        return createEncryptedCookieWithNow(audience, instanceId, eventId, registrationId, Datetime.now());
+    }
+
+    public String createEncryptedCookieWithNow(String audience, String instanceId, String eventId, String registrationId, Datetime nowTime) {
+        //Check everything to not let nulls through to JSON string
         audience = (String.isNotBlank(audience) && !audience.equalsIgnoreCase('null')) ? audience : '';
         instanceId = (String.isNotBlank(instanceId) && !instanceId.equalsIgnoreCase('null')) ? instanceId : '';
         eventId = (String.isNotBlank(eventId) && !eventId.equalsIgnoreCase('null')) ? eventId : '';
         registrationId = (String.isNotBlank(registrationId) && !registrationId.equalsIgnoreCase('null')) ? registrationId : '';
-        String CookieValue = encryptString('{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '","dt":"' + String.valueOf(Datetime.now()) + '"}');
+        String CookieValue = encryptString('{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '","dt":"' + String.valueOf(nowTime) + '"}');
         Cookie SummitEventsCookie = new Cookie('SummitEvents', CookieValue, null, -1, false);
         ApexPages.currentPage().setCookies(new Cookie[]{
                 SummitEventsCookie

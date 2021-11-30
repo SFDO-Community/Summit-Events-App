@@ -191,6 +191,11 @@ public with sharing class SummitEventsTestSharedDataFactory {
     public static List<Summit_Events_Question__c> addQuestionsToEvent(Id eventId, String inputType, String registrantType) {
         List<String> inputTypes = new List<String>();
         List<Summit_Events_Question__c> questions = new List<Summit_Events_Question__c>();
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+
         if (String.isNotBlank(inputType)) {
             inputTypes.add(inputType);
         } else {
@@ -203,31 +208,47 @@ public with sharing class SummitEventsTestSharedDataFactory {
         }
         //Get available mapping fields that are creatable and strings
         Map <String, Schema.SObjectField> fieldMap = Schema.SObjectType.Summit_Events_Registration__c.fields.getMap();
+
+        //Gather all fields that are accessible on the registration record to use as map_to values
         List <String> fieldsCreatable = new List <String>();
         for (Schema.SObjectField sField : fieldMap.values()) {
-            schema.DescribeFieldResult dField = sField.getDescribe();
+            Schema.DescribeFieldResult dField = sField.getDescribe();
             if (dField.isCreateable() &&
                     (String.valueOf(dField.getType()).equalsIgnoreCase('textarea') || String.valueOf(dField.getType()).equalsIgnoreCase('string'))) {
                 fieldsCreatable.add(dField.getName());
             }
         }
         System.debug(JSON.serializePretty(fieldsCreatable));
+        System.debug(inputTypes);
+
         Integer questionCount = 0;
         for (Integer x = 0; x < inputTypes.size(); x++) {
             for (Integer y = 0; y < 3; y++) {
                 Summit_Events_Question__c question = new Summit_Events_Question__c();
                 question.Event__c = eventId;
+
                 question.Question_Field_Type__c = inputTypes[x];
+                System.debug(inputTypes[x]);
                 question.Name = 'Question Name ' + x + '.' + y ;
                 question.Question_Label__c = 'Question ' + x + '.' + y;
+                question.Map_to_Field__c = fieldsCreatable[questionCount];
                 if (Math.mod(questionCount, 7) == 0) {
-                    question.Map_to_Field__c = fieldsCreatable[questionCount];
                     question.Is_Visible__c = false;
                 }
                 if (Math.mod(y, 2) == 0) {
                     question.Required__c = false;
                 } else {
                     question.Required__c = true;
+                }
+                if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
+                    question.Lookup_Results_Icon__c = 'robot';
+                    question.Lookup_Object__c = namespace + 'Summit_Events_Registration__c';
+                    //question.Lookup_Secondary_Value_Field__c = fieldsCreatable[questionCount + 1];
+                    //question.Lookup_Fields__c = 'Name';
+                    //questionCount++;
+                }
+                if (question.Question_Field_Type__c.equalsIgnoreCase('picklist')) {
+                    question.Picklist_Values__c = 'Choice1\\nChoice2\\nChoice3';
                 }
                 //Guest, Registrant, Registrant and Guest
                 question.Registrant_Type__c = registrantType;
@@ -238,6 +259,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 questions.add(question);
             }
         }
+        System.debug(JSON.serializePretty(questions));
         insert questions;
         return questions;
     }
