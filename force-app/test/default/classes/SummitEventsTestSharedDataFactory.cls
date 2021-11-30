@@ -244,7 +244,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                     question.Lookup_Results_Icon__c = 'robot';
                     question.Lookup_Object__c = namespace + 'Summit_Events_Registration__c';
                     //question.Lookup_Secondary_Value_Field__c = fieldsCreatable[questionCount + 1];
-                    //question.Lookup_Fields__c = 'Name';
+                    question.Lookup_Fields__c = namespace+ 'Registrant_First_Name__c,' + namespace + 'Registrant_Last_Name__c';
                     //questionCount++;
                 }
                 if (question.Question_Field_Type__c.equalsIgnoreCase('picklist')) {

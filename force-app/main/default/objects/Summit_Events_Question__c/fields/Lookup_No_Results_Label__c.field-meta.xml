@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Lookup_No_Results_Label__c</fullName>
-    <description>The label that appears if not results are found by the registrants input query.</description>
+    <description>The label that appears if no results are found by the registrants input query.</description>
     <externalId>false</externalId>
-    <inlineHelpText>The label that appears if not results are found by the registrants input query.</inlineHelpText>
+    <inlineHelpText>The label that appears if no results are found by the registrants input query.</inlineHelpText>
     <label>Lookup No Results Label</label>
     <length>255</length>
     <required>false</required>

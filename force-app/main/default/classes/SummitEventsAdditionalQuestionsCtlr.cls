@@ -156,7 +156,10 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                         if (Schema.SObjectType.Summit_Events_Registration__c.isAccessible() &&
                                 Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(question.Map_to_Field__c).getDescribe().isAccessible() &&
                                 Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(question.Map_to_Field__c).getDescribe().isCreateable()) {
-                            if(String.isNotBlank(question.Map_to_Field__c.trim())) {
+                            if (String.isNotBlank(question.Map_to_Field__c.trim())) {
+                                if (mapToList.contains(question.Map_to_Field__c)) {
+                                    quest.setupError += 'Duplicate Map to Fields selected for more than one question (' + question.Map_to_Field__c + '). ';
+                                }
                                 mapToList.add(question.Map_to_Field__c);
                             }
                             //build wrapper class to type and make picklist lists
@@ -266,6 +269,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     }
 
                     if (quest.setupError != '') {
+                        System.debug(quest.setupError);
                         quest.setupError = 'Question setup issue: ' + quest.setupError;
                         quest.setupFail = true;
                     }
@@ -291,12 +295,11 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     if (queryLookupFields.size() > 0) {
                         regQuery += ', ';
                         for (String key : queryLookupFields.keySet()) {
-                            if(String.isNotBlank(queryLookupFields.get(key))) {
+                            if (String.isNotBlank(queryLookupFields.get(key))) {
                                 regQuery += queryLookupFields.get(key) + ',';
                             }
                         }
                     }
-                    System.debug(regQuery);
                     regQuery = regQuery.trim();
                     regQuery = regQuery.removeEndIgnoreCase(',');
                     System.debug(regQuery);
@@ -307,7 +310,12 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 System.debug(regQuery);
 
                 if (String.isNotBlank(regQuery)) {
-                    eventRegistration = Database.query(regQuery);
+                    try {
+                        eventRegistration = Database.query(regQuery);
+                    } catch (Exception e) {
+                        //ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, e.getMessage()));
+                    }
+
                     //Apply hidden values
 
                     for (String key : hiddenValues.keySet()) {
@@ -393,7 +401,10 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     //Is lookup object accessible?
                     if (lookupObjectDesc.isAccessible()) {
                         //Check each fields accessibility and add it to the query
-                        List<String> lookupFields = queryInfo.get('Lookup_Fields__c').split(',');
+                        List<String> lookupFields = new List<String>();
+                        if (String.isNotBlank(queryInfo.get('Lookup_Fields__c'))) {
+                            lookupFields = queryInfo.get('Lookup_Fields__c').split(',');
+                        }
                         List<String> validLookupFields = new List<String>();
 
                         if (lookupFields.size() > 0) {
