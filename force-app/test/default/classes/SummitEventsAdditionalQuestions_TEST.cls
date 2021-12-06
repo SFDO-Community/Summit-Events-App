@@ -86,11 +86,13 @@ private class SummitEventsAdditionalQuestions_TEST {
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
 
+            //Previous page should be the first page. adminopen=true should be maintained from url parameter.
+            PageReference previousPage = questionController.previousPage();
+            System.assertEquals(previousPage.getUrl(), '/apex/summiteventsregister?adminopen=true');
+
             System.assertEquals(JSON.serialize(questionController.eventInformation), '{"registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
             //All questions types represented here (if number of types increases this will have to be adjusted)
             System.assertEquals(questionController.additionalQuestions.size(), 24);
-
-            System.debug(questionController.questionWrapper.size());
 
             Test.stopTest();
         }
@@ -124,8 +126,6 @@ private class SummitEventsAdditionalQuestions_TEST {
 
             //Only 3 lookup questions requested
             System.assertEquals(questionController.additionalQuestions.size(), 3);
-
-            System.debug(questionController.questionWrapper);
 
             SummitEventsAdditionalQuestionsCtlr.lookupSearch(questionController.questionWrapper[0].lookup, 'Test');
 

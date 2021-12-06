@@ -137,7 +137,7 @@
                                             <!-- Record lookup up main. Does not show if secondary input has been entered or requested -->
                                             <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox" style="{!IF(!ISBLANK(eventRegistration[qu.secondaryMapTo]), 'display:none;', '')}">
                                                 <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
-                                                    <apex:inputText value="{!lookupHoldingValues[qu.mapTo]}" id="combobox" styleClass="bind-autocomplete slds-input slds-combobox__input" html-autocomplete="off" html-role="textbox" html-aria-autocomplete="list"/>
+                                                    <apex:inputText value="{!lookUpDisplayValue[qu.mapTo]}" id="combobox" styleClass="bind-autocomplete slds-input slds-combobox__input" html-autocomplete="off" html-role="textbox" html-aria-autocomplete="list"/>
                                                     <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right refRemoveButton" title="Remove selected option" style="display:none;">
                                                         <svg class="slds-button__icon" aria-hidden="true">
                                                             <use xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>

@@ -22,7 +22,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public List<String> mapToList { get; set; }
     public List<questionItem> questionWrapper { get; set; }
     private Id incomingRegId { get; set; }
-    public Map<String, String> lookupHoldingValues { get; set; }
+    public Map<String, String> lookUpDisplayValue { get; set; }
 
     public class questionItem {
         public String questionId { get; set; }
@@ -59,6 +59,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         questionWrapper = new List<questionItem>();
         Map<String, String> hiddenValues = new Map<String, String>();
 
+        //eventInformation is an object gathered from the encrypted client cookie that contains event id and instance ids without which thou shall not pass
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
 
             eventPage = [
@@ -94,6 +95,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 eventIsClosed = SeaShared.isEventClosed(eventPage, eventInstance);
             }
 
+            //Get the question object questions
             additionalQuestions = [
                     SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
                             Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c,
@@ -112,57 +114,64 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 namespace = namespace + '__';
             }
 
+
             eventRegistration = new Summit_Events_Registration__c();
 
+            // eventInformation is an object gathered from the encrypted client cookie that contains a registration id without which thou shall not pass
             if (String.isNotBlank(eventInformation.registrationId)) {
 
+                // Apply the registration id from the cookie to a new registration object
                 eventRegistration.Id = eventInformation.registrationId;
 
                 mapToList = new List<String>();
-                lookupHoldingValues = new Map<String, String>();
-                //Start building out the query for all fields in mapToList
+                lookUpDisplayValue = new Map<String, String>();
+
+                //Start building out the query for all fields in mapToList. Must query all needed fields from the Registration record
                 mapToList.add('Id');
                 mapToList.add(namespace + 'Event__c');
                 mapToList.add(namespace + 'Event_Instance__c');
 
-                Map<String, String> queryLookupFields = new Map<String, String>();
+                Schema.DescribeFieldResult mapToFieldDescribe;
 
                 for (Summit_Events_Question__c question : additionalQuestions) {
-                    Object nextField;
-                    Boolean mapToFieldExists = true;
+                    //Build each question item and add to question item list to inform creation of visualforce form.
+
                     questionItem quest = new questionItem();
                     quest.setupFail = false;
                     quest.setupError = '';
+                    String mapToField = '';
+                    String lookupObject = '';
+                    Schema.DescribeSObjectResult lookUpObjectDescribe;
 
                     //Make sure this is really a field
                     if (String.isBlank(question.Map_to_Field__c)) {
                         quest.setupError += 'Map to field is not entered. ';
-                        mapToFieldExists = false;
                     } else {
                         //Check if map to field exists
                         try {
-                            nextField = Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(question.Map_to_Field__c).getDescribe();
+                            mapToField = question.Map_to_Field__c.trim().toLowerCase();
+                            mapToFieldDescribe = Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(mapToField).getDescribe();
                         } catch (Exception e) {
-                            mapToFieldExists = false;
                             quest.setupError += 'Map to field does not exist. ';
                         }
                     }
 
-                    quest.question = question.Question_Label__c;
-                    quest.required = question.Required__c;
+                    //If tests above pass mapToField will be populated with a valid mapToField
+                    if (String.isNotEmpty(mapToField)) {
 
-                    //Make sure this field is accessible
-                    if (mapToFieldExists) {
-                        if (Schema.SObjectType.Summit_Events_Registration__c.isAccessible() &&
-                                Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(question.Map_to_Field__c).getDescribe().isAccessible() &&
-                                Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(question.Map_to_Field__c).getDescribe().isCreateable()) {
-                            if (String.isNotBlank(question.Map_to_Field__c.trim())) {
-                                if (mapToList.contains(question.Map_to_Field__c)) {
-                                    quest.setupError += 'Duplicate Map to Fields selected for more than one question (' + question.Map_to_Field__c + '). ';
-                                }
-                                mapToList.add(question.Map_to_Field__c);
+                        // Make sure that we can access and edit the requested field
+                        if (Schema.SObjectType.Summit_Events_Registration__c.isAccessible() && mapToFieldDescribe.isAccessible() && mapToFieldDescribe.isCreateable()) {
+
+                            //It would be counter productive to map to the same field, but if you do it live with the ordering consequences with your questions
+                            if (!mapToList.contains(mapToField)) {
+                                mapToList.add(mapToField);
+                            } else {
+                                quest.setupError += 'You have 2 questions mapped to the same field: ' + mapToField + '. ';
                             }
+
                             //build wrapper class to type and make picklist lists
+                            quest.question = question.Question_Label__c;
+                            quest.required = question.Required__c;
                             quest.questionId = SeaShared.encryptString(question.Id);
                             quest.type = question.Question_Field_Type__c;
                             quest.picklist = createPicklists(question.Picklist_Values__c);
@@ -171,138 +180,143 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             quest.assist = question.Error_Assist_Text__c;
                             quest.defaultValue = question.Default_Value__c;
                             quest.textLimit = Integer.valueOf(question.Text_Limit__c);
-                            quest.mapTo = question.Map_to_Field__c;
+                            quest.mapTo = mapToField;
+
                             if (String.isNotBlank(question.Lookup_Results_Icon__c)) {
                                 quest.icon = question.Lookup_Results_Icon__c.trim();
                             } else {
                                 quest.icon = 'account';
                             }
+
                             if (String.isNotBlank(question.Lookup_Secondary_Input_Link_Text__c)) {
                                 quest.secondaryLinkText = question.Lookup_Secondary_Input_Link_Text__c;
                             } else {
                                 quest.secondaryLinkText = 'Manually enter information.';
                             }
 
-                            System.debug(question.Question_Field_Type__c);
-                            //Deal with record lookup questions
-                            if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
+                            //Look up object is the source of the data in the lookup question that returns an idea when a record is selected
 
-                                quest.secondaryQuestion = question.Lookup_Secondary_Input_Instructions__c;
-                                quest.secondaryMapTo = question.Lookup_Secondary_Value_Field__c;
-                                if (String.isNotBlank(question.Lookup_Secondary_Value_Field__c)) {
-                                    mapToList.add(question.Lookup_Secondary_Value_Field__c);
-                                }
-                                if (String.isNotBlank(question.Lookup_No_Results_Label__c)) {
-                                    quest.secondaryNoResults = question.Lookup_No_Results_Label__c;
-                                } else {
-                                    quest.secondaryNoResults = 'No results found.';
+                            if (String.isNotBlank(question.Lookup_Object__c)) {
+                                try {
+                                    lookupObject = question.Lookup_Object__c.trim().toLowerCase();
+                                    lookUpObjectDescribe = Schema.getGlobalDescribe().get(lookupObject).getDescribe();
+                                    if (!lookUpObjectDescribe.isAccessible()) {
+                                        quest.setupError += 'Lookup object ' + lookupObject + ' is not accessible (check sharing rules and permissions). ';
+                                    }
+                                } catch (Exception ex) {
+                                    quest.setupError += 'Lookup object ' + lookupObject + ' does not exist. ';
                                 }
 
-                                String lookupObject = '';
-                                if (String.isNotBlank(question.Lookup_Object__c)) {
-                                    lookupObject = question.Lookup_Object__c.trim();
-                                }
+                            }
 
+                            quest.secondaryMapTo = question.Lookup_Secondary_Value_Field__c;
+                            if (String.isNotBlank(question.Lookup_Secondary_Value_Field__c)) {
+                                mapToList.add(question.Lookup_Secondary_Value_Field__c);
+                            }
+
+                            quest.secondaryQuestion = question.Lookup_Secondary_Input_Instructions__c;
+
+                            if (String.isNotBlank(question.Lookup_No_Results_Label__c)) {
+                                quest.secondaryNoResults = question.Lookup_No_Results_Label__c;
+                            } else {
+                                quest.secondaryNoResults = 'No results found.';
+                            }
+
+                            if (question.Question_Field_Type__c.equalsIgnoreCase('lookup') && String.isNotBlank(lookupObject)) {
+
+
+                                List<String> cleanLookUpFields = new List<String>();
                                 List<String> lookupFields = new List<String>();
+                                List<String> referentialLookups = new List<String>();
+                                Boolean mapToFieldIsLookup = true;
+
+                                if (!String.valueOf(mapToFieldDescribe.getType()).equalsIgnoreCase('reference')) {
+                                    quest.setupError += 'Map to field must be a lookup relationship field (' + mapToField + '). ';
+                                    mapToFieldIsLookup = false;
+                                }
+
                                 if (String.isNotBlank(question.Lookup_Fields__c)) {
                                     lookupFields = question.Lookup_Fields__c.split(',');
-                                }
 
-                                //Check if lookup object is accessible
-                                Boolean lookupObjectAccessible = false;
-                                try {
-                                    lookupObjectAccessible = Schema.getGlobalDescribe().get(lookupObject).getDescribe().isAccessible();
-                                } catch (Exception e) {
-                                    lookupObjectAccessible = false;
-                                }
-
-
-                                if (lookupObjectAccessible) {
-                                    Boolean allFieldsAccessible = true;
+                                    // Test for accessibility and clean up lookup fields
                                     for (String lookUpField : lookupFields) {
+                                        lookUpField = lookUpField.trim();
+                                        Schema.DescribeFieldResult lookUpFieldDescribe;
+                                        Boolean lookUpFieldExists = true;
                                         try {
-                                            System.debug(lookUpField);
-                                            allFieldsAccessible = Schema.getGlobalDescribe().get(lookupObject).getDescribe().fields.getMap().get(lookUpField.trim()).getDescribe().isAccessible();
-                                        } catch (Exception e) {
-                                            allFieldsAccessible = false;
-                                            break;
+                                            lookUpFieldDescribe = lookUpObjectDescribe.fields.getMap().get(lookUpField).getDescribe();
+                                        } catch (Exception ex) {
+                                            quest.setupError += 'Lookup field ' + lookUpField + ' dose not exist. ';
+                                            lookUpFieldExists = false;
+                                        }
+                                        if (lookUpFieldExists) {
+                                            if (!lookUpFieldDescribe.isAccessible()) {
+                                                quest.setupError += 'Lookup field ' + lookUpField + ' is not accessible. ';
+                                            } else {
+                                                cleanLookUpFields.add(lookUpField);
+                                                if (mapToFieldIsLookup) {
+                                                    mapToList.add(mapToField.replace('__c', '__r.') + lookUpField);
+                                                    referentialLookups.add(lookUpField);
+                                                }
+                                            }
                                         }
                                     }
-                                    if (allFieldsAccessible) {
-                                        lookupHoldingValues.put(question.Map_to_Field__c, question.Lookup_Fields__c);
-                                        Map<String, String> queryInfo = new Map<String, String>();
-                                        queryInfo.put('Lookup_Object__c', question.Lookup_Object__c.replaceAll('\\s+', ''));
-                                        if (String.isNotBlank(question.Lookup_Fields__c)) {
-                                            queryInfo.put('Lookup_Fields__c', question.Lookup_Fields__c.replaceAll('\\s+', ''));
-                                        }
-                                        if (String.isNotBlank(question.Lookup_Where_Clause__c)) {
-                                            queryInfo.put('Lookup_Where_Clause__c', question.Lookup_Where_Clause__c);
-                                        }
+                                }
 
-                                        quest.lookup = SeaShared.encryptString(JSON.serialize(queryInfo));
+                                //Build queryInfo object to encrypt to pass lookup query information not in the clear
+                                Map<String, String> queryInfo = new Map<String, String>();
+                                queryInfo.put('Lookup_Object__c', lookupObject);
 
-                                        //Build query for getting values later
-                                        String lookupField = question.Map_to_Field__c.trim();
-                                        lookupField = lookupField.removeEnd('__c');
-                                        lookupField = lookupField + '__r.';
-                                        List<String> lookupFieldsRelation = new List<String>();
-                                        if (String.isNotBlank(question.Lookup_Fields__c)) {
-                                            lookupFieldsRelation = question.Lookup_Fields__c.split(',');
-                                        }
-                                        String lookupQuery = '';
-                                        for (String field : lookupFieldsRelation) {
-                                            lookupQuery += lookupField + field.trim() + ', ';
-                                        }
-                                        lookupQuery = lookupQuery.removeEnd(', ');
-                                        queryLookupFields.put(question.Lookup_Object__c.trim(), lookupQuery);
-                                    } else {
-                                        quest.setupError += 'Lookup fields provided are inaccessible. ';
-                                    }
-                                } else {
-                                    quest.setupError += 'Lookup Object is inaccessible. ';
+                                if (cleanLookUpFields.size() > 0) {
+                                    queryInfo.put('Lookup_Fields__c', String.join(cleanLookUpFields, ','));
+                                    lookUpDisplayValue.put(mapToField, String.join(referentialLookups, ','));
+                                }
+
+                                if (String.isNotBlank(question.Lookup_Where_Clause__c)) {
+                                    queryInfo.put('Lookup_Where_Clause__c', question.Lookup_Where_Clause__c);
+                                }
+
+                                System.debug(JSON.serializePretty(queryInfo));
+                                //serialize object with query info in it to retrieve later when decrypted
+                                quest.lookup = SeaShared.encryptString(JSON.serialize(queryInfo));
+
+                                List<String> lookupFieldsRelation = new List<String>();
+                                if (String.isNotBlank(question.Lookup_Fields__c)) {
+                                    lookupFieldsRelation = question.Lookup_Fields__c.split(',');
+                                }
+
+                            }
+
+
+                            //add question to question wrapper if it is visible, otherwise apply default value to the event registration.
+                            if (question.Is_Visible__c) {
+                                questionWrapper.add(quest);
+                            } else {
+                                if (String.isNotBlank(question.Default_Value__c)) {
+                                    hiddenValues.put(mapToField, question.Default_Value__c);
                                 }
                             }
+
 
                         } else {
                             quest.setupError += 'Map to field is not accessible with current permissions. ';
                         }
+
                     }
+
 
                     if (quest.setupError != '') {
-                        System.debug(quest.setupError);
-                        quest.setupError = 'Question setup issue: ' + quest.setupError;
+                        quest.setupError = 'Question setup issue(s): ' + quest.setupError;
                         quest.setupFail = true;
                     }
-
-                    //add question to question wrapper if it is visible, otherwise apply default value to the event registration.
-                    if (question.Is_Visible__c) {
-                        questionWrapper.add(quest);
-                    } else {
-                        if (String.isNotBlank(question.Default_Value__c)) {
-                            hiddenValues.put(question.Map_to_Field__c, question.Default_Value__c);
-                        }
-                    }
-
                 }
-
-                // System.debug(JSON.serializePretty(questionWrapper));
-
+                //outside question group
                 String regQuery = '';
                 if (mapToList.size() > 0) {
                     regQuery += 'SELECT ';
                     regQuery += String.join(mapToList, ',');
-                    //Lookup values added
-                    if (queryLookupFields.size() > 0) {
-                        regQuery += ', ';
-                        for (String key : queryLookupFields.keySet()) {
-                            if (String.isNotBlank(queryLookupFields.get(key))) {
-                                regQuery += queryLookupFields.get(key) + ',';
-                            }
-                        }
-                    }
                     regQuery = regQuery.trim();
                     regQuery = regQuery.removeEndIgnoreCase(',');
-                    System.debug(regQuery);
                     regQuery += ' FROM Summit_Events_Registration__c ';
                     regQuery += ' WHERE Id = \'' + String.escapeSingleQuotes(eventInformation.registrationId) + '\'';
                 }
@@ -313,36 +327,28 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     try {
                         eventRegistration = Database.query(regQuery);
                     } catch (Exception e) {
-                        //ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, e.getMessage()));
+                        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, e.getMessage()));
                     }
 
                     //Apply hidden values
-
                     for (String key : hiddenValues.keySet()) {
                         eventRegistration.put(key, hiddenValues.get(key));
                     }
 
-                    // hiddenValues.put(question.Map_to_Field__c, question.Default_Value__c);
-
                     //Get the holding values if there are any
-                    for (String key : lookupHoldingValues.keySet()) {
+                    for (String key : lookUpDisplayValue.keySet()) {
                         String lookupField = key.trim();
-                        if (String.isNotBlank((String) eventRegistration.get(lookupField.trim()))) {
-                            lookupField = lookupField.removeEnd('__c');
-                            lookupField = lookupField + '__r';
-                            List<String> lookupFieldsRelation = lookupHoldingValues.get(key).split(',');
-
-                            String holding = '';
-                            for (String field : lookupFieldsRelation) {
-                                if (String.isNotBlank(eventRegistration.getSObject(lookupField.trim()).get(field.trim()).toString())) {
-                                    holding += (String) eventRegistration.getSObject(lookupField.trim()).get(field.trim()) + ', ';
-                                }
+                        lookupField = lookupField.replace('__c', '__r');
+                        List<String> lookupFieldsRelation = lookUpDisplayValue.get(key).split(',');
+                        String holding = '';
+                        for (String field : lookupFieldsRelation) {
+                            String holdingValue = (String) eventRegistration.getSObject(lookupField).get(field);
+                            if (String.isNotBlank(holdingValue)) {
+                                holding += holdingValue + ', ';
                             }
-                            holding = holding.removeEnd(', ');
-                            lookupHoldingValues.put(key, holding);
-                        } else {
-                            lookupHoldingValues.put(key, '');
                         }
+                        holding = holding.removeEnd(', ');
+                        lookUpDisplayValue.put(key, holding);
                     }
                     incomingRegId = eventRegistration.Id;
                     eventRegistration.Id = null;
@@ -389,7 +395,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             Map<String, String> queryInfo = (Map<String, String>) JSON.deserialize(question, Map<String, String>.class);
             if (queryInfo.size() > 0) {
                 String lookupQuery = '';
-                DescribeSObjectResult lookupObjectDesc = null;
+                Schema.DescribeSObjectResult lookupObjectDesc = null;
                 try {
                     //Define lookup object
                     lookupObjectDesc = Schema.getGlobalDescribe().get(queryInfo.get('Lookup_Object__c').trim()).getDescribe();
@@ -420,12 +426,14 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'One or more of your lookup fields was inaccessible.'));
                             } else {
                                 lookupQuery = 'SELECT Id, ' + String.join(validLookupFields, ', ') + ' FROM ' + queryInfo.get('Lookup_Object__c').trim() + ' ';
-                                if (String.isNotBlank(lookupQuery) && String.isNotBlank(queryInfo.get('Lookup_Where_Clause__c'))) {
-                                    if (queryInfo.get('Lookup_Where_Clause__c').contains('WHERE ')) {
-                                        lookupQuery = lookupQuery + ' ' + queryInfo.get('Lookup_Where_Clause__c');
-                                    } else {
-                                        lookupQuery = lookupQuery + ' WHERE ' + queryInfo.get('Lookup_Where_Clause__c');
+                                if (String.isNotBlank(lookupQuery)) {
+                                    if (String.isNotBlank(queryInfo.get('Lookup_Where_Clause__c'))) {
+                                        if (!queryInfo.get('Lookup_Where_Clause__c').contains('WHERE ')) {
+                                            lookupQuery = lookupQuery + ' WHERE ';
+                                        }
+                                        lookupQuery += queryInfo.get('Lookup_Where_Clause__c');
                                     }
+
                                     String likeStatement = '';
 
                                     for (String sField : validLookupFields) {
@@ -436,8 +444,6 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                     lookupQuery += ' LIMIT 50';
 
                                     List<SObject> foundValues = new List<SObject>();
-
-                                    System.debug(lookupQuery);
 
                                     try {
                                         foundValues = Database.query(lookupQuery);
