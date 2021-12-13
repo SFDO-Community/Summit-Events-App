@@ -9,7 +9,7 @@ private class SummitEventsAdditionalQuestions_TEST {
     static void noDataController() {
         SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
         System.runAs(testUser) {
@@ -33,14 +33,12 @@ private class SummitEventsAdditionalQuestions_TEST {
         SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
-
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
         System.runAs(testUser) {
             Test.startTest();
 
             PageReference pageRef = Page.SummitEventsAdditionalQuestions;
-            pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
 
             SummitEventsShared SEShared = new SummitEventsShared();
@@ -70,8 +68,8 @@ private class SummitEventsAdditionalQuestions_TEST {
 
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
-        List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, '', 'Registrant and Guest');
-
+        SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, '', 'Registrant and Guest');
+        SummitEventsNamespace.plainNamespace = 'summit';
 
         System.runAs(testUser) {
             Test.startTest();
@@ -92,7 +90,7 @@ private class SummitEventsAdditionalQuestions_TEST {
 
             System.assertEquals(JSON.serialize(questionController.eventInformation), '{"registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
             //All questions types represented here (if number of types increases this will have to be adjusted)
-            System.assertEquals(questionController.additionalQuestions.size(), 24);
+            System.assertEquals(questionController.additionalQuestions.size(), 8);
 
             Test.stopTest();
         }
@@ -103,11 +101,18 @@ private class SummitEventsAdditionalQuestions_TEST {
         SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Look', 'Up', 'lookup@valleyhill.net', '55418', '1971-03-22', '2012', null);
 
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
-        List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'lookup', 'Registrant and Guest');
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
 
+        List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'lookup', 'Registrant and Guest');
+        testQuestions[0].Lookup_Where_Clause__c = ' WHERE ' + namespace + ' Registrant_First_Name__c != null ';
+        update testQuestions;
 
         System.runAs(testUser) {
             Test.startTest();
@@ -116,18 +121,140 @@ private class SummitEventsAdditionalQuestions_TEST {
             pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
 
+
             SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
             SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
 
+            //Checking that the cookie returns the correct information
             System.assertEquals(JSON.serialize(questionController.eventInformation), '{"registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
 
-            //Only 3 lookup questions requested
-            System.assertEquals(questionController.additionalQuestions.size(), 3);
+            //Only 1 lookup questions requested so additional question query and wrapper should be 1
+            System.assertEquals(questionController.additionalQuestions.size(), 1);
+            System.assertEquals(questionController.questionWrapper.size(), 1);
 
-            SummitEventsAdditionalQuestionsCtlr.lookupSearch(questionController.questionWrapper[0].lookup, 'Test');
+            //Search for something we know doesn't exist
+            List<SummitEventsAdditionalQuestionsCtlr.queryReturn> queryReturns = SummitEventsAdditionalQuestionsCtlr.lookupSearch(questionController.questionWrapper[0].lookup, 'NoWayYouAreFindingThis');
+            System.assertEquals(queryReturns.size(), 0);
+
+            //Search for the registration that was added in the data above
+
+            queryReturns = SummitEventsAdditionalQuestionsCtlr.lookupSearch(questionController.questionWrapper[0].lookup, 'Look');
+            System.assertEquals(queryReturns.size(), 1);
+
+            questionController.submitAdditionalQuestions();
+
+            testQuestions[0].Map_to_Field__c = namespace + 'Registrant_First_Name__c';
+            update testQuestions;
+            questionController = new SummitEventsAdditionalQuestionsCtlr();
+            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map to field must be a lookup relationship field (registrant_first_name__c). ');
+
+            Test.stopTest();
+        }
+    }
+
+    @IsTest
+    static void testMapToFieldError() {
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+
+        //Test question with empty map_to_field defined.
+        List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Registrant and Guest');
+        List<Summit_Events_Question__c> testQuestions2 = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Registrant and Guest');
+        testQuestions[0].Map_to_Field__c = '';
+        update testQuestions;
+
+        System.runAs(testUser) {
+            Test.startTest();
+
+            String namespace = SummitEventsNamespace.getNamespace();
+            if (String.isNotBlank(namespace)) {
+                namespace = namespace + '__';
+            }
+
+            PageReference pageRef = Page.SummitEventsAdditionalQuestions;
+            Test.setCurrentPage(pageRef);
+
+            SummitEventsShared SEShared = new SummitEventsShared();
+            Datetime nowTime = Datetime.now();
+            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+
+            SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
+            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map to field is not entered. ');
+
+            //Test question with field that doesn't exist for map_to_field__c
+            testQuestions[0].Map_to_Field__c = 'BogusField';
+            testQuestions[0].Lookup_Secondary_Input_Link_Text__c = 'Secondary Link Text';
+            testQuestions[0].Lookup_No_Results_Label__c = 'Nope. Nothing...';
+            update testQuestions;
+            questionController = new SummitEventsAdditionalQuestionsCtlr();
+            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map to field does not exist. Map to field is not accessible with current permissions. ');
+
+            //Test question with sane map_to_field__c as another question in the event
+            testQuestions[0].Map_to_Field__c = testQuestions2[0].Map_to_Field__c;
+            testQuestions[0].Lookup_Secondary_Input_Link_Text__c = 'Secondary Link Text';
+            testQuestions[0].Lookup_No_Results_Label__c = 'Nope. Nothing...';
+            update testQuestions;
+            questionController = new SummitEventsAdditionalQuestionsCtlr();
+            System.assertEquals(questionController.additionalQuestions.size(), 2);
+            System.assertEquals(questionController.questionWrapper[1].setupError, 'Question setup issue(s): You have 2 questions mapped to the same field: ' + testQuestions2[0].Map_to_Field__c.toLowerCase() + '. ');
+
+            Test.stopTest();
+        }
+    }
+
+    @IsTest
+    static void testLookUpFieldError() {
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+
+        //Test question with empty map_to_field defined.
+        List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'lookup', 'Registrant and Guest');
+        //List<Summit_Events_Question__c> testQuestions2 = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'lookup', 'Registrant and Guest');
+        testQuestions[0].Lookup_Object__c = '';
+        update testQuestions;
+
+        System.runAs(testUser) {
+            Test.startTest();
+
+            String namespace = SummitEventsNamespace.getNamespace();
+            if (String.isNotBlank(namespace)) {
+                namespace = namespace + '__';
+            }
+
+            PageReference pageRef = Page.SummitEventsAdditionalQuestions;
+            Test.setCurrentPage(pageRef);
+
+            SummitEventsShared SEShared = new SummitEventsShared();
+            Datetime nowTime = Datetime.now();
+            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+
+            SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
+            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Lookup question does not have a defined lookup object. ');
+
+
+            //Test question with field that doesn't exist for map_to_field__c
+            testQuestions[0].Lookup_Object__c = 'Blah';
+            testQuestions[0].Lookup_Fields__c = 'Blah';
+            update testQuestions;
+            questionController = new SummitEventsAdditionalQuestionsCtlr();
+            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Lookup object blah does not exist. Lookup field Blah dose not exist. ');
+//
+//            //Test question with sane map_to_field__c as another question in the event
+//            testQuestions[0].Map_to_Field__c = testQuestions2[0].Map_to_Field__c;
+//            testQuestions[0].Lookup_Secondary_Input_Link_Text__c = 'Secondary Link Text';
+//            testQuestions[0].Lookup_No_Results_Label__c = 'Nope. Nothing...';
+//            update testQuestions;
+//            questionController = new SummitEventsAdditionalQuestionsCtlr();
+//            System.assertEquals(questionController.additionalQuestions.size(), 2);
+//            System.assertEquals(questionController.questionWrapper[1].setupError, 'Question setup issue(s): You have 2 questions mapped to the same field: ' + testQuestions2[0].Map_to_Field__c.toLowerCase() + '. ');
+
 
             Test.stopTest();
         }

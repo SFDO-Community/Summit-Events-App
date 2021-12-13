@@ -158,9 +158,15 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
                     //If tests above pass mapToField will be populated with a valid mapToField
                     if (String.isNotEmpty(mapToField)) {
+                        Boolean mapToAvailable = false;
+                        try {
+                            mapToAvailable = Schema.SObjectType.Summit_Events_Registration__c.isAccessible() && mapToFieldDescribe.isAccessible() && mapToFieldDescribe.isCreateable();
+                        } catch (Exception e) {
+                            quest.setupError += 'Map to field is not accessible with current permissions. ';
+                        }
 
                         // Make sure that we can access and edit the requested field
-                        if (Schema.SObjectType.Summit_Events_Registration__c.isAccessible() && mapToFieldDescribe.isAccessible() && mapToFieldDescribe.isCreateable()) {
+                        if (mapToAvailable) {
 
                             //It would be counter productive to map to the same field, but if you do it live with the ordering consequences with your questions
                             if (!mapToList.contains(mapToField)) {
@@ -195,7 +201,6 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             }
 
                             //Look up object is the source of the data in the lookup question that returns an idea when a record is selected
-
                             if (String.isNotBlank(question.Lookup_Object__c)) {
                                 try {
                                     lookupObject = question.Lookup_Object__c.trim().toLowerCase();
@@ -206,7 +211,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                 } catch (Exception ex) {
                                     quest.setupError += 'Lookup object ' + lookupObject + ' does not exist. ';
                                 }
-
+                            } else if (String.isBlank(question.Lookup_Object__c) && question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
+                                quest.setupError += 'Lookup question does not have a defined lookup object. ';
                             }
 
                             quest.secondaryMapTo = question.Lookup_Secondary_Value_Field__c;
@@ -286,24 +292,17 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                 }
 
                             }
-
-
-                            //add question to question wrapper if it is visible, otherwise apply default value to the event registration.
-                            if (question.Is_Visible__c) {
-                                questionWrapper.add(quest);
-                            } else {
-                                if (String.isNotBlank(question.Default_Value__c)) {
-                                    hiddenValues.put(mapToField, question.Default_Value__c);
-                                }
-                            }
-
-
-                        } else {
-                            quest.setupError += 'Map to field is not accessible with current permissions. ';
                         }
-
                     }
 
+                    //add question to question wrapper if it is visible, otherwise apply default value to the event registration.
+                    if (question.Is_Visible__c) {
+                        questionWrapper.add(quest);
+                    } else {
+                        if (String.isNotBlank(question.Default_Value__c)) {
+                            hiddenValues.put(mapToField, question.Default_Value__c);
+                        }
+                    }
 
                     if (quest.setupError != '') {
                         quest.setupError = 'Question setup issue(s): ' + quest.setupError;
@@ -342,9 +341,12 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                         List<String> lookupFieldsRelation = lookUpDisplayValue.get(key).split(',');
                         String holding = '';
                         for (String field : lookupFieldsRelation) {
-                            String holdingValue = (String) eventRegistration.getSObject(lookupField).get(field);
-                            if (String.isNotBlank(holdingValue)) {
+                            String holdingValue = '';
+                            try {
+                                holdingValue = (String) eventRegistration.getSObject(lookupField).get(field);
                                 holding += holdingValue + ', ';
+                            } catch (Exception ex) {
+
                             }
                         }
                         holding = holding.removeEnd(', ');
@@ -431,17 +433,21 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                         if (!queryInfo.get('Lookup_Where_Clause__c').contains('WHERE ')) {
                                             lookupQuery = lookupQuery + ' WHERE ';
                                         }
-                                        lookupQuery += queryInfo.get('Lookup_Where_Clause__c');
+                                        lookupQuery += queryInfo.get('Lookup_Where_Clause__c') + ' AND ';
+                                    } else {
+                                        lookupQuery = lookupQuery + ' WHERE ';
                                     }
 
                                     String likeStatement = '';
-
                                     for (String sField : validLookupFields) {
                                         likeStatement += sField.trim() + ' LIKE \'%' + String.escapeSingleQuotes(term) + '%\' OR ';
                                     }
-                                    lookupQuery += ' AND ( ' + likeStatement.removeEnd(' OR ') + ' )';
+
+                                    lookupQuery += ' ( ' + likeStatement.removeEnd(' OR ') + ' )';
                                     lookupQuery += ' ORDER BY ' + String.join(validLookupFields, ', ') + ' ASC';
                                     lookupQuery += ' LIMIT 50';
+
+                                    System.debug(lookupQuery);
 
                                     List<SObject> foundValues = new List<SObject>();
 
@@ -478,17 +484,9 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                         returnValues.add(qr);
                                     }
 
-                                } else {
-                                    lookupQuery = '';
-                                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Lookup where clause missing.'));
                                 }
                             }
-
-                        } else {
-                            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Lookup object is inaccessible.'));
                         }
-
-
                     }
                 }
             }

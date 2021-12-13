@@ -257,7 +257,6 @@ public with sharing class SummitEventsRegisterGuestsController {
                 }
                 guestAnswers[xx].questions.addAll(hiddenQuestions);
             }
-            System.debug(JSON.serializePretty(guestAnswers));
             guestJSON = JSON.serialize(guestAnswers);
             crudToDo.updateRegistration(guestJSON, eventRegistration, oldRegId);
         }

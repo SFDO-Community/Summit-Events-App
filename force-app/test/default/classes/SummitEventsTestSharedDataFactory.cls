@@ -214,52 +214,42 @@ public with sharing class SummitEventsTestSharedDataFactory {
         for (Schema.SObjectField sField : fieldMap.values()) {
             Schema.DescribeFieldResult dField = sField.getDescribe();
             if (dField.isCreateable() &&
-                    (String.valueOf(dField.getType()).equalsIgnoreCase('textarea') || String.valueOf(dField.getType()).equalsIgnoreCase('string'))) {
+                    (String.valueOf(dField.getType()).equalsIgnoreCase('textarea'))) {
+                System.debug('field type : ' + String.valueOf(dField.getType()));
                 fieldsCreatable.add(dField.getName());
             }
         }
-        System.debug(JSON.serializePretty(fieldsCreatable));
-        System.debug(inputTypes);
 
         Integer questionCount = 0;
         for (Integer x = 0; x < inputTypes.size(); x++) {
-            for (Integer y = 0; y < 3; y++) {
-                Summit_Events_Question__c question = new Summit_Events_Question__c();
-                question.Event__c = eventId;
+            Summit_Events_Question__c question = new Summit_Events_Question__c();
+            question.Event__c = eventId;
 
-                question.Question_Field_Type__c = inputTypes[x];
-                System.debug(inputTypes[x]);
-                question.Name = 'Question Name ' + x + '.' + y ;
-                question.Question_Label__c = 'Question ' + x + '.' + y;
-                question.Map_to_Field__c = fieldsCreatable[questionCount];
-                if (Math.mod(questionCount, 7) == 0) {
-                    question.Is_Visible__c = false;
-                }
-                if (Math.mod(y, 2) == 0) {
-                    question.Required__c = false;
-                } else {
-                    question.Required__c = true;
-                }
-                if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
-                    question.Lookup_Results_Icon__c = 'robot';
-                    question.Lookup_Object__c = namespace + 'Summit_Events_Registration__c';
-                    //question.Lookup_Secondary_Value_Field__c = fieldsCreatable[questionCount + 1];
-                    question.Lookup_Fields__c = namespace+ 'Registrant_First_Name__c,' + namespace + 'Registrant_Last_Name__c';
-                    //questionCount++;
-                }
-                if (question.Question_Field_Type__c.equalsIgnoreCase('picklist')) {
-                    question.Picklist_Values__c = 'Choice1\\nChoice2\\nChoice3';
-                }
-                //Guest, Registrant, Registrant and Guest
-                question.Registrant_Type__c = registrantType;
-                question.Instructions__c = 'Instruction ' + x + '.' + y;
-                question.Help_Text__c = 'Help Text ' + x + '.' + y;
-                question.Error_Assist_Text__c = 'Error assist ' + x + '.' + y;
+            question.Question_Field_Type__c = inputTypes[x];
+            question.Name = 'Question Name ' + x;
+            question.Question_Label__c = 'Question ' + x;
+            question.Map_to_Field__c = fieldsCreatable[questionCount];
+            question.Is_Visible__c = true;
+            if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
+                question.Map_to_Field__c = namespace + 'Guest_Host__c';
+                question.Lookup_Results_Icon__c = 'robot';
+                question.Lookup_Object__c = namespace + 'Summit_Events_Registration__c';
+                question.Lookup_Secondary_Value_Field__c = fieldsCreatable[questionCount + 1];
+                question.Lookup_Fields__c = namespace + 'Registrant_First_Name__c,' + namespace + 'Registrant_Last_Name__c';
                 questionCount++;
-                questions.add(question);
             }
+            if (question.Question_Field_Type__c.equalsIgnoreCase('picklist')) {
+                question.Picklist_Values__c = 'Choice1\\nChoice2\\nChoice3';
+            }
+            //Guest, Registrant, Registrant and Guest
+            question.Registrant_Type__c = registrantType;
+            question.Instructions__c = 'Instruction ' + x;
+            question.Help_Text__c = 'Help Text ' + x;
+            question.Error_Assist_Text__c = 'Error assist';
+            questionCount++;
+            questions.add(question);
         }
-        System.debug(JSON.serializePretty(questions));
+
         insert questions;
         return questions;
     }
