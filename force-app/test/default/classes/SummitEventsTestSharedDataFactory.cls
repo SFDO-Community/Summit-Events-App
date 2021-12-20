@@ -215,7 +215,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
             Schema.DescribeFieldResult dField = sField.getDescribe();
             if (dField.isCreateable() &&
                     (String.valueOf(dField.getType()).equalsIgnoreCase('textarea'))) {
-                System.debug('field type : ' + String.valueOf(dField.getType()));
+               // System.debug('field type : ' + String.valueOf(dField.getType()));
                 fieldsCreatable.add(dField.getName());
             }
         }
@@ -383,6 +383,14 @@ public with sharing class SummitEventsTestSharedDataFactory {
             return u3;
         }
         return null;
+    }
+
+    public static String getUUID()
+    {
+        Blob b = Crypto.generateAesKey(128);
+        String h = EncodingUtil.convertToHex(b);
+        String guid = h.substring(0,8)+ '-' + h.substring(8,12) + '-' + h.substring(12,16) + '-' + h.substring(16,20) + '-' + h.substring(20);
+        return guid;
     }
 
 }

@@ -19,36 +19,34 @@ public with sharing class SummitEventsRegisterGuestsController {
     public String guestJSON { get; set; }
     public String guestQuestionJSON { get; set; }
     public Id oldRegId { get; set; }
-    public String statePicklist { get; set; }
-    public String countryPicklist { get; set; }
     public String namespace { get; set; }
     private List<questionData> hiddenQuestions { get; set; }
 
     public class question {
-        String id { get; set; }
-        String name { get; set; }
-        String type { get; set; }
-        String question { get; set; }
-        Boolean required { get; set; }
-        List<String> picklist { get; set; }
-        String help { get; set; }
-        String instructions { get; set; }
-        String assist { get; set; }
-        String defaultValue { get; set; }
-        Integer textLimit { get; set; }
-        String setupError { get; set; }
-        Boolean setupFail { get; set; }
+        public String id { get; set; }
+        public String name { get; set; }
+        public String type { get; set; }
+        public String question { get; set; }
+        public Boolean required { get; set; }
+        public List<String> picklist { get; set; }
+        public String help { get; set; }
+        public String instructions { get; set; }
+        public String assist { get; set; }
+        public String defaultValue { get; set; }
+        public Integer textLimit { get; set; }
+        public String setupError { get; set; }
+        public Boolean setupFail { get; set; }
     }
 
-    private class questionGuestData {
-        String guestId { get; set; }
-        List<questionData> questions { get; set; }
+    public class questionGuestData {
+        public String guestId { get; set; }
+        public List<questionData> questions { get; set; }
     }
 
-    private class questionData {
-        String id { get; set; }
-        String value { get; set; }
-        String question { get; set; }
+    public class questionData {
+        public String id { get; set; }
+        public String value { get; set; }
+        public String question { get; set; }
     }
 
     public SummitEventsRegisterGuestsController() {
@@ -102,7 +100,7 @@ public with sharing class SummitEventsRegisterGuestsController {
                     q.setupError += 'Map to field does not exist. ';
                     q.setupFail = true;
                 }
-                if(!mapToFieldAccessible) {
+                if (!mapToFieldAccessible) {
                     q.setupError += 'Map to field is not accessible. ';
                     q.setupFail = true;
                 }
@@ -144,6 +142,8 @@ public with sharing class SummitEventsRegisterGuestsController {
 
             guestJSON = eventRegistration.Guest_JSON__c;
 
+            System.debug(JSON.serializePretty(guestJSON));
+
             //remove hidden inputs
             if (String.isNotEmpty(guestJSON)) {
                 List<questionGuestData> hostedGuests = (List<questionGuestData>) JSON.deserialize(guestJSON, List<questionGuestData>.class);
@@ -182,9 +182,6 @@ public with sharing class SummitEventsRegisterGuestsController {
             }
             formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
 
-            statePicklist = buildPicklist('State');
-
-            countryPicklist = buildPicklist('Country');
         }
     }
 
@@ -201,28 +198,6 @@ public with sharing class SummitEventsRegisterGuestsController {
             }
         }
         return cpl;
-    }
-
-    public String buildPicklist(String htmlId) {
-        String htmlSelect = '<div class="slds-select_container">';
-        htmlSelect += '<select id="' + htmlId + '" name="' + htmlId + '" class="slds-select">';
-        Schema.DescribeFieldResult F;
-        if (htmlId.equalsIgnoreCase('state')) {
-            F = Summit_Events_Registration__c.Registrant_State_Global__c.getDescribe();
-        }
-        if (htmlId.equalsIgnoreCase('Country')) {
-            F = Summit_Events_Registration__c.Registrant_Country__c.getDescribe();
-        }
-
-        Schema.SObjectField T = F.getSobjectField();
-        //List<PicklistEntry> entries = T.getDescribe().getPicklistValues();
-        htmlSelect += '<option value="">Select</option>';
-        for (Schema.PicklistEntry PicklistValue : T.getDescribe().getPicklistValues()) {
-            htmlSelect += '<option value="' + PicklistValue.getValue() + '">' + PicklistValue.getLabel() + '</option>';
-        }
-        htmlSelect += '</div>';
-        htmlSelect += '</select>';
-        return htmlSelect;
     }
 
     public PageReference checkEventDetails() {
