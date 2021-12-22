@@ -164,7 +164,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
 
     }
 
-    public static Contact createContact(String firstName, String preferredFirst, String lastName, String Email, String Zip, String Phone, String DOB, String ClassYear) {
+    public static Contact createContact(String firstName, String lastName, String Email, String Zip, String Phone, String DOB) {
 
         Account a = new Account(Name = firstName + ' ' + lastName + ' Account Name');
         insert a;
@@ -189,6 +189,14 @@ public with sharing class SummitEventsTestSharedDataFactory {
     }
 
     public static List<Summit_Events_Question__c> addQuestionsToEvent(Id eventId, String inputType, String registrantType) {
+        return addQuestions(eventId, inputType, registrantType, '');
+    }
+
+    public static List<Summit_Events_Question__c> addQuestionsToEventWithMapTo(Id eventId, String inputType, String registrantType, String mapTo) {
+        return addQuestions(eventId, inputType, registrantType, mapTo);
+    }
+
+    public static List<Summit_Events_Question__c> addQuestions(Id eventId, String inputType, String registrantType, String mapTo) {
         List<String> inputTypes = new List<String>();
         List<Summit_Events_Question__c> questions = new List<Summit_Events_Question__c>();
         String namespace = SummitEventsNamespace.getNamespace();
@@ -215,7 +223,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
             Schema.DescribeFieldResult dField = sField.getDescribe();
             if (dField.isCreateable() &&
                     (String.valueOf(dField.getType()).equalsIgnoreCase('textarea'))) {
-               // System.debug('field type : ' + String.valueOf(dField.getType()));
+                // System.debug('field type : ' + String.valueOf(dField.getType()));
                 fieldsCreatable.add(dField.getName());
             }
         }
@@ -228,7 +236,11 @@ public with sharing class SummitEventsTestSharedDataFactory {
             question.Question_Field_Type__c = inputTypes[x];
             question.Name = 'Question Name ' + x;
             question.Question_Label__c = 'Question ' + x;
-            question.Map_to_Field__c = fieldsCreatable[questionCount];
+            if (String.isNotBlank(mapTo)) {
+                question.Map_to_Field__c = namespace + mapTo;
+            } else {
+                question.Map_to_Field__c = fieldsCreatable[questionCount];
+            }
             question.Is_Visible__c = true;
             if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
                 question.Map_to_Field__c = namespace + 'Guest_Host__c';
@@ -385,11 +397,10 @@ public with sharing class SummitEventsTestSharedDataFactory {
         return null;
     }
 
-    public static String getUUID()
-    {
+    public static String getUUID() {
         Blob b = Crypto.generateAesKey(128);
         String h = EncodingUtil.convertToHex(b);
-        String guid = h.substring(0,8)+ '-' + h.substring(8,12) + '-' + h.substring(12,16) + '-' + h.substring(16,20) + '-' + h.substring(20);
+        String guid = h.substring(0, 8) + '-' + h.substring(8, 12) + '-' + h.substring(12, 16) + '-' + h.substring(16, 20) + '-' + h.substring(20);
         return guid;
     }
 

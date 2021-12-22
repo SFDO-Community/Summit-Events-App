@@ -7,10 +7,10 @@
 private class SummitEventsSubmit_TEST {
 
     @IsTest static void testSubmit() {
-        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
         //Get namespace if packaged
         String namespace = SummitEventsNamespace.getNamespace();
         if (String.isNotBlank(namespace)) {
@@ -35,7 +35,7 @@ private class SummitEventsSubmit_TEST {
     }
 
     @IsTest static void testSubmitWithAppointments() {
-        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         List<Summit_Events_Appointment_Type__c> testAppointmentTypes = SummitEventsTestSharedDataFactory.createAppointmentTypes(seaTestInstances[1].Event__c);
@@ -46,7 +46,7 @@ private class SummitEventsSubmit_TEST {
             testAppointments.add(appointment);
         }
         insert testAppointments;
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
         String namespace = SummitEventsNamespace.getNamespace();
         if (String.isNotBlank(namespace)) {
             namespace = namespace + '__';
@@ -68,7 +68,7 @@ private class SummitEventsSubmit_TEST {
 
 
     @IsTest static void testSubmitWithFees() {
-        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         List<Summit_Events_Fee_Allocation__c> testFeeAllocations = SummitEventsTestSharedDataFactory.AddFeesToEvent(seaTestInstances[1].Event__c);
         SummitEventsTestSharedDataFactory.AddDonationsToEvents(seaTestInstances[1].Event__c, testFeeAllocations);
@@ -76,7 +76,7 @@ private class SummitEventsSubmit_TEST {
 
         //Get all the variations of user input to make a appointment type for each
         List<String> feeTypes = new List<String>();
-        Schema.DescribeFieldResult fieldResult = Summit_events_Fee__c.Event_Fee_Type__c.getDescribe();
+        Schema.DescribeFieldResult fieldResult = Summit_Events_Fee__c.Event_Fee_Type__c.getDescribe();
         List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
         for (Schema.PicklistEntry pickListVal : ple) {
             feeTypes .add(pickListVal.getLabel());
@@ -85,14 +85,14 @@ private class SummitEventsSubmit_TEST {
         List<Summit_Events_Fee__c> testFees = new List<Summit_Events_Fee__c>();
         for (String feeType : feeTypes) {
             Summit_Events_Fee__c fee = new Summit_Events_Fee__c();
-            fee.Event_Fee_type__c = feeType;
+            fee.Event_Fee_Type__c = feeType;
             fee.Event_Registration__c = seaTestRegistration.Id;
             fee.Event_Fee__c = 10.00;
             fee.Description__c = feeType + ' Fee';
             testFees.add(fee);
         }
         insert testFees;
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
         String namespace = SummitEventsNamespace.getNamespace();
         if (String.isNotBlank(namespace)) {
             namespace = namespace + '__';
