@@ -22,7 +22,6 @@ public with sharing class SummitEventsSubmitController {
     public Double eventOnlyPaymentAmount { get; set; }
     public String eventOnlyPaymentAmountFormatted { get; set; }
     public List<questionGuestData> guestAnswers { get; set; }
-    public String paymentItemized { get; set; }
     public Boolean showPaymentButton { get; set; }
     public Map<String, PageReference> pageFlow { get; set; }
 

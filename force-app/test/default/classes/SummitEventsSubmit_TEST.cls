@@ -113,4 +113,49 @@ private class SummitEventsSubmit_TEST {
 
     }
 
+    @IsTest static void testSubmitWithGuestRegistrations() {
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+
+        //Test question with empty map_to_field defined.
+        List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEventWithMapTo(seaTestInstances[1].Event__c, 'date', 'Guest', 'Question Text 1', 'Answer_1_Numeric__c');
+        testQuestions.addAll(SummitEventsTestSharedDataFactory.addQuestionsToEventWithMapTo(seaTestInstances[1].Event__c, 'Textbox', 'Guest', 'Question Text 5', 'Add_Info_Answer_1__c'));
+
+        //Create question answer JSON object
+        List<SummitEventsRegisterGuestsController.questionGuestData> guestsQuestions = new List<SummitEventsRegisterGuestsController.questionGuestData>();
+        SummitEventsRegisterGuestsController.questionGuestData guestAnswer = new SummitEventsRegisterGuestsController.questionGuestData();
+        List<SummitEventsRegisterGuestsController.questionData> questionsDataList = new List<SummitEventsRegisterGuestsController.questionData>();
+
+        questionsDataList.add(SummitEventsTestSharedDataFactory.createQuestionData(testQuestions[0].Id, 'TEST 0', testQuestions[0].Question_Label__c));
+        questionsDataList.add(SummitEventsTestSharedDataFactory.createQuestionData('NOT AN ID', 'TEST NO ID', testQuestions[1].Question_Label__c));
+
+        guestAnswer.guestId = SummitEventsTestSharedDataFactory.getUUID();
+        guestAnswer.questions = questionsDataList;
+        guestsQuestions.add(guestAnswer);
+
+        seaTestRegistration.Guest_JSON__c = JSON.serialize(guestsQuestions);
+
+        update seaTestRegistration;
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEventsSubmit;
+            Test.setCurrentPage(pageRef);
+            SummitEventsShared SEShared = new SummitEventsShared();
+            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+
+            //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
+            SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
+            System.assertEquals(submitCtrl.previousPage().getUrl(), '/apex/' + namespace + 'summiteventsregister');
+            System.assertEquals(submitCtrl.submitRegistration().getUrl(), '/apex/' + namespace + 'summiteventsconfirmation');
+            Test.stopTest();
+        }
+
+    }
+
 }
