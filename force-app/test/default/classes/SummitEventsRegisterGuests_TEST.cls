@@ -198,7 +198,6 @@ private class SummitEventsRegisterGuests_TEST {
             Datetime nowTime = Datetime.now();
             SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
 
-
             SummitEventsRegisterGuestsController guestController = new SummitEventsRegisterGuestsController();
 
             //Deserialize the question JSON from the page so we can check for errors

@@ -189,14 +189,15 @@ public with sharing class SummitEventsTestSharedDataFactory {
     }
 
     public static List<Summit_Events_Question__c> addQuestionsToEvent(Id eventId, String inputType, String registrantType) {
-        return addQuestions(eventId, inputType, registrantType, '');
+        return addQuestions(eventId, inputType, registrantType, '', '');
     }
 
-    public static List<Summit_Events_Question__c> addQuestionsToEventWithMapTo(Id eventId, String inputType, String registrantType, String mapTo) {
-        return addQuestions(eventId, inputType, registrantType, mapTo);
+
+    public static List<Summit_Events_Question__c> addQuestionsToEventWithMapTo(Id eventId, String inputType, String registrantType, String questionText, String mapTo) {
+        return addQuestions(eventId, inputType, registrantType, mapTo, questionText);
     }
 
-    public static List<Summit_Events_Question__c> addQuestions(Id eventId, String inputType, String registrantType, String mapTo) {
+    public static List<Summit_Events_Question__c> addQuestions(Id eventId, String inputType, String registrantType, String mapTo, String questionText) {
         List<String> inputTypes = new List<String>();
         List<Summit_Events_Question__c> questions = new List<Summit_Events_Question__c>();
         String namespace = SummitEventsNamespace.getNamespace();
@@ -235,7 +236,12 @@ public with sharing class SummitEventsTestSharedDataFactory {
 
             question.Question_Field_Type__c = inputTypes[x];
             question.Name = 'Question Name ' + x;
-            question.Question_Label__c = 'Question ' + x;
+            if (String.isNotBlank(questionText)) {
+                question.Question_Label__c = questionText;
+            } else {
+                question.Question_Label__c = 'Question ' + x;
+            }
+
             if (String.isNotBlank(mapTo)) {
                 question.Map_to_Field__c = namespace + mapTo;
             } else {
@@ -265,6 +271,16 @@ public with sharing class SummitEventsTestSharedDataFactory {
         insert questions;
         return questions;
     }
+
+    public static SummitEventsRegisterGuestsController.questionData createQuestionData(String questionID, String questionValue, String questionLabel) {
+        SummitEventsShared seaShared = new SummitEventsShared();
+        SummitEventsRegisterGuestsController.questionData questionData = new SummitEventsRegisterGuestsController.questionData();
+        questionData.id = seaShared.encryptString(questionID);
+        questionData.value = questionValue;
+        questionData.question = questionLabel;
+        return questionData;
+    }
+
 
     public static Summit_Events_Registration__c createEventRegistration(Summit_Events_Instance__c evtI, String firstName, String lastName, String Email, String Zip, String DOB, String ClassYear, Id optionalContactLinkId) {
 

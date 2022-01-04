@@ -11,7 +11,6 @@ public with sharing class SummitEventsConfirmationController {
     public String templateSelected { get; set; }
     public String formattedNavDate { get; set; }
     public Boolean eventIsClosed { get; set; }
-    public Boolean eventIsInError { get; set; }
     public Boolean adminOpen { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
 
@@ -90,7 +89,6 @@ public with sharing class SummitEventsConfirmationController {
         }
 
         if (!eventIsClosed) {
-            String eventTitle = '';
             if (!String.isBlank(eventInformation.registrationId)) {
 
                 Summit_Events_Registration__c eventRegistration = [
@@ -105,12 +103,6 @@ public with sharing class SummitEventsConfirmationController {
 
                     registrationCRUD regCRUD = new registrationCRUD();
 
-                    if (!String.isBlank(eventRegistration.Event_Instance_Title__c)) {
-                        eventTitle = eventRegistration.Event_Name__c + ' - ' + eventRegistration.Event_Instance_Title__c ;
-                    } else {
-                        eventTitle = eventRegistration.Event_Name__c;
-                    }
-
                     //Hosted Guests turn into registrations here if Guest_JSON__c is present in data
                     if (String.isNotBlank(eventRegistration.Guest_JSON__c)) {
 
@@ -121,12 +113,13 @@ public with sharing class SummitEventsConfirmationController {
                                 SELECT Id, Map_to_Field__c, Question_Field_Type__c, Display_Order__c, Question_Label__c
                                 FROM Summit_Events_Question__c
                                 WHERE Event__c = :eventInformation.eventId
-                                AND  (Registrant_Type__c = 'Guest' OR Registrant_Type__c = 'Registrant and Guest')
+                                AND (Registrant_Type__c = 'Guest' OR Registrant_Type__c = 'Registrant and Guest')
                                 WITH SECURITY_ENFORCED
                                 ORDER BY Display_Order__c NULLS LAST
                         ]);
 
                         List<questionData> guestAnswers = (List<questionData>) JSON.deserialize(eventRegistration.Guest_JSON__c, List<questionData>.class);
+
                         for (Integer xx = 0; xx < guestAnswers.size(); xx++) {
                             Summit_Events_Registration__c guestRegistration = new Summit_Events_Registration__c();
                             SObjectType seaObject = Summit_Events_Registration__c.getSObjectType();
@@ -136,8 +129,9 @@ public with sharing class SummitEventsConfirmationController {
                                 try {
                                     questionId = seaShared.decryptString(q.id, true);
                                 } catch (Exception e) {
-                                    System.debug(e.getMessage());
+                                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Invalid question Id detected.'));
                                 }
+
                                 if (questionId != null) {
                                     Summit_Events_Question__c questionParameters = availableQuestions.get(questionId);
                                     String mapToField = questionParameters.Map_to_Field__c;
@@ -146,6 +140,7 @@ public with sharing class SummitEventsConfirmationController {
                                         mapToField = String.escapeSingleQuotes(mapToField).escapeHtml4();
                                         Boolean fieldExists = true;
                                         Object nextField;
+
                                         try {
                                             nextField = Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(mapToField).getDescribe();
                                         } catch (Exception e) {
@@ -159,7 +154,6 @@ public with sharing class SummitEventsConfirmationController {
                                             String valueIn = q.value.trim();
                                             if (String.isNotBlank(valueIn)) {
                                                 String fieldType = String.valueOf(seaObjectResults.fields.getMap().get(mapToField).getDescribe().getType()).toLowerCase();
-                                                System.debug(seaObjectResults.fields.getMap().get(mapToField).getDescribe().getType() + ' : ' + fieldType + ' : ' + valueIn);
                                                 try {
                                                     switch on fieldType {
                                                         when 'date' {
@@ -185,7 +179,7 @@ public with sharing class SummitEventsConfirmationController {
                                                                     inputLength = 40;
                                                                 }
                                                             }
-                                                            if (inputLength > 0) {
+                                                            if (valueIn.length() > inputLength) {
                                                                 guestRegistration.put(mapToField, valueIn.abbreviate(inputLength));
                                                             }
                                                         }
@@ -213,8 +207,6 @@ public with sharing class SummitEventsConfirmationController {
                                 guestRegistrations.add(guestRegistration);
                             }
                         }
-
-                        System.debug('GUEST REG: ' + JSON.serializePretty(guestRegistrations));
 
                         if (guestRegistrations.size() > 0 && eventRegistrationSuccess) {
                             eventRegistrationSuccess = regCRUD.addGuestRegistration(guestRegistrations);
@@ -251,17 +243,6 @@ public with sharing class SummitEventsConfirmationController {
         }
     }
 
-    public static Boolean validateEmail(String email) {
-        Boolean isEmail = true;
-        String emailRegex = '^[a-zA-Z0-9._|\\\\%#~`=?&/$^*!}{+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'; // source: http://www.regular-expressions.info/email.html
-        Pattern MyPattern = Pattern.compile(emailRegex);
-        Matcher MyMatcher = MyPattern.matcher(email);
-        if (!MyMatcher.matches()) {
-            isEmail = false;
-        }
-        return isEmail;
-    }
-
 
     /**
      * Summit Events is a multi-step, guest user, registration solution so CRUD work needs to be done on records where guest record ownership is lost between steps.
@@ -277,22 +258,20 @@ public with sharing class SummitEventsConfirmationController {
             try {
                 update newEvtReg;
             } catch (Exception ex) {
-                System.debug(ex.getMessage());
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
             return newEvtReg;
         }
 
         public Boolean addGuestRegistration(List<Summit_Events_Registration__c> guestRegistrations) {
-            System.debug(JSON.serializePretty(guestRegistrations));
+            Boolean guestAdded = false;
             try {
                 insert guestRegistrations;
-                return true;
+                guestAdded =  true;
             } catch (Exception ex) {
-                System.debug(ex.getMessage());
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
-            return false;
+            return guestAdded;
         }
     }
 }
