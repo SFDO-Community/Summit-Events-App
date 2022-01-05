@@ -89,10 +89,10 @@ global with sharing class SummitEventsFeed {
 
         Boolean hideClosed = false;
         if (String.isNotBlank(req.params.get('hideClosed'))) {
+            hideClosed = false;
             try {
                 hideClosed = Boolean.valueOf(req.params.get('hideClosed'));
             } catch (Exception e) {
-                hideClosed = false;
             }
         }
         if (hideClosed) {

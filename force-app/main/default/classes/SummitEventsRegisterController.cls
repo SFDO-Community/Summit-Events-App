@@ -5,7 +5,6 @@
 
 public with sharing class SummitEventsRegisterController {
     public Summit_Events_Instance__c evtInstance { get; set; }
-    public List<Summit_Events_Question__c> eventQuestions { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public List<SelectOption> guestAmt { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
@@ -36,7 +35,6 @@ public with sharing class SummitEventsRegisterController {
     public Id incomingEventRegistrationId { get; set; }
     public Map<String, PageReference> pageFlow { get; set; }
     public String nextUrl { get; set; }
-    public String picklistStringToFormat { get; set; }
     public String placeholderValue { get; set; }
     public String timezoneDisplay { get; set; }
 
@@ -297,10 +295,6 @@ public with sharing class SummitEventsRegisterController {
                 contactSet = true;
             }
         }
-    }
-
-    public List<SelectOption> getCreateVFPicklist() {
-        return createPicklists(picklistStringToFormat);
     }
 
     public Summit_Events_Registration__c getEventRegistration(Id eventRegistrationId) {

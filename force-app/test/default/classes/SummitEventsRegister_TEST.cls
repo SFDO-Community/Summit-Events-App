@@ -154,6 +154,7 @@ private class SummitEventsRegister_TEST {
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Test', 'Tester', 'test@test.net', '55555', '1971-03-22', '2012', null);
         Summit_Events__c seaTestEvent = SummitEventsTestSharedDataFactory.getEventRecord(seaTestInstances[1].Event__c);
         seaTestEvent.Registration_Email_Restriction__c = 'One registration per event';
+        seaTestEvent.Ask_Phone__c = 'Ask with type';
         //remove location data to test it not showing
         seaTestEvent.Location_Title__c = '';
         seaTestEvent.Location_Address__c = '';
@@ -172,6 +173,7 @@ private class SummitEventsRegister_TEST {
             ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[2].Id);
             ApexPages.currentPage().getParameters().put('audience', 'High School Senior');
             SummitEventsRegisterController registerController = new SummitEventsRegisterController();
+            registerController.phoneType = 'mobile';
             registerController.eventRegistration.Registrant_First_Name__c = 'Test';
             registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
             registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
@@ -242,6 +244,7 @@ private class SummitEventsRegister_TEST {
             registerController.eventRegistration.Registrant_First_Name__c = 'Test';
             registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
             registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
+            registerController.phoneType = 'mobile';
             registerController.saveContactRegistration();
             List<Summit_Events_Fee__c> fees = [
                     SELECT Id, Event_Fee_Allocation__c, Event_Registration__c
@@ -251,7 +254,7 @@ private class SummitEventsRegister_TEST {
             //Fees records should have been added.
             System.assertEquals(fees.size(), 2);
             //Add a fee amount to cause deletion
-            Summit_events_Fee__c strayTestFee = new Summit_Events_Fee__c(
+            Summit_Events_Fee__c strayTestFee = new Summit_Events_Fee__c(
                     Event_Registration__c = registerController.eventRegistration.Id,
                     Event_Fee__c = 10,
                     Event_Fee_Allocation__c = seaTestFeeAllocations[5].Id,
@@ -293,6 +296,7 @@ private class SummitEventsRegister_TEST {
             registerController.eventRegistration.Registrant_First_Name__c = 'Test';
             registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
             registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
+            registerController.phoneType = 'home';
             registerController.saveContactRegistration();
             List<Summit_Events_Fee__c> fees = [
                     SELECT Id, Event_Fee_Allocation__c, Event_Registration__c, Event_Fee__c

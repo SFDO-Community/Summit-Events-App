@@ -244,9 +244,13 @@ public with sharing class SummitEventsShared {
 
         //Get home page link if it exists
         String eventHomeLink = '';
-        Id newInstanceId = eventInformation.instanceId;
-        String newRegistrationId = eventInformation.registrationId;
+        Id newInstanceId = null;
+        try {
+            newInstanceId = eventInformation.instanceId;
+        } catch (Exception ex) {
+        }
 
+        String newRegistrationId = eventInformation.registrationId;
         if (String.isNotBlank(newInstanceId)) {
             Summit_Events_Instance__c eventPage = [
                     SELECT Event__r.Event_Home_Link_URL__c

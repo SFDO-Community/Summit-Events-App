@@ -23,17 +23,28 @@ private class SummitEventsRegisterAppointment_TEST {
             }
 
             PageReference pageRef = Page.SummitEventsRegisterAppointments;
-            pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
 
             SummitEventsRegisterAppointmentCtlr optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
+
+            //Check event with no id should return home link to site
+            PageReference checkPage = optionsCtrl.checkEventDetails();
+            System.assertEquals(checkPage.getUrl(), 'https://google.com/SummitEvents');
+
             SummitEventsShared SEShared = new SummitEventsShared();
             SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
             optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
 
-            //optionsCtrl.checkEventDetails();
-            pageRef.getParameters().remove('adminopen');
+            //Check event details should return null because event
+            checkPage = optionsCtrl.checkEventDetails();
+            System.assertEquals(checkPage, null);
+
+            //previous page should be registration page
+            System.assertEquals(optionsCtrl.previousPage().getUrl(), '/apex/' + namespace + 'summiteventsregister');
+
             pageRef.getParameters().put('adminopen', 'true');
+            optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
+            //previous page should be registration page with included admin open added to URL above
             System.assertEquals(optionsCtrl.previousPage().getUrl(), '/apex/' + namespace + 'summiteventsregister?adminopen=true');
 
             List<Summit_Events_Appointments__c> testAppointments = [SELECT Id, Event_Registration__c FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :seaTestRegistration.Id];
