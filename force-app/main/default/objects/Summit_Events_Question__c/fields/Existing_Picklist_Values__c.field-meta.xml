@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Existing_Picklist_Values__c</fullName>
+    <description>Use picklist values that already exist on the registration record as a field.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Use picklist values that already exist on the registration record as a field.</inlineHelpText>
+    <label>Existing Picklist Values</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Registrant_Third_Party_Status__c</fullName>
+                <default>false</default>
+                <label>Third Party Status</label>
+            </value>
+            <value>
+                <fullName>Registrant_State_Global__c</fullName>
+                <default>false</default>
+                <label>State</label>
+            </value>
+            <value>
+                <fullName>Registrant_Country__c</fullName>
+                <default>false</default>
+                <label>Country</label>
+            </value>
+            <value>
+                <fullName>Registrant_Pronouns__c</fullName>
+                <default>false</default>
+                <label>Registrant Pronouns</label>
+            </value>
+            <value>
+                <fullName>Registrant_Applicant_Type__c</fullName>
+                <default>false</default>
+                <label>Applicant Type</label>
+            </value>
+            <value>
+                <fullName>Preferred_Visit_Time__c</fullName>
+                <default>false</default>
+                <label>Preferred Visit Time</label>
+            </value>
+            <value>
+                <fullName>Registrant_Gender__c</fullName>
+                <default>false</default>
+                <label>Gender</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
