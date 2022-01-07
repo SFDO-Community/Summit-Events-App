@@ -221,8 +221,6 @@ public with sharing class SummitEventsContactMatching {
         List<Lead> matchLeads = new List<Lead>();
         if (results.size() > 0) {
             for (Datacloud.DuplicateResult dr : results[0].getDuplicateResults()) {
-                System.debug(matchingRule);
-                System.debug(dr.getDuplicateRule());
 
                 if (matchingRule == dr.getDuplicateRule()) {
                     for (Datacloud.MatchResult mr : dr.getMatchResults()) {
@@ -435,8 +433,6 @@ public with sharing class SummitEventsContactMatching {
                 }
             }
         }
-
-        System.debug(matchingMethod + ' - ' + l);
 
         return l;
     }

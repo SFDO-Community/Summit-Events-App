@@ -24,6 +24,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     private Id incomingRegId { get; set; }
     public Map<String, String> lookUpDisplayValue { get; set; }
 
+
     public class questionItem {
         public String questionId { get; set; }
         public String type { get; set; }
@@ -100,7 +101,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
                             Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c,
                             Lookup_Object__c, Lookup_Fields__c, Lookup_Where_Clause__c, Lookup_No_Results_Label__c, Lookup_Secondary_Input_Link_Text__c, Lookup_Secondary_Value_Field__c,
-                            Lookup_Secondary_Input_Instructions__c, Lookup_Results_Icon__c
+                            Lookup_Secondary_Input_Instructions__c, Lookup_Results_Icon__c, Existing_Picklist_Values__c
                     FROM Summit_Events_Question__c
                     WHERE Event__c = :eventInformation.eventId
                     AND (Registrant_Type__c = 'Registrant' OR Registrant_Type__c = 'Registrant and Guest')
@@ -113,7 +114,6 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             if (String.isNotBlank(namespace)) {
                 namespace = namespace + '__';
             }
-
 
             eventRegistration = new Summit_Events_Registration__c();
 
@@ -131,169 +131,141 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 mapToList.add(namespace + 'Event__c');
                 mapToList.add(namespace + 'Event_Instance__c');
 
-                Schema.DescribeFieldResult mapToFieldDescribe;
-
                 for (Summit_Events_Question__c question : additionalQuestions) {
                     //Build each question item and add to question item list to inform creation of visualforce form.
-
                     questionItem quest = new questionItem();
                     quest.setupFail = false;
                     quest.setupError = '';
                     String mapToField = '';
                     String lookupObject = '';
-                    Schema.DescribeSObjectResult lookUpObjectDescribe;
 
                     //Make sure this is really a field
                     if (String.isBlank(question.Map_to_Field__c)) {
                         quest.setupError += 'Map to field is not entered. ';
                     } else {
                         //Check if map to field exists
-                        try {
-                            mapToField = question.Map_to_Field__c.trim().toLowerCase();
-                            mapToFieldDescribe = Schema.SObjectType.Summit_Events_Registration__c.fields.getMap().get(mapToField).getDescribe();
-                        } catch (Exception e) {
-                            quest.setupError += 'Map to field does not exist. ';
-                        }
+                        mapToField = question.Map_to_Field__c.trim().toLowerCase();
+                        quest.setupError = checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', mapToField, '', true, 'Map to field: ');
                     }
 
-                    //If tests above pass mapToField will be populated with a valid mapToField
-                    if (String.isNotEmpty(mapToField)) {
-                        Boolean mapToAvailable = false;
-                        try {
-                            mapToAvailable = Schema.SObjectType.Summit_Events_Registration__c.isAccessible() && mapToFieldDescribe.isAccessible() && mapToFieldDescribe.isCreateable();
-                        } catch (Exception e) {
-                            quest.setupError += 'Map to field is not accessible with current permissions. ';
-                        }
-
-                        // Make sure that we can access and edit the requested field
-                        if (mapToAvailable) {
-
-                            //It would be counter productive to map to the same field, but if you do it live with the ordering consequences with your questions
-                            if (!mapToList.contains(mapToField)) {
-                                mapToList.add(mapToField);
-                            } else {
-                                quest.setupError += 'You have 2 questions mapped to the same field: ' + mapToField + '. ';
-                            }
-
-                            //build wrapper class to type and make picklist lists
-                            quest.question = question.Question_Label__c;
-                            quest.required = question.Required__c;
-                            quest.questionId = SeaShared.encryptString(question.Id);
-                            quest.type = question.Question_Field_Type__c;
-                            quest.picklist = createPicklists(question.Picklist_Values__c);
-                            quest.help = question.Help_Text__c;
-                            quest.instructions = question.Instructions__c;
-                            quest.assist = question.Error_Assist_Text__c;
-                            quest.defaultValue = question.Default_Value__c;
-                            quest.textLimit = Integer.valueOf(question.Text_Limit__c);
-                            quest.mapTo = mapToField;
-
-                            if (String.isNotBlank(question.Lookup_Results_Icon__c)) {
-                                quest.icon = question.Lookup_Results_Icon__c.trim();
-                            } else {
-                                quest.icon = 'account';
-                            }
-
-                            if (String.isNotBlank(question.Lookup_Secondary_Input_Link_Text__c)) {
-                                quest.secondaryLinkText = question.Lookup_Secondary_Input_Link_Text__c;
-                            } else {
-                                quest.secondaryLinkText = 'Manually enter information.';
-                            }
-
-                            //Look up object is the source of the data in the lookup question that returns an idea when a record is selected
-                            if (String.isNotBlank(question.Lookup_Object__c)) {
-                                try {
-                                    lookupObject = question.Lookup_Object__c.trim().toLowerCase();
-                                    lookUpObjectDescribe = Schema.getGlobalDescribe().get(lookupObject).getDescribe();
-                                    if (!lookUpObjectDescribe.isAccessible()) {
-                                        quest.setupError += 'Lookup object ' + lookupObject + ' is not accessible (check sharing rules and permissions). ';
-                                    }
-                                } catch (Exception ex) {
-                                    quest.setupError += 'Lookup object ' + lookupObject + ' does not exist. ';
-                                }
-                            } else if (String.isBlank(question.Lookup_Object__c) && question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
-                                quest.setupError += 'Lookup question does not have a defined lookup object. ';
-                            }
-
-                            quest.secondaryMapTo = question.Lookup_Secondary_Value_Field__c;
-                            if (String.isNotBlank(question.Lookup_Secondary_Value_Field__c)) {
-                                mapToList.add(question.Lookup_Secondary_Value_Field__c);
-                            }
-
-                            quest.secondaryQuestion = question.Lookup_Secondary_Input_Instructions__c;
-
-                            if (String.isNotBlank(question.Lookup_No_Results_Label__c)) {
-                                quest.secondaryNoResults = question.Lookup_No_Results_Label__c;
-                            } else {
-                                quest.secondaryNoResults = 'No results found.';
-                            }
-
-                            if (question.Question_Field_Type__c.equalsIgnoreCase('lookup') && String.isNotBlank(lookupObject)) {
-
-
-                                List<String> cleanLookUpFields = new List<String>();
-                                List<String> lookupFields = new List<String>();
-                                List<String> referentialLookups = new List<String>();
-                                Boolean mapToFieldIsLookup = true;
-
-                                if (!String.valueOf(mapToFieldDescribe.getType()).equalsIgnoreCase('reference')) {
-                                    quest.setupError += 'Map to field must be a lookup relationship field (' + mapToField + '). ';
-                                    mapToFieldIsLookup = false;
-                                }
-
-                                if (String.isNotBlank(question.Lookup_Fields__c)) {
-                                    lookupFields = question.Lookup_Fields__c.split(',');
-
-                                    // Test for accessibility and clean up lookup fields
-                                    for (String lookUpField : lookupFields) {
-                                        lookUpField = lookUpField.trim();
-                                        Schema.DescribeFieldResult lookUpFieldDescribe;
-                                        Boolean lookUpFieldExists = true;
-                                        try {
-                                            lookUpFieldDescribe = lookUpObjectDescribe.fields.getMap().get(lookUpField).getDescribe();
-                                        } catch (Exception ex) {
-                                            quest.setupError += 'Lookup field ' + lookUpField + ' dose not exist. ';
-                                            lookUpFieldExists = false;
-                                        }
-                                        if (lookUpFieldExists) {
-                                            if (!lookUpFieldDescribe.isAccessible()) {
-                                                quest.setupError += 'Lookup field ' + lookUpField + ' is not accessible. ';
-                                            } else {
-                                                cleanLookUpFields.add(lookUpField);
-                                                if (mapToFieldIsLookup) {
-                                                    mapToList.add(mapToField.replace('__c', '__r.') + lookUpField);
-                                                    referentialLookups.add(lookUpField);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                //Build queryInfo object to encrypt to pass lookup query information not in the clear
-                                Map<String, String> queryInfo = new Map<String, String>();
-                                queryInfo.put('Lookup_Object__c', lookupObject);
-
-                                if (cleanLookUpFields.size() > 0) {
-                                    queryInfo.put('Lookup_Fields__c', String.join(cleanLookUpFields, ','));
-                                    lookUpDisplayValue.put(mapToField, String.join(referentialLookups, ','));
-                                }
-
-                                if (String.isNotBlank(question.Lookup_Where_Clause__c)) {
-                                    queryInfo.put('Lookup_Where_Clause__c', question.Lookup_Where_Clause__c);
-                                }
-
-                                System.debug(JSON.serializePretty(queryInfo));
-                                //serialize object with query info in it to retrieve later when decrypted
-                                quest.lookup = SeaShared.encryptString(JSON.serialize(queryInfo));
-
-                                List<String> lookupFieldsRelation = new List<String>();
-                                if (String.isNotBlank(question.Lookup_Fields__c)) {
-                                    lookupFieldsRelation = question.Lookup_Fields__c.split(',');
-                                }
-
-                            }
-                        }
+                    //It would be counter productive to map to the same field, but if you do it live with the ordering consequences with your questions
+                    if (!mapToList.contains(mapToField)) {
+                        mapToList.add(mapToField);
+                    } else {
+                        quest.setupError += 'You have 2 questions mapped to the same field: ' + mapToField + '. ';
                     }
+
+                    //build wrapper class to type and make picklist lists
+                    quest.question = question.Question_Label__c;
+                    quest.required = question.Required__c;
+                    quest.questionId = SeaShared.encryptString(question.Id);
+                    quest.type = question.Question_Field_Type__c;
+
+                    if (String.isNotBlank(question.Existing_Picklist_Values__c)) {
+
+                        String existingPickListField = question.Existing_Picklist_Values__c;
+                        //make sure non-namespaced
+                        if (String.isNotBlank(namespace) && !question.Existing_Picklist_Values__c.startsWith(namespace) && !question.Existing_Picklist_Values__c.startsWith('c__')) {
+                            existingPickListField = namespace + existingPickListField;
+                        }
+                        //Test if picklist is accessible and is a picklist
+                        quest.setupError += checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', existingPickListField, 'picklist', false, '');
+                        if (String.isBlank(quest.setupError)) {
+                            quest.picklist = createExistingPicklist(existingPickListField);
+                        }
+                    } else {
+                        quest.picklist = createPicklists(question.Picklist_Values__c);
+                    }
+
+                    quest.help = question.Help_Text__c;
+                    quest.instructions = question.Instructions__c;
+                    quest.assist = question.Error_Assist_Text__c;
+                    quest.defaultValue = question.Default_Value__c;
+                    quest.textLimit = Integer.valueOf(question.Text_Limit__c);
+                    quest.mapTo = mapToField;
+
+                    if (String.isNotBlank(question.Lookup_Results_Icon__c)) {
+                        quest.icon = question.Lookup_Results_Icon__c.trim();
+                    } else {
+                        quest.icon = 'account';
+                    }
+
+                    if (String.isNotBlank(question.Lookup_Secondary_Input_Link_Text__c)) {
+                        quest.secondaryLinkText = question.Lookup_Secondary_Input_Link_Text__c;
+                    } else {
+                        quest.secondaryLinkText = 'Manually enter information.';
+                    }
+
+
+                    quest.secondaryMapTo = question.Lookup_Secondary_Value_Field__c;
+                    if (String.isNotBlank(question.Lookup_Secondary_Value_Field__c)) {
+                        mapToList.add(question.Lookup_Secondary_Value_Field__c);
+                    }
+
+                    quest.secondaryQuestion = question.Lookup_Secondary_Input_Instructions__c;
+
+                    if (String.isNotBlank(question.Lookup_No_Results_Label__c)) {
+                        quest.secondaryNoResults = question.Lookup_No_Results_Label__c;
+                    } else {
+                        quest.secondaryNoResults = 'No results found.';
+                    }
+
+                    if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
+
+                        List<String> cleanLookUpFields = new List<String>();
+                        List<String> lookupFields = new List<String>();
+                        List<String> referentialLookups = new List<String>();
+                        Boolean mapToFieldIsLookup = true;
+
+                        //Look up object is the source of the data in the lookup question that returns an idea when a record is selected
+                        lookupObject = '';
+                        if (String.isNotBlank(question.Lookup_Object__c)) {
+                            lookupObject = question.Lookup_Object__c.trim().toLowerCase();
+                            quest.setupError += checkFieldGuestAccess(lookupObject, '', '', false, '');
+                        }
+
+                        quest.setupError += checkFieldGuestAccess(lookupObject, mapToField, 'reference', true, 'Map To Field: ');
+
+                        if (String.isNotBlank(question.Lookup_Fields__c)) {
+                            lookupFields = question.Lookup_Fields__c.split(',');
+
+                            // Test for accessibility and clean up lookup fields
+                            for (String lookUpField : lookupFields) {
+                                lookUpField = lookUpField.trim();
+                                quest.setupError += checkFieldGuestAccess(lookupObject, lookUpField, '', false, 'Look up field: ');
+                                if (String.isBlank(quest.setupError)) {
+                                    cleanLookUpFields.add(lookUpField);
+                                    if (mapToFieldIsLookup) {
+                                        mapToList.add(mapToField.replace('__c', '__r.') + lookUpField);
+                                        referentialLookups.add(lookUpField);
+                                    }
+                                }
+                            }
+                        }
+
+                        //Build queryInfo object to encrypt to pass lookup query information not in the clear
+                        Map<String, String> queryInfo = new Map<String, String>();
+                        queryInfo.put('Lookup_Object__c', lookupObject);
+
+                        if (cleanLookUpFields.size() > 0) {
+                            queryInfo.put('Lookup_Fields__c', String.join(cleanLookUpFields, ','));
+                            lookUpDisplayValue.put(mapToField, String.join(referentialLookups, ','));
+                        }
+
+                        if (String.isNotBlank(question.Lookup_Where_Clause__c)) {
+                            queryInfo.put('Lookup_Where_Clause__c', question.Lookup_Where_Clause__c);
+                        }
+
+                        //serialize object with query info in it to retrieve later when decrypted
+                        quest.lookup = SeaShared.encryptString(JSON.serialize(queryInfo));
+
+                        List<String> lookupFieldsRelation = new List<String>();
+                        if (String.isNotBlank(question.Lookup_Fields__c)) {
+                            lookupFieldsRelation = question.Lookup_Fields__c.split(',');
+                        }
+
+                    }
+
 
                     //add question to question wrapper if it is visible, otherwise apply default value to the event registration.
                     if (question.Is_Visible__c) {
@@ -309,6 +281,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                         quest.setupFail = true;
                     }
                 }
+
                 //outside question group
                 String regQuery = '';
                 if (mapToList.size() > 0) {
@@ -319,8 +292,6 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     regQuery += ' FROM Summit_Events_Registration__c ';
                     regQuery += ' WHERE Id = \'' + String.escapeSingleQuotes(eventInformation.registrationId) + '\'';
                 }
-
-                System.debug(regQuery);
 
                 if (String.isNotBlank(regQuery)) {
                     try {
@@ -374,6 +345,24 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         return cpl;
     }
 
+    public List<SelectOption> createExistingPicklist(String existingPicklist) {
+        List<SelectOption> picklists = new List<SelectOption>();
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace.toLowerCase() + '__';
+        }
+
+        Schema.DescribeSObjectResult registrationDescribe = ((SObject) Type.forName('Schema', namespace + 'Summit_Events_Registration__c').newInstance()).getSObjectType().getDescribe();
+
+        List<Schema.PicklistEntry> PicklistValues = registrationDescribe.fields.getMap().get(namespace + existingPicklist).getDescribe().getPicklistValues();
+        picklists.add(new SelectOption('', 'Select...'));
+        for (Schema.PicklistEntry PicklistValue : PicklistValues) {
+
+            picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));
+        }
+        return picklists;
+    }
+
     public PageReference submitAdditionalQuestions() {
         doCRUD CRUDToDo = new doCRUD();
         CRUDToDo.saveRegistration(eventRegistration, incomingRegId);
@@ -388,6 +377,52 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         return SeaShared.checkForEvent();
     }
 
+    //Method to test object and field availability for current user (Guest user)
+    public String checkFieldGuestAccess(String objectApiName, String fieldName, String requiredFieldType, Boolean testCreatable, String qualifierLabel) {
+        String returnError = '';
+        DescribeFieldResult fieldDescribe;
+        SObjectType schemaType;
+        if (String.isBlank(qualifierLabel)) {
+            qualifierLabel = '';
+        }
+        try {
+            schemaType = ((SObject) Type.forName('Schema', objectApiName).newInstance()).getSObjectType();
+        } catch (Exception ex) {
+            returnError = qualifierLabel + objectApiName + ' may not exist or is inaccessible. ';
+        }
+
+        if (String.isBlank(returnError)) {
+            if (!schemaType.getDescribe().isAccessible()) {
+                returnError += qualifierLabel + objectApiName + ' is not accessible (check sharing rules and permissions). ';
+            }
+        }
+        if (String.isNotBlank(fieldName) && String.isBlank(returnError)) {
+            try {
+                Map<String, SObjectField> fields = schemaType.getDescribe().fields.getMap();
+                fieldDescribe = fields.get(fieldName).getDescribe();
+            } catch (Exception ex) {
+                returnError += qualifierLabel + 'Field ' + fieldName + ' may not exist. ';
+            }
+
+            if (String.isBlank(returnError)) {
+                if (!fieldDescribe.isAccessible()) {
+                    returnError += qualifierLabel + 'Field ' + fieldName + ' is not accessible by guest user.';
+                }
+            }
+            if (String.isBlank(returnError) && testCreatable) {
+                if (!fieldDescribe.isCreateable()) {
+                    returnError += qualifierLabel + 'Field ' + fieldName + ' is not writable. ';
+                }
+            }
+            if (String.isBlank(returnError) && String.isNotBlank(requiredFieldType)) {
+                if (!String.valueOf(fieldDescribe.getType()).equalsIgnoreCase(requiredFieldType)) {
+                    returnError += qualifierLabel + 'Field ' + fieldName + ' is not the required field type ' + requiredFieldType + '. ';
+                }
+            }
+        }
+        return returnError;
+    }
+
     @RemoteAction
     public static List<queryReturn> lookupSearch(String question, String term) {
         SummitEventsShared SeaShared = new SummitEventsShared();
@@ -400,9 +435,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 Schema.DescribeSObjectResult lookupObjectDesc = null;
                 try {
                     //Define lookup object
-                    lookupObjectDesc = Schema.getGlobalDescribe().get(queryInfo.get('Lookup_Object__c').trim()).getDescribe();
+                    lookupObjectDesc = ((SObject) Type.forName('Schema', queryInfo.get('Lookup_Object__c')).newInstance()).getSObjectType().getDescribe();
                 } catch (Exception e) {
-                    System.debug(e.getMessage());
                     ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Lookup object is inaccessible.' + e.getMessage()));
                 }
                 if (lookupObjectDesc != null) {
@@ -447,14 +481,12 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                     lookupQuery += ' ORDER BY ' + String.join(validLookupFields, ', ') + ' ASC';
                                     lookupQuery += ' LIMIT 50';
 
-                                    System.debug(lookupQuery);
-
                                     List<SObject> foundValues = new List<SObject>();
 
                                     try {
                                         foundValues = Database.query(lookupQuery);
                                     } catch (Exception e) {
-                                        System.debug(e.getMessage());
+
                                     }
                                     for (SObject obj : foundValues) {
                                         queryReturn qr = new queryReturn();
@@ -464,7 +496,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                         validLookupFields.add('Id');
                                         for (Integer xx = 0; xx < validLookupFields.size(); xx++) {
                                             //Don't ever show Ids in the returned value list
-                                            String fieldType = String.valueOf(Schema.getGlobalDescribe().get(queryInfo.get('Lookup_Object__c')).getDescribe().fields.getMap().get(validLookupFields[xx]).getDescribe().getType()).toLowerCase();
+                                            SObjectType lookupObjectDescribe = ((SObject) Type.forName('Schema', queryInfo.get('Lookup_Object__c')).newInstance()).getSObjectType();
+                                            String fieldType = String.valueOf(lookupObjectDescribe.getDescribe().fields.getMap().get(validLookupFields[xx]).getDescribe().getType()).toLowerCase();
                                             if (fieldType != 'id') {
                                                 if (xx == 0) {
                                                     lineOne = (String) obj.get(validLookupFields[xx]);

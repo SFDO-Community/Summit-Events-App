@@ -142,8 +142,6 @@ public with sharing class SummitEventsRegisterGuestsController {
 
             guestJSON = eventRegistration.Guest_JSON__c;
 
-            System.debug(JSON.serializePretty(guestJSON));
-
             //remove hidden inputs
             if (String.isNotEmpty(guestJSON)) {
                 List<questionGuestData> hostedGuests = (List<questionGuestData>) JSON.deserialize(guestJSON, List<questionGuestData>.class);

@@ -149,7 +149,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             testQuestions[0].Map_to_Field__c = namespace + 'Registrant_First_Name__c';
             update testQuestions;
             questionController = new SummitEventsAdditionalQuestionsCtlr();
-            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map to field must be a lookup relationship field (registrant_first_name__c). ');
+            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map To Field: Field registrant_first_name__c is not the required field type reference. ');
 
             Test.stopTest();
         }
@@ -192,7 +192,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             testQuestions[0].Lookup_No_Results_Label__c = 'Nope. Nothing...';
             update testQuestions;
             questionController = new SummitEventsAdditionalQuestionsCtlr();
-            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map to field does not exist. Map to field is not accessible with current permissions. ');
+            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map to field: Field bogusfield may not exist. ');
 
             //Test question with sane map_to_field__c as another question in the event
             testQuestions[0].Map_to_Field__c = testQuestions2[0].Map_to_Field__c;
@@ -236,25 +236,52 @@ private class SummitEventsAdditionalQuestions_TEST {
             SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
-            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Lookup question does not have a defined lookup object. ');
-
+            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map To Field:  may not exist or is inaccessible. Look up field:  may not exist or is inaccessible. Look up field:  may not exist or is inaccessible. ');
 
             //Test question with field that doesn't exist for map_to_field__c
             testQuestions[0].Lookup_Object__c = 'Blah';
             testQuestions[0].Lookup_Fields__c = 'Blah';
             update testQuestions;
             questionController = new SummitEventsAdditionalQuestionsCtlr();
-            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Lookup object blah does not exist. Lookup field Blah dose not exist. ');
-//
-//            //Test question with sane map_to_field__c as another question in the event
-//            testQuestions[0].Map_to_Field__c = testQuestions2[0].Map_to_Field__c;
-//            testQuestions[0].Lookup_Secondary_Input_Link_Text__c = 'Secondary Link Text';
-//            testQuestions[0].Lookup_No_Results_Label__c = 'Nope. Nothing...';
-//            update testQuestions;
-//            questionController = new SummitEventsAdditionalQuestionsCtlr();
-//            System.assertEquals(questionController.additionalQuestions.size(), 2);
-//            System.assertEquals(questionController.questionWrapper[1].setupError, 'Question setup issue(s): You have 2 questions mapped to the same field: ' + testQuestions2[0].Map_to_Field__c.toLowerCase() + '. ');
+            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): blah may not exist or is inaccessible. Map To Field: blah may not exist or is inaccessible. Look up field: blah may not exist or is inaccessible. ');
 
+            Test.stopTest();
+        }
+    }
+
+    @IsTest
+    static void testExistingPicklist() {
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+
+        //Test question with empty map_to_field defined.
+        List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'picklist', 'Registrant and Guest');
+
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+
+        testQuestions[0].Existing_Picklist_Values__c = namespace + 'Registrant_State_Global__c';
+        testQuestions[0].Map_to_Field__c = namespace + 'Registrant_State_Global__c';
+        testQuestions[0].Picklist_Values__c = '';
+        update testQuestions;
+
+        System.runAs(testUser) {
+            Test.startTest();
+
+            PageReference pageRef = Page.SummitEventsAdditionalQuestions;
+            Test.setCurrentPage(pageRef);
+
+            SummitEventsShared SEShared = new SummitEventsShared();
+            Datetime nowTime = Datetime.now();
+            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+
+            SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
+
+            System.assert(questionController.questionWrapper[0].picklist.size() > 0);
 
             Test.stopTest();
         }

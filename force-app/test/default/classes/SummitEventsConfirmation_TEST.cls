@@ -219,7 +219,6 @@ private class SummitEventsConfirmation_TEST {
                 }
             }
             //System.assertEquals(pageMessages[0], 'Hosted Record: Insufficient Access to field for question: Question 0');
-            System.debug(JSON.serializePretty(pageMessages));
             System.assert(pageMessages.contains('Hosted Record: Could not covert response (double) on question \"Question Text 1\"'), true);
             System.assert(pageMessages.contains('Hosted Record: Could not covert response (date) on question \"Question Text 2\"'), true);
             System.assert(pageMessages.contains('Invalid question Id detected.'), true);

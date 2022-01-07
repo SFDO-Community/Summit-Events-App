@@ -125,8 +125,6 @@ public with sharing class SummitEventsShared {
             }
         }
 
-        System.debug('Current page location:' + currentPageLocation);
-        System.debug('page In Event Size ' + pagesInEvent.size());
         if (currentUrl.equalsIgnoreCase(allPageReferences.get(namespace + 'SummitEventsRegister').getUrl()) || pagesInEvent == null || currentPageLocation == 0) {
             pageMovement.put('Previous', Page.SummitEventsRegister);
         } else {
@@ -144,7 +142,6 @@ public with sharing class SummitEventsShared {
                 'adminopen', 'instanceID', 'audience'
         };
         for (String parameterKey : currentPageParameters.keySet()) {
-            System.debug(currentPageParameters);
             if (validParameters.contains(parameterKey)) {
                 for (String key : pageMovement.keySet()) {
                     PageReference addBackParameters = pageMovement.get(key);

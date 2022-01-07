@@ -224,7 +224,6 @@ public with sharing class SummitEventsTestSharedDataFactory {
             Schema.DescribeFieldResult dField = sField.getDescribe();
             if (dField.isCreateable() &&
                     (String.valueOf(dField.getType()).equalsIgnoreCase('textarea'))) {
-                // System.debug('field type : ' + String.valueOf(dField.getType()));
                 fieldsCreatable.add(dField.getName());
             }
         }
