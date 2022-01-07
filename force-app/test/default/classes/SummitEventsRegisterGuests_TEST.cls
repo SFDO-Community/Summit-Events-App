@@ -202,12 +202,54 @@ private class SummitEventsRegisterGuests_TEST {
 
             //Deserialize the question JSON from the page so we can check for errors
             List<SummitEventsRegisterGuestsController.question> guestQuestions = (List<SummitEventsRegisterGuestsController.question>) JSON.deserialize(guestController.guestQuestionJSON, List<SummitEventsRegisterGuestsController.question>.class);
-            System.assertEquals(guestQuestions[0].setupError, 'Map to field does not exist. ');
-            System.assertEquals(guestQuestions[1].setupError, 'Map to field is not accessible. ');
+            System.assertEquals(guestQuestions[0].setupError, 'Field NOT_A_FIELD__c may not exist. ');
+            System.assertEquals(guestQuestions[1].setupError, 'Field Total_Confirmed_Appointments__c is not writable. ');
 
             //Correct encrypted cooke information decrypted
             System.assertEquals(JSON.serialize(guestController.eventInformation), '{"registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
 
+
+            Test.stopTest();
+        }
+    }
+
+    @IsTest
+    static void testQuestionWithExistingPicklist() {
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+
+        //Test question with empty map_to_field defined.
+        List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Guest');
+        testQuestions.addAll(SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Guest'));
+
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+
+        testQuestions[0].Existing_Picklist_Values__c = namespace + 'Registrant_State_Global__c';
+        testQuestions[0].Map_to_Field__c = namespace + 'Registrant_State_Global__c';
+        testQuestions[0].Picklist_Values__c = '';
+        update testQuestions;
+
+        System.runAs(testUser) {
+            Test.startTest();
+
+            PageReference pageRef = Page.SummitEventsRegisterGuests;
+            Test.setCurrentPage(pageRef);
+
+            SummitEventsShared SEShared = new SummitEventsShared();
+            Datetime nowTime = Datetime.now();
+            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+
+            SummitEventsRegisterGuestsController guestController = new SummitEventsRegisterGuestsController();
+
+            //Deserialize the question JSON from the page so we can check for errors
+            List<SummitEventsRegisterGuestsController.question> guestQuestions = (List<SummitEventsRegisterGuestsController.question>) JSON.deserialize(guestController.guestQuestionJSON, List<SummitEventsRegisterGuestsController.question>.class);
+
+            System.assert(guestQuestions[0].picklist.size() > 0);
 
             Test.stopTest();
         }
