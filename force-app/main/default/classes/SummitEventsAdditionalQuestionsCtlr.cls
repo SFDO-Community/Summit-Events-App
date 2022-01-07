@@ -145,7 +145,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     } else {
                         //Check if map to field exists
                         mapToField = question.Map_to_Field__c.trim().toLowerCase();
-                        quest.setupError = checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', mapToField, '', true, 'Map to field: ');
+                        quest.setupError = SeaShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', mapToField, '', true, 'Map to field: ');
                     }
 
                     //It would be counter productive to map to the same field, but if you do it live with the ordering consequences with your questions
@@ -169,7 +169,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             existingPickListField = namespace + existingPickListField;
                         }
                         //Test if picklist is accessible and is a picklist
-                        quest.setupError += checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', existingPickListField, 'picklist', false, '');
+                        quest.setupError += SeaShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', existingPickListField, 'picklist', false, '');
                         if (String.isBlank(quest.setupError)) {
                             quest.picklist = createExistingPicklist(existingPickListField);
                         }
@@ -221,10 +221,10 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                         lookupObject = '';
                         if (String.isNotBlank(question.Lookup_Object__c)) {
                             lookupObject = question.Lookup_Object__c.trim().toLowerCase();
-                            quest.setupError += checkFieldGuestAccess(lookupObject, '', '', false, '');
+                            quest.setupError += SeaShared.checkFieldGuestAccess(lookupObject, '', '', false, '');
                         }
 
-                        quest.setupError += checkFieldGuestAccess(lookupObject, mapToField, 'reference', true, 'Map To Field: ');
+                        quest.setupError += SeaShared.checkFieldGuestAccess(lookupObject, mapToField, 'reference', true, 'Map To Field: ');
 
                         if (String.isNotBlank(question.Lookup_Fields__c)) {
                             lookupFields = question.Lookup_Fields__c.split(',');
@@ -232,7 +232,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             // Test for accessibility and clean up lookup fields
                             for (String lookUpField : lookupFields) {
                                 lookUpField = lookUpField.trim();
-                                quest.setupError += checkFieldGuestAccess(lookupObject, lookUpField, '', false, 'Look up field: ');
+                                quest.setupError += SeaShared.checkFieldGuestAccess(lookupObject, lookUpField, '', false, 'Look up field: ');
                                 if (String.isBlank(quest.setupError)) {
                                     cleanLookUpFields.add(lookUpField);
                                     if (mapToFieldIsLookup) {
@@ -357,7 +357,6 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         List<Schema.PicklistEntry> PicklistValues = registrationDescribe.fields.getMap().get(namespace + existingPicklist).getDescribe().getPicklistValues();
         picklists.add(new SelectOption('', 'Select...'));
         for (Schema.PicklistEntry PicklistValue : PicklistValues) {
-
             picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));
         }
         return picklists;
@@ -377,51 +376,6 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         return SeaShared.checkForEvent();
     }
 
-    //Method to test object and field availability for current user (Guest user)
-    public String checkFieldGuestAccess(String objectApiName, String fieldName, String requiredFieldType, Boolean testCreatable, String qualifierLabel) {
-        String returnError = '';
-        DescribeFieldResult fieldDescribe;
-        SObjectType schemaType;
-        if (String.isBlank(qualifierLabel)) {
-            qualifierLabel = '';
-        }
-        try {
-            schemaType = ((SObject) Type.forName('Schema', objectApiName).newInstance()).getSObjectType();
-        } catch (Exception ex) {
-            returnError = qualifierLabel + objectApiName + ' may not exist or is inaccessible. ';
-        }
-
-        if (String.isBlank(returnError)) {
-            if (!schemaType.getDescribe().isAccessible()) {
-                returnError += qualifierLabel + objectApiName + ' is not accessible (check sharing rules and permissions). ';
-            }
-        }
-        if (String.isNotBlank(fieldName) && String.isBlank(returnError)) {
-            try {
-                Map<String, SObjectField> fields = schemaType.getDescribe().fields.getMap();
-                fieldDescribe = fields.get(fieldName).getDescribe();
-            } catch (Exception ex) {
-                returnError += qualifierLabel + 'Field ' + fieldName + ' may not exist. ';
-            }
-
-            if (String.isBlank(returnError)) {
-                if (!fieldDescribe.isAccessible()) {
-                    returnError += qualifierLabel + 'Field ' + fieldName + ' is not accessible by guest user.';
-                }
-            }
-            if (String.isBlank(returnError) && testCreatable) {
-                if (!fieldDescribe.isCreateable()) {
-                    returnError += qualifierLabel + 'Field ' + fieldName + ' is not writable. ';
-                }
-            }
-            if (String.isBlank(returnError) && String.isNotBlank(requiredFieldType)) {
-                if (!String.valueOf(fieldDescribe.getType()).equalsIgnoreCase(requiredFieldType)) {
-                    returnError += qualifierLabel + 'Field ' + fieldName + ' is not the required field type ' + requiredFieldType + '. ';
-                }
-            }
-        }
-        return returnError;
-    }
 
     @RemoteAction
     public static List<queryReturn> lookupSearch(String question, String term) {

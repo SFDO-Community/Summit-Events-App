@@ -265,19 +265,15 @@ function buildPicklist(question) {
     picklist.name = question.id;
     picklist.id = question.id;
     picklist.setAttribute('aria-describedby', 'error_' + question.id);
-    question['picklist'].forEach(item => {
-        let selectOption = document.createElement('option');
-        selectOption.text = item;
-        if (item === 'Select...') {
-            selectOption.value = '';
-        } else {
-            if (question.defaultValue === item) {
-                selectOption.selected = true;
-            }
-            selectOption.value = item;
+    for (const pick in question['picklist']) {
+        let options = question['picklist'][pick];
+        for (const opt in options) {
+            let selectOption = document.createElement('option');
+            selectOption.text = opt;
+            selectOption.value = options[opt];
+            picklist.add(selectOption);
         }
-        picklist.add(selectOption);
-    });
+    }
     picklistWrap.appendChild(picklist);
     return picklistWrap;
 }
