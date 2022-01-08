@@ -24,7 +24,7 @@
 
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages />
+                    <apex:messages/>
                 </div>
 
                 <!-- EVENT BREADCRUMB -->
@@ -78,7 +78,7 @@
                                                 <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
                                                   <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
                                                 </svg>
-                                                Register Guest
+                                                {!IF(ISBLANK(eventPage.Guest_Registration_Add_Button_Label__c),'Register Guest', eventPage.Guest_Registration_Add_Button_Label__c)}
                                             </span>
                                         </button>
                                     </footer>
@@ -87,7 +87,7 @@
                         </div>
                         <div class="slds-col slds-size_1-of-1 slds-medium-size_8-of-12 slds-large-size_8-of-12" id="guestList">
                             <p class="slds-text-body slds-p-vertical_xx-small" id="noGuestPlaceholder">
-                                No guest added yet.
+                                {!IF(ISBLANK(eventPage.No_Guest_Registrations_Added_Message__c),'No guest added yet.', eventPage.No_Guest_Registrations_Added_Message__c)}
                             </p>
                         </div>
                         <apex:form id="GuestRegistration" styleClass="slds-grid slds-wrap slds-p-vertical_x-small slds-size_1-of-1">

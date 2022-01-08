@@ -1722,6 +1722,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Guest_Registration_Add_Button_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.Guest_Registration_Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1818,6 +1823,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Max_Other_Attendees__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.No_Guest_Registrations_Added_Message__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
