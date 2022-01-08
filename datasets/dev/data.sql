@@ -163,9 +163,10 @@ CREATE TABLE "Summit_Events_Instance__c" (
 	"Event__c" VARCHAR(255), 
 	PRIMARY KEY (id)
 );
-INSERT INTO "Summit_Events_Instance__c" VALUES(1,'Active','','False','','Registrants plus Guests','100.0','','','','','2020-10-04','12:30:00.000Z','Testing additional questions with this event.','2020-10-04','08:00:00.000Z','Central Daylight Time (America/Chicago)','Secondary Title','','','','','False','','','','','1');
-INSERT INTO "Summit_Events_Instance__c" VALUES(2,'Active','','False','','Registrants plus Guests','100.0','','','','','2020-09-25','15:30:00.000Z','A short description','2020-09-25','08:00:00.000Z','Central Daylight Time (America/Chicago)','Secondary Title','','','','','False','','','','','2');
-INSERT INTO "Summit_Events_Instance__c" VALUES(3,'Active','','False','','Registrants plus Guests','100.0','','','','','2020-10-02','13:15:00.000Z','A short description','2020-10-02','09:00:00.000Z','Central Daylight Time (America/Chicago)','A special Title','','','','','False','','','','','2');
+INSERT INTO "Summit_Events_Instance__c" VALUES(1,'Active','','False','','Registrants plus Guests','1000.0','','','','','2021-01-26','16:00:00.000Z','Test event for gathering guest registrations from registrant.','2021-01-26','12:00:00.000Z','Central Daylight Time (America/Chicago)','Secondary Title','','','','','False','','','','','3');
+INSERT INTO "Summit_Events_Instance__c" VALUES(2,'Active','','False','','Registrants plus Guests','100.0','','','','','2021-01-22','12:30:00.000Z','Testing additional questions with this event.','2021-01-22','08:00:00.000Z','Central Daylight Time (America/Chicago)','Secondary Title','','','','','False','','','','','1');
+INSERT INTO "Summit_Events_Instance__c" VALUES(3,'Active','','False','','Registrants plus Guests','100.0','','','','','2021-01-13','15:30:00.000Z','A short description','2021-01-13','08:00:00.000Z','Central Daylight Time (America/Chicago)','Secondary Title','','','','','False','','','','','2');
+INSERT INTO "Summit_Events_Instance__c" VALUES(4,'Active','','False','','Registrants plus Guests','100.0','','','','','2021-01-20','13:15:00.000Z','A short description','2021-01-20','09:00:00.000Z','Central Daylight Time (America/Chicago)','A special Title','','','','','False','','','','','2');
 CREATE TABLE "Summit_Events_Payment__c" (
 	id INTEGER NOT NULL, 
 	"Account_Number__c" VARCHAR(255), 
@@ -203,11 +204,17 @@ CREATE TABLE "Summit_Events_Question__c" (
 	"Default_Value__c" VARCHAR(255), 
 	"Display_Order__c" VARCHAR(255), 
 	"Error_Assist_Text__c" VARCHAR(255), 
+	"Existing_Picklist_Values__c" VARCHAR(255), 
 	"Help_Text__c" VARCHAR(255), 
 	"Instructions__c" VARCHAR(255), 
 	"Is_Visible__c" VARCHAR(255), 
 	"Lookup_Fields__c" VARCHAR(255), 
-	"Lookup_Object__c" VARCHAR(255),
+	"Lookup_No_Results_Label__c" VARCHAR(255), 
+	"Lookup_Object__c" VARCHAR(255), 
+	"Lookup_Results_Icon__c" VARCHAR(255), 
+	"Lookup_Secondary_Input_Instructions__c" VARCHAR(255), 
+	"Lookup_Secondary_Input_Link_Text__c" VARCHAR(255), 
+	"Lookup_Secondary_Value_Field__c" VARCHAR(255), 
 	"Lookup_Where_Clause__c" VARCHAR(255), 
 	"Map_to_Field__c" VARCHAR(255), 
 	"Name" VARCHAR(255), 
@@ -221,7 +228,22 @@ CREATE TABLE "Summit_Events_Question__c" (
 	"Event__c" VARCHAR(255), 
 	PRIMARY KEY (id)
 );
-INSERT INTO "Summit_Events_Question__c" VALUES(1,'','','1.0','A pet type is required. Please choose one.','If you don''t like pets than choose the on you dislike the least.','','True','','','','Add_Info_Answer_1__c','Test Registrant Favorite Pet','Dog
+INSERT INTO "Summit_Events_Question__c" VALUES(1,'','','3.0','State is a required field.','Registrant_State_Global__c','Ask your State representative what state you live in.','Enter the state your home is resides,','True','','','','','','','','','Registrant_State_Global__c','State','','Picklist','State','Registrant','True','','','1');
+INSERT INTO "Summit_Events_Question__c" VALUES(2,'','','6.0','State is a required field.','Registrant_State_Global__c','Ask your State representative what state you live in.','Enter the state your home is resides,','True','','','','','','','','','Registrant_State_Global__c','Guest Registrant State','','Picklist','State','Guest','False','','','3');
+INSERT INTO "Summit_Events_Question__c" VALUES(3,'','','20.0','A pet type is required. Please choose one.','','If you don''t like pets than choose the on you dislike the least.','','True','','','','','','','','','Add_Info_Answer_1__c','Guest Registrant Favorite Pet','Dog
+
+Cat
+
+Hamster
+
+Chicken
+
+Snake','Picklist','What is your favorite pet?','Guest','False','','','3');
+INSERT INTO "Summit_Events_Question__c" VALUES(4,'','','4.0','Street address is a required field','','This address should include house number and the street you live on.','Please enter your home address','True','','','','','','','','','Registrant_Street_1__c','Guest Registrant Street Address','','Textbox','Street Address','Guest','False','','','3');
+INSERT INTO "Summit_Events_Question__c" VALUES(5,'','','5.0','City is a required field','','If you can''t find your home city consult google maps.','Enter the city where your home resides.','True','','','','','','','','','Registrant_City__c','Guest Registrant City','','Textbox','City','Guest','False','','','3');
+INSERT INTO "Summit_Events_Question__c" VALUES(6,'','','1.0','','','','','True','','','','','','','','','Registrant_First_Name__c','Guest Registrant First Name','','Textbox','First Name','Guest','False','','','3');
+INSERT INTO "Summit_Events_Question__c" VALUES(7,'','','2.0','City is a required field','','If you can''t find your home city consult google maps.','Enter the city where your home resides.','True','','','','','','','','','Registrant_City__c','City','','Textbox','City','Registrant','True','','','1');
+INSERT INTO "Summit_Events_Question__c" VALUES(8,'','','10.0','A pet type is required. Please choose one.','','If you don''t like pets than choose the on you dislike the least.','','True','','','','','','','','','Add_Info_Answer_1__c','Test Registrant Favorite Pet','Dog
 
 Cat
 
@@ -230,6 +252,9 @@ Hamster
 Chicken
 
 Snake','Picklist','What is your favorite pet?','Registrant','True','','','1');
+INSERT INTO "Summit_Events_Question__c" VALUES(9,'','','3.0','','','','','True','','','','','','','','','Registrant_Email__c','Guest Registrant Email','','Email','Email','Guest','False','','','3');
+INSERT INTO "Summit_Events_Question__c" VALUES(10,'','','2.0','','','','','True','','','','','','','','','Registrant_Last_Name__c','Guest Registrant Last Name','','Textbox','Last Name','Guest','False','','','3');
+INSERT INTO "Summit_Events_Question__c" VALUES(11,'','','1.0','Street address is a required field','','This address should include house number and the street you live on.','Please enter your home address','True','','','','','','','','','Registrant_Street_1__c','Street Address','','Textbox','Street Address','Registrant','True','','','1');
 CREATE TABLE "Summit_Events_Registration__c" (
 	id INTEGER NOT NULL, 
 	"Actual_Number_of_Guests__c" VARCHAR(255), 
@@ -260,6 +285,7 @@ CREATE TABLE "Summit_Events_Registration__c" (
 	"Last_Name_as_Student__c" VARCHAR(255), 
 	"Matching_Log__c" VARCHAR(255), 
 	"New_Contact_Created__c" VARCHAR(255), 
+	"New_Lead_Created__c" VARCHAR(255), 
 	"Number_of_Guests__c" VARCHAR(255), 
 	"Participation_Type__c" VARCHAR(255), 
 	"Preferred_Class_Year__c" VARCHAR(255), 
@@ -369,6 +395,7 @@ CREATE TABLE "Summit_Events__c" (
 	"Contact_Matching_No_Match_Behavior__c" VARCHAR(255), 
 	"Contact_Matching_Rules__c" VARCHAR(255), 
 	"Custom_Metadata_Contact_Matching_Method__c" VARCHAR(255), 
+	"Custom_Metadata_Lead_Matching_Method__c" VARCHAR(255), 
 	"Date_Of_Birth_Label__c" VARCHAR(255), 
 	"Display_Guest_Registration__c" VARCHAR(255), 
 	"Display_Optional_Donation__c" VARCHAR(255), 
@@ -404,6 +431,7 @@ CREATE TABLE "Summit_Events__c" (
 	"First_Name_Label__c" VARCHAR(255), 
 	"Gender_Label__c" VARCHAR(255), 
 	"Guest_Max_Amount__c" VARCHAR(255), 
+	"Guest_Registration_Add_Button_Label__c" VARCHAR(255), 
 	"Guest_Registration_Description__c" VARCHAR(255), 
 	"Guest_Registration_Title__c" VARCHAR(255), 
 	"Guest_Table_Size__c" VARCHAR(255), 
@@ -413,6 +441,10 @@ CREATE TABLE "Summit_Events__c" (
 	"Keep_Registration_Open_During_Event__c" VARCHAR(255), 
 	"Last_Name_As_Student_Label__c" VARCHAR(255), 
 	"Last_Name_Label__c" VARCHAR(255), 
+	"Lead_Creation_Duplicate_Rule__c" VARCHAR(255), 
+	"Lead_Matching_Multiple_Match_Behavior__c" VARCHAR(255), 
+	"Lead_Matching_No_Match_Behavior__c" VARCHAR(255), 
+	"Lead_matching_rules__c" VARCHAR(255), 
 	"Location_Address__c" VARCHAR(255), 
 	"Location_Map_Link__c" VARCHAR(255), 
 	"Location_Title__c" VARCHAR(255), 
@@ -420,6 +452,7 @@ CREATE TABLE "Summit_Events__c" (
 	"Mailing_Address_Label__c" VARCHAR(255), 
 	"Max_Other_Attendees__c" VARCHAR(255), 
 	"Name" VARCHAR(255), 
+	"No_Guest_Registrations_Added_Message__c" VARCHAR(255), 
 	"Phone_Label__c" VARCHAR(255), 
 	"Phone_Type_Label__c" VARCHAR(255), 
 	"Preferred_Class_Year_Label__c" VARCHAR(255), 
@@ -451,12 +484,13 @@ CREATE TABLE "Summit_Events__c" (
 	"Event_Fee_Allocation__c" VARCHAR(255), 
 	PRIMARY KEY (id)
 );
-INSERT INTO "Summit_Events__c" VALUES(1,'','','','','','','','','','','','','','','','','','','True','','Application Type','Do not ask','Do not ask','Do not ask','Do not ask','False','Do not ask','Ask','Ask with type require','Do not ask','Do not ask','Ask','Do not ask','Do not ask','Parent/Guardian;Other','Do not ask','General Public','','0.0','','Company or Organization','','Full matching contact creation with duplicate management','Match with most recently modified','Create Contact','','','Date of Birth','False','False','','','','Email','2020-10-18','','','Body text for the appointment/options page explains what these appointments are about.','This is the header of the appointment/options page.','What does it mean to cancel a event.','Online Cancel of Registration Heading','The event has been cancelled.','Explain the registration has been received from the client at this point and is complete','Registration has been received title.','','','This footer appears on every event registration page in the footer.','Explain here that the event has reached capacity and is closed.','Event Home','','Test Event Additional Questions','This description appears in feed and should be concise','','Active','Description of submission being the final act in the registration play.','Heading for the Submit Page','Admissions Event','<p><strong>Rich Text</strong> description of the event that appears on the first registration page.</p>','Register','First Name','Gender','','','','','False','Touchpoint','False','False','Last Name As Student','Last Name','123 Evergreen Blvd., St. Paul, MN','https://g.page/sociablecider?share','The best place in the World','','Registrant Address','5.0','Test Event Additional Questions','Please provide either a home or mobile number','Type','Preferred Class Year','Preferred First Name','False','','','','Pronouns','I am willing to receive text messages on my mobile phone about this event','Your relationship to the participant','No limit','Relationship (select all that apply)','2020-08-18','GeneralSLDS','I am...','Title','','','','','','','','','','','','');
+INSERT INTO "Summit_Events__c" VALUES(1,'','','','','','','','','','','','','','','','','','','False','','Application Type','Do not ask','Do not ask','Do not ask','Do not ask','False','Do not ask','Do not ask','Do not ask','Do not ask','Do not ask','Do not ask','Do not ask','Do not ask','','Do not ask','General Public','','0.0','','Company or Organization','','Full matching contact creation with duplicate management','Match with most recently modified','Create Contact','','','','Date of Birth','False','False','','','','Email','2021-02-05','Additional Questions','<p>These questions are defined in the additional questions object that looks up to your event object.</p>','Body text for the appointment/options page explains what these appointments are about.','This is the header of the appointment/options page.','What does it mean to cancel a event.','Online Cancel of Registration Heading','The event has been cancelled.','Explain the registration has been received from the client at this point and is complete','Registration has been received title.','','','This footer appears on every event registration page in the footer.','Explain here that the event has reached capacity and is closed.','Event Home','','Test Event Additional Questions for Registrant','This description appears in feed and should be concise','','Active','Description of submission being the final act in the registration play.','Heading for the Submit Page','Admissions Event','<p><b>Rich Text</b> description of the event that appears on the first registration page. This event will test the additional questions feature of Summit Events as applied to the registrant only.</p>','Register','First Name','Gender','','','','','','False','Touchpoint','False','False','Last Name As Student','Last Name','','','','','123 Evergreen Blvd., St. Paul, MN','https://g.page/sociablecider?share','The best place in the World','','Registrant Address','','Test Event Additional Questions for Registrant','','Please provide either a home or mobile number','Type','Preferred Class Year','Preferred First Name','False','','','','Pronouns','I am willing to receive text messages on my mobile phone about this event','Your relationship to the participant','No limit','Relationship (select all that apply)','2020-12-06','GeneralSLDS','I am...','Title','','','','','','','','','','','','');
 INSERT INTO "Summit_Events__c" VALUES(2,'','','','Red
 
 Yellow
 
 Green
 
-Blue','','','','','What is your favorite color?','What''s up?','What''s your favorite day of the week?','','','Pick-list','Text area','Text box required','','','True','','Application Type','Do not ask','Do not ask','Do not ask','Do not ask','True','Do not ask','Ask','Ask with type require','Do not ask','Do not ask','Ask','Ask but do not require','Do not ask','Parent/Guardian;Other','Do not ask','General Public','','0.0','Don''t ask','Company or Organization','','Full matching contact creation with duplicate management','Match with most recently modified','Create Contact','','','Date of Birth','False','False','','','','Email','2020-10-18','','','Body text for the appointment/options page explains what these appointments are about.','This is the header of the appointment/options page.','What does it mean to cancel a event.','Online Cancel of Registration Heading','The event has been cancelled.','Explain the registration has been received from the client at this point and is complete','Registration has been received title.','','','This footer appears on every event registration page in the footer.','Explain here that the event has reached capacity and is closed.','Event Home','','Test Event','This description appears in feed and should be concise','','Active','Description of submission being the final act in the registration play.','Heading for the Submit Page','Admissions Event','<p><strong>Rich Text</strong> description of the event that appears on the first registration page.</p>','Register','First Name','Gender','','','','','False','Touchpoint','False','False','Last Name As Student','Last Name','123 Evergreen Blvd., St. Paul, MN','https://g.page/sociablecider?share','The best place in the World','','Registrant Address','5.0','Test Event','Please provide either a home or mobile number','Type','Preferred Class Year','Preferred First Name','False','','','','Pronouns','I am willing to receive text messages on my mobile phone about this event','Your relationship to the participant','No limit','Relationship (select all that apply)','2020-08-18','GeneralSLDS','I am...','Title','','','','','','','','','','','','');
+Blue','','','','','What is your favorite color?','What''s up?','What''s your favorite day of the week?','','','Pick-list','Text area','Text box required','','','True','','Application Type','Do not ask','Do not ask','Do not ask','Do not ask','True','Do not ask','Ask','Ask with type require','Do not ask','Do not ask','Ask','Ask but do not require','Do not ask','Parent/Guardian;Other','Do not ask','General Public','','0.0','Don''t ask','Company or Organization','','Full matching contact creation with duplicate management','Match with most recently modified','Create Contact','','','','Date of Birth','False','False','','','','Email','2021-02-05','','','Body text for the appointment/options page explains what these appointments are about.','This is the header of the appointment/options page.','What does it mean to cancel a event.','Online Cancel of Registration Heading','The event has been cancelled.','Explain the registration has been received from the client at this point and is complete','Registration has been received title.','','','This footer appears on every event registration page in the footer.','Explain here that the event has reached capacity and is closed.','Event Home','','Test Event','This description appears in feed and should be concise','','Active','Description of submission being the final act in the registration play.','Heading for the Submit Page','Admissions Event','<p><strong>Rich Text</strong> description of the event that appears on the first registration page.</p>','Register','First Name','Gender','','','','','','False','Touchpoint','False','False','Last Name As Student','Last Name','','','','','123 Evergreen Blvd., St. Paul, MN','https://g.page/sociablecider?share','The best place in the World','','Registrant Address','5.0','Test Event','','Please provide either a home or mobile number','Type','Preferred Class Year','Preferred First Name','False','','','','Pronouns','I am willing to receive text messages on my mobile phone about this event','Your relationship to the participant','No limit','Relationship (select all that apply)','2020-12-06','GeneralSLDS','I am...','Title','','','','','','','','','','','','');
+INSERT INTO "Summit_Events__c" VALUES(3,'','','','','','','','','','','','','','','','','','','False','','Application Type','Do not ask','Do not ask','Do not ask','Do not ask','False','Do not ask','Do not ask','Do not ask','Do not ask','Do not ask','Do not ask','Do not ask','Do not ask','','Do not ask','General Public','','0.0','','Company or Organization','','Full matching contact creation with duplicate management','Match with most recently modified','Create Contact','','','','Date of Birth','True','False','','','','Email','2021-02-05','Additional Questions','<p>These questions are defined in the additional questions object that looks up to your event object.</p>','Body text for the appointment/options page explains what these appointments are about.','This is the header of the appointment/options page.','What does it mean to cancel a event.','Online Cancel of Registration Heading','The event has been cancelled.','Explain the registration has been received from the client at this point and is complete','Registration has been received title.','','','This footer appears on every event registration page in the footer.','Explain here that the event has reached capacity and is closed.','Event Home','','Test Event for Additional Guest Registrations','This description appears in feed and should be concise','','Active','Description of submission being the final act in the registration play.','Heading for the Submit Page','Admissions Event','<p><b>Rich Text</b> description of the event that appears on the first registration page. This event will test gathering additional registrations for guests of the registrant.</p>','Register','First Name','Gender','5.0','Submit Guest Registration','<p>Please let us know who you are bringing so we can prepare the best possible event for your guests.</p>','Are you bringing additional guests','','False','Touchpoint','False','False','Last Name As Student','Last Name','','','','','123 Evergreen Blvd., St. Paul, MN','https://g.page/sociablecider?share','The best place in the World','','Registrant Address','','Test Event for Additional Guest Registrations','Guest registrations will appear here once you add them. None have been added yet.','Please provide either a home or mobile number','Type','Preferred Class Year','Preferred First Name','False','','','','Pronouns','I am willing to receive text messages on my mobile phone about this event','Your relationship to the participant','No limit','Relationship (select all that apply)','2020-12-06','GeneralSLDS','I am...','Title','','','','','','','','','','','','');
 COMMIT;
