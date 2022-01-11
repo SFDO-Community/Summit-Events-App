@@ -21,7 +21,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages/>
+                    <apex:messages />
                 </div>
 
                 <apex:form id="SummitEventRegisterForm" styleClass="slds-grid slds-wrap" style="width:100%">
@@ -121,7 +121,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </apex:outputPanel>
 
                         <apex:outputPanel layout="block" rendered="{!IF(totalEventCost!= 0,true,false)}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
-                            <h3 class="slds-text-heading_medium">Event Cost</h3>
+                            <h3 class="slds-text-heading_medium">{!IF(ISBLANK(eventPage.Event_Fee_Submit_List_Label__c),'Event Cost', eventPage.Event_Fee_Submit_List_Label__c)}</h3>
                             <p class="slds-text-body">$
                                 <apex:outputText value="{!totalEventCost}"/>
                             </p>
@@ -765,7 +765,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     <div class="slds-form-element__control">
                                         <div class="slds-select_container">
                                             <apex:selectList size="1" value="{!eventRegistration.Number_of_Guests__c}" id="guests" styleClass="slds-select {!IF(!contactSet,'required requiredText', '')}">
-                                                <apex:selectOptions value="{!guestAmt}"></apex:selectOptions>
+                                                <apex:selectOptions value="{!guestAmt}"/>
                                             </apex:selectList>
                                         </div>
                                     </div>
@@ -818,7 +818,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             <apex:commandLink action="{!saveContactRegistration}" onClick="fadeout(); return checkForm();" Value="{!IF(evtHasAppointments, 'Next', 'Register')}" id="submitReg1" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                         </div>
                         <div class="slds-col slds-p-vertical_medium slds-p-left_x-small slds-size_1-of-1">
-                            <apex:outputText escape="false" value="{!eventPage.Event_Footer__c}"></apex:outputText>
+                            <apex:outputText escape="false" value="{!eventPage.Event_Footer__c}"/>
                         </div>
                     </apex:outputPanel>
                 </apex:form>
