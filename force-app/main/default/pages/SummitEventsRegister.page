@@ -122,7 +122,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </apex:outputPanel>
 
                         <apex:outputPanel layout="block" rendered="{!IF(totalEventCost!= 0,true,false)}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
-                            <h3 class="slds-text-heading_medium">Event Cost</h3>
+                            <h3 class="slds-text-heading_medium">{!IF(ISBLANK(eventPage.Event_Fee_Submit_List_Label__c),'Event Cost', eventPage.Event_Fee_Submit_List_Label__c)}</h3>
                             <p class="slds-text-body">$
                                 <apex:outputText value="{!totalEventCost}"/>
                             </p>

@@ -55,9 +55,62 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
                             {!eventPage.Event_Confirmation_Title__c}
                         </h2>
-                        <p class="slds-text-body slds-p-vertical_xx-small">
-                            <apex:outputText escape="false" value="{!eventPage.Event_Confirmation_Description__c}"/>
-                        </p>
+                        <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                            <p class="slds-text-body slds-p-vertical_xx-small">
+                                <apex:outputText escape="false" value="{!eventPage.Event_Confirmation_Description__c}"/>
+                            </p>
+                        </div>
+                        <apex:outputPanel layout="block" rendered="{!hasFees}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
+                            <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">Payment Received</h3>
+
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Item">Item</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Fee">Fee</div>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!eventFees}" var="fee">
+                                    <apex:outputPanel rendered="{!fee.Event_Fee_Type__c != 'Event' && fee.Event_Fee_Type__c != 'Event Additional'}">
+                                        <tr>
+                                            <td class="feeAllocation">
+                                                <apex:outputPanel rendered="{!fee.Event_Fee_Type__c == 'Appointment'}" layout="none">
+                                                    {!fee.Event_Appointment_Type__r.Title__c}
+                                                </apex:outputPanel>
+                                                <apex:outputPanel rendered="{!fee.Event_Fee_Type__c == 'Optional Donation'}" layout="none">
+                                                    {!fee.Event_Fee_Type__c}
+                                                    {!IF(!ISBLANK(fee.Event_Fee_Allocation__r.Name), ' - ' + fee.Event_Fee_Allocation__r.Name, '')}
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td>
+                                                <apex:outputText value="{0, number, Currency }">
+                                                    <apex:param value="{!fee.Event_Fee__c}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                    </apex:outputPanel>
+                                </apex:repeat>
+                                <tr class="eventOnlyCost">
+                                    <td>General Event</td>
+                                    <td>{!eventOnlyPaymentAmountFormatted}</td>
+                                </tr>
+                                <tr class="eventTotalCost">
+                                    <td><strong>Total Cost</strong></td>
+                                    <td><strong>{!totalPaymentAmountFormatted}</strong></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </apex:outputPanel>
+                        <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
+                            <p class="slds-text-body ">
+                                <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"/>
+                            </p>
+                        </div>
                     </apex:outputPanel>
 
                     <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">

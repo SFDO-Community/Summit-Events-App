@@ -17,13 +17,15 @@ public with sharing class SummitEventsSubmitController {
     public Boolean adminOpen { get; set; }
     public List<Summit_Events_Fee__c> eventFees { get; set; }
     public Double totalPaymentAmount { get; set; }
-    public String totalPaymentAmountFormatted { get; set; }
     public Double existingPaymentAmount { get; set; }
     public Double eventOnlyPaymentAmount { get; set; }
     public String eventOnlyPaymentAmountFormatted { get; set; }
     public List<questionGuestData> guestAnswers { get; set; }
     public Boolean showPaymentButton { get; set; }
     public Map<String, PageReference> pageFlow { get; set; }
+    public Boolean hasPaymentGateway { get; set; }
+    public Boolean hasFees { get; set; }
+    public Boolean hasMessages { get; set; }
 
     public class questionGuestData {
         public String guestId { get; set; }
@@ -37,7 +39,8 @@ public with sharing class SummitEventsSubmitController {
     }
 
     public SummitEventsSubmitController() {
-        showPaymentButton = false;
+        hasFees = false;
+        hasMessages = false;
 
         //Get cookie or URL string variable
         eventInformation = seaShared.getSummitEventsInfo();
@@ -46,13 +49,18 @@ public with sharing class SummitEventsSubmitController {
             eventPage = [
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
                             Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
-                            Donation_Description__c, Display_Optional_Donation__c
+                            Donation_Description__c, Display_Optional_Donation__c, Payment_Gateway__c, Event_Fee_Label__c, Event_Fee_Total_Label__c,
+                            Event_Fee_Submit_List_Label__c, Payment_Button_Label__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
             ];
 
             templateSelected = seaShared.getTemplate(eventPage.Template__c);
+
+            if (String.isNotBlank(eventPage.Payment_Gateway__c) && eventPage.Payment_Gateway__c != 'None') {
+                hasPaymentGateway = true;
+            }
 
             eventInstance = [
                     SELECT Instance_Title__c, Event__r.Event_Name__c, Instance_Time_Zone__c,
@@ -70,6 +78,10 @@ public with sharing class SummitEventsSubmitController {
                 eventIsClosed = adminOpen;
             } else {
                 eventIsClosed = seaShared.isEventClosed(eventPage, eventInstance);
+            }
+
+            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('error'))) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ApexPages.currentPage().getParameters().get('error')));
             }
 
             formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
@@ -132,7 +144,11 @@ public with sharing class SummitEventsSubmitController {
             ];
 
             /** Check for preexisting payment **/
-            List<Summit_Events_Payment__c> existingPayment = [SELECT Id, Payment_Amount__c, TouchnetReceiptNumber__c FROM Summit_Events_Payment__c WHERE Event_Registration__c = :eventInformation.registrationId];
+            List<Summit_Events_Payment__c> existingPayment = [
+                    SELECT Id, Payment_Amount__c, TouchnetReceiptNumber__c
+                    FROM Summit_Events_Payment__c
+                    WHERE Event_Registration__c = :eventInformation.registrationId
+            ];
             if (existingPayment.size() > 0) {
                 existingPaymentAmount = existingPayment[0].Payment_Amount__c;
             }
@@ -154,27 +170,24 @@ public with sharing class SummitEventsSubmitController {
                     if (fee.Event_Fee__c != null && fee.Event_Fee__c > 0) {
                         totalPaymentAmount += fee.Event_Fee__c;
                     }
+                    if (fee.Event_Fee_Type__c == 'Event' || fee.Event_Fee_Type__c == 'Event Additional') {
+                        eventOnlyPaymentAmount += fee.Event_Fee__c;
+                    }
+
                 }
                 if (existingPaymentAmount > 0) {
                     totalPaymentAmount = totalPaymentAmount - existingPaymentAmount;
                 }
-                eventOnlyPaymentAmountFormatted = prettyCurrencyString(eventOnlyPaymentAmount);
-                totalPaymentAmountFormatted = prettyCurrencyString(totalPaymentAmount);
             }
             if (totalPaymentAmount > 0) {
-                showPaymentButton = true;
+                hasFees = true;
             }
         }
+        ApexPages.Message[] pageMessages = ApexPages.getMessages();
+        if (pageMessages.size() > 0) {
+            hasMessages = true;
+        }
 
-    }
-
-    public String prettyCurrencyString(Decimal numberIn) {
-        String numberOut = '';
-        List<String> args = new String[]{
-                '0', 'number', '###,###,##0.00'
-        };
-        numberOut = '$' + String.format(numberIn.format(), args);
-        return numberOut;
     }
 
     public PageReference checkEventDetails() {
