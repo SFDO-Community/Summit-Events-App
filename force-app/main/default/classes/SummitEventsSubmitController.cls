@@ -23,10 +23,11 @@ public with sharing class SummitEventsSubmitController {
     public String eventOnlyPaymentAmountFormatted { get; set; }
     public Boolean hasPaymentGateway { get; set; }
     public Boolean hasFees { get; set; }
+    public Boolean hasMessages { get; set; }
 
     public SummitEventsSubmitController() {
         hasFees = false;
-
+        hasMessages = false;
 
         //Get cookie or URL string variable
         eventInformation = seaShared.getSummitEventsInfo();
@@ -35,7 +36,7 @@ public with sharing class SummitEventsSubmitController {
             eventPage = [
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
                             Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
-                            Donation_Description__c, Display_Optional_Donation__c
+                            Donation_Description__c, Display_Optional_Donation__c, Payment_Gateway__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -140,6 +141,20 @@ public with sharing class SummitEventsSubmitController {
 
     public PageReference submitRegistration() {
         PageReference confirmPage = Page.SummitEventsConfirmation;
+        //Is there a payment gateway, are there fees
+        if (String.isNotBlank(eventPage.Payment_Gateway__c) && eventPage.Payment_Gateway__c != 'None') {
+            if (eventFees.size() > 0) {
+                //Get community base URL from custom settings
+                hasPaymentGateway = true;
+                Summit_Events_Settings__c myUserSetting = Summit_Events_Settings__c.getInstance(UserInfo.getUserId());
+                String communityBaseURL = myUserSetting.Community_Base_URL__c;
+                if (!communityBaseURL.endsWith('/')) {
+                    communityBaseURL += '/';
+                }
+                confirmPage = new PageReference(communityBaseURL + 'c__' + eventPage.Payment_Gateway__c);
+            }
+        }
+
         //Is there a payment gateway, are there fees
         if (String.isNotBlank(eventPage.Payment_Gateway__c) && eventPage.Payment_Gateway__c != 'None') {
             if (eventFees.size() > 0) {
