@@ -21,7 +21,6 @@ public with sharing class SummitEventsConfirmationController {
     public Double eventOnlyPaymentAmount { get; set; }
     public String eventOnlyPaymentAmountFormatted { get; set; }
     public Boolean hasFees { get; set; }
-    public Boolean hasMessages { get; set; }
     public Boolean paymentReceived { get; set; }
 
     private class questionData {
@@ -233,7 +232,7 @@ public with sharing class SummitEventsConfirmationController {
 
                     }
 
-                    if (String.isNotBlank(eventRegistration.Event__r.Payment_Gateway__c) && eventRegistration.Event__r.Payment_Gateway__c != 'None') {
+                    if (String.isNotBlank(eventRegistration.Event__r.Payment_Gateway__c) && eventRegistration.Event__r.Payment_Gateway__c != 'No Gateway') {
                         pageRef = gatherPaymentInformation();
                     }
 

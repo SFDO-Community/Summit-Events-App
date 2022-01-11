@@ -20,7 +20,9 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="sectionNav"/>
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
-
+                <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
+                    <apex:messages/>
+                </div>
                 <apex:form id="SummitEventsRegisterSubmitForm" styleClass="slds-grid slds-wrap">
                     <!-- EVENT BREADCRUMB -->
                     <div class="slds-col slds-p-vertical-small slds-size_1-of-1">
@@ -59,7 +61,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </div>
                     </apex:outputPanel>
 
-                    <apex:outputPanel rendered="{!!eventIsClosed}" layout="block" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                    <apex:outputPanel rendered="{!eventIsClosed}" layout="block" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                         <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
                             <apex:outputText value="{!eventPage.Event_Submit_Title__c}"/>
                         </h2>
@@ -103,7 +105,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                             <!-- Show selected appointments -->
                             <apex:outputPanel layout="none" rendered="{!IF(chosenAppointments.size>0, true, false)}">
-                                <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium slds-clearfix">Appointments/Options/Whatever</h2>
+                                <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium slds-clearfix">Appointments</h2>
                                 <ul id="chosenAppointments" class="slds-list_dotted">
                                     <apex:repeat var="appointment" value="{!chosenAppointments}">
                                         <li>

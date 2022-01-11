@@ -19,9 +19,7 @@ public with sharing class SummitEventsSubmitController {
     public Double totalPaymentAmount { get; set; }
     public Double existingPaymentAmount { get; set; }
     public Double eventOnlyPaymentAmount { get; set; }
-    public String eventOnlyPaymentAmountFormatted { get; set; }
     public List<questionGuestData> guestAnswers { get; set; }
-    public Boolean showPaymentButton { get; set; }
     public Map<String, PageReference> pageFlow { get; set; }
     public Boolean hasPaymentGateway { get; set; }
     public Boolean hasFees { get; set; }
@@ -58,7 +56,7 @@ public with sharing class SummitEventsSubmitController {
 
             templateSelected = seaShared.getTemplate(eventPage.Template__c);
 
-            if (String.isNotBlank(eventPage.Payment_Gateway__c) && eventPage.Payment_Gateway__c != 'None') {
+            if (String.isNotBlank(eventPage.Payment_Gateway__c) && eventPage.Payment_Gateway__c != 'No Gateway') {
                 hasPaymentGateway = true;
             }
 
