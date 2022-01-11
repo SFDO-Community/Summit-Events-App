@@ -1900,6 +1900,21 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events__c.Event_Fee_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Event_Fee_Submit_List_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Event_Fee_Total_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events__c.Event_Fee__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -2096,6 +2111,16 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events__c.No_Guest_Registrations_Added_Message__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Payment_Button_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Payment_Gateway__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

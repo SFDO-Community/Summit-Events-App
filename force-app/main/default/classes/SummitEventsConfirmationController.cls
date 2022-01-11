@@ -233,7 +233,11 @@ public with sharing class SummitEventsConfirmationController {
 
                     }
 
-                    if (eventRegistrationSuccess) {
+                    if (String.isNotBlank(eventRegistration.Event__r.Payment_Gateway__c) && eventRegistration.Event__r.Payment_Gateway__c != 'None') {
+                        pageRef = gatherPaymentInformation();
+                    }
+
+                    if (eventRegistrationSuccess && pageRef == null) {
                         //Build encrypted string for registration. Used for cancel link or other services outside of Summit Events App
                         String encryptedString = seaShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, eventInformation.registrationId);
 
@@ -257,6 +261,7 @@ public with sharing class SummitEventsConfirmationController {
                 }
             }
 
+                /*
                 if (String.isNotBlank(eventReg.Event__r.Payment_Gateway__c) && eventReg.Event__r.Payment_Gateway__c != 'None') {
                     pageRef = gatherPaymentInformation();
                 }
@@ -289,6 +294,7 @@ public with sharing class SummitEventsConfirmationController {
                 }
 
             }
+            */
         }
         return pageRef;
     }
