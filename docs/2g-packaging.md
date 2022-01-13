@@ -34,6 +34,16 @@ This is optional. You could install the release package in your own development 
 
 ---
 
+## Throw away package in CumulusCI
+Need to build a mock package to test and throw away without worrying about ancestry. CumulusCI has you covered with
+this command:
+
+```
+cci flow run build_feature_test_package
+```
+
+---
+
 ## ARCHIVED - Manual way of upgrading 2gp packages
 **THIS METHOD SHOULD NOT BE USED.** The instructions are left here for archival purposes. 
 The above CumulusCI method should be use as it automates everything listed below
