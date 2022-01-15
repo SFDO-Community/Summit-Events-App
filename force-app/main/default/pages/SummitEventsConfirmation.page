@@ -87,7 +87,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                     {!IF(!ISBLANK(fee.Event_Fee_Allocation__r.Name), ' - ' + fee.Event_Fee_Allocation__r.Name, '')}
                                                 </apex:outputPanel>
                                             </td>
-                                            <td>
+                                            <td class="slds-text-align_right">
                                                 <apex:outputText value="{0, number, Currency }">
                                                     <apex:param value="{!fee.Event_Fee__c}"/>
                                                 </apex:outputText>
@@ -96,12 +96,22 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </apex:outputPanel>
                                 </apex:repeat>
                                 <tr class="eventOnlyCost">
-                                    <td>General Event</td>
-                                    <td>{!eventOnlyPaymentAmountFormatted}</td>
+                                    <td>{!IF(ISBLANK(eventPage.Event_Fee_Label__c),'Event Cost', eventPage.Event_Fee_Label__c)}</td>
+                                    <td class="slds-text-align_right">
+                                        <apex:outputText value="${0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!eventOnlyPaymentAmount}"/>
+                                        </apex:outputText>
+                                    </td>
                                 </tr>
                                 <tr class="eventTotalCost">
-                                    <td><strong>Total Cost</strong></td>
-                                    <td><strong>{!totalPaymentAmountFormatted}</strong></td>
+                                    <td class="slds-cell_action-mode"><strong>{!IF(ISBLANK(eventPage.Event_Fee_Total_Label__c),'Event Cost', eventPage.Event_Fee_Total_Label__c)}</strong></td>
+                                    <td class="slds-text-align_right slds-cell_action-mode">
+                                        <strong>
+                                            <apex:outputText value="${0,number,###,###,###,##0.00}">
+                                                <apex:param value="{!totalPaymentAmount}"/>
+                                            </apex:outputText>
+                                        </strong>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>

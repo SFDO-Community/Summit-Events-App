@@ -41,6 +41,11 @@ this command:
 ```
 cci flow run build_feature_test_package
 ```
+Use the SubscriberPackageVersion Id to append to an installation link:
+
+```
+https://login.salesforce.com/packaging/installPackage.apexp?p0=[SubscriberPackageVersion Id]
+```
 
 ---
 

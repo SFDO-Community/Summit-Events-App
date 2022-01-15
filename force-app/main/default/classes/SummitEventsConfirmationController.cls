@@ -16,19 +16,17 @@ public with sharing class SummitEventsConfirmationController {
     public Map <String, String> feesByIndex { get; set; }
     public List<Summit_Events_Fee__c> eventFees { get; set; }
     public Double totalPaymentAmount { get; set; }
-    public String totalPaymentAmountFormatted { get; set; }
     public Double existingPaymentAmount { get; set; }
     public Double eventOnlyPaymentAmount { get; set; }
-    public String eventOnlyPaymentAmountFormatted { get; set; }
     public Boolean hasFees { get; set; }
     public Boolean paymentReceived { get; set; }
 
     private class questionData {
         String guestId { get; set; }
-        List<Questions> questions { get; set; }
+        List<Question> questions { get; set; }
     }
 
-    private class Questions {
+    private class Question {
         String id { get; set; }
         String value { get; set; }
         String question { get; set; }
@@ -80,7 +78,7 @@ public with sharing class SummitEventsConfirmationController {
 
                 }
 
-            gatherPaymentInformation();
+                gatherPaymentInformation();
 
             }
         }
@@ -140,7 +138,7 @@ public with sharing class SummitEventsConfirmationController {
                             Summit_Events_Registration__c guestRegistration = new Summit_Events_Registration__c();
                             SObjectType seaObject = Summit_Events_Registration__c.getSObjectType();
                             DescribeSObjectResult seaObjectResults = seaObject.getDescribe();
-                            for (Questions q : guestAnswers[xx].questions) {
+                            for (Question q : guestAnswers[xx].questions) {
                                 Id questionId = null;
                                 try {
                                     questionId = seaShared.decryptString(q.id, true);
@@ -260,40 +258,6 @@ public with sharing class SummitEventsConfirmationController {
                 }
             }
 
-                /*
-                if (String.isNotBlank(eventReg.Event__r.Payment_Gateway__c) && eventReg.Event__r.Payment_Gateway__c != 'None') {
-                    pageRef = gatherPaymentInformation();
-                }
-
-                if (pageRef == null) {
-                    if (!String.isBlank(eventReg.Event_Instance_Title__c)) {
-                        eventTitle = eventReg.Event_Name__c + ' - ' + eventReg.Event_Instance_Title__c ;
-                    } else {
-                        eventTitle = eventReg.Event_Name__c;
-                    }
-                    eventReg.Status__c = 'Registered';
-
-                    String encryptedString = seaShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, eventInformation.registrationId);
-
-                    if (encryptedString.length() > 255) {
-                        eventReg.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);
-                        eventReg.Encrypted_Registration_Id_2__c = encryptedString.substring(255, encryptedString.length());
-                    } else {
-                        eventReg.Encrypted_Registration_Id_1__c = encryptedString;
-                    }
-
-                    registrationCRUD regCRUD = new registrationCRUD();
-                    eventReg = regCRUD.updateRegistration(eventReg);
-
-                    SummitEventsShared SEAShared = new SummitEventsShared();
-
-                    //Remove the registration ID from the cookie so back button will redirect to the correct page.
-                    SEAShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, '');
-
-                }
-
-            }
-            */
         }
         return pageRef;
     }
@@ -337,8 +301,6 @@ public with sharing class SummitEventsConfirmationController {
             if (existingPaymentAmount > 0) {
                 totalPaymentAmount = totalPaymentAmount - existingPaymentAmount;
             }
-            eventOnlyPaymentAmountFormatted = prettyCurrencyString(eventOnlyPaymentAmount);
-            totalPaymentAmountFormatted = prettyCurrencyString(totalPaymentAmount);
             if (totalPaymentAmount > 0) {
                 hasFees = true;
             }
@@ -354,15 +316,6 @@ public with sharing class SummitEventsConfirmationController {
             pageRef.setRedirect(true);
         }
         return pageRef;
-    }
-
-    public String prettyCurrencyString(Decimal numberIn) {
-        String numberOut = '';
-        List<String> args = new String[]{
-                '0', 'number', '###,###,##0.00'
-        };
-        numberOut = '$' + String.format(numberIn.format(), args);
-        return numberOut;
     }
 
 
@@ -389,7 +342,7 @@ public with sharing class SummitEventsConfirmationController {
             Boolean guestAdded = false;
             try {
                 insert guestRegistrations;
-                guestAdded =  true;
+                guestAdded = true;
             } catch (Exception ex) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
