@@ -352,9 +352,14 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             namespace = namespace.toLowerCase() + '__';
         }
 
+        String existingPicklistString = existingPicklist;
+        if (!existingPicklistString.startsWith('c__')) {
+            existingPicklistString = namespace + existingPicklistString;
+        }
+
         Schema.DescribeSObjectResult registrationDescribe = ((SObject) Type.forName('Schema', namespace + 'Summit_Events_Registration__c').newInstance()).getSObjectType().getDescribe();
 
-        List<Schema.PicklistEntry> PicklistValues = registrationDescribe.fields.getMap().get(namespace + existingPicklist).getDescribe().getPicklistValues();
+        List<Schema.PicklistEntry> PicklistValues = registrationDescribe.fields.getMap().get(existingPicklistString).getDescribe().getPicklistValues();
         picklists.add(new SelectOption('', 'Select...'));
         for (Schema.PicklistEntry PicklistValue : PicklistValues) {
             picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));

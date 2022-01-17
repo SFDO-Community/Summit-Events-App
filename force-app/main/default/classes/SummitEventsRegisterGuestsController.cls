@@ -203,7 +203,12 @@ public with sharing class SummitEventsRegisterGuestsController {
 
         Schema.DescribeSObjectResult registrationDescribe = ((SObject) Type.forName('Schema', namespace + 'Summit_Events_Registration__c').newInstance()).getSObjectType().getDescribe();
 
-        List<Schema.PicklistEntry> PicklistValues = registrationDescribe.fields.getMap().get(namespace + existingPicklist).getDescribe().getPicklistValues();
+        String existingPicklistString = existingPicklist;
+        if (!existingPicklistString.startsWith('c__')) {
+            existingPicklistString = namespace + existingPicklistString;
+        }
+
+        List<Schema.PicklistEntry> PicklistValues = registrationDescribe.fields.getMap().get(existingPicklistString).getDescribe().getPicklistValues();
         picklists.add(new Map<String, String>{
                 'Select...' => ''
         });
