@@ -195,6 +195,8 @@ public with sharing class SummitEventsConfirmationController {
                                                             }
                                                             if (valueIn.length() > inputLength) {
                                                                 guestRegistration.put(mapToField, valueIn.abbreviate(inputLength));
+                                                            } else {
+                                                                guestRegistration.put(mapToField, valueIn);
                                                             }
                                                         }
                                                     }

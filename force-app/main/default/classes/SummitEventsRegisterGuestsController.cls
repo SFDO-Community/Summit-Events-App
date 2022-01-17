@@ -124,7 +124,6 @@ public with sharing class SummitEventsRegisterGuestsController {
             }
 
             guestQuestionJSON = JSON.serialize(questionList);
-            System.debug(JSON.serializePretty(questionList));
 
             eventRegistration = [
                     SELECT Id, Guest_JSON__c
