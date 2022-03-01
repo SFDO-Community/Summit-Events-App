@@ -84,7 +84,7 @@ function setOldPhoneValue() {
 function checkForm() {
 
     var error_count = 0;
-    var emailReg = /^([a-zA-Z0-9_.\-.'.+])+@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    var emailReg = /^([a-zA-Z0-9_.\-.'.+])+@(([a-zA-Z0-9\-])+\.)+\\.[a-zA-Z]+?$/;
 
     document.querySelectorAll(".slds-is-required .slds-input, .slds-is-required .slds-textarea, .slds-is-required .slds-select").forEach(item => {
         let inputWrap = item.closest('.slds-form-element');
