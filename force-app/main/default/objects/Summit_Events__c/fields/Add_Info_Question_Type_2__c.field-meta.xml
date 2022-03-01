@@ -24,11 +24,6 @@
                 <label>Pick-list required</label>
             </value>
             <value>
-                <fullName>Pick-list required but not guests</fullName>
-                <default>false</default>
-                <label>Pick-list required but not guests</label>
-            </value>
-            <value>
                 <fullName>Text area</fullName>
                 <default>false</default>
                 <label>Text area</label>
@@ -39,11 +34,6 @@
                 <label>Text area required</label>
             </value>
             <value>
-                <fullName>Text area required but not guest</fullName>
-                <default>false</default>
-                <label>Text area required but not guest</label>
-            </value>
-            <value>
                 <fullName>Text box</fullName>
                 <default>false</default>
                 <label>Text box</label>
@@ -52,11 +42,6 @@
                 <fullName>Text box required</fullName>
                 <default>false</default>
                 <label>Text box required</label>
-            </value>
-            <value>
-                <fullName>Text box required but not guests</fullName>
-                <default>false</default>
-                <label>Text box required but not guests</label>
             </value>
         </valueSetDefinition>
     </valueSet>
