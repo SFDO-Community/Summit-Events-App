@@ -2,9 +2,9 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Allow_Other_Attendees__c</fullName>
     <defaultValue>false</defaultValue>
-    <description>Activate allowing other attendees to the event in addition to primary attendee</description>
+    <description>Activate allowing other attendees to the event in addition to primary attendee. This does NOT prompt Guest Registration questions but add total guests to the individual registration.</description>
     <externalId>false</externalId>
-    <inlineHelpText>Activate allowing other attendees to the event in addition to primary attendee</inlineHelpText>
+    <inlineHelpText>Activate allowing other attendees to the event in addition to primary attendee. This does NOT prompt the Guest Registration process.</inlineHelpText>
     <label>Allow Other Attendees</label>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

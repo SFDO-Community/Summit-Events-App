@@ -7,12 +7,12 @@
 private class SummitEventsRegisterAppointment_TEST {
     @IsTest static void testRegWithOptions() {
 
-        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         List<Summit_Events_Appointment_Type__c> testAppointmentTypes = SummitEventsTestSharedDataFactory.createAppointmentTypes(seaTestInstances[1].Event__c);
 
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
         System.runAs(testUser) {
             Test.startTest();
@@ -23,17 +23,28 @@ private class SummitEventsRegisterAppointment_TEST {
             }
 
             PageReference pageRef = Page.SummitEventsRegisterAppointments;
-            pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
 
             SummitEventsRegisterAppointmentCtlr optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
+
+            //Check event with no id should return home link to site
+            PageReference checkPage = optionsCtrl.checkEventDetails();
+            System.assertEquals(checkPage.getUrl(), 'https://google.com/SummitEvents');
+
             SummitEventsShared SEShared = new SummitEventsShared();
             SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
             optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
 
-            //optionsCtrl.checkEventDetails();
-            pageRef.getParameters().remove('adminopen');
+            //Check event details should return null because event
+            checkPage = optionsCtrl.checkEventDetails();
+            System.assertEquals(checkPage, null);
+
+            //previous page should be registration page
+            System.assertEquals(optionsCtrl.previousPage().getUrl(), '/apex/' + namespace + 'summiteventsregister');
+
             pageRef.getParameters().put('adminopen', 'true');
+            optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
+            //previous page should be registration page with included admin open added to URL above
             System.assertEquals(optionsCtrl.previousPage().getUrl(), '/apex/' + namespace + 'summiteventsregister?adminopen=true');
 
             List<Summit_Events_Appointments__c> testAppointments = [SELECT Id, Event_Registration__c FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :seaTestRegistration.Id];

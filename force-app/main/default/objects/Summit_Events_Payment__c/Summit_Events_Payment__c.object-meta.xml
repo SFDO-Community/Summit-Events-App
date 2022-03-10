@@ -156,6 +156,7 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
     <label>Summit Events Payment</label>
     <nameField>
         <displayFormat>EvtPay-{0000}</displayFormat>
@@ -164,7 +165,7 @@
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Summit Events Payments</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts></searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>

@@ -19,9 +19,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="sectionNav"/>
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
-                <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
-                    <apex:messages />
-                </div>
                 <apex:form id="SummitEventsConfirmationForm" styleClass="slds-grid slds-wrap">
                     <!-- EVENT BREADCRUMB -->
                     <div class="slds-col slds-p-vertical-small slds-size_1-of-1">
@@ -39,29 +36,93 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </ol>
                         </nav>
                     </div>
+
                     <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                        <apex:messages layout="list" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small"/>
+                    </div>
+
+                    <!-- EVENT CLOSED MESSAGE -->
+                    <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
                         <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
                             {!eventPage.Event_Confirmation_Title__c}
                         </h2>
-                    </div>
-                    <!-- EVENT CLOSED MESSAGE -->
-                    <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
                         <p class="slds-text-body">
                             <apex:outputText value="{!eventPage.Event_Full_Text__c}"/>
                         </p>
                     </apex:outputPanel>
-                    <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
+
+                    <apex:outputPanel rendered="{!!eventIsClosed}" layout="block" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                        <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
+                            {!eventPage.Event_Confirmation_Title__c}
+                        </h2>
                         <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                             <p class="slds-text-body slds-p-vertical_xx-small">
                                 <apex:outputText escape="false" value="{!eventPage.Event_Confirmation_Description__c}"/>
                             </p>
                         </div>
-                        <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
-                            <p class="slds-text-body ">
-                                <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"/>
-                            </p>
-                        </div>
+                        <apex:outputPanel layout="block" rendered="{!hasFees}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
+                            <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">Payment Received</h3>
+
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Item">Item</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Fee">Fee</div>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!eventFees}" var="fee">
+                                    <apex:outputPanel rendered="{!fee.Event_Fee_Type__c != 'Event' && fee.Event_Fee_Type__c != 'Event Additional'}">
+                                        <tr>
+                                            <td class="feeAllocation">
+                                                <apex:outputPanel rendered="{!fee.Event_Fee_Type__c == 'Appointment'}" layout="none">
+                                                    {!fee.Event_Appointment_Type__r.Title__c}
+                                                </apex:outputPanel>
+                                                <apex:outputPanel rendered="{!fee.Event_Fee_Type__c == 'Optional Donation'}" layout="none">
+                                                    {!fee.Event_Fee_Type__c}
+                                                    {!IF(!ISBLANK(fee.Event_Fee_Allocation__r.Name), ' - ' + fee.Event_Fee_Allocation__r.Name, '')}
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td class="slds-text-align_right">
+                                                <apex:outputText value="{0, number, Currency }">
+                                                    <apex:param value="{!fee.Event_Fee__c}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                    </apex:outputPanel>
+                                </apex:repeat>
+                                <tr class="eventOnlyCost">
+                                    <td>{!IF(ISBLANK(eventPage.Event_Fee_Label__c),'Event Cost', eventPage.Event_Fee_Label__c)}</td>
+                                    <td class="slds-text-align_right">
+                                        <apex:outputText value="${0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!eventOnlyPaymentAmount}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr class="eventTotalCost">
+                                    <td class="slds-cell_action-mode"><strong>{!IF(ISBLANK(eventPage.Event_Fee_Total_Label__c),'Event Cost', eventPage.Event_Fee_Total_Label__c)}</strong></td>
+                                    <td class="slds-text-align_right slds-cell_action-mode">
+                                        <strong>
+                                            <apex:outputText value="${0,number,###,###,###,##0.00}">
+                                                <apex:param value="{!totalPaymentAmount}"/>
+                                            </apex:outputText>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </apex:outputPanel>
                     </apex:outputPanel>
+
+                    <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
+                        <p class="slds-text-body ">
+                            <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"/>
+                        </p>
+                    </div>
                 </apex:form>
             </div>
         </apex:define>

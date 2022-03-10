@@ -6,7 +6,7 @@
 @IsTest
 private class SummitEventsParkingPass_TEST {
     @IsTest static void testParkingPass() {
-        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'Test', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22', '2012');
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[2], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         Summit_Events_Registration__c seaTestRegistration2 = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst2', 'TestLast2', 'test2@valleyhill.net', '55418', '1971-03-22', '2012', null);

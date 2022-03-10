@@ -34,6 +34,127 @@ public with sharing class SummitEventsShared {
         return templateName;
     }
 
+    public Map<String, PageReference> getPageFlow(Id eventId, String instanceTitle, PageReference currentPage) {
+
+        //Get the url without anchors
+        String currentUrl = currentPage.getUrl();
+        currentUrl = currentUrl.replace('#', '?');
+        List<String> currentUrlSplit = currentUrl.split('\\?');
+        currentUrl = currentUrlSplit[0];
+
+        currentUrlSplit = currentUrl.split('/');
+        String currentPageName = currentUrlSplit[currentUrlSplit.size() - 1];
+
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+
+        Map<String, PageReference> pageMovement = new Map<String, PageReference>();
+        Map<String, String> currentPageParameters = currentPage.getParameters();
+        List<String> pagesInEvent = new List<String>();
+        Map<String, PageReference> allPageReferences = new Map<String, PageReference>();
+        allPageReferences.put(namespace + 'SummitEventsRegister', Page.SummitEventsRegister);
+        allPageReferences.put(namespace + 'SummitEventsAdditionalQuestions', Page.SummitEventsAdditionalQuestions);
+        allPageReferences.put(namespace + 'SummitEventsRegisterGuests', Page.SummitEventsRegisterGuests);
+        allPageReferences.put(namespace + 'SummitEventsRegisterAppointments', Page.SummitEventsRegisterAppointments);
+        allPageReferences.put(namespace + 'SummitEventsDonation', Page.SummitEventsDonation);
+        allPageReferences.put(namespace + 'SummitEventsSubmit', Page.SummitEventsSubmit);
+        allPageReferences.put(namespace + 'SummitEventsConfirmation', Page.SummitEventsConfirmation);
+
+        Integer appointmentTypes = [
+                SELECT COUNT()
+                FROM Summit_Events_Appointment_Type__c
+                WHERE Summit_Events__c = :eventId
+                AND Chosen_State__c != 'Added but not shown'
+                AND (
+                        Restrict_To_Instance_Title__r.Instance_Title__c = :instanceTitle
+                        OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
+                WITH SECURITY_ENFORCED
+        ];
+
+        Integer additionalQuestions = [
+                SELECT COUNT()
+                FROM Summit_Events_Question__c
+                WHERE Event__c = :eventId
+                AND Registrant_Type__c = 'Registrant'
+                WITH SECURITY_ENFORCED
+        ];
+
+        Summit_Events__c eventInformation = [
+                SELECT Id, Display_Optional_Donation__c, Display_Guest_Registration__c
+                FROM Summit_Events__c
+                WHERE Id = :eventId
+                WITH SECURITY_ENFORCED
+        ];
+
+        pagesInEvent.add(namespace + 'SummitEventsRegister');
+
+        //Check for additional questions
+
+        if (additionalQuestions > 0) {
+            pagesInEvent.add(namespace + 'SummitEventsAdditionalQuestions');
+        }
+
+        //check for if event has guests
+        if (eventInformation.Display_Guest_Registration__c) {
+            pagesInEvent.add(namespace + 'SummitEventsRegisterGuests');
+        }
+
+        //check for if event has appointments
+        if (appointmentTypes > 0) {
+            pagesInEvent.add(namespace + 'SummitEventsRegisterAppointments');
+        }
+
+        //check for if event has donation
+        if (eventInformation.Display_Optional_Donation__c) {
+            pagesInEvent.add(namespace + 'SummitEventsDonation');
+        }
+
+        //If event has more than 1 item in list then submit page
+        if (pagesInEvent.size() > 1) {
+            pagesInEvent.add(namespace + 'SummitEventsSubmit');
+        }
+
+        pagesInEvent.add(namespace + 'SummitEventsConfirmation');
+
+        Integer currentPageLocation = 0;
+        for (Integer x = 0; x < pagesInEvent.size(); x++) {
+            if (currentPageName.equalsIgnoreCase(pagesInEvent[x])) {
+                currentPageLocation = x;
+            }
+        }
+
+        if (currentUrl.equalsIgnoreCase(allPageReferences.get(namespace + 'SummitEventsRegister').getUrl()) || pagesInEvent == null || currentPageLocation == 0) {
+            pageMovement.put('Previous', Page.SummitEventsRegister);
+        } else {
+            pageMovement.put('Previous', allPageReferences.get(pagesInEvent[currentPageLocation - 1]));
+        }
+
+        if (currentUrl.equalsIgnoreCase(allPageReferences.get(namespace + 'SummitEventsConfirmation').getUrl())) {
+            pageMovement.put('Previous', Page.SummitEventsRegister);
+            pageMovement.put('Next', Page.SummitEventsRegister);
+        } else {
+            pageMovement.put('Next', allPageReferences.get(pagesInEvent[currentPageLocation + 1]));
+        }
+
+        List<String> validParameters = new List<String>{
+                'adminopen', 'instanceID', 'audience'
+        };
+        for (String parameterKey : currentPageParameters.keySet()) {
+            if (validParameters.contains(parameterKey)) {
+                for (String key : pageMovement.keySet()) {
+                    PageReference addBackParameters = pageMovement.get(key);
+                    addBackParameters.getParameters().put(parameterKey, currentPageParameters.get(parameterKey));
+                }
+            }
+        }
+
+        System.debug(pageMovement);
+        return pageMovement;
+
+    }
+
     public SummitEventsInfo getSummitEventsInfo() {
         //{"audience":"High School Senior","instanceId":"a320m000000A5fOAAS","registrationId":"a350m0000008q63AAA,"eventId":"a330m0000001SOrAAM"}
         SummitEventsInfo eventInformation = new SummitEventsInfo();
@@ -120,9 +241,13 @@ public with sharing class SummitEventsShared {
 
         //Get home page link if it exists
         String eventHomeLink = '';
-        Id newInstanceId = eventInformation.instanceId;
-        String newRegistrationId = eventInformation.registrationId;
+        Id newInstanceId = null;
+        try {
+            newInstanceId = eventInformation.instanceId;
+        } catch (Exception ex) {
+        }
 
+        String newRegistrationId = eventInformation.registrationId;
         if (String.isNotBlank(newInstanceId)) {
             Summit_Events_Instance__c eventPage = [
                     SELECT Event__r.Event_Home_Link_URL__c
@@ -185,26 +310,22 @@ public with sharing class SummitEventsShared {
     }
 
     public String createEncryptedCookie(String audience, String instanceId, String eventId, String registrationId) {
+        //Check everything to not let nulls through to JSON string
+        return createEncryptedCookieWithNow(audience, instanceId, eventId, registrationId, Datetime.now());
+    }
 
+    public String createEncryptedCookieWithNow(String audience, String instanceId, String eventId, String registrationId, Datetime nowTime) {
         //Check everything to not let nulls through to JSON string
         audience = (String.isNotBlank(audience) && !audience.equalsIgnoreCase('null')) ? audience : '';
         instanceId = (String.isNotBlank(instanceId) && !instanceId.equalsIgnoreCase('null')) ? instanceId : '';
         eventId = (String.isNotBlank(eventId) && !eventId.equalsIgnoreCase('null')) ? eventId : '';
         registrationId = (String.isNotBlank(registrationId) && !registrationId.equalsIgnoreCase('null')) ? registrationId : '';
-        String CookieValue = '{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '","dt":"' + String.valueOf(Datetime.now()) + '"}';
-        String encodedCipherText = '';
-        String key = getCookieKey();
-        if (String.isNotBlank(String.valueOf(key))) {
-            Blob data = Blob.valueOf(CookieValue);
-            Blob encrypted = Crypto.encryptWithManagedIV('AES256', Blob.valueOf(key), data);
-            encodedCipherText = EncodingUtil.base64Encode(encrypted);
-            encodedCipherText = EncodingUtil.urlEncode(encodedCipherText, 'UTF-8');
-            Cookie SummitEventsCookie = new Cookie('SummitEvents', encodedCipherText, null, -1, false);
-            ApexPages.currentPage().setCookies(new Cookie[]{
-                    SummitEventsCookie
-            });
-        }
-        return encodedCipherText;
+        String CookieValue = encryptString('{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '","dt":"' + String.valueOf(nowTime) + '"}');
+        Cookie SummitEventsCookie = new Cookie('SummitEvents', CookieValue, null, -1, false);
+        ApexPages.currentPage().setCookies(new Cookie[]{
+                SummitEventsCookie
+        });
+        return CookieValue;
     }
 
     public String getDecryptCookie() {
@@ -214,6 +335,21 @@ public with sharing class SummitEventsShared {
             return decryptString(encodedCipherText.getValue(), true);
         }
         return '';
+    }
+
+    public String encryptString(String toEncrypt) {
+        String key = getCookieKey();
+        String encryptedText = '';
+        if (String.isNotBlank(String.valueOf(key))) {
+            if (String.isNotBlank(toEncrypt)) {
+                Blob data = Blob.valueOf(toEncrypt);
+                Blob encrypted = Crypto.encryptWithManagedIV('AES256', Blob.valueOf(key), data);
+                encryptedText = EncodingUtil.base64Encode(encrypted);
+                encryptedText = EncodingUtil.urlEncode(encryptedText, 'UTF-8');
+
+            }
+        }
+        return encryptedText;
     }
 
     public String decryptString(String encryptedString, Boolean urlDecodeString) {
@@ -413,6 +549,52 @@ public with sharing class SummitEventsShared {
             }
         }
         return formatTime;
+    }
+
+    //Method to test object and field availability for current user (Guest user)
+    public String checkFieldGuestAccess(String objectApiName, String fieldName, String requiredFieldType, Boolean testCreatable, String qualifierLabel) {
+        String returnError = '';
+        DescribeFieldResult fieldDescribe;
+        SObjectType schemaType;
+        if (String.isBlank(qualifierLabel)) {
+            qualifierLabel = '';
+        }
+        try {
+            schemaType = ((SObject) Type.forName('Schema', objectApiName).newInstance()).getSObjectType();
+        } catch (Exception ex) {
+            returnError = qualifierLabel + objectApiName + ' may not exist or is inaccessible. ';
+        }
+
+        if (String.isBlank(returnError)) {
+            if (!schemaType.getDescribe().isAccessible()) {
+                returnError += qualifierLabel + objectApiName + ' is not accessible (check sharing rules and permissions). ';
+            }
+        }
+        if (String.isNotBlank(fieldName) && String.isBlank(returnError)) {
+            try {
+                Map<String, SObjectField> fields = schemaType.getDescribe().fields.getMap();
+                fieldDescribe = fields.get(fieldName).getDescribe();
+            } catch (Exception ex) {
+                returnError += qualifierLabel + 'Field ' + fieldName + ' may not exist. ';
+            }
+
+            if (String.isBlank(returnError)) {
+                if (!fieldDescribe.isAccessible()) {
+                    returnError += qualifierLabel + 'Field ' + fieldName + ' is not accessible by guest user.';
+                }
+            }
+            if (String.isBlank(returnError) && testCreatable) {
+                if (!fieldDescribe.isCreateable()) {
+                    returnError += qualifierLabel + 'Field ' + fieldName + ' is not writable. ';
+                }
+            }
+            if (String.isBlank(returnError) && String.isNotBlank(requiredFieldType)) {
+                if (!String.valueOf(fieldDescribe.getType()).equalsIgnoreCase(requiredFieldType)) {
+                    returnError += qualifierLabel + 'Field ' + fieldName + ' is not the required field type ' + requiredFieldType + '. ';
+                }
+            }
+        }
+        return returnError;
     }
 
     public Map<String, String> getDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName, String parentValue) {

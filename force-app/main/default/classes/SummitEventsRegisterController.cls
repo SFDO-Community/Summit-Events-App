@@ -21,7 +21,6 @@ public with sharing class SummitEventsRegisterController {
     public List<SelectOption> addPick4 { get; set; }
     public List<SelectOption> addPick5 { get; set; }
     public String applicantType { get; set; }
-    public Boolean evtHasAppointments { get; set; }
     public String birthDateString { get; set; }
     public Decimal totalEventCost { get; set; }
     public List<Summit_Events_Fee__c> eventFeeList { get; set; }
@@ -34,7 +33,10 @@ public with sharing class SummitEventsRegisterController {
     public String registrantAudience { get; set; }
     public String EvtUserType { get; set; }
     public Id incomingEventRegistrationId { get; set; }
-    public String formattedStartDate { get; set; }
+    public Map<String, PageReference> pageFlow { get; set; }
+    public String nextUrl { get; set; }
+    public String placeholderValue { get; set; }
+    public String timezoneDisplay { get; set; }
 
     public SummitEventsRegisterController() {
         //array for looping through additional information questions
@@ -93,8 +95,6 @@ public with sharing class SummitEventsRegisterController {
             endTimeString = SeaShared.formatTime(evtInstance.Instance_End_Time__c, false);
         }
 
-        formattedStartDate = formattedGmtVersionOfDate(evtInstance.Instance_Start_Date__c, evtInstance.Instance_Start_Time__c);
-
         //Get Event Info off of instance master detail id
         if (!String.isBlank(eventInformation.eventId)) {
             eventPage = [
@@ -112,11 +112,20 @@ public with sharing class SummitEventsRegisterController {
                             Tracking_Event_Registration__c, Ask_Date_Of_Birth__c, Event_Type__c, Contact_Creation__c, Contact_Matching_Rules__c,
                             Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c, Ask_Pronoun__c, Keep_Registration_Open_During_Event__c,
                             Close_Event_Days_Before__c, Ask_Title__c, Ask_Company_Organization__c, Event_Fee__c, Event_Fee_Additional__c,
-                            Event_Fee_Additional_Allocation__c, Event_Fee_Allocation__c, Display_Optional_Donation__c
+                            Event_Fee_Additional_Allocation__c, Event_Fee_Allocation__c, Display_Optional_Donation__c,
+                            Applicant_Type_Label__c,Company_Organization_Label__c,Date_Of_Birth_Label__c,Email_Label__c,
+                            First_Name_Label__c,Gender_Label__c,Last_Name_As_Student_Label__c,Last_Name_Label__c,Mailing_Address_Label__c,
+                            Phone_Label__c,Phone_Type_Label__c,Preferred_First_Name_Label__c,Pronouns_Label__c,Registrant_Receive_Texts_Label__c,
+                            Relationship_To_Institution_Label__c,Third_Party_Registrant_Label__c,Title_Label__c,Preferred_Class_Year_Label__c,
+                            Registrant_Relationship_Label__c, Event_Fee_Label__c, Event_Fee_Total_Label__c,  Event_Fee_Submit_List_Label__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
             ];
+
+            pageFlow = SeaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage());
+            System.debug(pageFlow);
+            nextUrl = pageFlow.get('Next').getUrl().toLowerCase();
 
             if (String.isNotBlank(eventPage.Ask_Phone__c)) {
                 if (eventPage.Ask_Phone__c.containsIgnoreCase('with type') && String.isNotBlank(eventRegistration.Registrant_Mobile_Phone__c) && String.isBlank(eventRegistration.Registrant_Phone__c)) {
@@ -194,19 +203,6 @@ public with sharing class SummitEventsRegisterController {
 
             formattedNavDate = SeaShared.navBreadcrumbBuilder(evtInstance);
 
-            //Check if the Event has appointments and therefore we have to redirect to the appointment page.
-            evtHasAppointments = false;
-            List<Summit_Events_Appointment_Type__c> appointmentTypes = [
-                    SELECT Id
-                    FROM Summit_Events_Appointment_Type__c
-                    WHERE Summit_Events__c = :eventInformation.eventId
-                    AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
-                    WITH SECURITY_ENFORCED
-            ];
-            if (appointmentTypes.size() > 0) {
-                evtHasAppointments = true;
-            }
-
             //Grab the template if defined
             templateSelected = SeaShared.getTemplate(eventPage.Template__c);
 
@@ -218,14 +214,6 @@ public with sharing class SummitEventsRegisterController {
                     }
                 }
             }
-
-            //Get appointment types for event
-            appointmentTypes = [
-                    SELECT Id, Title__c, Appointment_Category__c, Appointment_Type__c, Description__c
-                    FROM Summit_Events_Appointment_Type__c
-                    WHERE Summit_Events__c = :eventInformation.eventId
-                    WITH SECURITY_ENFORCED
-            ];
 
             addPick1 = createPicklists(eventPage.Add_Info_Question_Pick_List_1__c);
             addPick2 = createPicklists(eventPage.Add_Info_Question_Pick_List_2__c);
@@ -380,13 +368,6 @@ public with sharing class SummitEventsRegisterController {
         return cpl;
     }
 
-    public String formattedGmtVersionOfDate(Date aDate, Time aTime) {
-        String formattedString = '';
-        Datetime newDateTime = Datetime.newInstanceGmt(aDate.year(), aDate.month(), aDate.day(), aTime.hour(), aTime.minute(), aTime.second());
-        formattedString = newDateTime.formatGmt('EEEE MMMM dd, ') + newDateTime.year();
-        return formattedString;
-    }
-
     public List<SelectOption> PickThePicklist(String YourObjectName, String YourFieldName, Boolean includeSelect) {
         List<SelectOption> picklists = new List<SelectOption>();
         String namespace = SummitEventsNamespace.getNamespace();
@@ -501,20 +482,7 @@ public with sharing class SummitEventsRegisterController {
 
         eventInformation.registrationId = eventRegistration.Id;
 
-        if (evtHasAppointments) {
-            optionPage = Page.SummitEventsRegisterAppointments;
-        } else if (eventPage.Display_Optional_Donation__c) {
-            optionPage = Page.SummitEventsDonation;
-        } else if (eventFeeList.size() > 0) {
-            optionPage = Page.SummitEventsSubmit;
-        } else {
-            optionPage = Page.SummitEventsConfirmation;
-        }
-
-        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-            optionPage.setRedirect(true);
-            optionPage.getParameters().put('adminopen', ApexPages.currentPage().getParameters().get('adminopen'));
-        }
+        optionPage = pageFlow.get('Next');
 
         return optionPage;
     }

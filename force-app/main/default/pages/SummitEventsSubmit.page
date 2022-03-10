@@ -21,10 +21,9 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages />
+                    <apex:messages/>
                 </div>
                 <apex:form id="SummitEventsRegisterSubmitForm" styleClass="slds-grid slds-wrap">
-
                     <!-- EVENT BREADCRUMB -->
                     <div class="slds-col slds-p-vertical-small slds-size_1-of-1">
                         <nav role="navigation" aria-label="Breadcrumbs">
@@ -42,24 +41,71 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </nav>
                     </div>
 
-                    <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                    <apex:outputPanel layout="block" id="pageMessages" styleClass="slds-notify slds-notify_alert slds-alert_warning slds-m-vertical_small" rendered="{!hasMessages}">
+                        <span class="slds-assistive-text">Warning</span>
+                        <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Warning message">
+                            <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+                              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#warning"></use>
+                            </svg>
+                          </span>
+                        <h2>
+                            <apex:messages/>
+                        </h2>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-small" title="Close">
+                                <svg class="slds-button__icon" aria-hidden="true">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </apex:outputPanel>
+
+                    <apex:outputPanel rendered="{!eventIsClosed}" layout="block" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                         <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
                             <apex:outputText value="{!eventPage.Event_Submit_Title__c}"/>
                         </h2>
-                    </div>
-                    <!-- EVENT CLOSED MESSAGE -->
-                    <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
                         <p class="slds-text-body">
                             <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>
                         </p>
                     </apex:outputPanel>
+
                     <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
                         <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+
+                            <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
+                                <apex:outputText value="{!eventPage.Event_Submit_Title__c}"/>
+                            </h2>
+
                             <p class="slds-text-body slds-p-vertical_xx-small">
                                 <apex:outputText escape="false" value="{!eventPage.Event_Submit_Description__c}"/>
                             </p>
+
+                            <!-- Show Selected guest -->
+                            <apex:outputPanel layout="none" rendered="{!IF(guestAnswers.size>0, true, false)}">
+                                <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium slds-clearfix">Additional guest registered</h2>
+                                <apex:variable value="{!0}" var="guestNum"/>
+                                <apex:repeat var="guests" value="{!guestAnswers}">
+                                    <article class="slds-card slds-clearfix slds-p-vertical_none">
+                                        <div class="slds-card__body slds-card__body_inner slds-clearfix slds-m-vertical_x-small slds-p-horizontal_small">
+                                            <apex:repeat var="f" value="{!guests.questions}">
+                                                <div class="slds-float_left slds-m-right_large slds-p-bottom_x-small">
+                                                    <label class="slds-form-element__label">
+                                                        {!f.question}
+                                                    </label>
+                                                    <div class="slds-float_none slds-text-body_regular">
+                                                        {!f.value}
+                                                    </div>
+                                                </div>
+                                            </apex:repeat>
+                                        </div>
+                                    </article>
+                                </apex:repeat>
+                            </apex:outputPanel>
+
                             <!-- Show selected appointments -->
-                            <apex:outputPanel rendered="{!IF(chosenAppointments.size>0, true, false)}">
+                            <apex:outputPanel layout="none" rendered="{!IF(chosenAppointments.size>0, true, false)}">
+                                <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium slds-clearfix">Appointments</h2>
                                 <ul id="chosenAppointments" class="slds-list_dotted">
                                     <apex:repeat var="appointment" value="{!chosenAppointments}">
                                         <li>
@@ -74,25 +120,24 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </apex:repeat>
                                 </ul>
                             </apex:outputPanel>
+
                         </div>
 
-                        <apex:outputPanel layout="block" rendered="{!showPaymentButton}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
-                            <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">Event Cost</h3>
+                        <apex:outputPanel layout="block" rendered="{!hasFees}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
+                            <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">{!IF(ISBLANK(eventPage.Event_Fee_Submit_List_Label__c),'Event Charges', eventPage.Event_Fee_Submit_List_Label__c)}</h3>
 
-                            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
-                                <thead>
-                                <tr class="slds-line-height_reset">
-                                    <th class="" scope="col">
-                                        <div class="slds-truncate" title="Item">Item</div>
-                                    </th>
-                                    <th class="" scope="col">
-                                        <div class="slds-truncate" title="Fee">Fee</div>
-                                    </th>
-                                </tr>
-                                </thead>
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
                                 <tbody>
+                                <tr class="eventOnlyCost">
+                                    <td>{!IF(ISBLANK(eventPage.Event_Fee_Label__c),'Event Cost', eventPage.Event_Fee_Label__c)}</td>
+                                    <td class="slds-text-align_right">
+                                        <apex:outputText value="${0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!eventOnlyPaymentAmount}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
                                 <apex:repeat value="{!eventFees}" var="fee">
-                                    <apex:outputPanel rendered="{!fee.Event_Fee_Type__c != 'Event'}">
+                                    <apex:outputPanel rendered="{!fee.Event_Fee_Type__c != 'Event' && fee.Event_Fee_Type__c != 'Event Additional'}">
                                         <tr>
                                             <td class="feeAllocation">
                                                 <apex:outputPanel rendered="{!fee.Event_Fee_Type__c == 'Appointment'}" layout="none">
@@ -103,7 +148,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                     {!IF(!ISBLANK(fee.Event_Fee_Allocation__r.Name), ' - ' + fee.Event_Fee_Allocation__r.Name, '')}
                                                 </apex:outputPanel>
                                             </td>
-                                            <td>
+                                            <td class="slds-text-align_right">
                                                 <apex:outputText value="{0, number, Currency }">
                                                     <apex:param value="{!fee.Event_Fee__c}"/>
                                                 </apex:outputText>
@@ -111,13 +156,15 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                         </tr>
                                     </apex:outputPanel>
                                 </apex:repeat>
-                                <tr class="eventOnlyCost">
-                                    <td>General Event</td>
-                                    <td>{!eventOnlyPaymentAmountFormatted}</td>
-                                </tr>
                                 <tr class="eventTotalCost">
-                                    <td><strong>Total Cost</strong></td>
-                                    <td><strong>{!totalPaymentAmountFormatted}</strong></td>
+                                    <td class="slds-cell_action-mode"><strong>{!IF(ISBLANK(eventPage.Event_Fee_Total_Label__c),'Event Cost', eventPage.Event_Fee_Total_Label__c)}</strong></td>
+                                    <td class="slds-text-align_right slds-cell_action-mode">
+                                        <strong>
+                                            <apex:outputText value="${0,number,###,###,###,##0.00}">
+                                                <apex:param value="{!totalPaymentAmount}"/>
+                                            </apex:outputText>
+                                        </strong>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -125,7 +172,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                         <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
                             <p class="slds-text-body slds-p-vertical_xx-small">
-                                <apex:commandLink action="{!submitRegistration}" onClick="fadeout();" Value="Submit Registration" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                <apex:commandLink action="{!submitRegistration}" onClick="fadeout();" Value="{!IF(hasPaymentGateway, IF(ISBLANK(eventPage.Payment_Button_Label__c),'Make Payment', eventPage.Payment_Button_Label__c), 'Submit Registration')}" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                                 <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                             </p>
                         </div>

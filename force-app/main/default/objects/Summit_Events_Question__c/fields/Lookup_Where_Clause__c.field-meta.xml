@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Lookup_Where_Clause__c</fullName>
+    <description>SOQL Where clause statements to filter your object/field results for the registrant lookup feature.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>SOQL Where clause statements to filter your object/field results for the registrant lookup feature.</inlineHelpText>
+    <label>Lookup Where Clause</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

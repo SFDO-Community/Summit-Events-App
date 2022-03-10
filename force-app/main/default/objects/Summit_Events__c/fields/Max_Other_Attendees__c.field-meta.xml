@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Max_Other_Attendees__c</fullName>
-    <description>If other attendees is active, how many other attendees are allowed to this event</description>
+    <description>If other attendees is active, how many other attendees are allowed to this event. This does NOT prompt the Guest Registration process, but will add amount to the total guests on the individual registration.</description>
     <externalId>false</externalId>
-    <inlineHelpText>If other attendees is active, how many other attendees are allowed to this event</inlineHelpText>
+    <inlineHelpText>If other attendees is active, how many other attendees are allowed to this event. This does NOT control the Guest Registration process.</inlineHelpText>
     <label>Max Other Attendees</label>
     <precision>4</precision>
     <required>false</required>

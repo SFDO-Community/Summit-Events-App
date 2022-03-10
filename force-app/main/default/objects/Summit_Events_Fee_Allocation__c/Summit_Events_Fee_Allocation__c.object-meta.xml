@@ -153,6 +153,7 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>Private</externalSharingModel>
     <label>Summit Events Fee Allocation</label>
     <nameField>
         <label>Summit Events Fee Allocation Name</label>
@@ -160,7 +161,7 @@
         <type>Text</type>
     </nameField>
     <pluralLabel>Summit Events Fees Allocations</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts></searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>

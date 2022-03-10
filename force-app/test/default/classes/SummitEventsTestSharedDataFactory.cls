@@ -164,7 +164,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
 
     }
 
-    public static Contact createContact(String firstName, String preferredFirst, String lastName, String Email, String Zip, String Phone, String DOB, String ClassYear) {
+    public static Contact createContact(String firstName, String lastName, String Email, String Zip, String Phone, String DOB) {
 
         Account a = new Account(Name = firstName + ' ' + lastName + ' Account Name');
         insert a;
@@ -187,6 +187,99 @@ public with sharing class SummitEventsTestSharedDataFactory {
         return testContact;
 
     }
+
+    public static List<Summit_Events_Question__c> addQuestionsToEvent(Id eventId, String inputType, String registrantType) {
+        return addQuestions(eventId, inputType, registrantType, '', '');
+    }
+
+
+    public static List<Summit_Events_Question__c> addQuestionsToEventWithMapTo(Id eventId, String inputType, String registrantType, String questionText, String mapTo) {
+        return addQuestions(eventId, inputType, registrantType, mapTo, questionText);
+    }
+
+    public static List<Summit_Events_Question__c> addQuestions(Id eventId, String inputType, String registrantType, String mapTo, String questionText) {
+        List<String> inputTypes = new List<String>();
+        List<Summit_Events_Question__c> questions = new List<Summit_Events_Question__c>();
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+
+        if (String.isNotBlank(inputType)) {
+            inputTypes.add(inputType);
+        } else {
+            //Get all the variations of user input to make a question type for each
+            Schema.DescribeFieldResult fieldResult = Summit_Events_Question__c.Question_Field_Type__c.getDescribe();
+            List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+            for (Schema.PicklistEntry pickListVal : ple) {
+                inputTypes.add(pickListVal.getLabel());
+            }
+        }
+        //Get available mapping fields that are creatable and strings
+        Map <String, Schema.SObjectField> fieldMap = Schema.SObjectType.Summit_Events_Registration__c.fields.getMap();
+
+        //Gather all fields that are accessible on the registration record to use as map_to values
+        List <String> fieldsCreatable = new List <String>();
+        for (Schema.SObjectField sField : fieldMap.values()) {
+            Schema.DescribeFieldResult dField = sField.getDescribe();
+            if (dField.isCreateable() &&
+                    (String.valueOf(dField.getType()).equalsIgnoreCase('textarea'))) {
+                fieldsCreatable.add(dField.getName());
+            }
+        }
+
+        Integer questionCount = 0;
+        for (Integer x = 0; x < inputTypes.size(); x++) {
+            Summit_Events_Question__c question = new Summit_Events_Question__c();
+            question.Event__c = eventId;
+
+            question.Question_Field_Type__c = inputTypes[x];
+            question.Name = 'Question Name ' + x;
+            if (String.isNotBlank(questionText)) {
+                question.Question_Label__c = questionText;
+            } else {
+                question.Question_Label__c = 'Question ' + x;
+            }
+
+            if (String.isNotBlank(mapTo)) {
+                question.Map_to_Field__c = namespace + mapTo;
+            } else {
+                question.Map_to_Field__c = fieldsCreatable[questionCount];
+            }
+            question.Is_Visible__c = true;
+            if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
+                question.Map_to_Field__c = namespace + 'Guest_Host__c';
+                question.Lookup_Results_Icon__c = 'robot';
+                question.Lookup_Object__c = namespace + 'Summit_Events_Registration__c';
+                question.Lookup_Secondary_Value_Field__c = fieldsCreatable[questionCount + 1];
+                question.Lookup_Fields__c = namespace + 'Registrant_First_Name__c,' + namespace + 'Registrant_Last_Name__c';
+                questionCount++;
+            }
+            if (question.Question_Field_Type__c.equalsIgnoreCase('picklist')) {
+                question.Picklist_Values__c = 'Choice1\\nChoice2\\nChoice3';
+            }
+            //Guest, Registrant, Registrant and Guest
+            question.Registrant_Type__c = registrantType;
+            question.Instructions__c = 'Instruction ' + x;
+            question.Help_Text__c = 'Help Text ' + x;
+            question.Error_Assist_Text__c = 'Error assist';
+            questionCount++;
+            questions.add(question);
+        }
+
+        insert questions;
+        return questions;
+    }
+
+    public static SummitEventsRegisterGuestsController.questionData createQuestionData(String questionID, String questionValue, String questionLabel) {
+        SummitEventsShared seaShared = new SummitEventsShared();
+        SummitEventsRegisterGuestsController.questionData questionData = new SummitEventsRegisterGuestsController.questionData();
+        questionData.id = seaShared.encryptString(questionID);
+        questionData.value = questionValue;
+        questionData.question = questionLabel;
+        return questionData;
+    }
+
 
     public static Summit_Events_Registration__c createEventRegistration(Summit_Events_Instance__c evtI, String firstName, String lastName, String Email, String Zip, String DOB, String ClassYear, Id optionalContactLinkId) {
 
@@ -283,7 +376,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
         // Profile p = [SELECT Id, Name FROM Profile WHERE Name = :profileName];
         Profile p;
 
-        p = [select Id,name from Profile where Name = :profileName];
+        p = [SELECT Id,Name FROM Profile WHERE Name = :profileName];
 
         return new User(
                 Alias = alias,
@@ -317,6 +410,13 @@ public with sharing class SummitEventsTestSharedDataFactory {
             return u3;
         }
         return null;
+    }
+
+    public static String getUUID() {
+        Blob b = Crypto.generateAesKey(128);
+        String h = EncodingUtil.convertToHex(b);
+        String guid = h.substring(0, 8) + '-' + h.substring(8, 12) + '-' + h.substring(12, 16) + '-' + h.substring(16, 20) + '-' + h.substring(20);
+        return guid;
     }
 
 }

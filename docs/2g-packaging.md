@@ -1,6 +1,60 @@
 # Second Generation Packaging Summit Events
 
-## sfdx-project.json
+## Preferred CumulusCI method of 2gp packaging
+
+Using CumulusCI commands much of the headache of manually releasing _(see below)_ a 2GP package is relieved.
+CumulusCI will do the work of creating version numbers and creating a github release giving transparency
+to the packaging process. You will no longer have to edit the sfdx-project file as this work is done on the fly.
+
+**Create a pre release, beta package:**
+```
+cci flow run release_2gp_beta -o create_package_version__version_name 'October 2021' 
+```
+'October 2021' should be unique and be replaced with the month and year of time of release. Beta packages should
+not be installed in production orgs.
+
+**Test the pre-release, beta package in a scratch org:**
+```
+cci flow run ci_beta --org beta
+```
+This is optional. You could install the beta package in your own development org for testing as well
+(rather than a scratch org).
+
+**Promote the latest pre-realese, beta package to a full release package:**
+```
+cci flow run release_2gp_production 
+```
+
+**Test the full release package in a scratch org**
+```
+cci flow run ci_release --org release
+```
+This is optional. You could install the release package in your own development org/ testing production org for testing as well
+(rather than a scratch org).
+
+---
+
+## Throw away package in CumulusCI
+Need to build a mock package to test and throw away without worrying about ancestry. CumulusCI has you covered with
+this command:
+
+```
+cci flow run build_feature_test_package
+```
+Use the SubscriberPackageVersion Id to append to an installation link:
+
+```
+https://login.salesforce.com/packaging/installPackage.apexp?p0=[SubscriberPackageVersion Id]
+```
+
+---
+
+## ARCHIVED - Manual way of upgrading 2gp packages
+**THIS METHOD SHOULD NOT BE USED.** The instructions are left here for archival purposes. 
+The above CumulusCI method should be use as it automates everything listed below
+and creates github releases.
+
+### sfdx-project.json
 
 The sfdx-project.json is the control center for package versioning and ancestry.
 
@@ -9,7 +63,7 @@ build number on beta release builds until the package is promoted.
 
 **ancestorId**: This is the latest id of the release package you want to inherit 
 ancestry from. This ***is not*** the id of first ever released package, but most 
-often the id of the last package you created. For upgradeability the last package 
+often the id of the last package you created. For upgrade ability the last package 
 will follow its ancestor, and so on until the original release package id is found (if ancestry 
 has not been broken at some point). All packages in this chain of ancestors can be 
 updated to the current package you are creating.
@@ -42,7 +96,7 @@ updated to the current package you are creating.
 }
 ```
 
-## Build a beta package
+### Build a beta package
 
 It is surprisingly simple to build a beta package:
 
@@ -56,7 +110,7 @@ sfdx force:package:version:create --path force-app --codecoverage --installation
 Packaging seems to take about 10-15 minutes. Occasionally it will time out but give commands
 to check on the build in the future.
 
-## Promote a beta package
+### Promote a beta package
 
 In order for a beta package to come out of beta to be a fully released version you need 
 to promote the beta version with the following command:
@@ -75,8 +129,7 @@ installation URL and it still says that the package is beta wait on it until the
 flag is removed. Simply refresh the package installation page until it no longer 
 says beta.
 
-
-## Installing a package
+### Installing a package
 
 At the end of packaging you will get a URL to install the package. It will look like
 this with the ***version_01_id*** replaced with the package id. Don't install beta packages 
