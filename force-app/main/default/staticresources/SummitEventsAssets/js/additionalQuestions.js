@@ -5,20 +5,21 @@ let ready = (callback) => {
 
 ready(() => {
     const questionForm = document.querySelector("[id$=SummitEventQuestionForm]");
+    const allInputs = questionForm.querySelectorAll('input, select, textarea');
     questionForm.addEventListener('invalid', (e) => {
         e.preventDefault();
-        let allInputs = document.querySelectorAll('input, select, textarea');
-        allInputs.forEach(input => {
-            if (!input.validity.valid) {
+        allInputs.forEach(formInput => {
+            if (!formInput.validity.valid) {
                 fadein();
-                input.setAttribute('aria-invalid', 'true')
-                input.closest('.slds-form-element').classList.add('slds-has-error');
-                input.addEventListener('change', () => {
-                    input.closest('.slds-form-element').classList.remove('slds-has-error');
-                    input.removeAttribute('aria-invalid')
+                formInput.setAttribute('aria-invalid', 'true')
+                formInput.closest('.slds-form-element').classList.add('slds-has-error');
+                formInput.addEventListener('change', () => {
+                    formInput.closest('.slds-form-element').classList.remove('slds-has-error');
+                    formInput.removeAttribute('aria-invalid')
                 });
 
             }
         });
-    }, true)
+    }, true);
+
 });

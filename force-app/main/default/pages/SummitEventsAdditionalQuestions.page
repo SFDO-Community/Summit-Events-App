@@ -112,16 +112,19 @@
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__control">
 
                                         <!--Textbox -->
-                                        <apex:inputText value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Textbox',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}"/>
+                                        <apex:inputText value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Textbox',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}" maxLength="{!IF(ISBLANK(qu.textLimit), '255', qu.textLimit)}"/>
 
                                         <!--Textarea -->
-                                        <apex:inputTextarea value="{!eventRegistration[qu.mapTo]}" styleClass="slds-textarea" rendered="{!If(qu.type = 'Text Area',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}"/>
+                                        <apex:inputTextarea value="{!eventRegistration[qu.mapTo]}" styleClass="slds-textarea" rendered="{!If(qu.type = 'Text Area',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}"  html-maxlength="{!IF(ISBLANK(qu.textLimit), '255', qu.textLimit)}"/>
 
                                         <!--Email -->
-                                        <apex:input type="email" value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Email',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}"/>
+                                        <apex:input type="email" value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Email',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}" html-maxlength="{!IF(ISBLANK(qu.textLimit), '255', qu.textLimit)}"/>
 
                                         <!--Date -->
-                                        <apex:input type="date" value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Date',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}"/>
+                                        <apex:input type="date" value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Date',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}" html-maxlength="{!IF(ISBLANK(qu.textLimit), '255', qu.textLimit)}"/>
+
+                                        <!--Phone -->
+                                        <apex:input type="tel" value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Phone',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}" html-pattern="[0-9-+ ().]+" html-maxlength="{!IF(ISBLANK(qu.textLimit), '255', qu.textLimit)}"/>
 
                                         <!--Pick List-->
                                         <apex:outputPanel layout="block" styleClass="slds-select_container" rendered="{!IF(qu.type = 'Picklist', true, false)}">
@@ -185,7 +188,7 @@
                                             <!--Secondary Input Text Box - Used for requested manual entry of record and mapped to secondary field-->
                                             <div class="sea-secondary-input" style="{!IF(ISBLANK(eventRegistration[qu.secondaryMapTo]), 'display:none', '')}">
                                                 <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right sea-secondary-input" role="none">
-                                                    <apex:inputText value="{!eventRegistration[qu.secondaryMapTo]}" styleClass="slds-input slds-m-horizontal_none sea-alternate-input" html-aria-describedby="error-message-{!quNum}"/>
+                                                    <apex:inputText value="{!eventRegistration[qu.secondaryMapTo]}" styleClass="slds-input slds-m-horizontal_none sea-alternate-input" html-aria-describedby="error-message-{!quNum}" maxLength="{!IF(ISBLANK(qu.textLimit), '255', qu.textLimit)}"/>
                                                     <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right removeButtonSecondary" title="Remove selected option">
                                                         <svg class="slds-button__icon" aria-hidden="true">
                                                             <use xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
