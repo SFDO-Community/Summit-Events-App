@@ -224,7 +224,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             quest.setupError += SeaShared.checkFieldGuestAccess(lookupObject, '', '', false, '');
                         }
 
-                        quest.setupError += SeaShared.checkFieldGuestAccess(lookupObject, mapToField, 'reference', true, 'Map To Field: ');
+                        quest.setupError += SeaShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', mapToField, 'reference', true, 'Map To Field: ');
 
                         if (String.isNotBlank(question.Lookup_Fields__c)) {
                             lookupFields = question.Lookup_Fields__c.split(',');
