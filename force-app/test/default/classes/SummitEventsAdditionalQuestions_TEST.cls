@@ -236,14 +236,13 @@ private class SummitEventsAdditionalQuestions_TEST {
             SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
-            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map To Field:  may not exist or is inaccessible. Look up field:  may not exist or is inaccessible. Look up field:  may not exist or is inaccessible. ');
+            System.assertEquals(questionController.questionWrapper[0].setupError.trim(), 'Question setup issue(s): Look up field:  may not exist or is inaccessible. Look up field:  may not exist or is inaccessible.');
 
-            //Test question with field that doesn't exist for map_to_field__c
             testQuestions[0].Lookup_Object__c = 'Blah';
             testQuestions[0].Lookup_Fields__c = 'Blah';
             update testQuestions;
             questionController = new SummitEventsAdditionalQuestionsCtlr();
-            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): blah may not exist or is inaccessible. Map To Field: blah may not exist or is inaccessible. Look up field: blah may not exist or is inaccessible. ');
+            System.assertEquals(questionController.questionWrapper[0].setupError.trim(), 'Question setup issue(s): Lookup Object: blah may not exist or is inaccessible. Look up field: blah may not exist or is inaccessible.');
 
             Test.stopTest();
         }
