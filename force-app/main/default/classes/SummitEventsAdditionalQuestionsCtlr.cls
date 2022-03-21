@@ -221,17 +221,22 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                         lookupObject = '';
                         if (String.isNotBlank(question.Lookup_Object__c)) {
                             lookupObject = question.Lookup_Object__c.trim().toLowerCase();
-                            quest.setupError += SeaShared.checkFieldGuestAccess(lookupObject, '', '', false, '');
+                            quest.setupError += SeaShared.checkFieldGuestAccess(lookupObject, '', '', false, 'Lookup Object: ');
                         }
 
-                        quest.setupError += SeaShared.checkFieldGuestAccess(lookupObject, mapToField, 'reference', true, 'Map To Field: ');
+                        quest.setupError += SeaShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', mapToField, 'reference', true, 'Map To Field: ');
 
                         if (String.isNotBlank(question.Lookup_Fields__c)) {
-                            lookupFields = question.Lookup_Fields__c.split(',');
+                            String questionLookupFields = question.Lookup_Fields__c.toLowerCase();
+                            questionLookupFields = questionLookupFields.replace('billingaddress', 'BillingStreet,BillingCity,BillingState,BillingPostalCode,BillingCountry');
+                            questionLookupFields = questionLookupFields.replace('shippingaddress', 'ShippingStreet,ShippingCity,ShippingState,ShippingPostalCode,ShippingCountry');
+
+                            lookupFields = questionLookupFields.split(',');
 
                             // Test for accessibility and clean up lookup fields
                             for (String lookUpField : lookupFields) {
                                 lookUpField = lookUpField.trim();
+
                                 quest.setupError += SeaShared.checkFieldGuestAccess(lookupObject, lookUpField, '', false, 'Look up field: ');
                                 if (String.isBlank(quest.setupError)) {
                                     cleanLookUpFields.add(lookUpField);
