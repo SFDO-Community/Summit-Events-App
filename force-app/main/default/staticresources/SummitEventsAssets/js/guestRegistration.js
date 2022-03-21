@@ -239,7 +239,7 @@ function buildInputBox(question, inputType) {
     }
     inputBox.setAttribute('data-type', question.type);
     if (inputType === 'tel') {
-        //inputBox.setAttribute('pattern', '[\\+]\\d{2}[\\(]\\d{2}[\\)]\\d{4}[\\-]\\d{4}');
+        inputBox.setAttribute('pattern', '[0-9-+ ().]+');
     }
     inputBox.classList.add('slds-input');
     inputBox.name = question.id;
