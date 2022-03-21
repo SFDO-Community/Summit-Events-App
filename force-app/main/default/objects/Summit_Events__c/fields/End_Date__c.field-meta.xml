@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>End_Date__c</fullName>
-    <description>Date event ends</description>
+    <description>End date will impact the Event Instance Feed URL. As the End Date changes, the URL will change and update. End date should reflect the range of date Event Instances should appear in the URL.</description>
     <externalId>false</externalId>
-    <inlineHelpText>Date event ends</inlineHelpText>
+    <inlineHelpText>Date the LAST Instance should close.
+
+Note: the Event Instance Feed URL is dynamic and  will update as the end date changes. Registration of the Instance is independent of this end date.</inlineHelpText>
     <label>End Date</label>
     <required>false</required>
     <trackHistory>false</trackHistory>

@@ -164,7 +164,7 @@
     <label>Summit Events Appointment Type</label>
     <nameField>
         <displayFormat>AT-{0000}</displayFormat>
-        <label>UG Event Appointment Type</label>
+        <label>Appointment Type Name</label>
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Summit Events Appointment Types</pluralLabel>
