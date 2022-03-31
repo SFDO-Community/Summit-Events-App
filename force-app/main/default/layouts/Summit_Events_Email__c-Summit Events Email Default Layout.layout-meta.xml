@@ -19,7 +19,7 @@
         <label>Information</label>
         <layoutColumns>
             <layoutItems>
-                <height>150</height>
+                <height>175</height>
                 <page>SummitEventsLetterheadLookup</page>
                 <showLabel>false</showLabel>
                 <showScrollbars>false</showScrollbars>
@@ -130,7 +130,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h23000000PKf1</masterLabel>
+        <masterLabel>00hR0000004Pqew</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
