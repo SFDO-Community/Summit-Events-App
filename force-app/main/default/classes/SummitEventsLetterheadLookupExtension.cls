@@ -4,18 +4,20 @@
 // Created by Thaddaeus Dahlberg on 10/11/2018.
 
 public with sharing class SummitEventsLetterheadLookupExtension {
-    public Summit_Events_Email__c SummitEvt;
+    public Summit_Events_Email__c summitEventsEmail;
     public Map<Id, BrandTemplate> brandTemplates;
     public Map<Id, OrgWideEmailAddress> oweList;
 
     public SummitEventsLetterheadLookupExtension(ApexPages.StandardController stdController) {
-        SummitEvt = (Summit_Events_Email__c) stdController.getRecord();
+        summitEventsEmail = (Summit_Events_Email__c) stdController.getRecord();
     }
+
+
 
     public List<SelectOption> getOrgWideEmail() {
         oweList = new Map<Id, OrgWideEmailAddress>(
         [
-                SELECT Id, Address,DisplayName, IsAllowAllProfiles
+                SELECT Id, Address, DisplayName, IsAllowAllProfiles
                 FROM OrgWideEmailAddress
                 WHERE IsAllowAllProfiles = TRUE
                 WITH SECURITY_ENFORCED
@@ -56,13 +58,13 @@ public with sharing class SummitEventsLetterheadLookupExtension {
 
     public PageReference save() {
         ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'Your letterhead settings have been saved.'));
-        if (!String.isBlank(SummitEvt.Org_Email_Id__c)) {
-            SummitEvt.Org_Email__c = String.valueOf(oweList.get(SummitEvt.Org_Email_Id__c).Address);
+        if (!String.isBlank(summitEventsEmail.Org_Email_Id__c)) {
+            summitEventsEmail.Org_Email__c = String.valueOf(oweList.get(summitEventsEmail.Org_Email_Id__c).Address);
         }
         String LHTemplate = '';
-        if (!String.isBlank(SummitEvt.Letterhead_Id__c)) {
-            LHTemplate = brandTemplates.get(SummitEvt.Letterhead_Id__c).Value;
-            SummitEvt.Letterhead_Name__c = brandTemplates.get(SummitEvt.Letterhead_Id__c).Name;
+        if (!String.isBlank(summitEventsEmail.Letterhead_Id__c)) {
+            LHTemplate = brandTemplates.get(summitEventsEmail.Letterhead_Id__c).Value;
+            summitEventsEmail.Letterhead_Name__c = brandTemplates.get(summitEventsEmail.Letterhead_Id__c).Name;
         }
         String headerImg = '';
         String footerImg = '';
@@ -220,8 +222,8 @@ public with sharing class SummitEventsLetterheadLookupExtension {
         generatedLH += '</center>\n';
         generatedLH += '</body>';
 
-        SummitEvt.Letterhead_HTML__c = generatedLH;
-        update SummitEvt;
+        summitEventsEmail.Letterhead_HTML__c = generatedLH;
+        update summitEventsEmail;
 
         return ApexPages.currentPage();
     }

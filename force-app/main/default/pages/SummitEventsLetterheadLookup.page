@@ -5,40 +5,39 @@ license that can be found in the LICENSE file.
 Created by Thaddaeus Dahlberg on 10/11/2018.
 -->
 
-<apex:page id="SummitEventsLetterheadLookup" showHeader="false" sideBar="false" standardController="Summit_Events_Email__c" extensions="SummitEventsLetterheadLookupExtension">
-    <script>
-        function CloseAndRefresh() {
-            window.opener.location.href = "/{!Summit_Events_Email__c.Id}";
-            self.close();
-        }
-    </script>
+<apex:page id="SummitEventsLetterheadLookup" showHeader="false" sideBar="false" standardController="Summit_Events_Email__c" extensions="SummitEventsLetterheadLookupExtension" standardStylesheets="false">
+    <apex:slds />
+    TEST
     <apex:form id="LetterheadConfig">
-        <apex:pageBlock title="Letterhead Setup">
-            <apex:pageMessages />
-            <apex:pageBlockSection title="Organizational Email to send from" columns="1">
-                <apex:outputText rendered="{!!ISBLANK(Summit_Events_Email__c.Org_Email__c)}">
-                    Currently selected: {!Summit_Events_Email__c.Org_Email__c}
-                </apex:outputText>
-                <apex:selectList multiselect="false" size="1" value="{!Summit_Events_Email__c.Org_Email_Id__c}" required="false" style="width:95%">
-                    <apex:selectOptions value="{!orgWideEmail}"/>
-                </apex:selectList>
-            </apex:pageBlockSection>
-            <apex:pageBlockSection title="Letterheads" columns="1">
-                <apex:outputText rendered="{!!ISBLANK(Summit_Events_Email__c.Letterhead_Id__c)}">
-                    Currently selected: {!Summit_Events_Email__c.Letterhead_Id__c}
-                </apex:outputText>
-                <apex:selectList multiselect="false" size="1" value="{!Summit_Events_Email__c.Letterhead_Id__c}" required="false" style="width:95%">
-                    <apex:selectOptions value="{!Letterheads}"/>
-                </apex:selectList>
-            </apex:pageBlockSection>
-            <apex:pageBlockSection columns="2">
-                <apex:pageBlockSectionItem >
-                    <apex:commandButton value="Save" action="{!save}" onComplete="CloseAndRefresh();"/>
-                </apex:pageBlockSectionItem>
-                <apex:pageBlockSectionItem >
-                    <apex:commandButton value="Close" onClick="window.top.close();"/>
-                </apex:pageBlockSectionItem>
-            </apex:pageBlockSection>
-        </apex:pageBlock>
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col">
+                <div class="slds-form-element">
+                    <apex:outputLabel for="orgWideEmail">Select Organization Wide Email
+                        <br/>Currently selected: {!IF(!ISBLANK(Summit_Events_Email__c.Org_Email__c), Summit_Events_Email__c.Org_Email__c, ' None')}</apex:outputLabel>
+                    <div class="slds-select_container">
+                        <apex:selectList multiselect="false" size="1" value="{!Summit_Events_Email__c.Org_Email_Id__c}" required="false" id="orgWideEmail" styleClass="slds-select">
+                            <apex:selectOptions value="{!orgWideEmail}"/>
+                        </apex:selectList>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col">
+                <div class="slds-form-element">
+                    <apex:outputLabel for="letterheadLayout">Select classic letterhead layout<br/>
+                        Currently selected: {!IF(!ISBLANK(Summit_Events_Email__c.Letterhead_Id__c), Summit_Events_Email__c.Letterhead_Id__c, ' None')}</apex:outputLabel>
+                    <div class="slds-select_container">
+                        <apex:selectList multiselect="false" size="1" value="{!Summit_Events_Email__c.Letterhead_Id__c}" required="false" id="letterheadLayout" styleClass="slds-select">
+                            <apex:selectOptions value="{!Letterheads}"/>
+                        </apex:selectList>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-p-top_medium">
+                <apex:pageMessages />
+                <apex:commandButton value="Save Letterhead settings" action="{!save}" styleClass="slds-button slds-button_brand"/>
+            </div>
+        </div>
     </apex:form>
 </apex:page>
