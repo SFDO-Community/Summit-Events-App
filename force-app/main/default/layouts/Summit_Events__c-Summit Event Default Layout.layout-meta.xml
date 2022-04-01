@@ -633,9 +633,9 @@
     <platformActionList>
         <actionListContext>Record</actionListContext>
         <platformActionListItems>
-            <actionName>Clone</actionName>
+            <actionName>Edit</actionName>
             <actionType>StandardButton</actionType>
-            <sortOrder>2</sortOrder>
+            <sortOrder>0</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
             <actionName>Delete</actionName>
@@ -643,9 +643,9 @@
             <sortOrder>1</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>Edit</actionName>
+            <actionName>Clone</actionName>
             <actionType>StandardButton</actionType>
-            <sortOrder>0</sortOrder>
+            <sortOrder>2</sortOrder>
         </platformActionListItems>
     </platformActionList>
     <relatedLists>
@@ -666,6 +666,7 @@
         <relatedList>Summit_Events_Question__c.Event__c</relatedList>
     </relatedLists>
     <relatedLists>
+        <fields>NAME</fields>
         <fields>Title__c</fields>
         <fields>Appointment_Limits__c</fields>
         <fields>Description__c</fields>
@@ -719,7 +720,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h1h000003IXG5</masterLabel>
+        <masterLabel>00h3F0000071070</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
