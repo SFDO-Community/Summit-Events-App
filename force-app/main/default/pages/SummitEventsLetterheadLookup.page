@@ -22,7 +22,7 @@ Created by Thaddaeus Dahlberg on 10/11/2018.
             </div>
             <div class="slds-col">
                 <div class="slds-form-element">
-                    <apex:outputLabel for="letterheadLayout">Select classic letterhead layout<br/>
+                    <apex:outputLabel for="letterheadLayout">Select Classic Letterhead<br/>
                         Currently selected: {!IF(!ISBLANK(Summit_Events_Email__c.Letterhead_Id__c), Summit_Events_Email__c.Letterhead_Id__c, ' None')}</apex:outputLabel>
                     <div class="slds-select_container">
                         <apex:selectList multiselect="false" size="1" value="{!Summit_Events_Email__c.Letterhead_Id__c}" required="false" id="letterheadLayout" styleClass="slds-select">
