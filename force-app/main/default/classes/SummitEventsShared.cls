@@ -199,13 +199,18 @@ public with sharing class SummitEventsShared {
 
         //check if registration id is there and whether status it is set to registered. IF so reset cookie if it is.
         if (String.isNotBlank(eventInformation.registrationId)) {
-            Summit_Events_Registration__c evtReg = [
-                    SELECT Status__c
-                    FROM Summit_Events_Registration__c
-                    WHERE Id = :eventInformation.registrationId
-                    WITH SECURITY_ENFORCED
-            ];
-            if (evtReg.Status__c != 'Started') {
+            Summit_Events_Registration__c evtReg = new Summit_Events_Registration__c();
+            try {
+                evtReg = [
+                        SELECT Status__c
+                        FROM Summit_Events_Registration__c
+                        WHERE Id = :eventInformation.registrationId
+                        WITH SECURITY_ENFORCED
+                ];
+            } catch (Exception ex) {
+
+            }
+            if (evtReg.Status__c != 'Started' || evtReg == null) {
                 eventInformation.registrationId = '';
             }
         }
