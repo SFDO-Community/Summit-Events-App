@@ -4,7 +4,7 @@ project:
     package:
         name: Summit Events App
         namespace: summit
-        api_version: "51.0"
+        api_version: "52.0"
     source_format: sfdx
     git:
         default_branch: master
@@ -37,11 +37,12 @@ tasks:
         description: Setup the Custom Settings for the Event Site
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         options:
+            namespace_inject: $project_config.project__package__namespace
             apex: >
-                Site mySite = [SELECT Id FROM Site WHERE Name = 'Summit_Events'];
+                Site mySite = [SELECT Id FROM Site WHERE Name = '%%%NAMESPACE%%%Summit_Events'];
                 SiteDetail mySiteDetail = [SELECT SecureURL FROM SiteDetail WHERE DurableId = :mySite.Id];
                 String url = mySiteDetail.SecureURL;
-                Summit_Events_Settings__c eventSettings = Summit_Events_Settings__c.getOrgDefaults();
+                %%%NAMESPACE%%%Summit_Events_Settings__c eventSettings = %%%NAMESPACE%%%Summit_Events_Settings__c.getOrgDefaults();
                 eventSettings.Community_Base_URL__c = url;
                 eventSettings.Managed_Package__c = false;
                 upsert eventSettings;
@@ -50,6 +51,7 @@ tasks:
         description: Give System Admins Event Admin Permission Set
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         options:
+            namespace_inject: $project_config.project__package__namespace
             apex: >
                 List<PermissionSet> eventPermissionSets;
                 eventPermissionSets = [SELECT Name, Id FROM PermissionSet WHERE Name = 'Summit_Events_Admin'];
@@ -68,8 +70,9 @@ tasks:
         description: Give System Admins Event Admin Permission Set
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         options:
+            namespace_inject: $project_config.project__package__namespace
             apex: >
-                String siteName = 'Summit_Events';
+                String siteName = '%%%NAMESPACE%%%Summit_Events';
 
                 Site site = [
                         SELECT GuestUserId
@@ -92,6 +95,7 @@ tasks:
         description: Configure sample records for the Event app
         class_path: cumulusci.tasks.bulkdata.load.LoadData
         options:
+            namespace_inject: $project_config.project__package__namespace
             mapping: datasets/dev/mapping.yml
             sql_path: datasets/dev/data.sql
 
@@ -141,6 +145,23 @@ flows:
             9:
                 task: deploy_guest_sharing_rules
 
+    config_dev_namespaced:
+        steps:
+            3:
+                task: deploy_dev_event_records
+            4:
+                task: create_fake_school_data
+            5:
+                task: deploy_permission_set
+            6:
+                task: deploy_site_config
+            7:
+                task: deploy_site_settings
+            8:
+                task: deploy_guest_permission_set
+            9:
+                task: deploy_guest_sharing_rules
+
     customer_org:
         steps:
             1:
@@ -158,3 +179,10 @@ plans:
         steps:
             1:
                 flow: customer_org
+
+orgs:
+    scratch:
+        dev_namespaced:
+            config_file: orgs/dev.json
+            days: 7
+            namespaced: true

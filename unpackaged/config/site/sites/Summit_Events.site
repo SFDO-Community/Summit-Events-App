@@ -17,7 +17,7 @@
     <genericErrorPage>Exception</genericErrorPage>
     <inMaintenancePage>InMaintenance</inMaintenancePage>
     <inactiveIndexPage>InMaintenance</inactiveIndexPage>
-    <indexPage>SummitEvents</indexPage>
+    <indexPage>%%%NAMESPACE%%%SummitEvents</indexPage>
     <masterLabel>Summit Events</masterLabel>
     <referrerPolicyOriginWhenCrossOrigin>true</referrerPolicyOriginWhenCrossOrigin>
     <siteAdmin>test-unoxuhgakkwq@example.com</siteAdmin>

@@ -80,6 +80,9 @@ Insert Summit_Events__c:
   - Event_Confirmation_Description__c
   - Event_Confirmation_Title__c
   - Event_Fee_Additional__c
+  - Event_Fee_Label__c
+  - Event_Fee_Submit_List_Label__c
+  - Event_Fee_Total_Label__c
   - Event_Fee__c
   - Event_Footer__c
   - Event_Full_Text__c
@@ -119,6 +122,8 @@ Insert Summit_Events__c:
   - Max_Other_Attendees__c
   - Name
   - No_Guest_Registrations_Added_Message__c
+  - Payment_Button_Label__c
+  - Payment_Gateway__c
   - Phone_Label__c
   - Phone_Type_Label__c
   - Preferred_Class_Year_Label__c
@@ -293,7 +298,6 @@ Insert Summit_Events_Host__c:
   - Location__c
   - Max_Available__c
   - Preferred_Title__c
-  - RecordTypeId
   - Time__c
   - Undergrad_Major__c
   lookups:
@@ -336,6 +340,7 @@ Insert Summit_Events_Registration__c:
   - New_Lead_Created__c
   - Number_of_Guests__c
   - Participation_Type__c
+  - Payment_Gateway_Status__c
   - Preferred_Class_Year__c
   - Preferred_Visit_Time__c
   - Presentation_Location__c

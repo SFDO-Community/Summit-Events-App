@@ -8,5 +8,5 @@
         <members>Account</members>
         <name>SharingRules</name>
     </types>
-    <version>51.0</version>
+    <version>52.0</version>
 </Package>
