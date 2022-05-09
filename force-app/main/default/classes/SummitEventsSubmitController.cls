@@ -121,7 +121,6 @@ public with sharing class SummitEventsSubmitController {
                         if (questionId != null) {
                             Summit_Events_Question__c questionParameters = eventGuestQuestions.get(questionId);
                             if (!questionParameters.Is_Visible__c) {
-                                System.debug('not visible');
                                 //remove NOT visible questions so they do not appear to front end user
                                 guestAnswers[xx].questions.remove(yy);
                             }

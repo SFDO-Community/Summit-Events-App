@@ -124,7 +124,6 @@ public with sharing class SummitEventsRegisterController {
             ];
 
             pageFlow = SeaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage());
-            System.debug(pageFlow);
             nextUrl = pageFlow.get('Next').getUrl().toLowerCase();
 
             if (String.isNotBlank(eventPage.Ask_Phone__c)) {

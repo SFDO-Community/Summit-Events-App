@@ -29,7 +29,7 @@ private class SummitEventsRegisterAppointment_TEST {
 
             //Check event with no id should return home link to site
             PageReference checkPage = optionsCtrl.checkEventDetails();
-            System.assertEquals(checkPage.getUrl(), 'https://google.com/SummitEvents');
+            System.assertEquals(checkPage.getUrl(), 'https://google.com/' + namespace + 'SummitEvents');
 
             SummitEventsShared SEShared = new SummitEventsShared();
             SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);

@@ -29,12 +29,14 @@ private class SummitEventsRegisterGuests_TEST {
 
         SummitEventsShared seaShared = new SummitEventsShared();
 
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+
+
         System.runAs(testUser) {
             Test.startTest();
-            String namespace = SummitEventsNamespace.getNamespace();
-            if (String.isNotBlank(namespace)) {
-                namespace = namespace + '__';
-            }
 
             PageReference pageRef = Page.SummitEventsRegisterGuests;
             Test.setCurrentPage(pageRef);
@@ -43,7 +45,7 @@ private class SummitEventsRegisterGuests_TEST {
 
             //Page check returns the first page of Summit Events because cookie with event/registration data was not found and decrypted
             PageReference pageCheck = guestController.checkEventDetails();
-            System.assertEquals(pageCheck.getUrl(), 'https://google.com/SummitEvents');
+            System.assertEquals(pageCheck.getUrl(), 'https://google.com/' + namespace + 'SummitEvents');
 
             SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
@@ -105,15 +107,13 @@ private class SummitEventsRegisterGuests_TEST {
 
         SummitEventsShared seaShared = new SummitEventsShared();
 
-        //Set a namespace on this test
-        SummitEventsNamespace.plainNamespace = 'summit';
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
 
         System.runAs(testUser) {
             Test.startTest();
-            String namespace = SummitEventsNamespace.getNamespace();
-            if (String.isNotBlank(namespace)) {
-                namespace = namespace + '__';
-            }
 
             PageReference pageRef = Page.SummitEventsRegisterGuests;
             pageRef.getParameters().put('adminopen', 'true');
@@ -125,7 +125,7 @@ private class SummitEventsRegisterGuests_TEST {
             //Page check returns the first page of Summit Events because cookie with event/registration data was not found and decrypted
             PageReference pageCheck = guestController.checkEventDetails();
             //Namespace defined so url should include it
-            System.assertEquals(pageCheck.getUrl(), 'https://google.com/summit__SummitEvents');
+            System.assertEquals(pageCheck.getUrl(), 'https://google.com/' + namespace + 'SummitEvents');
 
             SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
@@ -137,7 +137,7 @@ private class SummitEventsRegisterGuests_TEST {
             pageCheck = guestController.checkEventDetails();
             System.assertEquals(pageCheck, null);
 
-            System.assertEquals(guestController.previousPage().getUrl(), '/apex/summiteventsregister?adminopen=true');
+            System.assertEquals(guestController.previousPage().getUrl(), '/apex/' + namespace + 'summiteventsregister?adminopen=true');
 
             //Correct encrypted cooke information decrypted
             System.assertEquals(JSON.serialize(guestController.eventInformation), '{"registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
@@ -182,10 +182,15 @@ private class SummitEventsRegisterGuests_TEST {
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
         //Test question with empty map_to_field defined.
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Guest');
         testQuestions.addAll(SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Guest'));
         testQuestions[0].Map_to_Field__c = 'NOT_A_FIELD__c';
-        testQuestions[1].Map_to_Field__c = 'Total_Confirmed_Appointments__c';
+        testQuestions[1].Map_to_Field__c = namespace + 'Total_Confirmed_Appointments__c';
         update testQuestions;
 
         System.runAs(testUser) {
@@ -203,7 +208,7 @@ private class SummitEventsRegisterGuests_TEST {
             //Deserialize the question JSON from the page so we can check for errors
             List<SummitEventsRegisterGuestsController.question> guestQuestions = (List<SummitEventsRegisterGuestsController.question>) JSON.deserialize(guestController.guestQuestionJSON, List<SummitEventsRegisterGuestsController.question>.class);
             System.assertEquals(guestQuestions[0].setupError, 'Field NOT_A_FIELD__c may not exist. ');
-            System.assertEquals(guestQuestions[1].setupError, 'Field Total_Confirmed_Appointments__c is not writable. ');
+            System.assertEquals(guestQuestions[1].setupError, 'Field ' + namespace + 'Total_Confirmed_Appointments__c is not writable. ');
 
             //Correct encrypted cooke information decrypted
             System.assertEquals(JSON.serialize(guestController.eventInformation), '{"registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
@@ -229,7 +234,7 @@ private class SummitEventsRegisterGuests_TEST {
             namespace = namespace + '__';
         }
 
-        testQuestions[0].Existing_Picklist_Values__c = namespace + 'Registrant_State_Global__c';
+        testQuestions[0].Existing_Picklist_Values__c = 'Registrant_State_Global__c';
         testQuestions[0].Map_to_Field__c = namespace + 'Registrant_State_Global__c';
         testQuestions[0].Picklist_Values__c = '';
         update testQuestions;
