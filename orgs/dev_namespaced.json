@@ -1,0 +1,26 @@
+{
+  "orgName": "Summit Events Dev",
+  "edition": "Developer",
+  "features": ["Sites"],
+  "namespace": "summit",
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "chatterSettings": {
+      "enableChatter": true
+    },
+    "userManagementSettings": {
+      "enableNewProfileUI": true
+    },
+    "securitySettings": {
+      "enableAdminLoginAsAnyUser": true,
+      "sessionSettings": {
+        "forceRelogin": false
+      }
+    },
+    "languageSettings": {
+      "enableTranslationWorkbench": true
+    }
+  }
+}

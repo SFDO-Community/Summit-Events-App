@@ -12,6 +12,11 @@ private class SummitEventsAdditionalQuestions_TEST {
         SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
+
         System.runAs(testUser) {
             Test.startTest();
 
@@ -21,7 +26,7 @@ private class SummitEventsAdditionalQuestions_TEST {
 
             //No cookie present so page redirects to root of Summit Events and event info is null
             PageReference eventPage = questionController.checkEventDetails();
-            System.assertEquals(eventPage.getUrl(), 'https://google.com/SummitEvents');
+            System.assertEquals(eventPage.getUrl(), 'https://google.com/' + namespace + 'SummitEvents');
             System.assertEquals(JSON.serialize(questionController.eventInformation), '{"registrationId":null,"instanceId":null,"eventId":null,"dt":null,"audience":null}');
 
             Test.stopTest();
@@ -69,7 +74,11 @@ private class SummitEventsAdditionalQuestions_TEST {
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
         SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, '', 'Registrant and Guest');
-        SummitEventsNamespace.plainNamespace = 'summit';
+
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace + '__';
+        }
 
         System.runAs(testUser) {
             Test.startTest();
@@ -86,7 +95,7 @@ private class SummitEventsAdditionalQuestions_TEST {
 
             //Previous page should be the first page. adminopen=true should be maintained from url parameter.
             PageReference previousPage = questionController.previousPage();
-            System.assertEquals(previousPage.getUrl(), '/apex/summiteventsregister?adminopen=true');
+            System.assertEquals(previousPage.getUrl(), '/apex/' + namespace + 'summiteventsregister?adminopen=true');
 
             System.assertEquals(JSON.serialize(questionController.eventInformation), '{"registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
             //All questions types represented here (if number of types increases this will have to be adjusted)
@@ -111,7 +120,7 @@ private class SummitEventsAdditionalQuestions_TEST {
         }
 
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'lookup', 'Registrant and Guest');
-        testQuestions[0].Lookup_Where_Clause__c = ' WHERE ' + namespace + ' Registrant_First_Name__c != null ';
+        testQuestions[0].Lookup_Where_Clause__c = ' WHERE ' + namespace + 'Registrant_First_Name__c != null ';
         update testQuestions;
 
         System.runAs(testUser) {
@@ -140,7 +149,6 @@ private class SummitEventsAdditionalQuestions_TEST {
             System.assertEquals(queryReturns.size(), 0);
 
             //Search for the registration that was added in the data above
-
             queryReturns = SummitEventsAdditionalQuestionsCtlr.lookupSearch(questionController.questionWrapper[0].lookup, 'Look');
             System.assertEquals(queryReturns.size(), 1);
 
@@ -149,7 +157,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             testQuestions[0].Map_to_Field__c = namespace + 'Registrant_First_Name__c';
             update testQuestions;
             questionController = new SummitEventsAdditionalQuestionsCtlr();
-            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map To Field: Field registrant_first_name__c is not the required field type reference. ');
+            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map To Field: Field ' + namespace + 'registrant_first_name__c is not the required field type reference. ');
 
             Test.stopTest();
         }
@@ -263,9 +271,9 @@ private class SummitEventsAdditionalQuestions_TEST {
             namespace = namespace + '__';
         }
 
-        testQuestions[0].Existing_Picklist_Values__c = namespace + 'Registrant_State_Global__c';
+        testQuestions[0].Existing_Picklist_Values__c = 'Registrant_State_Global__c';
         testQuestions[0].Map_to_Field__c = namespace + 'Registrant_State_Global__c';
-        testQuestions[0].Picklist_Values__c = '';
+        testQuestions[0].Picklist_Values__c = 'MN';
         update testQuestions;
 
         System.runAs(testUser) {
