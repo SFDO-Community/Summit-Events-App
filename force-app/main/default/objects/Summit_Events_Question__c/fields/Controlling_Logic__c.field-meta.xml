@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Controlling_Logic__c</fullName>
-    <description>This field captures the value or text that makes the question visible.</description>
+    <description>This field captures the value or text that makes the question visible.
+NOTE: Functionality doesn&apos;t currently exist and is on the roadmap.</description>
     <externalId>false</externalId>
-    <inlineHelpText>This field captures the value or text that makes the question visible.</inlineHelpText>
+    <inlineHelpText>This field captures the value or text that makes the question visible.
+NOTE: Functionality doesn&apos;t currently exist and is on the roadmap.</inlineHelpText>
     <label>Controlling Logic</label>
     <length>255</length>
     <required>false</required>

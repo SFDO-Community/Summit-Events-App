@@ -3,7 +3,7 @@
     <fullName>Registrant_State_Global__c</fullName>
     <description>Registrant&apos;s State value. The list is controlled by a Picklist value set.</description>
     <externalId>false</externalId>
-    <label>Registrant State</label>
+    <label>Registrant State (Global Picklist)</label>
     <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
