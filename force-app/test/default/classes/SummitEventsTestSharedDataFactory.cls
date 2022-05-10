@@ -222,8 +222,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
         List <String> fieldsCreatable = new List <String>();
         for (Schema.SObjectField sField : fieldMap.values()) {
             Schema.DescribeFieldResult dField = sField.getDescribe();
-            if (dField.isCreateable() &&
-                    (String.valueOf(dField.getType()).equalsIgnoreCase('textarea'))) {
+            if (String.valueOf(dField.getType()).equalsIgnoreCase('textarea')) {
                 fieldsCreatable.add(dField.getName());
             }
         }
