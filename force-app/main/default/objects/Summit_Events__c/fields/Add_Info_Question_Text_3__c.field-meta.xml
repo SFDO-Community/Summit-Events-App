@@ -3,7 +3,7 @@
     <fullName>Add_Info_Question_Text_3__c</fullName>
     <description>The text of the question you are asking.</description>
     <externalId>false</externalId>
-    <inlineHelpText>The text of the question you are asking.</inlineHelpText>
+    <inlineHelpText>The text of the question you are asking. Character Limit is based on the corresponding Add Info Answer field (limit:5000)</inlineHelpText>
     <label>Add Info Question Text 3</label>
     <required>false</required>
     <trackHistory>false</trackHistory>

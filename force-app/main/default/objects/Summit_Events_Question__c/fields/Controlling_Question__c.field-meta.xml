@@ -2,9 +2,11 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Controlling_Question__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
-    <description>This field indicates the Question that makes this question dependent.</description>
+    <description>This field indicates the Question that makes this question dependent.
+NOTE: Functionality doesn&apos;t currently exist and is on the roadmap.</description>
     <externalId>false</externalId>
-    <inlineHelpText>This field indicates the Question that makes this question dependent.</inlineHelpText>
+    <inlineHelpText>This field indicates the Question that makes this question dependent.
+NOTE: Functionality doesn&apos;t currently exist and is on the roadmap.</inlineHelpText>
     <label>Controlling Question</label>
     <referenceTo>Summit_Events_Question__c</referenceTo>
     <relationshipLabel>Summit Events Questions</relationshipLabel>
