@@ -2,7 +2,7 @@
  - Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas on 7/13/2021.
  -->
 
-<apex:page id="SummitEventsAdditionalQuestions" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" docType="html-5.0" cache="false" controller="SummitEventsAdditionalQuestionsCtlr" action="{!checkEventDetails}">
+ <apex:page id="SummitEventsAdditionalQuestions" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" docType="html-5.0" cache="false" controller="SummitEventsAdditionalQuestionsCtlr" action="{!checkEventDetails}">
     <apex:composition template="{!templateSelected}">
         <apex:define name="metaPageTitle">
             {!eventInstance.Event__r.Event_Name__c}
@@ -206,6 +206,13 @@
 
                                         </apex:outputPanel>
 
+                                        <!-- Lookup Picklist -->
+                                        <apex:outputPanel layout="block" styleClass="slds-select_container" rendered="{!IF(qu.type = 'Lookup Picklist', true, false)}">
+                                            <apex:selectList value="{!eventRegistration[qu.mapTo]}" size="1" styleClass="slds-select" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}">
+                                                <apex:selectOptions value="{!qu.picklist}"/>
+                                            </apex:selectList>
+                                        </apex:outputPanel>
+                                        
                                     </apex:outputPanel>
                                     <div class="slds-form-element__help" id="error-message-{!quNum}">{!qu.assist}</div>
                                 </apex:outputPanel>

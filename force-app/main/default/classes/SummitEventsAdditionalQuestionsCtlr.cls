@@ -271,6 +271,9 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
                     }
 
+                    if (question.Question_Field_Type__c.equalsIgnoreCase('lookup picklist')){
+                        quest.picklist = createLookupPicklist(question.Lookup_Object__c, question.Lookup_Where_Clause__c, question.Lookup_Fields__c);
+                    }
 
                     //add question to question wrapper if it is visible, otherwise apply default value to the event registration.
                     if (question.Is_Visible__c) {
@@ -370,6 +373,49 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));
         }
         return picklists;
+    }
+
+    public List<SelectOption> createLookupPicklist(String objectName, String filter, String fields){
+        List<SelectOption> pl = new List<SelectOption>();
+        pl.add(new SelectOption('', 'Select...'));
+        
+        List<String> fieldNames = fields.split(',');
+        
+        String query = 'SELECT Id,' + fields;
+        query += ' FROM ' + objectName;
+        
+        if (String.isNotBlank(filter)){
+            query += ' WHERE ' + filter;
+        }
+        
+        query += ' ORDER BY ' + fieldNames.get(0);
+        
+        List<sObject> results = Database.query(query);
+        
+        for (sObject obj : results){
+            String name = '';
+            
+            for (Integer i = 0; i < fieldNames.size(); i++){
+                String field = fieldNames.get(i);
+                
+                if (i == 1){
+                    name += ' - ';
+                }
+                if (i > 1){
+                    name += ', ';
+                }
+                
+                System.debug(field);
+                name += (String)obj.get(field.trim());
+            }
+            
+            //(String)obj.get('Name')
+            
+            SelectOption option = new SelectOption(obj.Id, name);
+            pl.add(option);
+        }
+        
+        return pl;
     }
 
     public PageReference submitAdditionalQuestions() {
