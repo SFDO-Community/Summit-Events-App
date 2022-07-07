@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_Lookup_fields_require_values</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISPICKVAL(Question_Field_Type__c, &apos;Lookup&apos;) &amp;&amp; 
+
+OR(
+  ISBLANK(Lookup_Object__c),
+  ISBLANK(Lookup_Fields__c),
+  ISBLANK(Lookup_Secondary_Value_Field__c),
+  ISBLANK(Lookup_Secondary_Input_Link_Text__c),
+  ISBLANK(Lookup_Secondary_Input_Instructions__c)
+)</errorConditionFormula>
+    <errorMessage>When Question Type = Lookup, then all &quot;Lookup&quot; fields require a value for record to be saved.</errorMessage>
+</ValidationRule>
