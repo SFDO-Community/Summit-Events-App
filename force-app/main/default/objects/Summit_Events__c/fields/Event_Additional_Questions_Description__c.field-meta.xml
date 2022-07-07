@@ -4,7 +4,7 @@
     <description>If entered these instructions appear before additional questions on the additional questions page if there are any additional question for the registrant.</description>
     <externalId>false</externalId>
     <inlineHelpText>If entered these instructions appear before additional questions on the additional questions page if there are any additional question for the registrant.</inlineHelpText>
-    <label>Event Additional Questions Description</label>
+    <label>Event Custom Questions Description</label>
     <length>3000</length>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

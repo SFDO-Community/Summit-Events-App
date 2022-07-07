@@ -4,7 +4,7 @@
     <description>The title that appears on the Additional Questions page if there are registrant additional questions.</description>
     <externalId>false</externalId>
     <inlineHelpText>The title that appears on the Additional Questions page if there are registrant additional questions.</inlineHelpText>
-    <label>Event Additional Question Title</label>
+    <label>Event Custom Question Title</label>
     <length>255</length>
     <required>false</required>
     <trackHistory>false</trackHistory>
