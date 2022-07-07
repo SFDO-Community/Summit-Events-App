@@ -33,6 +33,11 @@
                 <label>Lookup</label>
             </value>
             <value>
+                <fullName>Lookup Picklist</fullName>
+                <default>false</default>
+                <label>Lookup Picklist</label>
+            </value>
+            <value>
                 <fullName>Phone</fullName>
                 <default>false</default>
                 <label>Phone</label>
