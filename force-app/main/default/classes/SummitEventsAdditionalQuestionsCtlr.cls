@@ -76,7 +76,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             Event__r.Event_description__c, Event__r.Audience__c, Current_Available_Capacity__c,
                             Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c,
                             Event_Fee_Additional_Allocation_Override__c, Event_Fee_Additional_Override__c, Event_Fee_Override__c, Event_Fee_Allocation_Override__c,
-                            Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c
+                            Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c,
+                            Registration_Close_Date__c, Registration_Close_Time__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :eventInformation.instanceId
                     WITH SECURITY_ENFORCED

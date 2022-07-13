@@ -221,6 +221,11 @@
             <field>Virtual_Meeting_Link__c</field>
             <table>Summit_Events_Instance__c</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Registration_Close_Time__c</field>
+            <table>Summit_Events_Instance__c</table>
+        </columns>
         <masterLabel>Summit Events Instances</masterLabel>
     </sections>
     <sections>
