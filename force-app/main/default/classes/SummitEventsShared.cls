@@ -388,7 +388,7 @@ public with sharing class SummitEventsShared {
         }
 
         if (eventPage.Keep_Registration_Open_During_Event__c) {
-            if (evtInstance.Instance_Start_Date__c < compareCloseDate && evtInstance.Instance_End_Date__c != compareCloseDate) {
+            if (evtInstance.Instance_End_Date__c < compareCloseDate) {
                 eventIsClosed = true;
             }
         } else if (evtInstance.Instance_Start_Date__c <= compareCloseDate) {
