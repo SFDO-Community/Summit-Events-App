@@ -6,7 +6,7 @@
     <inlineHelpText>This field looks to the Summit Event Registration field API Name to know where to map the response.</inlineHelpText>
     <label>Map to Field</label>
     <length>255</length>
-    <required>false</required>
+    <required>true</required>
     <trackTrending>false</trackTrending>
     <type>Text</type>
     <unique>false</unique>
