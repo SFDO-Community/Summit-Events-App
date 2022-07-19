@@ -895,11 +895,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Summit_Events_Question__c.Map_to_Field__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
         <field>Summit_Events_Question__c.Picklist_Values__c</field>
         <readable>true</readable>
     </fieldPermissions>
