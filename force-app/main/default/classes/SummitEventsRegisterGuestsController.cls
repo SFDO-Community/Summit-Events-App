@@ -206,6 +206,8 @@ public with sharing class SummitEventsRegisterGuestsController {
         String existingPicklistString = existingPicklist;
         if (!existingPicklistString.startsWith('c__')) {
             existingPicklistString = namespace + existingPicklistString;
+        } else if (existingPicklistString.startsWith('c__')) {
+            existingPicklistString = existingPicklist.removeStart('c__');
         }
 
         List<Schema.PicklistEntry> PicklistValues = registrationDescribe.fields.getMap().get(existingPicklistString).getDescribe().getPicklistValues();

@@ -1,6 +1,7 @@
 # Salesforce / SFDX / CCI
 .cci
 .sfdx
+.sf
 /src.orig
 /src
 
