@@ -93,6 +93,26 @@ Must have a registration for the Instance to appear.</description>
             <table>Summit_Events_Instance__c</table>
         </columns>
         <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Additional_Allocation_Override__c</field>
+            <table>Summit_Events_Instance__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Additional_Override__c</field>
+            <table>Summit_Events_Instance__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Allocation_Override__c</field>
+            <table>Summit_Events_Instance__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Override__c</field>
+            <table>Summit_Events_Instance__c</table>
+        </columns>
+        <columns>
             <checkedByDefault>true</checkedByDefault>
             <field>Name</field>
             <table>Summit_Events_Instance__c</table>
@@ -224,6 +244,11 @@ Must have a registration for the Instance to appear.</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Virtual_Appointment_Link__c</field>
+            <table>Summit_Events_Instance__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Virtual_Meeting_Link__c</field>
             <table>Summit_Events_Instance__c</table>
         </columns>
@@ -287,7 +312,32 @@ Must have a registration for the Instance to appear.</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Add_to_Apple_Calendar__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Add_To_Calendar_Link__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_To_Google_Calendar_Link__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_to_Outlook_Calendar__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_To_Outlook_Web_Calendar__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_To_Yahoo_Calendar__c</field>
             <table>Summit_Events_Instance__c.Event_Registrations__r</table>
         </columns>
         <columns>
@@ -372,7 +422,22 @@ Must have a registration for the Instance to appear.</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Encrypted_Registration_Id_1__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Encrypted_Registration_Id_2__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Event__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Instance__c</field>
             <table>Summit_Events_Instance__c.Event_Registrations__r</table>
         </columns>
         <columns>
@@ -452,12 +517,32 @@ Must have a registration for the Instance to appear.</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Event_Type__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Generated_Itinerary__c</field>
             <table>Summit_Events_Instance__c.Event_Registrations__r</table>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Generated_Requested_Appointments__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_Host__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_Host_Status__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_JSON__c</field>
             <table>Summit_Events_Instance__c.Event_Registrations__r</table>
         </columns>
         <columns>
@@ -497,6 +582,11 @@ Must have a registration for the Instance to appear.</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Location_Type__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Matching_Log__c</field>
             <table>Summit_Events_Instance__c.Event_Registrations__r</table>
         </columns>
@@ -513,6 +603,11 @@ Must have a registration for the Instance to appear.</description>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Participation_Type__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Payment_Gateway_Status__c</field>
             <table>Summit_Events_Instance__c.Event_Registrations__r</table>
         </columns>
         <columns>
@@ -568,6 +663,11 @@ Must have a registration for the Instance to appear.</description>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Registrant_College_Year__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_Company_Organization__c</field>
             <table>Summit_Events_Instance__c.Event_Registrations__r</table>
         </columns>
         <columns>
@@ -628,6 +728,11 @@ Must have a registration for the Instance to appear.</description>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Registrant_Mobile_Phone__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_Name_Tag__c</field>
             <table>Summit_Events_Instance__c.Event_Registrations__r</table>
         </columns>
         <columns>
@@ -737,6 +842,11 @@ Must have a registration for the Instance to appear.</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_Title__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Registrant_Zip__c</field>
             <table>Summit_Events_Instance__c.Event_Registrations__r</table>
         </columns>
@@ -788,6 +898,11 @@ Must have a registration for the Instance to appear.</description>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>UG_Parking_Pass_Link__c</field>
+            <table>Summit_Events_Instance__c.Event_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Virtual_Appointment_URL__c</field>
             <table>Summit_Events_Instance__c.Event_Registrations__r</table>
         </columns>
         <columns>

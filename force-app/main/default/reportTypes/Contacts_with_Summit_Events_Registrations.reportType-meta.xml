@@ -32,6 +32,11 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>CleanStatus</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Id</field>
             <table>Contact</table>
         </columns>
@@ -48,6 +53,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>CreatedDate</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Created_with_Summit_Events__c</field>
             <table>Contact</table>
         </columns>
         <columns>
@@ -340,7 +350,32 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Add_to_Apple_Calendar__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Add_To_Calendar_Link__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_To_Google_Calendar_Link__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_to_Outlook_Calendar__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_To_Outlook_Web_Calendar__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_To_Yahoo_Calendar__c</field>
             <table>Contact.Summit_Events_Registrations__r</table>
         </columns>
         <columns>
@@ -405,6 +440,11 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Contact__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Contact_Name__c</field>
             <table>Contact.Summit_Events_Registrations__r</table>
         </columns>
@@ -426,6 +466,16 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Display_Attendance_Publicly__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Encrypted_Registration_Id_1__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Encrypted_Registration_Id_2__c</field>
             <table>Contact.Summit_Events_Registrations__r</table>
         </columns>
         <columns>
@@ -535,6 +585,21 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Guest_Host__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_Host_Status__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_JSON__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>LastActivityDate</field>
             <table>Contact.Summit_Events_Registrations__r</table>
         </columns>
@@ -591,6 +656,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Participation_Type__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Payment_Gateway_Status__c</field>
             <table>Contact.Summit_Events_Registrations__r</table>
         </columns>
         <columns>
@@ -711,6 +781,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Registrant_Mobile_Phone__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_Name_Tag__c</field>
             <table>Contact.Summit_Events_Registrations__r</table>
         </columns>
         <columns>
@@ -891,6 +966,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>New_Lead_Created__c</field>
+            <table>Contact.Summit_Events_Registrations__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Virtual_Meeting_URL__c</field>
             <table>Contact.Summit_Events_Registrations__r</table>
         </columns>
         <masterLabel>Summit Events Registrations</masterLabel>
