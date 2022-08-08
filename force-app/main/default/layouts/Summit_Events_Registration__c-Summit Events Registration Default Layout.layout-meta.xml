@@ -20,12 +20,12 @@
                 <field>Lead__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Event__c</field>
+                <behavior>Required</behavior>
+                <field>Event_Instance__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>Event_Instance__c</field>
+                <field>Event__c</field>
             </layoutItems>
             <layoutItems>
                 <emptySpace>true</emptySpace>
@@ -41,6 +41,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Actual_Number_of_Guests__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Event_ID_for_SE_Instance__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -696,7 +700,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h55000002gYmZ</masterLabel>
+        <masterLabel>00h7A000001CtKZ</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
