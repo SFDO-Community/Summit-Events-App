@@ -4,6 +4,7 @@
 .sf
 /src.orig
 /src
+.sf
 
 # Python
 *.pyc

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Event_Additional_Question_Title__c</fullName>
-    <description>The title that appears on the Additional Questions page if there are registrant additional questions.</description>
+    <description>The title that appears on the Custom Questions page if there are related list custom question records for the registrant.</description>
     <externalId>false</externalId>
-    <inlineHelpText>The title that appears on the Additional Questions page if there are registrant additional questions.</inlineHelpText>
+    <inlineHelpText>The title that appears on the Custom Questions page if there are related list custom question records for the registrant.</inlineHelpText>
     <label>Event Custom Question Title</label>
     <length>255</length>
     <required>false</required>

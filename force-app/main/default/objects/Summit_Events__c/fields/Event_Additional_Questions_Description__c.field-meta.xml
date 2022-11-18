@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Event_Additional_Questions_Description__c</fullName>
-    <description>If entered these instructions appear before additional questions on the additional questions page if there are any additional question for the registrant.</description>
+    <description>If entered these instructions will appear on the custom questions page if there are any related list custom question records.</description>
     <externalId>false</externalId>
-    <inlineHelpText>If entered these instructions appear before additional questions on the additional questions page if there are any additional question for the registrant.</inlineHelpText>
+    <inlineHelpText>If entered these instructions will appear on the custom questions page if there are any related list custom question records.</inlineHelpText>
     <label>Event Custom Questions Description</label>
     <length>3000</length>
     <trackHistory>false</trackHistory>

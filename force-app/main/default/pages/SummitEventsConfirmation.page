@@ -42,13 +42,15 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     </div>
 
                     <!-- EVENT CLOSED MESSAGE -->
-                    <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
+                    <apex:outputPanel styleClass="slds-col slds-p-vertical_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
                         <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
                             {!eventPage.Event_Confirmation_Title__c}
                         </h2>
-                        <p class="slds-text-body">
-                            <apex:outputText value="{!eventPage.Event_Full_Text__c}"/>
-                        </p>
+                        <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
+                            <p class="slds-text-body slds-p-vertical_xx-small">
+                                <apex:outputText value="{!eventPage.Event_Full_Text__c}"/>
+                            </p>
+                        </div>
                     </apex:outputPanel>
 
                     <apex:outputPanel rendered="{!!eventIsClosed}" layout="block" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
