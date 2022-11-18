@@ -5,7 +5,6 @@
 /src
 .sf
 
-
 # Python
 *.pyc
 __pycache__

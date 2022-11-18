@@ -4,14 +4,19 @@
 // Created by Thaddaeus Dahlberg on 10/11/2018.
 
 public with sharing class SummitEventsLetterheadLookupExtension {
-    public Summit_Events_Email__c summitEventsEmail;
+    public Summit_Events_Email__c summitEventsEmail { get; set; }
     public Map<Id, BrandTemplate> brandTemplates;
     public Map<Id, OrgWideEmailAddress> oweList;
 
     public SummitEventsLetterheadLookupExtension(ApexPages.StandardController stdController) {
-        summitEventsEmail = (Summit_Events_Email__c) stdController.getRecord();
+        summitEventsEmail = [
+                SELECT Id, Org_Email__c, Org_Email_Id__c, Letterhead__c,
+                        Letterhead_HTML__c, Letterhead_Id__c, Letterhead_Name__c
+                FROM Summit_Events_Email__c
+                WHERE Id = :stdController.getRecord().Id
+                WITH SECURITY_ENFORCED
+        ];
     }
-
 
 
     public List<SelectOption> getOrgWideEmail() {
