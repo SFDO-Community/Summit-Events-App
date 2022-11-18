@@ -387,11 +387,15 @@ public with sharing class SummitEventsShared {
             compareCloseDate = compareCloseDate.addDays((Integer.valueOf(eventPage.Close_Event_Days_Before__c) + 1));
         }
 
+        Time compareCloseTime = System.now().time();
+        
         if (eventPage.Keep_Registration_Open_During_Event__c) {
-            if (evtInstance.Instance_Start_Date__c < compareCloseDate && evtInstance.Instance_End_Date__c != compareCloseDate) {
+            if (evtInstance.Registration_Close_Date__c < compareCloseDate || 
+               (evtInstance.Registration_Close_Date__c == compareCloseDate && evtInstance.Registration_Close_Time__c <= compareCloseTime))
+            {
                 eventIsClosed = true;
             }
-        } else if (evtInstance.Instance_Start_Date__c <= compareCloseDate) {
+        } else if (evtInstance.Registration_Close_Date__c <= compareCloseDate) {
             eventIsClosed = true;
         }
 

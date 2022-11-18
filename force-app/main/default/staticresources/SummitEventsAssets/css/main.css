@@ -19,6 +19,18 @@
     font-size: 1.1em;
 }
 
+.slds-scope .regularLists ul {
+    list-style: disc;
+    margin: initial;
+    padding: 10px 0px 0px 25px !important;
+}
+
+.slds-scope .regularLists ol {
+    list-style: decimal;
+    margin: inherit;
+    padding: 10px 0px 0px 25px;
+}
+
 ul[role=alert] li {
     font-weight: bold
 }

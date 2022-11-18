@@ -1003,6 +1003,11 @@
             <field>Virtual_Meeting_Link__c</field>
             <table>Summit_Events__c.Event_Instances__r</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Registration_Close_Time__c</field>
+            <table>Summit_Events__c.Event_Instances__r</table>
+        </columns>
         <masterLabel>Summit Events Instances</masterLabel>
     </sections>
 </ReportType>

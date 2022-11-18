@@ -250,6 +250,18 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 question.Map_to_Field__c = namespace + 'Guest_Host__c';
                 question.Lookup_Results_Icon__c = 'robot';
                 question.Lookup_Object__c = namespace + 'Summit_Events_Registration__c';
+                question.Lookup_Fields__c = namespace + 'Registrant_First_Name__c,' + namespace + 'Registrant_Last_Name__c';
+                question.Lookup_Secondary_Value_Field__c = namespace + 'Add_Info_Answer_5__c';
+                question.Lookup_Secondary_Input_Link_Text__c = 'Can not find result';
+                question.Lookup_Secondary_Input_Instructions__c = 'Enter your own result';
+                question.Lookup_No_Results_Label__c = 'No result found';
+                questionCount++;
+            }
+            if (question.Question_Field_Type__c.equalsIgnoreCase('Lookup Picklist')) {
+                question.Map_to_Field__c = namespace + 'Guest_Host__c';
+                question.Lookup_Results_Icon__c = 'robot';
+                question.Lookup_Object__c = namespace + 'Summit_Events_Registration__c';
+                question.Lookup_Secondary_Input_Link_Text__c = 'Can not find result';
                 question.Lookup_Secondary_Value_Field__c = fieldsCreatable[questionCount + 1];
                 question.Lookup_Fields__c = namespace + 'Registrant_First_Name__c,' + namespace + 'Registrant_Last_Name__c';
                 questionCount++;
@@ -257,6 +269,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
             if (question.Question_Field_Type__c.equalsIgnoreCase('picklist')) {
                 question.Picklist_Values__c = 'Choice1\\nChoice2\\nChoice3';
             }
+
             //Guest, Registrant, Registrant and Guest
             question.Registrant_Type__c = registrantType;
             question.Instructions__c = 'Instruction ' + x;
@@ -265,6 +278,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
             questionCount++;
             questions.add(question);
         }
+        System.debug(JSON.serializePretty(questions));
 
         insert questions;
         return questions;

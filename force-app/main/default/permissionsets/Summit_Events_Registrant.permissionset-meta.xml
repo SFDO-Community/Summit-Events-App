@@ -522,6 +522,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events_Instance__c.Registration_Close_Time__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events_Instance__c.Registration_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -618,11 +623,6 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events_Question__c.Lookup_Where_Clause__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Summit_Events_Question__c.Map_to_Field__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

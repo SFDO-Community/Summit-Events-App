@@ -2,7 +2,7 @@
  - Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas on 7/13/2021.
  -->
 
-<apex:page id="SummitEventsAdditionalQuestions" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" docType="html-5.0" cache="false" controller="SummitEventsAdditionalQuestionsCtlr" action="{!checkEventDetails}">
+ <apex:page id="SummitEventsAdditionalQuestions" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" docType="html-5.0" cache="false" controller="SummitEventsAdditionalQuestionsCtlr" action="{!checkEventDetails}">
     <apex:composition template="{!templateSelected}">
         <apex:define name="metaPageTitle">
             {!eventInstance.Event__r.Event_Name__c}
@@ -61,7 +61,7 @@
                 </apex:outputPanel>
 
                 <!-- EVENT CLOSED MESSAGE -->
-                <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed && !ISBLANK(eventPage.Event_Full_Text__c)}">
+                <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 regularLists" rendered="{!eventIsClosed && !ISBLANK(eventPage.Event_Full_Text__c)}">
                     <p class="slds-text-body">
                         <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>
                     </p>
@@ -69,7 +69,7 @@
 
                 <apex:form id="SummitEventQuestionForm" styleClass="slds-grid slds-wrap" style="width:100%">
 
-                    <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!!ISBLANK(eventPage.Event_Additional_Questions_Description__c)}">
+                    <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 regularLists" rendered="{!!ISBLANK(eventPage.Event_Additional_Questions_Description__c)}">
                         <apex:outputText escape="false" value="{!eventPage.Event_Additional_Questions_Description__c}"/>
                     </apex:outputPanel>
 
@@ -206,6 +206,13 @@
 
                                         </apex:outputPanel>
 
+                                        <!-- Lookup Picklist -->
+                                        <apex:outputPanel layout="block" styleClass="slds-select_container" rendered="{!IF(qu.type = 'Lookup Picklist', true, false)}">
+                                            <apex:selectList value="{!eventRegistration[qu.mapTo]}" size="1" styleClass="slds-select" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}">
+                                                <apex:selectOptions value="{!qu.picklist}"/>
+                                            </apex:selectList>
+                                        </apex:outputPanel>
+                                        
                                     </apex:outputPanel>
                                     <div class="slds-form-element__help" id="error-message-{!quNum}">{!qu.assist}</div>
                                 </apex:outputPanel>
@@ -263,6 +270,9 @@
                                 <apex:commandButton action="{!submitAdditionalQuestions}" onClick="fadeout();" Value="Next" id="submitQuestions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                                 <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small" immediate="true"/>
                             </p>
+                        </div>
+                        <div class="slds-col slds-p-vertical_medium slds-p-left_x-small slds-size_1-of-1 regularLists">
+                            <apex:outputText escape="false" value="{!eventPage.Event_Footer__c}"/>
                         </div>
                     </apex:outputPanel>
 

@@ -53,7 +53,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </nav>
                     </div>
 
-                    <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
+                    <div class="slds-col slds-p-around_x-small slds-size_1-of-1 regularLists">
                         <h2 class="slds-text-heading_large">
                             <apex:outputText value="{!eventPage.Event_Name__c}"/>
                         </h2>
@@ -65,7 +65,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     </div>
 
                     <!-- EVENT CLOSED MESSAGE -->
-                    <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
+                    <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 regularLists" rendered="{!eventIsClosed}">
                         <p class="slds-text-body">
                             <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>
                         </p>
@@ -74,7 +74,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     <!-- REGISTRATION QUESTIONS BEGIN  -->
                     <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
 
-                        <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
+                        <div class="slds-col slds-p-around_x-small slds-size_1-of-1 regularLists">
                             <apex:outputText escape="false" value="{!eventPage.Event_description__c}"/>
                         </div>
 
@@ -821,7 +821,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         <div class="slds-col slds-p-vertical_medium slds-p-left_x-small slds-size_1-of-1">
                             <apex:commandLink action="{!saveContactRegistration}" onClick="fadeout(); return checkForm();" Value="{!IF(CONTAINS(nextUrl,'summiteventsconfirmation'), 'Register', 'Next')}" id="submitReg1" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                         </div>
-                        <div class="slds-col slds-p-vertical_medium slds-p-left_x-small slds-size_1-of-1">
+                        <div class="slds-col slds-p-vertical_medium slds-p-left_x-small slds-size_1-of-1 regularLists">
                             <apex:outputText escape="false" value="{!eventPage.Event_Footer__c}"/>
                         </div>
                     </apex:outputPanel>

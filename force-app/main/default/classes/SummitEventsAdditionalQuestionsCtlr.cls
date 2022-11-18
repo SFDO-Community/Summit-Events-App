@@ -5,7 +5,7 @@
 
 public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
-    private SummitEventsShared SeaShared = new SummitEventsShared();
+    final SummitEventsShared SeaShared = new SummitEventsShared();
     public String templateSelected { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
@@ -76,7 +76,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             Event__r.Event_description__c, Event__r.Audience__c, Current_Available_Capacity__c,
                             Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c,
                             Event_Fee_Additional_Allocation_Override__c, Event_Fee_Additional_Override__c, Event_Fee_Override__c, Event_Fee_Allocation_Override__c,
-                            Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c
+                            Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c,
+                            Registration_Close_Date__c, Registration_Close_Time__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :eventInformation.instanceId
                     WITH SECURITY_ENFORCED
@@ -220,7 +221,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                         quest.secondaryNoResults = 'No results found.';
                     }
 
-                    if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
+                    if (question.Question_Field_Type__c.equalsIgnoreCase('lookup') || question.Question_Field_Type__c.equalsIgnoreCase('lookup picklist')) {
 
                         List<String> cleanLookUpFields = new List<String>();
                         List<String> lookupFields = new List<String>();
@@ -256,6 +257,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                     }
                                 }
                             }
+                        } else {
+                            cleanLookUpFields.add('Name');
                         }
 
                         //Build queryInfo object to encrypt to pass lookup query information not in the clear
@@ -271,16 +274,22 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             queryInfo.put('Lookup_Where_Clause__c', question.Lookup_Where_Clause__c);
                         }
 
-                        //serialize object with query info in it to retrieve later when decrypted
-                        quest.lookup = SeaShared.encryptString(JSON.serialize(queryInfo));
+                        if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
+                            //serialize object with query info in it to retrieve later when decrypted
+                            quest.lookup = SeaShared.encryptString(JSON.serialize(queryInfo));
 
-                        List<String> lookupFieldsRelation = new List<String>();
-                        if (String.isNotBlank(question.Lookup_Fields__c)) {
-                            lookupFieldsRelation = question.Lookup_Fields__c.split(',');
+                            List<String> lookupFieldsRelation = new List<String>();
+                            if (String.isNotBlank(question.Lookup_Fields__c)) {
+                                lookupFieldsRelation = question.Lookup_Fields__c.split(',');
+                            }
                         }
 
+                        if (question.Question_Field_Type__c.equalsIgnoreCase('lookup picklist')) {
+                            if (String.isBlank(quest.setupError)) {
+                                quest.picklist = createLookupPicklist(queryInfo.get('Lookup_Object__c'), queryInfo.get('Lookup_Where_Clause__c'), queryInfo.get('Lookup_Fields__c'));
+                            }
+                        }
                     }
-
 
                     //add question to question wrapper if it is visible, otherwise apply default value to the event registration.
                     if (question.Is_Visible__c) {
@@ -380,6 +389,49 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));
         }
         return picklists;
+    }
+
+    public List<SelectOption> createLookupPicklist(String objectName, String filter, String fields) {
+        List<SelectOption> pl = new List<SelectOption>();
+        pl.add(new SelectOption('', 'Select...'));
+
+        List<String> fieldNames = fields.split(',');
+
+        String query = 'SELECT Id,' + fields;
+        query += ' FROM ' + objectName;
+
+        if (String.isNotBlank(filter)) {
+            query += ' WHERE ' + filter;
+        }
+
+        query += ' ORDER BY ' + fieldNames.get(0);
+
+        List<SObject> results = Database.query(query);
+
+        for (SObject obj : results) {
+            String name = '';
+
+            for (Integer i = 0; i < fieldNames.size(); i++) {
+                String field = fieldNames.get(i);
+
+                if (i == 1 && fieldNames.size() > 0) {
+                    name += ' - ';
+                }
+                if (i > 1) {
+                    name += ', ';
+                }
+                if (String.isNotBlank((String) obj.get(field.trim()))) {
+                    name += (String) obj.get(field.trim());
+                } else {
+                    name = name.removeEnd(', ');
+                }
+            }
+            name = name.removeEnd(', ');
+            SelectOption option = new SelectOption(obj.Id, name);
+            pl.add(option);
+        }
+
+        return pl;
     }
 
     public PageReference submitAdditionalQuestions() {

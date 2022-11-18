@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_Picklist_fields_require_values</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISPICKVAL(Question_Field_Type__c, &apos;Picklist&apos;) &amp;&amp; 
+
+ISPICKVAL(Existing_Picklist_Values__c, &quot;&quot;) = ISBLANK(Picklist_Values__c)</errorConditionFormula>
+    <errorMessage>When Question Type = Picklist, one of the Picklist Type fields must have a value for record to be saved.</errorMessage>
+</ValidationRule>
