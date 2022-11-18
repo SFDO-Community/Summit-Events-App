@@ -163,9 +163,19 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
                     if (String.isNotBlank(question.Existing_Picklist_Values__c)) {
 
+                        List<String> packagedExistingPicklists = new List<String>{
+                                'Registrant_Third_Party_Status__c',
+                                'Registrant_State_Global__c',
+                                'Registrant_Country__c',
+                                'Registrant_Pronouns__c',
+                                'Registrant_Applicant_Type__c',
+                                'Preferred_Visit_Time__c',
+                                'Registrant_Gender__c'
+                        };
+
                         String existingPickListField = question.Existing_Picklist_Values__c;
-                        //make sure non-namespaced
-                        if (String.isNotBlank(namespace) && !question.Existing_Picklist_Values__c.startsWith(namespace) && !question.Existing_Picklist_Values__c.startsWith('c__')) {
+                        //make sure packaged picklists get the namespace added if it is in play
+                        if (String.isNotBlank(namespace) && packagedExistingPicklists.contains(existingPickListField)) {
                             existingPickListField = namespace + existingPickListField;
                         }
                         //Test if picklist is accessible and is a picklist
