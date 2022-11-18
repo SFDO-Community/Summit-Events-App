@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Template__c</fullName>
-    <defaultValue>&apos;GeneralSLDS&apos;</defaultValue>
+    <defaultValue></defaultValue>
     <description>Chose a pre-programmed template for your event site</description>
     <externalId>false</externalId>
     <inlineHelpText>Chose a pre-programmed template for your event site</inlineHelpText>
@@ -16,7 +16,7 @@
             <sorted>false</sorted>
             <value>
                 <fullName>GeneralSLDS</fullName>
-                <default>false</default>
+                <default>true</default>
                 <label>GeneralSLDS</label>
             </value>
             <value>
