@@ -112,7 +112,17 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Applicant_Type_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Ask_Applicant_Type__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Ask_Company_Organization__c</field>
             <table>Summit_Events__c</table>
         </columns>
         <columns>
@@ -177,6 +187,11 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Ask_Title__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Audience__c</field>
             <table>Summit_Events__c</table>
         </columns>
@@ -202,12 +217,87 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Company_Organization_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Date_Of_Birth_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Contact_Creation__c</field>
             <table>Summit_Events__c</table>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Display_Guest_Registration__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Display_Optional_Donation__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Donation_Allocation_1__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Donation_Allocation_2__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Donation_Allocation_3__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Donation_Allocation_4__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Donation_Allocation_5__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Donation_Description__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Donation_Suggested_Amount_List__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Donation_Title__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Email_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Contact_Creation_Duplicate_Rule__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Contact_Matching_Multiple_Match_Behavior__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Contact_Matching_No_Match_Behavior__c</field>
             <table>Summit_Events__c</table>
         </columns>
         <columns>
@@ -252,6 +342,11 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Event_Additional_Questions_Description__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Event_Cancelled_Notification_Text__c</field>
             <table>Summit_Events__c</table>
         </columns>
@@ -278,6 +373,41 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Event_description__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Additional__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Additional_Allocation__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Allocation__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Submit_List_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Total_Label__c</field>
             <table>Summit_Events__c</table>
         </columns>
         <columns>
@@ -352,6 +482,46 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>First_Name_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Gender_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_Max_Amount__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_Registration_Add_Button_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_Registration_Description__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_Registration_Title__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_Tables_Available__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_Table_Size__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Hand_Raise_Action__c</field>
             <table>Summit_Events__c</table>
         </columns>
@@ -382,6 +552,16 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Last_Name_As_Student_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Last_Name_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Location_Address__c</field>
             <table>Summit_Events__c</table>
         </columns>
@@ -402,7 +582,17 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Mailing_Address_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Max_Other_Attendees__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>No_Guest_Registrations_Added_Message__c</field>
             <table>Summit_Events__c</table>
         </columns>
         <columns>
@@ -412,7 +602,37 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Payment_Button_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Payment_Gateway__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Phone_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Preferred_Class_Year_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Preferred_First_Name_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Private_Event__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Phone_Type_Label__c</field>
             <table>Summit_Events__c</table>
         </columns>
         <columns>
@@ -432,7 +652,27 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Pronouns_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_Receive_Texts_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_Relationship_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Registration_Email_Restriction__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Relationship_To_Institution_Label__c</field>
             <table>Summit_Events__c</table>
         </columns>
         <columns>
@@ -448,6 +688,16 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Template__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Third_Party_Registrant_Label__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Title_Label__c</field>
             <table>Summit_Events__c</table>
         </columns>
         <columns>
@@ -510,21 +760,6 @@
             <field>Custom_Metadata_Lead_Matching_Method__c</field>
             <table>Summit_Events__c</table>
         </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
-            <field>Event_Additional_Questions_Description__c</field>
-            <table>Summit_Events__c</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
-            <field>Guest_Registration_Add_Button_Label__c</field>
-            <table>Summit_Events__c</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
-            <field>No_Guest_Registrations_Added_Message__c</field>
-            <table>Summit_Events__c</table>
-        </columns>
         <masterLabel>Summit Events</masterLabel>
     </sections>
     <sections>
@@ -551,6 +786,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Attendee_List__c</field>
+            <table>Summit_Events__c.Event_Instances__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Audience__c</field>
             <table>Summit_Events__c.Event_Instances__r</table>
         </columns>
         <columns>
@@ -599,6 +839,31 @@
             <table>Summit_Events__c.Event_Instances__r</table>
         </columns>
         <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event__c</field>
+            <table>Summit_Events__c.Event_Instances__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Additional_Allocation_Override__c</field>
+            <table>Summit_Events__c.Event_Instances__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Additional_Override__c</field>
+            <table>Summit_Events__c.Event_Instances__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Allocation_Override__c</field>
+            <table>Summit_Events__c.Event_Instances__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Override__c</field>
+            <table>Summit_Events__c.Event_Instances__r</table>
+        </columns>
+        <columns>
             <checkedByDefault>true</checkedByDefault>
             <field>Name</field>
             <table>Summit_Events__c.Event_Instances__r</table>
@@ -606,6 +871,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Event_Name__c</field>
+            <table>Summit_Events__c.Event_Instances__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Type__c</field>
             <table>Summit_Events__c.Event_Instances__r</table>
         </columns>
         <columns>
@@ -721,6 +991,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Id</field>
+            <table>Summit_Events__c.Event_Instances__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Virtual_Appointment_Link__c</field>
             <table>Summit_Events__c.Event_Instances__r</table>
         </columns>
         <columns>
