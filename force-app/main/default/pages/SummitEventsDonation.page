@@ -50,14 +50,14 @@ Created by Thaddaeus Dahlberg on 2/10/2020.
                     </div>
 
                     <!-- EVENT CLOSED MESSAGE -->
-                    <apex:outputPanel styleClass="slds-col slds-p-vertical_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">
+                    <apex:outputPanel styleClass="slds-col slds-p-vertical_x-small slds-size_1-of-1 regularLists" rendered="{!eventIsClosed}">
                         <p class="slds-text-body">
                             <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>
                         </p>
                     </apex:outputPanel>
 
                     <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
-                        <div class="slds-col slds-p-vertical_x-small slds-size_1-of-1">
+                        <div class="slds-col slds-p-vertical_x-small slds-size_1-of-1 regularLists">
                             <apex:outputText escape="false" value="{!eventPage.Donation_Description__c}"/>
                         </div>
 
@@ -108,6 +108,9 @@ Created by Thaddaeus Dahlberg on 2/10/2020.
                                 <apex:commandLink action="{!submitDonation}" onClick="fadeout();" Value="Next" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                                 <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small" immediate="true"/>
                             </p>
+                        </div>
+                        <div class="slds-col slds-p-vertical_medium slds-p-left_x-small slds-size_1-of-1 regularLists">
+                            <apex:outputText escape="false" value="{!eventPage.Event_Footer__c}"/>
                         </div>
                     </apex:outputPanel>
 

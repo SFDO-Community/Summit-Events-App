@@ -24,18 +24,6 @@ Created by Thaddaeus Dahlberg on 2/15/2020.
             .slds-col img {
                 max-width: 99%;
             }
-
-            .slds-scope ul {
-                list-style: disc !important;
-                margin: initial !important;
-                padding: 0px 0px 0px 30px !important;
-            }
-
-            .slds-scope ol {
-                list-style: decimal;
-                margin: inherit;
-                padding: 0px 0px 0px 30px;
-            }
         </style>
         <apex:insert name="scriptsHead"/>
     </head>

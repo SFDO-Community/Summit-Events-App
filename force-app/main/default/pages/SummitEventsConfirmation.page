@@ -58,7 +58,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             {!eventPage.Event_Confirmation_Title__c}
                         </h2>
                         <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
-                            <p class="slds-text-body slds-p-vertical_xx-small">
+                            <p class="slds-text-body slds-p-vertical_xx-small regularLists">
                                 <apex:outputText escape="false" value="{!eventPage.Event_Confirmation_Description__c}"/>
                             </p>
                         </div>
@@ -121,7 +121,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     </apex:outputPanel>
 
                     <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
-                        <p class="slds-text-body ">
+                        <p class="slds-text-body regularLists">
                             <apex:outputText escape="false" value="{!EventPage.Event_Footer__c}"/>
                         </p>
                     </div>

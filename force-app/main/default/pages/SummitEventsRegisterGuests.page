@@ -53,14 +53,14 @@
                 <div class="slds-grid slds-wrap" style="width:100%;">
 
                     <!-- EVENT CLOSED MESSAGE -->
-                    <apex:outputPanel styleClass="slds-col slds-p-vertical_x-small slds-size_1-of-1 slds-medium-size_12-of-12 slds-large-size_12-of-12" rendered="{!eventIsClosed}">
+                    <apex:outputPanel styleClass="slds-col slds-p-vertical_x-small slds-size_1-of-1 slds-medium-size_12-of-12 slds-large-size_12-of-12 regularLists" rendered="{!eventIsClosed}">
                         <p class="slds-text-body">
                             <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>
                         </p>
                     </apex:outputPanel>
 
                     <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
-                        <div class="slds-col slds-p-bottom_large slds-p-bottom_x-small slds-size_1-of-1 slds-medium-size_12-of-12 slds-large-size_12-of-12">
+                        <div class="slds-col slds-p-bottom_large slds-p-bottom_x-small slds-size_1-of-1 slds-medium-size_12-of-12 slds-large-size_12-of-12 regularLists">
                             <apex:outputText escape="false" value="{!eventPage.Guest_Registration_Description__c}"/>
                         </div>
                         <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12 slds-p-right_medium">
@@ -99,6 +99,9 @@
                                 </p>
                             </div>
                         </apex:form>
+                        <div class="slds-col slds-p-vertical_medium slds-p-left_x-small slds-size_1-of-1 regularLists">
+                            <apex:outputText escape="false" value="{!eventPage.Event_Footer__c}"/>
+                        </div>
                     </apex:outputPanel>
                 </div>
             </div>
