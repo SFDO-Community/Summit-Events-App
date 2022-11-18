@@ -3,6 +3,8 @@
 .sfdx
 /src.orig
 /src
+.sf
+
 
 # Python
 *.pyc
