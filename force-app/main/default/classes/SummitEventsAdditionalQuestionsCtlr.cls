@@ -5,7 +5,7 @@
 
 public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
-    private SummitEventsShared SeaShared = new SummitEventsShared();
+    final SummitEventsShared SeaShared = new SummitEventsShared();
     public String templateSelected { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
@@ -414,14 +414,19 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             for (Integer i = 0; i < fieldNames.size(); i++) {
                 String field = fieldNames.get(i);
 
-                if (i == 1) {
+                if (i == 1 && fieldNames.size() > 0) {
                     name += ' - ';
                 }
                 if (i > 1) {
                     name += ', ';
                 }
-                name += (String) obj.get(field.trim());
+                if (String.isNotBlank((String) obj.get(field.trim()))) {
+                    name += (String) obj.get(field.trim());
+                } else {
+                    name = name.removeEnd(', ');
+                }
             }
+            name = name.removeEnd(', ');
             SelectOption option = new SelectOption(obj.Id, name);
             pl.add(option);
         }

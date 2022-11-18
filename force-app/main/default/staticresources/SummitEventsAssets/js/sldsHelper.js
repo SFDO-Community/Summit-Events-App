@@ -132,7 +132,7 @@ function activateAutoComplete() {
         });
         let removeButtonSecondary = comboBoxContainer.querySelector('.removeButtonSecondary');
 
-        if(isRequired) {
+        if (isRequired) {
             alternateInput.setAttribute('required', 'required');
         }
         /* Remote reference lookup */
@@ -215,9 +215,13 @@ function activateAutoComplete() {
                     }
                     resultList.innerHTML = outputList;
                     resultList.querySelectorAll('li').forEach(refItem => {
+                        let title = refItem.dataset.title.trim();
+                        if (title.endsWith(',')) {
+                            title = title.slice(0, -1);
+                        }
                         refItem.addEventListener('click', () => {
                             hiddenInput.value = refItem.dataset.resultid;
-                            autoItem.value = refItem.dataset.title;
+                            autoItem.value = title;
                             refValueAdded();
                         });
                     });
