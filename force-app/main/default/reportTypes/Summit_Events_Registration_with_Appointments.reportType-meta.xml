@@ -69,7 +69,32 @@ Requires the Registration to have Appointments</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Add_to_Apple_Calendar__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Add_To_Calendar_Link__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_To_Google_Calendar_Link__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_to_Outlook_Calendar__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_To_Outlook_Web_Calendar__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_To_Yahoo_Calendar__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
@@ -164,6 +189,16 @@ Requires the Registration to have Appointments</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Encrypted_Registration_Id_1__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Encrypted_Registration_Id_2__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Event__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
@@ -249,6 +284,11 @@ Requires the Registration to have Appointments</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Event_Type__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Event__c.Event_Sponsor__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
@@ -260,6 +300,21 @@ Requires the Registration to have Appointments</description>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Generated_Requested_Appointments__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_Host__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_Host_Status__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_JSON__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
@@ -299,6 +354,11 @@ Requires the Registration to have Appointments</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Location_Type__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Matching_Log__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
@@ -315,6 +375,11 @@ Requires the Registration to have Appointments</description>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Participation_Type__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Payment_Gateway_Status__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
@@ -370,6 +435,11 @@ Requires the Registration to have Appointments</description>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Registrant_College_Year__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_Company_Organization__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
@@ -430,6 +500,11 @@ Requires the Registration to have Appointments</description>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Registrant_Mobile_Phone__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_Name_Tag__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
@@ -539,6 +614,11 @@ Requires the Registration to have Appointments</description>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_Title__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Registrant_Zip__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
@@ -590,6 +670,11 @@ Requires the Registration to have Appointments</description>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>UG_Parking_Pass_Link__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Virtual_Appointment_URL__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
@@ -733,6 +818,11 @@ Requires the Registration to have Appointments</description>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Event_Reg_ID__c</field>
+            <table>Summit_Events_Registration__c.UG_Event_Appointments__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Registration__c</field>
             <table>Summit_Events_Registration__c.UG_Event_Appointments__r</table>
         </columns>
         <columns>

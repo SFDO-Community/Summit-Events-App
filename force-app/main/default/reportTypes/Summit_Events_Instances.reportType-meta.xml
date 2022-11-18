@@ -87,6 +87,26 @@
             <table>Summit_Events_Instance__c</table>
         </columns>
         <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Additional_Allocation_Override__c</field>
+            <table>Summit_Events_Instance__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Additional_Override__c</field>
+            <table>Summit_Events_Instance__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Allocation_Override__c</field>
+            <table>Summit_Events_Instance__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Event_Fee_Override__c</field>
+            <table>Summit_Events_Instance__c</table>
+        </columns>
+        <columns>
             <checkedByDefault>true</checkedByDefault>
             <field>Name</field>
             <table>Summit_Events_Instance__c</table>
@@ -214,6 +234,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Id</field>
+            <table>Summit_Events_Instance__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Virtual_Appointment_Link__c</field>
             <table>Summit_Events_Instance__c</table>
         </columns>
         <columns>

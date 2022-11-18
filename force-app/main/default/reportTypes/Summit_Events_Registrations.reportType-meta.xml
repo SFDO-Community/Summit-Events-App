@@ -63,7 +63,32 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Add_to_Apple_Calendar__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Add_To_Calendar_Link__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_To_Google_Calendar_Link__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_to_Outlook_Calendar__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_To_Outlook_Web_Calendar__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Add_To_Yahoo_Calendar__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
@@ -154,6 +179,16 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Display_Attendance_Publicly__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Encrypted_Registration_Id_1__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Encrypted_Registration_Id_2__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
@@ -263,6 +298,21 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Guest_Host__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_Host_Status__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Guest_JSON__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>LastActivityDate</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
@@ -323,6 +373,11 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Payment_Gateway_Status__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Preferred_Class_Year__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
@@ -374,6 +429,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Registrant_College_Year__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_Company_Organization__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
@@ -434,6 +494,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Registrant_Mobile_Phone__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_Name_Tag__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
@@ -543,6 +608,11 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Registrant_Title__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Registrant_Zip__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
@@ -594,6 +664,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>UG_Parking_Pass_Link__c</field>
+            <table>Summit_Events_Registration__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Virtual_Appointment_URL__c</field>
             <table>Summit_Events_Registration__c</table>
         </columns>
         <columns>
