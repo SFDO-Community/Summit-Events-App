@@ -21,7 +21,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages/>
+                    <apex:messages />
                 </div>
                 <apex:form id="SummitEventsRegisterSubmitForm" styleClass="slds-grid slds-wrap">
                     <!-- EVENT BREADCRUMB -->
@@ -49,7 +49,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </svg>
                           </span>
                         <h2>
-                            <apex:messages/>
+                            <apex:messages />
                         </h2>
                         <div class="slds-notify__close">
                             <button class="slds-button slds-button_icon slds-button_icon-small" title="Close">

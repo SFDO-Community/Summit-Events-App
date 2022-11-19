@@ -20,6 +20,7 @@
                     <value>3</value>
                 </componentInstanceProperties>
                 <componentName>force:highlightsPanel</componentName>
+                <identifier>force_highlight_2</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -29,6 +30,7 @@
                     <value>false</value>
                 </componentInstanceProperties>
                 <componentName>force:relatedListQuickLinksContainer</componentName>
+                <identifier>force_rel_list_quick_link_con_1</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -39,6 +41,7 @@
         <itemInstances>
             <componentInstance>
                 <componentName>force:detailPanel</componentName>
+                <identifier>force_detail_2</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -49,6 +52,7 @@
         <itemInstances>
             <componentInstance>
                 <componentName>runtime_sales_activities:activityPanel</componentName>
+                <identifier>runtime_sales_activity_panel_2</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -71,6 +75,7 @@
                     <value>Standard.Tab.activity</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
+                <identifier>flex_tab_4</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -85,6 +90,7 @@
                     <value>GRID</value>
                 </componentInstanceProperties>
                 <componentName>force:relatedListContainer</componentName>
+                <identifier>force_related_2</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -94,6 +100,7 @@
                     <value>sidebartabs</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tabset</componentName>
+                <identifier>flex_tabset_1</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
