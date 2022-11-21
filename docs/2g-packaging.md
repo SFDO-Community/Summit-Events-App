@@ -83,7 +83,7 @@ updated to the current package you are creating.
     ],
     "namespace": "summit",
     "sfdcLoginUrl": "https://login.salesforce.com",
-    "sourceApiVersion": "52.0",
+    "sourceApiVersion": "56.0",
     "packageAliases": {
         "Summit Events App": "0Ho4P000000fxYiSAI",
         "Summit Events App@0.4.0-1": "04t4P000002T5ZCQA0",

@@ -16,6 +16,7 @@
                     <value>3</value>
                 </componentInstanceProperties>
                 <componentName>force:highlightsPanel</componentName>
+                <identifier>force_highlight_4</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -38,6 +39,7 @@
                     <value>true</value>
                 </componentInstanceProperties>
                 <componentName>force:relatedListContainer</componentName>
+                <identifier>force_related_6</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -48,6 +50,7 @@
         <itemInstances>
             <componentInstance>
                 <componentName>force:detailPanel</componentName>
+                <identifier>force_detail_4</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -66,6 +69,7 @@
                     <value>Standard.Tab.relatedLists</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
+                <identifier>flex_tab_9</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -83,6 +87,7 @@
                     <value>Standard.Tab.detail</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
+                <identifier>flex_tab_10</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -97,6 +102,7 @@
                     <value>maintabs</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tabset</componentName>
+                <identifier>flex_tabset_6</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -107,6 +113,7 @@
         <itemInstances>
             <componentInstance>
                 <componentName>runtime_sales_activities:activityPanel</componentName>
+                <identifier>runtime_sales_activity_panel_4</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -129,6 +136,7 @@
                     <value>Standard.Tab.activity</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
+                <identifier>flex_tab_11</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -151,6 +159,7 @@
                     <value>true</value>
                 </componentInstanceProperties>
                 <componentName>force:relatedListContainer</componentName>
+                <identifier>force_related_4</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -160,6 +169,7 @@
                     <value>sidebartabs</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tabset</componentName>
+                <identifier>flex_tabset_7</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>

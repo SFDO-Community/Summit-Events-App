@@ -4,6 +4,7 @@
     <description>The open source community events app for EDUs and NGOs</description>
     <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
     <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
     <label>Summit Events</label>
     <tabs>Summit_Events__c</tabs>
     <tabs>Summit_Events_Email__c</tabs>
