@@ -65,7 +65,7 @@ function initCalendar() {
             let titleWrap = document.createElement('span');
             titleWrap.classList.add('summitEventsTitle');
 
-            if (info.event.classNames != 'eventClosed') {
+            if (info.event.classNames !== 'eventClosed') {
                 titleWrap.innerHTML = eventTitle
                 wrap.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -119,7 +119,7 @@ function initCalendar() {
         audienceDD.addEventListener('change', function () {
             eraseCookie('SummitEvents');
             createCookie('SummitEvents', '{"audience" : "' + getAudienceDDValue() + '"}', '');
-            if (getAudienceDDValue() == '' && hideCalendarUntilAudience) {
+            if (getAudienceDDValue() === '' && hideCalendarUntilAudience) {
                 calendarEl.style.visibility = "hidden";
             } else {
                 calendarEl.style.visibility = "visible";
@@ -139,7 +139,7 @@ function getCalView() {
 }
 
 function formatTimeString(stringIn) {
-    let stringOut = '';
+    let stringOut;
     stringIn = stringIn.split(',');
     stringIn = stringIn[stringIn.length - 1];
     let first = stringIn.indexOf(',');
@@ -154,7 +154,7 @@ function getAudienceDDValue() {
     if (audienceDD) {
         audienceDDValue = audienceDD.value;
     }
-    if (audienceDDValue == 'Select...') {
+    if (audienceDDValue === 'Select...') {
         audienceDDValue = '';
     }
     return audienceDDValue;
@@ -174,7 +174,7 @@ function loadAudienceDD() {
                 }
             }
             calendar.refetchEvents();
-            if (getAudienceDDValue() == '' && hideCalendarUntilAudience) {
+            if (getAudienceDDValue() === '' && hideCalendarUntilAudience) {
                 calendarEl.style.visibility = "hidden";
             }
         }).catch(function (error) {

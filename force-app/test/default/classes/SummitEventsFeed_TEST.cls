@@ -93,7 +93,7 @@ private class SummitEventsFeed_TEST {
 
     @IsTest static void testEventFeedOverrides() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        seaTestInstances[1].Alternate_Registration_URL_Override__c = 'http://testingAnOverride.com';
+        seaTestInstances[1].Alternate_Registration_URL_Override__c = 'https://testingAnOverride.com';
         seaTestInstances[1].Location_Address_Override__c = 'New location override';
         seaTestInstances[1].Location_Map_Link_Override__c = 'Map link override';
         seaTestInstances[1].Feed_Registration_Button_Text_Override__c = 'New button override';

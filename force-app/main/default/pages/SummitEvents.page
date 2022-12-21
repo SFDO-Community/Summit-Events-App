@@ -25,9 +25,9 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 const feedURL = '{!feedURL}';
                 const communityBaseURL = '{!communityBaseURL}';
             </script>
-            <link href="{!URLFOR($Resource.SummitEventsAssets, '/fullcalendar/lib/main.css')}" rel="stylesheet" type="text/css"/>
+<!--            <link href="{!URLFOR($Resource.SummitEventsAssets, '/fullcalendar/lib/main.css')}" rel="stylesheet" type="text/css"/>-->
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/calendar.css')}" rel="stylesheet" type="text/css"/>
-            <script src="{!URLFOR($Resource.SummitEventsAssets, '/fullcalendar/lib/main.js')}"></script>
+            <script src="{!URLFOR($Resource.SummitEventsAssets, '/fullcalendar/dist/index.global.min.js')}"></script>
             <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/moment.min.js')}"></script>
             <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/calendar.js')}"></script>
             <!-- end copy -->

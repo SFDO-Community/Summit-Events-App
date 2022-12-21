@@ -23,7 +23,7 @@ tasks:
         description: Makes fake account data to mimic schools with Educaiton as industry
         class_path: cumulusci.tasks.bulkdata.snowfakery.Snowfakery
         options:
-            recipe: datasets/dev/school_snowfakery_recipe.yml
+            recipe: datasets/snowfackery/school_recipe.yml
 
     deploy_guest_sharing_rules:
         description: Deploys configuration for Development.
@@ -91,14 +91,6 @@ tasks:
                     upsert permissionSetList;
                 }
 
-    deploy_dev_event_records:
-        description: Configure sample records for the Event app
-        class_path: cumulusci.tasks.bulkdata.load.LoadData
-        options:
-            namespace_inject: $project_config.project__package__namespace
-            mapping: datasets/dev/mapping.yml
-            sql_path: datasets/dev/data.sql
-
     robot:
         options:
             suites: robot/SummitEventsApp/tests
@@ -114,53 +106,47 @@ flows:
     config_qa:
         steps:
             3:
-                task: deploy_dev_event_records
-            4:
-                task: create_fake_school_data
-            5:
                 task: deploy_permission_set
-            6:
+            4:
                 task: deploy_site_config
-            7:
+            5:
                 task: deploy_site_settings
-            8:
+            6:
                 task: deploy_guest_permission_set
-            9:
+            7:
                 task: deploy_guest_sharing_rules
+            8:
+                task: create_fake_school_data
 
     config_dev:
         steps:
             3:
-                task: deploy_dev_event_records
-            4:
-                task: create_fake_school_data
-            5:
                 task: deploy_permission_set
-            6:
+            4:
                 task: deploy_site_config
-            7:
+            5:
                 task: deploy_site_settings
-            8:
+            6:
                 task: deploy_guest_permission_set
-            9:
+            7:
                 task: deploy_guest_sharing_rules
+            8:
+                task: create_fake_school_data
 
     config_dev_namespaced:
         steps:
             3:
-                task: deploy_dev_event_records
-            4:
-                task: create_fake_school_data
-            5:
                 task: deploy_permission_set
-            6:
+            4:
                 task: deploy_site_config
-            7:
+            5:
                 task: deploy_site_settings
-            8:
+            6:
                 task: deploy_guest_permission_set
-            9:
+            7:
                 task: deploy_guest_sharing_rules
+            8:
+                task: create_fake_school_data
 
     customer_org:
         steps:

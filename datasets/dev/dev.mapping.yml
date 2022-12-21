@@ -1,0 +1,490 @@
+Insert Contact:
+  sf_object: Contact
+  fields:
+  - Created_with_Summit_Events__c
+  - FirstName
+  - LastName
+  lookups:
+    ReportsToId:
+      table: Contact
+      after: Insert Contact
+Insert Summit_Events_Fee_Allocation__c:
+  sf_object: Summit_Events_Fee_Allocation__c
+  fields:
+  - Name
+Insert Summit_Events__c:
+  sf_object: Summit_Events__c
+  fields:
+  - Academic_Program_List_Selected__c
+  - Academic_Program_List__c
+  - Academic_Program_Selected__c
+  - Add_Info_Question_Pick_List_1__c
+  - Add_Info_Question_Pick_List_2__c
+  - Add_Info_Question_Pick_List_3__c
+  - Add_Info_Question_Pick_List_4__c
+  - Add_Info_Question_Pick_List_5__c
+  - Add_Info_Question_Text_1__c
+  - Add_Info_Question_Text_2__c
+  - Add_Info_Question_Text_3__c
+  - Add_Info_Question_Text_4__c
+  - Add_Info_Question_Text_5__c
+  - Add_Info_Question_Type_1__c
+  - Add_Info_Question_Type_2__c
+  - Add_Info_Question_Type_3__c
+  - Add_Info_Question_Type_4__c
+  - Add_Info_Question_Type_5__c
+  - Allow_Other_Attendees__c
+  - Alternate_Registration_URL__c
+  - Applicant_Type_Label__c
+  - Ask_Applicant_Type__c
+  - Ask_Company_Organization__c
+  - Ask_Date_Of_Birth__c
+  - Ask_Gender__c
+  - Ask_If_Parent__c
+  - Ask_Last_Name_As_Student__c
+  - Ask_Mailing_Address__c
+  - Ask_Phone__c
+  - Ask_Preferred_Class_Year__c
+  - Ask_Preferred_First_Name__c
+  - Ask_Pronoun__c
+  - Ask_Registrant_Program_Of_Interest__c
+  - Ask_Relationship_To_Institution__c
+  - Ask_Third_Party_Registrant__c
+  - Ask_Title__c
+  - Audience__c
+  - Building__c
+  - Close_Event_Days_Before__c
+  - College_High_School_Ask__c
+  - Company_Organization_Label__c
+  - Contact_Creation_Duplicate_Rule__c
+  - Contact_Creation__c
+  - Contact_Matching_Multiple_Match_Behavior__c
+  - Contact_Matching_No_Match_Behavior__c
+  - Contact_Matching_Rules__c
+  - Custom_Metadata_Contact_Matching_Method__c
+  - Custom_Metadata_Lead_Matching_Method__c
+  - Date_Of_Birth_Label__c
+  - Display_Guest_Registration__c
+  - Display_Optional_Donation__c
+  - Donation_Description__c
+  - Donation_Suggested_Amount_List__c
+  - Donation_Title__c
+  - Email_Label__c
+  - End_Date__c
+  - Event_Additional_Question_Title__c
+  - Event_Additional_Questions_Description__c
+  - Event_Appointment_Description__c
+  - Event_Appointment_Title__c
+  - Event_Cancel_Review_Description__c
+  - Event_Cancel_Review_Title__c
+  - Event_Cancelled_Notification_Text__c
+  - Event_Confirmation_Description__c
+  - Event_Confirmation_Title__c
+  - Event_Fee_Additional__c
+  - Event_Fee_Label__c
+  - Event_Fee_Submit_List_Label__c
+  - Event_Fee_Total_Label__c
+  - Event_Fee__c
+  - Event_Footer__c
+  - Event_Full_Text__c
+  - Event_Home_Link_Title__c
+  - Event_Home_Link_URL__c
+  - Event_Name__c
+  - Event_Short_Listing_Description__c
+  - Event_Sponsor__c
+  - Event_Status__c
+  - Event_Submit_Description__c
+  - Event_Submit_Title__c
+  - Event_Type__c
+  - Event_description__c
+  - Feed_Registration_Button_Text__c
+  - First_Name_Label__c
+  - Gender_Label__c
+  - Guest_Max_Amount__c
+  - Guest_Registration_Add_Button_Label__c
+  - Guest_Registration_Description__c
+  - Guest_Registration_Title__c
+  - Guest_Table_Size__c
+  - Guest_Tables_Available__c
+  - Hand_Raise_Action__c
+  - Include_Time_frame_List__c
+  - Keep_Registration_Open_During_Event__c
+  - Last_Name_As_Student_Label__c
+  - Last_Name_Label__c
+  - Lead_Creation_Duplicate_Rule__c
+  - Lead_Matching_Multiple_Match_Behavior__c
+  - Lead_Matching_No_Match_Behavior__c
+  - Lead_matching_rules__c
+  - Location_Address__c
+  - Location_Map_Link__c
+  - Location_Title__c
+  - Location_Type__c
+  - Mailing_Address_Label__c
+  - Max_Other_Attendees__c
+  - Name
+  - No_Guest_Registrations_Added_Message__c
+  - Payment_Button_Label__c
+  - Payment_Gateway__c
+  - Phone_Label__c
+  - Phone_Type_Label__c
+  - Preferred_Class_Year_Label__c
+  - Preferred_First_Name_Label__c
+  - Private_Event__c
+  - Program_Filter_2__c
+  - Program_Filter_3__c
+  - Program_Filter__c
+  - Pronouns_Label__c
+  - Registrant_Receive_Texts_Label__c
+  - Registrant_Relationship_Label__c
+  - Registration_Email_Restriction__c
+  - Relationship_To_Institution_Label__c
+  - Start_Date__c
+  - Template__c
+  - Third_Party_Registrant_Label__c
+  - Title_Label__c
+  - Tracking_Cancel_Registration__c
+  - Tracking_Confirmation_Registration__c
+  - Tracking_Event_Registration__c
+  - Tracking_Options_Registration__c
+  - Tracking_Submit_Registration__c
+  lookups:
+    Donation_Allocation_1__c:
+      table: Summit_Events_Fee_Allocation__c
+    Donation_Allocation_2__c:
+      table: Summit_Events_Fee_Allocation__c
+    Donation_Allocation_3__c:
+      table: Summit_Events_Fee_Allocation__c
+    Donation_Allocation_4__c:
+      table: Summit_Events_Fee_Allocation__c
+    Donation_Allocation_5__c:
+      table: Summit_Events_Fee_Allocation__c
+    Event_Fee_Additional_Allocation__c:
+      table: Summit_Events_Fee_Allocation__c
+    Event_Fee_Allocation__c:
+      table: Summit_Events_Fee_Allocation__c
+  anchor_date: '2022-12-21'
+Insert Summit_Events_Email__c:
+  sf_object: Summit_Events_Email__c
+  fields:
+  - Action_Status__c
+  - Action_Sub_status__c
+  - BCC_Email__c
+  - Email_Content_Instructions__c
+  - Email_Content__c
+  - Email_From__c
+  - Email_Subject__c
+  - Letterhead_HTML__c
+  - Letterhead_Id__c
+  - Letterhead_Name__c
+  - Letterhead__c
+  - Org_Email_Id__c
+  - Org_Email__c
+  lookups:
+    Event__c:
+      table: Summit_Events__c
+  anchor_date: '2022-12-21'
+Insert Summit_Events_Instance__c:
+  sf_object: Summit_Events_Instance__c
+  fields:
+  - Active_Status__c
+  - Alternate_Registration_URL_Override__c
+  - Attendee_List__c
+  - Building_Override__c
+  - Capacity_Control__c
+  - Capacity__c
+  - Category__c
+  - Event_Fee_Additional_Override__c
+  - Event_Fee_Override__c
+  - Feed_Registration_Button_Text_Override__c
+  - Instance_End_Date__c
+  - Instance_End_Time__c
+  - Instance_Short_Description__c
+  - Instance_Start_Date__c
+  - Instance_Start_Time__c
+  - Instance_Time_Zone__c
+  - Instance_Title__c
+  - Location_Address_Override__c
+  - Location_Map_Link_Override__c
+  - Location_Title_Override__c
+  - Location_Type_Override__c
+  - Private_Instance__c
+  - Virtual_Appointment_Link__c
+  - Virtual_Meeting_Link__c
+  lookups:
+    Event_Fee_Additional_Allocation_Override__c:
+      table: Summit_Events_Fee_Allocation__c
+    Event_Fee_Allocation_Override__c:
+      table: Summit_Events_Fee_Allocation__c
+    Event__c:
+      table: Summit_Events__c
+  anchor_date: '2022-12-21'
+Insert Summit_Events_Question__c:
+  sf_object: Summit_Events_Question__c
+  fields:
+  - Controlling_Logic__c
+  - Default_Value__c
+  - Display_Order__c
+  - Error_Assist_Text__c
+  - Existing_Picklist_Values__c
+  - Help_Text__c
+  - Instructions__c
+  - Is_Visible__c
+  - Lookup_Fields__c
+  - Lookup_No_Results_Label__c
+  - Lookup_Object__c
+  - Lookup_Results_Icon__c
+  - Lookup_Secondary_Input_Instructions__c
+  - Lookup_Secondary_Input_Link_Text__c
+  - Lookup_Secondary_Value_Field__c
+  - Lookup_Where_Clause__c
+  - Map_to_Field__c
+  - Name
+  - Picklist_Values__c
+  - Question_Field_Type__c
+  - Question_Label__c
+  - Registrant_Type__c
+  - Required__c
+  - Text_Limit__c
+  lookups:
+    Controlling_Question__c:
+      table: Summit_Events_Question__c
+      after: Insert Summit_Events_Question__c
+    Event__c:
+      table: Summit_Events__c
+  anchor_date: '2022-12-21'
+Insert Summit_Events_Appointment_Type__c:
+  sf_object: Summit_Events_Appointment_Type__c
+  fields:
+  - Appointment_Category__c
+  - Appointment_Fee_Additional__c
+  - Appointment_Fee__c
+  - Appointment_Limits__c
+  - Appointment_Type_Status__c
+  - Appointment_Type__c
+  - Auto_Add_Time__c
+  - Auto_Confirm_Appointment__c
+  - Auto_add_building__c
+  - Chosen_State__c
+  - Custom_Picklist__c
+  - Date_Available_End__c
+  - Date_Available_Start__c
+  - Day_of_Week_Availability__c
+  - Description__c
+  - Do_Not_Show_Time__c
+  - Registrant_Input__c
+  - Required_Appointment__c
+  - Sort_Order__c
+  - Title__c
+  lookups:
+    Appointment_Fee_Additional_Allocation__c:
+      table: Summit_Events_Fee_Allocation__c
+    Appointment_Fee_Allocation__c:
+      table: Summit_Events_Fee_Allocation__c
+    Restrict_To_Instance_Title__c:
+      table: Summit_Events_Instance__c
+    Summit_Events__c:
+      table: Summit_Events__c
+  anchor_date: '2022-12-21'
+Insert Summit_Events_Host__c:
+  sf_object: Summit_Events_Host__c
+  fields:
+  - Additional_Comments__c
+  - Assigned__c
+  - Building__c
+  - Course_Name__c
+  - Department__c
+  - First_Name__c
+  - Gender__c
+  - Last_Name__c
+  - Location__c
+  - Max_Available__c
+  - Preferred_Title__c
+  - Time__c
+  - Undergrad_Major__c
+  lookups:
+    Contact__c:
+      table: Contact
+    Event_Instance__c:
+      table: Summit_Events_Instance__c
+  anchor_date: '2022-12-21'
+Insert Summit_Events_Registration__c:
+  sf_object: Summit_Events_Registration__c
+  fields:
+  - Actual_Number_of_Guests__c
+  - Add_Info_Answer_1__c
+  - Add_Info_Answer_2__c
+  - Add_Info_Answer_3__c
+  - Add_Info_Answer_4__c
+  - Add_Info_Answer_5__c
+  - Answer_1_Numeric__c
+  - Answer_2_Numeric__c
+  - Answer_3_Numeric__c
+  - Answer_4_Numeric__c
+  - Answer_5_Numeric__c
+  - Appointment_Table__c
+  - Campus_Tour_Location__c
+  - Campus_Tour_Time__c
+  - Confirmation_Call_Result__c
+  - Date_All_Appointments_Confirmed_del__c
+  - Display_Attendance_Publicly__c
+  - Encrypted_Registration_Id_1__c
+  - Encrypted_Registration_Id_2__c
+  - Event_Instance_Date_Time_Formatted__c
+  - Event_Registration_Requested_Date__c
+  - Generated_Itinerary__c
+  - Generated_Requested_Appointments__c
+  - Guest_Host_Status__c
+  - Guest_JSON__c
+  - Last_Name_as_Student__c
+  - Matching_Log__c
+  - New_Contact_Created__c
+  - New_Lead_Created__c
+  - Number_of_Guests__c
+  - Participation_Type__c
+  - Payment_Gateway_Status__c
+  - Preferred_Class_Year__c
+  - Preferred_Visit_Time__c
+  - Presentation_Location__c
+  - Presentation_Time__c
+  - Registrant_Applicant_Type__c
+  - Registrant_City__c
+  - Registrant_College_Code__c
+  - Registrant_College_Not_Found__c
+  - Registrant_College_Year__c
+  - Registrant_College__c
+  - Registrant_Company_Organization__c
+  - Registrant_Country__c
+  - Registrant_Date_of_Birth__c
+  - Registrant_Do_Not_Call__c
+  - Registrant_Email__c
+  - Registrant_First_Name__c
+  - Registrant_Gender__c
+  - Registrant_High_School_Code__c
+  - Registrant_High_School_Grad_Year__c
+  - Registrant_High_School_Not_Found__c
+  - Registrant_High_School__c
+  - Registrant_Last_Name__c
+  - Registrant_Mobile_Phone__c
+  - Registrant_Name_Tag__c
+  - Registrant_Other_Email__c
+  - Registrant_Other_First_Name__c
+  - Registrant_Other_Last_Name__c
+  - Registrant_Other_Phone__c
+  - Registrant_Other_Relationship__c
+  - Registrant_Parent_Email__c
+  - Registrant_Parent_First_Name__c
+  - Registrant_Parent_Last_Name__c
+  - Registrant_Parent_Phone__c
+  - Registrant_Phone__c
+  - Registrant_Postal_Code__c
+  - Registrant_Preferred_First_Name__c
+  - Registrant_Program_Interest__c
+  - Registrant_Pronouns__c
+  - Registrant_Receive_Texts__c
+  - Registrant_State_Global__c
+  - Registrant_State_Province__c
+  - Registrant_State__c
+  - Registrant_Street_1__c
+  - Registrant_Street_2__c
+  - Registrant_Third_Party_Status__c
+  - Registrant_Title__c
+  - Registrant_Zip__c
+  - Relationship_To_Institution__c
+  - Reminder_Call_Complete__c
+  - Session__c
+  - Status__c
+  - Substatus__c
+  lookups:
+    Contact__c:
+      table: Contact
+    Event_Instance__c:
+      table: Summit_Events_Instance__c
+    Event__c:
+      table: Summit_Events__c
+    Guest_Host__c:
+      table: Summit_Events_Registration__c
+      after: Insert Summit_Events_Registration__c
+  anchor_date: '2022-12-21'
+Insert Summit_Events_Appointments__c:
+  sf_object: Summit_Events_Appointments__c
+  fields:
+  - Appointment_Category__c
+  - Appointment_Contact_Email__c
+  - Appointment_Contact_Name__c
+  - Appointment_Date_Time__c
+  - Appointment_Date__c
+  - Appointment_Detail__c
+  - Appointment_Status__c
+  - Appointment_Time_Options__c
+  - Appointment_Time__c
+  - Appointment_Title__c
+  - Appointment_Type__c
+  - Building__c
+  - Chosen_State__c
+  - Class_Title__c
+  - Client_Created_Appointment__c
+  - Description__c
+  - Do_Not_Show_Time__c
+  - Faculty_Staff_Member__c
+  - Registrant_Input__c
+  - Room__c
+  - Sort_Order__c
+  lookups:
+    Event_Appointment_Type__c:
+      table: Summit_Events_Appointment_Type__c
+    Event_Host__c:
+      table: Summit_Events_Host__c
+    Event_Registration__c:
+      table: Summit_Events_Registration__c
+  anchor_date: '2022-12-21'
+Insert Summit_Events_Payment__c:
+  sf_object: Summit_Events_Payment__c
+  fields:
+  - Account_Number__c
+  - Address_1__c
+  - Address_2__c
+  - Card_Type__c
+  - City__c
+  - Country__c
+  - Email_Address__c
+  - GatewayApprovalCode__c
+  - Gateway_Session_Identifier__c
+  - Method_of_Payment__c
+  - Name_On_Account__c
+  - Payment_Amount__c
+  - Payment_Defer_Date__c
+  - Payment_Dispute__c
+  - Payment_Email_Address__c
+  - Payment_Forfeit_Date__c
+  - Payment_Method_Expiration_Date__c
+  - Payment_Method__c
+  - Payment_Received_Date__c
+  - Payment_Refund_Date__c
+  - Payment_Returned_Date__c
+  - Payment_Status__c
+  - Phone__c
+  - State__c
+  - TouchnetReceiptNumber__c
+  - Zip__c
+  lookups:
+    Event_Registration__c:
+      table: Summit_Events_Registration__c
+  anchor_date: '2022-12-21'
+Insert Summit_Events_Fee__c:
+  sf_object: Summit_Events_Fee__c
+  fields:
+  - Description__c
+  - Event_Fee_Type__c
+  - Event_Fee__c
+  lookups:
+    Event_Appointment_Type__c:
+      table: Summit_Events_Appointment_Type__c
+    Event_Fee_Allocation__c:
+      table: Summit_Events_Fee_Allocation__c
+    Event_Registration__c:
+      table: Summit_Events_Registration__c
+    Summit_Events_Payment__c:
+      table: Summit_Events_Payment__c
+    Summit_Events__c:
+      table: Summit_Events__c
+  anchor_date: '2022-12-21'
