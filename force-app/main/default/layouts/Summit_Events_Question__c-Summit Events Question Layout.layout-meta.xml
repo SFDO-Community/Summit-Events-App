@@ -72,7 +72,7 @@
         <label>Field Question Details</label>
         <layoutColumns>
             <layoutItems>
-                <behavior>Edit</behavior>
+                <behavior>Required</behavior>
                 <field>Map_to_Field__c</field>
             </layoutItems>
             <layoutItems>

@@ -42,6 +42,7 @@
             <operator>equals</operator>
             <value>Started</value>
         </criteriaItems>
+        <language>en_US</language>
     </filter>
     <format>Tabular</format>
     <name>Started Registrations</name>
