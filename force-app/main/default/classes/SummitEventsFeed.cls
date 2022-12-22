@@ -622,4 +622,3 @@ global with sharing class SummitEventsFeed {
 //            return allSchoolsList;
 //        }
 }
-

@@ -295,6 +295,26 @@
                 <identifier>record_item_020</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Filter_Where_To_Display__c</fieldItem>
+                <identifier>RecordFilter_Where_To_Display_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Filter_Category__c</fieldItem>
+                <identifier>RecordFilter_Category_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-62f7952c-5dfa-4f20-ba80-47006a7acc5d</name>
         <type>Facet</type>
     </flexiPageRegions>
