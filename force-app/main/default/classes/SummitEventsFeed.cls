@@ -208,13 +208,13 @@ global with sharing class SummitEventsFeed {
         String displayOn = req.params.get('displayon');
         System.debug('DISPLAY ON IN: ' + displayOn);
         if (String.isNotBlank(displayOn)) {
-            eventQuery += ' AND Event__r.Where_to_Display__c INCLUDES (' + sanitizeIncludeList(displayOn) + ') ';
+            eventQuery += ' AND Event__r.Filter_Where_To_Display__c INCLUDES (' + sanitizeIncludeList(displayOn) + ') ';
         }
 
         //Category filter (can be comma separated)
         String category = req.params.get('category');
         if (String.isNotBlank(category)) {
-            eventQuery += ' AND Event__r.Category__c INCLUDES (' + sanitizeIncludeList(category) + ') ';
+            eventQuery += ' AND Event__r.Filter_Category__c INCLUDES (' + sanitizeIncludeList(category) + ') ';
         }
 
         //Event Type filter. Only accepts one.
@@ -549,14 +549,14 @@ global with sharing class SummitEventsFeed {
 
         //sponsor
         allOptions.add(makeOption('sponsor', getObjectItemList(Summit_Events__c.Event_Sponsor__c.getDescribe()), 'Filters on sponsor (&sponsor= single or coma separated list of these items)'));
-/*
+
 
         //displayon
-        allOptions.add(makeOption('displayon', getObjectItemList(Summit_Events__c.Where_to_Display__c.getDescribe()), 'Filters on where in the digital world you want to display events(&displayon= single or coma separated list of these items)'));
+        allOptions.add(makeOption('displayon', getObjectItemList(Summit_Events__c.Filter_Where_To_Display__c.getDescribe()), 'Filters on where in the digital world you want to display events(&displayon= single or coma separated list of these items)'));
 
         //category
-        allOptions.add(makeOption('category', getObjectItemList(Summit_Events__c.Category__c.getDescribe()), 'Filters category picklist events (&category= single or coma separated list of these items)'));
-*/
+        allOptions.add(makeOption('category', getObjectItemList(Summit_Events__c.Filter_Category__c.getDescribe()), 'Filters category picklist events (&category= single or coma separated list of these items)'));
+
 
         //longdesc
         allOptions.add(makeOption('longdesc', new List<String>{
