@@ -10,6 +10,7 @@ global with sharing class SummitEventsFeed {
     private static String feedType { get; set; }
     private static final SummitEventsShared SEShared = new SummitEventsShared();
     private static Id recTypeId { get; set; }
+    private static string namespace { get; set; }
 
     private class eventItem {
         public String ID { get; set; }
@@ -41,17 +42,16 @@ global with sharing class SummitEventsFeed {
         String recType = RestContext.request.params.get('rectype');
 
         //Get namespace if packaged
-        String namespace = SummitEventsNamespace.getNamespace();
+        namespace = SummitEventsNamespace.getNamespace();
         if (String.isNotBlank(namespace)) {
             namespace = namespace + '__';
         }
-
 
         if (String.isNotBlank(recType)) {
             List<RecordType> recTypeList = [
                     SELECT Id, Name
                     FROM RecordType
-                    WHERE SobjectType = :namespace + 'UST_Event__c'
+                    WHERE SobjectType = :namespace + 'Summit_Event__c'
                     AND Name = :recType
             ];
             if (recTypeList.size() > 0) {
@@ -96,12 +96,6 @@ global with sharing class SummitEventsFeed {
 
 
     private static List<eventItem> getEventList() {
-
-        //Get namespace if packaged
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
 
         List<eventItem> EventList = new List<eventItem>();
         RestRequest req = RestContext.request;
@@ -519,7 +513,7 @@ global with sharing class SummitEventsFeed {
         }, 'Must be included to get any feed (&feedType= one of these items)'));
 
         //Record Types
-        List<RecordType> recTypeList = [SELECT Id, Name FROM RecordType WHERE SobjectType = 'UST_Event__c'];
+        List<RecordType> recTypeList = [SELECT Id, Name FROM RecordType WHERE SobjectType = :namespace + 'Summit_Events__c'];
         List<String> recTypeNames = new List<String>();
         for (RecordType rt : recTypeList) {
             recTypeNames.add(rt.Name);
@@ -588,37 +582,4 @@ global with sharing class SummitEventsFeed {
         newOption.options = items;
         return newOption;
     }
-
-//    private without sharing class doCRUD {
-//        private List<String> getPrograms() {
-//            List<Major__c> allPrograms = [
-//                    SELECT Major_Display_Name__c, Prog_Major_Conc_Code__c, Program_Code__c, Status__c, Program_Offered__r.Degree_Level__c, College_School__c, Program_Offered__r.School__r. Name, Degree_Level__c
-//                    FROM Major__c
-//                    WHERE Status__c = 'Active'
-//                    AND (Display_on_RFI_UG__c = TRUE OR Display_on_RFI__c = TRUE)
-//                    ORDER BY Program_Offered__r.Degree_Level__c, Major_Display_Name__c
-//            ];
-//            List<String> allProgramsList = new List<String>();
-//            String programString = '';
-//            for (Major__c program : allPrograms) {
-//                programString = program.Prog_Major_Conc_Code__c;
-//                programString += ' = ' + program.Major_Display_Name__c;
-//                programString += ' - ' + program.Degree_Level__c;
-//                allProgramsList.add(programString);
-//            }
-//            return allProgramsList;
-//        }
-//
-//        private List<String> getSchools() {
-//            List<EnrollmentrxRx__School__c> allSchools = [
-//                    SELECT Id, Name, Active_Display_on_Portal__c
-//                    FROM EnrollmentrxRx__School__c
-//                    WHERE Active_Display_on_Portal__c = TRUE
-//            ];
-//            List<String> allSchoolsList = new List<String>();
-//            for (EnrollmentrxRx__School__c school : allSchools) {
-//                allSchoolsList.add(school. Name);
-//            }
-//            return allSchoolsList;
-//        }
 }
