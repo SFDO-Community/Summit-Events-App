@@ -10,7 +10,7 @@ global with sharing class SummitEventsFeed {
     private static String feedType { get; set; }
     private static final SummitEventsShared SEShared = new SummitEventsShared();
     private static Id recTypeId { get; set; }
-    private static string namespace { get; set; }
+    private static String namespace { get; set; }
 
     private class eventItem {
         public String ID { get; set; }
@@ -484,7 +484,9 @@ global with sharing class SummitEventsFeed {
         Map<String, String> fieldMap = new Map<String, String>();
         List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
         for (Schema.PicklistEntry f : ple) {
-            fieldMap.put(f.getLabel(), f.getValue());
+            if (!f.getLabel().equalsIgnoreCase('No Audience')) {
+                fieldMap.put(f.getLabel(), f.getValue());
+            }
         }
         return fieldMap;
     }
@@ -536,7 +538,7 @@ global with sharing class SummitEventsFeed {
         }, 'Shows only the instances under the event umbrella (&eventId= Salesforce Id for the event)'));
 
         //audience
-        allOptions.add(makeOption('audience', getObjectItemList(Summit_Events__c.Audience__c.getDescribe()), 'Filters on audiences (&audience= single or coma separated list of these items)'));
+        allOptions.add(makeOption('audience', (List<String>) getAudienceDD(Summit_Events__c.Audience__c.getDescribe()).values(), 'Filters on audiences (&audience= single or coma separated list of these items)'));
 
         //Event type
         allOptions.add(makeOption('type', getObjectItemList(Summit_Events__c.Event_Type__c.getDescribe()), 'Filters on event type (&type= single item only)'));
@@ -544,13 +546,11 @@ global with sharing class SummitEventsFeed {
         //sponsor
         allOptions.add(makeOption('sponsor', getObjectItemList(Summit_Events__c.Event_Sponsor__c.getDescribe()), 'Filters on sponsor (&sponsor= single or coma separated list of these items)'));
 
-
         //displayon
         allOptions.add(makeOption('displayon', getObjectItemList(Summit_Events__c.Filter_Where_To_Display__c.getDescribe()), 'Filters on where in the digital world you want to display events(&displayon= single or coma separated list of these items)'));
 
         //category
         allOptions.add(makeOption('category', getObjectItemList(Summit_Events__c.Filter_Category__c.getDescribe()), 'Filters category picklist events (&category= single or coma separated list of these items)'));
-
 
         //longdesc
         allOptions.add(makeOption('longdesc', new List<String>{
