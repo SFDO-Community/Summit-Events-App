@@ -55,7 +55,6 @@ let eventCount = 0;
 let audienceList = [];
 
 if (urlParams['audienceList']) {
-    console.log(decodeURIComponent(urlParams['audienceList']));
     audienceList = decodeURIComponent(urlParams['audienceList']).split(',');
 }
 
@@ -123,23 +122,19 @@ const initCalendar = function () {
         eventDisplay: "auto",
         eventTextColor: "#000",
         eventContent: function (info) {
-            let wrap;
+            let wrap = document.createElement("div");
             let titleWrap = document.createElement("span");
             eventCount++;
             let toolTipId = 'tool-tip-' + eventCount;
-
-
             titleWrap.classList.add("summitEventsTitle");
-            if (!info.event.extendedProps.eventClosed) {
-                wrap = document.createElement("a");
+            if (info.event.extendedProps.eventClosed.toLowerCase() === 'false') {
                 titleWrap.innerHTML = info.event.title;
                 wrap.href = info.event.url;
                 wrap.target = "_blank";
-            } else {
-                wrap = document.createElement("div");
-                titleWrap.innerHTML = info.event.title + "<br><em>Event is closed.</em>";
             }
-            wrap.classList.add("SummitEventsItem");
+            if (info.event.extendedProps.eventClosed.toLowerCase() === 'true') {
+                titleWrap.innerHTML = info.event.title + "<br/><em>Event is closed.</em><br/>";
+            }
             wrap.classList.add('SummitEventsItem', 'aria-describedby-tooltip');
             wrap.setAttribute('aria-describedby', toolTipId)
             wrap.classList.add(info.event.className);
@@ -252,7 +247,6 @@ const initCalendar = function () {
         let optionCount = 0;
         for (const [key, value] of Object.entries(data)) {
             if (!hideAudiences.includes(value)) {
-                console.log(audienceList.length);
                 if (audienceList.length === 0 || audienceList.includes(value)) {
                     let opt2 = document.createElement("option");
                     opt2.value = value;
