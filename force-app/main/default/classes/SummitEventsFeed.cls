@@ -560,15 +560,15 @@ global with sharing class SummitEventsFeed {
         //filter
         allOptions.add(makeOption('filter', new List<String>{
                 'Program_Filter', 'Location_Title', 'Location_Address', 'Building', 'School_Name'
-        }, 'Filter searches with a like statement all of these items together. (&filter= single or coma separated list of these items)'));
+        }, 'Searches all the fields listed in options as a like statement allowing for a broader search of location information. (&filter= single or coma separated list of these items)'));
 
         //filter-Location
-        allOptions.add(makeOption('filter+location', new List<String>{
-                'Program_Filter', 'Location_Title', 'Location_Address', 'Building', 'School_Name'
-        }, 'Filter searches with a like statement all of these items. (&filter= single or coma separated list of these items)'));
+        //allOptions.add(makeOption('filter+location', new List<String>{
+        //        'Program_Filter', 'Location_Title', 'Location_Address', 'Building', 'School_Name'
+        //}, 'Filter searches with a like statement all of these items. (&filter= single or coma separated list of these items)'));
 
         //filter-Building
-        allOptions.add(makeOption('filter+building', getObjectItemList(Summit_Events__c.Building__c.getDescribe()), 'Filter searches with a like statement all of these items. (&filter= single or coma separated list of these items)'));
+        allOptions.add(makeOption('building', getObjectItemList(Summit_Events__c.Building__c.getDescribe()), 'Filter searches with a like statement all of these items. (&filter= single or coma separated list of these items)'));
 
         //filter-School name
         //allOptions.add(makeOption('filter+school', CRUDtoDo.getSchools(), 'Filter searches with a like statement all of these items. (&filter= single or coma separated list of these items)'));
