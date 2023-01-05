@@ -568,7 +568,7 @@ global with sharing class SummitEventsFeed {
         //}, 'Filter searches with a like statement all of these items. (&filter= single or coma separated list of these items)'));
 
         //filter-Building
-        allOptions.add(makeOption('building', getObjectItemList(Summit_Events__c.Building__c.getDescribe()), 'Filter searches with a like statement all of these items. (&filter= single or coma separated list of these items)'));
+        allOptions.add(makeOption('building', getObjectItemList(Summit_Events__c.Building__c.getDescribe()), 'Filter searches with a like statement all of these items. (&building= single or coma separated list of these items)'));
 
         //filter-School name
         //allOptions.add(makeOption('filter+school', CRUDtoDo.getSchools(), 'Filter searches with a like statement all of these items. (&filter= single or coma separated list of these items)'));
