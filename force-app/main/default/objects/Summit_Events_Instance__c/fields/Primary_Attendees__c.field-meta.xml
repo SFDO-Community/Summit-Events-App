@@ -8,7 +8,7 @@
     <summaryFilterItems>
         <field>Summit_Events_Registration__c.Status__c</field>
         <operation>notEqual</operation>
-        <value>Cancelled, Rescheduled</value>
+        <value>Cancelled, Rescheduled, Started</value>
     </summaryFilterItems>
     <summaryForeignKey>Summit_Events_Registration__c.Event_Instance__c</summaryForeignKey>
     <summaryOperation>count</summaryOperation>
