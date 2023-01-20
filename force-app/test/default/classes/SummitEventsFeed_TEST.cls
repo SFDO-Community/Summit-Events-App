@@ -96,11 +96,35 @@ private class SummitEventsFeed_TEST {
             System.assertEquals(eventsList.size(), 1, 'Only one instance fits the viewStart and viewEnd dates passed for one day.');
 
             //test filter
+            req.params.remove('viewStart');
+            req.params.remove('viewEnd');
             req.params.put('filter', 'OCB');
             RestContext.request = req;
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
-            System.assert(res.responseBody.toString().contains('[]'));
+            System.assert(res.responseBody.toString().contains('[]'),'No events target the filter so this should be empty');
+
+            //test filter
+
+            Summit_Events__c eventUpdate = [SELECT Id, Program_Filter__c FROM Summit_Events__c WHERE Id = :seaTestInstances[0].Event__c];
+            eventUpdate.Program_Filter__c = 'OCB,BCY';
+            update eventUpdate;
+
+            //test filter
+            req.params.put('filter', 'OCB,BCY');
+            RestContext.request = req;
+            RestContext.response = res;
+            SummitEventsFeed.getSummitEventsFeed();
+            eventsList = (List<SummitEventsFeed.eventItem>) JSON.deserialize(res.responseBody.toString(), List<SummitEventsFeed.eventItem>.class);
+            System.assertEquals(eventsList.size(), 10, 'All 10 instance have program related to them.');
+
+
+            req.params.put('program', 'OCB');
+            RestContext.request = req;
+            RestContext.response = res;
+            SummitEventsFeed.getSummitEventsFeed();
+            eventsList = (List<SummitEventsFeed.eventItem>) JSON.deserialize(res.responseBody.toString(), List<SummitEventsFeed.eventItem>.class);
+            System.assertEquals(eventsList.size(), 10, 'All 10 instance have program related to them.');
 
             //test filter
             req.params.put('rectype', 'UDAR');
@@ -108,7 +132,8 @@ private class SummitEventsFeed_TEST {
             RestContext.request = req;
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
-            System.assert(res.responseBody.toString().contains('UDAR([])'));
+
+            System.assert(res.responseBody.toString().startswith('UDAR(['));
             Test.stopTest();
 
         }

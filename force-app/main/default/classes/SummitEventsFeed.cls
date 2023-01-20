@@ -226,7 +226,7 @@ global with sharing class SummitEventsFeed {
         String program = req.params.get('program');
         if (String.isNotBlank(program)) {
             String programFields = 'Event__r.Program_Filter__c,Event__r.Program_Filter_2__c,Event__r.Program_Filter_3__c';
-            eventQuery += ' AND (' + sanitizeOrLikeList(programFields, program) + ') ';
+            eventQuery += ' AND (' + sanitizeOrLikeList(program, programFields) + ') ';
         }
 
         //School filter (can be comma separated)
@@ -246,19 +246,8 @@ global with sharing class SummitEventsFeed {
         //get filter with like soql concatinated program,location, school, location address, location type
         String filter = req.params.get('filter');
         if (String.isNotBlank(filter)) {
-            eventQuery += ' AND  (';
-            List<String> filterList = filter.split(',');
-            for (String f : filterList) {
-                eventQuery += ' Event__r.Program_Filter__c LIKE \'%' + f + '%\' OR ';
-                eventQuery += ' Event__r.Program_Filter_2__c LIKE \'%' + f + '%\' OR ';
-                eventQuery += ' Event__r.Program_Filter_3__c LIKE \'%' + f + '%\' OR ';
-                eventQuery += ' Event__r.Location_Title__c LIKE \'%' + f + '%\' OR ';
-                eventQuery += ' Event__r.Location_Address__c LIKE \'%' + f + '%\' OR ';
-                eventQuery += ' Event__r.Building__c LIKE \'%' + f + '%\' OR ';
-                // eventQuery += ' Event__r.School__r.Name LIKE \'%' + f + '%\' OR ';
-            }
-            eventQuery = eventQuery.removeEnd('OR ');
-            eventQuery += ' ) ';
+            String filterFields = 'Event__r.Program_Filter__c,Event__r.Program_Filter_2__c,Event__r.Program_Filter_3__c,Event__r.Location_Title__c,Event__r.Location_Address__c,Event__r.Building__c';
+            eventQuery += ' AND (' + sanitizeOrLikeList(filter, filterFields) + ') ';
         }
 
         if (String.isNotBlank(recTypeId)) {
@@ -276,6 +265,7 @@ global with sharing class SummitEventsFeed {
         eventQuery += ' WITH SECURITY_ENFORCED ';
         eventQuery += ' ORDER BY Instance_Start_Date__c, Instance_Start_Time__c ';
 
+        System.debug(eventQuery);
 
         List<Summit_Events_Instance__c> EventInstanceList = Database.query(eventQuery);
 
@@ -455,16 +445,18 @@ global with sharing class SummitEventsFeed {
     }
 
 
-    private static String sanitizeOrLikeList(String listIn, String fieldToCompare) {
-        if (String.isNotBlank(listIn)) {
-            String listOut = '';
-            List<String> listInList = new List<String>();
-            listInList = listIn.split(',');
-            for (String listItem : listInList) {
-                listOut += ' ( ' + fieldToCompare + ' LIKE \'%' + String.escapeSingleQuotes(listItem.trim()) + '%\' ) OR ';
+    private static String sanitizeOrLikeList(String items, String fieldsToCompare) {
+        if (String.isNotBlank(items) && String.isNotBlank(fieldsToCompare)) {
+            String queryOut = '';
+            List<String> itemList = items.split(',');
+            List<String> fieldList = fieldsToCompare.split(',');
+            for (String item : itemList) {
+                for (String field : fieldList) {
+                    queryOut += ' ( ' + field + ' LIKE \'%' + String.escapeSingleQuotes(item.trim()) + '%\' ) OR ';
+                }
             }
-            listOut = listOut.removeEnd(' OR ');
-            return listOut;
+            queryOut = queryOut.removeEnd(' OR ');
+            return queryOut;
         }
         return '';
     }
