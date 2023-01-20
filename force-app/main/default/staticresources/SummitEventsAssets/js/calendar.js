@@ -5,30 +5,106 @@ let ready = (callback) => {
 
 ready(() => {
     initCalendar();
-});
+})
 
-const hideInstanceTitle = true;
-let calendar
+let urlParams = getUrlVars();
+
+/*  feedURL:
+    This should be the site URL of the salesforce site where Summit Events App is installed
+ */
+//let feedURL = "https://summiteventsappteam.secure.force.com/";
+
+/* HIDE CALENDAR OPTION:
+   hideCalendarUntilAudience set to true will hide the calendar of events until an audience is selected.
+   const hideCalendarUntilAudience = true;
+ */
+const hideCalendarUntilAudience = false;
+
+/* HARD CODE AUDIENCE DROPDOWN:
+   Replace the list of audience currently being pulled from the Salesforce org with a custom list.
+   This is a key,value list {'Option One Label':'Option One Value','Option Two Label':'Option Two Value'}.
+   Key will display to the user and value is the audience to filter events in Salesforce.
+   If not used this variable must still be defined with no values (const hardCodeAudience = {};).
+   const hardCodeAudience = {'Faculty/Staff':'Faculty/Staff','Online events':'Online'};
+ */
+const hardCodeAudience = {};
+
+const SESettings = JSON.parse(readCookie("SummitEvents"));
+
+/* OMIT AUDIENCE IN DROPDOWN:
+   This option lets you define a list of audiences you wish to omit from the audience dropdown generated from Salesforce.
+   If not used this variable must still be defined with no values (const hideAudiences = [];).
+   const hideAudiences = ['Faculty/Staff','General Public'];
+ */
+const hideAudiences = [];
+
+
+/* audienceDropDownId:
+   The div id of the html element you want to populate with the audience dropdown
+*/
+const audienceDropDownId = "audienceDD";
+
+
+/* calendarDivId:
+   The div id of the html element you want to populate with the full calendar
+*/
+const calendarDivId = "fullCalendarView";
+
 let eventCount = 0;
 
-function initCalendar() {
-    const calendarEl = document.getElementById('fullCalendarView');
-    const audienceDD = document.getElementById('audienceDD');
-    const hideCalendarUntilAudience = false;
+let audienceList = [];
+
+if (urlParams['audienceList']) {
+    audienceList = decodeURIComponent(urlParams['audienceList']).split(',');
+}
+
+function getUrlVars() {
+    let vars = {};
+    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+        function (m, key, value) {
+            vars[key] = value;
+        });
+    return vars;
+}
+
+const initCalendar = function () {
+    const calendarEl = document.getElementById(calendarDivId);
+
+    const audienceDD = document.getElementById(audienceDropDownId);
+
+    /*
+    if(feedURL.endsWith('/')) {
+        feedURL += 'services/apexrest/summit/summiteventsfeed';
+    } else {
+        feedURL += '/services/apexrest/summit/summiteventsfeed';
+    }
+    */
+
+    if (Object.keys(hardCodeAudience).length === 1) {
+        audienceDD.closest('.slds-col').style.display = 'none';
+    }
 
     if (audienceDD) {
         loadAudienceDD();
     }
-    calendar = new FullCalendar.Calendar(calendarEl, {
+
+    function getCalView() {
+        let initialView = "dayGridMonth";
+        if (window.innerWidth <= 900) {
+            initialView = "listMonth";
+        }
+        return initialView;
+    }
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: getCalView(),
         handleWindowResize: true,
+        textColor: "#000",
+        contentHeight: "auto",
         events: {
             url: feedURL,
             extraParams: function () {
-                return {
-                    'feedType': 'eventList',
-                    'audience': getAudienceDDValue()
-                }
+                return {feedType: "eventList", audience: getAudienceDDValue()};
             },
         },
         eventDataTransform: function (rawEventData) {
@@ -40,51 +116,38 @@ function initCalendar() {
                 end: rawEventData.end.replace('Z', ''),
                 description: rawEventData.description,
                 className: rawEventData.className,
+                eventClosed: rawEventData.eventClosed.toString()
             };
         },
-        eventDisplay: 'auto',
-        eventTextColor: '#000',
+        eventDisplay: "auto",
+        eventTextColor: "#000",
         eventContent: function (info) {
+            let wrap = document.createElement("div");
+            let titleWrap = document.createElement("span");
             eventCount++;
             let toolTipId = 'tool-tip-' + eventCount;
-            let wrap = document.createElement('div');
-            let eventTitle = info.event.title;
-            if (hideInstanceTitle) {
-                let eventTitleArr = eventTitle.split('-');
-                eventTitle = '';
-                for (let xx = 0; xx < eventTitleArr.length - 1; xx++) {
-                    if (xx > 0) {
-                        eventTitle += ' - '
-                    }
-                    eventTitle += eventTitleArr[xx].trim();
-                }
+            titleWrap.classList.add("summitEventsTitle");
+            if (info.event.extendedProps.eventClosed.toLowerCase() === 'false') {
+                titleWrap.innerHTML = info.event.title;
+                wrap.href = info.event.url;
+                wrap.target = "_blank";
+            }
+            if (info.event.extendedProps.eventClosed.toLowerCase() === 'true') {
+                titleWrap.innerHTML = info.event.title + "<br/><em>Event is closed.</em><br/>";
             }
             wrap.classList.add('SummitEventsItem', 'aria-describedby-tooltip');
             wrap.setAttribute('aria-describedby', toolTipId)
-
-            let titleWrap = document.createElement('span');
-            titleWrap.classList.add('summitEventsTitle');
-
-            if (info.event.classNames != 'eventClosed') {
-                titleWrap.innerHTML = eventTitle
-                wrap.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    window.open(info.event.url, 'new_window');
-                });
-            } else {
-                titleWrap.innerHTML = eventTitle + '<br><em>Event is closed.</em>';
-            }
-
-            let descWrap = document.createElement('div');
-            descWrap.classList.add('summitEventsDesc');
+            wrap.classList.add(info.event.className);
+            let descWrap = document.createElement("span");
+            descWrap.classList.add("summitEventsDesc");
             descWrap.innerHTML = info.event.extendedProps.description;
-            let timeWrap = document.createElement('div');
-            timeWrap.classList.add('summitEventsTimes');
+            let timeWrap = document.createElement("span");
+            timeWrap.classList.add("summitEventsTimes");
             let startTime = formatTimeString(info.event.start.toLocaleString());
             let endTime = formatTimeString(info.event.end.toLocaleString());
-            timeWrap.innerHTML = startTime + ' - ' + endTime;
+            timeWrap.innerHTML = startTime + " - " + endTime;
             wrap.append(titleWrap);
-            if (info.view.type === 'dayGridMonth') {
+            if (info.view.type === "dayGridMonth") {
                 wrap.append(timeWrap);
             } else {
                 wrap.append(descWrap);
@@ -103,7 +166,13 @@ function initCalendar() {
             let arrayOfDomNodes = [wrap]
             return {domNodes: arrayOfDomNodes}
         },
-        windowResize: function (arg) {
+        /*
+        eventMouseEnter: function (info) {
+            let desc = info.event.extendedProps.description;
+            tippy(info.el, {animate: "fade", content: desc});
+        },
+        */
+        windowResize: function () {
             this.changeView(getCalView());
             this.refetchEvents();
             activateTooltips();
@@ -116,16 +185,80 @@ function initCalendar() {
     calendar.render();
 
     if (audienceDD) {
-        audienceDD.addEventListener('change', function () {
-            eraseCookie('SummitEvents');
-            createCookie('SummitEvents', '{"audience" : "' + getAudienceDDValue() + '"}', '');
-            if (getAudienceDDValue() == '' && hideCalendarUntilAudience) {
+        audienceDD.addEventListener("change", function () {
+            eraseCookie("SummitEvents");
+            createCookie(
+                "SummitEvents",
+                '{"audience" : "' + getAudienceDDValue() + '"}',
+                ""
+            );
+            if (getAudienceDDValue() === "" && hideCalendarUntilAudience) {
                 calendarEl.style.visibility = "hidden";
             } else {
                 calendarEl.style.visibility = "visible";
             }
             calendar.refetchEvents();
         });
+    }
+
+    function getAudienceDDValue() {
+        if (Object.keys(hardCodeAudience).length === 1) {
+            return hardCodeAudience[Object.keys(hardCodeAudience)[0]];
+        }
+        let audienceDDValue = "";
+        if (audienceDD) {
+            audienceDDValue = audienceDD.value;
+        }
+        if (audienceDDValue === "Select...") {
+            audienceDDValue = "";
+        }
+        return audienceDDValue;
+    }
+
+    function loadAudienceDD() {
+        fetch(
+            feedURL + "?feedType=audienceDD"
+        ).then((resp) => resp.json())
+            .then(function (data) {
+                populateOptions(data, audienceDD);
+                if (SESettings != null) {
+                    if (SESettings.audience != null) {
+                        audienceDD.value = SESettings.audience;
+                    }
+                }
+                calendar.refetchEvents();
+                if (getAudienceDDValue() === "" && hideCalendarUntilAudience) {
+                    calendarEl.style.visibility = "hidden";
+                }
+            }).catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    function populateOptions(data, selector) {
+        selector.innerHTML = "";
+        let opt1 = document.createElement("option");
+        opt1.value = "";
+        opt1.text = "Select...";
+        selector.append(opt1);
+        if (Object.keys(hardCodeAudience).length > 0) {
+            data = hardCodeAudience;
+        }
+        let optionCount = 0;
+        for (const [key, value] of Object.entries(data)) {
+            if (!hideAudiences.includes(value)) {
+                if (audienceList.length === 0 || audienceList.includes(value)) {
+                    let opt2 = document.createElement("option");
+                    opt2.value = value;
+                    opt2.text = key;
+                    selector.append(opt2);
+                    optionCount++;
+                }
+            }
+        }
+        if (optionCount === 1) {
+            audienceDD.closest('.slds-col').style.display = 'none';
+        }
     }
 
 }
@@ -139,68 +272,21 @@ function getCalView() {
 }
 
 function formatTimeString(stringIn) {
-    let stringOut = '';
-    stringIn = stringIn.split(',');
+    let stringOut;
+    stringIn = stringIn.split(",");
     stringIn = stringIn[stringIn.length - 1];
-    let first = stringIn.indexOf(',');
     let last = stringIn.lastIndexOf(":");
     stringOut = stringIn.substring(stringIn, last);
     stringOut += stringIn.substring(last + 3, stringIn.length);
     return stringOut;
 }
 
-function getAudienceDDValue() {
-    let audienceDDValue = '';
-    if (audienceDD) {
-        audienceDDValue = audienceDD.value;
-    }
-    if (audienceDDValue == 'Select...') {
-        audienceDDValue = '';
-    }
-    return audienceDDValue;
-}
-
-function loadAudienceDD() {
-    fetch(
-        feedURL + "?feedType=audienceDD"
-    ).then((resp) => resp.json())
-        .then(function (data) {
-            populateOptions(data, audienceDD)
-            //preselect audience based on cookie
-            const SESettings = JSON.parse(readCookie('SummitEvents'));
-            if (SESettings != null) {
-                if (SESettings.audience != null) {
-                    audienceDD.value = SESettings.audience;
-                }
-            }
-            calendar.refetchEvents();
-            if (getAudienceDDValue() == '' && hideCalendarUntilAudience) {
-                calendarEl.style.visibility = "hidden";
-            }
-        }).catch(function (error) {
-        console.log(error);
-    });
-}
-
-function populateOptions(data, selector, keyAsText) {
-    selector.innerHTML = '';
-    let opt1 = document.createElement("option");
-    opt1.value = '';
-    opt1.text = 'Select...';
-    selector.append(opt1);
-    for (const [key, value] of Object.entries(data)) {
-        let opt2 = document.createElement("option");
-        opt2.value = value;
-        opt2.text = key;
-        selector.append(opt2);
-    }
-}
 
 function createCookie(name, value, days) {
     let expires;
     if (days) {
         let date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
         expires = "; expires=" + date.toGMTString();
     } else {
         expires = "";
@@ -210,11 +296,10 @@ function createCookie(name, value, days) {
 
 function readCookie(name) {
     let nameEQ = encodeURIComponent(name) + "=";
-    let ca = document.cookie.split(';');
+    let ca = document.cookie.split(";");
     for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
-        while (c.charAt(0) === ' ')
-            c = c.substring(1, c.length);
+        while (c.charAt(0) === " ") c = c.substring(1, c.length);
         if (c.indexOf(nameEQ) === 0)
             return decodeURIComponent(c.substring(nameEQ.length, c.length));
     }
@@ -247,7 +332,7 @@ function activateTooltips() {
                 toolTipElement.style.left = leftPosition + 'px';
                 toolTipElement.style.top = topPosition + 'px';
             });
-            item.addEventListener('mouseleave', function (e) {
+            item.addEventListener('mouseleave', function () {
                 toolTipElement.classList.remove('slds-rise-from-ground');
                 toolTipElement.classList.add('slds-fall-into-ground');
             });
