@@ -8,8 +8,9 @@ private class SummitEventsFeed_TEST {
     @IsTest static void testEventFeed() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+        List<SummitEventsFeed.eventItem> eventsList = new List<SummitEventsFeed.eventItem>();
         System.runAs(testUser) {
-            Test.startTest();
+
             RestRequest req = new RestRequest();
             RestResponse res = new RestResponse();
             req.requestURI = '/services/apexrest/summiteventfeed';
@@ -18,18 +19,30 @@ private class SummitEventsFeed_TEST {
 
             //Test audience dd request
             req.params.put('feedType', 'audienceDD');
+            List<String> audience = SummitEventsTestSharedDataFactory.getPicklistItems('Summit_Events__c', 'Audience__c');
             RestContext.request = req;
             RestContext.response = res;
-            SummitEventsFeed.getSummitEventsFeed();
-            System.assert(res.responseBody.toString().contains('General Public'));
 
+            Test.startTest();
+            SummitEventsFeed.getSummitEventsFeed();
+            //Get end of audience list because default is to not show "No Audience" first in list
+            System.assert(res.responseBody.toString().contains(audience[audience.size() - 1]));
             //Test sex dd request
             req.params.remove('feedType');
             req.params.put('feedType', 'sexDD');
+            List<String> genderDD = SummitEventsTestSharedDataFactory.getPicklistItems('Summit_Events_Registration__c', 'Registrant_Gender__c');
             RestContext.request = req;
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
-            System.assert(res.responseBody.toString().contains('Male'));
+            System.assert(res.responseBody.toString().contains(genderDD[0]));
+
+            //test parameterKey
+            req.params.remove('feedType');
+            req.params.put('feedType', 'parameterKey');
+            RestContext.request = req;
+            RestContext.response = res;
+            SummitEventsFeed.getSummitEventsFeed();
+            //System.assert(res.responseBody.toString().contains('Male'));
 
             //test filter minus dates
             req.params.remove('feedType');
@@ -37,40 +50,50 @@ private class SummitEventsFeed_TEST {
             RestContext.request = req;
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
-            System.assert(res.responseBody.toString().contains('Test Event - Test Event Session -1'));
+            System.assert(res.responseBody.toString().contains('Test Event - Test Event Session -1'), 'Returned instance list validated with one of the instance  titles');
 
-            //test filter minus dates
+            //test full feed for event instance and sponsor if there is value is sponsor
             req.params.remove('feedType');
             req.params.put('feedType', 'eventList');
-            req.params.put('eventId', seaTestInstances[1].Id);
-            req.params.put('sponsor', 'Big Business');
+            req.params.put('eventId', seaTestInstances[1].Event__c);
+            List<String> sponsor = SummitEventsTestSharedDataFactory.getPicklistItems('Summit_Events__c', 'Event_Sponsor__c');
+            if (sponsor.size() > 0) {
+                Summit_Events__c eventUpdate = [SELECT Id FROM Summit_Events__c WHERE Id = :seaTestInstances[0].Event__c];
+                eventUpdate.Event_Sponsor__c = sponsor[0];
+                req.params.put('sponsor', sponsor[0]);
+                update eventUpdate;
+            }
             req.params.put('longdesc', 'true');
             RestContext.request = req;
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
-            System.assert(res.responseBody.toString().contains('[]'));
+            eventsList = (List<SummitEventsFeed.eventItem>) JSON.deserialize(res.responseBody.toString(), List<SummitEventsFeed.eventItem>.class);
+            System.assertEquals(eventsList.size(), seaTestInstances.size(), 'When event id is in the parameter with no filters all instances should be present.');
+            if (sponsor.size() > 0) {
+                System.assertEquals(eventsList[0].sponsors, sponsor[0], 'Applied and filtered event sponsor should be present in returned instance data/');
+                req.params.remove('sponsor');
+            }
+
+            //Test if a non-event id is passed through
+            req.params.remove('eventId');
             req.params.put('eventId', 'WRONG!');
             RestContext.request = req;
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
-            System.assert(res.responseBody.toString().contains('[]'));
+            System.debug(res.responseBody.toString());
+            System.assert(res.responseBody.toString().contains('[]'), 'Event list should be empty if eventId is not an id');
 
             //test filter with start date
-            req.params.put('viewStart', String.valueOf(Datetime.now().addMonths(-1)));
+            req.params.remove('eventId');
+            req.params.put('viewStart', String.valueOf(Date.today().addDays(10)));
+            req.params.put('viewEnd', String.valueOf(Date.today().addDays(10)));
             req.params.put('hideClosed', 'true');
+            System.debug(JSON.serializePretty(req.params));
             RestContext.request = req;
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
-            System.assert(res.responseBody.toString().contains('[]'));
-
-            //test filter with end date
-            req.params.put('viewEnd', String.valueOf(Datetime.now().addMonths(1)));
-            req.params.put('audience', 'Alumni');
-            req.params.put('hideClosed', 'notRight');
-            RestContext.request = req;
-            RestContext.response = res;
-            SummitEventsFeed.getSummitEventsFeed();
-            System.assert(res.responseBody.toString().contains('[]'));
+            eventsList = (List<SummitEventsFeed.eventItem>) JSON.deserialize(res.responseBody.toString(), List<SummitEventsFeed.eventItem>.class);
+            System.assertEquals(eventsList.size(), 1, 'Only one instance fits the viewStart and viewEnd dates passed for one day.');
 
             //test filter
             req.params.put('filter', 'OCB');

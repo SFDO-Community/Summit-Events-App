@@ -12,7 +12,7 @@ global with sharing class SummitEventsFeed {
     private static Id recTypeId { get; set; }
     private static String namespace { get; set; }
 
-    private class eventItem {
+    public class eventItem {
         public String ID { get; set; }
         public String title { get; set; }
         public String instanceDesc { get; set; }
@@ -141,7 +141,7 @@ global with sharing class SummitEventsFeed {
         //if fullcalendar in use start is passed. start being protected variable
         if (String.isNotBlank(req.params.get('start'))) {
             viewStart = Date.valueOf(req.params.get('start'));
-        } else {
+        } else if (viewStart == null) {
             viewStart = Datetime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(-1);
         }
 
@@ -151,7 +151,7 @@ global with sharing class SummitEventsFeed {
         //if fullcalendar in use end is passed. end being protected variable
         if (String.isNotBlank(req.params.get('end'))) {
             viewEnd = Date.valueOf(req.params.get('end'));
-        } else {
+        } else if (viewEnd == null) {
             viewEnd = Datetime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(1);
 
         }
@@ -160,6 +160,8 @@ global with sharing class SummitEventsFeed {
         formattedViewEnd = viewEnd.format('yyyy-MM-dd');
         eventQuery += ' AND Instance_Start_Date__c >= ' + formattedViewStart + ' ';
         eventQuery += ' AND Instance_Start_Date__c <= ' + formattedViewEnd + ' ';
+        System.debug(formattedViewStart);
+        System.debug(formattedViewEnd);
 
         //get event based on event id
         String eventId = req.params.get('eventId');
@@ -172,6 +174,10 @@ global with sharing class SummitEventsFeed {
         }
         if (String.isNotBlank(eventId)) {
             eventQuery += ' AND Event__r.id = \'' + eventId + '\' ';
+        }
+        //If the eventId doesn't translate to an id and is present return no instances
+        if (String.isNotBlank(req.params.get('eventId')) && String.isBlank(eventId)) {
+            return EventList;
         }
 
         //get event based on audience (can be comma seperated)
@@ -200,7 +206,6 @@ global with sharing class SummitEventsFeed {
 
         //Display on filter (can be comma separated)
         String displayOn = req.params.get('displayon');
-        System.debug('DISPLAY ON IN: ' + displayOn);
         if (String.isNotBlank(displayOn)) {
             eventQuery += ' AND Event__r.Filter_Where_To_Display__c INCLUDES (' + sanitizeIncludeList(displayOn) + ') ';
         }
@@ -220,14 +225,17 @@ global with sharing class SummitEventsFeed {
         //Program filter (can be comma separated)
         String program = req.params.get('program');
         if (String.isNotBlank(program)) {
-            eventQuery += ' AND (' + sanitizeProgramOrLikeList(program) + ') ';
+            String programFields = 'Event__r.Program_Filter__c,Event__r.Program_Filter_2__c,Event__r.Program_Filter_3__c';
+            eventQuery += ' AND (' + sanitizeOrLikeList(programFields, program) + ') ';
         }
 
         //School filter (can be comma separated)
+        /*
         String school = req.params.get('school');
         if (String.isNotBlank(school)) {
             eventQuery += ' AND (' + sanitizeOrLikeList(school, 'Event__r.School__r.Name') + ') ';
         }
+        */
 
         //School filter (can be comma separated)
         String building = req.params.get('building');
@@ -247,7 +255,7 @@ global with sharing class SummitEventsFeed {
                 eventQuery += ' Event__r.Location_Title__c LIKE \'%' + f + '%\' OR ';
                 eventQuery += ' Event__r.Location_Address__c LIKE \'%' + f + '%\' OR ';
                 eventQuery += ' Event__r.Building__c LIKE \'%' + f + '%\' OR ';
-                eventQuery += ' Event__r.School__r.Name LIKE \'%' + f + '%\' OR ';
+                // eventQuery += ' Event__r.School__r.Name LIKE \'%' + f + '%\' OR ';
             }
             eventQuery = eventQuery.removeEnd('OR ');
             eventQuery += ' ) ';
@@ -438,22 +446,6 @@ global with sharing class SummitEventsFeed {
         return '';
     }
 
-    private static String sanitizeProgramOrLikeList(String listIn) {
-        if (String.isNotBlank(listIn)) {
-            String listOut = '';
-            List<String> listInList = new List<String>();
-            listInList = listIn.split(',');
-            for (String listItem : listInList) {
-                listOut += ' ( Event__r.Program_Filter__c LIKE \'%' + String.escapeSingleQuotes(listItem.trim()) + '%\' ) OR ';
-                listOut += ' ( Event__r.Program_Filter_2__c LIKE \'%' + String.escapeSingleQuotes(listItem.trim()) + '%\' ) OR ';
-                listOut += ' ( Event__r.Program_Filter_3__c LIKE \'%' + String.escapeSingleQuotes(listItem.trim()) + '%\' ) OR ';
-            }
-            listOut = listOut.removeEnd(' OR ');
-            return listOut;
-        }
-        return '';
-    }
-
     public static String removeHTMLandEscape(String incomingString, Boolean escapeHTML) {
         incomingString = incomingString.replaceAll('<[^>]+>', '').trim();
         if (escapeHTML) {
@@ -559,7 +551,7 @@ global with sharing class SummitEventsFeed {
 
         //filter
         allOptions.add(makeOption('filter', new List<String>{
-                'Program_Filter', 'Location_Title', 'Location_Address', 'Building', 'School_Name'
+                'Program_Filter', 'Location_Title', 'Location_Address', 'Building'
         }, 'Searches all the fields listed in options as a like statement allowing for a broader search of location information. (&filter= single or coma separated list of these items)'));
 
         //filter-Location
