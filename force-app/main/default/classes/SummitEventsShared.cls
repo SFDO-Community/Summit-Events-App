@@ -77,7 +77,15 @@ public with sharing class SummitEventsShared {
                 SELECT COUNT()
                 FROM Summit_Events_Question__c
                 WHERE Event__c = :eventId
-                AND Registrant_Type__c = 'Registrant'
+                AND (Registrant_Type__c = 'Registrant' OR Registrant_Type__c = 'Registrant and Guest')
+                WITH SECURITY_ENFORCED
+        ];
+
+        Integer guestQuestions = [
+                SELECT COUNT()
+                FROM Summit_Events_Question__c
+                WHERE Event__c = :eventId
+                AND (Registrant_Type__c = 'Guest' OR Registrant_Type__c = 'Registrant and Guest')
                 WITH SECURITY_ENFORCED
         ];
 
@@ -97,7 +105,7 @@ public with sharing class SummitEventsShared {
         }
 
         //check for if event has guests
-        if (eventInformation.Display_Guest_Registration__c) {
+        if (eventInformation.Display_Guest_Registration__c && guestQuestions > 0) {
             pagesInEvent.add(namespace + 'SummitEventsRegisterGuests');
         }
 

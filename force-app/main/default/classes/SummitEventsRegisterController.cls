@@ -8,7 +8,7 @@ public with sharing class SummitEventsRegisterController {
     public Summit_Events__c eventPage { get; set; }
     public List<SelectOption> guestAmt { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
-    private SummitEventsShared SeaShared = new SummitEventsShared();
+    private final SummitEventsShared SeaShared = new SummitEventsShared();
     public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
     public String templateSelected { get; set; }
     public Boolean contactSet { get; set; }
@@ -35,14 +35,18 @@ public with sharing class SummitEventsRegisterController {
     public Id incomingEventRegistrationId { get; set; }
     public Map<String, PageReference> pageFlow { get; set; }
     public String nextUrl { get; set; }
-    public String placeholderValue { get; set; }
-    public String timezoneDisplay { get; set; }
+    public String namespace { get; set; }
 
     public SummitEventsRegisterController() {
         //array for looping through additional information questions
         questionNum = new List<String>{
                 '1', '2', '3', '4', '5'
         };
+
+        namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace.toLowerCase() + '__';
+        }
 
         contactSet = false;
         eventIsClosed = false;
@@ -98,7 +102,7 @@ public with sharing class SummitEventsRegisterController {
         //Get Event Info off of instance master detail id
         if (!String.isBlank(eventInformation.eventId)) {
             eventPage = [
-                    SELECT Name, Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Full_Text__c, Audience__c,Include_Time_frame_List__c,
+                    SELECT Name, Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Full_Text__c, Audience__c, Include_Time_frame_List__c,
                             Max_Other_Attendees__c, Allow_Other_Attendees__c, College_High_School_Ask__c, Ask_Gender__c, Template__c,
                             Event_Home_Link_Title__c, Event_Home_Link_URL__c, Ask_If_Parent__c, Ask_Registrant_Program_Of_Interest__c,
                             Add_Info_Question_Pick_List_1__c, Add_Info_Question_Text_1__c, Add_Info_Question_Type_1__c,
@@ -113,11 +117,11 @@ public with sharing class SummitEventsRegisterController {
                             Ask_Third_Party_Registrant__c, Registration_Email_Restriction__c, Ask_Pronoun__c, Keep_Registration_Open_During_Event__c,
                             Close_Event_Days_Before__c, Ask_Title__c, Ask_Company_Organization__c, Event_Fee__c, Event_Fee_Additional__c,
                             Event_Fee_Additional_Allocation__c, Event_Fee_Allocation__c, Display_Optional_Donation__c,
-                            Applicant_Type_Label__c,Company_Organization_Label__c,Date_Of_Birth_Label__c,Email_Label__c,
-                            First_Name_Label__c,Gender_Label__c,Last_Name_As_Student_Label__c,Last_Name_Label__c,Mailing_Address_Label__c,
-                            Phone_Label__c,Phone_Type_Label__c,Preferred_First_Name_Label__c,Pronouns_Label__c,Registrant_Receive_Texts_Label__c,
-                            Relationship_To_Institution_Label__c,Third_Party_Registrant_Label__c,Title_Label__c,Preferred_Class_Year_Label__c,
-                            Registrant_Relationship_Label__c, Event_Fee_Label__c, Event_Fee_Total_Label__c,  Event_Fee_Submit_List_Label__c
+                            Applicant_Type_Label__c, Company_Organization_Label__c, Date_Of_Birth_Label__c, Email_Label__c,
+                            First_Name_Label__c, Gender_Label__c, Last_Name_As_Student_Label__c, Last_Name_Label__c, Mailing_Address_Label__c,
+                            Phone_Label__c, Phone_Type_Label__c, Preferred_First_Name_Label__c, Pronouns_Label__c, Registrant_Receive_Texts_Label__c,
+                            Relationship_To_Institution_Label__c, Third_Party_Registrant_Label__c, Title_Label__c, Preferred_Class_Year_Label__c,
+                            Registrant_Relationship_Label__c, Event_Fee_Label__c, Event_Fee_Total_Label__c, Event_Fee_Submit_List_Label__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -134,9 +138,9 @@ public with sharing class SummitEventsRegisterController {
                 }
             }
 
-            if (String.isBlank(eventRegistration.Registrant_Country__c)) {
-                eventRegistration.Registrant_Country__c = 'United States';
-            }
+//            if (String.isBlank(eventRegistration.Registrant_Country__c)) {
+//                eventRegistration.Registrant_Country__c = 'United States';
+//            }
 
             if (String.isNotBlank(eventRegistration.Registrant_Applicant_Type__c)) {
                 applicantType = eventRegistration.Registrant_Applicant_Type__c;
@@ -155,16 +159,17 @@ public with sharing class SummitEventsRegisterController {
             }
 
             if (
-                    !String.isBlank(eventPage.Add_Info_Question_Type_1__c) ||
-                            !String.isBlank(eventPage.Add_Info_Question_Type_1__c) ||
-                            !String.isBlank(eventPage.Add_Info_Question_Type_1__c) ||
-                            !String.isBlank(eventPage.Add_Info_Question_Type_1__c) ||
-                            !String.isBlank(eventPage.Add_Info_Question_Type_1__c) ||
+                    (String.isNotBlank(eventPage.Add_Info_Question_Type_1__c) && String.isNotBlank(eventPage.Add_Info_Question_Text_1__c)) ||
+                            (String.isNotBlank(eventPage.Add_Info_Question_Type_2__c) && String.isNotBlank(eventPage.Add_Info_Question_Text_2__c)) ||
+                            (String.isNotBlank(eventPage.Add_Info_Question_Type_3__c) && String.isNotBlank(eventPage.Add_Info_Question_Text_3__c)) ||
+                            (String.isNotBlank(eventPage.Add_Info_Question_Type_4__c) && String.isNotBlank(eventPage.Add_Info_Question_Text_4__c)) ||
+                            (String.isNotBlank(eventPage.Add_Info_Question_Type_5__c) && String.isNotBlank(eventPage.Add_Info_Question_Text_5__c)) ||
+
                             eventPage.Include_Time_frame_List__c ||
                             eventPage.Allow_Other_Attendees__c ||
                             (eventPage.Ask_Gender__c != 'Do not ask' && eventPage.Ask_Gender__c != null) ||
                             (eventPage.Ask_Registrant_Program_Of_Interest__c != 'Do not ask' && eventPage.Ask_Registrant_Program_Of_Interest__c != null)
-                    ) {
+            ) {
                 additionalQuestions = true;
             }
 
@@ -176,7 +181,7 @@ public with sharing class SummitEventsRegisterController {
                     || String.isNotBlank(evtInstance.Location_Map_Link_Override__c)
                     || String.isNotBlank(eventPage.Location_Map_Link__c)
                     || String.isNotBlank(evtInstance.Location_Map_Link_Override__c)
-                    ) {
+            ) {
                 showLocation = true;
             }
             String locationTitle = '';
@@ -325,7 +330,17 @@ public with sharing class SummitEventsRegisterController {
     }
 
     public List<SelectOption> getStateDD() {
-        return PickThePicklist('Summit_Events_Registration__c', 'Registrant_State_Global__c', true);
+        System.debug(eventRegistration.Registrant_Country__c);
+        Map<String, String> dependencies = SeaShared.getDependentSelectOptions(namespace + 'Summit_Events_Registration__c', 'Registrant_Country__c', namespace + 'Registrant_State_Global__c', eventRegistration.Registrant_Country__c);
+        System.debug(dependencies);
+        List<SelectOption> pickListItems = new List<SelectOption>();
+        if (dependencies.size() > 1) {
+            pickListItems.add(new SelectOption('', 'Select...'));
+            for (String item : dependencies.keySet()) {
+                pickListItems.add(new SelectOption(item, dependencies.get(item)));
+            }
+        }
+        return pickListItems;
     }
 
     public List<SelectOption> getCountryDD() {
@@ -369,7 +384,7 @@ public with sharing class SummitEventsRegisterController {
 
     public List<SelectOption> PickThePicklist(String YourObjectName, String YourFieldName, Boolean includeSelect) {
         List<SelectOption> picklists = new List<SelectOption>();
-        String namespace = SummitEventsNamespace.getNamespace();
+        namespace = SummitEventsNamespace.getNamespace();
         if (String.isNotBlank(namespace)) {
             namespace = namespace.toLowerCase() + '__';
         }
