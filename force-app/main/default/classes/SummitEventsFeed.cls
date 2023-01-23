@@ -10,8 +10,9 @@ global with sharing class SummitEventsFeed {
     private static String feedType { get; set; }
     private static final SummitEventsShared SEShared = new SummitEventsShared();
     private static Id recTypeId { get; set; }
+    private static String namespace { get; set; }
 
-    private class eventItem {
+    public class eventItem {
         public String ID { get; set; }
         public String title { get; set; }
         public String instanceDesc { get; set; }
@@ -41,17 +42,16 @@ global with sharing class SummitEventsFeed {
         String recType = RestContext.request.params.get('rectype');
 
         //Get namespace if packaged
-        String namespace = SummitEventsNamespace.getNamespace();
+        namespace = SummitEventsNamespace.getNamespace();
         if (String.isNotBlank(namespace)) {
             namespace = namespace + '__';
         }
-
 
         if (String.isNotBlank(recType)) {
             List<RecordType> recTypeList = [
                     SELECT Id, Name
                     FROM RecordType
-                    WHERE SobjectType = :namespace + 'UST_Event__c'
+                    WHERE SobjectType = :namespace + 'Summit_Event__c'
                     AND Name = :recType
             ];
             if (recTypeList.size() > 0) {
@@ -97,12 +97,6 @@ global with sharing class SummitEventsFeed {
 
     private static List<eventItem> getEventList() {
 
-        //Get namespace if packaged
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
-
         List<eventItem> EventList = new List<eventItem>();
         RestRequest req = RestContext.request;
         String eventQuery = '';
@@ -147,7 +141,7 @@ global with sharing class SummitEventsFeed {
         //if fullcalendar in use start is passed. start being protected variable
         if (String.isNotBlank(req.params.get('start'))) {
             viewStart = Date.valueOf(req.params.get('start'));
-        } else {
+        } else if (viewStart == null) {
             viewStart = Datetime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(-1);
         }
 
@@ -157,7 +151,7 @@ global with sharing class SummitEventsFeed {
         //if fullcalendar in use end is passed. end being protected variable
         if (String.isNotBlank(req.params.get('end'))) {
             viewEnd = Date.valueOf(req.params.get('end'));
-        } else {
+        } else if (viewEnd == null) {
             viewEnd = Datetime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(1);
 
         }
@@ -166,6 +160,8 @@ global with sharing class SummitEventsFeed {
         formattedViewEnd = viewEnd.format('yyyy-MM-dd');
         eventQuery += ' AND Instance_Start_Date__c >= ' + formattedViewStart + ' ';
         eventQuery += ' AND Instance_Start_Date__c <= ' + formattedViewEnd + ' ';
+        System.debug(formattedViewStart);
+        System.debug(formattedViewEnd);
 
         //get event based on event id
         String eventId = req.params.get('eventId');
@@ -178,6 +174,10 @@ global with sharing class SummitEventsFeed {
         }
         if (String.isNotBlank(eventId)) {
             eventQuery += ' AND Event__r.id = \'' + eventId + '\' ';
+        }
+        //If the eventId doesn't translate to an id and is present return no instances
+        if (String.isNotBlank(req.params.get('eventId')) && String.isBlank(eventId)) {
+            return EventList;
         }
 
         //get event based on audience (can be comma seperated)
@@ -206,15 +206,14 @@ global with sharing class SummitEventsFeed {
 
         //Display on filter (can be comma separated)
         String displayOn = req.params.get('displayon');
-        System.debug('DISPLAY ON IN: ' + displayOn);
         if (String.isNotBlank(displayOn)) {
-            eventQuery += ' AND Event__r.Where_to_Display__c INCLUDES (' + sanitizeIncludeList(displayOn) + ') ';
+            eventQuery += ' AND Event__r.Filter_Where_To_Display__c INCLUDES (' + sanitizeIncludeList(displayOn) + ') ';
         }
 
         //Category filter (can be comma separated)
         String category = req.params.get('category');
         if (String.isNotBlank(category)) {
-            eventQuery += ' AND Event__r.Category__c INCLUDES (' + sanitizeIncludeList(category) + ') ';
+            eventQuery += ' AND Event__r.Filter_Category__c INCLUDES (' + sanitizeIncludeList(category) + ') ';
         }
 
         //Event Type filter. Only accepts one.
@@ -226,14 +225,17 @@ global with sharing class SummitEventsFeed {
         //Program filter (can be comma separated)
         String program = req.params.get('program');
         if (String.isNotBlank(program)) {
-            eventQuery += ' AND (' + sanitizeProgramOrLikeList(program) + ') ';
+            String programFields = 'Event__r.Program_Filter__c,Event__r.Program_Filter_2__c,Event__r.Program_Filter_3__c';
+            eventQuery += ' AND (' + sanitizeOrLikeList(program, programFields) + ') ';
         }
 
         //School filter (can be comma separated)
+        /*
         String school = req.params.get('school');
         if (String.isNotBlank(school)) {
             eventQuery += ' AND (' + sanitizeOrLikeList(school, 'Event__r.School__r.Name') + ') ';
         }
+        */
 
         //School filter (can be comma separated)
         String building = req.params.get('building');
@@ -244,19 +246,8 @@ global with sharing class SummitEventsFeed {
         //get filter with like soql concatinated program,location, school, location address, location type
         String filter = req.params.get('filter');
         if (String.isNotBlank(filter)) {
-            eventQuery += ' AND  (';
-            List<String> filterList = filter.split(',');
-            for (String f : filterList) {
-                eventQuery += ' Event__r.Program_Filter__c LIKE \'%' + f + '%\' OR ';
-                eventQuery += ' Event__r.Program_Filter_2__c LIKE \'%' + f + '%\' OR ';
-                eventQuery += ' Event__r.Program_Filter_3__c LIKE \'%' + f + '%\' OR ';
-                eventQuery += ' Event__r.Location_Title__c LIKE \'%' + f + '%\' OR ';
-                eventQuery += ' Event__r.Location_Address__c LIKE \'%' + f + '%\' OR ';
-                eventQuery += ' Event__r.Building__c LIKE \'%' + f + '%\' OR ';
-                eventQuery += ' Event__r.School__r.Name LIKE \'%' + f + '%\' OR ';
-            }
-            eventQuery = eventQuery.removeEnd('OR ');
-            eventQuery += ' ) ';
+            String filterFields = 'Event__r.Program_Filter__c,Event__r.Program_Filter_2__c,Event__r.Program_Filter_3__c,Event__r.Location_Title__c,Event__r.Location_Address__c,Event__r.Building__c';
+            eventQuery += ' AND (' + sanitizeOrLikeList(filter, filterFields) + ') ';
         }
 
         if (String.isNotBlank(recTypeId)) {
@@ -274,6 +265,7 @@ global with sharing class SummitEventsFeed {
         eventQuery += ' WITH SECURITY_ENFORCED ';
         eventQuery += ' ORDER BY Instance_Start_Date__c, Instance_Start_Time__c ';
 
+        System.debug(eventQuery);
 
         List<Summit_Events_Instance__c> EventInstanceList = Database.query(eventQuery);
 
@@ -444,22 +436,6 @@ global with sharing class SummitEventsFeed {
         return '';
     }
 
-    private static String sanitizeProgramOrLikeList(String listIn) {
-        if (String.isNotBlank(listIn)) {
-            String listOut = '';
-            List<String> listInList = new List<String>();
-            listInList = listIn.split(',');
-            for (String listItem : listInList) {
-                listOut += ' ( Event__r.Program_Filter__c LIKE \'%' + String.escapeSingleQuotes(listItem.trim()) + '%\' ) OR ';
-                listOut += ' ( Event__r.Program_Filter_2__c LIKE \'%' + String.escapeSingleQuotes(listItem.trim()) + '%\' ) OR ';
-                listOut += ' ( Event__r.Program_Filter_3__c LIKE \'%' + String.escapeSingleQuotes(listItem.trim()) + '%\' ) OR ';
-            }
-            listOut = listOut.removeEnd(' OR ');
-            return listOut;
-        }
-        return '';
-    }
-
     public static String removeHTMLandEscape(String incomingString, Boolean escapeHTML) {
         incomingString = incomingString.replaceAll('<[^>]+>', '').trim();
         if (escapeHTML) {
@@ -469,16 +445,18 @@ global with sharing class SummitEventsFeed {
     }
 
 
-    private static String sanitizeOrLikeList(String listIn, String fieldToCompare) {
-        if (String.isNotBlank(listIn)) {
-            String listOut = '';
-            List<String> listInList = new List<String>();
-            listInList = listIn.split(',');
-            for (String listItem : listInList) {
-                listOut += ' ( ' + fieldToCompare + ' LIKE \'%' + String.escapeSingleQuotes(listItem.trim()) + '%\' ) OR ';
+    private static String sanitizeOrLikeList(String items, String fieldsToCompare) {
+        if (String.isNotBlank(items) && String.isNotBlank(fieldsToCompare)) {
+            String queryOut = '';
+            List<String> itemList = items.split(',');
+            List<String> fieldList = fieldsToCompare.split(',');
+            for (String item : itemList) {
+                for (String field : fieldList) {
+                    queryOut += ' ( ' + field + ' LIKE \'%' + String.escapeSingleQuotes(item.trim()) + '%\' ) OR ';
+                }
             }
-            listOut = listOut.removeEnd(' OR ');
-            return listOut;
+            queryOut = queryOut.removeEnd(' OR ');
+            return queryOut;
         }
         return '';
     }
@@ -490,7 +468,9 @@ global with sharing class SummitEventsFeed {
         Map<String, String> fieldMap = new Map<String, String>();
         List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
         for (Schema.PicklistEntry f : ple) {
-            fieldMap.put(f.getLabel(), f.getValue());
+            if (!f.getLabel().equalsIgnoreCase('No Audience')) {
+                fieldMap.put(f.getLabel(), f.getValue());
+            }
         }
         return fieldMap;
     }
@@ -519,7 +499,7 @@ global with sharing class SummitEventsFeed {
         }, 'Must be included to get any feed (&feedType= one of these items)'));
 
         //Record Types
-        List<RecordType> recTypeList = [SELECT Id, Name FROM RecordType WHERE SobjectType = 'UST_Event__c'];
+        List<RecordType> recTypeList = [SELECT Id, Name FROM RecordType WHERE SobjectType = :namespace + 'Summit_Events__c'];
         List<String> recTypeNames = new List<String>();
         for (RecordType rt : recTypeList) {
             recTypeNames.add(rt.Name);
@@ -542,21 +522,19 @@ global with sharing class SummitEventsFeed {
         }, 'Shows only the instances under the event umbrella (&eventId= Salesforce Id for the event)'));
 
         //audience
-        allOptions.add(makeOption('audience', getObjectItemList(Summit_Events__c.Audience__c.getDescribe()), 'Filters on audiences (&audience= single or coma separated list of these items)'));
+        allOptions.add(makeOption('audience', (List<String>) getAudienceDD(Summit_Events__c.Audience__c.getDescribe()).values(), 'Filters on audiences (&audience= single or coma separated list of these items)'));
 
         //Event type
         allOptions.add(makeOption('type', getObjectItemList(Summit_Events__c.Event_Type__c.getDescribe()), 'Filters on event type (&type= single item only)'));
 
         //sponsor
         allOptions.add(makeOption('sponsor', getObjectItemList(Summit_Events__c.Event_Sponsor__c.getDescribe()), 'Filters on sponsor (&sponsor= single or coma separated list of these items)'));
-/*
 
         //displayon
-        allOptions.add(makeOption('displayon', getObjectItemList(Summit_Events__c.Where_to_Display__c.getDescribe()), 'Filters on where in the digital world you want to display events(&displayon= single or coma separated list of these items)'));
+        allOptions.add(makeOption('displayon', getObjectItemList(Summit_Events__c.Filter_Where_To_Display__c.getDescribe()), 'Filters on where in the digital world you want to display events(&displayon= single or coma separated list of these items)'));
 
         //category
-        allOptions.add(makeOption('category', getObjectItemList(Summit_Events__c.Category__c.getDescribe()), 'Filters category picklist events (&category= single or coma separated list of these items)'));
-*/
+        allOptions.add(makeOption('category', getObjectItemList(Summit_Events__c.Filter_Category__c.getDescribe()), 'Filters category picklist events (&category= single or coma separated list of these items)'));
 
         //longdesc
         allOptions.add(makeOption('longdesc', new List<String>{
@@ -565,16 +543,16 @@ global with sharing class SummitEventsFeed {
 
         //filter
         allOptions.add(makeOption('filter', new List<String>{
-                'Program_Filter', 'Location_Title', 'Location_Address', 'Building', 'School_Name'
-        }, 'Filter searches with a like statement all of these items together. (&filter= single or coma separated list of these items)'));
+                'Program_Filter', 'Location_Title', 'Location_Address', 'Building'
+        }, 'Searches all the fields listed in options as a like statement allowing for a broader search of location information. (&filter= single or coma separated list of these items)'));
 
         //filter-Location
-        allOptions.add(makeOption('filter+location', new List<String>{
-                'Program_Filter', 'Location_Title', 'Location_Address', 'Building', 'School_Name'
-        }, 'Filter searches with a like statement all of these items. (&filter= single or coma separated list of these items)'));
+        //allOptions.add(makeOption('filter+location', new List<String>{
+        //        'Program_Filter', 'Location_Title', 'Location_Address', 'Building', 'School_Name'
+        //}, 'Filter searches with a like statement all of these items. (&filter= single or coma separated list of these items)'));
 
         //filter-Building
-        allOptions.add(makeOption('filter+building', getObjectItemList(Summit_Events__c.Building__c.getDescribe()), 'Filter searches with a like statement all of these items. (&filter= single or coma separated list of these items)'));
+        allOptions.add(makeOption('building', getObjectItemList(Summit_Events__c.Building__c.getDescribe()), 'Filter searches with a like statement all of these items. (&building= single or coma separated list of these items)'));
 
         //filter-School name
         //allOptions.add(makeOption('filter+school', CRUDtoDo.getSchools(), 'Filter searches with a like statement all of these items. (&filter= single or coma separated list of these items)'));
@@ -588,38 +566,4 @@ global with sharing class SummitEventsFeed {
         newOption.options = items;
         return newOption;
     }
-
-//    private without sharing class doCRUD {
-//        private List<String> getPrograms() {
-//            List<Major__c> allPrograms = [
-//                    SELECT Major_Display_Name__c, Prog_Major_Conc_Code__c, Program_Code__c, Status__c, Program_Offered__r.Degree_Level__c, College_School__c, Program_Offered__r.School__r. Name, Degree_Level__c
-//                    FROM Major__c
-//                    WHERE Status__c = 'Active'
-//                    AND (Display_on_RFI_UG__c = TRUE OR Display_on_RFI__c = TRUE)
-//                    ORDER BY Program_Offered__r.Degree_Level__c, Major_Display_Name__c
-//            ];
-//            List<String> allProgramsList = new List<String>();
-//            String programString = '';
-//            for (Major__c program : allPrograms) {
-//                programString = program.Prog_Major_Conc_Code__c;
-//                programString += ' = ' + program.Major_Display_Name__c;
-//                programString += ' - ' + program.Degree_Level__c;
-//                allProgramsList.add(programString);
-//            }
-//            return allProgramsList;
-//        }
-//
-//        private List<String> getSchools() {
-//            List<EnrollmentrxRx__School__c> allSchools = [
-//                    SELECT Id, Name, Active_Display_on_Portal__c
-//                    FROM EnrollmentrxRx__School__c
-//                    WHERE Active_Display_on_Portal__c = TRUE
-//            ];
-//            List<String> allSchoolsList = new List<String>();
-//            for (EnrollmentrxRx__School__c school : allSchools) {
-//                allSchoolsList.add(school. Name);
-//            }
-//            return allSchoolsList;
-//        }
 }
-

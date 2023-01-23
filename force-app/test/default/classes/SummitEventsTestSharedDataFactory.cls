@@ -278,7 +278,6 @@ public with sharing class SummitEventsTestSharedDataFactory {
             questionCount++;
             questions.add(question);
         }
-        System.debug(JSON.serializePretty(questions));
 
         insert questions;
         return questions;
@@ -430,6 +429,19 @@ public with sharing class SummitEventsTestSharedDataFactory {
         String h = EncodingUtil.convertToHex(b);
         String guid = h.substring(0, 8) + '-' + h.substring(8, 12) + '-' + h.substring(12, 16) + '-' + h.substring(16, 20) + '-' + h.substring(20);
         return guid;
+    }
+
+    public static List<String> getPicklistItems(String YourObjectName, String YourFieldName) {
+        List<String> picklists = new List<String>();
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace.toLowerCase() + '__';
+        }
+        List<Schema.PicklistEntry> PicklistValues = Schema.getGlobalDescribe().get(namespace + YourObjectName).getDescribe().fields.getMap().get(namespace + YourFieldName).getDescribe().getPicklistValues();
+        for (Schema.PicklistEntry PicklistValue : PicklistValues) {
+            picklists.add(PicklistValue.getValue());
+        }
+        return picklists;
     }
 
 }
