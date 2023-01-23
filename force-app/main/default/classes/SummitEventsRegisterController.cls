@@ -68,6 +68,22 @@ public with sharing class SummitEventsRegisterController {
             }
         }
 
+        //Set the default country if it is in settings and matches something in the global pick list
+        Summit_Events_Settings__c seaCustomSettings = Summit_Events_Settings__c.getOrgDefaults();
+        String defaultCountry = seaCustomSettings.Default_Country__c;
+        System.debug(defaultCountry);
+        if (String.isNotBlank(defaultCountry) && String.isBlank(eventRegistration.Registrant_Country__c)) {
+            System.debug('evaluating country');
+            List<SelectOption> getCountryDD = PickThePicklist('Summit_Events_Registration__c', 'Registrant_Country__c', false);
+            for (SelectOption selectOption : getCountryDD) {
+                if (selectOption.getLabel().equalsIgnoreCase(defaultCountry) || selectOption.getValue().equalsIgnoreCase(defaultCountry)) {
+                    eventRegistration.Registrant_Country__c = selectOption.getValue();
+                    break;
+                }
+            }
+        }
+        System.debug(eventRegistration.Registrant_Country__c);
+
         //Set applicant type if audience is passed
         registrantAudience = eventInformation.audience;
         if (!String.isBlank(registrantAudience)) {
@@ -138,10 +154,6 @@ public with sharing class SummitEventsRegisterController {
                 }
             }
 
-//            if (String.isBlank(eventRegistration.Registrant_Country__c)) {
-//                eventRegistration.Registrant_Country__c = 'United States';
-//            }
-
             if (String.isNotBlank(eventRegistration.Registrant_Applicant_Type__c)) {
                 applicantType = eventRegistration.Registrant_Applicant_Type__c;
             } else if (!String.isBlank(eventPage.Ask_Applicant_Type__c)) {
@@ -167,12 +179,10 @@ public with sharing class SummitEventsRegisterController {
 
                             eventPage.Include_Time_frame_List__c ||
                             eventPage.Allow_Other_Attendees__c ||
-                            (eventPage.Ask_Gender__c != 'Do not ask' && eventPage.Ask_Gender__c != null) ||
-                            (eventPage.Ask_Registrant_Program_Of_Interest__c != 'Do not ask' && eventPage.Ask_Registrant_Program_Of_Interest__c != null)
+                            (eventPage.Ask_Gender__c != 'Do not ask' && eventPage.Ask_Gender__c != null)
             ) {
                 additionalQuestions = true;
             }
-
 
             if (String.isNotBlank(eventPage.Location_Title__c)
                     || String.isNotBlank(evtInstance.Location_Title_Override__c)
@@ -330,14 +340,14 @@ public with sharing class SummitEventsRegisterController {
     }
 
     public List<SelectOption> getStateDD() {
-        System.debug(eventRegistration.Registrant_Country__c);
-        Map<String, String> dependencies = SeaShared.getDependentSelectOptions(namespace + 'Summit_Events_Registration__c', 'Registrant_Country__c', namespace + 'Registrant_State_Global__c', eventRegistration.Registrant_Country__c);
-        System.debug(dependencies);
         List<SelectOption> pickListItems = new List<SelectOption>();
-        if (dependencies.size() > 1) {
-            pickListItems.add(new SelectOption('', 'Select...'));
-            for (String item : dependencies.keySet()) {
-                pickListItems.add(new SelectOption(item, dependencies.get(item)));
+        if (String.isNotBlank(eventRegistration.Registrant_Country__c)) {
+            Map<String, String> dependencies = SeaShared.getDependentSelectOptions(namespace + 'Summit_Events_Registration__c', 'Registrant_Country__c', namespace + 'Registrant_State_Global__c', eventRegistration.Registrant_Country__c);
+            if (dependencies.size() > 1) {
+                pickListItems.add(new SelectOption('', 'Select...'));
+                for (String item : dependencies.keySet()) {
+                    pickListItems.add(new SelectOption(item, dependencies.get(item)));
+                }
             }
         }
         return pickListItems;
@@ -513,7 +523,7 @@ public with sharing class SummitEventsRegisterController {
     private without sharing class registrationCRUD {
 
         public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c eventRegistration, Id incomingEventRegistrationId, String registrantAudience, List<Summit_Events_Fee__c> upsertFees) {
-
+            System.debug(JSON.serializePretty(eventRegistration));
             try {
                 if (String.isNotBlank(incomingEventRegistrationId)) {
                     eventRegistration.Id = incomingEventRegistrationId;

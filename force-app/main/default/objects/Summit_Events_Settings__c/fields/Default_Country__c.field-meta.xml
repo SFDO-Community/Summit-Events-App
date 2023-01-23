@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Default_Country__c</fullName>
+    <description>Country to default in the Summit Events App when a registrant encounters the packaged country picklist during registration for an event. This value must match a value in the picklist. No value will default the country picklist to &quot;Select...&quot;</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Country to default in the Summit Events App when a registrant encounters the packaged country picklist during registration for an event. This value must match a value in the picklist. No value will default the country picklist to &quot;Select...&quot;</inlineHelpText>
+    <label>Default Country</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

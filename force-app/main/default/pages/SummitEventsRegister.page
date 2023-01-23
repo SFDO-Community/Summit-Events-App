@@ -633,13 +633,14 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                         </apex:outputLabel>
                                         <div class="slds-form-element__control">
                                             <div class="slds-select_container">
-                                                <apex:selectList value="{!eventRegistration.Registrant_Country__c}" size="1" id="country" multiselect="false" required="true" styleClass="slds-select" disabled="{!contactSet}" onChange="setCountrySetting(this.value)">
+                                                <apex:selectList value="{!eventRegistration.Registrant_Country__c}" size="1" id="country" multiselect="false" required="{!IF(CONTAINS(eventPage.Ask_Mailing_Address__c, 'require'), true, false)}" styleClass="slds-select" disabled="{!contactSet}" onChange="setCountrySetting(this.value)">
                                                     <apex:selectOptions value="{!countryDD}"/>
                                                 </apex:selectList>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
 
                                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_2-of-6">
                                     <div class="slds-form-element {!IF(eventPage.Ask_Mailing_Address__c == 'Ask and require', 'slds-is-required', '')}">
@@ -670,10 +671,10 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 </div>
 
                                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_2-of-6">
-                                    <div class="slds-form-element {!IF(eventPage.Ask_Mailing_Address__c == 'Ask and require', 'slds-is-required', '')}">
+                                    <div class="slds-form-element {!IF(eventPage.Ask_Mailing_Address__c == 'Ask and require' && stateDD.size > 0, 'slds-is-required', '')}">
                                         <apex:outputLabel for="state" styleClass="slds-form-element__label">
-                                            {!$ObjectType[namespace + 'Summit_Events_Registration__c'].fields['Registrant_State_Province__c'].Label}
-                                            <apex:outputText escape="false" rendered="{!IF(CONTAINS(eventPage.Ask_Mailing_Address__c, 'require'), true, false)}">
+                                            State/Province
+                                            <apex:outputText escape="false" rendered="{!IF(CONTAINS(eventPage.Ask_Mailing_Address__c, 'require') && stateDD.size > 0, true, false)}">
                                                 <abbr class="slds-required" title="required">*</abbr>
                                             </apex:outputText>
                                         </apex:outputLabel>
@@ -689,48 +690,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                         </div>
                                     </div>
                                 </div>
-
-
-                                <!--                                <apex:outputPanel layout="none" rendered="{!IF(eventRegistration.Registrant_Country__c != 'United States' && eventRegistration.Registrant_Country__c != 'Canada', true, false)}" styleClass="slds-grid slds-wrap" style="width:100%">-->
-
-                                <!--                                    <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_2-of-6">-->
-                                <!--                                        <div class="slds-form-element {!IF(eventPage.Ask_Mailing_Address__c == 'Ask and require', 'slds-is-required', '')}">-->
-                                <!--                                            <apex:outputLabel for="city2" styleClass="slds-form-element__label">-->
-                                <!--                                                City-->
-                                <!--                                                <apex:outputText escape="false" rendered="{!IF(CONTAINS(eventPage.Ask_Mailing_Address__c, 'require'), true, false)}">-->
-                                <!--                                                    <abbr class="slds-required" title="required">*</abbr>-->
-                                <!--                                                </apex:outputText>-->
-                                <!--                                            </apex:outputLabel>-->
-                                <!--                                            <div class="slds-form-element__control">-->
-                                <!--                                                <apex:inputText value="{!eventRegistration.Registrant_City__c}" id="city2" required="{!IF(CONTAINS(eventPage.Ask_Mailing_Address__c, 'require'), true, false)}" styleClass="slds-input {!IF(!contactSet,'required requiredText', '')} {!IF(contactSet, 'disable', '')}"/>-->
-                                <!--                                            </div>-->
-                                <!--                                        </div>-->
-                                <!--                                    </div>-->
-
-                                <!--                                    <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_2-of-6">-->
-                                <!--                                        <div class="slds-form-element {!IF(eventPage.Ask_Mailing_Address__c == 'Ask and require', 'slds-is-required', '')}">-->
-                                <!--                                            <apex:outputLabel for="stateProvince" styleClass="slds-form-element__label">-->
-                                <!--                                                State/Province-->
-                                <!--                                                <apex:outputText escape="false" rendered="{!IF(CONTAINS(eventPage.Ask_Mailing_Address__c, 'require'), true, false)}">-->
-                                <!--                                                    <abbr class="slds-required" title="required">*</abbr>-->
-                                <!--                                                </apex:outputText>-->
-                                <!--                                            </apex:outputLabel>-->
-                                <!--                                            <div class="slds-form-element__control">-->
-                                <!--                                                <apex:inputText value="{!eventRegistration.Registrant_State_Province__c}" id="stateProvince" required="false" styleClass="slds-input {!IF(contactSet, 'disable', '')}"/>-->
-                                <!--                                            </div>-->
-                                <!--                                        </div>-->
-                                <!--                                    </div>-->
-
-                                <!--                                    <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_2-of-6">-->
-                                <!--                                        <div class="slds-form-element">-->
-                                <!--                                            <apex:outputLabel value="Postal Code" for="postalCode" styleClass="slds-form-element__label"/>-->
-                                <!--                                            <div class="slds-form-element__control">-->
-                                <!--                                                <apex:inputText value="{!eventRegistration.Registrant_Postal_Code__c}" id="postalCode" required="false" styleClass="slds-input {!IF(contactSet, 'disable', '')}"/>-->
-                                <!--                                            </div>-->
-                                <!--                                        </div>-->
-                                <!--                                    </div>-->
-
-                                <!--                                </apex:outputPanel>-->
                             </apex:outputPanel>
                         </apex:outputPanel>
 
@@ -773,7 +732,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                             <!-- Free from additional questions as defined in event -->
                             <apex:repeat value="{!questionNum}" var="q">
-                                <apex:outputPanel layout="none" rendered="{!IF(!ISBLANK(eventPage['Add_Info_Question_Text_' + q + '__c']),true, false)}">
+                                <apex:outputPanel layout="none" rendered="{!IF((!ISBLANK(eventPage['Add_Info_Question_Text_' + q + '__c']) && (!ISBLANK(eventPage['Add_Info_Question_Type_' + q + '__c']))),true, false)}">
                                     <apex:variable var="isRequired" value="{!IF(CONTAINS(eventPage['Add_Info_Question_Type_' + q + '__c'],'required'),true, false)}"/>
                                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
 

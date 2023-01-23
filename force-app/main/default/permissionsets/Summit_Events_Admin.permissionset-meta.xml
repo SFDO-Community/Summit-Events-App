@@ -52,6 +52,10 @@
         <apexClass>SummitEventsSubmitController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <customSettingAccesses>
+        <enabled>true</enabled>
+        <name>Summit_Events_Settings__c</name>
+    </customSettingAccesses>
     <description>Full access to the Summit Events App</description>
     <fieldPermissions>
         <editable>true</editable>
