@@ -491,12 +491,13 @@ public with sharing class SummitEventsShared {
                 if (yearStart != yearEnd) {
                     instanceDate += ', ' + yearStart;
                 }
-                instanceDate += ', ' + timeStart + ' - ' + dayNameEnd + ', ' + monthEnd + ', ' + dayEnd + ', ' + timeEnd;
+                instanceDate += ', ' + timeStart + ' - ' + dayNameEnd + ', ' + monthEnd + ' ' + dayEnd + ', ';
                 if (yearStart == yearEnd) {
-                    instanceDate += ', ' + yearStart;
+                    instanceDate += yearStart;
                 } else {
-                    instanceDate += ', ' + yearEnd;
+                    instanceDate += yearEnd;
                 }
+                instanceDate += ', ' + timeEnd;
             } else {
                 instanceDate += ', ' + yearStart + ', ' + timeStart + ' - ' + timeEnd;
             }
