@@ -138,7 +138,7 @@ public with sharing class SummitEventsSubmitController {
                     WHERE Event_Registration__c = :eventInformation.registrationId
                     AND Chosen_State__c != 'Added but not shown'
                     WITH SECURITY_ENFORCED
-                    ORDER BY Appointment_Title__c
+                    ORDER BY Sort_Order__c
             ];
 
             /** Check for preexisting payment **/

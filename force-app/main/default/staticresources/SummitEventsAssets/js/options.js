@@ -131,7 +131,7 @@ appointmentsReady(() => {
 
                 if (App.querySelector(".appointmentCustomInput")) {
                     let inputType = App.querySelector(".appointmentCustomInput");
-                    desc += inputType.value = '';
+                    desc += inputType.value + '';
                 }
 
                 if (App.dataset.limit < 1) {
@@ -169,7 +169,6 @@ function populateAppJSON() {
         app['appSort'] = chosen.dataset.appsort;
         app['appInput'] = chosen.dataset.appinput;
         let appDesc = chosen.querySelector('.appointmentDesc');
-        appDesc = appDesc;
         if (appDesc) {
             app['appDesc'] = appDesc.textContent.replace(regExDouble, '\"').replace(regExSingle, '\'');
         }

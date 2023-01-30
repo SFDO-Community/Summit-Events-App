@@ -69,7 +69,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                              data-apptype="{!apt.appType}"
                                              data-apptitle="{!apt.appTitle}"
                                              data-appchosenstate="{!apt.appChosenState}"
-                                             data-appsort="{!apt.appSort}"
                                              data-appinput="{!apt.appInput}"
                                              data-limit="{!apt.appLimit}"
                                              class="slds-accordion__section appointment slds-box slds-box_small slds-m-vertical_x-small {!IF(apt.appRequired,'appointmentRequired','')}"
@@ -139,7 +138,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                 </apex:repeat>
                             </div>
-                            <apex:outputPanel rendered="{!requiredApp}" layout="inline" styleClass="requiredSelectionLabel">* Selection required.</apex:outputPanel>
+                            <apex:outputPanel rendered="{!requiredAppointments}" layout="inline" styleClass="requiredSelectionLabel">* Selection required.</apex:outputPanel>
                         </apex:outputPanel>
                         <apex:outputPanel layout="block" styleClass="slds-col slds-size_1-of-1 {!IF(!noOptionalAppointments, 'slds-medium-size_1-of-2 slds-large-size_1-of-2', '')} slds-p-vertical_x-small slds-p-vertical_xx-small">
                             <h4 class="slds-text-heading_medium slds-p-vertical_xx-small">Selected options</h4>
@@ -151,7 +150,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                          data-apptype="{!app.Appointment_Type__c}"
                                          data-apptitle="{!app.Appointment_Title__c}"
                                          data-appchosenstate="{!app.Chosen_State__c}"
-                                         data-appsort="{!app.Sort_Order__c}"
                                          data-appreginput="{!app.Registrant_Input__c}"
                                          class="appointmentChosen slds-box slds-box_small slds-m-vertical_x-small"
                                          style="{!IF(app.Chosen_State__c == 'Added but not show', 'display:none','')}">

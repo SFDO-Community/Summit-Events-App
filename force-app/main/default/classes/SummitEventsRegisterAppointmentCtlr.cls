@@ -5,22 +5,20 @@
 
 public with sharing class SummitEventsRegisterAppointmentCtlr {
     public SummitEventsShared seaShared = new SummitEventsShared();
-    public String test { get; set; }
     public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
-    public Map<Id, Summit_Events_Appointment_Type__c> apps { get; set; }
+    public Map<Id, Summit_Events_Appointment_Type__c> appointments { get; set; }
     public List<Summit_Events_Appointments__c> chosenApps { get; set; }
     public Summit_Events_Instance__c evtInstance { get; set; }
-    public String appointments { get; set; }
     public String incomingAppointmentJSON { get; set; }
     public Boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public String templateSelected { get; set; }
     public Boolean noOptionalAppointments { get; set; }
-    public Boolean requiredApp { get; set; }
+    public Boolean requiredAppointments { get; set; }
     public String formattedNavDate { get; set; }
     public List<incomingAppointments> allAvailableAppointments { get; set; }
-    public Map<String, PageReference> pageFlow {get;set;}
+    public Map<String, PageReference> pageFlow { get; set; }
 
     public class incomingAppointments {
         public String appId { get; set; }
@@ -35,12 +33,10 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         public Boolean appRequired { get; set; }
         public List<String> picklistItemList { get; set; }
     }
-    
+
     public SummitEventsRegisterAppointmentCtlr() {
         eventIsClosed = false;
-        test = '';
         eventInformation = seaShared.getSummitEventsInfo();
-        appointments = '';
         noOptionalAppointments = true;
 
         Map<String, Integer> appCount = new Map<String, Integer>();
@@ -80,7 +76,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     String dayOfWeek = seaShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
                     // = dayOfWeek;
                     //Build available appointments
-                    apps = new Map<Id, Summit_Events_Appointment_Type__c>([
+                    appointments = new Map<Id, Summit_Events_Appointment_Type__c>([
                             SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Appointment_Limits__c, Chosen_State__c,
                                     Registrant_Input__c, Custom_Picklist__c, Sort_Order__c, Auto_Confirm_Appointment__c, Auto_add_building__c, Auto_Add_Time__c, Do_Not_Show_Time__c,
                                     Date_Available_Start__c, Date_Available_End__c, Day_of_Week_Availability__c, Required_Appointment__c, Appointment_Type_Status__c
@@ -101,7 +97,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                     allAvailableAppointments = new List<incomingAppointments>();
 
-                    for (Summit_Events_Appointment_Type__c chosenCheck : apps.values()) {
+                    for (Summit_Events_Appointment_Type__c chosenCheck : appointments.values()) {
                         if (chosenCheck.Chosen_State__c != 'Added and Required' && chosenCheck.Chosen_State__c != 'Added but not shown') {
                             noOptionalAppointments = false;
                             break;
@@ -134,8 +130,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                 }
             }
 
-            requiredApp = false;
-            for (Summit_Events_Appointment_Type__c apt : apps.values()) {
+            requiredAppointments = false;
+            for (Summit_Events_Appointment_Type__c apt : appointments.values()) {
                 Integer appLimit = 1;
                 if (!String.isBlank(apt.Appointment_Limits__c)) {
                     appLimit = Integer.valueOf(apt.Appointment_Limits__c);
@@ -204,49 +200,48 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         ];
         doCRUD.deleteAppointments(deleteAppointments);
 
-        List<incomingAppointments> deserializedInvoices = (List<incomingAppointments>) JSON.deserialize(incomingAppointmentJSON, List<incomingAppointments>.class);
+        List<incomingAppointments> incomingAppointments = (List<incomingAppointments>) JSON.deserialize(incomingAppointmentJSON, List<incomingAppointments>.class);
 
         List<Summit_Events_Appointments__c> appointmentsToAdd = new List<Summit_Events_Appointments__c>();
-        for (incomingAppointments app : deserializedInvoices) {
-            Summit_Events_Appointments__c addApp = new Summit_Events_Appointments__c();
-            addApp.Event_Registration__c = eventInformation.registrationId;
-            addApp.Appointment_Status__c = 'Registered';
-            addApp.Client_Created_Appointment__c = true;
-            addApp.Event_Appointment_Type__c = app.appId;
-            Summit_Events_Appointment_Type__c appDefinition = apps.get(app.appId);
-            addApp.Chosen_State__c = app.appChosenState;
-            if (!String.isBlank(app.appCategory) && app.appCategory != 'null' && app.appCategory != 'undefined') {
-                addApp.Appointment_Category__c = app.appCategory;
+        for (incomingAppointments app : incomingAppointments) {
+
+            Summit_Events_Appointments__c addAppointment = new Summit_Events_Appointments__c();
+            addAppointment.Event_Registration__c = eventInformation.registrationId;
+            addAppointment.Appointment_Status__c = 'Registered';
+            addAppointment.Client_Created_Appointment__c = true;
+            addAppointment.Event_Appointment_Type__c = app.appId;
+            Summit_Events_Appointment_Type__c appDefinition = appointments.get(app.appId);
+
+            addAppointment.Chosen_State__c = app.appChosenState;
+            if (String.isNotBlank(app.appCategory) && app.appCategory != 'null' && app.appCategory != 'undefined') {
+                addAppointment.Appointment_Category__c = app.appCategory;
             }
-            if (!String.isBlank(app.appType) && app.appType != 'null' && app.appType != 'undefined') {
-                addApp.Appointment_Type__c = app.appType;
+            if (String.isNotBlank(app.appType) && app.appType != 'null' && app.appType != 'undefined') {
+                addAppointment.Appointment_Type__c = app.appType;
             }
-            addApp.Appointment_Title__c = app.appTitle;
-            if (app.appSort == null) {
-                addApp.Sort_Order__c = 99;
-            } else {
-                addApp.Sort_Order__c = Integer.valueOf(app.appSort);
-            }
+            addAppointment.Appointment_Title__c = app.appTitle;
+            addAppointment.Sort_Order__c = appDefinition.Sort_Order__c;
+
 
             //Auto add fields from appointment type as defined auto add
             //TODO: slim down on ui interface storing values and used app Type map ID to get them
             if (!String.isBlank(appDefinition.Auto_add_building__c)) {
-                addApp.Building__c = appDefinition.Auto_add_building__c;
+                addAppointment.Building__c = appDefinition.Auto_add_building__c;
             }
             if (appDefinition.Auto_Confirm_Appointment__c) {
-                addApp.Appointment_Status__c = 'Confirmed';
+                addAppointment.Appointment_Status__c = 'Confirmed';
             }
             if (appDefinition.Do_Not_Show_Time__c != null) {
-                addApp.Do_Not_Show_Time__c = appDefinition.Do_Not_Show_Time__c;
+                addAppointment.Do_Not_Show_Time__c = appDefinition.Do_Not_Show_Time__c;
             }
             if (appDefinition.Auto_Add_Time__c != null) {
-                addApp.Appointment_Time__c = appDefinition.Auto_Add_Time__c;
+                addAppointment.Appointment_Time__c = appDefinition.Auto_Add_Time__c;
             }
-            addApp.Description__c = app.appDesc;
-            if (String.isNotBlank(addApp.Registrant_Input__c)) {
-                addApp.Registrant_Input__c = app.appInput;
+            addAppointment.Description__c = app.appDesc;
+            if (String.isNotBlank(addAppointment.Registrant_Input__c)) {
+                addAppointment.Registrant_Input__c = app.appInput;
             }
-            appointmentsToAdd.add(addApp);
+            appointmentsToAdd.add(addAppointment);
         }
 
         if (appointmentsToAdd.size() > 0) {
