@@ -31,6 +31,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         public String appInput { get; set; }
         public Integer appLimit { get; set; }
         public Boolean appRequired { get; set; }
+        public Boolean inputRequired { get; set; }
         public List<String> picklistItemList { get; set; }
     }
 
@@ -152,6 +153,11 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                 addAppointment.appInput = apt.Registrant_Input__c;
                 addAppointment.appLimit = appLimit;
                 addAppointment.appRequired = apt.Required_Appointment__c;
+                addAppointment.inputRequired = false;
+
+                if (String.isNotBlank(apt.Registrant_Input__c) && apt.Registrant_Input__c.containsIgnoreCase('Required')) {
+                    addAppointment.inputRequired = true;
+                }
 
                 if (apt.Appointment_Category__c != null) {
                     Map<String, String> dependencies = seaShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', apt.Appointment_Category__c);
@@ -206,25 +212,13 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         for (incomingAppointments app : incomingAppointments) {
 
             Summit_Events_Appointments__c addAppointment = new Summit_Events_Appointments__c();
-            addAppointment.Event_Registration__c = eventInformation.registrationId;
-            addAppointment.Appointment_Status__c = 'Registered';
-            addAppointment.Client_Created_Appointment__c = true;
-            addAppointment.Event_Appointment_Type__c = app.appId;
+
+            //Get appointment type information to pass on to appointment from appointment map above
             Summit_Events_Appointment_Type__c appDefinition = appointments.get(app.appId);
-
-            addAppointment.Chosen_State__c = app.appChosenState;
-            if (String.isNotBlank(app.appCategory) && app.appCategory != 'null' && app.appCategory != 'undefined') {
-                addAppointment.Appointment_Category__c = app.appCategory;
-            }
-            if (String.isNotBlank(app.appType) && app.appType != 'null' && app.appType != 'undefined') {
-                addAppointment.Appointment_Type__c = app.appType;
-            }
-            addAppointment.Appointment_Title__c = app.appTitle;
+            addAppointment.Appointment_Type__c = appDefinition.Appointment_Type__c;
+            addAppointment.Appointment_Title__c = appDefinition.Title__c;
             addAppointment.Sort_Order__c = appDefinition.Sort_Order__c;
-
-
-            //Auto add fields from appointment type as defined auto add
-            //TODO: slim down on ui interface storing values and used app Type map ID to get them
+            addAppointment.Description__c = appDefinition.Description__c;
             if (!String.isBlank(appDefinition.Auto_add_building__c)) {
                 addAppointment.Building__c = appDefinition.Auto_add_building__c;
             }
@@ -237,7 +231,18 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             if (appDefinition.Auto_Add_Time__c != null) {
                 addAppointment.Appointment_Time__c = appDefinition.Auto_Add_Time__c;
             }
-            addAppointment.Description__c = app.appDesc;
+
+            //Set know states
+            addAppointment.Event_Registration__c = eventInformation.registrationId;
+            addAppointment.Appointment_Status__c = 'Registered';
+            addAppointment.Client_Created_Appointment__c = true;
+
+            //Get values passed in from page in JSON
+            addAppointment.Event_Appointment_Type__c = app.appId;
+            addAppointment.Chosen_State__c = app.appChosenState;
+            if (String.isNotBlank(app.appCategory) && app.appCategory != 'null' && app.appCategory != 'undefined') {
+                addAppointment.Appointment_Category__c = app.appCategory;
+            }
             if (String.isNotBlank(addAppointment.Registrant_Input__c)) {
                 addAppointment.Registrant_Input__c = app.appInput;
             }
@@ -245,7 +250,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         }
 
         if (appointmentsToAdd.size() > 0) {
-            doCRUD.updateAppointments(appointmentsToAdd);
+            doCRUD.insertAppointments(appointmentsToAdd);
         }
         return pageFlow.get('Next');
     }
@@ -264,7 +269,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
     private without sharing class crudToDo {
 
-        public void updateAppointments(List<Summit_Events_Appointments__c> appointments) {
+        public void insertAppointments(List<Summit_Events_Appointments__c> appointments) {
             try {
                 insert appointments;
             } catch (Exception ex) {

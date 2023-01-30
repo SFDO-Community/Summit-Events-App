@@ -124,6 +124,10 @@ appointmentsReady(() => {
                     App.classList.remove('slds-has-error');
                 }
 
+                if (App.classList.contains('general-error')) {
+                    App.classList.remove('general-error');
+                }
+
                 if (App.querySelector(".appointmentType")) {
                     let selType = App.querySelector(".appointmentType");
                     desc += selType.options[selType.selectedIndex].value = '';
@@ -156,31 +160,27 @@ function removeSelectedOption(removeButton) {
 
 
 function populateAppJSON() {
-    let jsonOut = [];
-    let chosen = document.getElementById('chosen');
-    chosen.querySelectorAll('.appointmentChosen').forEach(chosen => {
-        let app = {};
-        app['appId'] = chosen.dataset.appid;
-        app['appCategory'] = chosen.dataset.appcat;
-        app['appType'] = chosen.dataset.apptype;
-        app['appText'] = chosen.dataset.apptext;
-        app['appTitle'] = chosen.dataset.apptitle;
-        app['appChosenState'] = chosen.dataset.appchosenstate;
-        app['appSort'] = chosen.dataset.appsort;
-        app['appInput'] = chosen.dataset.appinput;
-        let appDesc = chosen.querySelector('.appointmentDesc');
-        if (appDesc) {
-            app['appDesc'] = appDesc.textContent.replace(regExDouble, '\"').replace(regExSingle, '\'');
-        }
-        jsonOut.push(app);
-    });
-    let pWithPad = document.createElement('p');
-    pWithPad.classList.add('slds-p-vertical_small');
-    let hiddenData = document.querySelectorAll('[id$=outgoingAppJSon]');
-    hiddenData.forEach(function (hidedata) {
-        hidedata.value = JSON.stringify(jsonOut);
-    });
-    return checkForRequiredAppointments();
+    let allAppGood = checkForRequiredAppointments();
+    if (allAppGood) {
+        let jsonOut = [];
+        let chosen = document.getElementById('chosen');
+        chosen.querySelectorAll('.appointmentChosen').forEach(chosen => {
+            let app = {};
+            app['appId'] = chosen.dataset.appid;
+            app['appCategory'] = chosen.dataset.appcat;
+            app['appText'] = chosen.dataset.apptext;
+            app['appChosenState'] = chosen.dataset.appchosenstate;
+            app['appInput'] = chosen.dataset.appinput;
+            jsonOut.push(app);
+        });
+        let pWithPad = document.createElement('p');
+        pWithPad.classList.add('slds-p-vertical_small');
+        let hiddenData = document.querySelectorAll('[id$=outgoingAppJSon]');
+        hiddenData.forEach(function (hidedata) {
+            hidedata.value = JSON.stringify(jsonOut);
+        });
+    }
+    return allAppGood;
 }
 
 function checkForRequiredAppointments() {
@@ -190,7 +190,7 @@ function checkForRequiredAppointments() {
     requiredAppointments.forEach(function (app) {
         if (window.getComputedStyle(app).display !== "none") {
             allAppGood = false;
-            app.classList.add('slds-has-error');
+            app.classList.add('general-error');
             if (!app.classList.contains('slds-is-open')) {
                 app.classList.add('slds-is-open');
             }

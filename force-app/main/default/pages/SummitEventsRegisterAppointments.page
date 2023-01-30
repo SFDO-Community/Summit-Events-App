@@ -47,12 +47,15 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             <apex:outputText value="{!eventPage.Event_Appointment_Title__c}"/>
                         </h2>
                     </div>
+
                     <!-- EVENT CLOSED MESSAGE -->
                     <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 regularLists" rendered="{!eventIsClosed}">
                         <p class="slds-text-body">
                             <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>
                         </p>
                     </apex:outputPanel>
+
+                    <!--Event is Open -->
                     <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
                         <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                             <p class="slds-text-body slds-p-vertical_xx-small regularLists">
@@ -66,8 +69,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                     <section id="{!apt.appId}" name="{!apt.appId}" data-appid="{!apt.appId}"
                                              data-appcat="{!apt.appCategory}"
-                                             data-apptype="{!apt.appType}"
-                                             data-apptitle="{!apt.appTitle}"
                                              data-appchosenstate="{!apt.appChosenState}"
                                              data-appinput="{!apt.appInput}"
                                              data-limit="{!apt.appLimit}"
@@ -87,7 +88,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                             </h3>
                                         </div>
                                         <div class="slds-accordion__content" id="accordion-details-01">
-                                            <div class="slds-form-element {!IF(apt.appRequired, 'slds-is-required','')}">
+                                            <div class="slds-form-element {!IF(apt.inputRequired, 'slds-is-required','')}">
                                                 <apex:outputPanel rendered="{!!ISBLANK(apt.appDesc)}" layout="none">
                                                     <label class="slds-form-element__label slds-text-body_regular slds-p-vertical_x-small regularLists" for="input{!apt.appId}">
                                                         <apex:outputText value="{!apt.appDesc}" escape="false"/>
@@ -147,8 +148,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     <div id="appt-{!app.Id}"
                                          data-appid="{!app.Event_Appointment_Type__c}"
                                          data-appcat="{!app.Appointment_Category__c}"
-                                         data-apptype="{!app.Appointment_Type__c}"
-                                         data-apptitle="{!app.Appointment_Title__c}"
                                          data-appchosenstate="{!app.Chosen_State__c}"
                                          data-appreginput="{!app.Registrant_Input__c}"
                                          class="appointmentChosen slds-box slds-box_small slds-m-vertical_x-small"
