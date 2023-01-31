@@ -82,7 +82,10 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#switch"></use>
                                                     </svg>
                                                     <span class="slds-truncate appointmentTitle" title="{!apt.appTitle}">
-                                                        {!apt.appTitle} {!IF(apt.appRequired, '*','')}
+                                                        {!apt.appTitle}
+                                                        <apex:outputPanel layout="none" rendered="{!apt.appRequired}">
+                                                            <abbr class="slds-required" title="required">*</abbr>
+                                                        </apex:outputPanel>
                                                     </span>
                                                 </button>
                                             </h3>

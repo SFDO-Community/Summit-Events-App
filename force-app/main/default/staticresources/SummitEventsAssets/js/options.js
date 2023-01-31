@@ -133,6 +133,10 @@ appointmentsReady(() => {
                     appointment.classList.remove('slds-has-error');
                 }
 
+                if (appointment.classList.contains('appointment-has-error')) {
+                    appointment.classList.remove('appointment-has-error');
+                }
+
                 if (appointment.querySelector(".appointmentType")) {
                     let selType = appointment.querySelector(".appointmentType");
                     registrantInput += selType.options[selType.selectedIndex].value = '';
@@ -195,7 +199,7 @@ function checkForRequiredAppointments() {
     requiredAppointments.forEach(function (app) {
         if (window.getComputedStyle(app).display !== "none") {
             allAppGood = false;
-            app.classList.add('slds-has-error');
+            app.classList.add('appointment-has-error');
             if (!app.classList.contains('slds-is-open')) {
                 app.classList.add('slds-is-open');
             }
