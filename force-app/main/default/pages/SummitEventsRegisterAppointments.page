@@ -21,7 +21,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
-                    <apex:messages />
+                    <apex:messages/>
                 </div>
 
                 <apex:form id="SummitEventsRegisterAppointmentsForm" styleClass="slds-grid slds-wrap">
@@ -90,8 +90,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                         <div class="slds-accordion__content" id="accordion-details-01">
                                             <div class="slds-form-element {!IF(apt.inputRequired, 'slds-is-required','')}">
                                                 <apex:outputPanel rendered="{!!ISBLANK(apt.appDesc)}" layout="none">
-                                                    <label class="slds-form-element__label slds-text-body_regular slds-p-vertical_x-small regularLists" for="input{!apt.appId}">
-                                                        <apex:outputText value="{!apt.appDesc}" escape="false"/>
+                                                    <label class="slds-form-element__label slds-text-body_regular slds-p-vertical_x-small regularLists appointmentDesc" for="input{!apt.appId}">
+                                                        <apex:outputText escape="false" value="{!apt.appDesc}"/>
                                                     </label>
                                                 </apex:outputPanel>
                                                 <div class="slds-form-element__control slds-p-vertical_x-small">
@@ -149,19 +149,30 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                          data-appid="{!app.Event_Appointment_Type__c}"
                                          data-appcat="{!app.Appointment_Category__c}"
                                          data-appchosenstate="{!app.Chosen_State__c}"
-                                         data-appreginput="{!app.Registrant_Input__c}"
+                                         data-appinput="{!app.Registrant_Input__c}"
                                          class="appointmentChosen slds-box slds-box_small slds-m-vertical_x-small"
-                                         style="{!IF(app.Chosen_State__c == 'Added but not show', 'display:none','')}">
-                                        <p class="appointmentTitle">{!app.Appointment_Title__c}</p>
+                                         style="{!IF(app.Chosen_State__c == 'Added but not shown', 'display:none','')}">
+                                        <div class="slds-text-heading_small slds-p-bottom_x-small">{!app.Appointment_Title__c}</div>
+
                                         <apex:outputPanel layout="none" rendered="{!!ISBLANK(app.Appointment_Type__c)}">
-                                            <p class="appointmentDesc">{!app.Appointment_Type__c}</p>
+                                            <div class="slds-text-body_regular appointmentDesc">{!app.Appointment_Type__c}</div>
                                         </apex:outputPanel>
+
                                         <apex:outputPanel layout="none" rendered="{!ISBLANK(app.Appointment_Type__c) && !ISBLANK(app.Description__c)}">
-                                            <p class="appointmentDesc">{!app.Description__c}</p>
+                                            <apex:outputPanel layout="none" rendered="{!!ISBLANK(app.Description__c)}">
+                                                <div class="slds-text-body_regular appointmentDesc">
+                                                    <apex:outputText escape="false" value="{!app.Description__c}"/>
+                                                </div>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel layout="none" rendered="{!!ISBLANK(app.Registrant_Input__c)}">
+                                                <div class="slds-text-body_regular slds-p-top_x-small">{!app.Registrant_Input__c}</div>
+                                            </apex:outputPanel>
                                         </apex:outputPanel>
-                                        <apex:outputPanel layout="none" rendered="{!app.Chosen_State__c != 'Added but not show' && app.Chosen_State__c != 'Added but not show'}">
-                                            <a href="javascript:;" class="appointmentRemove slds-button slds-button_neutral" title="Remove Appointment">Remove</a>
+
+                                        <apex:outputPanel layout="none" rendered="{!app.Chosen_State__c != 'Added but not shown' && app.Chosen_State__c != 'Added and Required'}">
+                                            <a href="javascript:;" class="appointmentRemove slds-button slds-button_neutral slds-m-top_small" title="Remove Appointment">Remove</a>
                                         </apex:outputPanel>
+
                                     </div>
                                 </apex:repeat>
                             </div>

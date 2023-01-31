@@ -396,11 +396,10 @@ public with sharing class SummitEventsShared {
         }
 
         Time compareCloseTime = System.now().time();
-        
+
         if (eventPage.Keep_Registration_Open_During_Event__c) {
-            if (evtInstance.Registration_Close_Date__c < compareCloseDate || 
-               (evtInstance.Registration_Close_Date__c == compareCloseDate && evtInstance.Registration_Close_Time__c <= compareCloseTime))
-            {
+            if (evtInstance.Registration_Close_Date__c < compareCloseDate ||
+                    (evtInstance.Registration_Close_Date__c == compareCloseDate && evtInstance.Registration_Close_Time__c <= compareCloseTime)) {
                 eventIsClosed = true;
             }
         } else if (evtInstance.Registration_Close_Date__c <= compareCloseDate) {
@@ -567,6 +566,14 @@ public with sharing class SummitEventsShared {
             }
         }
         return formatTime;
+    }
+
+    public String removeHTMLandEscape(String incomingString, Boolean escapeHTML) {
+        incomingString = incomingString.replaceAll('<[^>]+>', '').trim();
+        if (escapeHTML) {
+            incomingString = incomingString.escapeHtml4();
+        }
+        return incomingString;
     }
 
     //Method to test object and field availability for current user (Guest user)

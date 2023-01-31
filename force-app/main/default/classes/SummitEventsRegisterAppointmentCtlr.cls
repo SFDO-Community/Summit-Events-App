@@ -115,19 +115,19 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             WITH SECURITY_ENFORCED
                     ];
 
-
-                    for (Summit_Events_Appointments__c c : chosenApps) {
-
+                    //Add the chosen state appointments
+                    for (Integer x = 0; x < chosenApps.size(); x++) {
+                        chosenApps[x].Description__c = seaShared.removeHTMLandEscape(chosenApps[x].Description__c, false);
                         //Keep track of appointment ids to not show in available appointments later
-                        if (!String.isBlank(c.Event_Appointment_Type__c)) {
-                            if (!appCount.containsKey(c.Event_Appointment_Type__c)) {
-                                appCount.put(c.Event_Appointment_Type__c, 0);
+                        if (!String.isBlank(chosenApps[x].Event_Appointment_Type__c)) {
+                            if (!appCount.containsKey(chosenApps[x].Event_Appointment_Type__c)) {
+                                appCount.put(chosenApps[x].Event_Appointment_Type__c, 0);
                             }
-                            Integer increment = appCount.get(c.Event_Appointment_Type__c) + 1;
-                            appCount.put(c.Event_Appointment_Type__c, increment);
+                            Integer increment = appCount.get(chosenApps[x].Event_Appointment_Type__c) + 1;
+                            appCount.put(chosenApps[x].Event_Appointment_Type__c, increment);
                         }
-
                     }
+
                 }
             }
 
@@ -207,6 +207,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         doCRUD.deleteAppointments(deleteAppointments);
 
         List<incomingAppointments> incomingAppointments = (List<incomingAppointments>) JSON.deserialize(incomingAppointmentJSON, List<incomingAppointments>.class);
+        System.debug(JSON.serializePretty(incomingAppointments));
 
         List<Summit_Events_Appointments__c> appointmentsToAdd = new List<Summit_Events_Appointments__c>();
         for (incomingAppointments app : incomingAppointments) {
@@ -243,7 +244,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             if (String.isNotBlank(app.appCategory) && app.appCategory != 'null' && app.appCategory != 'undefined') {
                 addAppointment.Appointment_Category__c = app.appCategory;
             }
-            if (String.isNotBlank(addAppointment.Registrant_Input__c)) {
+            if (String.isNotBlank(app.appInput)) {
                 addAppointment.Registrant_Input__c = app.appInput;
             }
             appointmentsToAdd.add(addAppointment);

@@ -45,22 +45,22 @@ appointmentsReady(() => {
 
     //Initiate add buttons in chooser column
     chooser.querySelectorAll(".appointmentAdd").forEach(function (appButton) {
-        appButton.addEventListener("click", (addApp) => {
-            addApp.preventDefault();
-            let App = appButton.closest(".appointment");
+        appButton.addEventListener("click", (addAppointment) => {
+            addAppointment.preventDefault();
+            let appointment = appButton.closest(".appointment");
 
             //check for required fields
             let error = false;
-            let requiredInputs = App.querySelectorAll('.slds-is-required');
+            let requiredInputs = appointment.querySelectorAll('.slds-is-required');
             requiredInputs.forEach(function (reqs) {
                 let reqApp = reqs.closest(".appointment");
                 let incomingValue = '';
                 if (reqApp.querySelector(".appointmentType")) {
-                    let selType = App.querySelector(".appointmentType");
+                    let selType = appointment.querySelector(".appointmentType");
                     incomingValue = selType.options[selType.selectedIndex].value;
                 }
                 if (reqApp.querySelector(".appointmentCustomInput")) {
-                    let inputType = App.querySelector(".appointmentCustomInput");
+                    let inputType = appointment.querySelector(".appointmentCustomInput");
                     incomingValue = inputType.value;
                 }
                 if (!incomingValue) {
@@ -73,73 +73,78 @@ appointmentsReady(() => {
                 //move and adjust data
                 let chosenArea = document.getElementById("chosen");
 
-                let limit = App.dataset.limit;
+                let limit = appointment.dataset.limit;
 
-                addApp = document.createElement('div');
-                addApp.classList.add('slds-box', 'slds-box_small', 'slds-m-vertical_x-small', 'appointmentChosen');
-                Object.assign(addApp.dataset, App.dataset);
+                addAppointment = document.createElement('div');
+                addAppointment.classList.add('slds-box', 'slds-box_small', 'slds-m-vertical_x-small', 'appointmentChosen');
+                Object.assign(addAppointment.dataset, appointment.dataset);
+                addAppointment.classList.add('appointmentTitle', 'slds-text-body', 'slds-m-vertical_small');
 
-                let appTitle = document.createElement('p');
-                addApp.classList.add('appointmentTitle', 'slds-text-body', 'slds-m-vertical_small');
-                let findTitle = App.querySelector(".appointmentTitle");
+                let appTitle = document.createElement('div');
+                appTitle.classList.add('slds-text-heading_small', 'slds-p-bottom_x-small');
+                let findTitle = appointment.querySelector(".appointmentTitle");
                 appTitle.textContent = findTitle.textContent;
-                addApp.append(appTitle);
+                addAppointment.append(appTitle);
 
-                let desc = '';
-                if (App.querySelector(".appointmentType")) {
-                    let selType = App.querySelector(".appointmentType");
-                    desc += selType.options[selType.selectedIndex].value;
+                let appDescription = document.createElement('div');
+                appDescription.classList.add('slds-text-body_regular');
+                let findDescription = appointment.querySelector('.appointmentDesc');
+                appDescription.textContent = findDescription.textContent;
+                addAppointment.append(appDescription);
+
+                let registrantInput = '';
+                if (appointment.querySelector(".appointmentType")) {
+                    let selType = appointment.querySelector(".appointmentType");
+                    registrantInput += selType.options[selType.selectedIndex].value;
                 }
 
-                if (App.querySelector(".appointmentCustomInput")) {
-                    let inputType = App.querySelector(".appointmentCustomInput");
-                    desc += inputType.value;
+                if (appointment.querySelector(".appointmentCustomInput")) {
+                    let inputType = appointment.querySelector(".appointmentCustomInput");
+                    registrantInput += inputType.value;
                 }
 
-                if (desc) {
-                    desc = desc.replace(regExDouble, '\"').replace(regExSingle, '\'');
-                    let appDesc = document.createElement('p');
-                    appDesc.classList.add('appointmentDesc', 'slds-text-body', 'slds-p-vertical_small');
-                    appDesc.textContent = desc;
-                    addApp.append(appDesc);
+                if (registrantInput) {
+                    registrantInput = registrantInput.replace(regExDouble, '\"').replace(regExSingle, '\'');
+                    let appDesc = document.createElement('div');
+                    appDesc.classList.add('appointmentDesc', 'slds-text-body_regular', 'slds-p-top_x-small');
+                    appDesc.textContent = registrantInput;
+                    addAppointment.append(appDesc);
                 }
+
+                addAppointment.dataset.appinput = registrantInput;
 
                 //Create the remove button
                 let removeButton = document.createElement('a');
-                removeButton.classList.add('appointmentRemove', 'slds-button', 'slds-button_neutral');
+                removeButton.classList.add('appointmentRemove', 'slds-button', 'slds-button_neutral', 'slds-m-top_small');
                 removeButton.textContent = ' Remove ';
                 removeButton.addEventListener("click", function (evt) {
                     evt.preventDefault();
                     removeSelectedOption(removeButton)
                 });
-                addApp.appendChild(removeButton);
+                addAppointment.appendChild(removeButton);
 
-                addApp.id = 'app' + limit + '-' + App.id;
-                App.dataset.limit = String(limit - 1);
+                addAppointment.id = 'app' + limit + '-' + appointment.id;
+                appointment.dataset.limit = String(limit - 1);
 
-                chosenArea.append(addApp);
+                chosenArea.append(addAppointment);
 
                 //remove all values from hidden appointments.
-                if (App.classList.contains('slds-has-error')) {
-                    App.classList.remove('slds-has-error');
+                if (appointment.classList.contains('slds-has-error')) {
+                    appointment.classList.remove('slds-has-error');
                 }
 
-                if (App.classList.contains('general-error')) {
-                    App.classList.remove('general-error');
+                if (appointment.querySelector(".appointmentType")) {
+                    let selType = appointment.querySelector(".appointmentType");
+                    registrantInput += selType.options[selType.selectedIndex].value = '';
                 }
 
-                if (App.querySelector(".appointmentType")) {
-                    let selType = App.querySelector(".appointmentType");
-                    desc += selType.options[selType.selectedIndex].value = '';
+                if (appointment.querySelector(".appointmentCustomInput")) {
+                    let inputType = appointment.querySelector(".appointmentCustomInput");
+                    registrantInput += inputType.value + '';
                 }
 
-                if (App.querySelector(".appointmentCustomInput")) {
-                    let inputType = App.querySelector(".appointmentCustomInput");
-                    desc += inputType.value + '';
-                }
-
-                if (App.dataset.limit < 1) {
-                    App.style.display = "none";
+                if (appointment.dataset.limit < 1) {
+                    appointment.style.display = "none";
                 }
 
             }
@@ -190,7 +195,7 @@ function checkForRequiredAppointments() {
     requiredAppointments.forEach(function (app) {
         if (window.getComputedStyle(app).display !== "none") {
             allAppGood = false;
-            app.classList.add('general-error');
+            app.classList.add('slds-has-error');
             if (!app.classList.contains('slds-is-open')) {
                 app.classList.add('slds-is-open');
             }
