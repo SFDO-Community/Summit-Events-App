@@ -98,6 +98,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                     allAvailableAppointments = new List<incomingAppointments>();
 
+                    System.debug(JSON.serializePretty(appointments.values()));
+
                     for (Summit_Events_Appointment_Type__c chosenCheck : appointments.values()) {
                         if (chosenCheck.Chosen_State__c != 'Added and Required' && chosenCheck.Chosen_State__c != 'Added but not shown') {
                             noOptionalAppointments = false;
@@ -128,62 +130,64 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         }
                     }
 
-                }
-            }
+                    requiredAppointments = false;
+                    if (appointments.size() > 0) {
+                        for (Summit_Events_Appointment_Type__c apt : appointments.values()) {
+                            Integer appLimit = 1;
+                            if (!String.isBlank(apt.Appointment_Limits__c)) {
+                                appLimit = Integer.valueOf(apt.Appointment_Limits__c);
+                            }
+                            if (appCount.containsKey(apt.Id)) {
+                                appLimit = appLimit - (Integer.valueOf(appCount.get(apt.Id)));
+                            }
 
-            requiredAppointments = false;
-            for (Summit_Events_Appointment_Type__c apt : appointments.values()) {
-                Integer appLimit = 1;
-                if (!String.isBlank(apt.Appointment_Limits__c)) {
-                    appLimit = Integer.valueOf(apt.Appointment_Limits__c);
-                }
-                if (appCount.containsKey(apt.Id)) {
-                    appLimit = appLimit - (Integer.valueOf(appCount.get(apt.Id)));
-                }
+                            incomingAppointments addAppointment = new incomingAppointments();
 
-                incomingAppointments addAppointment = new incomingAppointments();
+                            addAppointment.appId = apt.Id;
+                            addAppointment.appCategory = apt.Appointment_Category__c;
+                            addAppointment.appType = apt.Appointment_Type__c;
+                            addAppointment.appTitle = apt.Title__c;
+                            addAppointment.appChosenState = apt.Chosen_State__c;
+                            addAppointment.appDesc = apt.Description__c;
+                            addAppointment.appSort = String.valueOf(apt.Sort_Order__c);
+                            addAppointment.appInput = apt.Registrant_Input__c;
+                            addAppointment.appLimit = appLimit;
+                            addAppointment.appRequired = apt.Required_Appointment__c;
+                            addAppointment.inputRequired = false;
 
-                addAppointment.appId = apt.Id;
-                addAppointment.appCategory = apt.Appointment_Category__c;
-                addAppointment.appType = apt.Appointment_Type__c;
-                addAppointment.appTitle = apt.Title__c;
-                addAppointment.appChosenState = apt.Chosen_State__c;
-                addAppointment.appDesc = apt.Description__c;
-                addAppointment.appSort = String.valueOf(apt.Sort_Order__c);
-                addAppointment.appInput = apt.Registrant_Input__c;
-                addAppointment.appLimit = appLimit;
-                addAppointment.appRequired = apt.Required_Appointment__c;
-                addAppointment.inputRequired = false;
+                            if (String.isNotBlank(apt.Registrant_Input__c) && apt.Registrant_Input__c.containsIgnoreCase('Required')) {
+                                addAppointment.inputRequired = true;
+                            }
 
-                if (String.isNotBlank(apt.Registrant_Input__c) && apt.Registrant_Input__c.containsIgnoreCase('Required')) {
-                    addAppointment.inputRequired = true;
-                }
+                            if (apt.Appointment_Category__c != null) {
+                                Map<String, String> dependencies = seaShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', apt.Appointment_Category__c);
+                                if (dependencies.size() > 1) {
+                                    List<String> pickListItems = new List<String>();
+                                    for (String item : dependencies.keySet()) {
+                                        pickListItems.add(dependencies.get(item));
+                                    }
+                                    addAppointment.picklistItemList = pickListItems;
+                                }
+                            }
 
-                if (apt.Appointment_Category__c != null) {
-                    Map<String, String> dependencies = seaShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', apt.Appointment_Category__c);
-                    if (dependencies.size() > 1) {
-                        List<String> pickListItems = new List<String>();
-                        for (String item : dependencies.keySet()) {
-                            pickListItems.add(dependencies.get(item));
+                            if (apt.Registrant_Input__c == 'Custom pick list') {
+                                if (!String.isBlank(apt.Custom_Picklist__c)) {
+                                    String custPickListText = apt.Custom_Picklist__c;
+                                    custPickListText = custPickListText.trim();
+                                    custPickListText = custPickListText.replace('\n\n', '\n');
+                                    String[] custPckListList = custPickListText.split('\n');
+                                    List<String> pickListItems = new List<String>();
+                                    for (String cp : custPckListList) {
+                                        pickListItems.add(cp.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', ''));
+                                    }
+                                    addAppointment.picklistItemList = pickListItems;
+                                }
+                            }
+                            allAvailableAppointments.add(addAppointment);
                         }
-                        addAppointment.picklistItemList = pickListItems;
                     }
-                }
 
-                if (apt.Registrant_Input__c == 'Custom pick list') {
-                    if (!String.isBlank(apt.Custom_Picklist__c)) {
-                        String custPickListText = apt.Custom_Picklist__c;
-                        custPickListText = custPickListText.trim();
-                        custPickListText = custPickListText.replace('\n\n', '\n');
-                        String[] custPckListList = custPickListText.split('\n');
-                        List<String> pickListItems = new List<String>();
-                        for (String cp : custPckListList) {
-                            pickListItems.add(cp.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', ''));
-                        }
-                        addAppointment.picklistItemList = pickListItems;
-                    }
                 }
-                allAvailableAppointments.add(addAppointment);
             }
         }
     }

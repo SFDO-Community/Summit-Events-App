@@ -505,7 +505,7 @@ public with sharing class SummitEventsRegisterController {
 
         eventInformation.registrationId = eventRegistration.Id;
 
-
+        String dayOfWeek = seaShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
         //Insert pre-chosen appointments for appointments page
         List<Summit_Events_Appointment_Type__c> autoAddAppt = [
                 SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Registrant_Input__c, Custom_Picklist__c, Appointment_Limits__c,
@@ -515,6 +515,10 @@ public with sharing class SummitEventsRegisterController {
                 AND (Chosen_State__c = 'Added' OR Chosen_State__c = 'Added and Required' OR Chosen_State__c = 'Added but not shown')
                 AND Id NOT IN (SELECT Event_Appointment_Type__c FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :eventInformation.registrationId)
                 AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null OR Restrict_To_Instance_Title__r.Instance_Title__c = '')
+                AND (Date_Available_Start__c <= :evtInstance.Instance_Start_Date__c OR Date_Available_Start__c = NULL)
+                AND (Date_Available_End__c >= :evtInstance.Instance_End_Date__c OR Date_Available_End__c = NULL)
+                AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
+                AND (Appointment_Type_Status__c = 'Active' OR Appointment_Type_Status__c = NULL)
                 ORDER BY Sort_Order__c ASC NULLS LAST
         ];
 
