@@ -109,6 +109,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                             <div class="slds-select_container">
                                                                 <apex:outputPanel layout="none" rendered="{!apt.appRequired}">
                                                                     <select class="appointmentType required slds-select slds-p-bottom_small" id="input{!apt.appId}" required="required" name="input{!apt.appId}">
+                                                                        <option value="">Select...</option>
                                                                         <apex:repeat var="pick" value="{!apt.picklistItemList}">
                                                                             <option value="{!pick}">{!pick}</option>
                                                                         </apex:repeat>
@@ -116,6 +117,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                                 </apex:outputPanel>
                                                                 <apex:outputPanel layout="none" rendered="{!!apt.appRequired}">
                                                                     <select class="appointmentType slds-select" id="input{!apt.appId}" name="input{!apt.appId}">
+                                                                        <option value="">Select...</option>
                                                                         <apex:repeat var="pick" value="{!apt.picklistItemList}">
                                                                             <option value="{!pick}">{!pick}</option>
                                                                         </apex:repeat>
