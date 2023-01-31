@@ -64,7 +64,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         WITH SECURITY_ENFORCED
                 ];
 
-                pageFlow = seaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage());
+                pageFlow = seaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage(), evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c);
 
                 if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
                     adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));

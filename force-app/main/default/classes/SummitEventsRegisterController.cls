@@ -73,7 +73,6 @@ public with sharing class SummitEventsRegisterController {
         String defaultCountry = seaCustomSettings.Default_Country__c;
         System.debug(defaultCountry);
         if (String.isNotBlank(defaultCountry) && String.isBlank(eventRegistration.Registrant_Country__c)) {
-            System.debug('evaluating country');
             List<SelectOption> getCountryDD = PickThePicklist('Summit_Events_Registration__c', 'Registrant_Country__c', false);
             for (SelectOption selectOption : getCountryDD) {
                 if (selectOption.getLabel().equalsIgnoreCase(defaultCountry) || selectOption.getValue().equalsIgnoreCase(defaultCountry)) {
@@ -143,7 +142,7 @@ public with sharing class SummitEventsRegisterController {
                     WITH SECURITY_ENFORCED
             ];
 
-            pageFlow = SeaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage());
+            pageFlow = SeaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage(), evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c);
             nextUrl = pageFlow.get('Next').getUrl().toLowerCase();
 
             if (String.isNotBlank(eventPage.Ask_Phone__c)) {
@@ -342,7 +341,7 @@ public with sharing class SummitEventsRegisterController {
     public List<SelectOption> getStateDD() {
         List<SelectOption> pickListItems = new List<SelectOption>();
         if (String.isNotBlank(eventRegistration.Registrant_Country__c)) {
-            Map<String, String> dependencies = SeaShared.getDependentSelectOptions(namespace + 'Summit_Events_Registration__c', 'Registrant_Country__c', namespace + 'Registrant_State_Global__c', eventRegistration.Registrant_Country__c);
+            Map<String, String> dependencies = SeaShared.getDependentSelectOptions('Summit_Events_Registration__c', 'Registrant_Country__c', 'Registrant_State_Global__c', eventRegistration.Registrant_Country__c);
             if (dependencies.size() > 1) {
                 pickListItems.add(new SelectOption('', 'Select...'));
                 for (String item : dependencies.keySet()) {
@@ -537,7 +536,7 @@ public with sharing class SummitEventsRegisterController {
             addAppt.Do_Not_Show_Time__c = appt.Do_Not_Show_Time__c;
             appointmentsToAdd.add(addAppt);
         }
-        if(appointmentsToAdd.size()>0) {
+        if (appointmentsToAdd.size() > 0) {
             rCRUD.insertAppointments(appointmentsToAdd);
         }
 

@@ -161,7 +161,7 @@ public with sharing class SummitEventsRegisterGuestsController {
 
             oldRegId = eventRegistration.Id;
             eventRegistration.Id = null;
-            pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage());
+            pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
             templateSelected = seaShared.getTemplate(eventPage.Template__c);
 
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {

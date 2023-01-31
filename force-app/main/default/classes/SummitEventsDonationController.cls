@@ -43,7 +43,7 @@ public with sharing class SummitEventsDonationController {
                     WITH SECURITY_ENFORCED
             ];
 
-            pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage());
+            pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
 
             templateSelected = seaShared.getTemplate(eventPage.Template__c);
 

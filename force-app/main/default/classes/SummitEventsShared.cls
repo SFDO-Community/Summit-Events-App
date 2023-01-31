@@ -34,7 +34,7 @@ public with sharing class SummitEventsShared {
         return templateName;
     }
 
-    public Map<String, PageReference> getPageFlow(Id eventId, String instanceTitle, PageReference currentPage) {
+    public Map<String, PageReference> getPageFlow(Id eventId, String instanceTitle, PageReference currentPage, Date startDate, Date endDate) {
 
         //Get the url without anchors
         String currentUrl = currentPage.getUrl();
@@ -62,6 +62,8 @@ public with sharing class SummitEventsShared {
         allPageReferences.put(namespace + 'SummitEventsSubmit', Page.SummitEventsSubmit);
         allPageReferences.put(namespace + 'SummitEventsConfirmation', Page.SummitEventsConfirmation);
 
+        String dayOfWeek = convertDateToDatetime(startDate, null, '').format('EEEE');
+
         Integer appointmentTypes = [
                 SELECT COUNT()
                 FROM Summit_Events_Appointment_Type__c
@@ -70,6 +72,10 @@ public with sharing class SummitEventsShared {
                 AND (
                         Restrict_To_Instance_Title__r.Instance_Title__c = :instanceTitle
                         OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
+                AND (Date_Available_Start__c <= :startDate OR Date_Available_Start__c = NULL)
+                AND (Date_Available_End__c >= :endDate OR Date_Available_End__c = NULL)
+                AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
+                AND (Appointment_Type_Status__c = 'Active' OR Appointment_Type_Status__c = NULL)
                 WITH SECURITY_ENFORCED
         ];
 
@@ -569,9 +575,11 @@ public with sharing class SummitEventsShared {
     }
 
     public String removeHTMLandEscape(String incomingString, Boolean escapeHTML) {
-        incomingString = incomingString.replaceAll('<[^>]+>', '').trim();
-        if (escapeHTML) {
-            incomingString = incomingString.escapeHtml4();
+        if(String.isNotBlank(incomingString)) {
+            incomingString = incomingString.replaceAll('<[^>]+>', '').trim();
+            if (escapeHTML) {
+                incomingString = incomingString.escapeHtml4();
+            }
         }
         return incomingString;
     }

@@ -84,7 +84,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             ];
 
             templateSelected = SeaShared.getTemplate(eventPage.Template__c);
-            pageFlow = SeaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage());
+            pageFlow = SeaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
             formattedNavDate = SeaShared.navBreadcrumbBuilder(eventInstance);
             instanceName = eventInstance.Name;
             startTimeString = SeaShared.formatTime(eventInstance.Instance_Start_Time__c, false);
