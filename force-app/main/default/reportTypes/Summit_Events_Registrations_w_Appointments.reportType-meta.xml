@@ -885,6 +885,11 @@ Does not require the Registration to have Appointments</description>
             <field>UG_Appointment_Category_Order__c</field>
             <table>Summit_Events_Registration__c.UG_Event_Appointments__r</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Appointment_Virtual_Meeting_URL__c</field>
+            <table>Summit_Events_Registration__c.UG_Event_Appointments__r</table>
+        </columns>
         <masterLabel>Summit Events Appointments</masterLabel>
     </sections>
 </ReportType>

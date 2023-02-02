@@ -111,6 +111,16 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Appointments__c.Appointment_Contact_Email__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Appointments__c.Appointment_Contact_Name__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Appointments__c.Appointment_Date_Time__c</field>
         <readable>true</readable>
@@ -157,6 +167,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Appointments__c.Appointment_Virtual_Meeting_URL__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Appointments__c.Building__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -173,6 +188,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Appointments__c.Client_Created_Appointment__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Appointments__c.Contact__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -193,6 +213,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Appointments__c.Event_Host__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Appointments__c.Event_Reg_ID__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
