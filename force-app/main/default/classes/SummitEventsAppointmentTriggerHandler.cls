@@ -28,7 +28,9 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                     SELECT Id, Name, Appointment_Time__c, Appointment_Time_Formatted__c, Event_Registration__r.Id, Event_Registration__r.Event_Name__c, Appointment_Status__c,
                             Faculty_Staff_Member__c, Appointment_Title__c, Event_Host__c, Host_Name__c, Event_Host__r.Assigned__c,
                             Host_Location__c, Building__c, Room__c, Event_Host__r.Time__c, Event_Host__r.Course_Name__c, Event_Host__r.RecordType.Name,
-                            Chosen_State__c, Description__c, Do_Not_Show_Time__c, Sort_Order__c, Appointment_Virtual_Meeting_URL__c
+                            Chosen_State__c, Description__c, Do_Not_Show_Time__c, Sort_Order__c, Appointment_Virtual_Meeting_URL__c,
+                            Event_Appointment_Type__r.Summit_Events__c, Appointment_Category__c, Appointment_Date__c, Appointment_Detail__c,
+                            Appointment_Type__c, Class_Title__c, Registrant_Input__c
                     FROM Summit_Events_Appointments__c
                     WHERE Event_Registration__r.Id IN :uniqueRegistrationIds
                     ORDER BY Appointment_Time__c ASC, Event_Host__r.Time__c ASC, Sort_Order__c, Appointment_Title__c ASC
@@ -51,7 +53,25 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
 
 
             if (allAppointments.size() > 0) {
+                List<String> packagedItineraryFields = new List<String>{
+                        'Appointment_Category__c', 'Appointment_Date__c', 'Appointment_Detail__c', 'Appointment_Time_Formatted__c', 'Appointment_Title__c',
+                        'Appointment_Type__c', 'Appointment_Virtual_Meeting_URL__c', 'Building__c', 'Class_Title__c', 'Description__c', 'Faculty_Staff_Member__c',
+                        'Host_Location__c', 'Host_Name__c', 'Registrant_Input__c', 'Room__c'
+                };
                 Map<Id, List<Summit_Events_Appointments__c>> appointmentListByRegistration = new Map<Id, List<Summit_Events_Appointments__c>>();
+                //Get event itinerary generating parameters
+                Set<Id> eventIds = new Set<Id>();
+                for (Summit_Events_Appointments__c appointment : allAppointments) {
+                    eventIds.add(appointment.Event_Appointment_Type__r.Summit_Events__c);
+                }
+                if (eventIds.size() > 0) {
+                    Map<Id, Summit_Events__c> eventItinerarySetup = new Map<Id, Summit_Events__c>([
+                            SELECT Id, Itinerary_Item_1__c
+                            FROM Summit_Events__c
+                            WHERE Id IN :eventIds
+                    ]);
+                }
+
                 for (Summit_Events_Appointments__c appointment : allAppointments) {
                     if (appointmentListByRegistration.containsKey(appointment.Event_Registration__r.Id)) {
                         List<Summit_Events_appointments__c> preexistingAppointments = appointmentListByRegistration.get(appointment.Event_Registration__c);
@@ -65,10 +85,10 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                     }
                 }
 
-                if(appointmentListByRegistration.size() > 0) {
+                if (appointmentListByRegistration.size() > 0) {
                     List<Summit_Events_Registration__c> registrationsWithItineraries = new List<Summit_Events_Registration__c>();
-                    for(List<Summit_Events_Appointments__c> registrationAppointments : appointmentListByRegistration.values()) {
-                        if (registrationAppointments.size() >0) {
+                    for (List<Summit_Events_Appointments__c> registrationAppointments : appointmentListByRegistration.values()) {
+                        if (registrationAppointments.size() > 0) {
                             Summit_Events_Registration__c registration = new Summit_Events_Registration__c();
                             registration.Id = registrationAppointments[0].Event_Registration__c;
                             String requestedAppointments = '';

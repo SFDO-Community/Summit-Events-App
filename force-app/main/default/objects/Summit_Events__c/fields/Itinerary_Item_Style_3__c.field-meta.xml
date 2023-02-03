@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Itinerary_Item_Style_3__c</fullName>
+    <description>Itinerary styles determine how the data will be presented. With a header the data will be presented in a table with the item title field showing as that header. With a bolded title</description>
+    <externalId>false</externalId>
+    <label>Itinerary Item Style 3</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Has table row header</fullName>
+                <default>false</default>
+                <label>Has table row header</label>
+            </value>
+            <value>
+                <fullName>Has bolded title</fullName>
+                <default>false</default>
+                <label>Has bolded title</label>
+            </value>
+            <value>
+                <fullName>Is appended to previous with dash</fullName>
+                <default>false</default>
+                <label>Is appended to previous with dash</label>
+            </value>
+            <value>
+                <fullName>Is appended to previous with line break</fullName>
+                <default>false</default>
+                <label>Is appended to previous with line break</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

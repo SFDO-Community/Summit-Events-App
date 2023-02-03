@@ -35,6 +35,14 @@
                 <behavior>Edit</behavior>
                 <field>Itinerary_Item_1__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Itinerary_Item_Style_1__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Itinerary_Table_Head_Or_Title_1__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
