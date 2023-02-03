@@ -6,7 +6,7 @@ The Summit Events App is a sustainable open source community events app that ser
 
 ## Documentation
 
-For project information, install instructions and documentation, please [visit our documentation site]([https://github.com/SFDO-Community/Summit-Events-App/wiki](https://sfdo-community-sprints.github.io/summit-events-app-documentation/))
+For project information, install instructions and documentation, please visit our [documentation site](https://sfdo-community-sprints.github.io/summit-events-app-documentation/).
 
 ## Installation
 [Install the Summit Events App managed package](https://install.salesforce.org/products/SummitEventsApp/latest)
