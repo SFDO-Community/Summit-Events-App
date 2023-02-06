@@ -98,8 +98,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                     allAvailableAppointments = new List<incomingAppointments>();
 
-                    System.debug(JSON.serializePretty(appointments.values()));
-
                     for (Summit_Events_Appointment_Type__c chosenCheck : appointments.values()) {
                         if (chosenCheck.Chosen_State__c != 'Added and Required' && chosenCheck.Chosen_State__c != 'Added but not shown') {
                             noOptionalAppointments = false;
@@ -211,7 +209,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         doCRUD.deleteAppointments(deleteAppointments);
 
         List<incomingAppointments> incomingAppointments = (List<incomingAppointments>) JSON.deserialize(incomingAppointmentJSON, List<incomingAppointments>.class);
-        System.debug(JSON.serializePretty(incomingAppointments));
 
         List<Summit_Events_Appointments__c> appointmentsToAdd = new List<Summit_Events_Appointments__c>();
         for (incomingAppointments app : incomingAppointments) {

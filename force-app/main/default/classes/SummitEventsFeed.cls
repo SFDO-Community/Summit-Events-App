@@ -160,8 +160,6 @@ global with sharing class SummitEventsFeed {
         formattedViewEnd = viewEnd.format('yyyy-MM-dd');
         eventQuery += ' AND Instance_Start_Date__c >= ' + formattedViewStart + ' ';
         eventQuery += ' AND Instance_Start_Date__c <= ' + formattedViewEnd + ' ';
-        System.debug(formattedViewStart);
-        System.debug(formattedViewEnd);
 
         //get event based on event id
         String eventId = req.params.get('eventId');
