@@ -65,7 +65,9 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                 System.debug(e.getMessage());
             }
 
+            System.debug(JSON.serializePretty(allAppointments));
             if (allAppointments.size() > 0) {
+
 
                 SummitEventsShared seaShared = new SummitEventsShared();
                 Map<Id, List<Summit_Events_Appointments__c>> appointmentListByRegistration = new Map<Id, List<Summit_Events_Appointments__c>>();
@@ -113,24 +115,23 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
 
                         String appointmentDisplayType = itineraryStyle.Itinerary_Display_Options__c;
 
-                        if (apt.Appointment_Status__c == 'Confirmed') {
+                        if (apt.Appointment_Status__c.equalsIgnoreCase('Confirmed')) {
                             for (Integer i = 1; i < 6; i++) {
 
                                 //Confirmed appointments styled by event definition
                                 String appointmentField = '';
                                 if (itineraryStyle.get(namespace + 'itinerary_Item_' + i + '__c') != null) {
-                                    confirmedAppointments = (String) itineraryStyle.get(namespace + 'itinerary_Item_' + i + '__c');
+                                    appointmentField = (String) itineraryStyle.get(namespace + 'itinerary_Item_' + i + '__c');
                                 }
 
                                 String appointmentLabel = '';
                                 if (itineraryStyle.get(namespace + 'Itinerary_Label_' + i + '__c') != null) {
-                                    confirmedAppointments = (String) itineraryStyle.get(namespace + 'Itinerary_Label_' + i + '__c');
+                                    appointmentLabel = (String) itineraryStyle.get(namespace + 'Itinerary_Label_' + i + '__c');
                                 }
 
                                 String fieldValue = '';
                                 if (String.isNotBlank(appointmentField) && apt.get(appointmentField) != null) {
                                     fieldValue = String.valueOf(apt.get(appointmentField));
-
                                 }
 
                                 if (String.isNotBlank(fieldValue) && String.isNotBlank(appointmentLabel)) {

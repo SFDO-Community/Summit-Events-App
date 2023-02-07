@@ -12,10 +12,10 @@ Created by Thaddaeus Dahlberg on 2/26/2019.
             <thead>
             <tr class="slds-line-height_reset">
                 <th class="" scope="col">
-                    Generated Itinerary
+                    Generated Itinerary (<a href="javascript:location.reload();">Refresh</a>)
                 </th>
                 <th class="" scope="col">
-                    Requested Appointments
+                    Requested Appointments (<a href="javascript:location.reload();">Refresh</a>)
                 </th>
             </tr>
             </thead>
