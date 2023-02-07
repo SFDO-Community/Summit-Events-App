@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Itinerary_Item_Style_1__c</fullName>
-    <description>Itinerary styles determine how the data will be presented. With a header the data will be presented in a table with the item title field showing as that header. With a bolded title</description>
+    <fullName>Itinerary_Display_Options__c</fullName>
+    <description>Relationship style of label to itinerary item information.</description>
     <externalId>false</externalId>
-    <label>Itinerary Item Style 1</label>
+    <inlineHelpText>Relationship style of label to itinerary item information.</inlineHelpText>
+    <label>Itinerary Display Options</label>
     <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
@@ -13,14 +14,14 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Has table row header</fullName>
+                <fullName>Labels as headers</fullName>
                 <default>false</default>
-                <label>Has table row header</label>
+                <label>Labels as headers</label>
             </value>
             <value>
-                <fullName>Has bolded title</fullName>
+                <fullName>Labels inline with colon</fullName>
                 <default>false</default>
-                <label>Has bolded title</label>
+                <label>Labels inline with colon</label>
             </value>
         </valueSetDefinition>
     </valueSet>

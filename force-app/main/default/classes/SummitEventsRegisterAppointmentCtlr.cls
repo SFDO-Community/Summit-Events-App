@@ -168,7 +168,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                                 }
                             }
 
-                            if (apt.Registrant_Input__c == 'Custom pick list') {
+                            if (apt.Registrant_Input__c == 'Custom pick list' || apt.Registrant_Input__c == 'Required custom pick list') {
                                 if (!String.isBlank(apt.Custom_Picklist__c)) {
                                     String custPickListText = apt.Custom_Picklist__c;
                                     custPickListText = custPickListText.trim();

@@ -53,6 +53,7 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                 query += appointmentFields + ' ';
                 query += 'FROM ' + namespace + 'Summit_Events_Appointments__c ';
                 query += 'WHERE ' + namespace + 'Event_Registration__r.Id IN :uniqueRegistrationIds ';
+                //TODO: Order by date before time
                 query += 'ORDER BY ' + namespace + 'Appointment_Time__c ASC, ';
                 query += namespace + 'Event_Host__r.' + namespace + 'Time__c ASC, ';
                 query += namespace + 'Sort_Order__c, ';
@@ -66,6 +67,7 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
 
             if (allAppointments.size() > 0) {
 
+                SummitEventsShared seaShared = new SummitEventsShared();
                 Map<Id, List<Summit_Events_Appointments__c>> appointmentListByRegistration = new Map<Id, List<Summit_Events_Appointments__c>>();
                 //Get event itinerary generating parameters
                 Set<Id> eventIds = new Set<Id>();
@@ -77,9 +79,8 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                 if (eventIds.size() > 0) {
                     eventItinerarySetup = new Map<Id, Summit_Events__c>([
                             SELECT Id, Itinerary_Item_1__c, Itinerary_Item_2__c, Itinerary_Item_3__c, Itinerary_Item_4__c, Itinerary_Item_5__c,
-                                    Itinerary_Item_Style_1__c, Itinerary_Item_Style_2__c, Itinerary_Item_Style_3__c, Itinerary_Item_Style_4__c, Itinerary_Item_Style_5__c,
-                                    Itinerary_Table_Head_Or_Title_1__c, Itinerary_Table_Head_Or_Title_2__c, Itinerary_Table_Head_Or_Title_3__c,
-                                    Itinerary_Table_Head_Or_Title_4__c, Itinerary_Table_Head_Or_Title_5__c
+                                    Itinerary_Label_1__c, Itinerary_Label_2__c, Itinerary_Label_3__c, Itinerary_Label_4__c, Itinerary_Label_5__c,
+                                    Itinerary_Display_Options__c
                             FROM Summit_Events__c
                             WHERE Id IN :eventIds
                     ]);
@@ -106,84 +107,69 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                     String requestedAppointments = '';
                     String confirmedAppointments = '';
 
-                    Boolean openTd = false;
-                    String tableHead = '';
-                    Boolean tableEvaluated = false;
-
                     for (Summit_Events_Appointments__c apt : apptList) {
 
                         Summit_Events__c itineraryStyle = eventItinerarySetup.get(apt.Event_Appointment_Type__r.Summit_Events__c);
 
-                        if (!tableEvaluated) {
+                        String appointmentDisplayType = itineraryStyle.Itinerary_Display_Options__c;
+
+                        if (apt.Appointment_Status__c == 'Confirmed') {
                             for (Integer i = 1; i < 6; i++) {
-                                if (itineraryStyle.get(namespace + 'itinerary_Item_Style_' + i + '__c') != null) {
-                                    String headerCheck = (String) itineraryStyle.get(namespace + 'itinerary_Item_Style_' + i + '__c');
-                                    if (headerCheck.equalsIgnoreCase('Has table row header')) {
-                                        String headText = '';
-                                        if (itineraryStyle.get(namespace + 'itinerary_Table_Head_Or_Title_' + i + '__c') != null) {
-                                            headText = (String) itineraryStyle.get(namespace + 'itinerary_Table_Head_Or_Title_' + i + '__c');
-                                        }
-                                        tableHead += '<th align="left" style="text-align:left; font-family:arial; font-size:12pt; color:#000000;">' + headText + '</th>';
+
+                                //Confirmed appointments styled by event definition
+                                String appointmentField = '';
+                                if (itineraryStyle.get(namespace + 'itinerary_Item_' + i + '__c') != null) {
+                                    confirmedAppointments = (String) itineraryStyle.get(namespace + 'itinerary_Item_' + i + '__c');
+                                }
+
+                                String appointmentLabel = '';
+                                if (itineraryStyle.get(namespace + 'Itinerary_Label_' + i + '__c') != null) {
+                                    confirmedAppointments = (String) itineraryStyle.get(namespace + 'Itinerary_Label_' + i + '__c');
+                                }
+
+                                String fieldValue = '';
+                                if (String.isNotBlank(appointmentField) && apt.get(appointmentField) != null) {
+                                    fieldValue = String.valueOf(apt.get(appointmentField));
+
+                                }
+
+                                if (String.isNotBlank(fieldValue) && String.isNotBlank(appointmentLabel)) {
+                                    if (appointmentDisplayType.equalsIgnoreCase('Labels as headers')) {
+                                        confirmedAppointments += '<b>' + appointmentLabel + '</b><br/>';
+                                    }
+
+                                    if (appointmentDisplayType.equalsIgnoreCase('Labels inline with colon')) {
+                                        confirmedAppointments += '<i><b>' + appointmentLabel + ': </b></i>';
                                     }
                                 }
+
+                                if (String.isNotBlank(fieldValue)) {
+                                    confirmedAppointments += fieldValue;
+                                }
+
+                                if (i == 5) {
+                                    confirmedAppointments += '<br/><br/>';
+                                }
                             }
-                            if (String.isNotBlank(tableHead)) {
-                                tableHead = '<tr>' + tableHead + '</tr>';
-                            }
-                            tableEvaluated = true;
                         }
 
-
-                        for (Integer i = 1; i < 6; i++) {
-
-                            String appointmentField = '';
-                            if (itineraryStyle.get(namespace + 'itinerary_Item_' + i + '__c') != null) {
-                                appointmentField = (String) itineraryStyle.get(namespace + 'itinerary_Item_' + i + '__c');
-                            }
-                            String appointmentStyle = '';
-                            if (itineraryStyle.get(namespace + 'itinerary_Item_Style_' + i + '__c') != null) {
-                                appointmentStyle = (String) itineraryStyle.get(namespace + 'itinerary_Item_Style_' + i + '__c');
-                            }
-                            String appointmentHead = '';
-                            if (itineraryStyle.get(namespace + 'itinerary_Table_Head_Or_Title_' + i + '__c') != null) {
-                                appointmentHead = (String) itineraryStyle.get(namespace + 'itinerary_Table_Head_Or_Title_' + i + '__c');
-                            }
-                            String fieldValue = '';
-                            if (apt.get(appointmentField) != null) {
-                                fieldValue = String.valueOf(apt.get(appointmentField));
-
-                            }
-
-                            if (appointmentStyle.equalsIgnoreCase('Has table row header')) {
-                                if (openTd) {
-                                    fieldValue = '</td><td style="vertical-align:top; text-align:left; font-family:arial,sans-serif; font-size:12pt; color:#000000; padding-top:5px; padding-bottom:10px; padding-left:15px;"> ' + fieldValue;
-                                } else {
-                                    fieldValue = '<td style="vertical-align:top; text-align:left; font-family:arial,sans-serif; font-size:12pt; color:#000000; padding-top:5px; padding-bottom:10px; padding-left:15px;"> ' + fieldValue;
-                                }
-                                openTd = true;
-                            }
-
-                            requestedAppointments += fieldValue;
-
-                            //Get field type to cast correctly
-//                            SObjectType r = ((SObject) (Type.forName('Schema.' + namespace + 'Summit_Events_Appointments__c').newInstance())).getSObjectType();
-//                            DescribeSObjectResult d = r.getDescribe();
-//                            Schema.DisplayType fieldDataType = d.fields.getMap().get(appointmentField).getDescribe().getType();
-                            if (i == 5 && String.isNotBlank(tableHead)) {
-                                if (openTd) {
-                                    requestedAppointments = requestedAppointments + '</td>';
-                                    openTd = false;
-                                }
-                                requestedAppointments = '<tr>' + requestedAppointments + '</tr>';
-                            }
+                        //Create requested itinerary
+                        String currentRegAppointment = '';
+                        if (String.isNotBlank(apt.Appointment_Title__c)) {
+                            currentRegAppointment += '<b>' + apt.Appointment_Title__c.trim() + '</b><br/>';
+                        }
+                        if (String.isNotBlank(apt.Description__c)) {
+                            currentRegAppointment += seaShared.removeHTMLandEscape(apt.Description__c, false).trim() + '<br/>';
+                        }
+                        if (String.isNotBlank(apt.Registrant_Input__c)) {
+                            currentRegAppointment += seaShared.removeHTMLandEscape(apt.Registrant_Input__c, false).trim() + '<br/>';
+                        }
+                        if (String.isNotBlank(currentRegAppointment)) {
+                            requestedAppointments += currentRegAppointment + '<br/>';
                         }
 
                     }
 
-
-                    if (String.isNotBlank(tableHead)) {
-                        requestedAppointments = '<table border="0" cellpadding="10" cellspacing="0">' + tableHead + requestedAppointments + '</table>';
-                    }
                     registration.Generated_Itinerary__c = confirmedAppointments;
                     registration.Generated_Requested_Appointments__c = requestedAppointments;
                     registrationsWithItineraries.add(registration);
@@ -194,173 +180,6 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                     CRUDtoDo.updateRegistration(registrationsWithItineraries);
                 }
 
-/*
-                // Generate itinaries
-                String generatedItinerary = '';
-                String generatedAppointment = '';
-                String tableHead = '';
-                String tableHead2 = '';
-                //Is there time in any of the itinerary so we should show the time column?
-                Boolean appointmentsHaveTime = false;
-                Boolean appointmentsHaveLocation = false;
-                Boolean appointmentsHaveHost = false;
-                Boolean appointmentsHaveMeet = false;
-
-                //Is there time in any of the itinerary so we should show the time column?
-
-                for (Summit_Events_Appointments__c appointmentTime : allAppointments) {
-                    if (!String.isBlank(appointmentTime.Appointment_Time_Formatted__c) && !appointmentTime.Do_Not_Show_Time__c) {
-                        appointmentsHaveTime = true;
-                    }
-                    if (!String.isBlank(appointmentTime.Building__c) ||
-                            !String.isBlank(appointmentTime.Room__c)) {
-                        appointmentsHaveLocation = true;
-                    }
-                    if (!String.isBlank(appointmentTime.Host_Name__c) || !String.isBlank(appointmentTime.Host_Location__c)) {
-                        appointmentsHaveHost = true;
-                    }
-                    if (!String.isBlank(appointmentTime.Appointment_Virtual_Meeting_URL__c)) {
-                        appointmentsHaveMeet = true;
-                    }
-                }
-
-
-                if (appointmentsHaveTime) {
-                    tableHead += '<th align="left" style="text-align:left; font-family:arial; font-size:12pt; color:#000000;">Time</th>';
-                }
-                tableHead += '<th align="left" style="text-align:left; font-family:arial; font-size:12pt; color:#000000;">Description</th>';
-                if (appointmentsHaveHost) {
-                    tableHead2 += '<th align="left" style="text-align:left; font-family:arial; font-size:12pt; color:#000000;">Host</th>';
-                }
-                if (appointmentsHaveMeet) {
-                    tableHead2 += '<th align="left" style="text-align:left; font-family:arial; font-size:12pt; color:#000000;">Meeting Link</th>';
-                }
-
-                if (appointmentsHaveLocation) {
-                    tableHead2 += '<th align="left" style="text-align:left; font-family:arial; font-size:12pt; color:#000000;">Location</th>';
-                }
-
-                String lastId = allAppointments[0].Id;
-                for (Integer i = 0; i < allAppointments.size(); i++) {
-
-                    // add all confirmed appointments
-                    if (allAppointments[i].Appointment_Status__c == 'Confirmed') {
-                        generatedItinerary += '<tr>';
-
-                        //Appointment Time
-                        if (appointmentsHaveTime) {
-                            generatedItinerary += '<td style="vertical-align:top; text-align:left; font-family:arial; font-size:12pt; color:#000000; padding-top:5px; padding-bottom:10px; padding-right:15px;">';
-                            if (!allAppointments[i].Do_Not_Show_Time__c) {
-                                if (!String.isBlank(allAppointments[i].Appointment_Time_Formatted__c)) {
-                                    generatedItinerary += allAppointments[i].Appointment_Time_Formatted__c.replace(' ', '&nbsp;');
-                                }
-                            }
-                            generatedItinerary += '</td>';
-                        }
-
-                        //Appointment Description
-                        generatedItinerary += '<td style="vertical-align:top; text-align:left; font-family:arial; font-size:12pt; padding-top:5px; padding-bottom:10px; color:#000000;">';
-                        generatedItinerary += allAppointments[i].Appointment_Title__c + ' - ';
-                        generatedItinerary = generatedItinerary.removeEnd(' - ');
-                        generatedItinerary += '</td>';
-
-                        //Appointment Meeting Link
-                        if (appointmentsHaveMeet) {
-                            generatedItinerary += '<td style="vertical-align:top; text-align:left; font-family:arial; font-size:12pt; padding-top:5px; padding-bottom:10px; color:#000000;">';
-                            generatedItinerary = generatedItinerary.removeEnd(' - ');
-                            generatedItinerary += '</td>';
-                        }
-
-                        //Appointment Host
-
-                        if (appointmentsHaveHost) {
-                            generatedItinerary += '<td style="vertical-align:top; text-align:left; font-family:arial; font-size:12pt; color:#000000; padding-top:5px; padding-bottom:10px; padding-left:15px;">';
-
-                            if (!String.isBlank(allAppointments[i].Event_Host__r.Course_Name__c)) {
-                                generatedItinerary += allAppointments[i].Event_Host__r.Course_Name__c + '<br/>';
-                            }
-                            if (!String.isBlank(allAppointments[i].Host_Name__c)) {
-                                generatedItinerary += allAppointments[i].Host_Name__c + '<br/>';
-                            }
-                            if (!String.isBlank(allAppointments[i].Host_Location__c)) {
-                                generatedItinerary += allAppointments[i].Host_Location__c + '<br/>';
-                            }
-                            generatedItinerary = generatedItinerary.removeEnd('<br/>');
-                            generatedItinerary = generatedItinerary += '</td>';
-                        }
-
-                        //Appointment Location
-                        if (appointmentsHaveLocation) {
-                            generatedItinerary += '<td style="vertical-align:top; text-align:left; font-family:arial; font-size:12pt; color:#000000; padding-top:5px; padding-bottom:10px; padding-left:15px;">';
-                            if (!String.isBlank(allAppointments[i].Building__c)) {
-                                generatedItinerary += allAppointments[i].Building__c + '<br/>';
-                            }
-                            if (!String.isBlank(allAppointments[i].Room__c)) {
-                                generatedItinerary += allAppointments[i].Room__c + '<br/>';
-                            }
-                            generatedItinerary = generatedItinerary.removeEnd('<br/>');
-                            generatedItinerary += '</td>';
-                        }
-
-                        generatedItinerary += '</tr>';
-                    }
-
-
-                    // add all requested appointments
-                    if (allAppointments[i].Chosen_State__c != 'Added but not shown') {
-                        generatedAppointment += '<tr>';
-
-                        if (appointmentsHaveTime) {
-                            generatedAppointment += '<td style="vertical-align:top; text-align:left; font-family:arial; font-size:12pt; color:#000000; padding-top:5px; padding-bottom:10px; padding-right:15px; ">';
-                            if (!allAppointments[i].Do_Not_Show_Time__c) {
-                                if (!String.isBlank(allAppointments[i].Appointment_Time_Formatted__c)) {
-                                    generatedAppointment += allAppointments[i].Appointment_Time_Formatted__c.replace(' ', '&nbsp;');
-                                }
-                            }
-                            generatedAppointment += '</td>';
-                        }
-
-                        //Appointment Description
-                        generatedAppointment += '<td style="vertical-align:top; text-align:left; font-family:arial; font-size:12pt; color:#000000;  padding-top:5px; padding-bottom:10px; ">';
-
-
-                        generatedAppointment += allAppointments[i].Appointment_Title__c;
-                        *//* + ' - ';
-                    if (!String.isBlank(AllAPpts[i].Description__c)) {
-                        generatedAppts += AllAPpts[i].Description__c + ' - ';
-                    }
-                    generatedAppts = generatedAppts.removeEnd(' - ');
-                    *//*
-
-
-                        generatedAppointment += '</td>';
-
-                        generatedAppointment += '</tr>';
-
-
-                        lastId = allAppointments[i].Event_Registration__r.Id;
-                    }
-
-                }
-
-
-                if (!String.isBlank(generatedItinerary)) {
-                    generatedItinerary = '<table border="0" cellpadding="10" cellspacing="0"><tr>' + tableHead + tableHead2 + '</tr>' + generatedItinerary + '</table>';
-                }
-
-                if (!String.isBlank(generatedAppointment)) {
-                    generatedAppointment = '<table>' + generatedAppointment + '</table>';
-                }
-
-                newItineraryRegs.add(new Summit_Events_Registration__c(Id = allAppointments[allAppointments.size() - 1].Event_Registration__r.Id, Generated_Itinerary__c = generatedItinerary, Generated_Requested_Appointments__c = generatedAppointment));
-            }
-
-            if (newItineraryRegs.size() > 0) {
-                doCRUD CRUDtoDo = new doCRUD();
-                CRUDtoDo.updateRegistration(newItineraryRegs);
-            }
-
-            */
             }
         }
 

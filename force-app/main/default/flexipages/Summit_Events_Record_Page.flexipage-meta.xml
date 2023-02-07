@@ -1417,18 +1417,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Itinerary_Item_Style_1__c</fieldItem>
-                <identifier>RecordItinerary_Item_Style_1_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Itinerary_Table_Head_Or_Title_1__c</fieldItem>
-                <identifier>RecordItinerary_Table_Head_Or_Title_1_cField</identifier>
+                <fieldItem>Record.Itinerary_Label_1__c</fieldItem>
+                <identifier>RecordItinerary_Label_1_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1447,18 +1437,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Itinerary_Item_Style_2__c</fieldItem>
-                <identifier>RecordItinerary_Item_Style_2_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Itinerary_Table_Head_Or_Title_2__c</fieldItem>
-                <identifier>RecordItinerary_Table_Head_Or_Title_2_cField</identifier>
+                <fieldItem>Record.Itinerary_Item_2__c</fieldItem>
+                <identifier>RecordItinerary_Item_2_cField2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1477,18 +1457,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Itinerary_Item_Style_3__c</fieldItem>
-                <identifier>RecordItinerary_Item_Style_3_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Itinerary_Table_Head_Or_Title_3__c</fieldItem>
-                <identifier>RecordItinerary_Table_Head_Or_Title_3_cField</identifier>
+                <fieldItem>Record.Itinerary_Label_3__c</fieldItem>
+                <identifier>RecordItinerary_Label_3_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-56ff8470-2573-47e4-9324-5b7b34412b50</name>
@@ -1511,18 +1481,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Itinerary_Item_Style_4__c</fieldItem>
-                <identifier>RecordItinerary_Item_Style_4_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Itinerary_Table_Head_Or_Title_4__c</fieldItem>
-                <identifier>RecordItinerary_Table_Head_Or_Title_4_cField</identifier>
+                <fieldItem>Record.Itinerary_Label_4__c</fieldItem>
+                <identifier>RecordItinerary_Label_4_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1541,8 +1501,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Itinerary_Item_Style_5__c</fieldItem>
-                <identifier>RecordItinerary_Item_Style_5_cField</identifier>
+                <fieldItem>Record.Itinerary_Label_5__c</fieldItem>
+                <identifier>RecordItinerary_Label_5_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1551,8 +1511,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Itinerary_Table_Head_Or_Title_5__c</fieldItem>
-                <identifier>RecordItinerary_Table_Head_Or_Title_5_cField</identifier>
+                <fieldItem>Record.Itinerary_Display_Options__c</fieldItem>
+                <identifier>RecordItinerary_Display_Options_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-f724d22e-c5f8-4d79-8d11-de7f1f594cb8</name>
