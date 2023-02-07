@@ -146,12 +146,12 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
 
                                 if (String.isNotBlank(fieldValue)) {
                                     confirmedAppointments += fieldValue;
-                                    if(!fieldValue.endsWithIgnoreCase('</p>')) {
+                                    if (!fieldValue.endsWithIgnoreCase('</p>')) {
                                         confirmedAppointments += '<br/>';
                                     }
                                 }
 
-                                if (i == 5) {
+                                if (i == 5 && String.isNotBlank(confirmedAppointments)) {
                                     confirmedAppointments += '<br/>';
                                 }
                             }
@@ -173,6 +173,8 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                         }
 
                     }
+                    confirmedAppointments = confirmedAppointments.removeEnd('<br/><br/>');
+                    requestedAppointments = requestedAppointments.removeEnd('<br/><br/>');
 
                     registration.Generated_Itinerary__c = confirmedAppointments;
                     registration.Generated_Requested_Appointments__c = requestedAppointments;
@@ -181,6 +183,7 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
 
                 if (registrationsWithItineraries.size() > 0) {
                     doCRUD CRUDtoDo = new doCRUD();
+                    System.debug(JSON.serializePretty(registrationsWithItineraries));
                     CRUDtoDo.updateRegistration(registrationsWithItineraries);
                 }
 
