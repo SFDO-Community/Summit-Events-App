@@ -146,10 +146,13 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
 
                                 if (String.isNotBlank(fieldValue)) {
                                     confirmedAppointments += fieldValue;
+                                    if(!fieldValue.endsWithIgnoreCase('</p>')) {
+                                        confirmedAppointments += '<br/>';
+                                    }
                                 }
 
                                 if (i == 5) {
-                                    confirmedAppointments += '<br/><br/>';
+                                    confirmedAppointments += '<br/>';
                                 }
                             }
                         }
