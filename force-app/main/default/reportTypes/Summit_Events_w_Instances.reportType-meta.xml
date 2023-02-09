@@ -775,6 +775,11 @@
             <field>Itinerary_Item_1__c</field>
             <table>Summit_Events__c</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Account__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
         <masterLabel>Summit Events</masterLabel>
     </sections>
     <sections>

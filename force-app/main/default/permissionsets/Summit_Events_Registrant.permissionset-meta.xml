@@ -1297,6 +1297,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Account__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.Add_Info_Question_Pick_List_1__c</field>
         <readable>true</readable>
     </fieldPermissions>
