@@ -107,7 +107,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                         <textarea required="required" class="appointmentCustomInput required slds-textarea"></textarea>
                                                     </apex:outputPanel>
 
-                                                    <apex:outputPanel layout="none" rendered="{!apt.appInput == 'Custom pick list' || pt.appInput == 'Required custom pick list' || !ISBLANK(apt.appCategory)}">
+                                                    <apex:outputPanel layout="none" rendered="{!apt.appInput == 'Custom pick list' || apt.appInput == 'Required custom pick list' || !ISBLANK(apt.appCategory)}">
                                                         <apex:outputPanel layout="none" rendered="{!apt.picklistItemList.size > 0}">
                                                             <div class="slds-select_container">
                                                                 <apex:outputPanel layout="none" rendered="{!apt.appRequired}">

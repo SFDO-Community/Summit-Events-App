@@ -86,11 +86,13 @@ appointmentsReady(() => {
                 appTitle.textContent = findTitle.textContent;
                 addAppointment.append(appTitle);
 
-                let appDescription = document.createElement('div');
-                appDescription.classList.add('slds-text-body_regular');
                 let findDescription = appointment.querySelector('.appointmentDesc');
-                appDescription.textContent = findDescription.textContent;
-                addAppointment.append(appDescription);
+                if (findDescription !== null) {
+                    let appDescription = document.createElement('div');
+                    appDescription.classList.add('slds-text-body_regular');
+                    appDescription.textContent = findDescription.textContent;
+                    addAppointment.append(appDescription);
+                }
 
                 let registrantInput = '';
                 if (appointment.querySelector(".appointmentType")) {

@@ -169,18 +169,19 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                                     addAppointment.picklistItemList = pickListItems;
                                 }
                             }
-
-                            if (apt.Registrant_Input__c == 'Custom pick list') {
-                                if (!String.isBlank(apt.Custom_Picklist__c)) {
-                                    String custPickListText = apt.Custom_Picklist__c;
-                                    custPickListText = custPickListText.trim();
-                                    custPickListText = custPickListText.replace('\n\n', '\n');
-                                    String[] custPckListList = custPickListText.split('\n');
-                                    List<String> pickListItems = new List<String>();
-                                    for (String cp : custPckListList) {
-                                        pickListItems.add(cp.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', ''));
+                            if (String.isNotBlank(apt.Registrant_Input__c)) {
+                                if (apt.Registrant_Input__c.equalsIgnoreCase('Custom pick list') || apt.Registrant_Input__c.equalsIgnoreCase('Required custom pick list')) {
+                                    if (String.isNotBlank(apt.Custom_Picklist__c)) {
+                                        String custPickListText = apt.Custom_Picklist__c;
+                                        custPickListText = custPickListText.trim();
+                                        custPickListText = custPickListText.replace('\n\n', '\n');
+                                        String[] custPckListList = custPickListText.split('\n');
+                                        List<String> pickListItems = new List<String>();
+                                        for (String cp : custPckListList) {
+                                            pickListItems.add(cp.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', ''));
+                                        }
+                                        addAppointment.picklistItemList = pickListItems;
                                     }
-                                    addAppointment.picklistItemList = pickListItems;
                                 }
                             }
                             allAvailableAppointments.add(addAppointment);
