@@ -55,14 +55,15 @@ appointmentsReady(() => {
             requiredInputs.forEach(function (reqs) {
                 let reqApp = reqs.closest(".appointment");
                 let incomingValue = '';
-                if (reqApp.querySelector(".appointmentType")) {
-                    let selType = appointment.querySelector(".appointmentType");
-                    incomingValue = selType.options[selType.selectedIndex].value;
-                }
-                if (reqApp.querySelector(".appointmentCustomInput")) {
+                //Check for select input first
+                if (reqApp.querySelector("select")) {
+                    let selType = appointment.querySelector("select");
+                    incomingValue = selType.value;
+                } else if (reqApp.querySelector(".appointmentCustomInput")) {
                     let inputType = appointment.querySelector(".appointmentCustomInput");
                     incomingValue = inputType.value;
                 }
+                incomingValue = incomingValue.trim();
                 if (!incomingValue) {
                     reqApp.classList.add('slds-has-error');
                     error = true;

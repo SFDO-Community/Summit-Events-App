@@ -161,8 +161,10 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                             if (apt.Appointment_Category__c != null) {
                                 Map<String, String> dependencies = seaShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', apt.Appointment_Category__c);
+                                List<String> pickListItems = new List<String>();
+
                                 if (dependencies.size() > 1) {
-                                    List<String> pickListItems = new List<String>();
+
                                     for (String item : dependencies.keySet()) {
                                         pickListItems.add(dependencies.get(item));
                                     }
