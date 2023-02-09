@@ -287,7 +287,7 @@ global with sharing class SummitEventsFeed {
                 evt.title += ' - ' + seaShared.removeHTMLandEscape(eventInstance.Instance_Title__c, true);
             }
 
-            if (!String.isBlank(eventInstance.Instance_Short_Description__c)) {
+            if (String.isNotBlank(eventInstance.Instance_Short_Description__c)) {
                 evt.instanceDesc = seaShared.removeHTMLandEscape(eventInstance.Instance_Short_Description__c, true);
             } else {
                 evt.instanceDesc = '';

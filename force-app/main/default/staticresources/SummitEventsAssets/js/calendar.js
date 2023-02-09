@@ -114,7 +114,7 @@ const initCalendar = function () {
                 url: rawEventData.eventUrl,
                 start: rawEventData.start.replace('Z', ''),
                 end: rawEventData.end.replace('Z', ''),
-                description: rawEventData.description,
+                description: rawEventData.instanceDesc ? rawEventData.instanceDesc : rawEventData.description,
                 className: rawEventData.className,
                 eventClosed: rawEventData.eventClosed.toString()
             };
