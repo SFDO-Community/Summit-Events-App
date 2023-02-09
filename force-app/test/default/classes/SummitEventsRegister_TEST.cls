@@ -17,8 +17,9 @@ private class SummitEventsRegister_TEST {
             ApexPages.currentPage().getParameters().put('adminopen', 'true');
             SummitEventsRegisterController registerController = new SummitEventsRegisterController();
             System.assert(registerController.getSexDD().size() > 0);
-            System.assert(registerController.getStateDD().size() > 0);
             System.assert(registerController.getCountryDD().size() > 0);
+            registerController.eventRegistration.Registrant_Country__c = 'Canada';
+            System.assert(registerController.getStateDD().size() > 0);
             System.assert(registerController.getTimeFrame().size() > 0);
             System.assert(registerController.getThirdPartyStatus().size() > 0);
             System.assert(registerController.getApplicantTypeDD().size() > 0);

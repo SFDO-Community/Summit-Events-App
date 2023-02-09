@@ -13,9 +13,10 @@
 .validationError, ul[role=alert] li {
     color: red !important;
 }
+
 .slds-notify_alert .validationError, ul[role=alert] li {
-    color:inherit!important;
-    font-weight: inherit!important;
+    color: inherit !important;
+    font-weight: inherit !important;
     font-size: 1.1em;
 }
 
@@ -54,6 +55,11 @@ textarea.input-textbox {
     resize: none;
     white-space: nowrap;
     overflow-x: hidden;
+}
+
+textarea {
+    width: 100%;
+    height: 75px;
 }
 
 #chosen .appointmentChosen p {
@@ -112,7 +118,7 @@ textarea.input-textbox {
     color: #fff;
 }
 
-.slds-has-error .selectableOL li {
+.slds-scope .slds-has-error .selectableOL li, .slds-scope .appointment-has-error {
     border: solid 1px red;
 }
 

@@ -70,7 +70,7 @@ public with sharing class SummitEventsSubmitController {
                     WITH SECURITY_ENFORCED
             ];
 
-            pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage());
+            pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
 
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
                 adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
@@ -133,13 +133,18 @@ public with sharing class SummitEventsSubmitController {
             }
 
             chosenAppointments = [
-                    SELECT Id, Appointment_Category__c, Event_Appointment_Type__c, Appointment_Type__c, Description__c, Appointment_Title__c, Chosen_State__c
+                    SELECT Id, Appointment_Category__c, Event_Appointment_Type__c, Appointment_Type__c, Description__c, Appointment_Title__c,
+                            Chosen_State__c, Registrant_Input__c
                     FROM Summit_Events_Appointments__c
                     WHERE Event_Registration__c = :eventInformation.registrationId
                     AND Chosen_State__c != 'Added but not shown'
                     WITH SECURITY_ENFORCED
-                    ORDER BY Appointment_Title__c
+                    ORDER BY Sort_Order__c
             ];
+
+            for(Integer x = 0; x < chosenAppointments.size(); x++) {
+                chosenAppointments[x].Description__c = seaShared.removeHTMLandEscape(chosenAppointments[x].Description__c, false);
+            }
 
             /** Check for preexisting payment **/
             List<Summit_Events_Payment__c> existingPayment = [

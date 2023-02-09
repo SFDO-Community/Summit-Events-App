@@ -2,7 +2,15 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Event_Registration_Date__c</fullName>
     <externalId>false</externalId>
-    <formula>TEXT(MONTH(Event_Registration__r.Event_Registration_Requested_Date__c))+&quot;/&quot; +TEXT(DAY(Event_Registration__r.Event_Registration_Requested_Date__c))+&quot;/&quot; +TEXT(YEAR(Event_Registration__r.Event_Registration_Requested_Date__c))</formula>
+    <formula>IF( NOT( ISBLANK(Event_Registration__r.Event_Registration_Requested_Date__c)),
+
+
+TEXT(MONTH(Event_Registration__r.Event_Registration_Requested_Date__c))+&quot;/&quot; +TEXT(DAY(Event_Registration__r.Event_Registration_Requested_Date__c))+&quot;/&quot; +TEXT(YEAR(Event_Registration__r.Event_Registration_Requested_Date__c)),
+
+TEXT(MONTH(DATEVALUE(Event_Registration__r.CreatedDate)))+&quot;/&quot; +TEXT(DAY(DATEVALUE(Event_Registration__r.CreatedDate)))+&quot;/&quot; +TEXT(YEAR(DATEVALUE(Event_Registration__r.CreatedDate)))
+ 
+
+)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Event Registration Date</label>
     <required>false</required>

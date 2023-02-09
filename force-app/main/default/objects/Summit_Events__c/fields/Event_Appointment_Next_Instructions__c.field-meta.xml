@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Appointment_Next_Instructions__c</fullName>
+    <defaultValue>&quot;Once you have made your selections click next.&quot;</defaultValue>
+    <description>Instructions that appear just before hitting the next button at the bottom of the page indicating this is when appointments are saved.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Instructions that appear just before hitting the next button at the bottom of the page indicating this is when appointments are saved.</inlineHelpText>
+    <label>Event Appointment Next Instructions</label>
+    <length>512</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>5</visibleLines>
+</CustomField>

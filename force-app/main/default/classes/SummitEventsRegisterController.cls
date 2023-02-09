@@ -73,7 +73,6 @@ public with sharing class SummitEventsRegisterController {
         String defaultCountry = seaCustomSettings.Default_Country__c;
         System.debug(defaultCountry);
         if (String.isNotBlank(defaultCountry) && String.isBlank(eventRegistration.Registrant_Country__c)) {
-            System.debug('evaluating country');
             List<SelectOption> getCountryDD = PickThePicklist('Summit_Events_Registration__c', 'Registrant_Country__c', false);
             for (SelectOption selectOption : getCountryDD) {
                 if (selectOption.getLabel().equalsIgnoreCase(defaultCountry) || selectOption.getValue().equalsIgnoreCase(defaultCountry)) {
@@ -143,7 +142,7 @@ public with sharing class SummitEventsRegisterController {
                     WITH SECURITY_ENFORCED
             ];
 
-            pageFlow = SeaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage());
+            pageFlow = SeaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage(), evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c);
             nextUrl = pageFlow.get('Next').getUrl().toLowerCase();
 
             if (String.isNotBlank(eventPage.Ask_Phone__c)) {
@@ -342,7 +341,7 @@ public with sharing class SummitEventsRegisterController {
     public List<SelectOption> getStateDD() {
         List<SelectOption> pickListItems = new List<SelectOption>();
         if (String.isNotBlank(eventRegistration.Registrant_Country__c)) {
-            Map<String, String> dependencies = SeaShared.getDependentSelectOptions(namespace + 'Summit_Events_Registration__c', 'Registrant_Country__c', namespace + 'Registrant_State_Global__c', eventRegistration.Registrant_Country__c);
+            Map<String, String> dependencies = SeaShared.getDependentSelectOptions('Summit_Events_Registration__c', 'Registrant_Country__c', 'Registrant_State_Global__c', eventRegistration.Registrant_Country__c);
             if (dependencies.size() > 1) {
                 pickListItems.add(new SelectOption('', 'Select...'));
                 for (String item : dependencies.keySet()) {
@@ -506,6 +505,46 @@ public with sharing class SummitEventsRegisterController {
 
         eventInformation.registrationId = eventRegistration.Id;
 
+        String dayOfWeek = seaShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
+        //Insert pre-chosen appointments for appointments page
+        List<Summit_Events_Appointment_Type__c> autoAddAppt = [
+                SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Registrant_Input__c, Custom_Picklist__c, Appointment_Limits__c,
+                        Chosen_State__c, Sort_Order__c, Auto_Confirm_Appointment__c, Auto_add_building__c, Auto_Add_Time__c, Do_Not_Show_Time__c
+                FROM Summit_Events_Appointment_Type__c
+                WHERE Summit_Events__c = :eventInformation.eventId
+                AND (Chosen_State__c = 'Added' OR Chosen_State__c = 'Added and Required' OR Chosen_State__c = 'Added but not shown')
+                AND Id NOT IN (SELECT Event_Appointment_Type__c FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :eventInformation.registrationId)
+                AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null OR Restrict_To_Instance_Title__r.Instance_Title__c = '')
+                AND (Date_Available_Start__c <= :evtInstance.Instance_Start_Date__c OR Date_Available_Start__c = NULL)
+                AND (Date_Available_End__c >= :evtInstance.Instance_End_Date__c OR Date_Available_End__c = NULL)
+                AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
+                AND (Appointment_Type_Status__c = 'Active' OR Appointment_Type_Status__c = NULL)
+                ORDER BY Sort_Order__c ASC NULLS LAST
+        ];
+
+        List<Summit_Events_Appointments__c> appointmentsToAdd = new List<Summit_Events_Appointments__c>();
+        for (Summit_Events_Appointment_Type__c appt : autoAddAppt) {
+            Summit_Events_Appointments__c addAppt = new Summit_Events_Appointments__c();
+            addAppt.Event_Appointment_Type__c = appt.Id;
+            addAppt.Event_Registration__c = eventInformation.registrationId;
+            addAppt.Appointment_Title__c = appt.Title__c;
+            addAppt.Appointment_Status__c = 'Registered';
+            addAppt.Appointment_Category__c = appt.Appointment_Category__c;
+            addAppt.Appointment_Type__c = appt.Appointment_Type__c;
+            addAppt.Appointment_Detail__c = appt.Description__c;
+            addAppt.Client_Created_Appointment__c = true;
+            addAppt.Chosen_State__c = appt.Chosen_State__c;
+            addAppt.Sort_Order__c = appt.Sort_Order__c;
+            addAppt.Description__c = appt.Description__c;
+            addAppt.Registrant_Input__c = appt.Registrant_Input__c;
+            addAppt.Do_Not_Show_Time__c = appt.Do_Not_Show_Time__c;
+            appointmentsToAdd.add(addAppt);
+        }
+        if (appointmentsToAdd.size() > 0) {
+            rCRUD.insertAppointments(appointmentsToAdd);
+        }
+
+
         optionPage = pageFlow.get('Next');
 
         return optionPage;
@@ -563,6 +602,14 @@ public with sharing class SummitEventsRegisterController {
                 delete deletableFees;
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
+            }
+        }
+
+        public void insertAppointments(List<Summit_Events_Appointments__c> appointments) {
+            try {
+                insert appointments;
+            } catch (Exception ex) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
         }
 

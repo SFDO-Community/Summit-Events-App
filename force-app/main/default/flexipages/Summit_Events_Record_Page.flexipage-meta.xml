@@ -1785,6 +1785,36 @@
                 <identifier>record_item_096</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Appointment_Unchosen_Label__c</fieldItem>
+                <identifier>RecordEvent_Appointment_Unchosen_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Appointment_Chosen_Label__c</fieldItem>
+                <identifier>RecordEvent_Appointment_Chosen_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Appointment_Next_Instructions__c</fieldItem>
+                <identifier>RecordEvent_Appointment_Next_Instructions_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-24795d7b-a1f2-4663-956d-4f3d23a64a82</name>
         <type>Facet</type>
     </flexiPageRegions>

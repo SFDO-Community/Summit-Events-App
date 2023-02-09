@@ -8,7 +8,7 @@
 global with sharing class SummitEventsFeed {
 
     private static String feedType { get; set; }
-    private static final SummitEventsShared SEShared = new SummitEventsShared();
+    private static final SummitEventsShared seaShared = new SummitEventsShared();
     private static Id recTypeId { get; set; }
     private static String namespace { get; set; }
 
@@ -273,24 +273,24 @@ global with sharing class SummitEventsFeed {
         for (Summit_Events_Instance__c eventInstance : EventInstanceList) {
             regDateOpenDate = Datetime.now().addDays(-1);
             if (eventInstance.Event__r.Close_Event_Days_Before__c != null && eventInstance.Event__r.Close_Event_Days_Before__c != 0) {
-                regDateOpenDate = SEShared.adjustForTimeZone(Datetime.now(), eventInstance.Instance_Time_Zone__c);
+                regDateOpenDate = seaShared.adjustForTimeZone(Datetime.now(), eventInstance.Instance_Time_Zone__c);
                 regDateOpenDate = regDateOpenDate.addDays((Integer.valueOf(eventInstance.Event__r.Close_Event_Days_Before__c) + 1));
             }
             eventItem evt = new eventItem();
             evt.ID = eventInstance.Id;
 
             if (eventInstance.Event__r.Event_Name__c != null) {
-                evt.title = removeHTMLandEscape(eventInstance.Event__r.Event_Name__c, true);
+                evt.title = seaShared.removeHTMLandEscape(eventInstance.Event__r.Event_Name__c, true);
             } else {
-                evt.title = removeHTMLandEscape(eventInstance.Event__r.Name, true);
+                evt.title = seaShared.removeHTMLandEscape(eventInstance.Event__r.Name, true);
             }
 
             if (eventInstance.Instance_Title__c != null) {
-                evt.title += ' - ' + removeHTMLandEscape(eventInstance.Instance_Title__c, true);
+                evt.title += ' - ' + seaShared.removeHTMLandEscape(eventInstance.Instance_Title__c, true);
             }
 
             if (!String.isBlank(eventInstance.Instance_Short_Description__c)) {
-                evt.instanceDesc = removeHTMLandEscape(eventInstance.Instance_Short_Description__c, true);
+                evt.instanceDesc = seaShared.removeHTMLandEscape(eventInstance.Instance_Short_Description__c, true);
             } else {
                 evt.instanceDesc = '';
             }
@@ -302,9 +302,9 @@ global with sharing class SummitEventsFeed {
 //            }
 
             if (String.isNotBlank(eventInstance.Feed_Registration_Button_Text_Override__c)) {
-                evt.feedButtonText = removeHTMLandEscape(eventInstance.Feed_Registration_Button_Text_Override__c, true);
+                evt.feedButtonText = seaShared.removeHTMLandEscape(eventInstance.Feed_Registration_Button_Text_Override__c, true);
             } else if (String.isNotBlank(eventInstance.Event__r.Feed_Registration_Button_Text__c)) {
-                evt.feedButtonText = removeHTMLandEscape(eventInstance.Event__r.Feed_Registration_Button_Text__c, true);
+                evt.feedButtonText = seaShared.removeHTMLandEscape(eventInstance.Event__r.Feed_Registration_Button_Text__c, true);
             } else {
                 evt.feedButtonText = 'Register';
             }
@@ -314,7 +314,7 @@ global with sharing class SummitEventsFeed {
             }
 
             if (String.isNotBlank(eventInstance.Location_Type_Override__c)) {
-                evt.locationType = removeHTMLandEscape(eventInstance.Location_Type_Override__c, true);
+                evt.locationType = seaShared.removeHTMLandEscape(eventInstance.Location_Type_Override__c, true);
             } else if (String.isNotBlank(eventInstance.Event__r.Location_Type__c)) {
                 evt.locationType = eventInstance.Event__r.Location_Type__c;
             } else {
@@ -334,7 +334,7 @@ global with sharing class SummitEventsFeed {
             }
 
             if (String.isNotBlank(eventInstance.Event__r.Event_Short_Listing_Description__c)) {
-                evt.description = removeHTMLandEscape(eventInstance.Event__r.Event_Short_Listing_Description__c, true);
+                evt.description = seaShared.removeHTMLandEscape(eventInstance.Event__r.Event_Short_Listing_Description__c, true);
             } else {
                 evt.description = '';
             }
@@ -358,18 +358,18 @@ global with sharing class SummitEventsFeed {
             }
 
             if (eventInstance.Instance_Start_Date__c != null) {
-                evt.start = SEShared.convertDateToDatetime(eventInstance.Instance_Start_Date__c, eventInstance.Instance_Start_Time__c, '');
+                evt.start = seaShared.convertDateToDatetime(eventInstance.Instance_Start_Date__c, eventInstance.Instance_Start_Time__c, '');
 
             }
             if (eventInstance.Instance_End_Date__c != null) {
-                evt.endDate = SEShared.convertDateToDatetime(eventInstance.Instance_End_Date__c, eventInstance.Instance_End_Time__c, '');
+                evt.endDate = seaShared.convertDateToDatetime(eventInstance.Instance_End_Date__c, eventInstance.Instance_End_Time__c, '');
             }
 
             if (String.isNotBlank(eventInstance.Event__r.Location_Title__c) || String.isNotBlank(eventInstance.Location_Title_Override__c)) {
                 if (String.isNotBlank(eventInstance.Location_Title_Override__c)) {
-                    evt.locationTitle = removeHTMLandEscape(eventInstance.Location_Title_Override__c, true);
+                    evt.locationTitle = seaShared.removeHTMLandEscape(eventInstance.Location_Title_Override__c, true);
                 } else {
-                    evt.locationTitle = removeHTMLandEscape(eventInstance.Event__r.Location_Title__c, true);
+                    evt.locationTitle = seaShared.removeHTMLandEscape(eventInstance.Event__r.Location_Title__c, true);
                 }
             } else {
                 evt.locationTitle = '';
@@ -377,9 +377,9 @@ global with sharing class SummitEventsFeed {
 
             if (String.isNotBlank(eventInstance.Event__r.Location_Address__c) || !String.isBlank(eventInstance.Location_Address_Override__c)) {
                 if (String.isNotBlank(eventInstance.Location_Address_Override__c)) {
-                    evt.locationAddress = removeHTMLandEscape(eventInstance.Location_Address_Override__c, true);
+                    evt.locationAddress = seaShared.removeHTMLandEscape(eventInstance.Location_Address_Override__c, true);
                 } else {
-                    evt.locationAddress = removeHTMLandEscape(eventInstance.Event__r.Location_Address__c, true);
+                    evt.locationAddress = seaShared.removeHTMLandEscape(eventInstance.Event__r.Location_Address__c, true);
                 }
             } else {
                 evt.locationAddress = '';
@@ -387,9 +387,9 @@ global with sharing class SummitEventsFeed {
 
             if (String.isNotBlank(eventInstance.Event__r.Location_Map_Link__c) || String.isNotBlank(eventInstance.Location_Map_Link_Override__c)) {
                 if (!String.isBlank(eventInstance.Location_Map_Link_Override__c)) {
-                    evt.locationMapLink = removeHTMLandEscape(eventInstance.Location_Map_Link_Override__c, false);
+                    evt.locationMapLink = seaShared.removeHTMLandEscape(eventInstance.Location_Map_Link_Override__c, false);
                 } else {
-                    evt.locationMapLink = removeHTMLandEscape(eventInstance.Event__r.Location_Map_Link__c, false);
+                    evt.locationMapLink = seaShared.removeHTMLandEscape(eventInstance.Event__r.Location_Map_Link__c, false);
                 }
             } else {
                 evt.locationMapLink = '';
@@ -406,9 +406,9 @@ global with sharing class SummitEventsFeed {
                 evt.eventClosed = false;
                 if (!String.isBlank(eventInstance.Event__r.Alternate_Registration_URL__c) || !String.isBlank(eventInstance.Alternate_Registration_URL_Override__c)) {
                     if (!String.isBlank(eventInstance.Alternate_Registration_URL_Override__c)) {
-                        evt.eventUrl = removeHTMLandEscape(eventInstance.Alternate_Registration_URL_Override__c, false);
+                        evt.eventUrl = seaShared.removeHTMLandEscape(eventInstance.Alternate_Registration_URL_Override__c, false);
                     } else {
-                        evt.eventUrl = removeHTMLandEscape(eventInstance.Event__r.Alternate_Registration_URL__c, false);
+                        evt.eventUrl = seaShared.removeHTMLandEscape(eventInstance.Event__r.Alternate_Registration_URL__c, false);
                     }
 
                 } else {
@@ -435,15 +435,6 @@ global with sharing class SummitEventsFeed {
         }
         return '';
     }
-
-    public static String removeHTMLandEscape(String incomingString, Boolean escapeHTML) {
-        incomingString = incomingString.replaceAll('<[^>]+>', '').trim();
-        if (escapeHTML) {
-            incomingString = incomingString.escapeHtml4();
-        }
-        return incomingString;
-    }
-
 
     private static String sanitizeOrLikeList(String items, String fieldsToCompare) {
         if (String.isNotBlank(items) && String.isNotBlank(fieldsToCompare)) {

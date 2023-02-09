@@ -5,22 +5,20 @@
 
 public with sharing class SummitEventsRegisterAppointmentCtlr {
     public SummitEventsShared seaShared = new SummitEventsShared();
-    public String test { get; set; }
     public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
-    public Map<Id, Summit_Events_Appointment_Type__c> apps { get; set; }
+    public Map<Id, Summit_Events_Appointment_Type__c> appointments { get; set; }
     public List<Summit_Events_Appointments__c> chosenApps { get; set; }
     public Summit_Events_Instance__c evtInstance { get; set; }
-    public String appointments { get; set; }
     public String incomingAppointmentJSON { get; set; }
     public Boolean eventIsClosed { get; set; }
     public Boolean adminOpen { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public String templateSelected { get; set; }
     public Boolean noOptionalAppointments { get; set; }
-    public Boolean requiredApp { get; set; }
+    public Boolean requiredAppointments { get; set; }
     public String formattedNavDate { get; set; }
     public List<incomingAppointments> allAvailableAppointments { get; set; }
-    public Map<String, PageReference> pageFlow {get;set;}
+    public Map<String, PageReference> pageFlow { get; set; }
 
     public class incomingAppointments {
         public String appId { get; set; }
@@ -33,14 +31,13 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         public String appInput { get; set; }
         public Integer appLimit { get; set; }
         public Boolean appRequired { get; set; }
+        public Boolean inputRequired { get; set; }
         public List<String> picklistItemList { get; set; }
     }
-    
+
     public SummitEventsRegisterAppointmentCtlr() {
         eventIsClosed = false;
-        test = '';
         eventInformation = seaShared.getSummitEventsInfo();
-        appointments = '';
         noOptionalAppointments = true;
 
         Map<String, Integer> appCount = new Map<String, Integer>();
@@ -49,7 +46,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             eventPage = [
                     SELECT Event_Name__c, Event_description__c, Event_Appointment_Title__c, Event_Appointment_Description__c, Event_Footer__c,
                             Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Options_Registration__c, Event_Full_Text__c,
-                            Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Display_Optional_Donation__c
+                            Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Display_Optional_Donation__c, Event_Appointment_Chosen_Label__c,
+                            Event_Appointment_Unchosen_Label__c, Event_Appointment_Next_Instructions__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -67,7 +65,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         WITH SECURITY_ENFORCED
                 ];
 
-                pageFlow = seaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage());
+                pageFlow = seaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage(), evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c);
 
                 if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
                     adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
@@ -80,7 +78,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     String dayOfWeek = seaShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
                     // = dayOfWeek;
                     //Build available appointments
-                    apps = new Map<Id, Summit_Events_Appointment_Type__c>([
+                    appointments = new Map<Id, Summit_Events_Appointment_Type__c>([
                             SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Appointment_Limits__c, Chosen_State__c,
                                     Registrant_Input__c, Custom_Picklist__c, Sort_Order__c, Auto_Confirm_Appointment__c, Auto_add_building__c, Auto_Add_Time__c, Do_Not_Show_Time__c,
                                     Date_Available_Start__c, Date_Available_End__c, Day_of_Week_Availability__c, Required_Appointment__c, Appointment_Type_Status__c
@@ -101,7 +99,9 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                     allAvailableAppointments = new List<incomingAppointments>();
 
-                    for (Summit_Events_Appointment_Type__c chosenCheck : apps.values()) {
+                    System.debug(JSON.serializePretty(appointments.values()));
+
+                    for (Summit_Events_Appointment_Type__c chosenCheck : appointments.values()) {
                         if (chosenCheck.Chosen_State__c != 'Added and Required' && chosenCheck.Chosen_State__c != 'Added but not shown') {
                             noOptionalAppointments = false;
                             break;
@@ -118,70 +118,80 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             WITH SECURITY_ENFORCED
                     ];
 
-
-                    for (Summit_Events_Appointments__c c : chosenApps) {
-
+                    //Add the chosen state appointments
+                    for (Integer x = 0; x < chosenApps.size(); x++) {
+                        chosenApps[x].Description__c = seaShared.removeHTMLandEscape(chosenApps[x].Description__c, false);
                         //Keep track of appointment ids to not show in available appointments later
-                        if (!String.isBlank(c.Event_Appointment_Type__c)) {
-                            if (!appCount.containsKey(c.Event_Appointment_Type__c)) {
-                                appCount.put(c.Event_Appointment_Type__c, 0);
+                        if (!String.isBlank(chosenApps[x].Event_Appointment_Type__c)) {
+                            if (!appCount.containsKey(chosenApps[x].Event_Appointment_Type__c)) {
+                                appCount.put(chosenApps[x].Event_Appointment_Type__c, 0);
                             }
-                            Integer increment = appCount.get(c.Event_Appointment_Type__c) + 1;
-                            appCount.put(c.Event_Appointment_Type__c, increment);
+                            Integer increment = appCount.get(chosenApps[x].Event_Appointment_Type__c) + 1;
+                            appCount.put(chosenApps[x].Event_Appointment_Type__c, increment);
                         }
-
                     }
-                }
-            }
 
-            requiredApp = false;
-            for (Summit_Events_Appointment_Type__c apt : apps.values()) {
-                Integer appLimit = 1;
-                if (!String.isBlank(apt.Appointment_Limits__c)) {
-                    appLimit = Integer.valueOf(apt.Appointment_Limits__c);
-                }
-                if (appCount.containsKey(apt.Id)) {
-                    appLimit = appLimit - (Integer.valueOf(appCount.get(apt.Id)));
-                }
+                    requiredAppointments = false;
+                    if (appointments.size() > 0) {
+                        for (Summit_Events_Appointment_Type__c apt : appointments.values()) {
+                            Integer appLimit = 1;
+                            if (!String.isBlank(apt.Appointment_Limits__c)) {
+                                appLimit = Integer.valueOf(apt.Appointment_Limits__c);
+                            }
+                            if (appCount.containsKey(apt.Id)) {
+                                appLimit = appLimit - (Integer.valueOf(appCount.get(apt.Id)));
+                            }
 
-                incomingAppointments addAppointment = new incomingAppointments();
+                            incomingAppointments addAppointment = new incomingAppointments();
 
-                addAppointment.appId = apt.Id;
-                addAppointment.appCategory = apt.Appointment_Category__c;
-                addAppointment.appType = apt.Appointment_Type__c;
-                addAppointment.appTitle = apt.Title__c;
-                addAppointment.appChosenState = apt.Chosen_State__c;
-                addAppointment.appDesc = apt.Description__c;
-                addAppointment.appSort = String.valueOf(apt.Sort_Order__c);
-                addAppointment.appInput = apt.Registrant_Input__c;
-                addAppointment.appLimit = appLimit;
-                addAppointment.appRequired = apt.Required_Appointment__c;
+                            addAppointment.appId = apt.Id;
+                            addAppointment.appCategory = apt.Appointment_Category__c;
+                            addAppointment.appType = apt.Appointment_Type__c;
+                            addAppointment.appTitle = apt.Title__c;
+                            addAppointment.appChosenState = apt.Chosen_State__c;
+                            addAppointment.appDesc = apt.Description__c;
+                            addAppointment.appSort = String.valueOf(apt.Sort_Order__c);
+                            addAppointment.appInput = apt.Registrant_Input__c;
+                            addAppointment.appLimit = appLimit;
+                            addAppointment.appRequired = apt.Required_Appointment__c;
+                            addAppointment.inputRequired = false;
 
-                if (apt.Appointment_Category__c != null) {
-                    Map<String, String> dependencies = seaShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', apt.Appointment_Category__c);
-                    if (dependencies.size() > 1) {
-                        List<String> pickListItems = new List<String>();
-                        for (String item : dependencies.keySet()) {
-                            pickListItems.add(dependencies.get(item));
+                            if (String.isNotBlank(apt.Registrant_Input__c) && apt.Registrant_Input__c.containsIgnoreCase('Required')) {
+                                addAppointment.inputRequired = true;
+                            }
+
+                            if (apt.Appointment_Category__c != null) {
+                                Map<String, String> dependencies = seaShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', apt.Appointment_Category__c);
+                                List<String> pickListItems = new List<String>();
+
+                                if (dependencies.size() > 1) {
+
+                                    for (String item : dependencies.keySet()) {
+                                        pickListItems.add(dependencies.get(item));
+                                    }
+                                    addAppointment.picklistItemList = pickListItems;
+                                }
+                            }
+                            if (String.isNotBlank(apt.Registrant_Input__c)) {
+                                if (apt.Registrant_Input__c.equalsIgnoreCase('Custom pick list') || apt.Registrant_Input__c.equalsIgnoreCase('Required custom pick list')) {
+                                    if (String.isNotBlank(apt.Custom_Picklist__c)) {
+                                        String custPickListText = apt.Custom_Picklist__c;
+                                        custPickListText = custPickListText.trim();
+                                        custPickListText = custPickListText.replace('\n\n', '\n');
+                                        String[] custPckListList = custPickListText.split('\n');
+                                        List<String> pickListItems = new List<String>();
+                                        for (String cp : custPckListList) {
+                                            pickListItems.add(cp.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', ''));
+                                        }
+                                        addAppointment.picklistItemList = pickListItems;
+                                    }
+                                }
+                            }
+                            allAvailableAppointments.add(addAppointment);
                         }
-                        addAppointment.picklistItemList = pickListItems;
                     }
-                }
 
-                if (apt.Registrant_Input__c == 'Custom pick list') {
-                    if (!String.isBlank(apt.Custom_Picklist__c)) {
-                        String custPickListText = apt.Custom_Picklist__c;
-                        custPickListText = custPickListText.trim();
-                        custPickListText = custPickListText.replace('\n\n', '\n');
-                        String[] custPckListList = custPickListText.split('\n');
-                        List<String> pickListItems = new List<String>();
-                        for (String cp : custPckListList) {
-                            pickListItems.add(cp.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', ''));
-                        }
-                        addAppointment.picklistItemList = pickListItems;
-                    }
                 }
-                allAvailableAppointments.add(addAppointment);
             }
         }
     }
@@ -204,53 +214,52 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         ];
         doCRUD.deleteAppointments(deleteAppointments);
 
-        List<incomingAppointments> deserializedInvoices = (List<incomingAppointments>) JSON.deserialize(incomingAppointmentJSON, List<incomingAppointments>.class);
+        List<incomingAppointments> incomingAppointments = (List<incomingAppointments>) JSON.deserialize(incomingAppointmentJSON, List<incomingAppointments>.class);
+        System.debug(JSON.serializePretty(incomingAppointments));
 
         List<Summit_Events_Appointments__c> appointmentsToAdd = new List<Summit_Events_Appointments__c>();
-        for (incomingAppointments app : deserializedInvoices) {
-            Summit_Events_Appointments__c addApp = new Summit_Events_Appointments__c();
-            addApp.Event_Registration__c = eventInformation.registrationId;
-            addApp.Appointment_Status__c = 'Registered';
-            addApp.Client_Created_Appointment__c = true;
-            addApp.Event_Appointment_Type__c = app.appId;
-            Summit_Events_Appointment_Type__c appDefinition = apps.get(app.appId);
-            addApp.Chosen_State__c = app.appChosenState;
-            if (!String.isBlank(app.appCategory) && app.appCategory != 'null' && app.appCategory != 'undefined') {
-                addApp.Appointment_Category__c = app.appCategory;
-            }
-            if (!String.isBlank(app.appType) && app.appType != 'null' && app.appType != 'undefined') {
-                addApp.Appointment_Type__c = app.appType;
-            }
-            addApp.Appointment_Title__c = app.appTitle;
-            if (app.appSort == null) {
-                addApp.Sort_Order__c = 99;
-            } else {
-                addApp.Sort_Order__c = Integer.valueOf(app.appSort);
-            }
+        for (incomingAppointments app : incomingAppointments) {
 
-            //Auto add fields from appointment type as defined auto add
-            //TODO: slim down on ui interface storing values and used app Type map ID to get them
+            Summit_Events_Appointments__c addAppointment = new Summit_Events_Appointments__c();
+
+            //Get appointment type information to pass on to appointment from appointment map above
+            Summit_Events_Appointment_Type__c appDefinition = appointments.get(app.appId);
+            addAppointment.Appointment_Type__c = appDefinition.Appointment_Type__c;
+            addAppointment.Appointment_Title__c = appDefinition.Title__c;
+            addAppointment.Sort_Order__c = appDefinition.Sort_Order__c;
+            addAppointment.Description__c = appDefinition.Description__c;
             if (!String.isBlank(appDefinition.Auto_add_building__c)) {
-                addApp.Building__c = appDefinition.Auto_add_building__c;
+                addAppointment.Building__c = appDefinition.Auto_add_building__c;
             }
             if (appDefinition.Auto_Confirm_Appointment__c) {
-                addApp.Appointment_Status__c = 'Confirmed';
+                addAppointment.Appointment_Status__c = 'Confirmed';
             }
             if (appDefinition.Do_Not_Show_Time__c != null) {
-                addApp.Do_Not_Show_Time__c = appDefinition.Do_Not_Show_Time__c;
+                addAppointment.Do_Not_Show_Time__c = appDefinition.Do_Not_Show_Time__c;
             }
             if (appDefinition.Auto_Add_Time__c != null) {
-                addApp.Appointment_Time__c = appDefinition.Auto_Add_Time__c;
+                addAppointment.Appointment_Time__c = appDefinition.Auto_Add_Time__c;
             }
-            addApp.Description__c = app.appDesc;
-            if (String.isNotBlank(addApp.Registrant_Input__c)) {
-                addApp.Registrant_Input__c = app.appInput;
+
+            //Set know states
+            addAppointment.Event_Registration__c = eventInformation.registrationId;
+            addAppointment.Appointment_Status__c = 'Registered';
+            addAppointment.Client_Created_Appointment__c = true;
+
+            //Get values passed in from page in JSON
+            addAppointment.Event_Appointment_Type__c = app.appId;
+            addAppointment.Chosen_State__c = app.appChosenState;
+            if (String.isNotBlank(app.appCategory) && app.appCategory != 'null' && app.appCategory != 'undefined') {
+                addAppointment.Appointment_Category__c = app.appCategory;
             }
-            appointmentsToAdd.add(addApp);
+            if (String.isNotBlank(app.appInput)) {
+                addAppointment.Registrant_Input__c = app.appInput;
+            }
+            appointmentsToAdd.add(addAppointment);
         }
 
         if (appointmentsToAdd.size() > 0) {
-            doCRUD.updateAppointments(appointmentsToAdd);
+            doCRUD.insertAppointments(appointmentsToAdd);
         }
         return pageFlow.get('Next');
     }
@@ -269,7 +278,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
     private without sharing class crudToDo {
 
-        public void updateAppointments(List<Summit_Events_Appointments__c> appointments) {
+        public void insertAppointments(List<Summit_Events_Appointments__c> appointments) {
             try {
                 insert appointments;
             } catch (Exception ex) {

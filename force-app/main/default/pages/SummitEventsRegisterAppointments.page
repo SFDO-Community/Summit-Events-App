@@ -47,12 +47,15 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             <apex:outputText value="{!eventPage.Event_Appointment_Title__c}"/>
                         </h2>
                     </div>
+
                     <!-- EVENT CLOSED MESSAGE -->
                     <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 regularLists" rendered="{!eventIsClosed}">
                         <p class="slds-text-body">
                             <apex:outputText escape="false" value="{!eventPage.Event_Full_Text__c}"/>
                         </p>
                     </apex:outputPanel>
+
+                    <!--Event is Open -->
                     <apex:outputPanel rendered="{!!eventIsClosed}" layout="none">
                         <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
                             <p class="slds-text-body slds-p-vertical_xx-small regularLists">
@@ -60,16 +63,13 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </p>
                         </div>
                         <apex:outputPanel layout="block" styleClass="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-vertical_x-small slds-p-vertical_xx-small slds-p-right_medium" rendered="{!!noOptionalAppointments}">
-                            <h4 class="slds-text-heading_medium slds-p-vertical_xx-small">Choose your options</h4>
+                            <h4 class="slds-text-heading_medium slds-p-vertical_xx-small appointmentsAvailableLabel">{!IF(ISBLANK(eventPage.Event_Appointment_Unchosen_Label__c), 'Choose your options', eventPage.Event_Appointment_Unchosen_Label__c)}</h4>
                             <div id="chooser">
                                 <apex:repeat value="{!allAvailableAppointments}" var="apt">
 
                                     <section id="{!apt.appId}" name="{!apt.appId}" data-appid="{!apt.appId}"
                                              data-appcat="{!apt.appCategory}"
-                                             data-apptype="{!apt.appType}"
-                                             data-apptitle="{!apt.appTitle}"
                                              data-appchosenstate="{!apt.appChosenState}"
-                                             data-appsort="{!apt.appSort}"
                                              data-appinput="{!apt.appInput}"
                                              data-limit="{!apt.appLimit}"
                                              class="slds-accordion__section appointment slds-box slds-box_small slds-m-vertical_x-small {!IF(apt.appRequired,'appointmentRequired','')}"
@@ -82,16 +82,19 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#switch"></use>
                                                     </svg>
                                                     <span class="slds-truncate appointmentTitle" title="{!apt.appTitle}">
-                                                        {!apt.appTitle} {!IF(apt.appRequired, '*','')}
+                                                        {!apt.appTitle}
+                                                        <apex:outputPanel layout="none" rendered="{!apt.appRequired}">
+                                                            <abbr class="slds-required" title="required">*</abbr>
+                                                        </apex:outputPanel>
                                                     </span>
                                                 </button>
                                             </h3>
                                         </div>
                                         <div class="slds-accordion__content" id="accordion-details-01">
-                                            <div class="slds-form-element {!IF(apt.appRequired, 'slds-is-required','')}">
+                                            <div class="slds-form-element {!IF(apt.inputRequired, 'slds-is-required','')}">
                                                 <apex:outputPanel rendered="{!!ISBLANK(apt.appDesc)}" layout="none">
-                                                    <label class="slds-form-element__label slds-text-body_regular slds-p-vertical_x-small regularLists" for="input{!apt.appId}">
-                                                        <apex:outputText value="{!apt.appDesc}" escape="false"/>
+                                                    <label class="slds-form-element__label slds-text-body_regular slds-p-vertical_x-small regularLists appointmentDesc" for="input{!apt.appId}">
+                                                        <apex:outputText escape="false" value="{!apt.appDesc}"/>
                                                     </label>
                                                 </apex:outputPanel>
                                                 <div class="slds-form-element__control slds-p-vertical_x-small">
@@ -104,11 +107,12 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                         <textarea required="required" class="appointmentCustomInput required slds-textarea"></textarea>
                                                     </apex:outputPanel>
 
-                                                    <apex:outputPanel layout="none" rendered="{!apt.appInput == 'Custom pick list' || pt.appInput == 'Required custom pick list' || !ISBLANK(apt.appCategory)}">
+                                                    <apex:outputPanel layout="none" rendered="{!apt.appInput == 'Custom pick list' || apt.appInput == 'Required custom pick list' || !ISBLANK(apt.appCategory)}">
                                                         <apex:outputPanel layout="none" rendered="{!apt.picklistItemList.size > 0}">
                                                             <div class="slds-select_container">
                                                                 <apex:outputPanel layout="none" rendered="{!apt.appRequired}">
                                                                     <select class="appointmentType required slds-select slds-p-bottom_small" id="input{!apt.appId}" required="required" name="input{!apt.appId}">
+                                                                        <option value=" ">Select...</option>
                                                                         <apex:repeat var="pick" value="{!apt.picklistItemList}">
                                                                             <option value="{!pick}">{!pick}</option>
                                                                         </apex:repeat>
@@ -116,6 +120,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                                 </apex:outputPanel>
                                                                 <apex:outputPanel layout="none" rendered="{!!apt.appRequired}">
                                                                     <select class="appointmentType slds-select" id="input{!apt.appId}" name="input{!apt.appId}">
+                                                                        <option value=" ">Select...</option>
                                                                         <apex:repeat var="pick" value="{!apt.picklistItemList}">
                                                                             <option value="{!pick}">{!pick}</option>
                                                                         </apex:repeat>
@@ -139,39 +144,47 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                                 </apex:repeat>
                             </div>
-                            <apex:outputPanel rendered="{!requiredApp}" layout="inline" styleClass="requiredSelectionLabel">* Selection required.</apex:outputPanel>
+                            <apex:outputPanel rendered="{!requiredAppointments}" layout="inline" styleClass="requiredSelectionLabel">* Selection required.</apex:outputPanel>
                         </apex:outputPanel>
                         <apex:outputPanel layout="block" styleClass="slds-col slds-size_1-of-1 {!IF(!noOptionalAppointments, 'slds-medium-size_1-of-2 slds-large-size_1-of-2', '')} slds-p-vertical_x-small slds-p-vertical_xx-small">
-                            <h4 class="slds-text-heading_medium slds-p-vertical_xx-small">Selected options</h4>
+                            <h4 class="slds-text-heading_medium slds-p-vertical_xx-small appointmentSelectedLabel">{!IF(ISBLANK(eventPage.Event_Appointment_Chosen_Label__c), 'Selected options', eventPage.Event_Appointment_Chosen_Label__c)}</h4>
                             <div id="chosen">
                                 <apex:repeat value="{!chosenApps}" var="app">
                                     <div id="appt-{!app.Id}"
                                          data-appid="{!app.Event_Appointment_Type__c}"
                                          data-appcat="{!app.Appointment_Category__c}"
-                                         data-apptype="{!app.Appointment_Type__c}"
-                                         data-apptitle="{!app.Appointment_Title__c}"
                                          data-appchosenstate="{!app.Chosen_State__c}"
-                                         data-appsort="{!app.Sort_Order__c}"
-                                         data-appreginput="{!app.Registrant_Input__c}"
+                                         data-appinput="{!app.Registrant_Input__c}"
                                          class="appointmentChosen slds-box slds-box_small slds-m-vertical_x-small"
-                                         style="{!IF(app.Chosen_State__c == 'Added but not show', 'display:none','')}">
-                                        <p class="appointmentTitle">{!app.Appointment_Title__c}</p>
+                                         style="{!IF(app.Chosen_State__c == 'Added but not shown', 'display:none','')}">
+                                        <div class="slds-text-heading_small slds-p-bottom_x-small">{!app.Appointment_Title__c}</div>
+
                                         <apex:outputPanel layout="none" rendered="{!!ISBLANK(app.Appointment_Type__c)}">
-                                            <p class="appointmentDesc">{!app.Appointment_Type__c}</p>
+                                            <div class="slds-text-body_regular appointmentDesc">{!app.Appointment_Type__c}</div>
                                         </apex:outputPanel>
+
                                         <apex:outputPanel layout="none" rendered="{!ISBLANK(app.Appointment_Type__c) && !ISBLANK(app.Description__c)}">
-                                            <p class="appointmentDesc">{!app.Description__c}</p>
+                                            <apex:outputPanel layout="none" rendered="{!!ISBLANK(app.Description__c)}">
+                                                <div class="slds-text-body_regular appointmentDesc">
+                                                    <apex:outputText escape="false" value="{!app.Description__c}"/>
+                                                </div>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel layout="none" rendered="{!!ISBLANK(app.Registrant_Input__c)}">
+                                                <div class="slds-text-body_regular slds-p-top_x-small">{!app.Registrant_Input__c}</div>
+                                            </apex:outputPanel>
                                         </apex:outputPanel>
-                                        <apex:outputPanel layout="none" rendered="{!app.Chosen_State__c != 'Added but not show' && app.Chosen_State__c != 'Added but not show'}">
-                                            <a href="javascript:;" class="appointmentRemove slds-button slds-button_neutral" title="Remove Appointment">Remove</a>
+
+                                        <apex:outputPanel layout="none" rendered="{!app.Chosen_State__c != 'Added but not shown' && app.Chosen_State__c != 'Added and Required'}">
+                                            <a href="javascript:;" class="appointmentRemove slds-button slds-button_neutral slds-m-top_small" title="Remove Appointment">Remove</a>
                                         </apex:outputPanel>
+
                                     </div>
                                 </apex:repeat>
                             </div>
                         </apex:outputPanel>
 
                         <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
-                            <p class="slds-text-body slds-p-vertical_xx-small"><em>Once you have made your selections click next.</em></p>
+                            <p class="slds-text-body slds-p-vertical_xx-small nextAppointmentInstructions">{!IF(ISBLANK(eventPage.Event_Appointment_Next_Instructions__c), 'Once you have made your selections click next.', eventPage.Event_Appointment_Next_Instructions__c)}</p>
                             <p class="slds-text-body slds-p-vertical_xx-small">
                                 <apex:commandLink action="{!saveOptions}" onClick="fadeout(); return populateAppJSON();" Value="Next" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                                 <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small" immediate="true"/>
