@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Appointment_Unchosen_Label__c</fullName>
+    <defaultValue>&quot;Choose your options&quot;</defaultValue>
+    <description>The label the registrant sees as a header for the list of available appointments that have not been chosen.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The label the registrant sees as a header for the list of available appointments that have not been chosen.</inlineHelpText>
+    <label>Event Appointment Unchosen Label</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
