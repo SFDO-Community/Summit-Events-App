@@ -46,7 +46,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             eventPage = [
                     SELECT Event_Name__c, Event_description__c, Event_Appointment_Title__c, Event_Appointment_Description__c, Event_Footer__c,
                             Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Options_Registration__c, Event_Full_Text__c,
-                            Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Display_Optional_Donation__c
+                            Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Display_Optional_Donation__c, Event_Appointment_Chosen_Label__c,
+                            Event_Appointment_Unchosen_Label__c, Event_Appointment_Next_Instructions__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -159,8 +160,10 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                             if (apt.Appointment_Category__c != null) {
                                 Map<String, String> dependencies = seaShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', apt.Appointment_Category__c);
+                                List<String> pickListItems = new List<String>();
+
                                 if (dependencies.size() > 1) {
-                                    List<String> pickListItems = new List<String>();
+
                                     for (String item : dependencies.keySet()) {
                                         pickListItems.add(dependencies.get(item));
                                     }
@@ -168,17 +171,19 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                                 }
                             }
 
-                            if (apt.Registrant_Input__c == 'Custom pick list' || apt.Registrant_Input__c == 'Required custom pick list') {
-                                if (!String.isBlank(apt.Custom_Picklist__c)) {
-                                    String custPickListText = apt.Custom_Picklist__c;
-                                    custPickListText = custPickListText.trim();
-                                    custPickListText = custPickListText.replace('\n\n', '\n');
-                                    String[] custPckListList = custPickListText.split('\n');
-                                    List<String> pickListItems = new List<String>();
-                                    for (String cp : custPckListList) {
-                                        pickListItems.add(cp.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', ''));
+                            if (String.isNotBlank(apt.Registrant_Input__c)) {
+                                if (apt.Registrant_Input__c.equalsIgnoreCase('Custom pick list') || apt.Registrant_Input__c.equalsIgnoreCase('Required custom pick list')) {
+                                    if (String.isNotBlank(apt.Custom_Picklist__c)) {
+                                        String custPickListText = apt.Custom_Picklist__c;
+                                        custPickListText = custPickListText.trim();
+                                        custPickListText = custPickListText.replace('\n\n', '\n');
+                                        String[] custPckListList = custPickListText.split('\n');
+                                        List<String> pickListItems = new List<String>();
+                                        for (String cp : custPckListList) {
+                                            pickListItems.add(cp.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', ''));
+                                        }
+                                        addAppointment.picklistItemList = pickListItems;
                                     }
-                                    addAppointment.picklistItemList = pickListItems;
                                 }
                             }
                             allAvailableAppointments.add(addAppointment);

@@ -55,14 +55,15 @@ appointmentsReady(() => {
             requiredInputs.forEach(function (reqs) {
                 let reqApp = reqs.closest(".appointment");
                 let incomingValue = '';
-                if (reqApp.querySelector(".appointmentType")) {
-                    let selType = appointment.querySelector(".appointmentType");
-                    incomingValue = selType.options[selType.selectedIndex].value;
-                }
-                if (reqApp.querySelector(".appointmentCustomInput")) {
+                //Check for select input first
+                if (reqApp.querySelector("select")) {
+                    let selType = appointment.querySelector("select");
+                    incomingValue = selType.value;
+                } else if (reqApp.querySelector(".appointmentCustomInput")) {
                     let inputType = appointment.querySelector(".appointmentCustomInput");
                     incomingValue = inputType.value;
                 }
+                incomingValue = incomingValue.trim();
                 if (!incomingValue) {
                     reqApp.classList.add('slds-has-error');
                     error = true;
@@ -86,11 +87,13 @@ appointmentsReady(() => {
                 appTitle.textContent = findTitle.textContent;
                 addAppointment.append(appTitle);
 
-                let appDescription = document.createElement('div');
-                appDescription.classList.add('slds-text-body_regular');
                 let findDescription = appointment.querySelector('.appointmentDesc');
-                appDescription.textContent = findDescription.textContent;
-                addAppointment.append(appDescription);
+                if (findDescription !== null) {
+                    let appDescription = document.createElement('div');
+                    appDescription.classList.add('slds-text-body_regular');
+                    appDescription.textContent = findDescription.textContent;
+                    addAppointment.append(appDescription);
+                }
 
                 let registrantInput = '';
                 if (appointment.querySelector(".appointmentType")) {
