@@ -2,6 +2,10 @@
     font-weight: bold;
 }
 
+.slds-scope .slds-form-element__label {
+    color: inherit;
+}
+
 .slds-form-element .slds-form-element__help {
     display: none;
 }
