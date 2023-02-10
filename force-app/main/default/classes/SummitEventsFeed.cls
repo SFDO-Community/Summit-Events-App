@@ -105,10 +105,10 @@ global with sharing class SummitEventsFeed {
         eventQuery += ' Building_Override__c, Alternate_Registration_URL_Override__c, Location_Address_Override__c, Location_Map_Link_Override__c, Location_Title_Override__c, Location_Type_Override__c,  ';
         eventQuery += ' Event__r.Event_Short_Listing_Description__c, Event__r.Audience__c, Event__r.Close_Event_Days_Before__c, Event__r.Event_Sponsor__c, ';
         eventQuery += ' Event__r.Feed_Registration_Button_Text__c, Feed_Registration_Button_Text_Override__c, Capacity__c, Current_Available_Capacity__c, Private_Instance__c, Event__r.Private_Event__c, ';
-        eventQuery += ' Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c ';
+        eventQuery += ' Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c, Event__r.Account__r.Name ';
         eventQuery += ' FROM Summit_Events_Instance__c ';
         eventQuery += ' WHERE ';
-        eventQuery += ' Event__R.Event_Status__c = \'Active\' ';
+        eventQuery += ' Event__r.Event_Status__c = \'Active\' ';
         eventQuery += ' AND Active_Status__c = \'Active\' ';
         eventQuery += ' AND Event__r.Private_Event__c = false ';
         eventQuery += ' AND Private_Instance__c = false ';
@@ -228,12 +228,16 @@ global with sharing class SummitEventsFeed {
         }
 
         //School filter (can be comma separated)
-        /*
         String school = req.params.get('school');
         if (String.isNotBlank(school)) {
-            eventQuery += ' AND (' + sanitizeOrLikeList(school, 'Event__r.School__r.Name') + ') ';
+            eventQuery += ' AND (' + sanitizeOrLikeList(school, 'Event__r.Account__r.Name') + ') ';
         }
-        */
+
+        //School filter (can be comma separated)
+        String accountName = req.params.get('account');
+        if (String.isNotBlank(accountName)) {
+            eventQuery += ' AND (' + sanitizeOrLikeList(accountName, 'Event__r.Account__r.Name') + ') ';
+        }
 
         //School filter (can be comma separated)
         String building = req.params.get('building');
