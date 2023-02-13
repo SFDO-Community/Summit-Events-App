@@ -209,6 +209,14 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
 
         List<Schema.PicklistEntry> PicklistValues = Schema.getGlobalDescribe().get(namespace + 'Summit_Events__c').getDescribe().fields.getMap().get(namespace + 'Itinerary_Item_1__c').getDescribe().getPicklistValues();
 
+        //Get the fields off of the appointment object ot make sure we don't add fields that don't exist
+        Set<String> appointmentObjectFields = Schema.SObjectType.Summit_Events_Appointments__c.fields.getMap().keySet();
+        Set<String> appointmentObjectFieldsLowercase = new Set<String>();
+        for (String appointmentField : appointmentObjectFields) {
+            appointmentObjectFieldsLowercase.add(appointmentField.toLowerCase());
+        }
+        System.debug(appointmentObjectFields);
+
         //Keep track of already added fields so as not to corrupt the query with a duplicate
         Set<String> fieldsFound = new Set<String>();
 
@@ -222,11 +230,15 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
 
                     //Check if the field is in the namespaced list and adjust accordingly
                     if (packagedItineraryFields.contains(PicklistValue.getValue())) {
-                        picklists.add(namespace + PicklistValue.getValue());
+                        if (appointmentObjectFieldsLowercase.contains(namespace + PicklistValue.getValue().toLowerCase())) {
+                            picklists.add(namespace + PicklistValue.getValue());
+                        }
                     } else {
-                        picklists.add(PicklistValue.getValue());
+                        if (appointmentObjectFieldsLowercase.contains(PicklistValue.getValue().toLowerCase())) {
+                            picklists.add(PicklistValue.getValue());
+                        }
                     }
-                    
+
                     fieldsFound.add(PicklistValue.getValue().toLowerCase());
                 }
             }
