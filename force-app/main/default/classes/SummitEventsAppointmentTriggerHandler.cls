@@ -135,12 +135,16 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                                 }
 
                                 if (String.isNotBlank(fieldValue) && String.isNotBlank(appointmentLabel)) {
-                                    if (appointmentDisplayType.equalsIgnoreCase('Labels as headers')) {
-                                        confirmedAppointments += '<b>' + appointmentLabel + '</b><br/>';
-                                    }
+                                    if (String.isNotBlank(appointmentDisplayType)) {
+                                        if (appointmentDisplayType.equalsIgnoreCase('Labels as headers')) {
+                                            confirmedAppointments += '<b>' + appointmentLabel + '</b><br/>';
+                                        }
 
-                                    if (appointmentDisplayType.equalsIgnoreCase('Labels inline with colon')) {
-                                        confirmedAppointments += '<i><b>' + appointmentLabel + ': </b></i>';
+                                        if (appointmentDisplayType.equalsIgnoreCase('Labels inline with colon')) {
+                                            confirmedAppointments += '<i><b>' + appointmentLabel + ': </b></i>';
+                                        }
+                                    } else {
+                                        confirmedAppointments += '<i>' + appointmentLabel + ': </i>';
                                     }
                                 }
 
