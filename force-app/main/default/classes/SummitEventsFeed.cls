@@ -540,9 +540,7 @@ global with sharing class SummitEventsFeed {
         }, 'Searches all the fields listed in options as a like statement allowing for a broader search of location information. (&filter= single or coma separated list of these items)'));
 
         //filter-Location
-        //allOptions.add(makeOption('filter+location', new List<String>{
-        //        'Program_Filter', 'Location_Title', 'Location_Address', 'Building', 'School_Name'
-        //}, 'Filter searches with a like statement all of these items. (&filter= single or coma separated list of these items)'));
+        allOptions.add(makeOption('account', new List<String>{}, 'Filter events on the name of an account associated to the event via the account lookup field.'));
 
         //filter-Building
         allOptions.add(makeOption('building', getObjectItemList(Summit_Events__c.Building__c.getDescribe()), 'Filter searches with a like statement all of these items. (&building= single or coma separated list of these items)'));
