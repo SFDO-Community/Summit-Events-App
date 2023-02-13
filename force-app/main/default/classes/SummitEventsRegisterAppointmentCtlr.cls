@@ -226,9 +226,17 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             addAppointment.Appointment_Title__c = appDefinition.Title__c;
             addAppointment.Sort_Order__c = appDefinition.Sort_Order__c;
             addAppointment.Description__c = appDefinition.Description__c;
+
+
+            //Set know states
+            addAppointment.Event_Registration__c = eventInformation.registrationId;
+            addAppointment.Appointment_Status__c = 'Registered';
+            addAppointment.Client_Created_Appointment__c = true;
+
             if (!String.isBlank(appDefinition.Auto_add_building__c)) {
                 addAppointment.Building__c = appDefinition.Auto_add_building__c;
             }
+            System.debug(appDefinition.Auto_Confirm_Appointment__c);
             if (appDefinition.Auto_Confirm_Appointment__c) {
                 addAppointment.Appointment_Status__c = 'Confirmed';
             }
@@ -238,11 +246,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             if (appDefinition.Auto_Add_Time__c != null) {
                 addAppointment.Appointment_Time__c = appDefinition.Auto_Add_Time__c;
             }
-
-            //Set know states
-            addAppointment.Event_Registration__c = eventInformation.registrationId;
-            addAppointment.Appointment_Status__c = 'Registered';
-            addAppointment.Client_Created_Appointment__c = true;
 
             //Get values passed in from page in JSON
             addAppointment.Event_Appointment_Type__c = app.appId;
