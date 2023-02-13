@@ -1447,8 +1447,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Itinerary_Item_2__c</fieldItem>
-                <identifier>RecordItinerary_Item_2_cField2</identifier>
+                <fieldItem>Record.Itinerary_Label_2__c</fieldItem>
+                <identifier>RecordItinerary_Label_2_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -2799,6 +2799,10 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
+                <componentInstanceProperties>
+                    <name>showLegacyActivityComposer</name>
+                    <value>false</value>
+                </componentInstanceProperties>
                 <componentName>runtime_sales_activities:activityPanel</componentName>
                 <identifier>runtime_sales_activity_panel_10</identifier>
             </componentInstance>
