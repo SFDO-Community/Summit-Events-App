@@ -112,7 +112,7 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                         Summit_Events__c itineraryStyle = eventItinerarySetup.get(apt.Event_Appointment_Type__r.Summit_Events__c);
 
                         String appointmentDisplayType = itineraryStyle.Itinerary_Display_Options__c;
-                        
+
                         if (apt.Appointment_Status__c.equalsIgnoreCase('Confirmed')) {
                             for (Integer i = 1; i < 6; i++) {
 
@@ -208,12 +208,26 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
         }
 
         List<Schema.PicklistEntry> PicklistValues = Schema.getGlobalDescribe().get(namespace + 'Summit_Events__c').getDescribe().fields.getMap().get(namespace + 'Itinerary_Item_1__c').getDescribe().getPicklistValues();
+
+        //Keep track of already added fields so as not to corrupt the query with a duplicate
+        Set<String> fieldsFound = new Set<String>();
+
         for (Schema.PicklistEntry PicklistValue : PicklistValues) {
+
+            //Make sure the picklist value is indeed a field ending with __c
             if (PicklistValue.getValue().endsWithIgnoreCase('__c')) {
-                if (packagedItineraryFields.contains(PicklistValue.getValue())) {
-                    picklists.add(namespace + PicklistValue.getValue());
-                } else {
-                    picklists.add(PicklistValue.getValue());
+
+                //Check if the field is a duplicate before proceeding
+                if (!fieldsFound.contains(PicklistValue.getValue().toLowerCase())) {
+
+                    //Check if the field is in the namespaced list and adjust accordingly
+                    if (packagedItineraryFields.contains(PicklistValue.getValue())) {
+                        picklists.add(namespace + PicklistValue.getValue());
+                    } else {
+                        picklists.add(PicklistValue.getValue());
+                    }
+                    
+                    fieldsFound.add(PicklistValue.getValue().toLowerCase());
                 }
             }
         }
