@@ -69,7 +69,7 @@ public with sharing class SummitEventsShared {
                 FROM Summit_Events_Appointment_Type__c
                 WHERE Summit_Events__c = :eventId
                 AND Chosen_State__c != 'Added but not shown'
-                AND (Auto_Confirm_Appointment__c = TRUE AND Chosen_State__c != 'Added but not shown')
+                AND (Auto_Confirm_Appointment__c = TRUE AND (Chosen_State__c != 'Added but not shown' AND Chosen_State__c != 'Added and Required')
                 AND (
                         Restrict_To_Instance_Title__r.Instance_Title__c = :instanceTitle
                         OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
