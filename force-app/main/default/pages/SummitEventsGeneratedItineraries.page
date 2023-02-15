@@ -6,7 +6,7 @@ Created by Thaddaeus Dahlberg on 2/26/2019.
 -->
 
 <apex:page id="SummitEventsGeneratedItineraries" extensions="SummitEventsGeneratedItinerariesExt" standardController="Summit_Events_Registration__c" showHeader="false" sideBar="false" lightningStylesheets="true">
-    <apex:slds/>
+    <apex:slds />
     <div style="overflow: auto; position:absolute; height:100%; width:100%;">
         <table class="slds-table slds-table_cell-buffer slds-table_bordered">
             <thead>
