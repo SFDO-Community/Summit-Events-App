@@ -5,7 +5,7 @@ license that can be found in the LICENSE file.
 Created by Thaddaeus Dahlberg on 2/26/2019.
 -->
 
-<apex:page id="SummitEventsGeneratedItineraries" standardController="Summit_Events_Registration__c" showHeader="false" sideBar="false" lightningStylesheets="true">
+<apex:page id="SummitEventsGeneratedItineraries" extensions="SummitEventsGeneratedItinerariesExt" standardController="Summit_Events_Registration__c" showHeader="false" sideBar="false" lightningStylesheets="true">
     <apex:slds/>
     <div style="overflow: auto; position:absolute; height:100%; width:100%;">
         <table class="slds-table slds-table_cell-buffer slds-table_bordered">
@@ -22,14 +22,14 @@ Created by Thaddaeus Dahlberg on 2/26/2019.
             <tbody>
             <tr>
                 <td style="vertical-align: top; text-align:left; width:50%;">
-                    <apex:outputText escape="false" value="{!Summit_Events_Registration__c.Generated_Itinerary__c}" rendered="{!!ISBLANK(Summit_Events_Registration__c.Generated_Itinerary__c)}"/>
-                    <apex:outputPanel rendered="{!ISBLANK(Summit_Events_Registration__c.Generated_Itinerary__c)}">
+                    <apex:outputText escape="false" value="{!generatedItinerary}" rendered="{!!ISBLANK(generatedItinerary)}"/>
+                    <apex:outputPanel rendered="{!ISBLANK(generatedItinerary)}">
                         <em>Itinerary not generated: there are no confirmed appointments to generate an itinerary.</em>
                     </apex:outputPanel>
                 </td>
                 <td style="vertical-align: top; text-align:left; width:50%;">
-                    <apex:outputText escape="false" value="{!Summit_Events_Registration__c.Generated_Requested_Appointments__c}" rendered="{!!ISBLANK(Summit_Events_Registration__c.Generated_Requested_Appointments__c)}"/>
-                    <apex:outputPanel rendered="{!ISBLANK(Summit_Events_Registration__c.Generated_Requested_Appointments__c)}">
+                    <apex:outputText escape="false" value="{!requestedItinerary}" rendered="{!!ISBLANK(requestedItinerary)}"/>
+                    <apex:outputPanel rendered="{!ISBLANK(requestedItinerary)}">
                         <em>Itinerary not generated: there are were no requested appointments.</em>
                     </apex:outputPanel>
                 </td>
