@@ -10,7 +10,14 @@ public with sharing class SummitEventsGeneratedItinerariesExt {
 
     public SummitEventsGeneratedItinerariesExt(ApexPages.StandardController stdController) {
         seaRegistration = (Summit_Events_Registration__c) stdController.getRecord();
-        generatedItinerary = seaRegistration.Generated_Itinerary__c;
-        requestedItinerary = seaRegistration.Generated_Requested_Appointments__c;
+        Id regId = seaRegistration.Id;
+        Summit_Events_Registration__c registration = [
+                SELECT Id, Generated_Itinerary__c, Generated_Requested_Appointments__c
+                FROM Summit_Events_Registration__c
+                WHERE Id = :regId
+        ];
+
+        generatedItinerary = registration.Generated_Itinerary__c;
+        requestedItinerary = registration.Generated_Requested_Appointments__c;
     }
 }
