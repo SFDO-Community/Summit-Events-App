@@ -111,50 +111,55 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
 
                         Summit_Events__c itineraryStyle = eventItinerarySetup.get(apt.Event_Appointment_Type__r.Summit_Events__c);
 
-                        String appointmentDisplayType = itineraryStyle.Itinerary_Display_Options__c;
+                        String appointmentDisplayType = '';
 
-                        if (apt.Appointment_Status__c.equalsIgnoreCase('Confirmed')) {
-                            for (Integer i = 1; i < 6; i++) {
+                        if (itineraryStyle != null && String.isNotBlank(itineraryStyle.Itinerary_Display_Options__c)) {
+                            appointmentDisplayType = itineraryStyle.Itinerary_Display_Options__c;
 
-                                //Confirmed appointments styled by event definition
-                                String appointmentField = '';
-                                if (itineraryStyle.get(namespace + 'itinerary_Item_' + i + '__c') != null) {
-                                    appointmentField = (String) itineraryStyle.get(namespace + 'itinerary_Item_' + i + '__c');
-                                }
 
-                                String appointmentLabel = '';
-                                if (itineraryStyle.get(namespace + 'Itinerary_Label_' + i + '__c') != null) {
-                                    appointmentLabel = (String) itineraryStyle.get(namespace + 'Itinerary_Label_' + i + '__c');
-                                }
+                            if (apt.Appointment_Status__c.equalsIgnoreCase('Confirmed')) {
+                                for (Integer i = 1; i < 6; i++) {
 
-                                String fieldValue = '';
-                                if (String.isNotBlank(appointmentField) && apt.get(appointmentField) != null) {
-                                    fieldValue = String.valueOf(apt.get(appointmentField));
-                                }
-
-                                if (String.isNotBlank(fieldValue) && String.isNotBlank(appointmentLabel)) {
-                                    if (String.isNotBlank(appointmentDisplayType)) {
-                                        if (appointmentDisplayType.equalsIgnoreCase('Labels as headers')) {
-                                            confirmedAppointments += '<b>' + appointmentLabel + '</b><br/>';
-                                        }
-
-                                        if (appointmentDisplayType.equalsIgnoreCase('Labels inline with colon')) {
-                                            confirmedAppointments += '<i><b>' + appointmentLabel + ': </b></i>';
-                                        }
-                                    } else {
-                                        confirmedAppointments += '<i>' + appointmentLabel + ': </i>';
+                                    //Confirmed appointments styled by event definition
+                                    String appointmentField = '';
+                                    if (itineraryStyle.get(namespace + 'itinerary_Item_' + i + '__c') != null) {
+                                        appointmentField = (String) itineraryStyle.get(namespace + 'itinerary_Item_' + i + '__c');
                                     }
-                                }
 
-                                if (String.isNotBlank(fieldValue)) {
-                                    confirmedAppointments += fieldValue;
-                                    if (!fieldValue.endsWithIgnoreCase('</p>')) {
+                                    String appointmentLabel = '';
+                                    if (itineraryStyle.get(namespace + 'Itinerary_Label_' + i + '__c') != null) {
+                                        appointmentLabel = (String) itineraryStyle.get(namespace + 'Itinerary_Label_' + i + '__c');
+                                    }
+
+                                    String fieldValue = '';
+                                    if (String.isNotBlank(appointmentField) && apt.get(appointmentField) != null) {
+                                        fieldValue = String.valueOf(apt.get(appointmentField));
+                                    }
+
+                                    if (String.isNotBlank(fieldValue) && String.isNotBlank(appointmentLabel)) {
+                                        if (String.isNotBlank(appointmentDisplayType)) {
+                                            if (appointmentDisplayType.equalsIgnoreCase('Labels as headers')) {
+                                                confirmedAppointments += '<b>' + appointmentLabel + '</b><br/>';
+                                            }
+
+                                            if (appointmentDisplayType.equalsIgnoreCase('Labels inline with colon')) {
+                                                confirmedAppointments += '<i><b>' + appointmentLabel + ': </b></i>';
+                                            }
+                                        } else {
+                                            confirmedAppointments += '<i>' + appointmentLabel + ': </i>';
+                                        }
+                                    }
+
+                                    if (String.isNotBlank(fieldValue)) {
+                                        confirmedAppointments += fieldValue;
+                                        if (!fieldValue.endsWithIgnoreCase('</p>')) {
+                                            confirmedAppointments += '<br/>';
+                                        }
+                                    }
+
+                                    if (i == 5 && String.isNotBlank(confirmedAppointments)) {
                                         confirmedAppointments += '<br/>';
                                     }
-                                }
-
-                                if (i == 5 && String.isNotBlank(confirmedAppointments)) {
-                                    confirmedAppointments += '<br/>';
                                 }
                             }
                         }
