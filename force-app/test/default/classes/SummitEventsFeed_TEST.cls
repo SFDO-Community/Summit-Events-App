@@ -80,7 +80,7 @@ private class SummitEventsFeed_TEST {
             RestContext.request = req;
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
-            System.debug(res.responseBody.toString());
+
             System.assert(res.responseBody.toString().contains('[]'), 'Event list should be empty if eventId is not an id');
 
             //test filter with start date
@@ -88,7 +88,7 @@ private class SummitEventsFeed_TEST {
             req.params.put('viewStart', String.valueOf(Date.today().addDays(10)));
             req.params.put('viewEnd', String.valueOf(Date.today().addDays(10)));
             req.params.put('hideClosed', 'true');
-            System.debug(JSON.serializePretty(req.params));
+
             RestContext.request = req;
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();

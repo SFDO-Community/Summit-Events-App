@@ -99,8 +99,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                     allAvailableAppointments = new List<incomingAppointments>();
 
-                    System.debug(JSON.serializePretty(appointments.values()));
-
                     for (Summit_Events_Appointment_Type__c chosenCheck : appointments.values()) {
                         if (chosenCheck.Chosen_State__c != 'Added and Required' && chosenCheck.Chosen_State__c != 'Added but not shown') {
                             noOptionalAppointments = false;
@@ -172,6 +170,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                                     addAppointment.picklistItemList = pickListItems;
                                 }
                             }
+
                             if (String.isNotBlank(apt.Registrant_Input__c)) {
                                 if (apt.Registrant_Input__c.equalsIgnoreCase('Custom pick list') || apt.Registrant_Input__c.equalsIgnoreCase('Required custom pick list')) {
                                     if (String.isNotBlank(apt.Custom_Picklist__c)) {
@@ -215,7 +214,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         doCRUD.deleteAppointments(deleteAppointments);
 
         List<incomingAppointments> incomingAppointments = (List<incomingAppointments>) JSON.deserialize(incomingAppointmentJSON, List<incomingAppointments>.class);
-        System.debug(JSON.serializePretty(incomingAppointments));
 
         List<Summit_Events_Appointments__c> appointmentsToAdd = new List<Summit_Events_Appointments__c>();
         for (incomingAppointments app : incomingAppointments) {
@@ -228,9 +226,17 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             addAppointment.Appointment_Title__c = appDefinition.Title__c;
             addAppointment.Sort_Order__c = appDefinition.Sort_Order__c;
             addAppointment.Description__c = appDefinition.Description__c;
+
+
+            //Set know states
+            addAppointment.Event_Registration__c = eventInformation.registrationId;
+            addAppointment.Appointment_Status__c = 'Registered';
+            addAppointment.Client_Created_Appointment__c = true;
+
             if (!String.isBlank(appDefinition.Auto_add_building__c)) {
                 addAppointment.Building__c = appDefinition.Auto_add_building__c;
             }
+            System.debug(appDefinition.Auto_Confirm_Appointment__c);
             if (appDefinition.Auto_Confirm_Appointment__c) {
                 addAppointment.Appointment_Status__c = 'Confirmed';
             }
@@ -240,11 +246,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             if (appDefinition.Auto_Add_Time__c != null) {
                 addAppointment.Appointment_Time__c = appDefinition.Auto_Add_Time__c;
             }
-
-            //Set know states
-            addAppointment.Event_Registration__c = eventInformation.registrationId;
-            addAppointment.Appointment_Status__c = 'Registered';
-            addAppointment.Client_Created_Appointment__c = true;
 
             //Get values passed in from page in JSON
             addAppointment.Event_Appointment_Type__c = app.appId;

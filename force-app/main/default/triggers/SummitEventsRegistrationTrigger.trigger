@@ -4,14 +4,17 @@ trigger SummitEventsRegistrationTrigger on Summit_Events_Registration__c (before
         SummitEventsContactMatching SECM = new SummitEventsContactMatching();
         SECM.matchContacts(Trigger.new);
     } */
-    if (Trigger.isBefore && Trigger.isUpdate) {
-        SummitEventsContactMatching.matchContacts(Trigger.new);
-    }
+    Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
+    if (!SummitEventsSettings.Turn_off_Registration_Trigger__c) {
+        if (Trigger.isBefore && Trigger.isUpdate) {
+            SummitEventsContactMatching.matchContacts(Trigger.new);
+        }
 
-    if (Trigger.isAfter && Trigger.isInsert) {
-        SummitEventsRegistration.run(Trigger.new, Trigger.old);
-    }
-    if (Trigger.isAfter && Trigger.isUpdate) {
-        SummitEventsRegistration.run(Trigger.new, Trigger.old);
+        if (Trigger.isAfter && Trigger.isInsert) {
+            SummitEventsRegistration.run(Trigger.new, Trigger.old);
+        }
+        if (Trigger.isAfter && Trigger.isUpdate) {
+            SummitEventsRegistration.run(Trigger.new, Trigger.old);
+        }
     }
 }

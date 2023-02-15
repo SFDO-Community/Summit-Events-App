@@ -6,26 +6,35 @@ Created by Thaddaeus Dahlberg on 2/26/2019.
 -->
 
 <apex:page id="SummitEventsGeneratedItineraries" standardController="Summit_Events_Registration__c" showHeader="false" sideBar="false" lightningStylesheets="true">
-<table class="slds-table slds-table_cell-buffer slds-table_bordered">
-    <thead>
-    <tr class="slds-line-height_reset">
-        <th class="" scope="col">
-            Generated Itinerary
-        </th>
-        <th class="" scope="col">
-            Requested Appointments
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>
-            <apex:outputText escape="false" value="{!Summit_Events_Registration__c.Generated_Itinerary__c}"/>
-        </td>
-        <td>
-            <apex:outputText escape="false" value="{!Summit_Events_Registration__c.Generated_Requested_Appointments__c}"/>
-        </td>
-    </tr>
-    </tbody>
-</table>
+    <apex:slds/>
+    <div style="overflow: auto; position:absolute; height:100%; width:100%;">
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead>
+            <tr class="slds-line-height_reset">
+                <th class="" scope="col">
+                    Generated Itinerary (<a href="javascript:location.reload();">Refresh</a>)
+                </th>
+                <th class="" scope="col">
+                    Requested Appointments (<a href="javascript:location.reload();">Refresh</a>)
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td style="vertical-align: top; text-align:left; width:50%;">
+                    <apex:outputText escape="false" value="{!Summit_Events_Registration__c.Generated_Itinerary__c}" rendered="{!!ISBLANK(Summit_Events_Registration__c.Generated_Itinerary__c)}"/>
+                    <apex:outputPanel rendered="{!ISBLANK(Summit_Events_Registration__c.Generated_Itinerary__c)}">
+                        <em>Itinerary not generated: there are no confirmed appointments to generate an itinerary.</em>
+                    </apex:outputPanel>
+                </td>
+                <td style="vertical-align: top; text-align:left; width:50%;">
+                    <apex:outputText escape="false" value="{!Summit_Events_Registration__c.Generated_Requested_Appointments__c}" rendered="{!!ISBLANK(Summit_Events_Registration__c.Generated_Requested_Appointments__c)}"/>
+                    <apex:outputPanel rendered="{!ISBLANK(Summit_Events_Registration__c.Generated_Requested_Appointments__c)}">
+                        <em>Itinerary not generated: there are were no requested appointments.</em>
+                    </apex:outputPanel>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </apex:page>

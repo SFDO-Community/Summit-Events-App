@@ -105,10 +105,10 @@ global with sharing class SummitEventsFeed {
         eventQuery += ' Building_Override__c, Alternate_Registration_URL_Override__c, Location_Address_Override__c, Location_Map_Link_Override__c, Location_Title_Override__c, Location_Type_Override__c,  ';
         eventQuery += ' Event__r.Event_Short_Listing_Description__c, Event__r.Audience__c, Event__r.Close_Event_Days_Before__c, Event__r.Event_Sponsor__c, ';
         eventQuery += ' Event__r.Feed_Registration_Button_Text__c, Feed_Registration_Button_Text_Override__c, Capacity__c, Current_Available_Capacity__c, Private_Instance__c, Event__r.Private_Event__c, ';
-        eventQuery += ' Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c ';
+        eventQuery += ' Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c, Event__r.Account__r.Name ';
         eventQuery += ' FROM Summit_Events_Instance__c ';
         eventQuery += ' WHERE ';
-        eventQuery += ' Event__R.Event_Status__c = \'Active\' ';
+        eventQuery += ' Event__r.Event_Status__c = \'Active\' ';
         eventQuery += ' AND Active_Status__c = \'Active\' ';
         eventQuery += ' AND Event__r.Private_Event__c = false ';
         eventQuery += ' AND Private_Instance__c = false ';
@@ -160,8 +160,6 @@ global with sharing class SummitEventsFeed {
         formattedViewEnd = viewEnd.format('yyyy-MM-dd');
         eventQuery += ' AND Instance_Start_Date__c >= ' + formattedViewStart + ' ';
         eventQuery += ' AND Instance_Start_Date__c <= ' + formattedViewEnd + ' ';
-        System.debug(formattedViewStart);
-        System.debug(formattedViewEnd);
 
         //get event based on event id
         String eventId = req.params.get('eventId');
@@ -230,12 +228,16 @@ global with sharing class SummitEventsFeed {
         }
 
         //School filter (can be comma separated)
-        /*
         String school = req.params.get('school');
         if (String.isNotBlank(school)) {
-            eventQuery += ' AND (' + sanitizeOrLikeList(school, 'Event__r.School__r.Name') + ') ';
+            eventQuery += ' AND (' + sanitizeOrLikeList(school, 'Event__r.Account__r.Name') + ') ';
         }
-        */
+
+        //School filter (can be comma separated)
+        String accountName = req.params.get('account');
+        if (String.isNotBlank(accountName)) {
+            eventQuery += ' AND (' + sanitizeOrLikeList(accountName, 'Event__r.Account__r.Name') + ') ';
+        }
 
         //School filter (can be comma separated)
         String building = req.params.get('building');
@@ -289,7 +291,7 @@ global with sharing class SummitEventsFeed {
                 evt.title += ' - ' + seaShared.removeHTMLandEscape(eventInstance.Instance_Title__c, true);
             }
 
-            if (!String.isBlank(eventInstance.Instance_Short_Description__c)) {
+            if (String.isNotBlank(eventInstance.Instance_Short_Description__c)) {
                 evt.instanceDesc = seaShared.removeHTMLandEscape(eventInstance.Instance_Short_Description__c, true);
             } else {
                 evt.instanceDesc = '';
@@ -538,9 +540,7 @@ global with sharing class SummitEventsFeed {
         }, 'Searches all the fields listed in options as a like statement allowing for a broader search of location information. (&filter= single or coma separated list of these items)'));
 
         //filter-Location
-        //allOptions.add(makeOption('filter+location', new List<String>{
-        //        'Program_Filter', 'Location_Title', 'Location_Address', 'Building', 'School_Name'
-        //}, 'Filter searches with a like statement all of these items. (&filter= single or coma separated list of these items)'));
+        allOptions.add(makeOption('account', new List<String>{}, 'Filter events on the name of an account associated to the event via the account lookup field.'));
 
         //filter-Building
         allOptions.add(makeOption('building', getObjectItemList(Summit_Events__c.Building__c.getDescribe()), 'Filter searches with a like statement all of these items. (&building= single or coma separated list of these items)'));

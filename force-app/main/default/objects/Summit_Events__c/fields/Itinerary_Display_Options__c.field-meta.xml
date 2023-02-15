@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Itinerary_Display_Options__c</fullName>
+    <description>Relationship style of label to itinerary item information.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Relationship style of label to itinerary item information.</inlineHelpText>
+    <label>Itinerary Display Options</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Labels as headers</fullName>
+                <default>false</default>
+                <label>Labels as headers</label>
+            </value>
+            <value>
+                <fullName>Labels inline with colon</fullName>
+                <default>false</default>
+                <label>Labels inline with colon</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

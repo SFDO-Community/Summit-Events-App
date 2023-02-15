@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Turn_off_Appointment_Trigger__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Turns off Summit Events App Appointment trigger.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Turns off Summit Events App Appointment trigger.</inlineHelpText>
+    <label>Turn off Appointment Trigger</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
