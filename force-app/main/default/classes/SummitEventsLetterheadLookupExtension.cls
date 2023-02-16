@@ -14,7 +14,6 @@ public with sharing class SummitEventsLetterheadLookupExtension {
                         Letterhead_HTML__c, Letterhead_Id__c, Letterhead_Name__c
                 FROM Summit_Events_Email__c
                 WHERE Id = :stdController.getRecord().Id
-                WITH SECURITY_ENFORCED
         ];
     }
 
@@ -25,7 +24,6 @@ public with sharing class SummitEventsLetterheadLookupExtension {
                 SELECT Id, Address, DisplayName, IsAllowAllProfiles
                 FROM OrgWideEmailAddress
                 WHERE IsAllowAllProfiles = TRUE
-                WITH SECURITY_ENFORCED
         ]);
         List<SelectOption> owe = new List<SelectOption>();
         owe.add(new SelectOption('', 'Select...'));
@@ -41,7 +39,6 @@ public with sharing class SummitEventsLetterheadLookupExtension {
                 SELECT Id, Name, Value
                 FROM BrandTemplate
                 WHERE IsActive = TRUE
-                WITH SECURITY_ENFORCED
         ]
         );
         List<SelectOption> brandOptions = new List<SelectOption>();
