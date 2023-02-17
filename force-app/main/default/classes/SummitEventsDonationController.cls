@@ -37,7 +37,7 @@ public with sharing class SummitEventsDonationController {
 
             eventInstance = [
                     SELECT Id, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c,
-                            Current_Available_Capacity__c, Active_Status__c, Event__r.Event_Name__c
+                            Current_Available_Capacity__c, Active_Status__c, Event__r.Event_Name__c, Registration_Close_Date__c, Registration_Close_Time__c
                     FROM Summit_Events_Instance__c
                     WHERE Id = :eventInformation.instanceId
                     WITH SECURITY_ENFORCED
