@@ -28,9 +28,9 @@ public class SummitEventsRegistration {
             }
 
             //Get all new trigger Summit_Events_Registration__c that have a status change by comparing old map
-            if(String.isNotBlank(r.Registrant_Email__c) && r.Guest_Host_Status__c != 'Hosted registrant') {
+            if (String.isNotBlank(r.Registrant_Email__c) && r.Guest_Host_Status__c != 'Hosted registrant') {
                 if (String.isNotBlank(oldReg.Id)) {
-                    if (r.Status__c != oldReg.Status__c || r.Substatus__c != oldReg.Substatus__c && String.isNotBlank(r.Registrant_Email__c)) {
+                    if (r.Status__c != oldReg.Status__c || r.Substatus__c != oldReg.Substatus__c) {
                         affectedIds.put(r.Event__c, r.Event__c);
                         affectedRegs.add(r);
                         if (r.Status__c == 'Confirmed' && r.Substatus__c == 'Attended') {
