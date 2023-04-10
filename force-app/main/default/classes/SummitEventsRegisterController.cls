@@ -136,7 +136,8 @@ public with sharing class SummitEventsRegisterController {
                             First_Name_Label__c, Gender_Label__c, Last_Name_As_Student_Label__c, Last_Name_Label__c, Mailing_Address_Label__c,
                             Phone_Label__c, Phone_Type_Label__c, Preferred_First_Name_Label__c, Pronouns_Label__c, Registrant_Receive_Texts_Label__c,
                             Relationship_To_Institution_Label__c, Third_Party_Registrant_Label__c, Title_Label__c, Preferred_Class_Year_Label__c,
-                            Registrant_Relationship_Label__c, Event_Fee_Label__c, Event_Fee_Total_Label__c, Event_Fee_Submit_List_Label__c, Account__r.Name
+                            Registrant_Relationship_Label__c, Event_Fee_Label__c, Event_Fee_Total_Label__c, Event_Fee_Submit_List_Label__c, Account__r.Name,
+                            Filter_Category__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -273,8 +274,8 @@ public with sharing class SummitEventsRegisterController {
             /*get Analytic data*/
 
             //Get current URL
-            String baseURL = URL.getSalesforceBaseUrl().toExternalForm(); // it will return: < https://cs14.salesforce.com >
-            String PageURL = ApexPages.currentPage().getUrl();   // it will return: < /apex/myVFpage?id=906F00000008w9wIAA >
+            String baseURL = Url.getSalesforceBaseUrl().toExternalForm();
+            String PageURL = ApexPages.currentPage().getUrl();
             eventRegistration.Event_Website__c = baseURL + PageURL.replace('\'', '').escapeHtml4();
 
             //Get referrer url if not blank
