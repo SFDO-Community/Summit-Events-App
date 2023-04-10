@@ -270,6 +270,32 @@ public with sharing class SummitEventsRegisterController {
                 ));
             }
 
+            /*get Analytic data*/
+
+            //Get current URL
+            String baseURL = URL.getSalesforceBaseUrl().toExternalForm(); // it will return: < https://cs14.salesforce.com >
+            String PageURL = ApexPages.currentPage().getUrl();   // it will return: < /apex/myVFpage?id=906F00000008w9wIAA >
+            eventRegistration.Event_Website__c = baseURL + PageURL.replace('\'', '').escapeHtml4();
+
+            //Get referrer url if not blank
+            if (String.isNotBlank(ApexPages.currentPage().getHeaders().get('Referer'))) {
+                eventRegistration.Event_Website_Referrer__c = ApexPages.currentPage().getHeaders().get('Referer').replace('\'', '').escapeHtml4();
+            }
+
+            List<String> analyticCodes = new List<String>{
+                    'gclid__c', 'utm_campaign__c', 'utm_content__c',
+                    'utm_creative_format__c', 'utm_id__c', 'utm_marketing_tactic__c', 'utm_medium__c', 'utm_source__c', 'utm_source_platform__c', 'utm_term__c'
+            };
+
+            for (String code : analyticCodes) {
+                if (String.isNotBlank(ApexPages.currentPage().getParameters().get(code))) {
+                    String codeValue = ApexPages.currentPage().getParameters().get(code);
+                    codeValue = codeValue.replace('\'', '');
+                    codeValue = codeValue.escapeHtml4();
+                    eventRegistration.put(code, codeValue);
+                }
+            }
+
         }
 
         //If the user is logged in use that data
@@ -327,8 +353,10 @@ public with sharing class SummitEventsRegisterController {
                         Registrant_High_School__c, Registrant_High_School_Code__c, Registrant_Receive_Texts__c, Registrant_High_School_Grad_Year__c, Registrant_High_School_Not_Found__c,
                         Registrant_College_Not_Found__c, Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c, Registrant_Parent_Phone__c,
                         Add_Info_Answer_1__c, Add_Info_Answer_2__c, Add_Info_Answer_3__c, Add_Info_Answer_4__c, Add_Info_Answer_5__c, Registrant_Program_Interest__c, Registrant_Preferred_First_Name__c,
-                        Registrant_Date_of_Birth__c, Last_Name_as_Student__c, Preferred_Class_Year__c, Relationship_To_Institution__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c, Registrant_Other_Phone__c, Registrant_Other_Relationship__c,
-                        Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c, Registrant_Pronouns__c, Registrant_Title__c, Registrant_Company_Organization__c
+                        Registrant_Date_of_Birth__c, Last_Name_as_Student__c, Preferred_Class_Year__c, Relationship_To_Institution__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c,
+                        Registrant_Other_Phone__c, Registrant_Other_Relationship__c, Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c,
+                        Registrant_Pronouns__c, Registrant_Title__c, Registrant_Company_Organization__c, Event_Website__c, Event_Website_Referrer__c, gclid__c, utm_campaign__c, utm_content__c,
+                        utm_creative_format__c, utm_id__c, utm_marketing_tactic__c, utm_medium__c, utm_source__c, utm_source_platform__c, utm_term__c
                 FROM Summit_Events_Registration__c
                 WHERE Id = :eventRegistrationId
                 WITH SECURITY_ENFORCED
