@@ -136,7 +136,7 @@ public with sharing class SummitEventsRegisterController {
                             First_Name_Label__c, Gender_Label__c, Last_Name_As_Student_Label__c, Last_Name_Label__c, Mailing_Address_Label__c,
                             Phone_Label__c, Phone_Type_Label__c, Preferred_First_Name_Label__c, Pronouns_Label__c, Registrant_Receive_Texts_Label__c,
                             Relationship_To_Institution_Label__c, Third_Party_Registrant_Label__c, Title_Label__c, Preferred_Class_Year_Label__c,
-                            Registrant_Relationship_Label__c, Event_Fee_Label__c, Event_Fee_Total_Label__c, Event_Fee_Submit_List_Label__c
+                            Registrant_Relationship_Label__c, Event_Fee_Label__c, Event_Fee_Total_Label__c, Event_Fee_Submit_List_Label__c, Account__r.Name
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -279,7 +279,8 @@ public with sharing class SummitEventsRegisterController {
             if (String.isBlank(eventInformation.registrationId)) {
 
                 userContact = [
-                        SELECT Id, Name, FirstName, LastName, Email, HomePhone, MobilePhone, Birthdate
+                        SELECT Id, Name, FirstName, LastName, Email, HomePhone, MobilePhone, Birthdate, MailingStreet,
+                                MailingState, MailingCountry, MailingPostalCode, MailingCity
                         FROM Contact
                         WHERE Id IN (
                                 SELECT ContactId
@@ -289,12 +290,20 @@ public with sharing class SummitEventsRegisterController {
                         WITH SECURITY_ENFORCED
                 ];
 
+                eventRegistration.Registrant_Street_1__c = userContact.MailingStreet;
+                eventRegistration.Registrant_State__c = userContact.MailingState;
+                eventRegistration.Registrant_Country__c = userContact.MailingCountry;
+                eventRegistration.Registrant_Postal_Code__c = userContact.MailingPostalCode;
+                eventRegistration.Registrant_Zip__c = userContact.MailingPostalCode;
+                eventRegistration.Registrant_City__c = userContact.MailingCity;
                 eventRegistration.Registrant_First_Name__c = userContact.FirstName;
                 eventRegistration.Registrant_Last_Name__c = userContact.LastName;
                 eventRegistration.Registrant_Email__c = userContact.Email;
                 eventRegistration.Registrant_Phone__c = userContact.HomePhone;
                 eventRegistration.Registrant_Mobile_Phone__c = userContact.MobilePhone;
                 eventRegistration.Registrant_Date_of_Birth__c = userContact.Birthdate;
+                eventRegistration.Contact__c = userContact.Id;
+
                 if (userContact.Birthdate != null) {
                     birthDateString = userContact.Birthdate.format();
                 }
@@ -505,7 +514,7 @@ public with sharing class SummitEventsRegisterController {
 
         eventInformation.registrationId = eventRegistration.Id;
 
-        String dayOfWeek = seaShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
+        String dayOfWeek = SeaShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
         //Insert pre-chosen appointments for appointments page
         List<Summit_Events_Appointment_Type__c> autoAddAppt = [
                 SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Registrant_Input__c, Custom_Picklist__c, Appointment_Limits__c,
@@ -514,7 +523,7 @@ public with sharing class SummitEventsRegisterController {
                 WHERE Summit_Events__c = :eventInformation.eventId
                 AND (Chosen_State__c = 'Added' OR Chosen_State__c = 'Added and Required' OR Chosen_State__c = 'Added but not shown')
                 AND Id NOT IN (SELECT Event_Appointment_Type__c FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :eventInformation.registrationId)
-                AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null OR Restrict_To_Instance_Title__r.Instance_Title__c = '')
+                AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL OR Restrict_To_Instance_Title__r.Instance_Title__c = '')
                 AND (Date_Available_Start__c <= :evtInstance.Instance_Start_Date__c OR Date_Available_Start__c = NULL)
                 AND (Date_Available_End__c >= :evtInstance.Instance_End_Date__c OR Date_Available_End__c = NULL)
                 AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
@@ -528,7 +537,11 @@ public with sharing class SummitEventsRegisterController {
             addAppt.Event_Appointment_Type__c = appt.Id;
             addAppt.Event_Registration__c = eventInformation.registrationId;
             addAppt.Appointment_Title__c = appt.Title__c;
-            addAppt.Appointment_Status__c = 'Registered';
+            if (appt.Auto_Confirm_Appointment__c) {
+                addAppt.Appointment_Status__c = 'Confirmed';
+            } else {
+                addAppt.Appointment_Status__c = 'Registered';
+            }
             addAppt.Appointment_Category__c = appt.Appointment_Category__c;
             addAppt.Appointment_Type__c = appt.Appointment_Type__c;
             addAppt.Appointment_Detail__c = appt.Description__c;
