@@ -284,8 +284,8 @@ public with sharing class SummitEventsRegisterController {
             }
 
             List<String> analyticCodes = new List<String>{
-                    'gclid__c', 'utm_campaign__c', 'utm_content__c',
-                    'utm_creative_format__c', 'utm_id__c', 'utm_marketing_tactic__c', 'utm_medium__c', 'utm_source__c', 'utm_source_platform__c', 'utm_term__c'
+                    'gclid__c', 'utm_campaign__c', 'utm_content__c', 'utm_creative_format__c', 'utm_id__c',
+                    'utm_marketing_tactic__c', 'utm_medium__c', 'utm_source__c', 'utm_source_platform__c', 'utm_term__c'
             };
 
             for (String code : analyticCodes) {
