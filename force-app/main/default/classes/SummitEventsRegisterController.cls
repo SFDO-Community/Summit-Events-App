@@ -537,6 +537,7 @@ public with sharing class SummitEventsRegisterController {
             addAppt.Event_Appointment_Type__c = appt.Id;
             addAppt.Event_Registration__c = eventInformation.registrationId;
             addAppt.Appointment_Title__c = appt.Title__c;
+            //If appointment is not shown and auto confirmed confirm it!
             if (appt.Auto_Confirm_Appointment__c) {
                 addAppt.Appointment_Status__c = 'Confirmed';
             } else {
