@@ -76,8 +76,7 @@
                     <apex:outputPanel rendered="{!!eventIsClosed && questionWrapper.size > 0}" layout="none">
                         <apex:variable var="qNum" value="{!0}"/>
                         <apex:repeat value="{!questionWrapper}" var="qu">
-
-                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-error {!If(qu.type != 'Text Area','slds-large-size_3-of-6',false)}" rendered="{!qu.setupFail}">
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-error {!qu.displayStyle}" rendered="{!qu.setupFail}">
                                 <apex:outputLabel styleClass="slds-form-element__label">
                                     {!qu.question}
                                     <apex:outputText escape="false" rendered="{!qu.required}">
@@ -87,7 +86,7 @@
                                 <p class="slds-text-color_error">{!qu.setupError}</p>
                             </apex:outputPanel>
 
-                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 {!If(qu.type != 'Text Area','slds-large-size_3-of-6',false)}" rendered="{!If(qu.type != 'Checkbox' && !qu.setupFail, true, false)}">
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 {!qu.displayStyle}" rendered="{!If(qu.type != 'Checkbox' && !qu.setupFail, true, false)}">
                                 <apex:outputPanel layout="block" styleClass="slds-form-element {!IF(qu.required, 'slds-is-required', '')}">
 
                                     <apex:outputLabel styleClass="slds-form-element__label">
