@@ -42,6 +42,17 @@
                 <behavior>Edit</behavior>
                 <field>Actual_Number_of_Guests__c</field>
             </layoutItems>
+            <layoutItems>
+                <emptySpace>true</emptySpace>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>BCC_Transactional_Emails__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>BCC_Transactional_Email_Statuses__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

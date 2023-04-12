@@ -786,6 +786,16 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Registration__c.BCC_Transactional_Email_Statuses__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Registration__c.BCC_Transactional_Emails__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Registration__c.Campus_Tour_Location__c</field>
         <readable>true</readable>
