@@ -396,10 +396,11 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </apex:outputPanel>
 
                             <!-- MOBILE PHONE NUMBER -->
-                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6" rendered="{!IF(CONTAINS(eventPage.Ask_Phone__c, 'home and mobile') || phoneType == 'mobile' || (phoneType= '' && CONTAINS(eventPage.Ask_Phone__c, 'with type')), true, false)}">
-                                <div class="slds-form-element {!If(eventPage.Ask_Phone__c = 'Ask with type require' || eventPage.Ask_Phone__c = 'Ask home and mobile require both', 'slds-is-required', '')}">
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6"
+                                              rendered="{!IF(CONTAINS(eventPage.Ask_Phone__c, 'home and mobile') || eventPage.Ask_Phone__c == 'Ask mobile' || eventPage.Ask_Phone__c == 'Ask mobile and require' || phoneType == 'mobile' || (phoneType= '' && CONTAINS(eventPage.Ask_Phone__c, 'with type')), true, false)}">
+                                <div class="slds-form-element {!If(eventPage.Ask_Phone__c = 'Ask with type require' || eventPage.Ask_Phone__c = 'Ask home and mobile require both' || eventPage.Ask_Phone__c == 'Ask mobile and require', 'slds-is-required', '')}">
                                     <apex:outputLabel for="mobile" styleClass="slds-form-element__label">
-                                        {!IF((CONTAINS(eventPage.Ask_Phone__c, 'with type') && phoneType == ''),'', 'Mobile ')}{!eventPage.Phone_Label__c}
+                                        {!IF((CONTAINS(eventPage.Ask_Phone__c, 'with type') || eventPage.Ask_Phone__c == 'Ask mobile' || eventPage.Ask_Phone__c == 'Ask mobile and require' && phoneType == ''),'', 'Mobile ')}{!eventPage.Phone_Label__c}
                                         <apex:outputText escape="false" rendered="{!IF(CONTAINS(eventPage.Ask_Phone__c, 'require'), true, false)}">
                                             <abbr class="slds-required" title="required">*</abbr>
                                         </apex:outputText>
@@ -435,8 +436,8 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </apex:outputPanel>
 
                             <!-- TEXT MESSAGE ASK -->
-                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!IF(CONTAINS(eventPage.Ask_Phone__c, 'mobile') || phoneType='mobile', true, false)}">
-                                <div class="slds-form-element slds-is-required">
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!IF(CONTAINS(eventPage.Ask_Phone__c, 'mobile') || eventPage.Ask_Phone__c == 'Ask mobile' || eventPage.Ask_Phone__c == 'Ask mobile and require' ||  phoneType='mobile', true, false)}">
+                                <div class="slds-form-element">
                                     <div class="slds-form-element__control">
                                         <div class="slds-checkbox">
                                             <apex:inputCheckbox value="{!eventRegistration.Registrant_Receive_Texts__c}" id="AcceptTextMessage"/>
