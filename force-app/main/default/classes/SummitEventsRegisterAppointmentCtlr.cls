@@ -24,6 +24,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         public String appId { get; set; }
         public String appCategory { get; set; }
         public String appType { get; set; }
+        public Boolean appTypeSet { get; set; }
         public String appTitle { get; set; }
         public String appChosenState { get; set; }
         public String appDesc { get; set; }
@@ -153,6 +154,9 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             addAppointment.appLimit = appLimit;
                             addAppointment.appRequired = apt.Required_Appointment__c;
                             addAppointment.inputRequired = false;
+                            if(String.isNotBlank(apt.Appointment_Type__c)) {
+                                addAppointment.appTypeSet = true;
+                            }
 
                             if (String.isNotBlank(apt.Registrant_Input__c) && apt.Registrant_Input__c.containsIgnoreCase('Required')) {
                                 addAppointment.inputRequired = true;
@@ -161,9 +165,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             if (apt.Appointment_Category__c != null) {
                                 Map<String, String> dependencies = seaShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', apt.Appointment_Category__c);
                                 List<String> pickListItems = new List<String>();
-
-                                if (dependencies.size() > 1) {
-
+                                System.debug(dependencies);
+                                if (dependencies.size() > 0) {
                                     for (String item : dependencies.keySet()) {
                                         pickListItems.add(dependencies.get(item));
                                     }
@@ -252,6 +255,9 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             addAppointment.Chosen_State__c = app.appChosenState;
             if (String.isNotBlank(app.appCategory) && app.appCategory != 'null' && app.appCategory != 'undefined') {
                 addAppointment.Appointment_Category__c = app.appCategory;
+                if (String.isNotBlank(app.appInput) && String.isBlank(addAppointment.Appointment_Type__c)) {
+                    addAppointment.Appointment_Type__c = app.appInput;
+                }
             }
             if (String.isNotBlank(app.appInput)) {
                 addAppointment.Registrant_Input__c = app.appInput;
