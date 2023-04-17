@@ -87,7 +87,6 @@ public class SummitEventsRegistration {
                     BCCsToGo = addToEmailList(em.BCC_Email__c, BCCsToGo);
                     BCCsToGo = addToEmailList(areg.Registrant_Other_Email__c, BCCsToGo);
                     BCCsToGo = addToEmailList(areg.Registrant_Parent_Email__c, BCCsToGo);
-                    System.debug('bcc status match: ' + bccRegStatusMatch);
                     if (bccRegStatusMatch) {
                         BCCsToGo = addToEmailList(areg.BCC_Transactional_Emails__c, BCCsToGo);
                     }
@@ -226,7 +225,6 @@ public class SummitEventsRegistration {
         mail.setToAddresses(new String[]{
                 EmailTo
         });
-        System.debug(BccList);
         mail.setSubject(Subject);
         mail.setBccAddresses(bccList);
         mail.setPlainTextBody(plainBody);

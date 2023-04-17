@@ -83,7 +83,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                             <!-- Show Selected guest -->
                             <apex:outputPanel layout="none" rendered="{!IF(guestAnswers.size>0, true, false)}">
-                                <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium slds-clearfix">Additional guest registered</h2>
+                                <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium slds-clearfix">{!IF(ISBLANK(eventPage.Event_Guest_Submit_List_Label__c),'Additional guests registered', eventPage.Event_Guest_Submit_List_Label__c)}</h2>
                                 <apex:variable value="{!0}" var="guestNum"/>
                                 <apex:repeat var="guests" value="{!guestAnswers}">
                                     <article class="slds-card slds-clearfix slds-p-vertical_none">
@@ -105,7 +105,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                             <!-- Show selected appointments -->
                             <apex:outputPanel layout="none" rendered="{!IF(chosenAppointments.size>0, true, false)}">
-                                <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium slds-clearfix">Appointments</h2>
+                                <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium slds-clearfix">{!IF(ISBLANK(eventPage.Event_Appointment_Submit_List_Label__c),'Selected options', eventPage.Event_Appointment_Submit_List_Label__c)}</h2>
                                 <ul id="chosenAppointments" class="slds-list_dotted">
                                     <apex:repeat var="appointment" value="{!chosenAppointments}">
                                         <li>

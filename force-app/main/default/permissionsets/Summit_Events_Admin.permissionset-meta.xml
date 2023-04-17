@@ -1954,6 +1954,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events__c.Event_Appointment_Submit_List_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events__c.Event_Appointment_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -2030,6 +2035,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events__c.Event_Full_Text__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Event_Guest_Submit_List_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
