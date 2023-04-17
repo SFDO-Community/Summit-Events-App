@@ -66,7 +66,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
             eventPage = [
                     SELECT Name, Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Full_Text__c, Event_Home_Link_URL__c, Event_Home_Link_Title__c,
-                            Template__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Event_Additional_Question_Title__c, Event_Additional_Questions_Description__c
+                            Template__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Event_Additional_Question_Title__c, Event_Additional_Questions_Description__c,
+                            Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -141,7 +142,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     String mapToField = '';
                     String lookupObject = '';
 
-                    if(String.isBlank(question.Display_Style__c)) {
+                    if (String.isBlank(question.Display_Style__c)) {
                         quest.displayStyle = 'slds-large-size_3-of-6';
                     } else if (question.Display_Style__c.equalsIgnoreCase('full width')) {
                         quest.displayStyle = 'slds-large-size_6-of-6';

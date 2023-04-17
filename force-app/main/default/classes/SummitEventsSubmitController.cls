@@ -48,7 +48,8 @@ public with sharing class SummitEventsSubmitController {
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
                             Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
                             Donation_Description__c, Display_Optional_Donation__c, Payment_Gateway__c, Event_Fee_Label__c, Event_Fee_Total_Label__c,
-                            Event_Fee_Submit_List_Label__c, Payment_Button_Label__c, Event_Appointment_Submit_List_Label__c, Event_Guest_Submit_List_Label__c
+                            Event_Fee_Submit_List_Label__c, Payment_Button_Label__c, Event_Appointment_Submit_List_Label__c, Event_Guest_Submit_List_Label__c,
+                            Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
