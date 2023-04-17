@@ -64,17 +64,29 @@ public class SummitEventsRegistration {
             //Loop through gather email templates to get template and use registration fields to fill in hooks
             for (Summit_Events_Email__c em : matchEmail) {
                 Boolean statusMatch = false;
-
+                Boolean bccRegStatusMatch = false;
+                List<String> BCCsToGo = new List<String>();
                 if (em.Event__c.equals(areg.Event__c)) {
 
                     statusMatch = false;
 
-                    if (!String.isBlank(em.Action_Sub_status__c) && !String.isBlank(areg.Substatus__c)) {
+                    if (String.isNotBlank(em.Action_Sub_status__c) && String.isNotBlank(areg.Substatus__c)) {
                         if (em.Action_Sub_status__c.equals(areg.Substatus__c) && em.Action_Status__c.equalsIgnoreCase(areg.Status__c)) {
                             statusMatch = true;
                         }
                     } else if (em.Action_Status__c.equals(areg.Status__c) && String.isBlank(em.Action_Sub_status__c) && String.isBlank(areg.Substatus__c)) {
                         statusMatch = true;
+                        if (areg.BCC_Transactional_Email_Statuses__c.contains(em.Action_Status__c)) {
+                            bccRegStatusMatch = true;
+                        }
+                    }
+
+                    //Build the BCC list. No duplicate emails. Split strings.
+                    BCCsToGo = addToEmailList(em.BCC_Email__c, BCCsToGo);
+                    BCCsToGo = addToEmailList(areg.Registrant_Other_Email__c, BCCsToGo);
+                    BCCsToGo = addToEmailList(areg.Registrant_Parent_Email__c, BCCsToGo);
+                    if (bccRegStatusMatch) {
+                        BCCsToGo = addToEmailList(areg.BCC_Transactional_Emails__c, BCCsToGo);
                     }
 
                     if (statusMatch) {
@@ -159,6 +171,51 @@ public class SummitEventsRegistration {
             doCRUD crudToDo = new doCRUD();
             crudToDo.savTask(activityUpdates);
         }
+    }
+
+    /*
+    This method makes sure no duplicate emails make it into our lists causing BCC failures.
+    emailList is the list you want to maintain and emailIn is the new emails you want to add.
+     */
+    public static List<String> addToEmailList(String emailsInString, List<String> emailList) {
+        if (String.isNotBlank(emailsInString)) {
+            List<String> emailsIn = splitEmails(emailsInString);
+            for (String email : emailsIn) {
+                if (!emailList.contains(email)) {
+                    emailList.add(email);
+                }
+            }
+        }
+        return emailList;
+    }
+
+    public static List<String> splitEmails(String emailDelineatedString) {
+        List<String> checkedEmails = new List<String>();
+        if (String.isNotBlank(emailDelineatedString)) {
+            emailDelineatedString = emailDelineatedString.replaceAll('\\s+', ',');
+            emailDelineatedString = emailDelineatedString.replaceAll(';', ',');
+            List<String> emailList = emailDelineatedString.split(',');
+            for (String em : emailList) {
+                if (validateEmail(em)) {
+                    checkedEmails.add(em);
+                }
+            }
+        }
+        return checkedEmails;
+    }
+
+    public static Boolean validateEmail(String email) {
+        Boolean res = false;
+        if (String.isNotBlank(email)) {
+            // source: http://www.regular-expressions.info/email.html
+            String emailRegex = '^[a-zA-Z0-9._|\\\\%#~`=?&/$^*!}{+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$';
+            Pattern MyPattern = Pattern.compile(emailRegex);
+            Matcher MyMatcher = MyPattern.matcher(email);
+            if (MyMatcher.matches()) {
+                res = true;
+            }
+        }
+        return res;
     }
 
     public static void sendEmail2(String EmailTo, String HTMLBody, String plainBody, String Subject, Id OrgEmailId, String BCCString) {
