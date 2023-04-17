@@ -572,6 +572,12 @@ public with sharing class SummitEventsRegisterController {
             } else {
                 addAppt.Appointment_Status__c = 'Registered';
             }
+            if (String.isNotBlank(appt.Auto_add_building__c)) {
+                addAppt.Building__c = appt.Auto_add_building__c;
+            }
+            if (appt.Auto_Add_Time__c != null) {
+                addAppt.Appointment_Time__c = appt.Auto_Add_Time__c;
+            }
             addAppt.Appointment_Category__c = appt.Appointment_Category__c;
             addAppt.Appointment_Type__c = appt.Appointment_Type__c;
             addAppt.Appointment_Detail__c = appt.Description__c;
