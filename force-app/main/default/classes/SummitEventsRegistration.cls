@@ -76,8 +76,10 @@ public class SummitEventsRegistration {
                         }
                     } else if (em.Action_Status__c.equals(areg.Status__c) && String.isBlank(em.Action_Sub_status__c) && String.isBlank(areg.Substatus__c)) {
                         statusMatch = true;
-                        if (areg.BCC_Transactional_Email_Statuses__c.contains(em.Action_Status__c)) {
-                            bccRegStatusMatch = true;
+                        if (String.isNotBlank(areg.BCC_Transactional_Email_Statuses__c)) {
+                            if (areg.BCC_Transactional_Email_Statuses__c.contains(em.Action_Status__c)) {
+                                bccRegStatusMatch = true;
+                            }
                         }
                     }
 
@@ -85,6 +87,7 @@ public class SummitEventsRegistration {
                     BCCsToGo = addToEmailList(em.BCC_Email__c, BCCsToGo);
                     BCCsToGo = addToEmailList(areg.Registrant_Other_Email__c, BCCsToGo);
                     BCCsToGo = addToEmailList(areg.Registrant_Parent_Email__c, BCCsToGo);
+                    System.debug('bcc status match: ' + bccRegStatusMatch);
                     if (bccRegStatusMatch) {
                         BCCsToGo = addToEmailList(areg.BCC_Transactional_Emails__c, BCCsToGo);
                     }
@@ -143,7 +146,7 @@ public class SummitEventsRegistration {
                         originalTemplate = originalTemplate.replaceAll('\\[\\[DONT_DELETE_CONTENT_HERE\\]\\]', emailContent);
 
                         //send the message
-                        sendEmail2(areg.Registrant_Email__c, originalTemplate, emailContent, em.Email_Subject__c, em.Org_Email_Id__c, em.BCC_Email__c);
+                        sendEmail2(areg.Registrant_Email__c, originalTemplate, emailContent, em.Email_Subject__c, em.Org_Email_Id__c, BCCsToGo);
 
                         //Create an activity task
                         Task nt = new Task();
@@ -218,20 +221,14 @@ public class SummitEventsRegistration {
         return res;
     }
 
-    public static void sendEmail2(String EmailTo, String HTMLBody, String plainBody, String Subject, Id OrgEmailId, String BCCString) {
+    public static void sendEmail2(String EmailTo, String HTMLBody, String plainBody, String Subject, Id OrgEmailId, List<String> BccList) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setToAddresses(new String[]{
                 EmailTo
         });
+        System.debug(BccList);
         mail.setSubject(Subject);
-        if (!String.isBlank(BCCString)) {
-            BCCString = BCCString.replaceAll('\\s+', '');
-            BCCString = BCCString.replaceAll(';', ',');
-            List<String> bccList = BCCString.split(',');
-            if (bccList.size() > 0) {
-                mail.setBccAddresses(bccList);
-            }
-        }
+        mail.setBccAddresses(bccList);
         mail.setPlainTextBody(plainBody);
         if (String.isBlank(HTMLBody)) {
             mail.setHtmlBody(plainBody);
