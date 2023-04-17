@@ -145,7 +145,7 @@ public class SummitEventsRegistration {
                         originalTemplate = originalTemplate.replaceAll('\\[\\[DONT_DELETE_CONTENT_HERE\\]\\]', emailContent);
 
                         //send the message
-                        sendEmail2(areg.Registrant_Email__c, originalTemplate, emailContent, em.Email_Subject__c, em.Org_Email_Id__c, BCCsToGo);
+                        String emailMessage = sendEmail2(areg.Registrant_Email__c, originalTemplate, emailContent, em.Email_Subject__c, em.Org_Email_Id__c, BCCsToGo);
 
                         //Create an activity task
                         Task nt = new Task();
@@ -160,6 +160,7 @@ public class SummitEventsRegistration {
                         nt.Description = emailContent.replaceAll('</p>', '\n'); // Replaces </p> (the paragraph closing tag) with a line break, since it is functionally identical to a line break
                         nt.Description = nt.Description.replaceAll('<(.*?)>', ''); // Replaces angled brackets and everything between with an empty string
                         nt.Description += '\n\n' + 'Registrant Email: ' + areg.Registrant_Email__c;
+                        nt.Description = emailMessage + '\n\n' + nt.Description;
 
                         activityUpdates.add(nt);
                     }
@@ -167,7 +168,6 @@ public class SummitEventsRegistration {
                 }
             }
         }
-
 
         if (activityUpdates.size() > 0) {
             doCRUD crudToDo = new doCRUD();
@@ -220,23 +220,30 @@ public class SummitEventsRegistration {
         return res;
     }
 
-    public static void sendEmail2(String EmailTo, String HTMLBody, String plainBody, String Subject, Id OrgEmailId, List<String> BccList) {
-        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-        mail.setToAddresses(new String[]{
-                EmailTo
-        });
-        mail.setSubject(Subject);
-        mail.setBccAddresses(bccList);
-        mail.setPlainTextBody(plainBody);
-        if (String.isBlank(HTMLBody)) {
-            mail.setHtmlBody(plainBody);
-        } else {
-            mail.setHtmlBody(HTMLBody);
+    public static String sendEmail2(String EmailTo, String HTMLBody, String plainBody, String Subject, Id OrgEmailId, List<String> BccList) {
+        String emailMessage = 'Email successfully sent!';
+        try {
+            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+            mail.setToAddresses(new String[]{
+                    EmailTo
+            });
+            mail.setSubject(Subject);
+            mail.setBccAddresses(bccList);
+            mail.setPlainTextBody(plainBody);
+            if (String.isBlank(HTMLBody)) {
+                mail.setHtmlBody(plainBody);
+            } else {
+                mail.setHtmlBody(HTMLBody);
+            }
+            mail.setOrgWideEmailAddressId(OrgEmailId);
+            Messaging.SendEmailResult [] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[]{
+                    mail
+            });
+        } catch (Exception ex) {
+            emailMessage = 'Email failed with this error: ' + ex.getMessage();
+            System.debug(ex.getMessage());
         }
-        mail.setOrgWideEmailAddressId(OrgEmailId);
-        Messaging.SendEmailResult [] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[]{
-                mail
-        });
+        return emailMessage;
     }
 
     private without sharing class doCRUD {
