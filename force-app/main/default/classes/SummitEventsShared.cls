@@ -396,10 +396,10 @@ public with sharing class SummitEventsShared {
     }
 
     public Boolean isEventClosed(Summit_Events_Instance__c evtInstance) {
-        //Figure out if the event is closed.
+        // Figure out if the event is closed.
         Boolean eventIsClosed = false;
         Date compareCloseDate = Date.today();
-        //Get time in timezone fo event
+        // Get time in timezone fo event
         DateTime dt = DateTime.now();
         String timeZonePick = getTimeZonePick(evtInstance.Instance_Time_Zone__c);
         TimeZone tz = getTimeZone(timeZonePick);
