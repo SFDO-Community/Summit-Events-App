@@ -67,7 +67,7 @@ public with sharing class SummitEventsDonationController {
                 adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
                 eventIsClosed = adminOpen;
             } else {
-                eventIsClosed = seaShared.isEventClosed(eventPage, eventInstance);
+                eventIsClosed = seaShared.isEventClosed(eventInstance);
             }
 
             formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);

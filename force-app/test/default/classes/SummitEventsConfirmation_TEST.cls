@@ -224,6 +224,8 @@ private class SummitEventsConfirmation_TEST {
 
             System.assert(confirmCtrl.paymentReceived);
 
+            confirmCtrl.checkEventDetails();
+
             Summit_Events_Registration__c checkRegistrationStatus = [
                     SELECT Id, Status__c
                     FROM

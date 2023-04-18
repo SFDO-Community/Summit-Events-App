@@ -72,7 +72,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
                     eventIsClosed = adminOpen;
                 } else {
-                    eventIsClosed = seaShared.isEventClosed(eventPage, evtInstance);
+                    eventIsClosed = seaShared.isEventClosed(evtInstance);
                 }
 
                 if (evtInstance != null) {

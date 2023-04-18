@@ -395,25 +395,21 @@ public with sharing class SummitEventsShared {
         return '';
     }
 
-    public Boolean isEventClosed(Summit_Events__c eventPage, Summit_Events_Instance__c evtInstance) {
+    public Boolean isEventClosed(Summit_Events_Instance__c evtInstance) {
         //Figure out if the event is closed.
         Boolean eventIsClosed = false;
-
         Date compareCloseDate = Date.today();
+        //Get time in timezone fo event
+        DateTime dt = DateTime.now();
+        String timeZonePick = getTimeZonePick(evtInstance.Instance_Time_Zone__c);
+        TimeZone tz = getTimeZone(timeZonePick);
+        dt = dt.addSeconds((tz.getOffset(dt) / 1000));
+        Time compareCloseTime = dt.time();
 
-        if (eventPage.Close_Event_Days_Before__c != null && eventPage.Close_Event_Days_Before__c != 0) {
-            compareCloseDate = compareCloseDate.addDays((Integer.valueOf(eventPage.Close_Event_Days_Before__c) + 1));
-        }
-
-        Time compareCloseTime = System.now().time();
-
-        if (eventPage.Keep_Registration_Open_During_Event__c) {
-            if (evtInstance.Registration_Close_Date__c < compareCloseDate ||
-                    (evtInstance.Registration_Close_Date__c == compareCloseDate && evtInstance.Registration_Close_Time__c <= compareCloseTime)) {
+        if (evtInstance.Registration_Close_Date__c <= compareCloseDate) {
+            if(evtInstance.Registration_Close_Time__c < compareCloseTime) {
                 eventIsClosed = true;
             }
-        } else if (evtInstance.Registration_Close_Date__c <= compareCloseDate) {
-            eventIsClosed = true;
         }
 
         if (evtInstance.Current_Available_Capacity__c <= 0 || evtInstance.Active_Status__c != 'Active') {
@@ -579,7 +575,7 @@ public with sharing class SummitEventsShared {
     }
 
     public String removeHTMLandEscape(String incomingString, Boolean escapeHTML) {
-        if(String.isNotBlank(incomingString)) {
+        if (String.isNotBlank(incomingString)) {
             incomingString = incomingString.replaceAll('<[^>]+>', '').trim();
             if (escapeHTML) {
                 incomingString = incomingString.escapeHtml4();

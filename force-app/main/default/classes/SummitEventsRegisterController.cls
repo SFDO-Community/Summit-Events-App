@@ -167,7 +167,7 @@ public with sharing class SummitEventsRegisterController {
                 adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
                 eventIsClosed = adminOpen;
             } else {
-                eventIsClosed = SeaShared.isEventClosed(eventPage, evtInstance);
+                eventIsClosed = SeaShared.isEventClosed(evtInstance);
             }
 
             if (

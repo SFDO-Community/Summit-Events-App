@@ -96,7 +96,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
                 eventIsClosed = adminOpen;
             } else {
-                eventIsClosed = SeaShared.isEventClosed(eventPage, eventInstance);
+                eventIsClosed = SeaShared.isEventClosed(eventInstance);
             }
 
             //Get the question object questions
