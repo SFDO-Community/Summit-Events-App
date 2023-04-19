@@ -570,7 +570,7 @@ public with sharing class SummitEventsRegisterController {
             if (appt.Auto_Confirm_Appointment__c) {
                 addAppt.Appointment_Status__c = 'Confirmed';
             } else {
-                addAppt.Appointment_Status__c = 'Registered';
+                addAppt.Appointment_Status__c = 'Requested';
             }
             if (String.isNotBlank(appt.Auto_add_building__c)) {
                 addAppt.Building__c = appt.Auto_add_building__c;

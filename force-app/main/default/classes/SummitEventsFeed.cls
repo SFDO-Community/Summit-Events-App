@@ -251,7 +251,7 @@ global with sharing class SummitEventsFeed {
             eventQuery += ' AND (' + sanitizeOrLikeList(accountName, 'Event__r.Account__r.Name') + ') ';
         }
 
-        //School filter (can be comma separated)
+        //Building filter (can be comma separated)
         String building = req.params.get('building');
         if (String.isNotBlank(building)) {
             eventQuery += ' AND (' + sanitizeOrLikeList(building, 'Event__r.Building__c') + ') ';
@@ -468,9 +468,6 @@ global with sharing class SummitEventsFeed {
         }
         return '';
     }
-
-
-//eventQuery += ' Event__r.Program_Filter__c LIKE \'%' + f + '%\' OR ';
 
     private static Map<String, String> getAudienceDD(Schema.DescribeFieldResult fieldResult) {
         Map<String, String> fieldMap = new Map<String, String>();
