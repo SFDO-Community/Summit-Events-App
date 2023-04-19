@@ -11,7 +11,6 @@ public with sharing class SummitEventsConfirmationController {
     public String templateSelected { get; set; }
     public String formattedNavDate { get; set; }
     public Boolean eventIsClosed { get; set; }
-    public Boolean adminOpen { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
     public Map <String, String> feesByIndex { get; set; }
     public List<Summit_Events_Fee__c> eventFees { get; set; }
@@ -60,17 +59,7 @@ public with sharing class SummitEventsConfirmationController {
                             LIMIT 1
                     ];
 
-                    if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-                        adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-                        if (adminOpen) {
-                            PageReference eventDetailsPageReference = checkEventDetails();
-                            if (eventDetailsPageReference == null) {
-                                eventIsClosed = seaShared.isEventClosed(eventInstance);
-                            }
-                        }
-                    } else {
-                        eventIsClosed = seaShared.isEventClosed(eventInstance);
-                    }
+                    eventIsClosed = seaShared.isEventClosed(eventInstance);
 
                     formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
                 }
@@ -97,13 +86,7 @@ public with sharing class SummitEventsConfirmationController {
         Boolean eventRegistrationSuccess = true;
 
         //Make sure the event has not expired
-        eventIsClosed = false;
-        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-            adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-            eventIsClosed = adminOpen;
-        } else {
-            eventIsClosed = seaShared.isEventClosed(eventInstance);
-        }
+        eventIsClosed = seaShared.isEventClosed(eventInstance);
 
         // Default to submit page, submit will redirect to beginning if no reg id is present. Prevents pre-filled forms in one step registrations.
         ApexPages.currentPage().getHeaders().put('referer', Page.SummitEventsSubmit.getUrl());

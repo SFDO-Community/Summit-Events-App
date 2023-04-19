@@ -18,7 +18,6 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public String formattedNavDate { get; set; }
     public List<Summit_Events_Question__c> additionalQuestions { get; set; }
     public Boolean eventIsClosed { get; set; }
-    public Boolean adminOpen { get; set; }
     public List<String> mapToList { get; set; }
     public List<questionItem> questionWrapper { get; set; }
     private Id incomingRegId { get; set; }
@@ -92,12 +91,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             startTimeString = SeaShared.formatTime(eventInstance.Instance_Start_Time__c, false);
             endTimeString = SeaShared.formatTime(eventInstance.Instance_End_Time__c, false);
 
-            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-                adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-                eventIsClosed = adminOpen;
-            } else {
-                eventIsClosed = SeaShared.isEventClosed(eventInstance);
-            }
+            eventIsClosed = SeaShared.isEventClosed(eventInstance);
 
             //Get the question object questions
             additionalQuestions = [

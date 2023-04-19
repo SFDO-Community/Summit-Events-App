@@ -14,7 +14,6 @@ public with sharing class SummitEventsRegisterGuestsController {
     public Map<Id, Summit_Events_Question__c> eventGuestQuestions { get; set; }
     public String templateSelected { get; set; }
     public Boolean eventIsClosed { get; set; }
-    public Boolean adminOpen { get; set; }
     public Map<String, PageReference> pageFlow { get; set; }
     public String guestJSON { get; set; }
     public String guestQuestionJSON { get; set; }
@@ -165,12 +164,8 @@ public with sharing class SummitEventsRegisterGuestsController {
             pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
             templateSelected = seaShared.getTemplate(eventPage.Template__c);
 
-            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-                adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-                eventIsClosed = adminOpen;
-            } else {
-                eventIsClosed = seaShared.isEventClosed(eventInstance);
-            }
+            eventIsClosed = seaShared.isEventClosed(eventInstance);
+
             formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
 
         }

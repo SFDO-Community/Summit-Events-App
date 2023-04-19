@@ -14,7 +14,6 @@ public with sharing class SummitEventsDonationController {
     public String donationAmount { get; set; }
     public Summit_Events_Fee__c incomingFee { get; set; }
     public Boolean eventIsClosed { get; set; }
-    public Boolean adminOpen { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public String formattedNavDate { get; set; }
     public Map<String, PageReference> pageFlow {get;set;}
@@ -63,12 +62,7 @@ public with sharing class SummitEventsDonationController {
                 donationAmountSelect = String.valueOf(incomingFee.Event_Fee__c);
             }
 
-            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-                adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-                eventIsClosed = adminOpen;
-            } else {
-                eventIsClosed = seaShared.isEventClosed(eventInstance);
-            }
+            eventIsClosed = seaShared.isEventClosed(eventInstance);
 
             formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
         }

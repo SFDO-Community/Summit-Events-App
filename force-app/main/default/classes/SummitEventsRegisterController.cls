@@ -29,7 +29,6 @@ public with sharing class SummitEventsRegisterController {
     public Boolean showLocation { get; set; }
     public String startTimeString { get; set; }
     public String endTimeString { get; set; }
-    public Boolean adminOpen { get; set; }
     public String registrantAudience { get; set; }
     public String EvtUserType { get; set; }
     public Id incomingEventRegistrationId { get; set; }
@@ -163,12 +162,7 @@ public with sharing class SummitEventsRegisterController {
                 }
             }
 
-            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-                adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-                eventIsClosed = adminOpen;
-            } else {
-                eventIsClosed = SeaShared.isEventClosed(evtInstance);
-            }
+            eventIsClosed = SeaShared.isEventClosed(evtInstance);
 
             if (
                     (String.isNotBlank(eventPage.Add_Info_Question_Type_1__c) && String.isNotBlank(eventPage.Add_Info_Question_Text_1__c)) ||

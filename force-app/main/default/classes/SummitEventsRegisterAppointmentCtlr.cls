@@ -11,7 +11,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     public Summit_Events_Instance__c evtInstance { get; set; }
     public String incomingAppointmentJSON { get; set; }
     public Boolean eventIsClosed { get; set; }
-    public Boolean adminOpen { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public String templateSelected { get; set; }
     public Boolean noOptionalAppointments { get; set; }
@@ -68,12 +67,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                 pageFlow = seaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage(), evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c);
 
-                if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-                    adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-                    eventIsClosed = adminOpen;
-                } else {
-                    eventIsClosed = seaShared.isEventClosed(evtInstance);
-                }
+                eventIsClosed = seaShared.isEventClosed(evtInstance);
 
                 if (evtInstance != null) {
                     String dayOfWeek = seaShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');

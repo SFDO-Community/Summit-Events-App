@@ -14,7 +14,6 @@ public with sharing class SummitEventsSubmitController {
     public Map <String, String> feesByIndex { get; set; }
     public String formattedNavDate { get; set; }
     public Boolean eventIsClosed { get; set; }
-    public Boolean adminOpen { get; set; }
     public List<Summit_Events_Fee__c> eventFees { get; set; }
     public Double totalPaymentAmount { get; set; }
     public Double existingPaymentAmount { get; set; }
@@ -73,12 +72,7 @@ public with sharing class SummitEventsSubmitController {
 
             pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
 
-            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-                adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-                eventIsClosed = adminOpen;
-            } else {
-                eventIsClosed = seaShared.isEventClosed(eventInstance);
-            }
+            eventIsClosed = seaShared.isEventClosed(eventInstance);
 
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('error'))) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ApexPages.currentPage().getParameters().get('error')));

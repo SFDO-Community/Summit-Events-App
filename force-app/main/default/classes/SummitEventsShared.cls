@@ -395,25 +395,45 @@ public with sharing class SummitEventsShared {
         return '';
     }
 
+    public Boolean isBoolean(String booleanString) {
+        Boolean b;
+        booleanString = booleanString.toLowerCase();
+        if (booleanString == 'true') {
+            b = true;
+        } else if (booleanString == 'false') {
+            b = false;
+        } else if (booleanString == '0') {
+            b = false;
+        } else if (booleanString == '1') {
+            b = true;
+        }
+        return b;
+    }
+
     public Boolean isEventClosed(Summit_Events_Instance__c evtInstance) {
         // Figure out if the event is closed.
         Boolean eventIsClosed = false;
-        Date compareCloseDate = Date.today();
-        // Get time in timezone fo event
-        DateTime dt = DateTime.now();
-        String timeZonePick = getTimeZonePick(evtInstance.Instance_Time_Zone__c);
-        TimeZone tz = getTimeZone(timeZonePick);
-        dt = dt.addSeconds((tz.getOffset(dt) / 1000));
-        Time compareCloseTime = dt.time();
+        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+            Boolean adminOpen = isBoolean(ApexPages.currentPage().getParameters().get('adminopen'));
+            eventIsClosed = !adminOpen;
+        } else {
+            Date compareCloseDate = Date.today();
+            // Get time in timezone fo event
+            Datetime dt = Datetime.now();
+            String timeZonePick = getTimeZonePick(evtInstance.Instance_Time_Zone__c);
+            TimeZone tz = getTimeZone(timeZonePick);
+            dt = dt.addSeconds((tz.getOffset(dt) / 1000));
+            Time compareCloseTime = dt.time();
 
-        if (evtInstance.Registration_Close_Date__c <= compareCloseDate) {
-            if(evtInstance.Registration_Close_Time__c < compareCloseTime) {
+            if (evtInstance.Registration_Close_Date__c <= compareCloseDate) {
+                if (evtInstance.Registration_Close_Time__c < compareCloseTime) {
+                    eventIsClosed = true;
+                }
+            }
+
+            if (evtInstance.Current_Available_Capacity__c <= 0 || evtInstance.Active_Status__c != 'Active') {
                 eventIsClosed = true;
             }
-        }
-
-        if (evtInstance.Current_Available_Capacity__c <= 0 || evtInstance.Active_Status__c != 'Active') {
-            eventIsClosed = true;
         }
 
         return eventIsClosed;
