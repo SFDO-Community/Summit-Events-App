@@ -42,6 +42,7 @@ appointmentsReady(() => {
         title.innerHTML = title.innerHTML.replace(regExDouble, '\"');
     })
 
+    populateAppJSON();
 
     //Initiate add buttons in chooser column
     if (chooser) {

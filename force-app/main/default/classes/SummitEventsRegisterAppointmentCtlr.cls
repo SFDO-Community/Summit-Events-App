@@ -103,7 +103,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     for (Summit_Events_Appointment_Type__c chosenCheck : appointments.values()) {
                         if (chosenCheck.Chosen_State__c != 'Added and Required' && chosenCheck.Chosen_State__c != 'Added but not shown') {
                             noOptionalAppointments = false;
-                            break;
                         }
                     }
 
