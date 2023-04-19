@@ -233,7 +233,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
             //Set know states
             addAppointment.Event_Registration__c = eventInformation.registrationId;
-            addAppointment.Appointment_Status__c = 'Registered';
+            addAppointment.Appointment_Status__c = 'Requested';
             addAppointment.Client_Created_Appointment__c = true;
 
             if (!String.isBlank(appDefinition.Auto_add_building__c)) {
