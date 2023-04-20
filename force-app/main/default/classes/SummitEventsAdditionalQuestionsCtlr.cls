@@ -136,12 +136,13 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     String mapToField = '';
                     String lookupObject = '';
 
-                    if (String.isBlank(question.Display_Style__c)) {
-                        quest.displayStyle = 'slds-large-size_3-of-6';
-                    } else if (question.Display_Style__c.equalsIgnoreCase('full width')) {
-                        quest.displayStyle = 'slds-large-size_6-of-6';
-                    } else if (question.Display_Style__c.equalsIgnoreCase('third width')) {
-                        quest.displayStyle = 'slds-large-size_2-of-6';
+                    quest.displayStyle = 'slds-large-size_3-of-6';
+                    if (String.isNotBlank(question.Display_Style__c)) {
+                        if (question.Display_Style__c.equalsIgnoreCase('full width')) {
+                            quest.displayStyle = 'slds-large-size_6-of-6';
+                        } else if (question.Display_Style__c.equalsIgnoreCase('third width')) {
+                            quest.displayStyle = 'slds-large-size_2-of-6';
+                        }
                     }
 
                     //Make sure this is really a field
