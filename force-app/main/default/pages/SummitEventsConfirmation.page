@@ -16,14 +16,15 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="scriptsHead">
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
             <script>
-                dataLayer = [{
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push({
                     'account': '{!IF(!ISBLANK(eventPage.Account__r.Name),eventPage.Account__r.Name, '')}',
                     'audience': '{!IF(!ISBLANK(eventPage.Audience__c),eventPage.Audience__c, '')}',
                     'eventLabel': '{!eventPage.Event_Name__c}{!IF(!ISBLANK(eventInstance.Instance_Title__c),' - ' + eventInstance.Instance_Title__c,'')}',
                     'category': '{!IF(!ISBLANK(eventPage.Filter_Category__c), eventPage.Filter_Category__c, '')}',
                     'sponsor': '{!IF(!ISBLANK(eventPage.Event_Sponsor__c), eventPage.Event_Sponsor__c, '')}',
                     'page': '{!$CurrentPage.Name}'
-                }];
+                });
             </script>
         </apex:define>
         <apex:define name="sectionNav"/>
