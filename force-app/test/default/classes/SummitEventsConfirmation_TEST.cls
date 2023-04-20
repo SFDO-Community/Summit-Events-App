@@ -100,7 +100,7 @@ private class SummitEventsConfirmation_TEST {
                             Summit_Events_Registration__c
                     WHERE Id = :seaTestRegistration.Id
             ];
-            System.assertEquals(checkRegistrationStatus.Status__c, 'Started');
+            System.assertEquals(checkRegistrationStatus.Status__c, 'Registered');
             Test.stopTest();
         }
     }

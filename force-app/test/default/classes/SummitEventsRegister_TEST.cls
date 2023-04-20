@@ -71,6 +71,46 @@ private class SummitEventsRegister_TEST {
             Test.stopTest();
         }
     }
+    @IsTest static void testEventWithUTMParameters() {
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Test', 'Tester', 'test@test.net', '55555', '1971-03-22', '2012', null);
+        Summit_Events__c seaTestEvent = SummitEventsTestSharedDataFactory.getEventRecord(seaTestInstances[1].Event__c);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        System.runAs(testUser) {
+
+            PageReference pageRef = Page.SummitEventsRegister;
+            Test.setCurrentPage(pageRef);
+            ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
+            ApexPages.currentPage().getParameters().put('audience', 'Transfer');
+            List<String> analyticCodes = new List<String>{
+                    'gclid__c', 'utm_campaign__c', 'utm_content__c', 'utm_creative_format__c', 'utm_id__c',
+                    'utm_marketing_tactic__c', 'utm_medium__c', 'utm_source__c', 'utm_source_platform__c', 'utm_term__c'
+            };
+            for (String code : analyticCodes) {
+                String urlParameter = code.removeEnd('__c');
+                ApexPages.currentPage().getParameters().put(urlParameter, urlParameter + '_TEST');
+            }
+            SummitEventsRegisterController registerController = new SummitEventsRegisterController();
+            registerController.eventRegistration.Registrant_First_Name__c = 'Test';
+            registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
+            registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
+            registerController.saveContactRegistration();
+            Summit_Events_Registration__c registration = [
+                    SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c,
+                            utm_term__c, gclid__c, utm_campaign__c, utm_content__c, utm_creative_format__c, utm_id__c,
+                            utm_marketing_tactic__c, utm_medium__c, utm_source_platform__c, utm_source__c
+                    FROM Summit_Events_Registration__c
+                    WHERE id = :registerController.eventRegistration.Id
+            ];
+            Test.startTest();
+            for (String code : analyticCodes) {
+                String urlParameter = code.removeEnd('__c');
+                System.assertEquals(registration.get(code), urlParameter + '_TEST');
+            }
+            Test.stopTest();
+        }
+    }
+
 
     @IsTest static void testEventWithAppointments() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();

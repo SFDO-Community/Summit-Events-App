@@ -277,14 +277,16 @@ public with sharing class SummitEventsRegisterController {
                 eventRegistration.Event_Website_Referrer__c = ApexPages.currentPage().getHeaders().get('Referer').replace('\'', '').escapeHtml4();
             }
 
+            //get and sanitize utm variables
             List<String> analyticCodes = new List<String>{
                     'gclid__c', 'utm_campaign__c', 'utm_content__c', 'utm_creative_format__c', 'utm_id__c',
                     'utm_marketing_tactic__c', 'utm_medium__c', 'utm_source__c', 'utm_source_platform__c', 'utm_term__c'
             };
 
             for (String code : analyticCodes) {
-                if (String.isNotBlank(ApexPages.currentPage().getParameters().get(code))) {
-                    String codeValue = ApexPages.currentPage().getParameters().get(code);
+                String urlParameter = code.removeEnd('__c');
+                if (String.isNotBlank(ApexPages.currentPage().getParameters().get(urlParameter))) {
+                    String codeValue = ApexPages.currentPage().getParameters().get(urlParameter);
                     codeValue = codeValue.replace('\'', '');
                     codeValue = codeValue.escapeHtml4();
                     eventRegistration.put(code, codeValue);
