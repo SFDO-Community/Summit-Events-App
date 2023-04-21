@@ -13,6 +13,7 @@ public with sharing class SummitEventsCancelReviewController {
     public Boolean eventNotFound { get; set; }
     public String formattedNavDate { get; set; }
     public String eventParameter { get; set; }
+    public Summit_Events_Instance__c eventInstance { get; set; }
 
     public SummitEventsCancelReviewController() {
         eventParameter = ApexPages.currentPage().getParameters().get('eventInfo');
@@ -36,7 +37,8 @@ public with sharing class SummitEventsCancelReviewController {
                                     Event__r.Template__c, Event__r.Event_Home_Link_Title__c, Event__r.Event_Home_Link_URL__c,
                                     Event_Instance__r.Instance_Start_Date__c, Event_Instance__r.Instance_Start_Time__c,
                                     Event_Instance__r.Instance_End_Date__c, Event_Instance__r.Instance_End_Time__c, Event_Instance__r.Instance_Time_Zone__c,
-                                    Event__r.Tracking_Cancel_Registration__c
+                                    Event__r.Tracking_Cancel_Registration__c, Event__r.Account__r.Name, Event__r.Audience__c,
+                                    Event__r.Filter_Category__c, Event__r.Event_Sponsor__c
                             FROM Summit_Events_Registration__c
                             WHERE Id = :eventInformation.registrationId
                             WITH SECURITY_ENFORCED
@@ -56,7 +58,7 @@ public with sharing class SummitEventsCancelReviewController {
                                 WITH SECURITY_ENFORCED
                         ];
 
-                        List<Summit_Events_Instance__c> eventInstance = [
+                        eventInstance = [
                                 SELECT Id, Event__r.Event_Name__c, Instance_Title__c,
                                         Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c
                                 FROM Summit_Events_Instance__c W
@@ -68,8 +70,8 @@ public with sharing class SummitEventsCancelReviewController {
                             eventOver = true;
                         }
 
-                        if (eventInstance.size() > 0) {
-                            formattedNavDate = SEShared.navBreadcrumbBuilder(eventInstance[0]);
+                        if (eventInstance != null) {
+                            formattedNavDate = SEShared.navBreadcrumbBuilder(eventInstance);
                         }
                         eventNotFound = false;
                     }

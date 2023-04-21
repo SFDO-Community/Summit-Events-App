@@ -29,7 +29,6 @@ public with sharing class SummitEventsRegisterController {
     public Boolean showLocation { get; set; }
     public String startTimeString { get; set; }
     public String endTimeString { get; set; }
-    public Boolean adminOpen { get; set; }
     public String registrantAudience { get; set; }
     public String EvtUserType { get; set; }
     public Id incomingEventRegistrationId { get; set; }
@@ -136,7 +135,8 @@ public with sharing class SummitEventsRegisterController {
                             First_Name_Label__c, Gender_Label__c, Last_Name_As_Student_Label__c, Last_Name_Label__c, Mailing_Address_Label__c,
                             Phone_Label__c, Phone_Type_Label__c, Preferred_First_Name_Label__c, Pronouns_Label__c, Registrant_Receive_Texts_Label__c,
                             Relationship_To_Institution_Label__c, Third_Party_Registrant_Label__c, Title_Label__c, Preferred_Class_Year_Label__c,
-                            Registrant_Relationship_Label__c, Event_Fee_Label__c, Event_Fee_Total_Label__c, Event_Fee_Submit_List_Label__c
+                            Registrant_Relationship_Label__c, Event_Fee_Label__c, Event_Fee_Total_Label__c, Event_Fee_Submit_List_Label__c, Account__r.Name,
+                            Filter_Category__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -162,12 +162,7 @@ public with sharing class SummitEventsRegisterController {
                 }
             }
 
-            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-                adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-                eventIsClosed = adminOpen;
-            } else {
-                eventIsClosed = SeaShared.isEventClosed(eventPage, evtInstance);
-            }
+            eventIsClosed = SeaShared.isEventClosed(evtInstance);
 
             if (
                     (String.isNotBlank(eventPage.Add_Info_Question_Type_1__c) && String.isNotBlank(eventPage.Add_Info_Question_Text_1__c)) ||
@@ -270,6 +265,34 @@ public with sharing class SummitEventsRegisterController {
                 ));
             }
 
+            /*get Analytic data*/
+
+            //Get current URL
+            String baseURL = Url.getSalesforceBaseUrl().toExternalForm();
+            String PageURL = ApexPages.currentPage().getUrl();
+            eventRegistration.Event_Website__c = baseURL + PageURL.replace('\'', '').escapeHtml4();
+
+            //Get referrer url if not blank
+            if (String.isNotBlank(ApexPages.currentPage().getHeaders().get('Referer'))) {
+                eventRegistration.Event_Website_Referrer__c = ApexPages.currentPage().getHeaders().get('Referer').replace('\'', '').escapeHtml4();
+            }
+
+            //get and sanitize utm variables
+            List<String> analyticCodes = new List<String>{
+                    'gclid__c', 'utm_campaign__c', 'utm_content__c', 'utm_creative_format__c', 'utm_id__c',
+                    'utm_marketing_tactic__c', 'utm_medium__c', 'utm_source__c', 'utm_source_platform__c', 'utm_term__c'
+            };
+
+            for (String code : analyticCodes) {
+                String urlParameter = code.removeEnd('__c');
+                if (String.isNotBlank(ApexPages.currentPage().getParameters().get(urlParameter))) {
+                    String codeValue = ApexPages.currentPage().getParameters().get(urlParameter);
+                    codeValue = codeValue.replace('\'', '');
+                    codeValue = codeValue.escapeHtml4();
+                    eventRegistration.put(code, codeValue);
+                }
+            }
+
         }
 
         //If the user is logged in use that data
@@ -279,7 +302,8 @@ public with sharing class SummitEventsRegisterController {
             if (String.isBlank(eventInformation.registrationId)) {
 
                 userContact = [
-                        SELECT Id, Name, FirstName, LastName, Email, HomePhone, MobilePhone, Birthdate
+                        SELECT Id, Name, FirstName, LastName, Email, HomePhone, MobilePhone, Birthdate, MailingStreet,
+                                MailingState, MailingCountry, MailingPostalCode, MailingCity
                         FROM Contact
                         WHERE Id IN (
                                 SELECT ContactId
@@ -289,12 +313,20 @@ public with sharing class SummitEventsRegisterController {
                         WITH SECURITY_ENFORCED
                 ];
 
+                eventRegistration.Registrant_Street_1__c = userContact.MailingStreet;
+                eventRegistration.Registrant_State__c = userContact.MailingState;
+                eventRegistration.Registrant_Country__c = userContact.MailingCountry;
+                eventRegistration.Registrant_Postal_Code__c = userContact.MailingPostalCode;
+                eventRegistration.Registrant_Zip__c = userContact.MailingPostalCode;
+                eventRegistration.Registrant_City__c = userContact.MailingCity;
                 eventRegistration.Registrant_First_Name__c = userContact.FirstName;
                 eventRegistration.Registrant_Last_Name__c = userContact.LastName;
                 eventRegistration.Registrant_Email__c = userContact.Email;
                 eventRegistration.Registrant_Phone__c = userContact.HomePhone;
                 eventRegistration.Registrant_Mobile_Phone__c = userContact.MobilePhone;
                 eventRegistration.Registrant_Date_of_Birth__c = userContact.Birthdate;
+                eventRegistration.Contact__c = userContact.Id;
+
                 if (userContact.Birthdate != null) {
                     birthDateString = userContact.Birthdate.format();
                 }
@@ -318,8 +350,10 @@ public with sharing class SummitEventsRegisterController {
                         Registrant_High_School__c, Registrant_High_School_Code__c, Registrant_Receive_Texts__c, Registrant_High_School_Grad_Year__c, Registrant_High_School_Not_Found__c,
                         Registrant_College_Not_Found__c, Registrant_Parent_First_Name__c, Registrant_Parent_Last_Name__c, Registrant_Parent_Email__c, Registrant_Parent_Phone__c,
                         Add_Info_Answer_1__c, Add_Info_Answer_2__c, Add_Info_Answer_3__c, Add_Info_Answer_4__c, Add_Info_Answer_5__c, Registrant_Program_Interest__c, Registrant_Preferred_First_Name__c,
-                        Registrant_Date_of_Birth__c, Last_Name_as_Student__c, Preferred_Class_Year__c, Relationship_To_Institution__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c, Registrant_Other_Phone__c, Registrant_Other_Relationship__c,
-                        Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c, Registrant_Pronouns__c, Registrant_Title__c, Registrant_Company_Organization__c
+                        Registrant_Date_of_Birth__c, Last_Name_as_Student__c, Preferred_Class_Year__c, Relationship_To_Institution__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c,
+                        Registrant_Other_Phone__c, Registrant_Other_Relationship__c, Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c,
+                        Registrant_Pronouns__c, Registrant_Title__c, Registrant_Company_Organization__c, Event_Website__c, Event_Website_Referrer__c, gclid__c, utm_campaign__c, utm_content__c,
+                        utm_creative_format__c, utm_id__c, utm_marketing_tactic__c, utm_medium__c, utm_source__c, utm_source_platform__c, utm_term__c
                 FROM Summit_Events_Registration__c
                 WHERE Id = :eventRegistrationId
                 WITH SECURITY_ENFORCED
@@ -505,7 +539,7 @@ public with sharing class SummitEventsRegisterController {
 
         eventInformation.registrationId = eventRegistration.Id;
 
-        String dayOfWeek = seaShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
+        String dayOfWeek = SeaShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
         //Insert pre-chosen appointments for appointments page
         List<Summit_Events_Appointment_Type__c> autoAddAppt = [
                 SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Registrant_Input__c, Custom_Picklist__c, Appointment_Limits__c,
@@ -514,7 +548,7 @@ public with sharing class SummitEventsRegisterController {
                 WHERE Summit_Events__c = :eventInformation.eventId
                 AND (Chosen_State__c = 'Added' OR Chosen_State__c = 'Added and Required' OR Chosen_State__c = 'Added but not shown')
                 AND Id NOT IN (SELECT Event_Appointment_Type__c FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :eventInformation.registrationId)
-                AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = null OR Restrict_To_Instance_Title__r.Instance_Title__c = '')
+                AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL OR Restrict_To_Instance_Title__r.Instance_Title__c = '')
                 AND (Date_Available_Start__c <= :evtInstance.Instance_Start_Date__c OR Date_Available_Start__c = NULL)
                 AND (Date_Available_End__c >= :evtInstance.Instance_End_Date__c OR Date_Available_End__c = NULL)
                 AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
@@ -528,7 +562,18 @@ public with sharing class SummitEventsRegisterController {
             addAppt.Event_Appointment_Type__c = appt.Id;
             addAppt.Event_Registration__c = eventInformation.registrationId;
             addAppt.Appointment_Title__c = appt.Title__c;
-            addAppt.Appointment_Status__c = 'Registered';
+            //If appointment is not shown and auto confirmed confirm it!
+            if (appt.Auto_Confirm_Appointment__c) {
+                addAppt.Appointment_Status__c = 'Confirmed';
+            } else {
+                addAppt.Appointment_Status__c = 'Requested';
+            }
+            if (String.isNotBlank(appt.Auto_add_building__c)) {
+                addAppt.Building__c = appt.Auto_add_building__c;
+            }
+            if (appt.Auto_Add_Time__c != null) {
+                addAppt.Appointment_Time__c = appt.Auto_Add_Time__c;
+            }
             addAppt.Appointment_Category__c = appt.Appointment_Category__c;
             addAppt.Appointment_Type__c = appt.Appointment_Type__c;
             addAppt.Appointment_Detail__c = appt.Description__c;

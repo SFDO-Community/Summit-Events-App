@@ -16,6 +16,17 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="scriptsHead">
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
             <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/submit.js')}" type="text/javascript"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push({
+                    'account': '{!IF(!ISBLANK(eventPage.Account__r.Name),eventPage.Account__r.Name, '')}',
+                    'audience': '{!IF(!ISBLANK(eventPage.Audience__c),eventPage.Audience__c, '')}',
+                    'eventLabel': '{!eventPage.Event_Name__c}{!IF(!ISBLANK(eventInstance.Instance_Title__c),' - ' + eventInstance.Instance_Title__c,'')}',
+                    'category': '{!IF(!ISBLANK(eventPage.Filter_Category__c), eventPage.Filter_Category__c, '')}',
+                    'sponsor': '{!IF(!ISBLANK(eventPage.Event_Sponsor__c), eventPage.Event_Sponsor__c, '')}',
+                    'page': '{!$CurrentPage.Name}'
+                });
+            </script>
         </apex:define>
         <apex:define name="sectionNav"/>
         <apex:define name="body">
@@ -83,7 +94,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                             <!-- Show Selected guest -->
                             <apex:outputPanel layout="none" rendered="{!IF(guestAnswers.size>0, true, false)}">
-                                <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium slds-clearfix">Additional guest registered</h2>
+                                <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium slds-clearfix">{!IF(ISBLANK(eventPage.Event_Guest_Submit_List_Label__c),'Additional guests registered', eventPage.Event_Guest_Submit_List_Label__c)}</h2>
                                 <apex:variable value="{!0}" var="guestNum"/>
                                 <apex:repeat var="guests" value="{!guestAnswers}">
                                     <article class="slds-card slds-clearfix slds-p-vertical_none">
@@ -105,18 +116,17 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                             <!-- Show selected appointments -->
                             <apex:outputPanel layout="none" rendered="{!IF(chosenAppointments.size>0, true, false)}">
-                                <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium slds-clearfix">Appointments</h2>
+                                <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium slds-clearfix">{!IF(ISBLANK(eventPage.Event_Appointment_Submit_List_Label__c),'Selected options', eventPage.Event_Appointment_Submit_List_Label__c)}</h2>
                                 <ul id="chosenAppointments" class="slds-list_dotted">
                                     <apex:repeat var="appointment" value="{!chosenAppointments}">
                                         <li>
                                             {!appointment.Appointment_Title__c}
-                                            <apex:outputPanel layout="none" rendered="{!!ISBLANK(appointment.Appointment_Type__c)}">
+                                            <apex:outputPanel layout="none" rendered="{!ISBLANK(appointment.Registrant_Input__c) && !ISBLANK(appointment.Appointment_Type__c)}">
                                                 <br/>{!appointment.Appointment_Type__c}
                                             </apex:outputPanel>
-                                            <apex:outputPanel layout="none" rendered="{!!ISBLANK(appointment.Description__c)}">
-                                                <br/>
-                                                {!appointment.Description__c}
-                                            </apex:outputPanel>
+                                            <!--<apex:outputPanel layout="none" rendered="{!!ISBLANK(appointment.Description__c)}">-->
+                                            <!--    <br/>{!appointment.Description__c}-->
+                                            <!--</apex:outputPanel>-->
                                             <apex:outputPanel layout="none" rendered="{!!ISBLANK(appointment.Registrant_Input__c)}">
                                                 <br/>{!appointment.Registrant_Input__c}
                                             </apex:outputPanel>

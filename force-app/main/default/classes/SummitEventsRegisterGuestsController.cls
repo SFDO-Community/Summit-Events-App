@@ -14,7 +14,6 @@ public with sharing class SummitEventsRegisterGuestsController {
     public Map<Id, Summit_Events_Question__c> eventGuestQuestions { get; set; }
     public String templateSelected { get; set; }
     public Boolean eventIsClosed { get; set; }
-    public Boolean adminOpen { get; set; }
     public Map<String, PageReference> pageFlow { get; set; }
     public String guestJSON { get; set; }
     public String guestQuestionJSON { get; set; }
@@ -60,7 +59,8 @@ public with sharing class SummitEventsRegisterGuestsController {
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
                             Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
                             Guest_Registration_Title__c, Guest_Max_Amount__c, Guest_Registration_Description__c, Guest_Table_Size__c, Guest_Tables_Available__c,
-                            Display_Guest_Registration__c, Guest_Registration_Add_Button_Label__c, No_Guest_Registrations_Added_Message__c
+                            Display_Guest_Registration__c, Guest_Registration_Add_Button_Label__c, No_Guest_Registrations_Added_Message__c,
+                            Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -164,12 +164,8 @@ public with sharing class SummitEventsRegisterGuestsController {
             pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
             templateSelected = seaShared.getTemplate(eventPage.Template__c);
 
-            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-                adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-                eventIsClosed = adminOpen;
-            } else {
-                eventIsClosed = seaShared.isEventClosed(eventPage, eventInstance);
-            }
+            eventIsClosed = seaShared.isEventClosed(eventInstance);
+
             formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
 
         }

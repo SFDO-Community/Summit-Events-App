@@ -18,6 +18,17 @@
             </script>
             <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/guestRegistration.js')}" type="text/javascript"></script>
             <script src="{!URLFOR($Resource.SummitEventsAssets, '/js/sldsHelper.js')}" type="text/javascript"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push({
+                    'account': '{!IF(!ISBLANK(eventPage.Account__r.Name),eventPage.Account__r.Name, '')}',
+                    'audience': '{!IF(!ISBLANK(eventPage.Audience__c),eventPage.Audience__c, '')}',
+                    'eventLabel': '{!eventPage.Event_Name__c}{!IF(!ISBLANK(eventInstance.Instance_Title__c),' - ' + eventInstance.Instance_Title__c,'')}',
+                    'category': '{!IF(!ISBLANK(eventPage.Filter_Category__c), eventPage.Filter_Category__c, '')}',
+                    'sponsor': '{!IF(!ISBLANK(eventPage.Event_Sponsor__c), eventPage.Event_Sponsor__c, '')}',
+                    'page': '{!$CurrentPage.Name}'
+                });
+            </script>
         </apex:define>
         <apex:define name="sectionNav"/>
         <apex:define name="body">

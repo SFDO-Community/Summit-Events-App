@@ -43,6 +43,16 @@
                 <default>false</default>
                 <label>Ask home and mobile require both</label>
             </value>
+            <value>
+                <fullName>Ask mobile</fullName>
+                <default>false</default>
+                <label>Ask mobile</label>
+            </value>
+            <value>
+                <fullName>Ask mobile and require</fullName>
+                <default>false</default>
+                <label>Ask mobile and require</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
