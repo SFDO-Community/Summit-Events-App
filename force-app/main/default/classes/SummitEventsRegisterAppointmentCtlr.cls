@@ -11,7 +11,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     public Summit_Events_Instance__c evtInstance { get; set; }
     public String incomingAppointmentJSON { get; set; }
     public Boolean eventIsClosed { get; set; }
-    public Boolean adminOpen { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public String templateSelected { get; set; }
     public Boolean noOptionalAppointments { get; set; }
@@ -24,6 +23,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         public String appId { get; set; }
         public String appCategory { get; set; }
         public String appType { get; set; }
+        public Boolean appTypeSet { get; set; }
         public String appTitle { get; set; }
         public String appChosenState { get; set; }
         public String appDesc { get; set; }
@@ -47,7 +47,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     SELECT Event_Name__c, Event_description__c, Event_Appointment_Title__c, Event_Appointment_Description__c, Event_Footer__c,
                             Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Options_Registration__c, Event_Full_Text__c,
                             Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Display_Optional_Donation__c, Event_Appointment_Chosen_Label__c,
-                            Event_Appointment_Unchosen_Label__c, Event_Appointment_Next_Instructions__c
+                            Event_Appointment_Unchosen_Label__c, Event_Appointment_Next_Instructions__c, Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -67,12 +67,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                 pageFlow = seaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage(), evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c);
 
-                if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-                    adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-                    eventIsClosed = adminOpen;
-                } else {
-                    eventIsClosed = seaShared.isEventClosed(eventPage, evtInstance);
-                }
+                eventIsClosed = seaShared.isEventClosed(evtInstance);
 
                 if (evtInstance != null) {
                     String dayOfWeek = seaShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
@@ -102,7 +97,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     for (Summit_Events_Appointment_Type__c chosenCheck : appointments.values()) {
                         if (chosenCheck.Chosen_State__c != 'Added and Required' && chosenCheck.Chosen_State__c != 'Added but not shown') {
                             noOptionalAppointments = false;
-                            break;
                         }
                     }
 
@@ -153,6 +147,9 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             addAppointment.appLimit = appLimit;
                             addAppointment.appRequired = apt.Required_Appointment__c;
                             addAppointment.inputRequired = false;
+                            if(String.isNotBlank(apt.Appointment_Type__c)) {
+                                addAppointment.appTypeSet = true;
+                            }
 
                             if (String.isNotBlank(apt.Registrant_Input__c) && apt.Registrant_Input__c.containsIgnoreCase('Required')) {
                                 addAppointment.inputRequired = true;
@@ -161,9 +158,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             if (apt.Appointment_Category__c != null) {
                                 Map<String, String> dependencies = seaShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', apt.Appointment_Category__c);
                                 List<String> pickListItems = new List<String>();
-
-                                if (dependencies.size() > 1) {
-
+                                System.debug(dependencies);
+                                if (dependencies.size() > 0) {
                                     for (String item : dependencies.keySet()) {
                                         pickListItems.add(dependencies.get(item));
                                     }
@@ -230,7 +226,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
             //Set know states
             addAppointment.Event_Registration__c = eventInformation.registrationId;
-            addAppointment.Appointment_Status__c = 'Registered';
+            addAppointment.Appointment_Status__c = 'Requested';
             addAppointment.Client_Created_Appointment__c = true;
 
             if (!String.isBlank(appDefinition.Auto_add_building__c)) {
@@ -252,6 +248,9 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
             addAppointment.Chosen_State__c = app.appChosenState;
             if (String.isNotBlank(app.appCategory) && app.appCategory != 'null' && app.appCategory != 'undefined') {
                 addAppointment.Appointment_Category__c = app.appCategory;
+                if (String.isNotBlank(app.appInput) && String.isBlank(addAppointment.Appointment_Type__c)) {
+                    addAppointment.Appointment_Type__c = app.appInput;
+                }
             }
             if (String.isNotBlank(app.appInput)) {
                 addAppointment.Registrant_Input__c = app.appInput;

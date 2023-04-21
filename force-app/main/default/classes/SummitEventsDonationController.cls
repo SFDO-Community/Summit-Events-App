@@ -14,7 +14,6 @@ public with sharing class SummitEventsDonationController {
     public String donationAmount { get; set; }
     public Summit_Events_Fee__c incomingFee { get; set; }
     public Boolean eventIsClosed { get; set; }
-    public Boolean adminOpen { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public String formattedNavDate { get; set; }
     public Map<String, PageReference> pageFlow {get;set;}
@@ -29,7 +28,7 @@ public with sharing class SummitEventsDonationController {
                             Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Donation_Suggested_Amount_List__c,
                             Donation_Description__c, Display_Optional_Donation__c, Donation_Allocation_1__c, Donation_Allocation_2__c, Donation_Allocation_3__c, Donation_Allocation_4__c,
                             Donation_Allocation_5__c, Donation_Allocation_1__r.Name, Donation_Allocation_2__r.Name, Donation_Allocation_3__r.Name, Donation_Allocation_4__r.Name,
-                            Donation_Allocation_5__r.Name, Donation_Title__c
+                            Donation_Allocation_5__r.Name, Donation_Title__c, Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -63,12 +62,7 @@ public with sharing class SummitEventsDonationController {
                 donationAmountSelect = String.valueOf(incomingFee.Event_Fee__c);
             }
 
-            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-                adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-                eventIsClosed = adminOpen;
-            } else {
-                eventIsClosed = seaShared.isEventClosed(eventPage, eventInstance);
-            }
+            eventIsClosed = seaShared.isEventClosed(eventInstance);
 
             formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
         }

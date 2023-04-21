@@ -28,6 +28,17 @@
                     });
                 }
             </script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push({
+                    'account': '{!IF(!ISBLANK(eventPage.Account__r.Name),eventPage.Account__r.Name, '')}',
+                    'audience': '{!IF(!ISBLANK(eventPage.Audience__c),eventPage.Audience__c, '')}',
+                    'eventLabel': '{!eventPage.Event_Name__c}{!IF(!ISBLANK(eventInstance.Instance_Title__c),' - ' + eventInstance.Instance_Title__c,'')}',
+                    'category': '{!IF(!ISBLANK(eventPage.Filter_Category__c), eventPage.Filter_Category__c, '')}',
+                    'sponsor': '{!IF(!ISBLANK(eventPage.Event_Sponsor__c), eventPage.Event_Sponsor__c, '')}',
+                    'page': '{!$CurrentPage.Name}'
+                });
+            </script>
         </apex:define>
         <apex:define name="sectionNav"/>
         <apex:define name="body">
@@ -76,8 +87,7 @@
                     <apex:outputPanel rendered="{!!eventIsClosed && questionWrapper.size > 0}" layout="none">
                         <apex:variable var="qNum" value="{!0}"/>
                         <apex:repeat value="{!questionWrapper}" var="qu">
-
-                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-error {!If(qu.type != 'Text Area','slds-large-size_3-of-6',false)}" rendered="{!qu.setupFail}">
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-error {!qu.displayStyle}" rendered="{!qu.setupFail}">
                                 <apex:outputLabel styleClass="slds-form-element__label">
                                     {!qu.question}
                                     <apex:outputText escape="false" rendered="{!qu.required}">
@@ -87,7 +97,7 @@
                                 <p class="slds-text-color_error">{!qu.setupError}</p>
                             </apex:outputPanel>
 
-                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 {!If(qu.type != 'Text Area','slds-large-size_3-of-6',false)}" rendered="{!If(qu.type != 'Checkbox' && !qu.setupFail, true, false)}">
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 {!qu.displayStyle}" rendered="{!If(qu.type != 'Checkbox' && !qu.setupFail, true, false)}">
                                 <apex:outputPanel layout="block" styleClass="slds-form-element {!IF(qu.required, 'slds-is-required', '')}">
 
                                     <apex:outputLabel styleClass="slds-form-element__label">

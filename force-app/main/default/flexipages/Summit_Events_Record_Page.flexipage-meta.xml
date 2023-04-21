@@ -1767,6 +1767,16 @@
                 <identifier>record_item_088</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Guest_Submit_List_Label__c</fieldItem>
+                <identifier>RecordEvent_Guest_Submit_List_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-7f64a50a-6644-4f6c-b669-2baad4862426</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -1979,6 +1989,16 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Event_Appointment_Next_Instructions__c</fieldItem>
                 <identifier>RecordEvent_Appointment_Next_Instructions_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Appointment_Submit_List_Label__c</fieldItem>
+                <identifier>RecordEvent_Appointment_Submit_List_Label_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-24795d7b-a1f2-4663-956d-4f3d23a64a82</name>

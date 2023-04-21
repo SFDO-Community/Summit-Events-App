@@ -18,7 +18,6 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public String formattedNavDate { get; set; }
     public List<Summit_Events_Question__c> additionalQuestions { get; set; }
     public Boolean eventIsClosed { get; set; }
-    public Boolean adminOpen { get; set; }
     public List<String> mapToList { get; set; }
     public List<questionItem> questionWrapper { get; set; }
     private Id incomingRegId { get; set; }
@@ -45,6 +44,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         public String secondaryNoResults { get; set; }
         public String setupError { get; set; }
         public Boolean setupFail { get; set; }
+        public String displayStyle { get; set; }
     }
 
     public class queryReturn {
@@ -65,7 +65,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
             eventPage = [
                     SELECT Name, Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Full_Text__c, Event_Home_Link_URL__c, Event_Home_Link_Title__c,
-                            Template__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Event_Additional_Question_Title__c, Event_Additional_Questions_Description__c
+                            Template__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Event_Additional_Question_Title__c, Event_Additional_Questions_Description__c,
+                            Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -90,19 +91,14 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             startTimeString = SeaShared.formatTime(eventInstance.Instance_Start_Time__c, false);
             endTimeString = SeaShared.formatTime(eventInstance.Instance_End_Time__c, false);
 
-            if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-                adminOpen = Boolean.valueOf(ApexPages.currentPage().getParameters().get('adminopen'));
-                eventIsClosed = adminOpen;
-            } else {
-                eventIsClosed = SeaShared.isEventClosed(eventPage, eventInstance);
-            }
+            eventIsClosed = SeaShared.isEventClosed(eventInstance);
 
             //Get the question object questions
             additionalQuestions = [
                     SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
                             Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c,
                             Lookup_Object__c, Lookup_Fields__c, Lookup_Where_Clause__c, Lookup_No_Results_Label__c, Lookup_Secondary_Input_Link_Text__c, Lookup_Secondary_Value_Field__c,
-                            Lookup_Secondary_Input_Instructions__c, Lookup_Results_Icon__c, Existing_Picklist_Values__c
+                            Lookup_Secondary_Input_Instructions__c, Lookup_Results_Icon__c, Existing_Picklist_Values__c, Display_Style__c
                     FROM Summit_Events_Question__c
                     WHERE Event__c = :eventInformation.eventId
                     AND (Registrant_Type__c = 'Registrant' OR Registrant_Type__c = 'Registrant and Guest')
@@ -139,6 +135,15 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     quest.setupError = '';
                     String mapToField = '';
                     String lookupObject = '';
+
+                    quest.displayStyle = 'slds-large-size_3-of-6';
+                    if (String.isNotBlank(question.Display_Style__c)) {
+                        if (question.Display_Style__c.equalsIgnoreCase('full width')) {
+                            quest.displayStyle = 'slds-large-size_6-of-6';
+                        } else if (question.Display_Style__c.equalsIgnoreCase('third width')) {
+                            quest.displayStyle = 'slds-large-size_2-of-6';
+                        }
+                    }
 
                     //Make sure this is really a field
                     if (String.isBlank(question.Map_to_Field__c)) {

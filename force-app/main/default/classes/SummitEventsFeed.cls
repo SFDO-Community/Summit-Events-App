@@ -15,6 +15,8 @@ global with sharing class SummitEventsFeed {
     public class eventItem {
         public String ID { get; set; }
         public String title { get; set; }
+        public String title_event { get; set; }
+        public String title_instance { get; set; }
         public String instanceDesc { get; set; }
         public String description { get; set; }
         public String longDesc { get; set; }
@@ -99,7 +101,7 @@ global with sharing class SummitEventsFeed {
 
         //Check if account is accessible
         Boolean accountIsAccessible = false;
-        if (Schema.sObjectType.Account.isAccessible()) {
+        if (Schema.SObjectType.Account.isAccessible()) {
             accountIsAccessible = true;
         }
 
@@ -249,7 +251,7 @@ global with sharing class SummitEventsFeed {
             eventQuery += ' AND (' + sanitizeOrLikeList(accountName, 'Event__r.Account__r.Name') + ') ';
         }
 
-        //School filter (can be comma separated)
+        //Building filter (can be comma separated)
         String building = req.params.get('building');
         if (String.isNotBlank(building)) {
             eventQuery += ' AND (' + sanitizeOrLikeList(building, 'Event__r.Building__c') + ') ';
@@ -293,12 +295,15 @@ global with sharing class SummitEventsFeed {
 
             if (eventInstance.Event__r.Event_Name__c != null) {
                 evt.title = seaShared.removeHTMLandEscape(eventInstance.Event__r.Event_Name__c, true);
+                evt.title_event = seaShared.removeHTMLandEscape(eventInstance.Event__r.Event_Name__c, true);
             } else {
                 evt.title = seaShared.removeHTMLandEscape(eventInstance.Event__r.Name, true);
+                evt.title_event = seaShared.removeHTMLandEscape(eventInstance.Event__r.Name, true);
             }
 
-            if (eventInstance.Instance_Title__c != null) {
+            if (String.isNotBlank(eventInstance.Instance_Title__c)) {
                 evt.title += ' - ' + seaShared.removeHTMLandEscape(eventInstance.Instance_Title__c, true);
+                evt.title_instance = seaShared.removeHTMLandEscape(eventInstance.Instance_Title__c, true);
             }
 
             if (String.isNotBlank(eventInstance.Instance_Short_Description__c)) {
@@ -463,9 +468,6 @@ global with sharing class SummitEventsFeed {
         }
         return '';
     }
-
-
-//eventQuery += ' Event__r.Program_Filter__c LIKE \'%' + f + '%\' OR ';
 
     private static Map<String, String> getAudienceDD(Schema.DescribeFieldResult fieldResult) {
         Map<String, String> fieldMap = new Map<String, String>();

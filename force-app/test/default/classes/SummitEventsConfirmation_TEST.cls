@@ -62,7 +62,7 @@ private class SummitEventsConfirmation_TEST {
         System.runAs(testUser) {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsConfirmation;
-            pageRef.getParameters().put('adminopen', 'true');
+            pageRef.getParameters().put('adminopen', '1');
             Test.setCurrentPage(pageRef);
             SummitEventsShared SEShared = new SummitEventsShared();
             SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
@@ -100,7 +100,7 @@ private class SummitEventsConfirmation_TEST {
                             Summit_Events_Registration__c
                     WHERE Id = :seaTestRegistration.Id
             ];
-            System.assertEquals(checkRegistrationStatus.Status__c, 'Started');
+            System.assertEquals(checkRegistrationStatus.Status__c, 'Registered');
             Test.stopTest();
         }
     }
@@ -204,7 +204,7 @@ private class SummitEventsConfirmation_TEST {
         insert testFees;
 
         System.runAs(testUser) {
-            Test.startTest();
+
             PageReference pageRef = Page.SummitEventsConfirmation;
             pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
@@ -221,9 +221,8 @@ private class SummitEventsConfirmation_TEST {
                     pageMessages.add(message.getSummary());
                 }
             }
-
+            Test.startTest();
             System.assert(confirmCtrl.paymentReceived);
-
             Summit_Events_Registration__c checkRegistrationStatus = [
                     SELECT Id, Status__c
                     FROM
