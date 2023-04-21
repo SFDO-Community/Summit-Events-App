@@ -121,13 +121,12 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     <apex:repeat var="appointment" value="{!chosenAppointments}">
                                         <li>
                                             {!appointment.Appointment_Title__c}
-                                            <apex:outputPanel layout="none" rendered="{!!ISBLANK(appointment.Appointment_Type__c)}">
+                                            <apex:outputPanel layout="none" rendered="{!ISBLANK(appointment.Registrant_Input__c) && !ISBLANK(appointment.Appointment_Type__c)}">
                                                 <br/>{!appointment.Appointment_Type__c}
                                             </apex:outputPanel>
-                                            <apex:outputPanel layout="none" rendered="{!!ISBLANK(appointment.Description__c)}">
-                                                <br/>
-                                                {!appointment.Description__c}
-                                            </apex:outputPanel>
+                                            <!--<apex:outputPanel layout="none" rendered="{!!ISBLANK(appointment.Description__c)}">-->
+                                            <!--    <br/>{!appointment.Description__c}-->
+                                            <!--</apex:outputPanel>-->
                                             <apex:outputPanel layout="none" rendered="{!!ISBLANK(appointment.Registrant_Input__c)}">
                                                 <br/>{!appointment.Registrant_Input__c}
                                             </apex:outputPanel>
