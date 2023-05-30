@@ -50,18 +50,6 @@ public with sharing class SummitEventsShared {
             namespace = namespace + '__';
         }
 
-        Map<String, PageReference> pageMovement = new Map<String, PageReference>();
-        Map<String, String> currentPageParameters = currentPage.getParameters();
-        List<String> pagesInEvent = new List<String>();
-        Map<String, PageReference> allPageReferences = new Map<String, PageReference>();
-        allPageReferences.put(namespace + 'SummitEventsRegister', Page.SummitEventsRegister);
-        allPageReferences.put(namespace + 'SummitEventsAdditionalQuestions', Page.SummitEventsAdditionalQuestions);
-        allPageReferences.put(namespace + 'SummitEventsRegisterGuests', Page.SummitEventsRegisterGuests);
-        allPageReferences.put(namespace + 'SummitEventsRegisterAppointments', Page.SummitEventsRegisterAppointments);
-        allPageReferences.put(namespace + 'SummitEventsDonation', Page.SummitEventsDonation);
-        allPageReferences.put(namespace + 'SummitEventsSubmit', Page.SummitEventsSubmit);
-        allPageReferences.put(namespace + 'SummitEventsConfirmation', Page.SummitEventsConfirmation);
-
         String dayOfWeek = convertDateToDatetime(startDate, null, '').format('EEEE');
 
         Integer appointmentTypes = [
@@ -100,11 +88,29 @@ public with sharing class SummitEventsShared {
         ];
 
         Summit_Events__c eventInformation = [
-                SELECT Id, Display_Optional_Donation__c, Display_Guest_Registration__c
+                SELECT Id, Display_Optional_Donation__c, Display_Guest_Registration__c, Payment_Gateway__c
                 FROM Summit_Events__c
                 WHERE Id = :eventId
                 WITH SECURITY_ENFORCED
         ];
+
+        Map<String, PageReference> pageMovement = new Map<String, PageReference>();
+        Map<String, String> currentPageParameters = currentPage.getParameters();
+        List<String> pagesInEvent = new List<String>();
+        Map<String, PageReference> allPageReferences = new Map<String, PageReference>();
+        allPageReferences.put(namespace + 'SummitEventsRegister', Page.SummitEventsRegister);
+        allPageReferences.put(namespace + 'SummitEventsAdditionalQuestions', Page.SummitEventsAdditionalQuestions);
+        allPageReferences.put(namespace + 'SummitEventsRegisterGuests', Page.SummitEventsRegisterGuests);
+        allPageReferences.put(namespace + 'SummitEventsRegisterAppointments', Page.SummitEventsRegisterAppointments);
+        allPageReferences.put(namespace + 'SummitEventsDonation', Page.SummitEventsDonation);
+        allPageReferences.put(namespace + 'SummitEventsSubmit', Page.SummitEventsSubmit);
+
+        //If payment gateway exist add it here
+        if (String.isNotBlank(eventInformation.Payment_Gateway__c) && eventInformation.Payment_Gateway__c != 'No Gateway') {
+            allPageReferences.put('c__' + eventInformation.Payment_Gateway__c, new PageReference(Site.getBaseSecureUrl() + '/c__' + eventInformation.Payment_Gateway__c));
+        }
+
+        allPageReferences.put(namespace + 'SummitEventsConfirmation', Page.SummitEventsConfirmation);
 
         pagesInEvent.add(namespace + 'SummitEventsRegister');
 
@@ -134,6 +140,11 @@ public with sharing class SummitEventsShared {
             pagesInEvent.add(namespace + 'SummitEventsSubmit');
         }
 
+        //If payment gateway exist add it here
+        if (String.isNotBlank(eventInformation.Payment_Gateway__c) && eventInformation.Payment_Gateway__c != 'No Gateway') {
+            pagesInEvent.add('c__' + eventInformation.Payment_Gateway__c);
+        }
+
         pagesInEvent.add(namespace + 'SummitEventsConfirmation');
 
         Integer currentPageLocation = 0;
@@ -155,6 +166,7 @@ public with sharing class SummitEventsShared {
         } else {
             pageMovement.put('Next', allPageReferences.get(pagesInEvent[currentPageLocation + 1]));
         }
+
 
         List<String> validParameters = new List<String>{
                 'adminopen', 'instanceID', 'audience'
