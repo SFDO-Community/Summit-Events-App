@@ -1,10 +1,17 @@
 {
   "orgName": "Summit Events Dev",
   "edition": "Developer",
-  "features": ["Sites"],
+  "features": [
+    "Sites",
+    "EnableSetPasswordInApi",
+    "EducationCloud:5"
+  ],
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true
+    },
+    "mobileSettings": {
+      "enableS1EncryptedStoragePref2": false
     },
     "chatterSettings": {
       "enableChatter": true
@@ -15,7 +22,7 @@
     "securitySettings": {
       "enableAdminLoginAsAnyUser": true,
       "sessionSettings": {
-        "forceRelogin": false
+        "forceRelogin": falsegit
       }
     },
     "languageSettings": {
