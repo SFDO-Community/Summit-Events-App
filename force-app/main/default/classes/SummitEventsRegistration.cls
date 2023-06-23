@@ -143,17 +143,11 @@ public class SummitEventsRegistration {
                             while (matcher2.find()) {
 
                                 //Get the value for hook from registration have to remove any registration object names since we are already in the object
-                                String found = matcher2.group(1).replace('Summit_Events_Registration__c.', '');
+                                String found = matcher2.group(1).replace(namespace + 'Summit_Events_Registration__c.', '');
                                 try {
                                     found = String.valueOf(areg.get(found));
                                 } catch (Exception e) {
                                     found = '';
-                                }
-
-                                if(String.isBlank(found)) {
-                                    if(String.isNotBlank(namespace)) {
-
-                                    }
                                 }
 
                                 //replaceAll doesn't like nulls

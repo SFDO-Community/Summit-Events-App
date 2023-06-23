@@ -1632,6 +1632,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Do_not_show_receive_text_question__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.Donation_Allocation_1__c</field>
         <readable>true</readable>
     </fieldPermissions>
