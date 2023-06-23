@@ -257,10 +257,17 @@ global with sharing class SummitEventsFeed {
             eventQuery += ' AND (' + sanitizeOrLikeList(building, 'Event__r.Building__c') + ') ';
         }
 
+        //Building filter (can be comma separated)
+        String locationType = req.params.get('locationtype');
+        if (String.isNotBlank(locationType)) {
+            eventQuery += ' AND ((' + sanitizeOrLikeList(locationType, 'Event__r.Location_Type__c') + ') ';
+            eventQuery += ' OR (' + sanitizeOrLikeList(locationType, 'Location_Type_Override__c') + ')) ';
+        }
+
         //get filter with like soql concatinated program,location, school, location address, location type
         String filter = req.params.get('filter');
         if (String.isNotBlank(filter)) {
-            String filterFields = 'Event__r.Program_Filter__c,Event__r.Program_Filter_2__c,Event__r.Program_Filter_3__c,Event__r.Location_Title__c,Event__r.Location_Address__c,Event__r.Building__c';
+            String filterFields = 'Event__r.Program_Filter__c,Event__r.Program_Filter_2__c,Event__r.Program_Filter_3__c,Event__r.Location_Title__c,Event__r.Location_Address__c,Event__r.Location_Type__c,Event__r.Building__c';
             eventQuery += ' AND (' + sanitizeOrLikeList(filter, filterFields) + ') ';
         }
 
