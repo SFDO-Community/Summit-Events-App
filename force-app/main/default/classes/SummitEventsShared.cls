@@ -425,7 +425,7 @@ public with sharing class SummitEventsShared {
     public Boolean isEventClosed(Summit_Events_Instance__c evtInstance) {
         // Figure out if the event is closed.
         Boolean eventIsClosed = false;
-        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+        if (ApexPages.currentPage() != null && String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
             Boolean adminOpen = isBoolean(ApexPages.currentPage().getParameters().get('adminopen'));
             eventIsClosed = !adminOpen;
         } else {
