@@ -167,7 +167,6 @@ public with sharing class SummitEventsShared {
             pageMovement.put('Next', allPageReferences.get(pagesInEvent[currentPageLocation + 1]));
         }
 
-
         List<String> validParameters = new List<String>{
                 'adminopen', 'instanceID', 'audience'
         };
@@ -280,6 +279,7 @@ public with sharing class SummitEventsShared {
         try {
             newInstanceId = eventInformation.instanceId;
         } catch (Exception ex) {
+            System.debug(ex.getMessage());
         }
 
         String newRegistrationId = eventInformation.registrationId;
@@ -356,7 +356,7 @@ public with sharing class SummitEventsShared {
         eventId = (String.isNotBlank(eventId) && !eventId.equalsIgnoreCase('null')) ? eventId : '';
         registrationId = (String.isNotBlank(registrationId) && !registrationId.equalsIgnoreCase('null')) ? registrationId : '';
         String CookieValue = encryptString('{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '","dt":"' + String.valueOf(nowTime) + '"}');
-        Cookie SummitEventsCookie = new Cookie('SummitEvents', CookieValue, null, -1, false);
+        Cookie SummitEventsCookie = new Cookie('SummitEvents', CookieValue, null, -1, true, 'Strict');
         ApexPages.currentPage().setCookies(new Cookie[]{
                 SummitEventsCookie
         });

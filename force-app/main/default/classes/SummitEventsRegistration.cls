@@ -27,11 +27,13 @@ public class SummitEventsRegistration {
                 'Add_To_Yahoo_Calendar__c'
         };
 
-        //Add the namespace to the email tags so that both namespaced and non-namespeced version work
-        for (String tag : emailTags) {
-            if (String.isNotBlank(namespace)) {
-                emailTags.add(namespace + tag);
+        //Add the namespace to the email tags so that both namespaced and non-namespaced version work
+        if (String.isNotBlank(namespace)) {
+            List<String> emailTagsPackaged = new List<String>();
+            for (String tag : emailTags) {
+                emailTagsPackaged.add(namespace + tag);
             }
+            emailTags.addAll(emailTagsPackaged);
         }
 
         //Delineator of content in the email templase
