@@ -100,7 +100,7 @@ private class SummitEventsConfirmation_TEST {
                             Summit_Events_Registration__c
                     WHERE Id = :seaTestRegistration.Id
             ];
-            System.assertEquals(checkRegistrationStatus.Status__c, 'Started');
+            System.assertEquals(checkRegistrationStatus.Status__c, 'Registered');
             Test.stopTest();
         }
     }
@@ -169,7 +169,7 @@ private class SummitEventsConfirmation_TEST {
 
         SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        List<Summit_Events_Fee_Allocation__c> testAllocations =  SummitEventsTestSharedDataFactory.AddFeesToEvent(seaTestInstances[1].Event__c);
+        List<Summit_Events_Fee_Allocation__c> testAllocations = SummitEventsTestSharedDataFactory.AddFeesToEvent(seaTestInstances[1].Event__c);
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
@@ -188,14 +188,14 @@ private class SummitEventsConfirmation_TEST {
         //Add fees to registration
         List<Summit_Events_Fee__c> testFees = new List<Summit_Events_Fee__c>();
         Summit_Events_Fee__c testFee = new Summit_Events_Fee__c();
-        testFee.Event_Registration__c= seaTestRegistration.Id;
+        testFee.Event_Registration__c = seaTestRegistration.Id;
         testFee.Event_Fee_Allocation__c = getEventFees.Event_Fee_Allocation__c;
         testFee.Event_Fee__c = getEventFees.Event_Fee__c;
         testFee.Summit_Events_Payment__c = testPayment.Id;
         testFee.Event_Fee_Type__c = 'Event';
         testFees.add(testFee);
         testFee = new Summit_Events_Fee__c();
-        testFee.Event_Registration__c= seaTestRegistration.Id;
+        testFee.Event_Registration__c = seaTestRegistration.Id;
         testFee.Event_Fee_Allocation__c = getEventFees.Event_Fee_Additional_Allocation__c;
         testFee.Event_Fee__c = getEventFees.Event_Fee_Additional__c;
         testFee.Summit_Events_Payment__c = testPayment.Id;
@@ -212,7 +212,77 @@ private class SummitEventsConfirmation_TEST {
             SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
             SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
 
-            confirmCtrl.checkEventDetails();
+            List<String> pageMessages = new List<String>();
+            ApexPages.Message[] currentMessages = ApexPages.getMessages();
+            for (ApexPages.Message message : currentMessages) {
+                if (message.getSeverity() == ApexPages.Severity.WARNING) {
+                    pageMessages.add(message.getSummary());
+                }
+            }
+
+            Test.startTest();
+
+            PageReference confirmPageReg = confirmCtrl.gatherPaymentInformation();
+            System.assertEquals(confirmPageReg, null);
+
+            Summit_Events_Registration__c checkRegistrationStatus = [
+                    SELECT Id, Status__c
+                    FROM
+                            Summit_Events_Registration__c
+                    WHERE Id = :seaTestRegistration.Id
+            ];
+            System.assertEquals(checkRegistrationStatus.Status__c, 'Started');
+
+            Test.stopTest();
+        }
+    }
+
+    @IsTest static void tesWithPaymentPaymentsReceived() {
+
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        List<Summit_Events_Fee_Allocation__c> testAllocations = SummitEventsTestSharedDataFactory.AddFeesToEvent(seaTestInstances[1].Event__c);
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+
+        Summit_Events__c getEventFees = [
+                SELECT Id, Event_Fee__c, Event_Fee_Allocation__c, Event_Fee_Additional__c, Event_Fee_Additional_Allocation__c
+                FROM Summit_Events__c
+                WHERE Id = :seaTestInstances[1].Event__c
+        ];
+
+        // Add payment record
+        Summit_Events_Payment__c testPayment = new Summit_Events_Payment__c();
+        testPayment.Event_Registration__c = seaTestRegistration.Id;
+        testPayment.Payment_Amount__c = getEventFees.Event_Fee__c + getEventFees.Event_Fee_Additional__c;
+        insert testPayment;
+
+        //Add fees to registration
+        List<Summit_Events_Fee__c> testFees = new List<Summit_Events_Fee__c>();
+        Summit_Events_Fee__c testFee = new Summit_Events_Fee__c();
+        testFee.Event_Registration__c = seaTestRegistration.Id;
+        testFee.Event_Fee_Allocation__c = getEventFees.Event_Fee_Allocation__c;
+        testFee.Event_Fee__c = getEventFees.Event_Fee__c;
+        testFee.Summit_Events_Payment__c = testPayment.Id;
+        testFee.Event_Fee_Type__c = 'Event';
+        testFees.add(testFee);
+        testFee = new Summit_Events_Fee__c();
+        testFee.Event_Registration__c = seaTestRegistration.Id;
+        testFee.Event_Fee_Allocation__c = getEventFees.Event_Fee_Additional_Allocation__c;
+        testFee.Event_Fee__c = getEventFees.Event_Fee_Additional__c;
+        testFee.Summit_Events_Payment__c = testPayment.Id;
+        testFee.Event_Fee_Type__c = 'Event';
+        testFees.add(testFee);
+        insert testFees;
+
+        System.runAs(testUser) {
+
+            PageReference pageRef = Page.SummitEventsConfirmation;
+            pageRef.getParameters().put('adminopen', 'true');
+            Test.setCurrentPage(pageRef);
+            SummitEventsShared SEShared = new SummitEventsShared();
+            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
 
             List<String> pageMessages = new List<String>();
             ApexPages.Message[] currentMessages = ApexPages.getMessages();
@@ -221,8 +291,12 @@ private class SummitEventsConfirmation_TEST {
                     pageMessages.add(message.getSummary());
                 }
             }
+
             Test.startTest();
-            System.assert(confirmCtrl.paymentReceived);
+
+            PageReference confirmPageReg = confirmCtrl.checkEventDetails();
+            System.assertEquals(confirmPageReg, null);
+
             Summit_Events_Registration__c checkRegistrationStatus = [
                     SELECT Id, Status__c
                     FROM
@@ -230,6 +304,49 @@ private class SummitEventsConfirmation_TEST {
                     WHERE Id = :seaTestRegistration.Id
             ];
             System.assertEquals(checkRegistrationStatus.Status__c, 'Registered');
+
+            Test.stopTest();
+        }
+    }
+
+
+    @IsTest static void tesWithPaymentNoPaymentRecord() {
+
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        List<Summit_Events_Fee_Allocation__c> testAllocations = SummitEventsTestSharedDataFactory.AddFeesToEvent(seaTestInstances[1].Event__c);
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+
+        System.runAs(testUser) {
+
+            PageReference pageRef = Page.SummitEventsConfirmation;
+            Test.setCurrentPage(pageRef);
+
+            SummitEventsShared SEShared = new SummitEventsShared();
+            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
+
+            List<String> pageMessages = new List<String>();
+            ApexPages.Message[] currentMessages = ApexPages.getMessages();
+            for (ApexPages.Message message : currentMessages) {
+                if (message.getSeverity() == ApexPages.Severity.WARNING) {
+                    pageMessages.add(message.getSummary());
+                }
+            }
+
+            Test.startTest();
+            PageReference confirmPageReg = confirmCtrl.gatherPaymentInformation();
+            System.assertEquals(confirmPageReg.getParameters().get('error'), 'Payment+was+not+received.+Please+try+again.');
+
+            Summit_Events_Registration__c checkRegistrationStatus = [
+                    SELECT Id, Status__c
+                    FROM
+                            Summit_Events_Registration__c
+                    WHERE Id = :seaTestRegistration.Id
+            ];
+            System.assertEquals(checkRegistrationStatus.Status__c, 'Started');
+
             Test.stopTest();
         }
     }
