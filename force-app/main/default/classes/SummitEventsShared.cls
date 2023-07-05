@@ -438,7 +438,11 @@ public with sharing class SummitEventsShared {
             Time compareCloseTime = dt.time();
 
             if (evtInstance.Registration_Close_Date__c <= compareCloseDate) {
-                if (evtInstance.Registration_Close_Time__c < compareCloseTime) {
+                if (evtInstance.Registration_Close_Date__c == compareCloseDate) {
+                    if (evtInstance.Registration_Close_Time__c < compareCloseTime) {
+                        eventIsClosed = true;
+                    }
+                } else {
                     eventIsClosed = true;
                 }
             }
