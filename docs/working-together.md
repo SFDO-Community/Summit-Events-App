@@ -11,6 +11,8 @@ git config --global credential.helper store
 -- global can be replaced with --local if you do not want to affect all your repositories.
 ## Fork the Summit Events repository
 
+N/A
+
 ## Freshen your fork at any time
 
 Check what remotes you currently are set up for repository:
@@ -46,3 +48,10 @@ git push
 
 
 ## Make a pull request to contribute your innovations
+
+### Make sure you follow these steps:
+
+- Anything added must be pushed in a new branch OR in a forked repository.
+- In the pull request, make sure to give a description of the changes you made based on the template given in the pull request.
+- If your pull request is reviewed and approved, your pull request will be merged to the main branch.
+### Thank you for Contributing!
