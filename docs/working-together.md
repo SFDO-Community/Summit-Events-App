@@ -11,7 +11,8 @@ git config --global credential.helper store
 -- global can be replaced with --local if you do not want to affect all your repositories.
 ## Fork the Summit Events repository
 
-N/A
+To fork a repository, go to the Summit Events Repository and click "Fork" as shown below:
+![image](https://github.com/FrancisTR/Summit-Events-App/assets/123771828/457a12b9-6237-480c-b1b5-854de1d356dd)
 
 ## Freshen your fork at any time
 
