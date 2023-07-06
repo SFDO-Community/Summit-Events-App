@@ -218,7 +218,7 @@ public with sharing class SummitEventsConfirmationController {
                             eventRegistrationSuccess = regCRUD.addGuestRegistration(guestRegistrations);
                             //TODO: Ask original registrant if they are attending the event and enter value below.
                             eventRegistration.Guest_Host_Status__c = 'Host attending';
-                            //eventRegistration.Hosted_Attendees__c = guestRegistrations.size();
+                            eventRegistration.Hosted_Registrants__c = guestRegistrations.size();
                         }
 
                     }
