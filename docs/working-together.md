@@ -11,6 +11,9 @@ git config --global credential.helper store
 -- global can be replaced with --local if you do not want to affect all your repositories.
 ## Fork the Summit Events repository
 
+To fork a repository, go to the Summit Events Repository and click "Fork" as shown below:
+![image](https://github.com/FrancisTR/Summit-Events-App/assets/123771828/457a12b9-6237-480c-b1b5-854de1d356dd)
+
 ## Freshen your fork at any time
 
 Check what remotes you currently are set up for repository:
@@ -46,3 +49,10 @@ git push
 
 
 ## Make a pull request to contribute your innovations
+
+### Make sure you follow these steps:
+
+- Anything added must be pushed in a new branch OR in a forked repository.
+- In the pull request, make sure to give a description of the changes you made based on the template given in the pull request.
+- If your pull request is reviewed and approved, your pull request will be merged to the main branch.
+### Thank you for Contributing!

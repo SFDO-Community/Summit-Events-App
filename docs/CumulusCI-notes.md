@@ -2,7 +2,7 @@
 
 ## Manage Packaging
 
-Before packaging make sure your master branch has everything in it you want to include in the package for installation. 
+Before packaging, make sure your master branch has everything in it you want to include in the package for installation. 
 
 1. Deploy to scratch org. This will create a dev scratch org that installs all dependencies (EDA in this case).
 
@@ -27,7 +27,7 @@ Before packaging make sure your master branch has everything in it you want to i
     ```bash
     cci flow run release_production --org packaging
     ```
-5. Initially you will have to upload via the packaging org upload button to get your install link. This appears to only have to be done once and is a step I missed.
+5. Initially you will have to upload via the packaging org upload button to get your install link. This appears only to be done once and is a step I missed.
 
 
 ## Deploy meta data code - not managed or unmanaged
@@ -51,7 +51,9 @@ Before packaging make sure your master branch has everything in it you want to i
 
 2. Deploy code straight to a defined org
 
-    First rebuild the root src so it reflects any changes made. Note: The src directory should have been rebuilt if you have deployed to a scratch org like you should have.
+    First rebuild the root src so it reflects any changes made.
+   <br>
+   *Note: The src directory should have been rebuilt if you have deployed to a scratch org like you should have.*
 
     ```bash
    cci task run dx_convert_from
@@ -109,13 +111,13 @@ cci task run deploy
 ```
 
 **Run this command to open a scrach org in a browser (in this case dev)**
-<br>If you did the above your application should be installed:
+<br>If you did the above, your application should be installed:
 
 ```bash
 cci org browser dev
 ```
 
-**Run this command after you complete building your dev org take a snapshot of the changes (there should be none at this point)**
+**Run this command after you complete building your dev org and taking a snapshot of the changes (there should be none at this point)**
 
 ```bash
 cci task run list_changes -o snapshot True
