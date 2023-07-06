@@ -36,7 +36,7 @@ your forked repository. This is the URL you will use to copy the code down to yo
 6. On your computer navigate to the folder that you wish to put your cloned code in. Remember that
 cloning will create a directory for the code for you. 
 
-*You may also wish to use GitHub desktop to make this whole process prettier and less intimidating. **
+***You may also wish to use GitHub desktop to make this whole process prettier and less intimidating.***
 
 7. Copy your code to your computer with this command:
 
