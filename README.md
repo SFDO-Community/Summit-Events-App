@@ -1,4 +1,4 @@
-# Summit Events App
+# The Summit Events App
 
 ![SEA logo image](https://github.com/SFDO-Community-Sprints/Summit-Events-App/blob/master/images/Summit%20Events%20App%20Badge%20fv.png)
 
@@ -6,7 +6,7 @@ The Summit Events App is a sustainable open source community events app that ser
 
 ## Documentation
 
-For project information, install instructions and documentation, please visit our [documentation site](https://sfdo-community-sprints.github.io/summit-events-app-documentation/).
+For more information on the project's installation instructions and documentation, please visit our [documentation site](https://sfdo-community-sprints.github.io/summit-events-app-documentation/).
 
 ## Installation
 [Install the Summit Events App managed package](https://install.salesforce.org/products/SummitEventsApp/latest)
