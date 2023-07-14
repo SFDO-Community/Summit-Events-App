@@ -560,8 +560,7 @@ global with sharing class SummitEventsFeed {
         }, 'Filter events on the name of an account associated to the event via the account lookup field.'));
 
         //locationtype
-        allOptions.add(makeOption('locationtype', new List<String> {
-        }, 'Filter events on the location type set on the event or the override on an instance of the event.'));
+        allOptions.add(makeOption('locationtype',getObjectItemList(Summit_Events__c.Location_Type__c.getDescribe()), 'Filter events on the location type set on the event or the override on an instance of the event.'));
         //filter-Building
         allOptions.add(makeOption('building', getObjectItemList(Summit_Events__c.Building__c.getDescribe()), 'Filter searches with a like statement all of these items. (&building= single or coma separated list of these items)'));
 
