@@ -10,6 +10,35 @@ public class SummitEventsRegistration {
         Map<Id, Id> affectedContactIds = new Map<Id, Id>();
         List<Summit_Events_Registration__c> affectedRegs = new List<Summit_Events_Registration__c>();
 
+        String namespace = SummitEventsNamespace.getNamespace();
+        if (String.isNotBlank(namespace)) {
+            namespace = namespace.toLowerCase() + '__';
+        }
+
+        //Tags that need a little TLC to turn them into real links
+        List<String> emailTags = new List<String>{
+                'UG_Parking_Pass_Link__c',
+                'Add_To_Calendar_Link__c',
+                'Event_Registration_Cancel_Link__c',
+                'Add_to_Apple_Calendar__c',
+                'Add_To_Google_Calendar_Link__c',
+                'Add_to_Outlook_Calendar__c',
+                'Add_To_Outlook_Web_Calendar__c',
+                'Add_To_Yahoo_Calendar__c'
+        };
+
+        //Add the namespace to the email tags so that both namespaced and non-namespaced version work
+        if (String.isNotBlank(namespace)) {
+            List<String> emailTagsPackaged = new List<String>();
+            for (String tag : emailTags) {
+                emailTagsPackaged.add(namespace + tag);
+            }
+            emailTags.addAll(emailTagsPackaged);
+        }
+
+        //Delineator of content in the email templase
+        String originalTemplate = '[[DONT_DELETE_CONTENT_HERE]]';
+
         Map<Id, Summit_Events_Registration__c> oldListMap = new Map<Id, Summit_Events_Registration__c>();
         if (oldlist != null) {
             for (Summit_Events_Registration__c ol : (List<Summit_Events_Registration__c>) oldlist) {
@@ -94,7 +123,6 @@ public class SummitEventsRegistration {
                     if (statusMatch) {
                         //Get email template
                         String emailContent = em.Email_Content__c;
-                        String originalTemplate = '[[DONT_DELETE_CONTENT_HERE]]';
                         if (!String.isBlank(em.Letterhead_HTML__c)) {
                             originalTemplate = em.Letterhead_HTML__c;
                         }
@@ -117,7 +145,7 @@ public class SummitEventsRegistration {
                             while (matcher2.find()) {
 
                                 //Get the value for hook from registration have to remove any registration object names since we are already in the object
-                                String found = matcher2.group(1).replace('Summit_Events_Registration__c.', '');
+                                String found = matcher2.group(1).replace(namespace + 'Summit_Events_Registration__c.', '');
                                 try {
                                     found = String.valueOf(areg.get(found));
                                 } catch (Exception e) {
@@ -130,7 +158,7 @@ public class SummitEventsRegistration {
                                 }
                                 //replace all hooks with found values from regstration
 
-                                if (matcher2.group(1) == 'UG_Parking_Pass_Link__c' || matcher2.group(1) == 'Add_To_Calendar_Link__c' || matcher2.group(1) == 'Event_Registration_Cancel_Link__c' || matcher2.group(1) == 'Add_to_Apple_Calendar__c' || matcher2.group(1) == 'Add_To_Google_Calendar_Link__c' || matcher2.group(1) == 'Add_to_Outlook_Calendar__c' || matcher2.group(1) == 'Add_To_Outlook_Web_Calendar__c' || matcher2.group(1) == 'Add_To_Yahoo_Calendar__c') {
+                                if (emailTags.contains(matcher2.group(1))) {
                                     found = found.replace('_HL_ENCODED_', '<a href="');
                                     found = found.replace('_HL__blank_HL_', '</a>');
                                     found = found.replace('_HL_', ' target="_blank">');
@@ -228,7 +256,7 @@ public class SummitEventsRegistration {
                     EmailTo
             });
             mail.setSubject(Subject);
-            mail.setBccAddresses(bccList);
+            mail.setBccAddresses(BccList);
             mail.setPlainTextBody(plainBody);
             if (String.isBlank(HTMLBody)) {
                 mail.setHtmlBody(plainBody);

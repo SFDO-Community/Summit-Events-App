@@ -10,6 +10,11 @@
         <operation>notEqual</operation>
         <value>Cancelled, Rescheduled, Started</value>
     </summaryFilterItems>
+    <summaryFilterItems>
+        <field>Summit_Events_Registration__c.Guest_Host_Status__c</field>
+        <operation>notEqual</operation>
+        <value>Hosted registrant</value>
+    </summaryFilterItems>
     <summaryForeignKey>Summit_Events_Registration__c.Event_Instance__c</summaryForeignKey>
     <summaryOperation>count</summaryOperation>
     <trackHistory>false</trackHistory>

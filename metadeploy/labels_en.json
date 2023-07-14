@@ -1,0 +1,48 @@
+{
+    "product": {
+        "title": {
+            "message": "Summit Events App (SEA)",
+            "description": "name of product"
+        },
+        "short_description": {
+            "message": "Event application that serves a broad variety of needs for EDUs and NGOs.",
+            "description": "tagline of product"
+        },
+        "description": {
+            "message": "The Summit Events App is a sustainable open source community events app that serves a broad variety of needs for EDUs and NGOs. The event solution has the flexibility needed to offer events of different types: paid, free, group, guests, and individual. The solution will include the full life cycle of the event: registration, receipting, confirmation, reporting and web faced exposure. This solution facilitates a Salesforce connected campus and will be compatible with Salesforce.org\u2019s Data Architectures.\r\nResources:\r\n\r\n- [Installation Guide](https://sfdo-community-sprints.github.io/summit-events-app-documentation/)\r\n- [Open source GitHub repository](https://github.com/SFDO-Community-Sprints/Summit-Events-App/wiki)\r\n- [Summit Events App version release notes]( https://sfdo-community-sprints.github.io/summit-events-app-documentation/docs/release-notes/)\r\n- Learn more and get support: [Trailblazer Community](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHi2?tab=discussion). Please login to the Power of Us Hub, and post your question to the Summit Events App group. Maintainers of this application and Salesforce.org Open Source Program team members actively monitor every post.\r\n\r\n![Summit-Events-App logo](https://raw.githubusercontent.com/SFDO-Community-Sprints/Summit-Events-App/master/images/Summit%20Events%20App%20Badge%20fv.png)",
+            "description": "shown on product detail page (markdown)"
+        },
+        "click_through_agreement": {
+            "message": "The Summit Events App (\u201cSEA\u201d) technology is an open-source package licensed by salesforce.com, Inc. or one of its Affiliates (\u201cSFDC\u201d) under the BSD-3 Clause License, found at https://opensource.org/licenses/BSD-3-Clause. \r\n\r\nANY MASTER SUBSCRIPTION AGREEMENT YOU OR YOUR ENTITY MAY HAVE WITH SALESFORCE.ORG LLC (\u201cSFDO\u201d) OR SALESFORCE.COM, INC. (\u201cSALESFORCE\u201d), OR ITS AFFILIATES, DOES NOT APPLY TO YOUR USE OF SEA. FOR PURPOSES OF THIS AGREEMENT, AN \u201cAFFILIATE\u201d MEANS ANY ENTITY THAT DIRECTLY OR INDIRECTLY CONTROLS, IS CONTROLLED BY, OR IS UNDER COMMON CONTROL WITH THE SUBJECT ENTITY. \u201cCONTROL,\u201d FOR PURPOSES OF THIS DEFINITION, MEANS DIRECT OR INDIRECT OWNERSHIP OR CONTROL OF MORE THAN 50% OF THE VOTING INTERESTS OF THE SUBJECT ENTITY.\r\nSEA IS A NON-SFDC APPLICATION OR THIRD-PARTY APPLICATION, AND NOT SERVICES, UNDER ANY MASTER SUBSCRIPTION AGREEMENT YOU HAVE WITH SFDO OR SALESFORCE, OR ITS AFFILIATES. SEA IS PROVIDED \u201cAS IS\u201d AND AS AVAILABLE. NEITHER SFDO NOR SALESFORCE, OR ITS AFFILIATES, MAKES ANY WARRANTY OF ANY KIND REGARDING SEA, WHETHER EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, FREEDOM FROM DEFECTS OR NON-INFRINGEMENT, TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW.\r\nNEITHER SFDO NOR SALESFORCE, OR ITS AFFILIATES, WILL HAVE ANY LIABILITY ARISING OUT OF OR RELATED TO YOUR USE OF SEA FOR ANY DIRECT DAMAGES OR FOR ANY LOST PROFITS, REVENUES, GOODWILL OR INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL, EXEMPLARY, COVER, BUSINESS INTERRUPTION OR PUNITIVE DAMAGES, WHETHER AN ACTION IS IN CONTRACT OR TORT AND REGARDLESS OF THE THEORY OF LIABILITY, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES OR IF A REMEDY OTHERWISE FAILS OF ITS ESSENTIAL PURPOSE. THE FOREGOING DISCLAIMER WILL NOT APPLY TO THE EXTENT PROHIBITED BY LAW. SFDO AND SALESFORCE, AND ITS AFFILIATES, DISCLAIM ALL LIABILITY AND INDEMNIFICATION OBLIGATIONS FOR ANY HARM OR DAMAGES CAUSED BY ANY THIRD-PARTY HOSTING PROVIDERS.",
+            "description": "legal text shown in modal dialog"
+        },
+        "error_message": {
+            "message": "If you experience an issue with the installation, please post in the [Power of Us Hub](https://powerofus.force.com/s/group/0F91E000000bo8OSAQ/community-project-summit-events-app).\"",
+            "description": "shown after failed installation (markdown)"
+        }
+    },
+    "plan:install": {
+        "title": {
+            "message": "Base Plan",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "This will install Summit Events App (SEA) into your org.",
+            "description": "shown before user starts installation (markdown)"
+        },
+        "post_install_message": {
+            "message": "Thanks for installing SEA. Please review the [post-install instructions](https://github.com/SFDO-Community/Summit-Events-App/wiki/0a-%E2%80%93-Setting-Up-Summit-Events-After-Installing-Package) for next steps.",
+            "description": "shown after successful installation (markdown)"
+        },
+        "error_message": {
+            "message": "If you experience an issue with the installation, please post in the [Power of Us Hub](https://powerofus.force.com/s/group/0F91E000000bo8OSAQ/community-project-summit-events-app).",
+            "description": "shown after failed installation (markdown)"
+        }
+    },
+    "steps": {
+        "Install {product} {version}": {
+            "message": "Install {product} {version}",
+            "description": "title of installation step"
+        }
+    }
+}

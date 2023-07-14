@@ -438,7 +438,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </apex:outputPanel>
 
                             <!-- TEXT MESSAGE ASK -->
-                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!IF(CONTAINS(eventPage.Ask_Phone__c, 'mobile') || eventPage.Ask_Phone__c == 'Ask mobile' || eventPage.Ask_Phone__c == 'Ask mobile and require' ||  phoneType='mobile', true, false)}">
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!IF((CONTAINS(eventPage.Ask_Phone__c, 'mobile') || eventPage.Ask_Phone__c == 'Ask mobile' || eventPage.Ask_Phone__c == 'Ask mobile and require' ||  phoneType='mobile') && !eventPage.Do_not_show_receive_text_question__c, true, false)}">
                                 <div class="slds-form-element">
                                     <div class="slds-form-element__control">
                                         <div class="slds-checkbox">

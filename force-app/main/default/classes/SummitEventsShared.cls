@@ -50,18 +50,6 @@ public with sharing class SummitEventsShared {
             namespace = namespace + '__';
         }
 
-        Map<String, PageReference> pageMovement = new Map<String, PageReference>();
-        Map<String, String> currentPageParameters = currentPage.getParameters();
-        List<String> pagesInEvent = new List<String>();
-        Map<String, PageReference> allPageReferences = new Map<String, PageReference>();
-        allPageReferences.put(namespace + 'SummitEventsRegister', Page.SummitEventsRegister);
-        allPageReferences.put(namespace + 'SummitEventsAdditionalQuestions', Page.SummitEventsAdditionalQuestions);
-        allPageReferences.put(namespace + 'SummitEventsRegisterGuests', Page.SummitEventsRegisterGuests);
-        allPageReferences.put(namespace + 'SummitEventsRegisterAppointments', Page.SummitEventsRegisterAppointments);
-        allPageReferences.put(namespace + 'SummitEventsDonation', Page.SummitEventsDonation);
-        allPageReferences.put(namespace + 'SummitEventsSubmit', Page.SummitEventsSubmit);
-        allPageReferences.put(namespace + 'SummitEventsConfirmation', Page.SummitEventsConfirmation);
-
         String dayOfWeek = convertDateToDatetime(startDate, null, '').format('EEEE');
 
         Integer appointmentTypes = [
@@ -100,11 +88,29 @@ public with sharing class SummitEventsShared {
         ];
 
         Summit_Events__c eventInformation = [
-                SELECT Id, Display_Optional_Donation__c, Display_Guest_Registration__c
+                SELECT Id, Display_Optional_Donation__c, Display_Guest_Registration__c, Payment_Gateway__c
                 FROM Summit_Events__c
                 WHERE Id = :eventId
                 WITH SECURITY_ENFORCED
         ];
+
+        Map<String, PageReference> pageMovement = new Map<String, PageReference>();
+        Map<String, String> currentPageParameters = currentPage.getParameters();
+        List<String> pagesInEvent = new List<String>();
+        Map<String, PageReference> allPageReferences = new Map<String, PageReference>();
+        allPageReferences.put(namespace + 'SummitEventsRegister', Page.SummitEventsRegister);
+        allPageReferences.put(namespace + 'SummitEventsAdditionalQuestions', Page.SummitEventsAdditionalQuestions);
+        allPageReferences.put(namespace + 'SummitEventsRegisterGuests', Page.SummitEventsRegisterGuests);
+        allPageReferences.put(namespace + 'SummitEventsRegisterAppointments', Page.SummitEventsRegisterAppointments);
+        allPageReferences.put(namespace + 'SummitEventsDonation', Page.SummitEventsDonation);
+        allPageReferences.put(namespace + 'SummitEventsSubmit', Page.SummitEventsSubmit);
+
+        //If payment gateway exist add it here
+        if (String.isNotBlank(eventInformation.Payment_Gateway__c) && eventInformation.Payment_Gateway__c != 'No Gateway') {
+            allPageReferences.put('c__' + eventInformation.Payment_Gateway__c, new PageReference(Site.getBaseSecureUrl() + '/c__' + eventInformation.Payment_Gateway__c));
+        }
+
+        allPageReferences.put(namespace + 'SummitEventsConfirmation', Page.SummitEventsConfirmation);
 
         pagesInEvent.add(namespace + 'SummitEventsRegister');
 
@@ -132,6 +138,11 @@ public with sharing class SummitEventsShared {
         //If event has more than 1 item in list then submit page
         if (pagesInEvent.size() > 1) {
             pagesInEvent.add(namespace + 'SummitEventsSubmit');
+        }
+
+        //If payment gateway exist add it here
+        if (String.isNotBlank(eventInformation.Payment_Gateway__c) && eventInformation.Payment_Gateway__c != 'No Gateway') {
+            pagesInEvent.add('c__' + eventInformation.Payment_Gateway__c);
         }
 
         pagesInEvent.add(namespace + 'SummitEventsConfirmation');
@@ -268,6 +279,7 @@ public with sharing class SummitEventsShared {
         try {
             newInstanceId = eventInformation.instanceId;
         } catch (Exception ex) {
+            System.debug(ex.getMessage());
         }
 
         String newRegistrationId = eventInformation.registrationId;
@@ -344,7 +356,7 @@ public with sharing class SummitEventsShared {
         eventId = (String.isNotBlank(eventId) && !eventId.equalsIgnoreCase('null')) ? eventId : '';
         registrationId = (String.isNotBlank(registrationId) && !registrationId.equalsIgnoreCase('null')) ? registrationId : '';
         String CookieValue = encryptString('{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '","dt":"' + String.valueOf(nowTime) + '"}');
-        Cookie SummitEventsCookie = new Cookie('SummitEvents', CookieValue, null, -1, false);
+        Cookie SummitEventsCookie = new Cookie('SummitEvents', CookieValue, null, -1, true, 'Strict');
         ApexPages.currentPage().setCookies(new Cookie[]{
                 SummitEventsCookie
         });
@@ -413,7 +425,7 @@ public with sharing class SummitEventsShared {
     public Boolean isEventClosed(Summit_Events_Instance__c evtInstance) {
         // Figure out if the event is closed.
         Boolean eventIsClosed = false;
-        if (String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
+        if (ApexPages.currentPage() != null && String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
             Boolean adminOpen = isBoolean(ApexPages.currentPage().getParameters().get('adminopen'));
             eventIsClosed = !adminOpen;
         } else {
@@ -426,7 +438,11 @@ public with sharing class SummitEventsShared {
             Time compareCloseTime = dt.time();
 
             if (evtInstance.Registration_Close_Date__c <= compareCloseDate) {
-                if (evtInstance.Registration_Close_Time__c < compareCloseTime) {
+                if (evtInstance.Registration_Close_Date__c == compareCloseDate) {
+                    if (evtInstance.Registration_Close_Time__c < compareCloseTime) {
+                        eventIsClosed = true;
+                    }
+                } else {
                     eventIsClosed = true;
                 }
             }

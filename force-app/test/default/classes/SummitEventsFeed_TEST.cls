@@ -133,7 +133,7 @@ private class SummitEventsFeed_TEST {
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
 
-            System.assert(res.responseBody.toString().startswith('UDAR(['));
+            System.assert(res.responseBody.toString().startsWith('UDAR(['));
             Test.stopTest();
 
         }

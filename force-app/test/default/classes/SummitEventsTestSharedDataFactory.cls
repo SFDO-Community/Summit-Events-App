@@ -33,6 +33,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Template__c = 'GeneralSLDS',
                 Close_Event_Days_Before__c = 0,
                 Location_Title__c = 'A location',
+                Keep_Registration_Open_During_Event__c = true,
                 Location_Map_Link__c = 'Map Link 1',
                 Location_Address__c = '123 Electric Ave.',
                 Location_Type__c = 'On-Site',
@@ -48,9 +49,11 @@ public with sharing class SummitEventsTestSharedDataFactory {
             seaInstance.Event__c = testEvent.Id;
             seaInstance.Instance_Title__c = testEvent.Name + ' Session ' + x;
             seaInstance.Instance_Start_Date__c = Date.today().addDays(x);
-            seaInstance.Instance_Start_Time__c = Time.newInstance(8, 0, 0, 0);
+            Datetime currentDatetime = Datetime.now();
+            Time currentTIme = Time.newInstance(currentDatetime.day(), currentDatetime.hour(), currentDatetime.minute(), currentDatetime.second());
+            seaInstance.Instance_Start_Time__c = currentTIme.addHours(-1);
             seaInstance.Instance_End_Date__c = Date.today().addDays(x);
-            seaInstance.Instance_End_Time__c = Time.newInstance(14, 0, 0, 0);
+            seaInstance.Instance_End_Time__c = currentTIme.addHours(8);
             seaInstance.Instance_Time_Zone__c = 'Central Daylight Time (America/Chicago)';
             seaInstance.Active_Status__c = 'Active';
             seaInstance.Capacity__c = 500;
@@ -152,7 +155,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Event__c = evtInst.Event__c
         );
 
-        List<OrgWideEmailAddress> oweList = [SELECT Id, Address,DisplayName, IsAllowAllProfiles FROM OrgWideEmailAddress WHERE IsAllowAllProfiles = TRUE];
+        List<OrgWideEmailAddress> oweList = [SELECT Id, Address, DisplayName, IsAllowAllProfiles FROM OrgWideEmailAddress WHERE IsAllowAllProfiles = TRUE];
 
         if (oweList.size() > 0) {
             testEvtEmail.Org_Email_Id__c = oweList[0].Id;
@@ -365,7 +368,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
     public static void AddDonationsToEvents(Id eventId, List<Summit_Events_Fee_Allocation__c> testFeeAllocations) {
         Summit_Events__c seaTestEvent = [
                 SELECT Id, Event_Fee__c, Event_Fee_Additional__c, Event_Fee_Allocation__c, Event_Fee_Additional_Allocation__c,
-                        Donation_Allocation_1__c,Donation_Allocation_2__c,Donation_Allocation_3__c,Donation_Allocation_4__c,Donation_Allocation_5__c,
+                        Donation_Allocation_1__c, Donation_Allocation_2__c, Donation_Allocation_3__c, Donation_Allocation_4__c, Donation_Allocation_5__c,
                         Donation_Description__c, Donation_Suggested_Amount_List__c, Display_Optional_Donation__c, Donation_Title__c
                 FROM Summit_Events__c
                 WHERE Id = :eventId
@@ -388,7 +391,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
         // Profile p = [SELECT Id, Name FROM Profile WHERE Name = :profileName];
         Profile p;
 
-        p = [SELECT Id,Name FROM Profile WHERE Name = :profileName];
+        p = [SELECT Id, Name FROM Profile WHERE Name = :profileName];
 
         return new User(
                 Alias = alias,

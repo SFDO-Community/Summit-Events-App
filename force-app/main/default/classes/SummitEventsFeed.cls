@@ -113,7 +113,7 @@ global with sharing class SummitEventsFeed {
         eventQuery += ' Building_Override__c, Alternate_Registration_URL_Override__c, Location_Address_Override__c, Location_Map_Link_Override__c, Location_Title_Override__c, Location_Type_Override__c,  ';
         eventQuery += ' Event__r.Event_Short_Listing_Description__c, Event__r.Audience__c, Event__r.Close_Event_Days_Before__c, Event__r.Event_Sponsor__c, ';
         eventQuery += ' Event__r.Feed_Registration_Button_Text__c, Feed_Registration_Button_Text_Override__c, Capacity__c, Current_Available_Capacity__c, Private_Instance__c, Event__r.Private_Event__c, ';
-        eventQuery += ' Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c ';
+        eventQuery += ' Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c, Registration_Close_Date__c, Registration_Close_Time__c   ';
         if (accountIsAccessible) {
             eventQuery += ' , Event__r.Account__r.Name ';
         }
@@ -136,8 +136,6 @@ global with sharing class SummitEventsFeed {
         if (hideClosed) {
             eventQuery += ' AND (Current_Available_Capacity__c > 0 OR Capacity__c = null) ';
         }
-
-
         // build and sanitize the where statement that have variables
 
         // get start and end view times convert string to datetime then convert back into string to sanitize
@@ -238,7 +236,6 @@ global with sharing class SummitEventsFeed {
             eventQuery += ' AND (' + sanitizeOrLikeList(program, programFields) + ') ';
         }
 
-
         //School filter (can be comma separated)
         String school = req.params.get('school');
         if (String.isNotBlank(school) && accountIsAccessible) {
@@ -257,10 +254,17 @@ global with sharing class SummitEventsFeed {
             eventQuery += ' AND (' + sanitizeOrLikeList(building, 'Event__r.Building__c') + ') ';
         }
 
+        //Building filter (can be comma separated)
+        String locationType = req.params.get('locationtype');
+        if (String.isNotBlank(locationType)) {
+            eventQuery += ' AND ((' + sanitizeOrLikeList(locationType, 'Event__r.Location_Type__c') + ') ';
+            eventQuery += ' OR (' + sanitizeOrLikeList(locationType, 'Location_Type_Override__c') + ')) ';
+        }
+
         //get filter with like soql concatinated program,location, school, location address, location type
         String filter = req.params.get('filter');
         if (String.isNotBlank(filter)) {
-            String filterFields = 'Event__r.Program_Filter__c,Event__r.Program_Filter_2__c,Event__r.Program_Filter_3__c,Event__r.Location_Title__c,Event__r.Location_Address__c,Event__r.Building__c';
+            String filterFields = 'Event__r.Program_Filter__c,Event__r.Program_Filter_2__c,Event__r.Program_Filter_3__c,Event__r.Location_Title__c,Event__r.Location_Address__c,Event__r.Location_Type__c,Event__r.Building__c';
             eventQuery += ' AND (' + sanitizeOrLikeList(filter, filterFields) + ') ';
         }
 
@@ -412,7 +416,7 @@ global with sharing class SummitEventsFeed {
                 evt.locationMapLink = '';
             }
 
-            if (evt.start < regDateOpenDate || eventInstance.Current_Available_Capacity__c <= 0) {
+            if (seaShared.isEventClosed(eventInstance)) {
                 evt.eventClosed = true;
                 evt.eventUrl = 'javascript:;';
                 evt.className = 'eventClosed';
@@ -555,6 +559,8 @@ global with sharing class SummitEventsFeed {
         allOptions.add(makeOption('account', new List<String>{
         }, 'Filter events on the name of an account associated to the event via the account lookup field.'));
 
+        //locationtype
+        allOptions.add(makeOption('locationtype',getObjectItemList(Summit_Events__c.Location_Type__c.getDescribe()), 'Filter events on the location type set on the event or the override on an instance of the event.'));
         //filter-Building
         allOptions.add(makeOption('building', getObjectItemList(Summit_Events__c.Building__c.getDescribe()), 'Filter searches with a like statement all of these items. (&building= single or coma separated list of these items)'));
 

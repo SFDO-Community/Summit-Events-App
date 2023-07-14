@@ -10,10 +10,10 @@ git reset --hard origin/master
 git clean -f
 ```
 
-Connecting to remote
+Connecting to remote?
 
 ```git
-
+git remote add [name] [URL]
 ```
 
 

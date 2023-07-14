@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Do_not_show_receive_text_question__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Checking this box will suppress the question about willingness to receive text messaging.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Checking this box will suppress the question about willingness to receive text messaging.</inlineHelpText>
+    <label>Do not show receive text question</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
