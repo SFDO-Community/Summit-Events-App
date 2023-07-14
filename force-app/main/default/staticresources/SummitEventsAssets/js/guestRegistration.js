@@ -1,6 +1,5 @@
 let ready = (callback) => {
-    if (document.readyState !== "loading") callback();
-    else document.addEventListener("DOMContentLoaded", callback);
+    if (document.readyState !== "loading") callback(); else document.addEventListener("DOMContentLoaded", callback);
 }
 
 let allGuests = [];
@@ -61,6 +60,9 @@ function handleGuestInput(event) {
         }
     });
     if (valuesEntered) {
+        let submitButton = form.querySelector("#registerGuestButton");
+        submitButton.classList.remove('slds-button_brand');
+        submitButton.classList.add('slds-button_neutral');
         let newGuest = serializeForm(event.target);
         allGuests.push(newGuest);
         let guestJSON = document.querySelector("[id$='guestJSON']");
@@ -183,7 +185,7 @@ function buildGuestForm() {
 
         form.addEventListener('invalid', (e) => {
             e.preventDefault();
-            let allInputs = document.querySelectorAll('input, select, textarea');
+            let allInputs = form.querySelectorAll('input, select, textarea');
             allInputs.forEach(input => {
                 if (!input.validity.valid) {
                     input.setAttribute('aria-invalid', 'true')
@@ -195,6 +197,24 @@ function buildGuestForm() {
                 }
             });
         }, true)
+
+        form.addEventListener('change', () => {
+            let allInputs = form.querySelectorAll('input, select, textarea');
+            let submitButton = form.querySelector("#registerGuestButton");
+            let hasValues = false;
+            allInputs.forEach(input => {
+                if (input.value) {
+                    hasValues = true;
+                }
+            });
+            if (hasValues) {
+                submitButton.classList.remove('slds-button_neutral');
+                submitButton.classList.add('slds-button_brand');
+            } else {
+                submitButton.classList.remove('slds-button_brand');
+                submitButton.classList.add('slds-button_neutral');
+            }
+        });
 
     }
 }
@@ -224,7 +244,6 @@ function setGuestRemaining() {
 
 function buildInputBox(question, inputType) {
     let inputBox;
-    console.log(inputType);
     if (inputType === 'textarea') {
         inputBox = document.createElement('textarea');
     } else {
