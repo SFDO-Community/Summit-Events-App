@@ -5,14 +5,6 @@
 
 public with sharing class SummitEventsShared {
 
-    public class SummitEventsInfo {
-        public String audience { get; set; }
-        public String instanceId { get; set; }
-        public String eventId { get; set; }
-        public String registrationId { get; set; }
-        public String dt { get; set; }
-    }
-
     public SummitEventsShared() {
 
     }

@@ -7,7 +7,7 @@ public with sharing class SummitEventsParkingPassController {
     public String firstName { get; set; }
     public String warning { get; set; }
     public Summit_Events_Registration__c visitor { get; set; }
-    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public SummitEventsInfo eventInformation { get; set; }
     private SummitEventsShared SEShared = new SummitEventsShared();
 
 
@@ -21,7 +21,7 @@ public with sharing class SummitEventsParkingPassController {
 
             if (String.isNotBlank(decryptedParameter)) {
                 try {
-                    eventInformation = (SummitEventsShared.SummitEventsInfo) JSON.deserialize(decryptedParameter, SummitEventsShared.SummitEventsInfo.class);
+                    eventInformation = (SummitEventsInfo) JSON.deserialize(decryptedParameter, SummitEventsInfo.class);
                 } catch (Exception e) {
                     System.debug(e.getMessage());
                 }

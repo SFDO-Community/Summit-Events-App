@@ -5,7 +5,7 @@
 
 public with sharing class SummitEventsRegisterAppointmentCtlr {
     public SummitEventsShared seaShared = new SummitEventsShared();
-    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public SummitEventsInfo eventInformation { get; set; }
     public Map<Id, Summit_Events_Appointment_Type__c> appointments { get; set; }
     public List<Summit_Events_Appointments__c> chosenApps { get; set; }
     public Summit_Events_Instance__c evtInstance { get; set; }

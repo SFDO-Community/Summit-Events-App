@@ -1,7 +1,7 @@
-/**
- * Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas on 7/13/2021.
- */
-
+// Copyright (c) 2021, Salesforce.org. All rights reserved.
+// Use of this source code is governed by a BSD 3-Clause.
+// License can be found found in the LICENSE file in this repository.
+// Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas o 7/13/2021
 
 public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
@@ -10,7 +10,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
-    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public SummitEventsInfo eventInformation { get; set; }
     public String instanceName { get; set; }
     public String startTimeString { get; set; }
     public String endTimeString { get; set; }
@@ -19,33 +19,10 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public List<Summit_Events_Question__c> additionalQuestions { get; set; }
     public Boolean eventIsClosed { get; set; }
     public List<String> mapToList { get; set; }
-    public List<questionItem> questionWrapper { get; set; }
+    public List<SummitQuestionWrapper> questionWrapper { get; set; }
     private Id incomingRegId { get; set; }
     public Map<String, String> lookUpDisplayValue { get; set; }
 
-
-    public class questionItem {
-        public String questionId { get; set; }
-        public String type { get; set; }
-        public String question { get; set; }
-        public Boolean required { get; set; }
-        public List<SelectOption> picklist { get; set; }
-        public String help { get; set; }
-        public String instructions { get; set; }
-        public String assist { get; set; }
-        public String defaultValue { get; set; }
-        public Integer textLimit { get; set; }
-        public String mapTo { get; set; }
-        public String lookup { get; set; }
-        public String icon { get; set; }
-        public String secondaryLinkText { get; set; }
-        public String secondaryQuestion { get; set; }
-        public String secondaryMapTo { get; set; }
-        public String secondaryNoResults { get; set; }
-        public String setupError { get; set; }
-        public Boolean setupFail { get; set; }
-        public String displayStyle { get; set; }
-    }
 
     public class queryReturn {
         public String searchTerm { get; set; }
@@ -57,7 +34,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public SummitEventsAdditionalQuestionsCtlr() {
         eventIsClosed = false;
         eventInformation = SeaShared.getSummitEventsInfo();
-        questionWrapper = new List<questionItem>();
+        questionWrapper = new List<SummitQuestionWrapper>();
         Map<String, String> hiddenValues = new Map<String, String>();
 
         //eventInformation is an object gathered from the encrypted client cookie that contains event id and instance ids without which thou shall not pass
@@ -130,7 +107,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
                 for (Summit_Events_Question__c question : additionalQuestions) {
                     //Build each question item and add to question item list to inform creation of visualforce form.
-                    questionItem quest = new questionItem();
+                    SummitQuestionWrapper quest = new SummitQuestionWrapper();
                     quest.setupFail = false;
                     quest.setupError = '';
                     String mapToField = '';

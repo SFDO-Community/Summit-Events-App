@@ -1,0 +1,192 @@
+<!--
+ - Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas on 7/22/2023.
+ -->
+
+<apex:component id="SummitFormInputs">
+<!--    <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-error {!qu.displayStyle}" rendered="{!qu.setupFail}">
+        <apex:outputLabel styleClass="slds-form-element__label">
+            {!qu.question}
+            <apex:outputText escape="false" rendered="{!qu.required}">
+                <abbr class="slds-required" title="required">*</abbr>
+            </apex:outputText>
+        </apex:outputLabel>
+        <p class="slds-text-color_error">{!qu.setupError}</p>
+    </apex:outputPanel>
+
+    <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 {!qu.displayStyle}" rendered="{!If(qu.type != 'Checkbox' && !qu.setupFail, true, false)}">
+        <apex:outputPanel layout="block" styleClass="slds-form-element {!IF(qu.required, 'slds-is-required', '')}">
+
+            <apex:outputLabel styleClass="slds-form-element__label">
+                {!qu.question}
+                <apex:outputText escape="false" rendered="{!qu.required}">
+                    <abbr class="slds-required" title="required">*</abbr>
+                </apex:outputText>
+            </apex:outputLabel>
+
+            <apex:outputPanel layout="block" styleClass="slds-form-element__icon" rendered="{!!ISBLANK(qu.help)}">
+                <button class="slds-button slds-button_icon helpButton" aria-describedby="help{!qNum}">
+                    <svg class="slds-button__icon" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#info"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Help</span>
+                </button>
+                <div class="slds-popover slds-fall-into-ground slds-nubbin_bottom-left" role="tooltip" id="help{!qNum}" style="position:absolute;top:-45px;left:-15px;width:200px">
+                    <div class="slds-popover__body">{!qu.help}</div>
+                </div>
+            </apex:outputPanel>
+
+            <apex:outputPanel layout="block" styleClass="slds-form-element__control">
+
+                &lt;!&ndash;Textbox &ndash;&gt;
+                <apex:inputText value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Textbox',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}" maxLength="{!IF(ISBLANK(qu.textLimit), '255', qu.textLimit)}"/>
+
+                &lt;!&ndash;Textarea &ndash;&gt;
+                <apex:inputTextarea value="{!eventRegistration[qu.mapTo]}" styleClass="slds-textarea" rendered="{!If(qu.type = 'Text Area',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}"  html-maxlength="{!IF(ISBLANK(qu.textLimit), '255', qu.textLimit)}"/>
+
+                &lt;!&ndash;Email &ndash;&gt;
+                <apex:input type="email" value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Email',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}" html-maxlength="{!IF(ISBLANK(qu.textLimit), '255', qu.textLimit)}"/>
+
+                &lt;!&ndash;Date &ndash;&gt;
+                <apex:input type="date" value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Date',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}" html-maxlength="{!IF(ISBLANK(qu.textLimit), '255', qu.textLimit)}"/>
+
+                &lt;!&ndash;Phone &ndash;&gt;
+                <apex:input type="tel" value="{!eventRegistration[qu.mapTo]}" styleClass="slds-input" rendered="{!If(qu.type = 'Phone',true,false)}" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}" html-pattern="[0-9-+ ().]+" html-maxlength="{!IF(ISBLANK(qu.textLimit), '255', qu.textLimit)}"/>
+
+                &lt;!&ndash;Pick List&ndash;&gt;
+                <apex:outputPanel layout="block" styleClass="slds-select_container" rendered="{!IF(qu.type = 'Picklist', true, false)}">
+                    <apex:selectList value="{!eventRegistration[qu.mapTo]}" size="1" styleClass="slds-select" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}">
+                        <apex:selectOptions value="{!qu.picklist}"/>
+                    </apex:selectList>
+                </apex:outputPanel>
+
+                &lt;!&ndash; Record Lookup &ndash;&gt;
+                <apex:outputPanel rendered="{!qu.type = 'Lookup'}" layout="block" styleClass="referenceLookup slds-combobox_container" html-data-lookup="{!qu.lookup}" html-data-noresults="{!qu.secondaryNoResults}" html-data-secondarylinktext="{!qu.secondaryLinkText}" html-data-listicon="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#' + qu.icon)}">
+                    <apex:outputText value="Configuration error: Lookup Secondary Value Field not entered." rendered="{!ISBLANK(qu.secondaryMapTo)}" styleClass="validationError"/>
+
+                    &lt;!&ndash; Record lookup up main. Does not show if secondary input has been entered or requested &ndash;&gt;
+                    <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox" style="{!IF(!ISBLANK(eventRegistration[qu.secondaryMapTo]), 'display:none;', '')}">
+                        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                            <apex:inputText value="{!lookUpDisplayValue[qu.mapTo]}" id="combobox" styleClass="bind-autocomplete slds-input slds-combobox__input" html-autocomplete="off" html-role="textbox" html-aria-autocomplete="list"/>
+                            <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right refRemoveButton" title="Remove selected option" style="display:none;">
+                                <svg class="slds-button__icon" aria-hidden="true">
+                                    <use xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Remove selected option</span>
+                            </button>
+                            <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right refMagGlass">
+                                                        <svg class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default " aria-hidden="true">
+                                                            <use xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                                        </svg>
+                                                        <div class="sea-spinner" style="height:1rem;position:relative;margin-right:.5rem;display:none;">
+                                                            <div class="slds-spinner_container">
+                                                                <div role="status" class="slds-spinner slds-spinner_x-small">
+                                                                    <span class="slds-assistive-text">Loading</span>
+                                                                    <div class="slds-spinner__dot-a"></div>
+                                                                    <div class="slds-spinner__dot-b"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </span>
+                        </div>
+                        <div class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox" style="min-height: 2rem;">
+                            <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                <li role="presentation" class="slds-listbox__item">
+                                    <div id="option1" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                                             <span class="slds-media__body">
+                                                                ...
+                                                              </span>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="sea-spinner slds-modal">
+                                <div class="slds-spinner_container">
+                                    <div role="status" class="slds-spinner slds-spinner_x-small">
+                                        <span class="slds-assistive-text">Loading</span>
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <apex:inputHidden value="{!eventRegistration[qu.mapTo]}" id="lookupValue" html-class="sea-lookup-input"/>
+
+                    &lt;!&ndash;Secondary Input Text Box - Used for requested manual entry of record and mapped to secondary field&ndash;&gt;
+                    <div class="sea-secondary-input" style="{!IF(ISBLANK(eventRegistration[qu.secondaryMapTo]), 'display:none', '')}">
+                        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right sea-secondary-input" role="none">
+                            <apex:inputText value="{!eventRegistration[qu.secondaryMapTo]}" styleClass="slds-input slds-m-horizontal_none sea-alternate-input" html-aria-describedby="error-message-{!quNum}" maxLength="{!IF(ISBLANK(qu.textLimit), '255', qu.textLimit)}"/>
+                            <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right removeButtonSecondary" title="Remove selected option">
+                                <svg class="slds-button__icon" aria-hidden="true">
+                                    <use xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Remove selected option</span>
+                            </button>
+
+                        </div>
+                        <apex:outputPanel layout="block" rendered="{!!ISBLANK(qu.secondaryQuestion)}">
+                            <p class="slds-text-body_regular slds-p-top_xxx-small">
+                                <em>{!qu.secondaryQuestion}</em>
+                            </p>
+                        </apex:outputPanel>
+                    </div>
+
+                </apex:outputPanel>
+
+                &lt;!&ndash; Lookup Picklist &ndash;&gt;
+                <apex:outputPanel layout="block" styleClass="slds-select_container" rendered="{!IF(qu.type = 'Lookup Picklist', true, false)}">
+                    <apex:selectList value="{!eventRegistration[qu.mapTo]}" size="1" styleClass="slds-select" required="{!qu.required}" html-aria-describedby="error-message-{!quNum}">
+                        <apex:selectOptions value="{!qu.picklist}"/>
+                    </apex:selectList>
+                </apex:outputPanel>
+
+            </apex:outputPanel>
+            <div class="slds-form-element__help" id="error-message-{!quNum}">{!qu.assist}</div>
+        </apex:outputPanel>
+
+        <apex:outputPanel layout="block" rendered="{!!ISBLANK(qu.instructions)}">
+            <p class="slds-text-body_regular slds-p-top_xxx-small">
+                {!qu.instructions}
+            </p>
+        </apex:outputPanel>
+
+    </apex:outputPanel>
+
+    &lt;!&ndash; Checkbox&ndash;&gt;
+    <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6" rendered="{!If(qu.type == 'Checkbox' && !qu.setupFail, true, false)}">
+        <apex:outputPanel layout="block" styleClass="slds-form-element {!IF(qu.required, 'slds-is-required', '')}">
+            <apex:outputPanel layout="block" styleClass="slds-form-element__control">
+                <apex:outputPanel layout="block" styleClass="slds-checkbox">
+                    <apex:inputCheckbox value="{!eventRegistration[qu.mapTo]}" html-aria-describedby="error-message-{!quNum}" required="{!qu.required}"/>
+                    <apex:outputLabel styleClass="slds-checkbox__label">
+                        <span class="slds-checkbox_faux"></span>
+                        <span class="slds-form-element__label">{!qu.question}
+                            <apex:outputText escape="false" rendered="{!qu.required}">
+                                                    <abbr class="slds-required" title="required">*</abbr>
+                                                </apex:outputText>
+                                                </span>
+                    </apex:outputLabel>
+                    <apex:outputPanel layout="block" styleClass="slds-form-element__icon" rendered="{!!ISBLANK(qu.help)}">
+                        <button class="slds-button slds-button_icon helpButton" aria-describedby="help{!qNum}">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#info"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Help</span>
+                        </button>
+                        <div class="slds-popover slds-fall-into-ground slds-nubbin_bottom-left" role="tooltip" id="help{!qNum}" style="position:absolute;top:-45px;left:-15px;width:200px">
+                            <div class="slds-popover__body">{!qu.help}</div>
+                        </div>
+                    </apex:outputPanel>
+                </apex:outputPanel>
+
+            </apex:outputPanel>
+            <div class="slds-form-element__help" id="error-message-{!quNum}">{!qu.assist}</div>
+        </apex:outputPanel>
+        <apex:outputPanel layout="block" rendered="{!!ISBLANK(qu.instructions)}">
+            <p class="slds-text-body_regular slds-p-top_xxx-small">
+                {!qu.instructions}
+            </p></apex:outputPanel>
+    </apex:outputPanel>
+
+    &lt;!&ndash; Increment for unique error id, etc&ndash;&gt;
+    <apex:variable var="qNum" value="{!qNum + 1}"/>-->
+</apex:component>

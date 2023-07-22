@@ -6,7 +6,7 @@
 public with sharing class SummitEventsDonationController {
 
     public SummitEventsShared seaShared = new SummitEventsShared();
-    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public SummitEventsInfo eventInformation { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public String templateSelected { get; set; }
     public String donationAllocation { get; set; }

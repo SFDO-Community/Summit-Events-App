@@ -5,7 +5,7 @@
 
 public with sharing class SummitEventsSubmitController {
     public SummitEventsShared seaShared = new SummitEventsShared();
-    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public SummitEventsInfo eventInformation { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public List<Summit_Events_Appointment_Type__c> appointments { get; set; }

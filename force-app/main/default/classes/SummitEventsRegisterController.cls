@@ -9,7 +9,7 @@ public with sharing class SummitEventsRegisterController {
     public List<SelectOption> guestAmt { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
     private final SummitEventsShared SeaShared = new SummitEventsShared();
-    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public SummitEventsInfo eventInformation { get; set; }
     public String templateSelected { get; set; }
     public Boolean contactSet { get; set; }
     public Boolean eventIsClosed { get; set; }

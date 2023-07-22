@@ -6,7 +6,7 @@
 public with sharing class SummitEventsCancelReviewController {
     public SummitEventsShared SEShared = new SummitEventsShared();
     public Summit_Events_Registration__c eventRegistration { get; set; }
-    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public SummitEventsInfo eventInformation { get; set; }
     public List<Summit_Events_Appointments__c> appointments { get; set; }
     public String templateSelected { get; set; }
     public Boolean eventOver { get; set; }
@@ -24,7 +24,7 @@ public with sharing class SummitEventsCancelReviewController {
             String decryptedParameter = SEShared.decryptString(eventParameter, false);
             if (String.isNotBlank(decryptedParameter)) {
                 try {
-                    eventInformation = (SummitEventsShared.SummitEventsInfo) JSON.deserialize(decryptedParameter, SummitEventsShared.SummitEventsInfo.class);
+                    eventInformation = (SummitEventsInfo) JSON.deserialize(decryptedParameter, SummitEventsInfo.class);
                 } catch (Exception e) {
                     System.debug(e.getMessage());
                 }
