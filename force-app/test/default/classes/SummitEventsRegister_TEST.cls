@@ -100,7 +100,7 @@ private class SummitEventsRegister_TEST {
                             utm_term__c, gclid__c, utm_campaign__c, utm_content__c, utm_creative_format__c, utm_id__c,
                             utm_marketing_tactic__c, utm_medium__c, utm_source_platform__c, utm_source__c
                     FROM Summit_Events_Registration__c
-                    WHERE id = :registerController.eventRegistration.Id
+                    WHERE Id = :registerController.eventRegistration.Id
             ];
             Test.startTest();
             for (String code : analyticCodes) {
@@ -238,8 +238,7 @@ private class SummitEventsRegister_TEST {
             PageReference pageRef = Page.SummitEventsRegister;
             Test.setCurrentPage(pageRef);
             //Try to register on different instance
-            SummitEventsShared SEShared = new SummitEventsShared();
-            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
             SummitEventsRegisterController registerController = new SummitEventsRegisterController();
             //Change current registration information
             registerController.eventRegistration.Registrant_First_Name__c = 'Test2';

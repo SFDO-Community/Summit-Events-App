@@ -49,7 +49,7 @@ public with sharing class SummitEventsRegisterGuestsController {
     }
 
     public SummitEventsRegisterGuestsController() {
-        eventInformation = seaShared.getSummitEventsInfo();
+        eventInformation = SummitEventsShared.getSummitEventsInfo();
         String namespace = SummitEventsNamespace.getNamespace();
         if (String.isNotBlank(namespace)) {
             namespace = namespace.toLowerCase() + '__';
@@ -94,10 +94,10 @@ public with sharing class SummitEventsRegisterGuestsController {
                 //Check all mapTo fields before adding question
                 q.setupFail = false;
                 q.setupError = '';
-                q.setupError = seaShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', eventGuestQuestions.get(key).Map_to_Field__c, '', true, '');
+                q.setupError = SummitEventsShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', eventGuestQuestions.get(key).Map_to_Field__c, '', true, '');
                 q.name = seaQuestion.Name;
                 q.question = seaQuestion.Question_Label__c;
-                q.id = seaShared.encryptString(seaQuestion.Id);
+                q.id = SummitEventsShared.encryptString(seaQuestion.Id);
                 q.name = seaQuestion.Name;
                 q.question = seaQuestion.Question_Label__c;
                 q.type = seaQuestion.Question_Field_Type__c;
@@ -116,7 +116,7 @@ public with sharing class SummitEventsRegisterGuestsController {
                     questionList.add(q);
                 } else {
                     questionData hiddenQuestion = new questionData();
-                    hiddenQuestion.id = seaShared.encryptString(seaQuestion.Id);
+                    hiddenQuestion.id = SummitEventsShared.encryptString(seaQuestion.Id);
                     hiddenQuestion.value = seaQuestion.Default_Value__c;
                     hiddenQuestion.question = seaQuestion.Question_Label__c;
                     hiddenQuestions.add(hiddenQuestion);
@@ -142,7 +142,7 @@ public with sharing class SummitEventsRegisterGuestsController {
                     for (Integer yy = 0; yy < hostedGuests[xx].questions.size(); yy++) {
                         Id questionId = null;
                         try {
-                            questionId = seaShared.decryptString(hostedGuests[xx].questions[yy].id, true);
+                            questionId = SummitEventsShared.decryptString(hostedGuests[xx].questions[yy].id, true);
                         } catch (Exception e) {
                             System.debug(e.getMessage());
                         }
@@ -161,12 +161,12 @@ public with sharing class SummitEventsRegisterGuestsController {
 
             oldRegId = eventRegistration.Id;
             eventRegistration.Id = null;
-            pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
-            templateSelected = seaShared.getTemplate(eventPage.Template__c);
+            pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
+            templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
 
-            eventIsClosed = seaShared.isEventClosed(eventInstance);
+            eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
 
-            formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
+            formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
 
         }
     }
@@ -219,7 +219,7 @@ public with sharing class SummitEventsRegisterGuestsController {
     }
 
     public PageReference checkEventDetails() {
-        return seaShared.checkForEvent();
+        return SummitEventsShared.checkForEvent();
     }
 
     public PageReference saveGuests() {
@@ -232,7 +232,7 @@ public with sharing class SummitEventsRegisterGuestsController {
                 for (questionData q : guestAnswers[xx].questions) {
                     Id questionId = null;
                     try {
-                        questionId = seaShared.decryptString(q.id, true);
+                        questionId = SummitEventsShared.decryptString(q.id, true);
                     } catch (Exception e) {
                         System.debug(e.getMessage());
                     }

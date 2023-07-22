@@ -30,7 +30,7 @@ public with sharing class SummitEventsLetterheadLookup_TEST {
         );
         emailController.brandTemplates = new Map<Id, BrandTemplate>();
         emailController.brandTemplates.put(fakeBrandTemplate.Id, fakeBrandTemplate);
-        emailController.SummitEventsEmail.Letterhead_Id__c = fakeBrandTemplate.Id;
+        emailController.summitEventsEmail.Letterhead_Id__c = fakeBrandTemplate.Id;
 
 
         OrgWideEmailAddress fakeOrgWideEmailAddress = new OrgWideEmailAddress (
@@ -40,7 +40,7 @@ public with sharing class SummitEventsLetterheadLookup_TEST {
         );
         emailController.oweList = new Map<Id, OrgWideEmailAddress>();
         emailController.oweList.put(fakeOrgWideEmailAddress.Id, fakeOrgWideEmailAddress);
-        emailController.SummitEventsEmail.Org_Email_Id__c = fakeOrgWideEmailAddress.Id;
+        emailController.summitEventsEmail.Org_Email_Id__c = fakeOrgWideEmailAddress.Id;
 
         emailController.save();
         List<Summit_Events_Email__c> testSummitEventsEmail = [SELECT Id, Name, Letterhead__c, Letterhead_Id__c, Org_Email_Id__c FROM Summit_Events_Email__c WHERE Event__c = :testEvent.Id];

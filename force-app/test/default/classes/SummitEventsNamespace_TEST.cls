@@ -37,42 +37,42 @@
 @IsTest
 public with sharing class SummitEventsNamespace_TEST {
 
-    @isTest
+    @IsTest
     private static void TestNamespacePrefixFixups() {
         if (SummitEventsNamespace.getNamespace() != '') {
-            system.assertNotEquals('', SummitEventsNamespace.getNamespace());
-            system.assertEquals(SummitEventsNamespace.getNamespace() + '__foo', SummitEventsNamespace.StrTokenNSPrefix('foo'));
-            system.assertEquals(SummitEventsNamespace.getNamespace() + '__foo__c', SummitEventsNamespace.StrTokenNSPrefix('foo__c'));
-            system.assertEquals('foo', SummitEventsNamespace.StrAllNSPrefix('foo'));
-            system.assertEquals(SummitEventsNamespace.getNamespace() + '__foo__c', SummitEventsNamespace.StrAllNSPrefix('foo__c'));
-            system.assertEquals(SummitEventsNamespace.getNamespace() + '__foo_bar_baz__c', SummitEventsNamespace.StrAllNSPrefix('foo_bar_baz__c'));
-            system.assertEquals('select ' + SummitEventsNamespace.getNamespace() + '__foo__c, bar, ' + SummitEventsNamespace.getNamespace() + '__baz1__c, ' + SummitEventsNamespace.getNamespace() + '__biz_buz__c from Contact', SummitEventsNamespace.StrAllNSPrefix('select foo__c, bar, baz1__c, biz_buz__c from Contact'));
-            system.assertEquals(SummitEventsNamespace.getNamespace() + '.test', SummitEventsNamespace.StrTokenNSPrefixDotNotation('test'));
+            System.assertNotEquals('', SummitEventsNamespace.getNamespace());
+            System.assertEquals(SummitEventsNamespace.getNamespace() + '__foo', SummitEventsNamespace.StrTokenNSPrefix('foo'));
+            System.assertEquals(SummitEventsNamespace.getNamespace() + '__foo__c', SummitEventsNamespace.StrTokenNSPrefix('foo__c'));
+            System.assertEquals('foo', SummitEventsNamespace.StrAllNSPrefix('foo'));
+            System.assertEquals(SummitEventsNamespace.getNamespace() + '__foo__c', SummitEventsNamespace.StrAllNSPrefix('foo__c'));
+            System.assertEquals(SummitEventsNamespace.getNamespace() + '__foo_bar_baz__c', SummitEventsNamespace.StrAllNSPrefix('foo_bar_baz__c'));
+            System.assertEquals('select ' + SummitEventsNamespace.getNamespace() + '__foo__c, bar, ' + SummitEventsNamespace.getNamespace() + '__baz1__c, ' + SummitEventsNamespace.getNamespace() + '__biz_buz__c from Contact', SummitEventsNamespace.StrAllNSPrefix('select foo__c, bar, baz1__c, biz_buz__c from Contact'));
+            System.assertEquals(SummitEventsNamespace.getNamespace() + '.test', SummitEventsNamespace.StrTokenNSPrefixDotNotation('test'));
         } else {
-            system.assertEquals('foo', SummitEventsNamespace.StrTokenNSPrefix('foo'));
-            system.assertEquals('foo__c', SummitEventsNamespace.StrTokenNSPrefix('foo__c'));
-            system.assertEquals('foo', SummitEventsNamespace.StrAllNSPrefix('foo'));
-            system.assertEquals('foo__c', SummitEventsNamespace.StrAllNSPrefix('foo__c'));
-            system.assertEquals('foo_bar_baz__c', SummitEventsNamespace.StrAllNSPrefix('foo_bar_baz__c'));
-            system.assertEquals('select foo__c, bar, baz1__c, biz_buz__c from Contact', SummitEventsNamespace.StrAllNSPrefix('select foo__c, bar, baz1__c, biz_buz__c from Contact'));
-            system.assertEquals('test', SummitEventsNamespace.StrTokenNSPrefixDotNotation('test'));
+            System.assertEquals('foo', SummitEventsNamespace.StrTokenNSPrefix('foo'));
+            System.assertEquals('foo__c', SummitEventsNamespace.StrTokenNSPrefix('foo__c'));
+            System.assertEquals('foo', SummitEventsNamespace.StrAllNSPrefix('foo'));
+            System.assertEquals('foo__c', SummitEventsNamespace.StrAllNSPrefix('foo__c'));
+            System.assertEquals('foo_bar_baz__c', SummitEventsNamespace.StrAllNSPrefix('foo_bar_baz__c'));
+            System.assertEquals('select foo__c, bar, baz1__c, biz_buz__c from Contact', SummitEventsNamespace.StrAllNSPrefix('select foo__c, bar, baz1__c, biz_buz__c from Contact'));
+            System.assertEquals('test', SummitEventsNamespace.StrTokenNSPrefixDotNotation('test'));
         }
-        system.assertEquals('npe01__foo__c', SummitEventsNamespace.StrTokenRemoveNSPrefix('npe01__foo__c'));
-        system.assertEquals('npe5__foo__c', SummitEventsNamespace.StrTokenRemoveNSPrefix('npe5__foo__c'));
-        system.assertEquals('foo__c', SummitEventsNamespace.StrTokenRemoveNSPrefix('npsp__foo__c'));
-        system.assertEquals('foo_npsp__c', SummitEventsNamespace.StrTokenRemoveNSPrefix('foo_npsp__c'));
+        System.assertEquals('npe01__foo__c', SummitEventsNamespace.StrTokenRemoveNSPrefix('npe01__foo__c'));
+        System.assertEquals('npe5__foo__c', SummitEventsNamespace.StrTokenRemoveNSPrefix('npe5__foo__c'));
+        System.assertEquals('foo__c', SummitEventsNamespace.StrTokenRemoveNSPrefix('npsp__foo__c'));
+        System.assertEquals('foo_npsp__c', SummitEventsNamespace.StrTokenRemoveNSPrefix('foo_npsp__c'));
     }
 
     @IsTest static void testWithFakeNamespace() {
         SummitEventsNamespace.plainNamespace = 'summit';
         if (SummitEventsNamespace.getNamespace() != '') {
-            system.assertNotEquals('', SummitEventsNamespace.getNamespace());
-            system.assertEquals(SummitEventsNamespace.getNamespace() + '__foo', SummitEventsNamespace.StrTokenNSPrefix('foo'));
-            system.assertEquals(SummitEventsNamespace.getNamespace() + '__foo__c', SummitEventsNamespace.StrTokenNSPrefix('foo__c'));
-            system.assertEquals('foo', SummitEventsNamespace.StrAllNSPrefix('foo'));
-            system.assertEquals(SummitEventsNamespace.getNamespace() + '__foo__c', SummitEventsNamespace.StrAllNSPrefix('foo__c'));
-            system.assertEquals(SummitEventsNamespace.getNamespace() + '__foo_bar_baz__c', SummitEventsNamespace.StrAllNSPrefix('foo_bar_baz__c'));
-            system.assertEquals('select ' + SummitEventsNamespace.getNamespace() + '__foo__c, bar, ' + SummitEventsNamespace.getNamespace() + '__baz1__c, ' + SummitEventsNamespace.getNamespace() + '__biz_buz__c from Contact', SummitEventsNamespace.StrAllNSPrefix('select foo__c, bar, baz1__c, biz_buz__c from Contact'));
+            System.assertNotEquals('', SummitEventsNamespace.getNamespace());
+            System.assertEquals(SummitEventsNamespace.getNamespace() + '__foo', SummitEventsNamespace.StrTokenNSPrefix('foo'));
+            System.assertEquals(SummitEventsNamespace.getNamespace() + '__foo__c', SummitEventsNamespace.StrTokenNSPrefix('foo__c'));
+            System.assertEquals('foo', SummitEventsNamespace.StrAllNSPrefix('foo'));
+            System.assertEquals(SummitEventsNamespace.getNamespace() + '__foo__c', SummitEventsNamespace.StrAllNSPrefix('foo__c'));
+            System.assertEquals(SummitEventsNamespace.getNamespace() + '__foo_bar_baz__c', SummitEventsNamespace.StrAllNSPrefix('foo_bar_baz__c'));
+            System.assertEquals('select ' + SummitEventsNamespace.getNamespace() + '__foo__c, bar, ' + SummitEventsNamespace.getNamespace() + '__baz1__c, ' + SummitEventsNamespace.getNamespace() + '__biz_buz__c from Contact', SummitEventsNamespace.StrAllNSPrefix('select foo__c, bar, baz1__c, biz_buz__c from Contact'));
         }
     }
 

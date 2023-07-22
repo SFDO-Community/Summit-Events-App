@@ -68,7 +68,7 @@ public class SummitEventsAddToCalendar_TEST {
             String startDate = calendarController.DTStart;
             String endDate = calendarController.DTEnd;
             String testCalendarURL = 'https://calendar.yahoo.com?desc=&et=' + endDate + '&in_csz=America%2FChicago&in_loc=A+location&in_st=123+Electric+Ave.&st=' + startDate + '&title=Test+Event+-+Test+Event+Session+0&v=60';
-            system.assertEquals(calendarController.calendarType().getUrl(), testCalendarURL);
+            System.assertEquals(calendarController.calendarType().getUrl(), testCalendarURL);
             Test.stopTest();
         }
     }
@@ -117,8 +117,7 @@ public class SummitEventsAddToCalendar_TEST {
             Test.setCurrentPage(pageRef);
             SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
 
-            SummitEventsShared SEShared = new SummitEventsShared();
-            String timezoneString = SEShared.getTimeZonePick(seaTestInstances[1].Instance_Time_Zone__c);
+            String timezoneString = SummitEventsShared.getTimeZonePick(seaTestInstances[1].Instance_Time_Zone__c);
             TimeZone tz = TimeZone.getTimeZone(timezoneString);
             Date startD = seaTestInstances[1].Instance_Start_Date__c;
             Time startT = seaTestInstances[1].Instance_Start_Time__c;

@@ -17,8 +17,7 @@ private class SummitEventsDonation_TEST {
             PageReference pageRef = Page.SummitEventsDonation;
             pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
-            SummitEventsShared seaShared = new SummitEventsShared();
-            seaShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
             SummitEventsDonationController donationController = new SummitEventsDonationController();
 
             System.assert(donationController.getDonationAllocationList().size() > 0);

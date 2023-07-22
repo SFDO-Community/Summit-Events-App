@@ -4,7 +4,6 @@
 // Created by Thaddaeus Dahlberg on  5/1/2018.
 
 public with sharing class SummitEventsCancelReviewController {
-    public SummitEventsShared SEShared = new SummitEventsShared();
     public Summit_Events_Registration__c eventRegistration { get; set; }
     public SummitEventsInfo eventInformation { get; set; }
     public List<Summit_Events_Appointments__c> appointments { get; set; }
@@ -21,7 +20,7 @@ public with sharing class SummitEventsCancelReviewController {
         eventOver = false;
 
         if (!String.isBlank(eventParameter)) {
-            String decryptedParameter = SEShared.decryptString(eventParameter, false);
+            String decryptedParameter = SummitEventsShared.decryptString(eventParameter, false);
             if (String.isNotBlank(decryptedParameter)) {
                 try {
                     eventInformation = (SummitEventsInfo) JSON.deserialize(decryptedParameter, SummitEventsInfo.class);
@@ -47,7 +46,7 @@ public with sharing class SummitEventsCancelReviewController {
 
                     if (eventRegistration != null) {
 
-                        templateSelected = SEShared.getTemplate(eventRegistration.Event__r.Template__c);
+                        templateSelected = SummitEventsShared.getTemplate(eventRegistration.Event__r.Template__c);
 
                         SummitEventsShared SEShared = new SummitEventsShared();
 
@@ -66,12 +65,12 @@ public with sharing class SummitEventsCancelReviewController {
                                 WITH SECURITY_ENFORCED
                         ];
 
-                        if (SEShared.convertDateToDatetime(eventRegistration.Event_Instance__r.Instance_End_Date__c, null, '') < SEShared.adjustForTimeZone(Datetime.now(), eventRegistration.Event_Instance__r.Instance_Time_Zone__c)) {
+                        if (SummitEventsShared.convertDateToDatetime(eventRegistration.Event_Instance__r.Instance_End_Date__c, null, '') < SummitEventsShared.adjustForTimeZone(Datetime.now(), eventRegistration.Event_Instance__r.Instance_Time_Zone__c)) {
                             eventOver = true;
                         }
 
                         if (eventInstance != null) {
-                            formattedNavDate = SEShared.navBreadcrumbBuilder(eventInstance);
+                            formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
                         }
                         eventNotFound = false;
                     }

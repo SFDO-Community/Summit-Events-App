@@ -14,7 +14,6 @@ private class SummitEventsRegisterGuests_TEST {
 
         SummitEventsRegisterGuestsController guestController = new SummitEventsRegisterGuestsController();
         System.assertEquals(JSON.serialize(guestController.eventInformation), '{"registrationId":null,"instanceId":null,"eventId":null,"dt":null,"audience":null}');
-
     }
 
     @IsTest
@@ -47,10 +46,8 @@ private class SummitEventsRegisterGuests_TEST {
             PageReference pageCheck = guestController.checkEventDetails();
             System.assertEquals(pageCheck.getUrl(), 'https://google.com/' + namespace + 'SummitEvents');
 
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
-
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
 
             guestController = new SummitEventsRegisterGuestsController();
 
@@ -67,7 +64,7 @@ private class SummitEventsRegisterGuests_TEST {
             List<SummitEventsRegisterGuestsController.questionData> questionsDataList = new List<SummitEventsRegisterGuestsController.questionData>();
 
             SummitEventsRegisterGuestsController.questionData questionData = new SummitEventsRegisterGuestsController.questionData();
-            questionData.id = seaShared.encryptString(testQuestions[0].Id);
+            questionData.id = SummitEventsShared.encryptString(testQuestions[0].Id);
             questionData.value = 'TEST';
             questionData.question = testQuestions[0].Question_Label__c;
             questionsDataList.add(questionData);
@@ -127,9 +124,8 @@ private class SummitEventsRegisterGuests_TEST {
             //Namespace defined so url should include it
             System.assertEquals(pageCheck.getUrl(), 'https://google.com/' + namespace + 'SummitEvents');
 
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
 
             guestController = new SummitEventsRegisterGuestsController();
 
@@ -148,7 +144,7 @@ private class SummitEventsRegisterGuests_TEST {
             List<SummitEventsRegisterGuestsController.questionData> questionsDataList = new List<SummitEventsRegisterGuestsController.questionData>();
 
             SummitEventsRegisterGuestsController.questionData questionData = new SummitEventsRegisterGuestsController.questionData();
-            questionData.id = seaShared.encryptString(testQuestions[0].Id);
+            questionData.id = SummitEventsShared.encryptString(testQuestions[0].Id);
             questionData.value = 'TEST';
             questionData.question = testQuestions[0].Question_Label__c;
             questionsDataList.add(questionData);
@@ -199,9 +195,8 @@ private class SummitEventsRegisterGuests_TEST {
             PageReference pageRef = Page.SummitEventsRegisterGuests;
             Test.setCurrentPage(pageRef);
 
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
 
             SummitEventsRegisterGuestsController guestController = new SummitEventsRegisterGuestsController();
 
@@ -245,9 +240,8 @@ private class SummitEventsRegisterGuests_TEST {
             PageReference pageRef = Page.SummitEventsRegisterGuests;
             Test.setCurrentPage(pageRef);
 
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
 
             SummitEventsRegisterGuestsController guestController = new SummitEventsRegisterGuestsController();
 

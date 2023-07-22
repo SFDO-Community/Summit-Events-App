@@ -8,8 +8,6 @@ public with sharing class SummitEventsParkingPassController {
     public String warning { get; set; }
     public Summit_Events_Registration__c visitor { get; set; }
     public SummitEventsInfo eventInformation { get; set; }
-    private SummitEventsShared SEShared = new SummitEventsShared();
-
 
     public SummitEventsParkingPassController() {
         warning = 'Sorry, this parking permit has expired or invalid.';
@@ -17,7 +15,7 @@ public with sharing class SummitEventsParkingPassController {
         visitor = new Summit_Events_Registration__c();
 
         if (!String.isBlank(eventParameter)) {
-            String decryptedParameter = SEShared.decryptString(eventParameter, false);
+            String decryptedParameter = SummitEventsShared.decryptString(eventParameter, false);
 
             if (String.isNotBlank(decryptedParameter)) {
                 try {
@@ -37,7 +35,7 @@ public with sharing class SummitEventsParkingPassController {
                     System.debug(e.getMessage());
                 }
 
-                Datetime todayDateTime = SEShared.adjustForTimeZone(Datetime.now(), visitor.Event_Instance_Time_Zone__c);
+                Datetime todayDateTime = SummitEventsShared.adjustForTimeZone(Datetime.now(), visitor.Event_Instance_Time_Zone__c);
                 Date todayDate = Date.newInstance(todayDateTime.year(), todayDateTime.month(), todayDateTime.day());
 
                 if (todayDate <= visitor.Event_Instance_Start_Date__c && visitor.Status__c != 'Started' && visitor.Status__c != 'Cancelled') {

@@ -14,8 +14,7 @@ private class SummitEventsConfirmation_TEST {
             PageReference pageRef = Page.SummitEventsConfirmation;
             pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
-            SummitEventsShared SEShared = new SummitEventsShared();
-            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, evtReg.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, evtReg.Id);
             SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
             confirmCtrl.eventIsClosed = false;
             confirmCtrl.checkEventDetails();
@@ -64,8 +63,7 @@ private class SummitEventsConfirmation_TEST {
             PageReference pageRef = Page.SummitEventsConfirmation;
             pageRef.getParameters().put('adminopen', '1');
             Test.setCurrentPage(pageRef);
-            SummitEventsShared SEShared = new SummitEventsShared();
-            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
             SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
             confirmCtrl.checkEventDetails();
             Summit_Events_Registration__c checkRegistrationStatus = [
@@ -90,8 +88,7 @@ private class SummitEventsConfirmation_TEST {
             PageReference pageRef = Page.SummitEventsConfirmation;
 
             Test.setCurrentPage(pageRef);
-            SummitEventsShared SEShared = new SummitEventsShared();
-            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
             SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
             confirmCtrl.checkEventDetails();
             Summit_Events_Registration__c checkRegistrationStatus = [
@@ -139,8 +136,7 @@ private class SummitEventsConfirmation_TEST {
             PageReference pageRef = Page.SummitEventsConfirmation;
             pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
-            SummitEventsShared SEShared = new SummitEventsShared();
-            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
             SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
 
             confirmCtrl.checkEventDetails();
@@ -208,8 +204,7 @@ private class SummitEventsConfirmation_TEST {
             PageReference pageRef = Page.SummitEventsConfirmation;
             pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
-            SummitEventsShared SEShared = new SummitEventsShared();
-            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
             SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
 
             List<String> pageMessages = new List<String>();
@@ -280,8 +275,7 @@ private class SummitEventsConfirmation_TEST {
             PageReference pageRef = Page.SummitEventsConfirmation;
             pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
-            SummitEventsShared SEShared = new SummitEventsShared();
-            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
             SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
 
             List<String> pageMessages = new List<String>();
@@ -323,8 +317,7 @@ private class SummitEventsConfirmation_TEST {
             PageReference pageRef = Page.SummitEventsConfirmation;
             Test.setCurrentPage(pageRef);
 
-            SummitEventsShared SEShared = new SummitEventsShared();
-            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
             SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
 
             List<String> pageMessages = new List<String>();
@@ -391,8 +384,7 @@ private class SummitEventsConfirmation_TEST {
             PageReference pageRef = Page.SummitEventsConfirmation;
             pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
-            SummitEventsShared SEShared = new SummitEventsShared();
-            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
             SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
 
             confirmCtrl.checkEventDetails();
