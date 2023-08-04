@@ -612,52 +612,6 @@ public with sharing class SummitEventsShared {
         return incomingString;
     }
 
-    //Method to test object and field availability for current user (Guest user)
-    public static String checkFieldGuestAccess(String objectApiName, String fieldName, String requiredFieldType, Boolean testCreatable, String qualifierLabel) {
-        String returnError = '';
-        DescribeFieldResult fieldDescribe;
-        SObjectType schemaType;
-        if (String.isBlank(qualifierLabel)) {
-            qualifierLabel = '';
-        }
-        try {
-            schemaType = ((SObject) Type.forName('Schema', objectApiName).newInstance()).getSObjectType();
-        } catch (Exception ex) {
-            returnError = qualifierLabel + objectApiName + ' may not exist or is inaccessible. ';
-        }
-
-        if (String.isBlank(returnError)) {
-            if (!schemaType.getDescribe().isAccessible()) {
-                returnError += qualifierLabel + objectApiName + ' is not accessible (check sharing rules and permissions). ';
-            }
-        }
-        if (String.isNotBlank(fieldName) && String.isBlank(returnError)) {
-            try {
-                Map<String, SObjectField> fields = schemaType.getDescribe().fields.getMap();
-                fieldDescribe = fields.get(fieldName).getDescribe();
-            } catch (Exception ex) {
-                returnError += qualifierLabel + 'Field ' + fieldName + ' may not exist. ';
-            }
-
-            if (String.isBlank(returnError)) {
-                if (!fieldDescribe.isAccessible()) {
-                    returnError += qualifierLabel + 'Field ' + fieldName + ' is not accessible by guest user.';
-                }
-            }
-            if (String.isBlank(returnError) && testCreatable) {
-                if (!fieldDescribe.isCreateable()) {
-                    returnError += qualifierLabel + 'Field ' + fieldName + ' is not writable. ';
-                }
-            }
-            if (String.isBlank(returnError) && String.isNotBlank(requiredFieldType)) {
-                if (!String.valueOf(fieldDescribe.getType()).equalsIgnoreCase(requiredFieldType)) {
-                    returnError += qualifierLabel + 'Field ' + fieldName + ' is not the required field type ' + requiredFieldType + '. ';
-                }
-            }
-        }
-        return returnError;
-    }
-
     public static Map<String, String> getDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName, String parentValue) {
         Map<String, String> dependentItems = new Map<String, String>();
         if (null != parentObjName && null != parentFieldName && null != dependentFieldName && null != parentValue) {

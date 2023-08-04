@@ -138,14 +138,14 @@ private class SummitEventsAdditionalQuestions_TEST {
 
             //Only 1 lookup questions requested so additional question query and wrapper should be 1
             System.assertEquals(questionController.additionalQuestions.size(), 1);
-            System.assertEquals(questionController.questionWrapper.size(), 1);
+            System.assertEquals(questionController.questionWrapperList.size(), 1);
 
             //Search for something we know doesn't exist
-            List<SummitEventsAdditionalQuestionsCtlr.queryReturn> queryReturns = SummitEventsAdditionalQuestionsCtlr.lookupSearch(questionController.questionWrapper[0].lookup, 'NoWayYouAreFindingThis');
+            List<SummitEventsAdditionalQuestionsCtlr.queryReturn> queryReturns = SummitEventsAdditionalQuestionsCtlr.lookupSearch(questionController.questionWrapperList[0].lookup, 'NoWayYouAreFindingThis');
             System.assertEquals(queryReturns.size(), 0);
 
             //Search for the registration that was added in the data above
-            queryReturns = SummitEventsAdditionalQuestionsCtlr.lookupSearch(questionController.questionWrapper[0].lookup, 'Look');
+            queryReturns = SummitEventsAdditionalQuestionsCtlr.lookupSearch(questionController.questionWrapperList[0].lookup, 'Look');
             System.assertEquals(queryReturns.size(), 1);
 
             questionController.submitAdditionalQuestions();
@@ -153,7 +153,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             testQuestions[0].Map_to_Field__c = namespace + 'Registrant_First_Name__c';
             update testQuestions;
             questionController = new SummitEventsAdditionalQuestionsCtlr();
-            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map To Field: Field ' + namespace + 'registrant_first_name__c is not the required field type reference. ');
+            System.assertEquals(questionController.questionWrapperList[0].setupError, 'Question setup issue(s): Map To Field: Field ' + namespace + 'registrant_first_name__c is not the required field type reference. ');
 
             Test.stopTest();
         }
@@ -192,7 +192,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             testQuestions[0].Lookup_No_Results_Label__c = 'Nope. Nothing...';
             update testQuestions;
             questionController = new SummitEventsAdditionalQuestionsCtlr();
-            System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map to field: Field bogusfield may not exist. ');
+            System.assertEquals(questionController.questionWrapperList[0].setupError, 'Question setup issue(s): Map to field: Field bogusfield may not exist. ');
 
             //Test question with sane map_to_field__c as another question in the event
             testQuestions[0].Map_to_Field__c = testQuestions2[0].Map_to_Field__c;
@@ -201,7 +201,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             update testQuestions;
             questionController = new SummitEventsAdditionalQuestionsCtlr();
             System.assertEquals(questionController.additionalQuestions.size(), 2);
-            System.assertEquals(questionController.questionWrapper[1].setupError, 'Question setup issue(s): You have 2 questions mapped to the same field: ' + testQuestions2[0].Map_to_Field__c.toLowerCase() + '. ');
+            System.assertEquals(questionController.questionWrapperList[1].setupError, 'Question setup issue(s): You have 2 questions mapped to the same field: ' + testQuestions2[0].Map_to_Field__c.toLowerCase() + '. ');
 
             Test.stopTest();
         }
@@ -236,7 +236,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             testQuestions[0].Lookup_Fields__c = 'Blah';
             update testQuestions;
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
-            System.assertEquals(questionController.questionWrapper[0].setupError.trim(), 'Question setup issue(s): Lookup Object: blah may not exist or is inaccessible. Look up field: blah may not exist or is inaccessible.');
+            System.assertEquals(questionController.questionWrapperList[0].setupError.trim(), 'Question setup issue(s): Lookup Object: blah may not exist or is inaccessible. Look up field: blah may not exist or is inaccessible.');
 
             Test.stopTest();
         }
@@ -273,7 +273,7 @@ private class SummitEventsAdditionalQuestions_TEST {
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
 
-            System.assert(questionController.questionWrapper[0].picklist.size() > 0);
+            System.assert(questionController.questionWrapperList[0].picklist.size() > 0);
 
             Test.stopTest();
         }

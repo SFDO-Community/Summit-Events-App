@@ -21,21 +21,6 @@ public with sharing class SummitEventsRegisterGuestsController {
     public String namespace { get; set; }
     private List<questionData> hiddenQuestions { get; set; }
 
-    public class question {
-        public String id { get; set; }
-        public String name { get; set; }
-        public String type { get; set; }
-        public String question { get; set; }
-        public Boolean required { get; set; }
-        public List<Map<String, String>> picklist { get; set; }
-        public String help { get; set; }
-        public String instructions { get; set; }
-        public String assist { get; set; }
-        public String defaultValue { get; set; }
-        public Integer textLimit { get; set; }
-        public String setupError { get; set; }
-        public Boolean setupFail { get; set; }
-    }
 
     public class questionGuestData {
         public String guestId { get; set; }
@@ -85,27 +70,27 @@ public with sharing class SummitEventsRegisterGuestsController {
                     ORDER BY Display_Order__c NULLS LAST
             ]);
 
-            List<question> questionList = new List<question>();
+            List<SummitEventsQuestionWrapper> questionList = new List<SummitEventsQuestionWrapper>();
             hiddenQuestions = new List<questionData>();
 
             for (Id key : eventGuestQuestions.keySet()) {
                 Summit_Events_Question__c seaQuestion = eventGuestQuestions.get(key);
-                question q = new question();
+                SummitEventsQuestionWrapper q = new SummitEventsQuestionWrapper();
                 //Check all mapTo fields before adding question
                 q.setupFail = false;
                 q.setupError = '';
-                q.setupError = SummitEventsShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', eventGuestQuestions.get(key).Map_to_Field__c, '', true, '');
-                q.name = seaQuestion.Name;
+                q.setupError = SummitEventsQuestionsShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', eventGuestQuestions.get(key).Map_to_Field__c, '', true, '');
+                //q.name = seaQuestion.Name;
                 q.question = seaQuestion.Question_Label__c;
-                q.id = SummitEventsShared.encryptString(seaQuestion.Id);
-                q.name = seaQuestion.Name;
+                q.questionId = SummitEventsShared.encryptString(seaQuestion.Id);
+               // q.name = seaQuestion.Name;
                 q.question = seaQuestion.Question_Label__c;
                 q.type = seaQuestion.Question_Field_Type__c;
                 q.required = seaQuestion.Required__c;
                 if (String.isNotBlank(seaQuestion.Existing_Picklist_Values__c)) {
-                    q.picklist = createExistingPicklist(seaQuestion.Existing_Picklist_Values__c);
+                    q.picklist = SummitEventsQuestionsShared.createExistingPicklist(seaQuestion.Existing_Picklist_Values__c);
                 } else if (String.isNotBlank(seaQuestion.Picklist_Values__c)) {
-                    q.picklist = createPicklists(seaQuestion.Picklist_Values__c);
+                    q.picklist = SummitEventsQuestionsShared.createPicklists(seaQuestion.Picklist_Values__c);
                 }
                 q.help = seaQuestion.Help_Text__c;
                 q.instructions = seaQuestion.Instructions__c;
@@ -169,53 +154,6 @@ public with sharing class SummitEventsRegisterGuestsController {
             formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
 
         }
-    }
-
-    public List<Map<String, String>> createPicklists(String returnSepStringList) {
-        List<Map<String, String>> cpl = new List<Map<String, String>>();
-        if (!String.isBlank(returnSepStringList)) {
-            cpl.add(new Map<String, String>{
-                    'Select...' => ''
-            });
-            returnSepStringList = returnSepStringList.trim();
-            returnSepStringList = returnSepStringList.replace('\n\n', '\n');
-            String[] splitList = returnSepStringList.split('\n');
-            for (String p : splitList) {
-                p = p.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', '');
-                cpl.add(new Map<String, String>{
-                        p => p
-                });
-            }
-        }
-        return cpl;
-    }
-
-    public List<Map<String, String>> createExistingPicklist(String existingPicklist) {
-        List<Map<String, String>> picklists = new List<Map<String, String>>();
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace.toLowerCase() + '__';
-        }
-
-        Schema.DescribeSObjectResult registrationDescribe = ((SObject) Type.forName('Schema', namespace + 'Summit_Events_Registration__c').newInstance()).getSObjectType().getDescribe();
-
-        String existingPicklistString = existingPicklist;
-        if (!existingPicklistString.startsWith('c__')) {
-            existingPicklistString = namespace + existingPicklistString;
-        } else if (existingPicklistString.startsWith('c__')) {
-            existingPicklistString = existingPicklist.removeStart('c__');
-        }
-
-        List<Schema.PicklistEntry> PicklistValues = registrationDescribe.fields.getMap().get(existingPicklistString).getDescribe().getPicklistValues();
-        picklists.add(new Map<String, String>{
-                'Select...' => ''
-        });
-        for (Schema.PicklistEntry PicklistValue : PicklistValues) {
-            picklists.add(new Map<String, String>{
-                    PicklistValue.getLabel() => PicklistValue.getValue()
-            });
-        }
-        return picklists;
     }
 
     public PageReference checkEventDetails() {

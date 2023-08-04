@@ -18,7 +18,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public List<Summit_Events_Question__c> additionalQuestions { get; set; }
     public Boolean eventIsClosed { get; set; }
     public List<String> mapToList { get; set; }
-    public List<SummitQuestionWrapper> questionWrapper { get; set; }
+    public List<SummitEventsQuestionWrapper> questionWrapperList { get; set; }
     private Id incomingRegId { get; set; }
     public Map<String, String> lookUpDisplayValue { get; set; }
 
@@ -32,7 +32,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public SummitEventsAdditionalQuestionsCtlr() {
         eventIsClosed = false;
         eventInformation = SummitEventsShared.getSummitEventsInfo();
-        questionWrapper = new List<SummitQuestionWrapper>();
+        questionWrapperList = new List<SummitEventsQuestionWrapper>();
         Map<String, String> hiddenValues = new Map<String, String>();
 
         //eventInformation is an object gathered from the encrypted client cookie that contains event id and instance ids without which thou shall not pass
@@ -105,7 +105,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
                 for (Summit_Events_Question__c question : additionalQuestions) {
                     //Build each question item and add to question item list to inform creation of visualforce form.
-                    SummitQuestionWrapper quest = new SummitQuestionWrapper();
+                    SummitEventsQuestionWrapper quest = new SummitEventsQuestionWrapper();
                     quest.setupFail = false;
                     quest.setupError = '';
                     String mapToField = '';
@@ -126,7 +126,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     } else {
                         //Check if map to field exists
                         mapToField = question.Map_to_Field__c.trim().toLowerCase();
-                        quest.setupError = SummitEventsShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', mapToField, '', true, 'Map to field: ');
+                        quest.setupError = SummitEventsQuestionsShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', mapToField, '', true, 'Map to field: ');
                     }
 
                     //It would be counter productive to map to the same field, but if you do it live with the ordering consequences with your questions
@@ -160,12 +160,12 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             existingPickListField = namespace + existingPickListField;
                         }
                         //Test if picklist is accessible and is a picklist
-                        quest.setupError += SummitEventsShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', existingPickListField, 'picklist', false, '');
+                        quest.setupError += SummitEventsQuestionsShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', existingPickListField, 'picklist', false, '');
                         if (String.isBlank(quest.setupError)) {
-                            quest.picklist = createExistingPicklist(existingPickListField);
+                            quest.picklist = SummitEventsQuestionsShared.createExistingPicklist(existingPickListField);
                         }
                     } else {
-                        quest.picklist = createPicklists(question.Picklist_Values__c);
+                        quest.picklist = SummitEventsQuestionsShared.createPicklists(question.Picklist_Values__c);
                     }
 
                     quest.help = question.Help_Text__c;
@@ -212,10 +212,10 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                         lookupObject = '';
                         if (String.isNotBlank(question.Lookup_Object__c)) {
                             lookupObject = question.Lookup_Object__c.trim().toLowerCase();
-                            quest.setupError += SummitEventsShared.checkFieldGuestAccess(lookupObject, '', '', false, 'Lookup Object: ');
+                            quest.setupError += SummitEventsQuestionsShared.checkFieldGuestAccess(lookupObject, '', '', false, 'Lookup Object: ');
                         }
 
-                        quest.setupError += SummitEventsShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', mapToField, 'reference', true, 'Map To Field: ');
+                        quest.setupError += SummitEventsQuestionsShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', mapToField, 'reference', true, 'Map To Field: ');
 
                         if (String.isNotBlank(question.Lookup_Fields__c)) {
                             String questionLookupFields = question.Lookup_Fields__c.toLowerCase();
@@ -228,7 +228,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             for (String lookUpField : lookupFields) {
                                 lookUpField = lookUpField.trim();
 
-                                quest.setupError += SummitEventsShared.checkFieldGuestAccess(lookupObject, lookUpField, '', false, 'Look up field: ');
+                                quest.setupError += SummitEventsQuestionsShared.checkFieldGuestAccess(lookupObject, lookUpField, '', false, 'Look up field: ');
                                 if (String.isBlank(quest.setupError)) {
                                     cleanLookUpFields.add(lookUpField);
                                     if (mapToFieldIsLookup) {
@@ -266,14 +266,14 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
                         if (question.Question_Field_Type__c.equalsIgnoreCase('lookup picklist')) {
                             if (String.isBlank(quest.setupError)) {
-                                quest.picklist = createLookupPicklist(queryInfo.get('Lookup_Object__c'), queryInfo.get('Lookup_Where_Clause__c'), queryInfo.get('Lookup_Fields__c'));
+                                quest.picklist = SummitEventsQuestionsShared.createLookupPicklist(queryInfo.get('Lookup_Object__c'), queryInfo.get('Lookup_Where_Clause__c'), queryInfo.get('Lookup_Fields__c'));
                             }
                         }
                     }
 
                     //add question to question wrapper if it is visible, otherwise apply default value to the event registration.
                     if (question.Is_Visible__c) {
-                        questionWrapper.add(quest);
+                        questionWrapperList.add(quest);
                     } else {
                         if (String.isNotBlank(question.Default_Value__c)) {
                             hiddenValues.put(mapToField, question.Default_Value__c);
@@ -332,86 +332,6 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 }
             }
         }
-    }
-
-    public List<SelectOption> createPicklists(String returnSepStringList) {
-        List<SelectOption> cpl = new List<SelectOption>();
-        if (!String.isBlank(returnSepStringList)) {
-            cpl.add(new SelectOption('', 'Select...'));
-            returnSepStringList = returnSepStringList.trim();
-            returnSepStringList = returnSepStringList.replace('\n\n', '\n');
-            String[] splitList = returnSepStringList.split('\n');
-            for (String p : splitList) {
-                p = p.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', '');
-                cpl.add(new SelectOption(p, p));
-            }
-        }
-        return cpl;
-    }
-
-    public List<SelectOption> createExistingPicklist(String existingPicklist) {
-        List<SelectOption> picklists = new List<SelectOption>();
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace.toLowerCase() + '__';
-        }
-
-        String existingPicklistString = existingPicklist;
-        if (!existingPicklistString.startsWith('c__')) {
-            existingPicklistString = namespace + existingPicklistString;
-        }
-
-        Schema.DescribeSObjectResult registrationDescribe = ((SObject) Type.forName('Schema', namespace + 'Summit_Events_Registration__c').newInstance()).getSObjectType().getDescribe();
-
-        List<Schema.PicklistEntry> PicklistValues = registrationDescribe.fields.getMap().get(existingPicklistString).getDescribe().getPicklistValues();
-        picklists.add(new SelectOption('', 'Select...'));
-        for (Schema.PicklistEntry PicklistValue : PicklistValues) {
-            picklists.add(new SelectOption(PicklistValue.getValue(), PicklistValue.getLabel()));
-        }
-        return picklists;
-    }
-
-    public List<SelectOption> createLookupPicklist(String objectName, String filter, String fields) {
-        List<SelectOption> pl = new List<SelectOption>();
-        pl.add(new SelectOption('', 'Select...'));
-
-        List<String> fieldNames = fields.split(',');
-
-        String query = 'SELECT Id,' + fields;
-        query += ' FROM ' + objectName;
-
-        if (String.isNotBlank(filter)) {
-            query += ' WHERE ' + filter;
-        }
-
-        query += ' ORDER BY ' + fieldNames.get(0);
-
-        List<SObject> results = Database.query(query);
-
-        for (SObject obj : results) {
-            String name = '';
-
-            for (Integer i = 0; i < fieldNames.size(); i++) {
-                String field = fieldNames.get(i);
-
-                if (i == 1 && fieldNames.size() > 0) {
-                    name += ' - ';
-                }
-                if (i > 1) {
-                    name += ', ';
-                }
-                if (String.isNotBlank((String) obj.get(field.trim()))) {
-                    name += (String) obj.get(field.trim());
-                } else {
-                    name = name.removeEnd(', ');
-                }
-            }
-            name = name.removeEnd(', ');
-            SelectOption option = new SelectOption(obj.Id, name);
-            pl.add(option);
-        }
-
-        return pl;
     }
 
     public PageReference submitAdditionalQuestions() {

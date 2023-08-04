@@ -3,7 +3,7 @@
 // License can be found found in the LICENSE file in this repository.
 // Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas o 7/22/2023
 
-public with sharing class SummitQuestionWrapper {
+public with sharing class SummitEventsQuestionWrapper {
     public String questionId { get; set; }
     public String type { get; set; }
     public String question { get; set; }
