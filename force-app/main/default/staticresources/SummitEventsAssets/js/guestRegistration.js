@@ -350,3 +350,24 @@ const answerTemplate = (question, answer) => `
     </div>
 </div>
 `;
+
+const resultListTemplate = (modalId, title, text, actionButtonTitle, cancelButtonTitle, action) => `
+<section role="dialog" tabIndex="-1" aria-modal="true" aria-label="${title}" className="slds-modal slds-fade-in-open" id="${modalId}">
+    <div className="slds-modal__container">
+        <button className="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+            <svg className="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+            </svg>
+            <span className="slds-assistive-text">Cancel and close</span>
+        </button>
+        <div className="slds-modal__content slds-p-around_medium slds-modal__content_headless" id="modal-content-id-1">
+            <p>${text}</p>
+        </div>
+        <div className="slds-modal__footer">
+            <button className="slds-button slds-button_neutral" aria-label="Cancel and close">${cancelButtonTitle}</button>
+            <button class="slds-button slds-button_brand" onclick="${action}">${actionButtonTitle}</button>
+        </div>
+    </div>
+</section>
+<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+`;

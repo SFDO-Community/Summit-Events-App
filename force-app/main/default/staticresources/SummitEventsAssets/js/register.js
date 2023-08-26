@@ -230,6 +230,7 @@ function formatPhone(phone) {
 function validYear() {
     let yearsToValidate = document.querySelectorAll('.validYear');
     yearsToValidate.forEach(function (yr) {
+
         let yrWrap = yr.closest('.slds-form-element');
         yr.addEventListener("keyup", (e) => {
             if (yrWrap.classList.contains('slds-has-error')) {
@@ -245,14 +246,17 @@ function validYear() {
         });
         yr.addEventListener("change", (e) => {
             let re = new RegExp(/(19|20)\d{2}/);
-            if (!re.test(yr.value)) {
-                yr.value = '';
-                yrWrap.classList.add('slds-has-error');
-                yrWrap.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
-                    errorHelp.style.display = "block"
-                });
+            if(yr.value) {
+                if (!re.test(yr.value)) {
+                    yr.value = '';
+                    yrWrap.classList.add('slds-has-error');
+                    yrWrap.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
+                        errorHelp.style.display = "block"
+                    });
+                }
             }
         });
+
     });
 }
 
