@@ -4,7 +4,7 @@
     <description>Return separated list that will be converted to a pick-list.</description>
     <externalId>false</externalId>
     <inlineHelpText>Return separated list that will be converted to a pick-list.</inlineHelpText>
-    <label>Add Info Question Pick List Long 1</label>
+    <label>Add Info Question Pick List Long 3</label>
     <length>10000</length>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

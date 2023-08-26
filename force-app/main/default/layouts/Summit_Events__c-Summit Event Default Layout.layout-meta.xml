@@ -379,6 +379,10 @@
                 <field>Add_Info_Question_Pick_List_1__c</field>
             </layoutItems>
             <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Add_Info_Question_Pick_List_Long_1__c</field>
+            </layoutItems>
+            <layoutItems>
                 <emptySpace>true</emptySpace>
             </layoutItems>
             <layoutItems>
@@ -392,6 +396,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Add_Info_Question_Pick_List_2__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Add_Info_Question_Pick_List_Long_2__c</field>
             </layoutItems>
             <layoutItems>
                 <emptySpace>true</emptySpace>
@@ -408,6 +416,10 @@
                 <behavior>Edit</behavior>
                 <field>Add_Info_Question_Pick_List_3__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Add_Info_Question_Pick_List_Long_3__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -423,6 +435,10 @@
                 <field>Add_Info_Question_Pick_List_4__c</field>
             </layoutItems>
             <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Add_Info_Question_Pick_List_Long_4__c</field>
+            </layoutItems>
+            <layoutItems>
                 <emptySpace>true</emptySpace>
             </layoutItems>
             <layoutItems>
@@ -436,6 +452,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Add_Info_Question_Pick_List_5__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Add_Info_Question_Pick_List_Long_5__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -803,7 +823,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h8B000001auye</masterLabel>
+        <masterLabel>00h8N000003Fl2p</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
