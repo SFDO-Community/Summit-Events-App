@@ -4,7 +4,7 @@
     <description>This field enables user to create Picklist values for a Picklist question, return/line separated.</description>
     <externalId>false</externalId>
     <inlineHelpText>This field enables user to create Picklist values for a Picklist question, return/line separated.</inlineHelpText>
-    <label>Picklist Values</label>
+    <label>Picklist Values Long</label>
     <length>32000</length>
     <trackTrending>false</trackTrending>
     <type>LongTextArea</type>

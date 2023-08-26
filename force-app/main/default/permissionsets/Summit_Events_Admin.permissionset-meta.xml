@@ -909,6 +909,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Question__c.Picklist_Values_Long__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Question__c.Picklist_Values__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1660,6 +1665,31 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events__c.Add_Info_Question_Pick_List_5__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Add_Info_Question_Pick_List_Long_1__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Add_Info_Question_Pick_List_Long_2__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Add_Info_Question_Pick_List_Long_3__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Add_Info_Question_Pick_List_Long_4__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Add_Info_Question_Pick_List_Long_5__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
