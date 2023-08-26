@@ -10,8 +10,7 @@ let audience;
 const overlay = createSpinner();
 
 let ready = (callback) => {
-    if (document.readyState != "loading") callback();
-    else document.addEventListener("DOMContentLoaded", callback);
+    if (document.readyState != "loading") callback(); else document.addEventListener("DOMContentLoaded", callback);
 }
 
 ready(() => {
@@ -151,56 +150,63 @@ function fillInCityStateOnZip(zipObj) {
     } else {
         url = url + zip;
     }
-
-    let cityState = document.querySelectorAll('input[id$=city], select[id$=state]');
-    cityState.forEach(function (cs) {
-        let formElem = cs.closest(".slds-form-element");
-        if (formElem !== null) {
-            formElem.append(overlay.cloneNode(true));
-        }
-    });
+    formOverlay(false);
 
     fetch(url)
         .then((response) => response.json())
-        .then((result) => {
-            if (result) {
-                let city = result[0].address.city;
-                if (city == null) {
-                    city = result[0].address.hamlet;
-                }
-                if (city == null) {
-                    city = result[0].address.town;
-                }
-                let state = result[0].address.state;
-                if (state == null) {
-                    state = result[0].address.county;
-                }
+        .then((results) => {
+            if (results) {
+                if (results.length > 0) {
+                    result = results[0];
 
-                for (let [key, value] of Object.entries(RFIStates)) {
-                    if (value === state) {
-                        state = key;
+                    let city = '';
+
+                    city = result.address.city ? result.address.city : '';
+                    city = !city && result.address.hamlet ? result.address.hamlet : city;
+                    city = !city && result.address.town ? result.address.town : city;
+
+                    let state = result.address.state ? result.address.state : '';
+                    stat = !state && result.address.county ? result.address.county : state;
+
+                    for (let [key, value] of Object.entries(RFIStates)) {
+                        if (value === state) {
+                            state = key;
+                        }
+                    }
+                    let county = result.address.county ? result.address.county : '';
+                    let country = result.address.country_code.toUpperCase() ? result.address.country_code.toUpperCase() : '';
+
+                    let cityInput = document.querySelector('[id$=city]');
+                    let stateInput = document.querySelector('[id$=state]');
+                    if (cityInput) {
+                        cityInput.value = city;
+                    }
+                    if (stateInput) {
+                        stateInput.value = state;
                     }
                 }
-                let county = result[0].address.county;
-                let country = result[0].address.country_code.toUpperCase();
-                let cityInput = document.querySelector('[id$=city]');
-                let stateInput = document.querySelector('[id$=state]');
-                if (cityInput) {
-                    cityInput.value = city;
-                }
-                if (stateInput) {
-                    stateInput.value = state;
-                }
             }
-            cityState.forEach(function (cs) {
-                let formElem = cs.closest(".slds-form-element");
+            formOverlay(true);
+        }).catch(error => {
+        console.log(error);
+        formOverlay(true);
+    });
+
+    function formOverlay(remove) {
+        let cityState = document.querySelectorAll('input[id$=city], select[id$=state]');
+        cityState.forEach(function (cs) {
+            let formElem = cs.closest(".slds-form-element");
+            if (remove) {
                 formElem.querySelectorAll('.waiting-overlay').forEach(function (wa) {
                     wa.remove();
                 });
-            });
-        }).catch(error => {
-
-    });
+            } else {
+                if (formElem !== null) {
+                    formElem.append(overlay.cloneNode(true));
+                }
+            }
+        });
+    }
 }
 
 function formatPhone(phone) {
@@ -339,10 +345,8 @@ function readCookie(name) {
     var ca = document.cookie.split(';');
     for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0) === ' ')
-            c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0)
-            return decodeURIComponent(c.substring(nameEQ.length, c.length));
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
     }
     return null;
 }
@@ -352,10 +356,8 @@ function eraseCookie(name) {
 }
 
 var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)), sURLVariables = sPageURL.split('&'),
+        sParameterName, i;
 
     for (i = 0; i < sURLVariables.length; i++) {
         sParameterName = sURLVariables[i].split('=');
