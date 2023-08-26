@@ -307,6 +307,45 @@ function removeById(idToRemove, element) {
     setGuestRemaining();
 }
 
+function saveGuestModal() {
+    let form = document.getElementById('guestInput');
+    let allInputs = form.querySelectorAll('input, select, textarea');
+    let submitButton = document.querySelector("[id$='submitOptions']");
+    let noValues = true;
+    let modalElem = document.getElementById('unsavedGuestModal');
+    let modalBack = document.getElementById('unsavedGuestBackground');
+    allInputs.forEach(input => {
+        if (input.value) {
+            noValues = false;
+        }
+    });
+    if (!noValues) {
+        modalElem.classList.add('slds-fade-in-open');
+        modalBack.classList.add('slds-fade-in-open');
+        modalElem.querySelectorAll('.cancelSubmit').forEach(cancel => {
+            cancel.addEventListener('click', () => {
+                modalElem.classList.remove('slds-fade-in-open');
+                modalBack.classList.remove('slds-fade-in-open');
+            });
+        })
+    }
+    modalElem.querySelectorAll('.continueSubmit').forEach(submit => {
+        submit.addEventListener('click', () => {
+            modalElem.classList.remove('slds-fade-in-open');
+            modalBack.classList.remove('slds-fade-in-open');
+            allInputs.forEach(input => {
+                input.value = '';
+            });
+            submitButton.click();
+        })
+    });
+    if (noValues) {
+        fadeout();
+    }
+    return noValues;
+    //fadeout();
+}
+
 
 //Templates
 
@@ -349,25 +388,4 @@ const answerTemplate = (question, answer) => `
         ${answer}
     </div>
 </div>
-`;
-
-const resultListTemplate = (modalId, title, text, actionButtonTitle, cancelButtonTitle, action) => `
-<section role="dialog" tabIndex="-1" aria-modal="true" aria-label="${title}" className="slds-modal slds-fade-in-open" id="${modalId}">
-    <div className="slds-modal__container">
-        <button className="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
-            <svg className="slds-button__icon slds-button__icon_large" aria-hidden="true">
-                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
-            </svg>
-            <span className="slds-assistive-text">Cancel and close</span>
-        </button>
-        <div className="slds-modal__content slds-p-around_medium slds-modal__content_headless" id="modal-content-id-1">
-            <p>${text}</p>
-        </div>
-        <div className="slds-modal__footer">
-            <button className="slds-button slds-button_neutral" aria-label="Cancel and close">${cancelButtonTitle}</button>
-            <button class="slds-button slds-button_brand" onclick="${action}">${actionButtonTitle}</button>
-        </div>
-    </div>
-</section>
-<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
 `;
