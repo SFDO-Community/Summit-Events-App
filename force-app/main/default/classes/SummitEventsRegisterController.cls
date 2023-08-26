@@ -70,7 +70,6 @@ public with sharing class SummitEventsRegisterController {
         //Set the default country if it is in settings and matches something in the global pick list
         Summit_Events_Settings__c seaCustomSettings = Summit_Events_Settings__c.getOrgDefaults();
         String defaultCountry = seaCustomSettings.Default_Country__c;
-        System.debug(defaultCountry);
         if (String.isNotBlank(defaultCountry) && String.isBlank(eventRegistration.Registrant_Country__c)) {
             List<SelectOption> getCountryDD = PickThePicklist('Summit_Events_Registration__c', 'Registrant_Country__c', false);
             for (SelectOption selectOption : getCountryDD) {
@@ -80,7 +79,6 @@ public with sharing class SummitEventsRegisterController {
                 }
             }
         }
-        System.debug(eventRegistration.Registrant_Country__c);
 
         //Set applicant type if audience is passed
         registrantAudience = eventInformation.audience;
@@ -136,7 +134,8 @@ public with sharing class SummitEventsRegisterController {
                             Phone_Label__c, Phone_Type_Label__c, Preferred_First_Name_Label__c, Pronouns_Label__c, Registrant_Receive_Texts_Label__c,
                             Relationship_To_Institution_Label__c, Third_Party_Registrant_Label__c, Title_Label__c, Preferred_Class_Year_Label__c,
                             Registrant_Relationship_Label__c, Event_Fee_Label__c, Event_Fee_Total_Label__c, Event_Fee_Submit_List_Label__c, Account__r.Name,
-                            Filter_Category__c, Do_not_show_receive_text_question__c
+                            Filter_Category__c, Do_not_show_receive_text_question__c, Add_Info_Question_Pick_List_Long_1__c, Add_Info_Question_Pick_List_Long_2__c,
+                            Add_Info_Question_Pick_List_Long_3__c, Add_Info_Question_Pick_List_Long_4__c, Add_Info_Question_Pick_List_Long_5__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -223,11 +222,11 @@ public with sharing class SummitEventsRegisterController {
                 }
             }
 
-            addPick1 = createPicklists(eventPage.Add_Info_Question_Pick_List_1__c);
-            addPick2 = createPicklists(eventPage.Add_Info_Question_Pick_List_2__c);
-            addPick3 = createPicklists(eventPage.Add_Info_Question_Pick_List_3__c);
-            addPick4 = createPicklists(eventPage.Add_Info_Question_Pick_List_4__c);
-            addPick5 = createPicklists(eventPage.Add_Info_Question_Pick_List_5__c);
+            addPick1 = createPicklists(eventPage.Add_Info_Question_Pick_List_1__c, eventPage.Add_Info_Question_Pick_List_Long_1__c);
+            addPick2 = createPicklists(eventPage.Add_Info_Question_Pick_List_2__c, eventPage.Add_Info_Question_Pick_List_Long_2__c);
+            addPick3 = createPicklists(eventPage.Add_Info_Question_Pick_List_3__c, eventPage.Add_Info_Question_Pick_List_Long_3__c);
+            addPick4 = createPicklists(eventPage.Add_Info_Question_Pick_List_4__c, eventPage.Add_Info_Question_Pick_List_Long_4__c);
+            addPick5 = createPicklists(eventPage.Add_Info_Question_Pick_List_5__c, eventPage.Add_Info_Question_Pick_List_Long_5__c);
 
             //Calculate event cost by Instance and Event fees and add to list of fees for upsert
             eventFeeList = new List<Summit_Events_Fee__c>();
@@ -410,19 +409,29 @@ public with sharing class SummitEventsRegisterController {
         return PickThePicklist('Summit_Events_Registration__c', 'Registrant_Pronouns__c', true);
     }
 
-    public List<SelectOption> createPicklists(String returnSepStringList) {
+    public List<SelectOption> createPicklists(String returnSepStringList, String returnSepStringList2) {
         List<SelectOption> cpl = new List<SelectOption>();
-        if (!String.isBlank(returnSepStringList)) {
-            cpl.add(new SelectOption('', 'Select...'));
-            returnSepStringList = returnSepStringList.trim();
-            returnSepStringList = returnSepStringList.replace('\n\n', '\n');
-            String[] splitList = returnSepStringList.split('\n');
-            for (String p : splitList) {
-                p = p.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', '');
-                cpl.add(new SelectOption(p, p));
-            }
+        cpl.add(new SelectOption('', 'Select...'));
+        List<String> splitList = new List<String>();
+        splitList.addAll(sanitizePicklistString(returnSepStringList));
+        splitList.addAll(sanitizePicklistString(returnSepStringList2));
+        System.debug(splitList);
+        for (String p : splitList) {
+            p = p.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', '');
+            cpl.add(new SelectOption(p, p));
         }
         return cpl;
+    }
+
+    public List<String> sanitizePicklistString(String picklistString) {
+        List<String> pickList = new List<String>();
+        if (String.isNotBlank(picklistString)) {
+            picklistString = picklistString.trim();
+            picklistString = picklistString.replace('\n\n', '\n');
+            pickList = picklistString.split('\n');
+            System.debug(picklist);
+        }
+        return pickList;
     }
 
     public List<SelectOption> PickThePicklist(String YourObjectName, String YourFieldName, Boolean includeSelect) {
