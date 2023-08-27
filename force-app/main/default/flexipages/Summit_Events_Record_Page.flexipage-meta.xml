@@ -1829,6 +1829,36 @@
                 <identifier>record_item_086</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Guest_Unsaved_Modal_Text__c</fieldItem>
+                <identifier>RecordGuest_Unsaved_Modal_Text_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Guest_Unsaved_Cancel_Label__c</fieldItem>
+                <identifier>RecordGuest_Unsaved_Cancel_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Guest_Unsaved_Continue_Label__c</fieldItem>
+                <identifier>RecordGuest_Unsaved_Continue_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-6f1934ef-fd4d-4e34-a85f-55d2a419f40b</name>
         <type>Facet</type>
     </flexiPageRegions>

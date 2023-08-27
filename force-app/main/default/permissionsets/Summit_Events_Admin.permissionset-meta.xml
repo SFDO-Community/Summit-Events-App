@@ -2199,6 +2199,21 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events__c.Guest_Unsaved_Cancel_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Guest_Unsaved_Continue_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.Guest_Unsaved_Modal_Text__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events__c.Hand_Raise_Action__c</field>
         <readable>true</readable>
     </fieldPermissions>

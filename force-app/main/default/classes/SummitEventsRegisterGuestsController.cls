@@ -59,7 +59,8 @@ public with sharing class SummitEventsRegisterGuestsController {
                             Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
                             Guest_Registration_Title__c, Guest_Max_Amount__c, Guest_Registration_Description__c, Guest_Table_Size__c, Guest_Tables_Available__c,
                             Display_Guest_Registration__c, Guest_Registration_Add_Button_Label__c, No_Guest_Registrations_Added_Message__c,
-                            Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c
+                            Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c, Guest_Unsaved_Cancel_Label__c, Guest_Unsaved_Continue_Label__c,
+                            Guest_Unsaved_Modal_Text__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED

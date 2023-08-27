@@ -252,6 +252,14 @@
                 <behavior>Edit</behavior>
                 <field>No_Guest_Registrations_Added_Message__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Event_Guest_Submit_List_Label__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Guest_Unsaved_Continue_Label__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -269,6 +277,14 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Guest_Registration_Description__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Guest_Unsaved_Cancel_Label__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Guest_Unsaved_Modal_Text__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
