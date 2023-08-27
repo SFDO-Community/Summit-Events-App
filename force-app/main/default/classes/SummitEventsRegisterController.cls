@@ -8,8 +8,7 @@ public with sharing class SummitEventsRegisterController {
     public Summit_Events__c eventPage { get; set; }
     public List<SelectOption> guestAmt { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
-    private final SummitEventsShared SeaShared = new SummitEventsShared();
-    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public SummitEventsInfo eventInformation { get; set; }
     public String templateSelected { get; set; }
     public Boolean contactSet { get; set; }
     public Boolean eventIsClosed { get; set; }
@@ -52,7 +51,7 @@ public with sharing class SummitEventsRegisterController {
         additionalQuestions = false;
         EvtUserType = UserInfo.getUserType();
         //Get cookie or URL string variable
-        eventInformation = SeaShared.getSummitEventsInfo();
+        eventInformation = SummitEventsShared.getSummitEventsInfo();
 
         //Create event registration. Populate with current registration if it exists with removed id
         eventRegistration = new Summit_Events_Registration__c();
@@ -107,8 +106,8 @@ public with sharing class SummitEventsRegisterController {
 
             //define Event ID from instanceInfo data
             eventInformation.eventId = evtInstance.Event__r.Id;
-            startTimeString = SeaShared.formatTime(evtInstance.Instance_Start_Time__c, false);
-            endTimeString = SeaShared.formatTime(evtInstance.Instance_End_Time__c, false);
+            startTimeString = SummitEventsShared.formatTime(evtInstance.Instance_Start_Time__c, false);
+            endTimeString = SummitEventsShared.formatTime(evtInstance.Instance_End_Time__c, false);
         }
 
         //Get Event Info off of instance master detail id
@@ -141,7 +140,7 @@ public with sharing class SummitEventsRegisterController {
                     WITH SECURITY_ENFORCED
             ];
 
-            pageFlow = SeaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage(), evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c);
+            pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage(), evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c);
             nextUrl = pageFlow.get('Next').getUrl().toLowerCase();
 
             if (String.isNotBlank(eventPage.Ask_Phone__c)) {
@@ -161,7 +160,7 @@ public with sharing class SummitEventsRegisterController {
                 }
             }
 
-            eventIsClosed = SeaShared.isEventClosed(evtInstance);
+            eventIsClosed = SummitEventsShared.isEventClosed(evtInstance);
 
             if (
                     (String.isNotBlank(eventPage.Add_Info_Question_Type_1__c) && String.isNotBlank(eventPage.Add_Info_Question_Text_1__c)) ||
@@ -208,10 +207,10 @@ public with sharing class SummitEventsRegisterController {
                 locationAddress = eventPage.Location_Title__c;
             }
 
-            formattedNavDate = SeaShared.navBreadcrumbBuilder(evtInstance);
+            formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(evtInstance);
 
             //Grab the template if defined
-            templateSelected = SeaShared.getTemplate(eventPage.Template__c);
+            templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
 
             if (eventPage.Allow_Other_Attendees__c) {
                 guestAmt = new List<SelectOption>();
@@ -364,7 +363,7 @@ public with sharing class SummitEventsRegisterController {
     }
 
     public PageReference checkEventDetails() {
-        return SeaShared.checkForEvent();
+        return SummitEventsShared.checkForEvent();
     }
 
     public List<SelectOption> getSexDD() {
@@ -374,7 +373,7 @@ public with sharing class SummitEventsRegisterController {
     public List<SelectOption> getStateDD() {
         List<SelectOption> pickListItems = new List<SelectOption>();
         if (String.isNotBlank(eventRegistration.Registrant_Country__c)) {
-            Map<String, String> dependencies = SeaShared.getDependentSelectOptions('Summit_Events_Registration__c', 'Registrant_Country__c', 'Registrant_State_Global__c', eventRegistration.Registrant_Country__c);
+            Map<String, String> dependencies = SummitEventsShared.getDependentSelectOptions('Summit_Events_Registration__c', 'Registrant_Country__c', 'Registrant_State_Global__c', eventRegistration.Registrant_Country__c);
             if (dependencies.size() > 1) {
                 pickListItems.add(new SelectOption('', 'Select...'));
                 for (String item : dependencies.keySet()) {
@@ -429,7 +428,7 @@ public with sharing class SummitEventsRegisterController {
             picklistString = picklistString.trim();
             picklistString = picklistString.replace('\n\n', '\n');
             pickList = picklistString.split('\n');
-            System.debug(picklist);
+            System.debug(pickList);
         }
         return pickList;
     }
@@ -540,7 +539,7 @@ public with sharing class SummitEventsRegisterController {
         }
 
         eventRegistration.Status__c = 'Started';
-        eventRegistration.Event_Instance_Date_Time_Formatted__c = SeaShared.navBreadcrumbBuilder(evtInstance);
+        eventRegistration.Event_Instance_Date_Time_Formatted__c = SummitEventsShared.navBreadcrumbBuilder(evtInstance);
         eventRegistration.Event__c = eventInformation.eventId;
         eventRegistration.Event_Instance__c = eventInformation.instanceId;
 
@@ -548,7 +547,7 @@ public with sharing class SummitEventsRegisterController {
 
         eventInformation.registrationId = eventRegistration.Id;
 
-        String dayOfWeek = SeaShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
+        String dayOfWeek = SummitEventsShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
         //Insert pre-chosen appointments for appointments page
         List<Summit_Events_Appointment_Type__c> autoAddAppt = [
                 SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Registrant_Input__c, Custom_Picklist__c, Appointment_Limits__c,
@@ -646,7 +645,7 @@ public with sharing class SummitEventsRegisterController {
 
             //Update encrypted cookie
             SummitEventsShared SeaShared = new SummitEventsShared();
-            SeaShared.createEncryptedCookie(registrantAudience, eventRegistration.Event_Instance__c, eventRegistration.Event__c, eventRegistration.Id);
+            SummitEventsShared.createEncryptedCookie(registrantAudience, eventRegistration.Event_Instance__c, eventRegistration.Event__c, eventRegistration.Id);
 
             return eventRegistration;
         }

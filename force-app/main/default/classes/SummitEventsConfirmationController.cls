@@ -4,8 +4,7 @@
 // Created by Thaddaeus Dahlberg on 5/1/2018.
 
 public with sharing class SummitEventsConfirmationController {
-    public SummitEventsShared seaShared = new SummitEventsShared();
-    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public SummitEventsInfo eventInformation { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public String templateSelected { get; set; }
@@ -33,7 +32,7 @@ public with sharing class SummitEventsConfirmationController {
 
     public SummitEventsConfirmationController() {
         eventIsClosed = false;
-        eventInformation = seaShared.getSummitEventsInfo();
+        eventInformation = SummitEventsShared.getSummitEventsInfo();
 
         if (!String.isEmpty(eventInformation.eventId)) {
             eventPage = [
@@ -49,7 +48,7 @@ public with sharing class SummitEventsConfirmationController {
 
             if (eventPage != null) {
 
-                templateSelected = seaShared.getTemplate(eventPage.Template__c);
+                templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
 
                 if (String.isNotBlank(eventInformation.instanceId)) {
                     eventInstance = [
@@ -60,9 +59,9 @@ public with sharing class SummitEventsConfirmationController {
                             LIMIT 1
                     ];
 
-                    eventIsClosed = seaShared.isEventClosed(eventInstance);
+                    eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
 
-                    formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
+                    formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
                 }
 
                 if (String.isNotBlank(eventInformation.registrationId)) {
@@ -83,11 +82,11 @@ public with sharing class SummitEventsConfirmationController {
     public PageReference checkEventDetails() {
 
         PageReference pageRef = null;
-        eventInformation = seaShared.getSummitEventsInfo();
+        eventInformation = SummitEventsShared.getSummitEventsInfo();
         Boolean eventRegistrationSuccess = true;
 
         //Make sure the event has not expired
-        eventIsClosed = seaShared.isEventClosed(eventInstance);
+        eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
 
         // Default to submit page, submit will redirect to beginning if no reg id is present. Prevents pre-filled forms in one step registrations.
         ApexPages.currentPage().getHeaders().put('referer', Page.SummitEventsSubmit.getUrl());
@@ -131,7 +130,7 @@ public with sharing class SummitEventsConfirmationController {
                             for (Question q : guestAnswers[xx].questions) {
                                 Id questionId = null;
                                 try {
-                                    questionId = seaShared.decryptString(q.id, true);
+                                    questionId = SummitEventsShared.decryptString(q.id, true);
                                 } catch (Exception e) {
                                     ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Invalid question Id detected.'));
                                 }
@@ -229,7 +228,7 @@ public with sharing class SummitEventsConfirmationController {
 
                     if (eventRegistrationSuccess && pageRef == null) {
                         //Build encrypted string for registration. Used for cancel link or other services outside of Summit Events App
-                        String encryptedString = seaShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, eventInformation.registrationId);
+                        String encryptedString = SummitEventsShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, eventInformation.registrationId);
 
                         if (encryptedString.length() > 255) {
                             eventRegistration.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);
@@ -244,7 +243,7 @@ public with sharing class SummitEventsConfirmationController {
                         SummitEventsShared SEAShared = new SummitEventsShared();
 
                         //Remove the registration ID from the cookie so back button will redirect to the correct page.
-                        SEAShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, '');
+                        SummitEventsShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, '');
                     } else {
                         ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Hosted guest record(s) could not be saved.'));
                     }

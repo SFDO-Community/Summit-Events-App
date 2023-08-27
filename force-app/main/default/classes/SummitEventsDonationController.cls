@@ -5,8 +5,7 @@
 
 public with sharing class SummitEventsDonationController {
 
-    public SummitEventsShared seaShared = new SummitEventsShared();
-    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public SummitEventsInfo eventInformation { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public String templateSelected { get; set; }
     public String donationAllocation { get; set; }
@@ -19,7 +18,7 @@ public with sharing class SummitEventsDonationController {
     public Map<String, PageReference> pageFlow {get;set;}
 
     public SummitEventsDonationController() {
-        eventInformation = seaShared.getSummitEventsInfo();
+        eventInformation = SummitEventsShared.getSummitEventsInfo();
 
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
 
@@ -42,9 +41,9 @@ public with sharing class SummitEventsDonationController {
                     WITH SECURITY_ENFORCED
             ];
 
-            pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
+            pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
 
-            templateSelected = seaShared.getTemplate(eventPage.Template__c);
+            templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
 
             //Check for current donation fees for this registration
             List<Summit_Events_Fee__c> previousDonationFees = [
@@ -62,9 +61,9 @@ public with sharing class SummitEventsDonationController {
                 donationAmountSelect = String.valueOf(incomingFee.Event_Fee__c);
             }
 
-            eventIsClosed = seaShared.isEventClosed(eventInstance);
+            eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
 
-            formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
+            formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
         }
     }
 
@@ -120,7 +119,7 @@ public with sharing class SummitEventsDonationController {
     }
 
     public PageReference checkEventDetails() {
-        return seaShared.checkForEvent();
+        return SummitEventsShared.checkForEvent();
     }
 
     public PageReference submitDonation() {

@@ -4,8 +4,7 @@
 // Created by Thaddaeus Dahlberg on 5/1/2018.
 
 public with sharing class SummitEventsSubmitController {
-    public SummitEventsShared seaShared = new SummitEventsShared();
-    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public SummitEventsInfo eventInformation { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public List<Summit_Events_Appointment_Type__c> appointments { get; set; }
@@ -40,7 +39,7 @@ public with sharing class SummitEventsSubmitController {
         hasMessages = false;
 
         //Get cookie or URL string variable
-        eventInformation = seaShared.getSummitEventsInfo();
+        eventInformation = SummitEventsShared.getSummitEventsInfo();
 
         if (!String.isEmpty(eventInformation.eventId)) {
             eventPage = [
@@ -54,7 +53,7 @@ public with sharing class SummitEventsSubmitController {
                     WITH SECURITY_ENFORCED
             ];
 
-            templateSelected = seaShared.getTemplate(eventPage.Template__c);
+            templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
 
             if (String.isNotBlank(eventPage.Payment_Gateway__c) && eventPage.Payment_Gateway__c != 'No Gateway') {
                 hasPaymentGateway = true;
@@ -70,15 +69,15 @@ public with sharing class SummitEventsSubmitController {
                     WITH SECURITY_ENFORCED
             ];
 
-            pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
+            pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
 
-            eventIsClosed = seaShared.isEventClosed(eventInstance);
+            eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
 
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('error'))) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ApexPages.currentPage().getParameters().get('error')));
             }
 
-            formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
+            formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
         }
 
         if (!String.isBlank(eventInformation.registrationId)) {
@@ -110,7 +109,7 @@ public with sharing class SummitEventsSubmitController {
                     for (Integer yy = 0; yy < guestAnswers[xx].questions.size(); yy++) {
                         Id questionId = null;
                         try {
-                            questionId = seaShared.decryptString(guestAnswers[xx].questions[yy].id, true);
+                            questionId = SummitEventsShared.decryptString(guestAnswers[xx].questions[yy].id, true);
                         } catch (Exception e) {
                             System.debug(e.getMessage());
                         }
@@ -138,7 +137,7 @@ public with sharing class SummitEventsSubmitController {
             ];
 
             for(Integer x = 0; x < chosenAppointments.size(); x++) {
-                chosenAppointments[x].Description__c = seaShared.removeHTMLandEscape(chosenAppointments[x].Description__c, false);
+                chosenAppointments[x].Description__c = SummitEventsShared.removeHTMLandEscape(chosenAppointments[x].Description__c, false);
             }
 
             /** Check for preexisting payment **/
@@ -189,7 +188,7 @@ public with sharing class SummitEventsSubmitController {
     }
 
     public PageReference checkEventDetails() {
-        return seaShared.checkForEvent();
+        return SummitEventsShared.checkForEvent();
     }
 
     public PageReference submitRegistration() {

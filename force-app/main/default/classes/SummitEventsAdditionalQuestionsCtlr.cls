@@ -5,12 +5,11 @@
 
 public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
-    final SummitEventsShared SeaShared = new SummitEventsShared();
     public String templateSelected { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
-    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public SummitEventsInfo eventInformation { get; set; }
     public String instanceName { get; set; }
     public String startTimeString { get; set; }
     public String endTimeString { get; set; }
@@ -56,7 +55,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
     public SummitEventsAdditionalQuestionsCtlr() {
         eventIsClosed = false;
-        eventInformation = SeaShared.getSummitEventsInfo();
+        eventInformation = SummitEventsShared.getSummitEventsInfo();
         questionWrapper = new List<questionItem>();
         Map<String, String> hiddenValues = new Map<String, String>();
 
@@ -84,14 +83,14 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     WITH SECURITY_ENFORCED
             ];
 
-            templateSelected = SeaShared.getTemplate(eventPage.Template__c);
-            pageFlow = SeaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
-            formattedNavDate = SeaShared.navBreadcrumbBuilder(eventInstance);
+            templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
+            pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
+            formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
             instanceName = eventInstance.Name;
-            startTimeString = SeaShared.formatTime(eventInstance.Instance_Start_Time__c, false);
-            endTimeString = SeaShared.formatTime(eventInstance.Instance_End_Time__c, false);
+            startTimeString = SummitEventsShared.formatTime(eventInstance.Instance_Start_Time__c, false);
+            endTimeString = SummitEventsShared.formatTime(eventInstance.Instance_End_Time__c, false);
 
-            eventIsClosed = SeaShared.isEventClosed(eventInstance);
+            eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
 
             //Get the question object questions
             additionalQuestions = [
@@ -151,7 +150,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     } else {
                         //Check if map to field exists
                         mapToField = question.Map_to_Field__c.trim().toLowerCase();
-                        quest.setupError = SeaShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', mapToField, '', true, 'Map to field: ');
+                        quest.setupError = SummitEventsShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', mapToField, '', true, 'Map to field: ');
                     }
 
                     //It would be counter productive to map to the same field, but if you do it live with the ordering consequences with your questions
@@ -164,7 +163,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     //build wrapper class to type and make picklist lists
                     quest.question = question.Question_Label__c;
                     quest.required = question.Required__c;
-                    quest.questionId = SeaShared.encryptString(question.Id);
+                    quest.questionId = SummitEventsShared.encryptString(question.Id);
                     quest.type = question.Question_Field_Type__c;
 
                     if (String.isNotBlank(question.Existing_Picklist_Values__c)) {
@@ -185,7 +184,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             existingPickListField = namespace + existingPickListField;
                         }
                         //Test if picklist is accessible and is a picklist
-                        quest.setupError += SeaShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', existingPickListField, 'picklist', false, '');
+                        quest.setupError += SummitEventsShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', existingPickListField, 'picklist', false, '');
                         if (String.isBlank(quest.setupError)) {
                             quest.picklist = createExistingPicklist(existingPickListField);
                         }
@@ -237,10 +236,10 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                         lookupObject = '';
                         if (String.isNotBlank(question.Lookup_Object__c)) {
                             lookupObject = question.Lookup_Object__c.trim().toLowerCase();
-                            quest.setupError += SeaShared.checkFieldGuestAccess(lookupObject, '', '', false, 'Lookup Object: ');
+                            quest.setupError += SummitEventsShared.checkFieldGuestAccess(lookupObject, '', '', false, 'Lookup Object: ');
                         }
 
-                        quest.setupError += SeaShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', mapToField, 'reference', true, 'Map To Field: ');
+                        quest.setupError += SummitEventsShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', mapToField, 'reference', true, 'Map To Field: ');
 
                         if (String.isNotBlank(question.Lookup_Fields__c)) {
                             String questionLookupFields = question.Lookup_Fields__c.toLowerCase();
@@ -253,7 +252,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             for (String lookUpField : lookupFields) {
                                 lookUpField = lookUpField.trim();
 
-                                quest.setupError += SeaShared.checkFieldGuestAccess(lookupObject, lookUpField, '', false, 'Look up field: ');
+                                quest.setupError += SummitEventsShared.checkFieldGuestAccess(lookupObject, lookUpField, '', false, 'Look up field: ');
                                 if (String.isBlank(quest.setupError)) {
                                     cleanLookUpFields.add(lookUpField);
                                     if (mapToFieldIsLookup) {
@@ -281,7 +280,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
                         if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
                             //serialize object with query info in it to retrieve later when decrypted
-                            quest.lookup = SeaShared.encryptString(JSON.serialize(queryInfo));
+                            quest.lookup = SummitEventsShared.encryptString(JSON.serialize(queryInfo));
 
                             List<String> lookupFieldsRelation = new List<String>();
                             if (String.isNotBlank(question.Lookup_Fields__c)) {
@@ -450,7 +449,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     }
 
     public PageReference checkEventDetails() {
-        return SeaShared.checkForEvent();
+        return SummitEventsShared.checkForEvent();
     }
 
 
@@ -459,7 +458,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         SummitEventsShared SeaShared = new SummitEventsShared();
         List<queryReturn> returnValues = new List<queryReturn>();
         if (String.isNotBlank(question) && String.isNotBlank(term)) {
-            question = SeaShared.decryptString(question, true);
+            question = SummitEventsShared.decryptString(question, true);
             Map<String, String> queryInfo = (Map<String, String>) JSON.deserialize(question, Map<String, String>.class);
             if (queryInfo.size() > 0) {
                 String lookupQuery = '';

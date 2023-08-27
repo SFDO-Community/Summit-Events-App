@@ -4,8 +4,7 @@
 // Created by Thaddaeus Dahlberg on 5/1/2018.
 
 public with sharing class SummitEventsRegisterAppointmentCtlr {
-    public SummitEventsShared seaShared = new SummitEventsShared();
-    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public SummitEventsInfo eventInformation { get; set; }
     public Map<Id, Summit_Events_Appointment_Type__c> appointments { get; set; }
     public List<Summit_Events_Appointments__c> chosenApps { get; set; }
     public Summit_Events_Instance__c evtInstance { get; set; }
@@ -37,7 +36,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
     public SummitEventsRegisterAppointmentCtlr() {
         eventIsClosed = false;
-        eventInformation = seaShared.getSummitEventsInfo();
+        eventInformation = SummitEventsShared.getSummitEventsInfo();
         noOptionalAppointments = true;
 
         Map<String, Integer> appCount = new Map<String, Integer>();
@@ -53,7 +52,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     WITH SECURITY_ENFORCED
             ];
 
-            templateSelected = seaShared.getTemplate(eventPage.Template__c);
+            templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
 
             if (!String.isBlank(eventInformation.registrationId)) {
                 evtInstance = [
@@ -65,12 +64,12 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                         WITH SECURITY_ENFORCED
                 ];
 
-                pageFlow = seaShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage(), evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c);
+                pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage(), evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c);
 
-                eventIsClosed = seaShared.isEventClosed(evtInstance);
+                eventIsClosed = SummitEventsShared.isEventClosed(evtInstance);
 
                 if (evtInstance != null) {
-                    String dayOfWeek = seaShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
+                    String dayOfWeek = SummitEventsShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
                     // = dayOfWeek;
                     //Build available appointments
                     appointments = new Map<Id, Summit_Events_Appointment_Type__c>([
@@ -88,7 +87,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             ORDER BY Sort_Order__c ASC NULLS LAST
                     ]);
 
-                    formattedNavDate = seaShared.navBreadcrumbBuilder(evtInstance);
+                    formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(evtInstance);
 
                     //Check if the user gets to select any appointments or they are all auto added
 
@@ -112,7 +111,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                     //Add the chosen state appointments
                     for (Integer x = 0; x < chosenApps.size(); x++) {
-                        chosenApps[x].Description__c = seaShared.removeHTMLandEscape(chosenApps[x].Description__c, false);
+                        chosenApps[x].Description__c = SummitEventsShared.removeHTMLandEscape(chosenApps[x].Description__c, false);
                         //Keep track of appointment ids to not show in available appointments later
                         if (!String.isBlank(chosenApps[x].Event_Appointment_Type__c)) {
                             if (!appCount.containsKey(chosenApps[x].Event_Appointment_Type__c)) {
@@ -156,7 +155,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             }
 
                             if (apt.Appointment_Category__c != null) {
-                                Map<String, String> dependencies = seaShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', apt.Appointment_Category__c);
+                                Map<String, String> dependencies = SummitEventsShared.getDependentSelectOptions('Summit_Events_Appointment_Type__c', 'Appointment_Category__c', 'Appointment_Type__c', apt.Appointment_Category__c);
                                 List<String> pickListItems = new List<String>();
                                 System.debug(dependencies);
                                 if (dependencies.size() > 0) {
@@ -193,7 +192,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
 
     public PageReference checkEventDetails() {
-        return seaShared.checkForEvent();
+        return SummitEventsShared.checkForEvent();
     }
 
     public PageReference saveOptions() {
