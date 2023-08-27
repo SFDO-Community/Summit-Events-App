@@ -221,11 +221,11 @@ public with sharing class SummitEventsRegisterController {
                 }
             }
 
-            addPick1 = createPicklists(eventPage.Add_Info_Question_Pick_List_1__c, eventPage.Add_Info_Question_Pick_List_Long_1__c);
-            addPick2 = createPicklists(eventPage.Add_Info_Question_Pick_List_2__c, eventPage.Add_Info_Question_Pick_List_Long_2__c);
-            addPick3 = createPicklists(eventPage.Add_Info_Question_Pick_List_3__c, eventPage.Add_Info_Question_Pick_List_Long_3__c);
-            addPick4 = createPicklists(eventPage.Add_Info_Question_Pick_List_4__c, eventPage.Add_Info_Question_Pick_List_Long_4__c);
-            addPick5 = createPicklists(eventPage.Add_Info_Question_Pick_List_5__c, eventPage.Add_Info_Question_Pick_List_Long_5__c);
+            addPick1 = SummitEventsShared.createPicklistsFromStrings(eventPage.Add_Info_Question_Pick_List_1__c, eventPage.Add_Info_Question_Pick_List_Long_1__c);
+            addPick2 = SummitEventsShared.createPicklistsFromStrings(eventPage.Add_Info_Question_Pick_List_2__c, eventPage.Add_Info_Question_Pick_List_Long_2__c);
+            addPick3 = SummitEventsShared.createPicklistsFromStrings(eventPage.Add_Info_Question_Pick_List_3__c, eventPage.Add_Info_Question_Pick_List_Long_3__c);
+            addPick4 = SummitEventsShared.createPicklistsFromStrings(eventPage.Add_Info_Question_Pick_List_4__c, eventPage.Add_Info_Question_Pick_List_Long_4__c);
+            addPick5 = SummitEventsShared.createPicklistsFromStrings(eventPage.Add_Info_Question_Pick_List_5__c, eventPage.Add_Info_Question_Pick_List_Long_5__c);
 
             //Calculate event cost by Instance and Event fees and add to list of fees for upsert
             eventFeeList = new List<Summit_Events_Fee__c>();
@@ -406,31 +406,6 @@ public with sharing class SummitEventsRegisterController {
 
     public List<SelectOption> getPronounDD() {
         return PickThePicklist('Summit_Events_Registration__c', 'Registrant_Pronouns__c', true);
-    }
-
-    public List<SelectOption> createPicklists(String returnSepStringList, String returnSepStringList2) {
-        List<SelectOption> cpl = new List<SelectOption>();
-        cpl.add(new SelectOption('', 'Select...'));
-        List<String> splitList = new List<String>();
-        splitList.addAll(sanitizePicklistString(returnSepStringList));
-        splitList.addAll(sanitizePicklistString(returnSepStringList2));
-        System.debug(splitList);
-        for (String p : splitList) {
-            p = p.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', '');
-            cpl.add(new SelectOption(p, p));
-        }
-        return cpl;
-    }
-
-    public List<String> sanitizePicklistString(String picklistString) {
-        List<String> pickList = new List<String>();
-        if (String.isNotBlank(picklistString)) {
-            picklistString = picklistString.trim();
-            picklistString = picklistString.replace('\n\n', '\n');
-            pickList = picklistString.split('\n');
-            System.debug(pickList);
-        }
-        return pickList;
     }
 
     public List<SelectOption> PickThePicklist(String YourObjectName, String YourFieldName, Boolean includeSelect) {

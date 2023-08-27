@@ -611,6 +611,31 @@ public with sharing class SummitEventsShared {
         return incomingString;
     }
 
+    public static List<SelectOption> createPicklistsFromStrings(String returnSepStringList, String returnSepStringList2) {
+        List<SelectOption> cpl = new List<SelectOption>();
+        cpl.add(new SelectOption('', 'Select...'));
+        List<String> splitList = new List<String>();
+        splitList.addAll(sanitizePicklistString(returnSepStringList));
+        splitList.addAll(sanitizePicklistString(returnSepStringList2));
+        for (String p : splitList) {
+            p = p.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', '');
+            if(String.isNotBlank(p)) {
+                cpl.add(new SelectOption(p, p));
+            }
+        }
+        return cpl;
+    }
+
+    public static List<String> sanitizePicklistString(String picklistString) {
+        List<String> pickList = new List<String>();
+        if (String.isNotBlank(picklistString)) {
+            picklistString = picklistString.trim();
+            picklistString = picklistString.replace('\n\n', '\n');
+            pickList = picklistString.split('\n');
+        }
+        return pickList;
+    }
+
     //Method to test object and field availability for current user (Guest user)
     public static String checkFieldGuestAccess(String objectApiName, String fieldName, String requiredFieldType, Boolean testCreatable, String qualifierLabel) {
         String returnError = '';

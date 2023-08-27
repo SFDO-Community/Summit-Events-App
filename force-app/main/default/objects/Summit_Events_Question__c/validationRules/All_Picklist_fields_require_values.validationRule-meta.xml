@@ -4,6 +4,6 @@
     <active>true</active>
     <errorConditionFormula>ISPICKVAL(Question_Field_Type__c, &apos;Picklist&apos;) &amp;&amp; 
 
-ISPICKVAL(Existing_Picklist_Values__c, &quot;&quot;) = ISBLANK(Picklist_Values__c)</errorConditionFormula>
+ISPICKVAL(Existing_Picklist_Values__c, &quot;&quot;) = ISBLANK(Picklist_Values__c + Picklist_Values_Long__c)</errorConditionFormula>
     <errorMessage>When Question Type = Picklist, one of the Picklist Type fields must have a value for record to be saved.</errorMessage>
 </ValidationRule>

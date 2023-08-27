@@ -76,7 +76,7 @@ public with sharing class SummitEventsRegisterGuestsController {
             eventGuestQuestions = new Map<Id, Summit_Events_Question__c>([
                     SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
                             Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c,
-                            Existing_Picklist_Values__c
+                            Existing_Picklist_Values__c, Picklist_Values_Long__c
                     FROM Summit_Events_Question__c
                     WHERE Event__c = :eventInformation.eventId
                     AND (Registrant_Type__c = 'Guest' OR Registrant_Type__c = 'Registrant and Guest')
@@ -103,8 +103,8 @@ public with sharing class SummitEventsRegisterGuestsController {
                 q.required = seaQuestion.Required__c;
                 if (String.isNotBlank(seaQuestion.Existing_Picklist_Values__c)) {
                     q.picklist = createExistingPicklist(seaQuestion.Existing_Picklist_Values__c);
-                } else if (String.isNotBlank(seaQuestion.Picklist_Values__c)) {
-                    q.picklist = createPicklists(seaQuestion.Picklist_Values__c);
+                } else if (String.isNotBlank(seaQuestion.Picklist_Values__c) || String.isNotBlank(seaQuestion.Picklist_Values_Long__c)) {
+                    q.picklist = createPicklists(seaQuestion.Picklist_Values__c, seaQuestion.Picklist_Values_Long__c);
                 }
                 q.help = seaQuestion.Help_Text__c;
                 q.instructions = seaQuestion.Instructions__c;
@@ -170,21 +170,14 @@ public with sharing class SummitEventsRegisterGuestsController {
         }
     }
 
-    public List<Map<String, String>> createPicklists(String returnSepStringList) {
+    public List<Map<String, String>> createPicklists(String pickListString, String pickListString2) {
         List<Map<String, String>> cpl = new List<Map<String, String>>();
-        if (!String.isBlank(returnSepStringList)) {
+        List<SelectOption> splitList = SummitEventsShared.createPicklistsFromStrings(pickListString, pickListString2);
+        System.debug(splitList);
+        for (SelectOption p : splitList) {
             cpl.add(new Map<String, String>{
-                    'Select...' => ''
+                    p.getLabel() => p.getValue()
             });
-            returnSepStringList = returnSepStringList.trim();
-            returnSepStringList = returnSepStringList.replace('\n\n', '\n');
-            String[] splitList = returnSepStringList.split('\n');
-            for (String p : splitList) {
-                p = p.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', '');
-                cpl.add(new Map<String, String>{
-                        p => p
-                });
-            }
         }
         return cpl;
     }
