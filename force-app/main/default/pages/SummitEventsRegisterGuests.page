@@ -127,14 +127,14 @@
                     </button>
                     <div class="slds-modal__content slds-p-around_medium slds-modal__content_headless" id="modal-content-id-1">
                         <p>
-                            {!IF(ISBLANK(eventPage.Guest_Unsaved_Modal_Text__c),'ou have unsaved guest information entered. Do you wish to continue without saving?', eventPage.Guest_Unsaved_Modal_Text__c)}
+                            {!IF(ISBLANK(eventPage.Guest_Unsaved_Modal_Text__c),'You have unsaved Guest information entered. Select Cancel to finish adding your guests.', eventPage.Guest_Unsaved_Modal_Text__c)}
                         </p>
                     </div>
                     <div class="slds-modal__footer">
-                        <button class="slds-button slds-button_neutral cancelSubmit" aria-label="Cancel and close">
+                        <button class="slds-button slds-button_brand cancelSubmit" aria-label="Cancel and close">
                             {!IF(ISBLANK(eventPage.Guest_Unsaved_Cancel_Label__c),'Cancel', eventPage.Guest_Unsaved_Cancel_Label__c)}
                         </button>
-                        <button class="slds-button slds-button_brand continueSubmit">
+                        <button class="slds-button  slds-button_neutral continueSubmit">
                             {!IF(ISBLANK(eventPage.Guest_Unsaved_Continue_Label__c),'Continue', eventPage.Guest_Unsaved_Continue_Label__c)}
                         </button>
                     </div>

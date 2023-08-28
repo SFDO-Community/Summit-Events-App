@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Guest_Unsaved_Modal_Text__c</fullName>
-    <defaultValue>&quot;You have unsaved guest information entered. Do you wish to continue without saving?&quot;</defaultValue>
+    <defaultValue>&quot;You have unsaved Guest information entered. Select Cancel to finish adding your guests.&quot;</defaultValue>
     <description>This text appears in the dialog that pops up if unsaved guest information is present.</description>
     <externalId>false</externalId>
     <inlineHelpText>This text appears in the dialog that pops up if unsaved guest information is present.</inlineHelpText>
