@@ -48,8 +48,6 @@ public with sharing class SummitEventsCancelReviewController {
 
                         templateSelected = SummitEventsShared.getTemplate(eventRegistration.Event__r.Template__c);
 
-                        SummitEventsShared SEShared = new SummitEventsShared();
-
                         appointments = [
                                 SELECT Id, Appointment_Title__c, Appointment_Category__c, Appointment_Type__c
                                 FROM Summit_Events_Appointments__c

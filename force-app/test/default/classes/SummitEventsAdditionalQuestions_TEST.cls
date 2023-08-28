@@ -46,9 +46,8 @@ private class SummitEventsAdditionalQuestions_TEST {
             PageReference pageRef = Page.SummitEventsAdditionalQuestions;
             Test.setCurrentPage(pageRef);
 
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
             //Page stays where it is because cookie present
@@ -87,9 +86,8 @@ private class SummitEventsAdditionalQuestions_TEST {
             pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
 
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
 
@@ -130,10 +128,8 @@ private class SummitEventsAdditionalQuestions_TEST {
             pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
 
-
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
 
@@ -186,9 +182,8 @@ private class SummitEventsAdditionalQuestions_TEST {
             PageReference pageRef = Page.SummitEventsAdditionalQuestions;
             Test.setCurrentPage(pageRef);
 
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
             //Test question with field that doesn't exist for map_to_field__c
@@ -235,9 +230,8 @@ private class SummitEventsAdditionalQuestions_TEST {
             PageReference pageRef = Page.SummitEventsAdditionalQuestions;
             Test.setCurrentPage(pageRef);
 
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
             testQuestions[0].Lookup_Object__c = 'Blah';
             testQuestions[0].Lookup_Fields__c = 'Blah';
             update testQuestions;
@@ -274,9 +268,8 @@ private class SummitEventsAdditionalQuestions_TEST {
             PageReference pageRef = Page.SummitEventsAdditionalQuestions;
             Test.setCurrentPage(pageRef);
 
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
 

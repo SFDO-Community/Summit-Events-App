@@ -455,7 +455,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
     @RemoteAction
     public static List<queryReturn> lookupSearch(String question, String term) {
-        SummitEventsShared SeaShared = new SummitEventsShared();
+
         List<queryReturn> returnValues = new List<queryReturn>();
         if (String.isNotBlank(question) && String.isNotBlank(term)) {
             question = SummitEventsShared.decryptString(question, true);

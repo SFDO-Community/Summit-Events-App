@@ -619,7 +619,6 @@ public with sharing class SummitEventsRegisterController {
             }
 
             //Update encrypted cookie
-            SummitEventsShared SeaShared = new SummitEventsShared();
             SummitEventsShared.createEncryptedCookie(registrantAudience, eventRegistration.Event_Instance__c, eventRegistration.Event__c, eventRegistration.Id);
 
             return eventRegistration;

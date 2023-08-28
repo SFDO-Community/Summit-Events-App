@@ -10,8 +10,7 @@ private class SummitEventsCancelReview_TEST {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
-        SummitEventsShared SEAShared = new SummitEventsShared();
-        String encryptedString = SEAShared.createEncryptedCookie('', seaTestRegistration.Event_Instance__c, seaTestRegistration.Event__c, seaTestRegistration.Id);
+        String encryptedString = SummitEventsShared.createEncryptedCookie('', seaTestRegistration.Event_Instance__c, seaTestRegistration.Event__c, seaTestRegistration.Id);
         encryptedString = EncodingUtil.urlDecode(encryptedString, 'UTF-8');
         if (encryptedString.length() > 255) {
             seaTestRegistration.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);
@@ -49,8 +48,7 @@ private class SummitEventsCancelReview_TEST {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
-        SummitEventsShared SEAShared = new SummitEventsShared();
-        String encryptedString = SEAShared.createEncryptedCookie('', seaTestRegistration.Event_Instance__c, seaTestRegistration.Event__c, seaTestRegistration.Id);
+        String encryptedString = SummitEventsShared.createEncryptedCookie('', seaTestRegistration.Event_Instance__c, seaTestRegistration.Event__c, seaTestRegistration.Id);
         encryptedString = EncodingUtil.urlDecode(encryptedString, 'UTF-8');
         if (encryptedString.length() > 255) {
             seaTestRegistration.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);
@@ -66,7 +64,7 @@ private class SummitEventsCancelReview_TEST {
             PageReference pageRef = Page.SummitEventsCancelReview;
             pageRef.getParameters().put('eventInfo', seaTestRegistration.Encrypted_Registration_Id_1__c + seaTestRegistration.Encrypted_Registration_Id_2__c);
             Test.setCurrentPage(pageRef);
-            String encryptedRegistrationId = SEAShared.createEncryptedCookie('', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            String encryptedRegistrationId = SummitEventsShared.createEncryptedCookie('', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
             ApexPages.currentPage().getParameters().put('eventInfo', encryptedRegistrationId + 'TAMPER');
             SummitEventsCancelReviewController cancelReviewCtrl = new SummitEventsCancelReviewController();
             cancelReviewCtrl.cancelRegistration();

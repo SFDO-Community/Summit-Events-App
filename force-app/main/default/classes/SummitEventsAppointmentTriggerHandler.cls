@@ -67,7 +67,6 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
 
             if (allAppointments.size() > 0) {
 
-                SummitEventsShared seaShared = new SummitEventsShared();
                 Map<Id, List<Summit_Events_Appointments__c>> appointmentListByRegistration = new Map<Id, List<Summit_Events_Appointments__c>>();
                 //Get event itinerary generating parameters
                 Set<Id> eventIds = new Set<Id>();
@@ -170,10 +169,10 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                             currentRegAppointment += '<b>' + apt.Appointment_Title__c.trim() + '</b><br/>';
                         }
                         if (String.isNotBlank(apt.Description__c)) {
-                            currentRegAppointment += seaShared.removeHTMLandEscape(apt.Description__c, false).trim() + '<br/>';
+                            currentRegAppointment += SummitEventsShared.removeHTMLandEscape(apt.Description__c, false).trim() + '<br/>';
                         }
                         if (String.isNotBlank(apt.Registrant_Input__c)) {
-                            currentRegAppointment += seaShared.removeHTMLandEscape(apt.Registrant_Input__c, false).trim() + '<br/>';
+                            currentRegAppointment += SummitEventsShared.removeHTMLandEscape(apt.Registrant_Input__c, false).trim() + '<br/>';
                         }
                         if (String.isNotBlank(currentRegAppointment)) {
                             requestedAppointments += currentRegAppointment + '<br/>';

@@ -240,8 +240,6 @@ public with sharing class SummitEventsConfirmationController {
                         eventRegistration.Status__c = 'Registered';
                         eventRegistration = regCRUD.updateRegistration(eventRegistration);
 
-                        SummitEventsShared SEAShared = new SummitEventsShared();
-
                         //Remove the registration ID from the cookie so back button will redirect to the correct page.
                         SummitEventsShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, '');
                     } else {
