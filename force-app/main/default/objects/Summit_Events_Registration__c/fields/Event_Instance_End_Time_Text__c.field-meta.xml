@@ -10,7 +10,7 @@ IF( MINUTE(Event_Instance_End_Time__c)  &lt; 10 , &quot;0&quot; &amp; TEXT( MINU
 &amp;
 &quot; &quot;
 &amp;
-IF( HOUR(Event_Instance_End_Time__c) &gt;= 13, &quot;PM&quot;, &quot;AM&quot;)</formula>
+IF( HOUR(Event_Instance_End_Time__c) &gt;= 12, &quot;PM&quot;, &quot;AM&quot;)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Event Instance End Time Text</label>
     <required>false</required>
