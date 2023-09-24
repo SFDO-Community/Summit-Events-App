@@ -2611,8 +2611,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Event_Fee_Submit_List_Label__c</fieldItem>
-                <identifier>record_item_116</identifier>
+                <fieldItem>Record.Event_Fees_Received_Label__c</fieldItem>
+                <identifier>RecordEvent_Fees_Received_Label_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-898af6dc-1c84-435e-be26-075f1ef026e6</name>
@@ -2627,6 +2627,16 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Event_Fee_Total_Label__c</fieldItem>
                 <identifier>record_item_117</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Fee_Submit_List_Label__c</fieldItem>
+                <identifier>record_item_116</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-59d9f745-618f-4d64-bc94-e4bc5cf26806</name>

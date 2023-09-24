@@ -116,6 +116,16 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                         </apex:outputText>
                                     </td>
                                 </tr>
+                                <apex:outputPanel layout="none" rendered="{!!ISBLANK(existingPaymentAmount)}">
+                                    <tr class="eventOnlyCost">
+                                        <td>{!IF(ISBLANK(eventPage.Event_Fees_Received_Label__c),'Payment Recieved', eventPage.Event_Fees_Received_Label__c)}</td>
+                                        <td class="slds-text-align_right">
+                                            <apex:outputText value="${0,number,###,###,###,##0.00}">
+                                                <apex:param value="{!existingPaymentAmount}"/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </apex:outputPanel>
                                 <tr class="eventTotalCost">
                                     <td class="slds-cell_action-mode"><strong>{!IF(ISBLANK(eventPage.Event_Fee_Total_Label__c),'Event Cost', eventPage.Event_Fee_Total_Label__c)}</strong></td>
                                     <td class="slds-text-align_right slds-cell_action-mode">

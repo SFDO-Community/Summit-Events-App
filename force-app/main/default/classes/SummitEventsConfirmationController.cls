@@ -40,7 +40,7 @@ public with sharing class SummitEventsConfirmationController {
                             Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Confirmation_Registration__c, Event_Full_Text__c,
                             Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Hand_Raise_Action__c, Account__r.Name, Audience__c,
                             Filter_Category__c, Event_Sponsor__c, Event_Fee_Label__c, Event_Fee_Submit_List_Label__c, Event_Fee_Total_Label__c,
-                            Event_Fee__c, Event_Fee_Allocation__c, Event_Fee_Additional__c
+                            Event_Fee__c, Event_Fee_Allocation__c, Event_Fee_Additional__c, Event_Fees_Received_Label__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -265,15 +265,15 @@ public with sharing class SummitEventsConfirmationController {
                 WITH SECURITY_ENFORCED
         ];
 
-        Integer payments = [
-                SELECT COUNT()
+        List<Summit_Events_Payment__c> payments = [
+                SELECT Id, Payment_Amount__c
                 FROM Summit_Events_Payment__c
                 WHERE Event_Registration__c = :eventInformation.registrationId
         ];
 
         String errorMessage = '';
 
-        if (payments == 1) {
+        if (payments.size() > 0) {
             paymentReceived = true;
             //Payment received. Get payment fees to display.
             feesByIndex = new Map<String, String>();
@@ -288,13 +288,13 @@ public with sharing class SummitEventsConfirmationController {
                 }
 
             }
-            if (existingPaymentAmount > 0) {
-                totalPaymentAmount = totalPaymentAmount - existingPaymentAmount;
-            }
+            existingPaymentAmount = payments[0].Payment_Amount__c;
+            totalPaymentAmount = totalPaymentAmount - payments[0].Payment_Amount__c;
             if (totalPaymentAmount > 0) {
                 hasFees = true;
             }
-        } else if (payments == 0) {
+
+        } else if (payments.size() == 0) {
             errorMessage = 'Payment was not received. Please try again.';
         } else {
             errorMessage = 'Multiple payments were received. Please contact event.';
