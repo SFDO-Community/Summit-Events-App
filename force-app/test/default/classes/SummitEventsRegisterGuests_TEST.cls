@@ -13,7 +13,7 @@ private class SummitEventsRegisterGuests_TEST {
         Test.setCurrentPage(pageRef);
 
         SummitEventsRegisterGuestsController guestController = new SummitEventsRegisterGuestsController();
-        System.assertEquals(JSON.serialize(guestController.eventInformation), '{"registrationId":null,"instanceId":null,"eventId":null,"dt":null,"audience":null}');
+        System.assertEquals(JSON.serialize(guestController.eventInformation), '{"valid":null,"registrationId":null,"instanceId":null,"eventId":null,"dt":null,"audience":null}');
 
     }
 
@@ -46,7 +46,7 @@ private class SummitEventsRegisterGuests_TEST {
             System.assertEquals(pageCheck.getUrl(), 'https://google.com/' + namespace + 'SummitEvents');
 
             Datetime nowTime = Datetime.now();
-            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime, true);
 
 
             guestController = new SummitEventsRegisterGuestsController();
@@ -56,7 +56,7 @@ private class SummitEventsRegisterGuests_TEST {
             System.assertEquals(pageCheck, null);
 
             //Correct encrypted cooke information decrypted
-            System.assertEquals(JSON.serialize(guestController.eventInformation), '{"registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
+            System.assertEquals(JSON.serialize(guestController.eventInformation), '{"valid":"true","registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
 
             //Create question answer JSON object
             List<SummitEventsRegisterGuestsController.questionGuestData> guestsQuestions = new List<SummitEventsRegisterGuestsController.questionGuestData>();
@@ -123,7 +123,7 @@ private class SummitEventsRegisterGuests_TEST {
             System.assertEquals(pageCheck.getUrl(), 'https://google.com/' + namespace + 'SummitEvents');
 
             Datetime nowTime = Datetime.now();
-            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime, true);
 
             guestController = new SummitEventsRegisterGuestsController();
 
@@ -134,7 +134,7 @@ private class SummitEventsRegisterGuests_TEST {
             System.assertEquals(guestController.previousPage().getUrl(), '/apex/' + namespace + 'summiteventsregister?adminopen=true');
 
             //Correct encrypted cooke information decrypted
-            System.assertEquals(JSON.serialize(guestController.eventInformation), '{"registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
+            System.assertEquals(JSON.serialize(guestController.eventInformation), '{"valid":"true","registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
 
             //Create question answer JSON object
             List<SummitEventsRegisterGuestsController.questionGuestData> guestsQuestions = new List<SummitEventsRegisterGuestsController.questionGuestData>();
@@ -194,7 +194,7 @@ private class SummitEventsRegisterGuests_TEST {
             Test.setCurrentPage(pageRef);
 
             Datetime nowTime = Datetime.now();
-            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime,true);
 
             SummitEventsRegisterGuestsController guestController = new SummitEventsRegisterGuestsController();
 
@@ -204,7 +204,7 @@ private class SummitEventsRegisterGuests_TEST {
             System.assertEquals(guestQuestions[1].setupError, 'Field ' + namespace + 'Total_Confirmed_Appointments__c is not writable. ');
 
             //Correct encrypted cooke information decrypted
-            System.assertEquals(JSON.serialize(guestController.eventInformation), '{"registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
+            System.assertEquals(JSON.serialize(guestController.eventInformation), '{"valid":"true","registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
 
 
             Test.stopTest();
@@ -239,7 +239,7 @@ private class SummitEventsRegisterGuests_TEST {
             Test.setCurrentPage(pageRef);
 
             Datetime nowTime = Datetime.now();
-            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime,true);
 
             SummitEventsRegisterGuestsController guestController = new SummitEventsRegisterGuestsController();
 

@@ -1,6 +1,7 @@
 {
   "orgName": "Summit Events Dev",
   "edition": "Developer",
+  "release": "preview",
   "features": ["Sites"],
   "settings": {
     "lightningExperienceSettings": {

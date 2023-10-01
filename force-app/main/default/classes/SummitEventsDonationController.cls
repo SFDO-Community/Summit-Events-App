@@ -119,7 +119,7 @@ public with sharing class SummitEventsDonationController {
     }
 
     public PageReference checkEventDetails() {
-        return SummitEventsShared.checkForEvent();
+        return SummitEventsShared.checkForEvent('donation');
     }
 
     public PageReference submitDonation() {

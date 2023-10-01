@@ -22,7 +22,7 @@ private class SummitEventsSubmit_TEST {
             pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
 
-            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, true);
 
             //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
             SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
@@ -54,7 +54,7 @@ private class SummitEventsSubmit_TEST {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsSubmit;
             Test.setCurrentPage(pageRef);
-            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, true);
 
             //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
             SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
@@ -99,7 +99,7 @@ private class SummitEventsSubmit_TEST {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsSubmit;
             Test.setCurrentPage(pageRef);
-            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, true);
 
             //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
             SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();
@@ -143,7 +143,7 @@ private class SummitEventsSubmit_TEST {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsSubmit;
             Test.setCurrentPage(pageRef);
-            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, true);
 
             //ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances.Id);
             SummitEventsSubmitController submitCtrl = new SummitEventsSubmitController();

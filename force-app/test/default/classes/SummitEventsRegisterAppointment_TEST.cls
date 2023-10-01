@@ -31,7 +31,7 @@ private class SummitEventsRegisterAppointment_TEST {
             PageReference checkPage = optionsCtrl.checkEventDetails();
             System.assertEquals(checkPage.getUrl(), 'https://google.com/' + namespace + 'SummitEvents');
 
-            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, true);
             optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
 
             //Check event details should return null because event

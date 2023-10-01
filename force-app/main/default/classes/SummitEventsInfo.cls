@@ -9,4 +9,5 @@ public with sharing class SummitEventsInfo {
     public String eventId { get; set; }
     public String registrationId { get; set; }
     public String dt { get; set; }
+    public String valid { get; set; }
 }

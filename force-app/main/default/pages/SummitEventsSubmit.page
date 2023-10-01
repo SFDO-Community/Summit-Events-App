@@ -137,7 +137,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                         </div>
 
-                        <apex:outputPanel layout="block" rendered="{!hasFees}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
+                        <apex:outputPanel layout="block" rendered="{!eventFees.size > 0}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
                             <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">{!IF(ISBLANK(eventPage.Event_Fee_Submit_List_Label__c),'Event Charges', eventPage.Event_Fee_Submit_List_Label__c)}</h3>
 
                             <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
@@ -171,7 +171,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     </apex:outputPanel>
                                 </apex:repeat>
                                 <tr class="eventTotalCost">
-                                    <td class="slds-cell_action-mode"><strong>{!IF(ISBLANK(eventPage.Event_Fee_Total_Label__c),'Event Cost', eventPage.Event_Fee_Total_Label__c)}</strong></td>
+                                    <td class="slds-cell_action-mode"><strong>{!IF(ISBLANK(eventPage.Event_Fee_Total_Label__c),'Total', eventPage.Event_Fee_Total_Label__c)}</strong></td>
                                     <td class="slds-text-align_right slds-cell_action-mode">
                                         <strong>
                                             <apex:outputText value="${0,number,###,###,###,##0.00}">

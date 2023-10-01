@@ -11,8 +11,8 @@ private class SummitEventsParkingPass_TEST {
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[2], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         Summit_Events_Registration__c seaTestRegistration2 = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst2', 'TestLast2', 'test2@valleyhill.net', '55418', '1971-03-22', '2012', null);
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
-        String encryptedString = SummitEventsShared.createEncryptedCookie('', seaTestRegistration.Event_Instance__c, seaTestRegistration.Event__c, seaTestRegistration.Id);
-        String encryptedString2 = SummitEventsShared.createEncryptedCookie('', seaTestRegistration2.Event_Instance__c, seaTestRegistration2.Event__c, seaTestRegistration2.Id);
+        String encryptedString = SummitEventsShared.createEncryptedCookie('', seaTestRegistration.Event_Instance__c, seaTestRegistration.Event__c, seaTestRegistration.Id, true);
+        String encryptedString2 = SummitEventsShared.createEncryptedCookie('', seaTestRegistration2.Event_Instance__c, seaTestRegistration2.Event__c, seaTestRegistration2.Id, true);
         encryptedString = EncodingUtil.urlDecode(encryptedString, 'UTF-8');
         encryptedString2 = EncodingUtil.urlDecode(encryptedString2, 'UTF-8');
         if (encryptedString.length() > 255) {

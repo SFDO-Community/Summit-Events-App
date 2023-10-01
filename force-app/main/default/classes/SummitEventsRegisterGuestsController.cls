@@ -174,7 +174,6 @@ public with sharing class SummitEventsRegisterGuestsController {
     public List<Map<String, String>> createPicklists(String pickListString, String pickListString2) {
         List<Map<String, String>> cpl = new List<Map<String, String>>();
         List<SelectOption> splitList = SummitEventsShared.createPicklistsFromStrings(pickListString, pickListString2);
-        System.debug(splitList);
         for (SelectOption p : splitList) {
             cpl.add(new Map<String, String>{
                     p.getLabel() => p.getValue()
@@ -212,7 +211,7 @@ public with sharing class SummitEventsRegisterGuestsController {
     }
 
     public PageReference checkEventDetails() {
-        return SummitEventsShared.checkForEvent();
+        return SummitEventsShared.checkForEvent('guest');
     }
 
     public PageReference saveGuests() {

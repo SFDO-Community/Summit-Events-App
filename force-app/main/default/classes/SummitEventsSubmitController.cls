@@ -20,7 +20,6 @@ public with sharing class SummitEventsSubmitController {
     public List<questionGuestData> guestAnswers { get; set; }
     public Map<String, PageReference> pageFlow { get; set; }
     public Boolean hasPaymentGateway { get; set; }
-    public Boolean hasFees { get; set; }
     public Boolean hasMessages { get; set; }
 
     public class questionGuestData {
@@ -35,7 +34,6 @@ public with sharing class SummitEventsSubmitController {
     }
 
     public SummitEventsSubmitController() {
-        hasFees = false;
         hasMessages = false;
 
         //Get cookie or URL string variable
@@ -176,9 +174,6 @@ public with sharing class SummitEventsSubmitController {
                     totalPaymentAmount = totalPaymentAmount - existingPaymentAmount;
                 }
             }
-            if (totalPaymentAmount > 0) {
-                hasFees = true;
-            }
         }
         ApexPages.Message[] pageMessages = ApexPages.getMessages();
         if (pageMessages.size() > 0) {
@@ -188,7 +183,7 @@ public with sharing class SummitEventsSubmitController {
     }
 
     public PageReference checkEventDetails() {
-        return SummitEventsShared.checkForEvent();
+        return SummitEventsShared.checkForEvent('submit');
     }
 
     public PageReference submitRegistration() {

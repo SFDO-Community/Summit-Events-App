@@ -176,7 +176,7 @@ public with sharing class SummitEventsShared {
     }
 
     public static SummitEventsInfo getSummitEventsInfo() {
-        //{"audience":"High School Senior","instanceId":"a320m000000A5fOAAS","registrationId":"a350m0000008q63AAA,"eventId":"a330m0000001SOrAAM"}
+        //{"audience":"High School Senior","instanceId":"a320m000000A5fOAAS","registrationId":"a350m0000008q63AAA,"eventId":"a330m0000001SOrAAM","valid":"true"}
         SummitEventsInfo eventInformation = new SummitEventsInfo();
         String URLAudience = '';
         if (String.isNotBlank(ApexPages.currentPage().getParameters().get('audience'))) {
@@ -250,13 +250,13 @@ public with sharing class SummitEventsShared {
         return eventInformation;
     }
 
-    public static PageReference checkForEvent() {
+    public static PageReference checkForEvent(String pageName) {
         PageReference myVFPage;
         SummitEventsInfo eventInformation = getSummitEventsInfo();
 
         Boolean onRegistrationPage = false;
-        String[] currentURL = ApexPages.currentPage().getUrl().split('\\?');
-        if (currentURL[0].endsWithIgnoreCase('SummitEventsRegister')) {
+
+        if (pagename.endsWithIgnoreCase('register')) {
             onRegistrationPage = true;
         }
 
@@ -274,6 +274,13 @@ public with sharing class SummitEventsShared {
         }
 
         String newRegistrationId = eventInformation.registrationId;
+
+        if (String.isNotBlank(eventInformation.valid) && eventInformation.valid.equalsIgnoreCase('false')) {
+            newRegistrationId = '';
+            //Set on registration to false because we need logic to fire below as if we are not there to reset the registration id
+            onRegistrationPage = false;
+        }
+
         if (String.isNotBlank(newInstanceId)) {
             Summit_Events_Instance__c eventPage = [
                     SELECT Event__r.Event_Home_Link_URL__c
@@ -327,26 +334,29 @@ public with sharing class SummitEventsShared {
             myVFPage = new PageReference(newUrl);
             myVFPage.setRedirect(true);
             newRegistrationId = '';
-            createEncryptedCookie(eventInformation.audience, newInstanceId, eventInformation.eventId, newRegistrationId);
+            createEncryptedCookie(eventInformation.audience, newInstanceId, eventInformation.eventId, newRegistrationId, true);
         } else if (onRegistrationPage) {
-            createEncryptedCookie(eventInformation.audience, newInstanceId, eventInformation.eventId, newRegistrationId);
+            createEncryptedCookie(eventInformation.audience, newInstanceId, eventInformation.eventId, newRegistrationId, true);
         }
 
         return myVFPage;
     }
 
-    public static String createEncryptedCookie(String audience, String instanceId, String eventId, String registrationId) {
+    public static String createEncryptedCookie(String audience, String instanceId, String eventId, String registrationId, Boolean valid) {
         //Check everything to not let nulls through to JSON string
-        return createEncryptedCookieWithNow(audience, instanceId, eventId, registrationId, Datetime.now());
+        System.debug(registrationId);
+        return createEncryptedCookieWithNow(audience, instanceId, eventId, registrationId, Datetime.now(), valid);
     }
 
-    public static String createEncryptedCookieWithNow(String audience, String instanceId, String eventId, String registrationId, Datetime nowTime) {
+    public static String createEncryptedCookieWithNow(String audience, String instanceId, String eventId, String registrationId, Datetime nowTime, Boolean valid) {
         //Check everything to not let nulls through to JSON string
+        System.debug(registrationId);
         audience = (String.isNotBlank(audience) && !audience.equalsIgnoreCase('null')) ? audience : '';
         instanceId = (String.isNotBlank(instanceId) && !instanceId.equalsIgnoreCase('null')) ? instanceId : '';
         eventId = (String.isNotBlank(eventId) && !eventId.equalsIgnoreCase('null')) ? eventId : '';
         registrationId = (String.isNotBlank(registrationId) && !registrationId.equalsIgnoreCase('null')) ? registrationId : '';
-        String CookieValue = encryptString('{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '","dt":"' + String.valueOf(nowTime) + '"}');
+        valid = (valid != null) ? valid : false;
+        String CookieValue = encryptString('{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '","dt":"' + String.valueOf(nowTime) + '","valid":"' + String.valueOf(valid) + '"}');
         Cookie SummitEventsCookie = new Cookie('SummitEvents', CookieValue, null, -1, true, 'Strict');
         ApexPages.currentPage().setCookies(new Cookie[]{
                 SummitEventsCookie
@@ -619,7 +629,7 @@ public with sharing class SummitEventsShared {
         splitList.addAll(sanitizePicklistString(returnSepStringList2));
         for (String p : splitList) {
             p = p.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', '');
-            if(String.isNotBlank(p)) {
+            if (String.isNotBlank(p)) {
                 cpl.add(new SelectOption(p, p));
             }
         }

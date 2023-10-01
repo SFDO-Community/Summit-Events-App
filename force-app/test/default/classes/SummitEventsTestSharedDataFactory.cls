@@ -313,7 +313,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
         insert testRegistration;
 
         //create encrypted string
-        String encryptedString = SummitEventsShared.createEncryptedCookie('', testRegistration.Event_Instance__c, testRegistration.Event__c, testRegistration.Id);
+        String encryptedString = SummitEventsShared.createEncryptedCookie('', testRegistration.Event_Instance__c, testRegistration.Event__c, testRegistration.Id, true);
 
         if (encryptedString.length() > 255) {
             testRegistration.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);

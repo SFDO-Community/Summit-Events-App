@@ -363,7 +363,7 @@ public with sharing class SummitEventsRegisterController {
     }
 
     public PageReference checkEventDetails() {
-        return SummitEventsShared.checkForEvent();
+        return SummitEventsShared.checkForEvent('register');
     }
 
     public List<SelectOption> getSexDD() {
@@ -619,7 +619,7 @@ public with sharing class SummitEventsRegisterController {
             }
 
             //Update encrypted cookie
-            SummitEventsShared.createEncryptedCookie(registrantAudience, eventRegistration.Event_Instance__c, eventRegistration.Event__c, eventRegistration.Id);
+            SummitEventsShared.createEncryptedCookie(registrantAudience, eventRegistration.Event_Instance__c, eventRegistration.Event__c, eventRegistration.Id, true);
 
             return eventRegistration;
         }

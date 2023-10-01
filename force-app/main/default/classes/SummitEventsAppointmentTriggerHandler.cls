@@ -219,7 +219,6 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
         for (String appointmentField : appointmentObjectFields) {
             appointmentObjectFieldsLowercase.add(appointmentField.toLowerCase());
         }
-        System.debug(appointmentObjectFields);
 
         //Keep track of already added fields so as not to corrupt the query with a duplicate
         Set<String> fieldsFound = new Set<String>();
