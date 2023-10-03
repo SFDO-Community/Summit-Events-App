@@ -227,7 +227,6 @@ public with sharing class SummitEventsConfirmationController {
                         //Build encrypted string for registration. Used for cancel link or other services outside of Summit Events App
                         //valid = false will not work for registration pages, only confirmation and cancel registration pages
 
-                        System.debug(eventInformation.registrationId);
                         String encryptedString = SummitEventsShared.createEncryptedCookie(eventInformation.audience, eventInformation.instanceId, eventInformation.eventId, eventInformation.registrationId, false);
 
                         if (encryptedString.length() > 255) {

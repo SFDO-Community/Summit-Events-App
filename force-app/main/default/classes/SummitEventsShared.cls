@@ -218,7 +218,7 @@ public with sharing class SummitEventsShared {
         }
 
         //check if registration id is there and whether status it is set to registered. IF so reset cookie if it is.
-        if (String.isNotBlank(eventInformation.registrationId)) {
+        if (String.isNotBlank(eventInformation.registrationId) && String.isBlank(eventInformation.valid)) {
             Summit_Events_Registration__c evtReg = new Summit_Events_Registration__c();
             try {
                 evtReg = [
@@ -256,7 +256,7 @@ public with sharing class SummitEventsShared {
 
         Boolean onRegistrationPage = false;
 
-        if (pagename.endsWithIgnoreCase('register')) {
+        if (pageName.endsWithIgnoreCase('register')) {
             onRegistrationPage = true;
         }
 
@@ -275,10 +275,8 @@ public with sharing class SummitEventsShared {
 
         String newRegistrationId = eventInformation.registrationId;
 
-        if (String.isNotBlank(eventInformation.valid) && eventInformation.valid.equalsIgnoreCase('false')) {
+        if (String.isNotBlank(eventInformation.valid) && eventInformation.valid.equalsIgnoreCase('false') && !pageName.equalsIgnoreCase('confirmation')) {
             newRegistrationId = '';
-            //Set on registration to false because we need logic to fire below as if we are not there to reset the registration id
-            onRegistrationPage = false;
         }
 
         if (String.isNotBlank(newInstanceId)) {
@@ -344,13 +342,12 @@ public with sharing class SummitEventsShared {
 
     public static String createEncryptedCookie(String audience, String instanceId, String eventId, String registrationId, Boolean valid) {
         //Check everything to not let nulls through to JSON string
-        System.debug(registrationId);
+        System.debug('Create cookie reg id: '+ registrationId);
         return createEncryptedCookieWithNow(audience, instanceId, eventId, registrationId, Datetime.now(), valid);
     }
 
     public static String createEncryptedCookieWithNow(String audience, String instanceId, String eventId, String registrationId, Datetime nowTime, Boolean valid) {
         //Check everything to not let nulls through to JSON string
-        System.debug(registrationId);
         audience = (String.isNotBlank(audience) && !audience.equalsIgnoreCase('null')) ? audience : '';
         instanceId = (String.isNotBlank(instanceId) && !instanceId.equalsIgnoreCase('null')) ? instanceId : '';
         eventId = (String.isNotBlank(eventId) && !eventId.equalsIgnoreCase('null')) ? eventId : '';
