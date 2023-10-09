@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Event_Fees_Received_Label__c</fullName>
+    <defaultValue>&quot;Payments Received&quot;</defaultValue>
     <description>Appears on the confirmation page as title to the itemized list of fees where fee received is displayed. Defaults to &quot;Payments Received&quot;</description>
     <externalId>false</externalId>
     <inlineHelpText>Appears on the confirmation page as title to the itemized list of fees where fee received is displayed. Defaults to &quot;Payments Received&quot;</inlineHelpText>

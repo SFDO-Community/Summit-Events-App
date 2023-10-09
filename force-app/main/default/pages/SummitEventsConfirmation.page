@@ -79,17 +79,11 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">Payment Received</h3>
                             </outputPanel>
 
+                            <outputPanel layout="none" rendered="{!!paymentReceived}">
+                                <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">Payment Due</h3>
+                            </outputPanel>
+
                             <table class="slds-table slds-table_cell-buffer slds-table_bordered">
-                                <thead>
-                                <tr class="slds-line-height_reset">
-                                    <th class="" scope="col">
-                                        <div class="slds-truncate" title="Item">Item</div>
-                                    </th>
-                                    <th class="" scope="col">
-                                        <div class="slds-truncate" title="Fee">Fee</div>
-                                    </th>
-                                </tr>
-                                </thead>
                                 <tbody>
                                 <apex:repeat value="{!eventFees}" var="fee">
                                     <apex:outputPanel rendered="{!fee.Event_Fee_Type__c != 'Event' && fee.Event_Fee_Type__c != 'Event Additional'}">

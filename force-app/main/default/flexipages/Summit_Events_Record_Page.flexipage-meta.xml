@@ -2615,6 +2615,26 @@
                 <identifier>RecordEvent_Fees_Received_Label_cField</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Payment_Due_Heading_Label__c</fieldItem>
+                <identifier>RecordEvent_Payment_Due_Heading_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Payment_Due_Description__c</fieldItem>
+                <identifier>RecordEvent_Payment_Due_Description_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-898af6dc-1c84-435e-be26-075f1ef026e6</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -2637,6 +2657,26 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Event_Fee_Submit_List_Label__c</fieldItem>
                 <identifier>record_item_116</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Payment_Received_Heading_Label__c</fieldItem>
+                <identifier>RecordEvent_Payment_Received_Heading_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Payment_Received_Description__c</fieldItem>
+                <identifier>RecordEvent_Payment_Received_Description_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-59d9f745-618f-4d64-bc94-e4bc5cf26806</name>

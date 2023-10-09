@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Event_Fee_Total_Label__c</fullName>
+    <defaultValue>&quot;Total&quot;</defaultValue>
     <description>Appears on the total cost line of the submit page fee listing. Defaults to &quot;Total&quot;</description>
     <externalId>false</externalId>
     <inlineHelpText>Appears on the total cost line of the submit page fee listing. Defaults to &quot;Total&quot;</inlineHelpText>
