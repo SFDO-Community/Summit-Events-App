@@ -37,7 +37,8 @@ public with sharing class SummitEventsConfirmationController {
                             Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Confirmation_Registration__c, Event_Full_Text__c,
                             Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Hand_Raise_Action__c, Account__r.Name, Audience__c,
                             Filter_Category__c, Event_Sponsor__c, Event_Fee_Label__c, Event_Fee_Submit_List_Label__c, Event_Fee_Total_Label__c,
-                            Event_Fee__c, Event_Fee_Allocation__c, Event_Fee_Additional__c, Event_Fees_Received_Label__c
+                            Event_Fee__c, Event_Fee_Allocation__c, Event_Fee_Additional__c, Event_Fees_Received_Label__c, Event_Payment_Due_Description__c,
+                            Event_Payment_Due_Heading_Label__c, Event_Payment_Received_Heading_Label__c, Event_Payment_Received_Description__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
