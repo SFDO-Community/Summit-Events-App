@@ -1369,10 +1369,6 @@
                 <identifier>record_item_075</identifier>
             </fieldInstance>
         </itemInstances>
-        <name>Facet-49c2a790-1cbe-40c2-9641-a7ea496a54a4</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
@@ -1383,6 +1379,10 @@
                 <identifier>record_item_076</identifier>
             </fieldInstance>
         </itemInstances>
+        <name>Facet-49c2a790-1cbe-40c2-9641-a7ea496a54a4</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
@@ -1391,6 +1391,16 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Add_Info_Question_Pick_List_4__c</fieldItem>
                 <identifier>record_item_077</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Add_Info_Question_Pick_List_Long_4__c</fieldItem>
+                <identifier>RecordAdd_Info_Question_Pick_List_Long_4_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-4353a557-f62b-4122-82be-c765aed4626f</name>
