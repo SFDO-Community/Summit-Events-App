@@ -775,6 +775,10 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                     </apex:selectList>
                                                 </apex:outputPanel>
 
+                                                <div class="slds-form-element__help" >
+                                                    {!IF(isRequired, 'This field is required', '')}
+                                                </div>
+
                                             </apex:outputPanel>
                                         </div>
                                     </div>
