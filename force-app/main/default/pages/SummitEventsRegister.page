@@ -540,7 +540,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 <div class="slds-form-element__help" id="applicantType-required">
                                     {!IF(eventPage.Ask_Last_Name_As_Student__c == 'Ask and require', 'This field is required', '')}
                                 </div>
-                                <div class="slds-form-element__help" id="applicantType-required">This field is required</div>
                             </div>
                         </apex:outputPanel>
 
@@ -557,7 +556,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                     <apex:input value="{!eventRegistration.Preferred_Class_Year__c}" html-aria-describedby="preferredClassYear-required" id="preferredClassYear" styleClass="slds-input validYear" required="{!IF(eventPage.Ask_Preferred_Class_Year__c == 'Ask and require', true, false)}"/>
                                 </div>
                                 <div class="slds-form-element__help" id="preferredClassYear-required">
-                                    {!IF(eventPage.Ask_Preferred_Class_Year__c == 'Ask and require', 'Please enter a valid 4-digit value', '')}
+                                    Please enter a valid 4-digit value
                                 </div>
                             </div>
                         </apex:outputPanel>

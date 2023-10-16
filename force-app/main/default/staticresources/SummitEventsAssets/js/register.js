@@ -96,9 +96,6 @@ function checkForm() {
 
             if (inputRequired && !item.value) {
                 inputWrap.classList.add("slds-has-error");
-                inputWrap.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
-                    errorHelp.style.display = "block"
-                });
                 addErrorFixerListener(item, inputWrap, 'change');
                 error_count++;
             }
@@ -135,10 +132,14 @@ function checkForm() {
 
 function addErrorFixerListener(inpt, wrp, evtType) {
     inpt.addEventListener(evtType, (e) => {
-        wrp.classList.remove("slds-has-error");
-        wrp.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
-            errorHelp.style.display = "none";
-        });
+        if (!inpt.classList.contains('validYear')) {
+            wrp.classList.remove("slds-has-error");
+        } else {
+            let re = new RegExp(/(19|20)\d{2}/);
+            if (re.test(inpt.value)) {
+                wrp.classList.remove("slds-has-error");
+            }
+        }
     });
 }
 
@@ -230,15 +231,9 @@ function formatPhone(phone) {
 function validYear() {
     let yearsToValidate = document.querySelectorAll('.validYear');
     yearsToValidate.forEach(function (yr) {
-
         let yrWrap = yr.closest('.slds-form-element');
+        let inputRequired = yrWrap.classList.contains('slds-is-required');
         yr.addEventListener("keyup", (e) => {
-            if (yrWrap.classList.contains('slds-has-error')) {
-                yrWrap.classList.remove('slds-has-error');
-            }
-            yrWrap.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
-                errorHelp.style.display = "none"
-            });
             yr.value = (yr.value.replace(/\D/g, ''));
             if (yr.value.length > 4) {
                 yr.value = yr.value.slice(0, 4);
@@ -246,17 +241,19 @@ function validYear() {
         });
         yr.addEventListener("change", (e) => {
             let re = new RegExp(/(19|20)\d{2}/);
-            if(yr.value) {
+            yrWrap.classList.remove('slds-has-error');
+            yrWrap.classList.remove('slds-has-info');
+            if (yr.value) {
                 if (!re.test(yr.value)) {
                     yr.value = '';
-                    yrWrap.classList.add('slds-has-error');
-                    yrWrap.querySelectorAll(".slds-form-element__help").forEach(errorHelp => {
-                        errorHelp.style.display = "block"
-                    });
+                    if (inputRequired) {
+                        yrWrap.classList.add('slds-has-error');
+                    } else {
+                        yrWrap.classList.add('slds-has-info');
+                    }
                 }
             }
         });
-
     });
 }
 
