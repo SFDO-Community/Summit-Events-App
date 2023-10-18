@@ -47,8 +47,6 @@ public with sharing class SummitEventsTestSharedDataFactory {
         Time currentTime = Time.newInstance(9, 0, 0, 0);
         //Integer hour, Integer minute, Integer second, Integer millisecond
 
-        System.debug(currentTime);
-
         for (Integer x = -1; x < 10; x++) {
             Summit_Events_Instance__c seaInstance = new Summit_Events_Instance__c();
             seaInstance.Event__c = testEvent.Id;
