@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Add_Info_Question_Pick_List_3__c</fullName>
-    <description>return separated list that will be converted to a pick-list.</description>
+    <description>Return separated list that will be converted to a pick-list.</description>
     <externalId>false</externalId>
-    <inlineHelpText>return separated list that will be converted to a pick-list.</inlineHelpText>
+    <inlineHelpText>Return separated list that will be converted to a pick-list.</inlineHelpText>
     <label>Add Info Question Pick List 3</label>
     <required>false</required>
     <trackHistory>false</trackHistory>

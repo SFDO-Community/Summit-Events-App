@@ -105,7 +105,7 @@
                             <apex:inputHidden value="{!guestJSON}" id="guestJSON"/>
                             <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
                                 <p class="slds-text-body slds-p-vertical_xx-small">
-                                    <apex:commandLink action="{!saveGuests}" onClick="fadeout();" Value="Next" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                    <apex:commandLink action="{!saveGuests}" onClick="return saveGuestModal();" Value="Next" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                                     <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small" immediate="true"/>
                                 </p>
                             </div>
@@ -116,6 +116,32 @@
                     </apex:outputPanel>
                 </div>
             </div>
+
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-label="Meaningful description of the modal content" class="slds-modal" id="unsavedGuestModal">
+                <div class="slds-modal__container">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse cancelSubmit">
+                        <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                        </svg>
+                        <span class="slds-assistive-text">Cancel and close</span>
+                    </button>
+                    <div class="slds-modal__content slds-p-around_medium slds-modal__content_headless" id="modal-content-id-1">
+                        <p>
+                            {!IF(ISBLANK(eventPage.Guest_Unsaved_Modal_Text__c),'You have unsaved Guest information entered. Select Cancel to finish adding your guests.', eventPage.Guest_Unsaved_Modal_Text__c)}
+                        </p>
+                    </div>
+                    <div class="slds-modal__footer">
+                        <button class="slds-button slds-button_brand cancelSubmit" aria-label="Cancel and close">
+                            {!IF(ISBLANK(eventPage.Guest_Unsaved_Cancel_Label__c),'Cancel', eventPage.Guest_Unsaved_Cancel_Label__c)}
+                        </button>
+                        <button class="slds-button  slds-button_neutral continueSubmit">
+                            {!IF(ISBLANK(eventPage.Guest_Unsaved_Continue_Label__c),'Continue', eventPage.Guest_Unsaved_Continue_Label__c)}
+                        </button>
+                    </div>
+                </div>
+            </section>
+            <div class="slds-backdrop" role="presentation" id="unsavedGuestBackground"></div>
+
         </apex:define>
 
     </apex:composition>

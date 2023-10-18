@@ -160,11 +160,12 @@ private class SummitEventsFeed_TEST {
             RestContext.request = req;
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
-
+            Test.startTest();
             System.assert(res.responseBody.toString().contains('testingAnOverride.com'));
             System.assert(res.responseBody.toString().contains('New location override'));
             System.assert(res.responseBody.toString().contains('Map link override'));
             System.assert(res.responseBody.toString().contains('New button override'));
+            Test.stopTest();
         }
     }
 }

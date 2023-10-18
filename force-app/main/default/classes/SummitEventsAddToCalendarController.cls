@@ -5,7 +5,6 @@
 
 public with sharing class SummitEventsAddToCalendarController {
 
-    public SummitEventsShared SEShared = new SummitEventsShared();
     public String DTStart { get; set; }
     public String TIMEZONE2 { get; set; }
     public String DTEnd { get; set; }
@@ -36,9 +35,9 @@ public with sharing class SummitEventsAddToCalendarController {
             Summit_Events_Instance__c eventInformation = getEventInformation(URLInstanceID);
 
             if (eventInformation != null) {
-                DTStart = SEShared.convertDateToDatetime(eventInformation.Instance_Start_Date__c, eventInformation.Instance_Start_Time__c, eventInformation.Instance_Time_Zone__c).format('yyyyMMdd\'T\'HHmmss\'Z\'');
-                DTEnd = SEShared.convertDateToDatetime(eventInformation.Instance_End_Date__c, eventInformation.Instance_End_Time__c, eventInformation.Instance_Time_Zone__c).format('yyyyMMdd\'T\'HHmmss\'Z\'');
-                TIMEZONE2 = SEShared.getTimeZonePick(eventInformation.Instance_Time_Zone__c);
+                DTStart = SummitEventsShared.convertDateToDatetime(eventInformation.Instance_Start_Date__c, eventInformation.Instance_Start_Time__c, eventInformation.Instance_Time_Zone__c).format('yyyyMMdd\'T\'HHmmss\'Z\'');
+                DTEnd = SummitEventsShared.convertDateToDatetime(eventInformation.Instance_End_Date__c, eventInformation.Instance_End_Time__c, eventInformation.Instance_Time_Zone__c).format('yyyyMMdd\'T\'HHmmss\'Z\'');
+                TIMEZONE2 = SummitEventsShared.getTimeZonePick(eventInformation.Instance_Time_Zone__c);
 
                 VTIMEZONE = getDayLightSavings(TIMEZONE2, eventInformation.Instance_Start_Date__c.year(), eventInformation.Instance_End_Date__c.year());
 
@@ -230,7 +229,7 @@ public with sharing class SummitEventsAddToCalendarController {
                     urlCalendarLink += '/';
                     urlCalendarLink += formattedGmtVersionOfDate(eventInformation.Instance_End_Date__c, eventInformation.Instance_End_Time__c);
                     //Timezone ctz=America/New_York
-                    urlCalendarLink += '&ctz=' + SEShared.getTimeZonePick(eventInformation.Instance_Time_Zone__c);
+                    urlCalendarLink += '&ctz=' + SummitEventsShared.getTimeZonePick(eventInformation.Instance_Time_Zone__c);
                     //Location - Google readable address
                     urlCalendarLink += '&location=' + EncodingUtil.urlEncode(getEventAddress(eventInformation), 'UTF-8');
                     //Url of source of the event
@@ -257,7 +256,7 @@ public with sharing class SummitEventsAddToCalendarController {
                     //Street address
                     urlCalendarLink += '&in_st=' + EncodingUtil.urlEncode(getEventAddress(eventInformation), 'UTF-8');
                     //City/State/Zip = Atlanta, GA, 30307
-                    urlCalendarLink += '&in_csz=' + SEShared.getTimeZonePick(eventInformation.Instance_Time_Zone__c);
+                    urlCalendarLink += '&in_csz=' + SummitEventsShared.getTimeZonePick(eventInformation.Instance_Time_Zone__c);
                     //Unique Id
                     //urlCalendarLink += '&uid=' + NewGuid();
                     linkPage = new PageReference(urlCalendarLink);
@@ -276,7 +275,7 @@ public with sharing class SummitEventsAddToCalendarController {
                     urlCalendarLink += '&location=' + EncodingUtil.urlEncode(getLocationTitle(eventInformation) + ',  ' + getEventAddress(eventInformation), 'UTF-8');
 
                     //Start date in zurich gmt time (YYYY-MM-DDTHH:mm:SSZ) or date (YYYY-MM-DD, for all-day events)
-                    String timezoneString = SEShared.getTimeZonePick(eventInformation.Instance_Time_Zone__c);
+                    String timezoneString = SummitEventsShared.getTimeZonePick(eventInformation.Instance_Time_Zone__c);
                     TimeZone tz = TimeZone.getTimeZone(timezoneString);
                     Date startD = eventInformation.Instance_Start_Date__c;
                     Time startT = eventInformation.Instance_Start_Time__c;

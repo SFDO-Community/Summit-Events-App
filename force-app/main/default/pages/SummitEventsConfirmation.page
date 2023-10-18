@@ -73,20 +73,26 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 <apex:outputText escape="false" value="{!eventPage.Event_Confirmation_Description__c}"/>
                             </p>
                         </div>
-                        <apex:outputPanel layout="block" rendered="{!hasFees}" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1">
-                            <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">Payment Received</h3>
+
+                        <apex:outputPanel layout="block" rendered="{!eventFees.size > 0}" styleClass="slds-col slds-p-vertical_x-small slds-size_1-of-1">
+
+                            <apex:outputPanel layout="none" rendered="{!paymentReceived}">
+                                <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">{!IF(!ISBLANK(eventPage.Event_Payment_Received_Heading_Label__c), eventPage.Event_Payment_Received_Heading_Label__c, "Payment Received")}</h3>
+                                <apex:outputPanel layout="none" rendered="{!!ISBLANK(eventPage.Event_Payment_Received_Description__c)}">
+                                    <p class="slds-text-body slds-p-vertical_x-small">
+                                        <apex:outputText escape="false" value="{!EventPage.Event_Payment_Received_Description__c}"/>
+                                    </p>
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+
+                            <apex:outputPanel layout="none" rendered="{!!paymentReceived}">
+                                <h3 class="slds-text-heading_medium slds-p-vertical_xx-small">{!IF(!ISBLANK(eventPage.Event_Payment_Due_Heading_Label__c), eventPage.Event_Payment_Due_Heading_Label__c, "Payment Due")}</h3>
+                                <apex:outputPanel layout="block" rendered="{!!ISBLANK(eventPage.Event_Payment_Due_Description__c)}" styleClass="slds-text-body slds-p-vertical_small">
+                                    <apex:outputText escape="false" value="{!EventPage.Event_Payment_Due_Description__c}"/>
+                                </apex:outputPanel>
+                            </apex:outputPanel>
 
                             <table class="slds-table slds-table_cell-buffer slds-table_bordered">
-                                <thead>
-                                <tr class="slds-line-height_reset">
-                                    <th class="" scope="col">
-                                        <div class="slds-truncate" title="Item">Item</div>
-                                    </th>
-                                    <th class="" scope="col">
-                                        <div class="slds-truncate" title="Fee">Fee</div>
-                                    </th>
-                                </tr>
-                                </thead>
                                 <tbody>
                                 <apex:repeat value="{!eventFees}" var="fee">
                                     <apex:outputPanel rendered="{!fee.Event_Fee_Type__c != 'Event' && fee.Event_Fee_Type__c != 'Event Additional'}">
@@ -116,8 +122,18 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                         </apex:outputText>
                                     </td>
                                 </tr>
+                                <apex:outputPanel layout="none" rendered="{!!ISBLANK(existingPaymentAmount)}">
+                                    <tr class="eventOnlyCost">
+                                        <td>{!IF(ISBLANK(eventPage.Event_Fees_Received_Label__c),'Payment Recieved', eventPage.Event_Fees_Received_Label__c)}</td>
+                                        <td class="slds-text-align_right">
+                                            <apex:outputText value="${0,number,###,###,###,##0.00}">
+                                                <apex:param value="{!existingPaymentAmount}"/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </apex:outputPanel>
                                 <tr class="eventTotalCost">
-                                    <td class="slds-cell_action-mode"><strong>{!IF(ISBLANK(eventPage.Event_Fee_Total_Label__c),'Event Cost', eventPage.Event_Fee_Total_Label__c)}</strong></td>
+                                    <td class="slds-cell_action-mode"><strong>{!IF(ISBLANK(eventPage.Event_Fee_Total_Label__c),'Balance Due', eventPage.Event_Fee_Total_Label__c)}</strong></td>
                                     <td class="slds-text-align_right slds-cell_action-mode">
                                         <strong>
                                             <apex:outputText value="${0,number,###,###,###,##0.00}">

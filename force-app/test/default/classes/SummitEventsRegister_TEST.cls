@@ -238,8 +238,7 @@ private class SummitEventsRegister_TEST {
             PageReference pageRef = Page.SummitEventsRegister;
             Test.setCurrentPage(pageRef);
             //Try to register on different instance
-            SummitEventsShared SEShared = new SummitEventsShared();
-            SEShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, true);
             SummitEventsRegisterController registerController = new SummitEventsRegisterController();
             //Change current registration information
             registerController.eventRegistration.Registrant_First_Name__c = 'Test2';

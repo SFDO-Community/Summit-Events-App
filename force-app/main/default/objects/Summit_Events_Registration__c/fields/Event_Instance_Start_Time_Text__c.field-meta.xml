@@ -6,11 +6,11 @@
 &amp;
 &quot;:&quot;
 &amp;
-IF( MINUTE(Event_Instance_Start_Time__c)  &lt; 10 , &quot;0&quot; &amp; TEXT( MINUTE(Event_Instance_Start_Time__c)), TEXT(MINUTE(Event_Instance_Start_Time__c)))
+IF( MINUTE(Event_Instance_Start_Time__c) &lt; 10 , &quot;0&quot; &amp; TEXT( MINUTE(Event_Instance_Start_Time__c)), TEXT(MINUTE(Event_Instance_Start_Time__c)))
 &amp;
 &quot; &quot;
 &amp;
-IF( HOUR(Event_Instance_Start_Time__c) &gt;= 13, &quot;PM&quot;, &quot;AM&quot;)</formula>
+IF( HOUR(Event_Instance_Start_Time__c) &gt;= 12, &quot;PM&quot;, &quot;AM&quot;)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Event Instance Start Time Text</label>
     <required>false</required>

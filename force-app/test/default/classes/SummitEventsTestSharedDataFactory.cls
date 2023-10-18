@@ -44,16 +44,17 @@ public with sharing class SummitEventsTestSharedDataFactory {
 
         List<Summit_Events_Instance__c> seaTestInstances = new List<Summit_Events_Instance__c>();
 
+        Time currentTime = Time.newInstance(9, 0, 0, 0);
+        //Integer hour, Integer minute, Integer second, Integer millisecond
+
         for (Integer x = -1; x < 10; x++) {
             Summit_Events_Instance__c seaInstance = new Summit_Events_Instance__c();
             seaInstance.Event__c = testEvent.Id;
             seaInstance.Instance_Title__c = testEvent.Name + ' Session ' + x;
             seaInstance.Instance_Start_Date__c = Date.today().addDays(x);
-            Datetime currentDatetime = Datetime.now();
-            Time currentTIme = Time.newInstance(currentDatetime.day(), currentDatetime.hour(), currentDatetime.minute(), currentDatetime.second());
-            seaInstance.Instance_Start_Time__c = currentTIme.addHours(-1);
             seaInstance.Instance_End_Date__c = Date.today().addDays(x);
-            seaInstance.Instance_End_Time__c = currentTIme.addHours(8);
+            seaInstance.Instance_Start_Time__c = currentTime.addHours(-1);
+            seaInstance.Instance_End_Time__c = currentTime.addHours(8);
             seaInstance.Instance_Time_Zone__c = 'Central Daylight Time (America/Chicago)';
             seaInstance.Active_Status__c = 'Active';
             seaInstance.Capacity__c = 500;
@@ -287,9 +288,8 @@ public with sharing class SummitEventsTestSharedDataFactory {
     }
 
     public static SummitEventsRegisterGuestsController.questionData createQuestionData(String questionID, String questionValue, String questionLabel) {
-        SummitEventsShared seaShared = new SummitEventsShared();
         SummitEventsRegisterGuestsController.questionData questionData = new SummitEventsRegisterGuestsController.questionData();
-        questionData.id = seaShared.encryptString(questionID);
+        questionData.id = SummitEventsShared.encryptString(questionID);
         questionData.value = questionValue;
         questionData.question = questionLabel;
         return questionData;
@@ -314,8 +314,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
         insert testRegistration;
 
         //create encrypted string
-        SummitEventsShared SEAShared = new SummitEventsShared();
-        String encryptedString = SEAShared.createEncryptedCookie('', testRegistration.Event_Instance__c, testRegistration.Event__c, testRegistration.Id);
+        String encryptedString = SummitEventsShared.createEncryptedCookie('', testRegistration.Event_Instance__c, testRegistration.Event__c, testRegistration.Id, true);
 
         if (encryptedString.length() > 255) {
             testRegistration.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);

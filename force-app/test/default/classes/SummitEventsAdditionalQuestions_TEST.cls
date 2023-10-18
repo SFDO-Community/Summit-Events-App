@@ -27,7 +27,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             //No cookie present so page redirects to root of Summit Events and event info is null
             PageReference eventPage = questionController.checkEventDetails();
             System.assertEquals(eventPage.getUrl(), 'https://google.com/' + namespace + 'SummitEvents');
-            System.assertEquals(JSON.serialize(questionController.eventInformation), '{"registrationId":null,"instanceId":null,"eventId":null,"dt":null,"audience":null}');
+            System.assertEquals(JSON.serialize(questionController.eventInformation), '{"valid":null,"registrationId":null,"instanceId":null,"eventId":null,"dt":null,"audience":null}');
 
             Test.stopTest();
         }
@@ -46,9 +46,8 @@ private class SummitEventsAdditionalQuestions_TEST {
             PageReference pageRef = Page.SummitEventsAdditionalQuestions;
             Test.setCurrentPage(pageRef);
 
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime, true);
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
             //Page stays where it is because cookie present
@@ -56,7 +55,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             System.assertEquals(eventPage, null);
 
             //Correct encrypted cooke information decrypted
-            System.assertEquals(JSON.serialize(questionController.eventInformation), '{"registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
+            System.assertEquals(JSON.serialize(questionController.eventInformation), '{"valid":"true","registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
 
             //No questions were set up for this page
             System.assertEquals(questionController.additionalQuestions.size(), 0);
@@ -87,9 +86,8 @@ private class SummitEventsAdditionalQuestions_TEST {
             pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
 
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime, true);
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
 
@@ -97,7 +95,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             PageReference previousPage = questionController.previousPage();
             System.assertEquals(previousPage.getUrl(), '/apex/' + namespace + 'summiteventsregister?adminopen=true');
 
-            System.assertEquals(JSON.serialize(questionController.eventInformation), '{"registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
+            System.assertEquals(JSON.serialize(questionController.eventInformation), '{"valid":"true","registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
             //All questions types represented here (if number of types increases this will have to be adjusted)
             System.assertEquals(questionController.additionalQuestions.size(), 9);
 
@@ -130,15 +128,13 @@ private class SummitEventsAdditionalQuestions_TEST {
             pageRef.getParameters().put('adminopen', 'true');
             Test.setCurrentPage(pageRef);
 
-
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime, true);
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
 
             //Checking that the cookie returns the correct information
-            System.assertEquals(JSON.serialize(questionController.eventInformation), '{"registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
+            System.assertEquals(JSON.serialize(questionController.eventInformation), '{"valid":"true","registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');
 
             //Only 1 lookup questions requested so additional question query and wrapper should be 1
             System.assertEquals(questionController.additionalQuestions.size(), 1);
@@ -186,9 +182,8 @@ private class SummitEventsAdditionalQuestions_TEST {
             PageReference pageRef = Page.SummitEventsAdditionalQuestions;
             Test.setCurrentPage(pageRef);
 
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime, true);
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
             //Test question with field that doesn't exist for map_to_field__c
@@ -235,9 +230,8 @@ private class SummitEventsAdditionalQuestions_TEST {
             PageReference pageRef = Page.SummitEventsAdditionalQuestions;
             Test.setCurrentPage(pageRef);
 
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime, true);
             testQuestions[0].Lookup_Object__c = 'Blah';
             testQuestions[0].Lookup_Fields__c = 'Blah';
             update testQuestions;
@@ -274,9 +268,8 @@ private class SummitEventsAdditionalQuestions_TEST {
             PageReference pageRef = Page.SummitEventsAdditionalQuestions;
             Test.setCurrentPage(pageRef);
 
-            SummitEventsShared SEShared = new SummitEventsShared();
             Datetime nowTime = Datetime.now();
-            SEShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime);
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime, true);
 
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
 
