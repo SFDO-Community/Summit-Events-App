@@ -287,9 +287,8 @@ public with sharing class SummitEventsTestSharedDataFactory {
     }
 
     public static SummitEventsRegisterGuestsController.questionData createQuestionData(String questionID, String questionValue, String questionLabel) {
-        SummitEventsShared seaShared = new SummitEventsShared();
         SummitEventsRegisterGuestsController.questionData questionData = new SummitEventsRegisterGuestsController.questionData();
-        questionData.id = seaShared.encryptString(questionID);
+        questionData.id = SummitEventsShared.encryptString(questionID);
         questionData.value = questionValue;
         questionData.question = questionLabel;
         return questionData;
@@ -314,8 +313,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
         insert testRegistration;
 
         //create encrypted string
-        SummitEventsShared SEAShared = new SummitEventsShared();
-        String encryptedString = SEAShared.createEncryptedCookie('', testRegistration.Event_Instance__c, testRegistration.Event__c, testRegistration.Id);
+        String encryptedString = SummitEventsShared.createEncryptedCookie('', testRegistration.Event_Instance__c, testRegistration.Event__c, testRegistration.Id, true);
 
         if (encryptedString.length() > 255) {
             testRegistration.Encrypted_Registration_Id_1__c = encryptedString.substring(0, 255);

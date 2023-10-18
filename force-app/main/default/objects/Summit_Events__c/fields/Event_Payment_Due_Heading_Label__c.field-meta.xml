@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Payment_Due_Heading_Label__c</fullName>
+    <defaultValue>&quot;Payment Due&quot;</defaultValue>
+    <description>The heading that appear above the fees when payment was not received and fees are still due. Defaults to &quot;Payment Due.&quot;</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The heading that appear above the fees when payment was not received and fees are still due. Defaults to &quot;Payment Due.&quot;</inlineHelpText>
+    <label>Event Payment Due Heading Label</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

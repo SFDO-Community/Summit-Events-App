@@ -5,19 +5,10 @@
 
 public with sharing class SummitEventsShared {
 
-    public class SummitEventsInfo {
-        public String audience { get; set; }
-        public String instanceId { get; set; }
-        public String eventId { get; set; }
-        public String registrationId { get; set; }
-        public String dt { get; set; }
-    }
-
     public SummitEventsShared() {
-
     }
 
-    public String getTemplate(String templateName) {
+    public static String getTemplate(String templateName) {
         List<String> namespaceTemplate = new List<String>{
                 'GeneralSLDS',
                 'crowncollege2020',
@@ -34,7 +25,7 @@ public with sharing class SummitEventsShared {
         return templateName;
     }
 
-    public Map<String, PageReference> getPageFlow(Id eventId, String instanceTitle, PageReference currentPage, Date startDate, Date endDate) {
+    public static Map<String, PageReference> getPageFlow(Id eventId, String instanceTitle, PageReference currentPage, Date startDate, Date endDate) {
 
         //Get the url without anchors
         String currentUrl = currentPage.getUrl();
@@ -184,8 +175,8 @@ public with sharing class SummitEventsShared {
 
     }
 
-    public SummitEventsInfo getSummitEventsInfo() {
-        //{"audience":"High School Senior","instanceId":"a320m000000A5fOAAS","registrationId":"a350m0000008q63AAA,"eventId":"a330m0000001SOrAAM"}
+    public static SummitEventsInfo getSummitEventsInfo() {
+        //{"audience":"High School Senior","instanceId":"a320m000000A5fOAAS","registrationId":"a350m0000008q63AAA,"eventId":"a330m0000001SOrAAM","valid":"true"}
         SummitEventsInfo eventInformation = new SummitEventsInfo();
         String URLAudience = '';
         if (String.isNotBlank(ApexPages.currentPage().getParameters().get('audience'))) {
@@ -227,7 +218,7 @@ public with sharing class SummitEventsShared {
         }
 
         //check if registration id is there and whether status it is set to registered. IF so reset cookie if it is.
-        if (String.isNotBlank(eventInformation.registrationId)) {
+        if (String.isNotBlank(eventInformation.registrationId) && String.isBlank(eventInformation.valid)) {
             Summit_Events_Registration__c evtReg = new Summit_Events_Registration__c();
             try {
                 evtReg = [
@@ -259,13 +250,13 @@ public with sharing class SummitEventsShared {
         return eventInformation;
     }
 
-    public PageReference checkForEvent() {
+    public static PageReference checkForEvent(String pageName) {
         PageReference myVFPage;
         SummitEventsInfo eventInformation = getSummitEventsInfo();
 
         Boolean onRegistrationPage = false;
-        String[] currentURL = ApexPages.currentPage().getUrl().split('\\?');
-        if (currentURL[0].endsWithIgnoreCase('SummitEventsRegister')) {
+
+        if (pageName.endsWithIgnoreCase('register')) {
             onRegistrationPage = true;
         }
 
@@ -283,6 +274,11 @@ public with sharing class SummitEventsShared {
         }
 
         String newRegistrationId = eventInformation.registrationId;
+
+        if (String.isNotBlank(eventInformation.valid) && eventInformation.valid.equalsIgnoreCase('false') && !pageName.equalsIgnoreCase('confirmation')) {
+            newRegistrationId = '';
+        }
+
         if (String.isNotBlank(newInstanceId)) {
             Summit_Events_Instance__c eventPage = [
                     SELECT Event__r.Event_Home_Link_URL__c
@@ -336,26 +332,28 @@ public with sharing class SummitEventsShared {
             myVFPage = new PageReference(newUrl);
             myVFPage.setRedirect(true);
             newRegistrationId = '';
-            createEncryptedCookie(eventInformation.audience, newInstanceId, eventInformation.eventId, newRegistrationId);
+            createEncryptedCookie(eventInformation.audience, newInstanceId, eventInformation.eventId, newRegistrationId, true);
         } else if (onRegistrationPage) {
-            createEncryptedCookie(eventInformation.audience, newInstanceId, eventInformation.eventId, newRegistrationId);
+            createEncryptedCookie(eventInformation.audience, newInstanceId, eventInformation.eventId, newRegistrationId, true);
         }
 
         return myVFPage;
     }
 
-    public String createEncryptedCookie(String audience, String instanceId, String eventId, String registrationId) {
+    public static String createEncryptedCookie(String audience, String instanceId, String eventId, String registrationId, Boolean valid) {
         //Check everything to not let nulls through to JSON string
-        return createEncryptedCookieWithNow(audience, instanceId, eventId, registrationId, Datetime.now());
+        System.debug('Create cookie reg id: '+ registrationId);
+        return createEncryptedCookieWithNow(audience, instanceId, eventId, registrationId, Datetime.now(), valid);
     }
 
-    public String createEncryptedCookieWithNow(String audience, String instanceId, String eventId, String registrationId, Datetime nowTime) {
+    public static String createEncryptedCookieWithNow(String audience, String instanceId, String eventId, String registrationId, Datetime nowTime, Boolean valid) {
         //Check everything to not let nulls through to JSON string
         audience = (String.isNotBlank(audience) && !audience.equalsIgnoreCase('null')) ? audience : '';
         instanceId = (String.isNotBlank(instanceId) && !instanceId.equalsIgnoreCase('null')) ? instanceId : '';
         eventId = (String.isNotBlank(eventId) && !eventId.equalsIgnoreCase('null')) ? eventId : '';
         registrationId = (String.isNotBlank(registrationId) && !registrationId.equalsIgnoreCase('null')) ? registrationId : '';
-        String CookieValue = encryptString('{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '","dt":"' + String.valueOf(nowTime) + '"}');
+        valid = (valid != null) ? valid : false;
+        String CookieValue = encryptString('{"audience":"' + audience + '","instanceId":"' + instanceId + '","eventId":"' + eventId + '","registrationId":"' + registrationId + '","dt":"' + String.valueOf(nowTime) + '","valid":"' + String.valueOf(valid) + '"}');
         Cookie SummitEventsCookie = new Cookie('SummitEvents', CookieValue, null, -1, true, 'Strict');
         ApexPages.currentPage().setCookies(new Cookie[]{
                 SummitEventsCookie
@@ -363,7 +361,7 @@ public with sharing class SummitEventsShared {
         return CookieValue;
     }
 
-    public String getDecryptCookie() {
+    public static String getDecryptCookie() {
         String CookieName = 'SummitEvents';
         Cookie encodedCipherText = ApexPages.currentPage().getCookies().get(CookieName);
         if (encodedCipherText != null) {
@@ -372,7 +370,7 @@ public with sharing class SummitEventsShared {
         return '';
     }
 
-    public String encryptString(String toEncrypt) {
+    public static String encryptString(String toEncrypt) {
         String key = getCookieKey();
         String encryptedText = '';
         if (String.isNotBlank(String.valueOf(key))) {
@@ -387,7 +385,7 @@ public with sharing class SummitEventsShared {
         return encryptedText;
     }
 
-    public String decryptString(String encryptedString, Boolean urlDecodeString) {
+    public static String decryptString(String encryptedString, Boolean urlDecodeString) {
         String key = getCookieKey();
         if (String.isNotBlank(encryptedString) && String.isNotBlank(String.valueOf(key))) {
             if (urlDecodeString) {
@@ -407,7 +405,7 @@ public with sharing class SummitEventsShared {
         return '';
     }
 
-    public Boolean isBoolean(String booleanString) {
+    public static Boolean isBoolean(String booleanString) {
         Boolean b;
         booleanString = booleanString.toLowerCase();
         if (booleanString == 'true') {
@@ -422,7 +420,7 @@ public with sharing class SummitEventsShared {
         return b;
     }
 
-    public Boolean isEventClosed(Summit_Events_Instance__c evtInstance) {
+    public static Boolean isEventClosed(Summit_Events_Instance__c evtInstance) {
         // Figure out if the event is closed.
         Boolean eventIsClosed = false;
         if (ApexPages.currentPage() != null && String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
@@ -455,7 +453,7 @@ public with sharing class SummitEventsShared {
         return eventIsClosed;
     }
 
-    public String getTimeZonePick(String pickListTimeZone) {
+    public static String getTimeZonePick(String pickListTimeZone) {
         if (String.isNotBlank(pickListTimeZone)) {
             if (pickListTimeZone.length() > 4) {
                 pickListTimeZone = pickListTimeZone.substring(pickListTimeZone.indexOf('(') + 1, pickListTimeZone.indexOf(')'));
@@ -465,7 +463,7 @@ public with sharing class SummitEventsShared {
         return '';
     }
 
-    public TimeZone getTimeZone(String timeZoneId) {
+    public static TimeZone getTimeZone(String timeZoneId) {
         TimeZone tz = null;
         if (String.isNotBlank(timeZoneId)) {
             tz = TimeZone.getTimeZone(timeZoneId);
@@ -473,7 +471,7 @@ public with sharing class SummitEventsShared {
         return tz;
     }
 
-    public String getTimeZoneDisplay(String timeZonePick, Boolean shortDisplay) {
+    public static String getTimeZoneDisplay(String timeZonePick, Boolean shortDisplay) {
         String displayName = '';
         if (String.isNotBlank(timeZonePick)) {
             timeZonePick = getTimeZonePick(timeZonePick);
@@ -496,7 +494,7 @@ public with sharing class SummitEventsShared {
         return displayName;
     }
 
-    public String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance) {
+    public static String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance) {
         String instanceDate = '';
 
         if (eventInstance.Instance_Start_Date__c != null && eventInstance.Instance_End_Date__c != null) {
@@ -560,7 +558,7 @@ public with sharing class SummitEventsShared {
         return instanceDate;
     }
 
-    public Datetime adjustForTimeZone(Datetime dt, String timezoneString) {
+    public static Datetime adjustForTimeZone(Datetime dt, String timezoneString) {
         timezoneString = getTimeZonePick(timezoneString);
         //Get the current GMT time and adjust for our timezone
         //tz = TimeZone.getTimeZone('America/Chicago');
@@ -573,7 +571,7 @@ public with sharing class SummitEventsShared {
         return dt;
     }
 
-    public Datetime convertDateToDatetime(Date dateIn, Time timeIn, String timezoneString) {
+    public static Datetime convertDateToDatetime(Date dateIn, Time timeIn, String timezoneString) {
         if (timeIn == null) {
             timeIn = Time.newInstance(1, 12, 3, 4);
         }
@@ -584,7 +582,7 @@ public with sharing class SummitEventsShared {
         return converted;
     }
 
-    public String formatTime(Time myTime, Boolean military) {
+    public static String formatTime(Time myTime, Boolean military) {
         String formatTime = '';
         if (myTime.hour() >= 13 && myTime.hour() > 0 && !military) {
             formatTime = String.valueOf(myTime.hour() - 12);
@@ -610,7 +608,7 @@ public with sharing class SummitEventsShared {
         return formatTime;
     }
 
-    public String removeHTMLandEscape(String incomingString, Boolean escapeHTML) {
+    public static String removeHTMLandEscape(String incomingString, Boolean escapeHTML) {
         if (String.isNotBlank(incomingString)) {
             incomingString = incomingString.replaceAll('<[^>]+>', '').trim();
             if (escapeHTML) {
@@ -620,8 +618,33 @@ public with sharing class SummitEventsShared {
         return incomingString;
     }
 
+    public static List<SelectOption> createPicklistsFromStrings(String returnSepStringList, String returnSepStringList2) {
+        List<SelectOption> cpl = new List<SelectOption>();
+        cpl.add(new SelectOption('', 'Select...'));
+        List<String> splitList = new List<String>();
+        splitList.addAll(sanitizePicklistString(returnSepStringList));
+        splitList.addAll(sanitizePicklistString(returnSepStringList2));
+        for (String p : splitList) {
+            p = p.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', '');
+            if (String.isNotBlank(p)) {
+                cpl.add(new SelectOption(p, p));
+            }
+        }
+        return cpl;
+    }
+
+    public static List<String> sanitizePicklistString(String picklistString) {
+        List<String> pickList = new List<String>();
+        if (String.isNotBlank(picklistString)) {
+            picklistString = picklistString.trim();
+            picklistString = picklistString.replace('\n\n', '\n');
+            pickList = picklistString.split('\n');
+        }
+        return pickList;
+    }
+
     //Method to test object and field availability for current user (Guest user)
-    public String checkFieldGuestAccess(String objectApiName, String fieldName, String requiredFieldType, Boolean testCreatable, String qualifierLabel) {
+    public static String checkFieldGuestAccess(String objectApiName, String fieldName, String requiredFieldType, Boolean testCreatable, String qualifierLabel) {
         String returnError = '';
         DescribeFieldResult fieldDescribe;
         SObjectType schemaType;
@@ -666,7 +689,7 @@ public with sharing class SummitEventsShared {
         return returnError;
     }
 
-    public Map<String, String> getDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName, String parentValue) {
+    public static Map<String, String> getDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName, String parentValue) {
         Map<String, String> dependentItems = new Map<String, String>();
         if (null != parentObjName && null != parentFieldName && null != dependentFieldName && null != parentValue) {
             String namespace = SummitEventsNamespace.getNamespace();
@@ -737,7 +760,7 @@ public with sharing class SummitEventsShared {
         return retVal;
     }
 
-    public String getCookieKey() {
+    public static String getCookieKey() {
         String key = '';
         Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
         if (String.isNotBlank(SummitEventsSettings.Cookie_Encryption_Key__c)) {

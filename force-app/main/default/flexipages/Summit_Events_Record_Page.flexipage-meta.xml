@@ -1153,10 +1153,6 @@
                 <identifier>record_item_066</identifier>
             </fieldInstance>
         </itemInstances>
-        <name>Facet-8c228279-6d57-4f6d-b714-7f39947ba3cd</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
@@ -1167,6 +1163,10 @@
                 <identifier>record_item_067</identifier>
             </fieldInstance>
         </itemInstances>
+        <name>Facet-8c228279-6d57-4f6d-b714-7f39947ba3cd</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
@@ -1175,6 +1175,16 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Add_Info_Question_Pick_List_1__c</fieldItem>
                 <identifier>record_item_068</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Add_Info_Question_Pick_List_Long_1__c</fieldItem>
+                <identifier>RecordAdd_Info_Question_Pick_List_Long_1_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-6e08869c-a7a8-4509-b6f2-254b33861288</name>
@@ -1215,10 +1225,6 @@
                 <identifier>record_item_069</identifier>
             </fieldInstance>
         </itemInstances>
-        <name>Facet-4dc8f791-8dd3-43f0-b35a-3ba0ac90ebc1</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
@@ -1229,6 +1235,10 @@
                 <identifier>record_item_070</identifier>
             </fieldInstance>
         </itemInstances>
+        <name>Facet-4dc8f791-8dd3-43f0-b35a-3ba0ac90ebc1</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
@@ -1237,6 +1247,16 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Add_Info_Question_Pick_List_2__c</fieldItem>
                 <identifier>record_item_071</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Add_Info_Question_Pick_List_Long_2__c</fieldItem>
+                <identifier>RecordAdd_Info_Question_Pick_List_Long_2_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-3fe9b7ac-d949-4b97-8972-ebb2c952a639</name>
@@ -1277,10 +1297,6 @@
                 <identifier>record_item_072</identifier>
             </fieldInstance>
         </itemInstances>
-        <name>Facet-56e813b7-d6f5-46a3-82f7-18115abdfe56</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
@@ -1291,6 +1307,10 @@
                 <identifier>record_item_073</identifier>
             </fieldInstance>
         </itemInstances>
+        <name>Facet-56e813b7-d6f5-46a3-82f7-18115abdfe56</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
@@ -1299,6 +1319,16 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Add_Info_Question_Pick_List_3__c</fieldItem>
                 <identifier>record_item_074</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Add_Info_Question_Pick_List_Long_3__c</fieldItem>
+                <identifier>RecordAdd_Info_Question_Pick_List_Long_3_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-484c67ff-4026-4690-bef9-3d3344dde4b7</name>
@@ -1339,10 +1369,6 @@
                 <identifier>record_item_075</identifier>
             </fieldInstance>
         </itemInstances>
-        <name>Facet-49c2a790-1cbe-40c2-9641-a7ea496a54a4</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
@@ -1353,6 +1379,10 @@
                 <identifier>record_item_076</identifier>
             </fieldInstance>
         </itemInstances>
+        <name>Facet-49c2a790-1cbe-40c2-9641-a7ea496a54a4</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
@@ -1361,6 +1391,16 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Add_Info_Question_Pick_List_4__c</fieldItem>
                 <identifier>record_item_077</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Add_Info_Question_Pick_List_Long_4__c</fieldItem>
+                <identifier>RecordAdd_Info_Question_Pick_List_Long_4_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-4353a557-f62b-4122-82be-c765aed4626f</name>
@@ -1401,10 +1441,6 @@
                 <identifier>record_item_078</identifier>
             </fieldInstance>
         </itemInstances>
-        <name>Facet-93769726-74b5-4863-9e99-76ca7f60275c</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
@@ -1415,6 +1451,10 @@
                 <identifier>record_item_079</identifier>
             </fieldInstance>
         </itemInstances>
+        <name>Facet-93769726-74b5-4863-9e99-76ca7f60275c</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
@@ -1423,6 +1463,16 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Add_Info_Question_Pick_List_5__c</fieldItem>
                 <identifier>record_item_080</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Add_Info_Question_Pick_List_Long_5__c</fieldItem>
+                <identifier>RecordAdd_Info_Question_Pick_List_Long_5_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-c0199129-1f50-4096-9aba-3b4b5052ba8b</name>
@@ -1787,6 +1837,36 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Guest_Table_Size__c</fieldItem>
                 <identifier>record_item_086</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Guest_Unsaved_Modal_Text__c</fieldItem>
+                <identifier>RecordGuest_Unsaved_Modal_Text_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Guest_Unsaved_Cancel_Label__c</fieldItem>
+                <identifier>RecordGuest_Unsaved_Cancel_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Guest_Unsaved_Continue_Label__c</fieldItem>
+                <identifier>RecordGuest_Unsaved_Continue_Label_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-6f1934ef-fd4d-4e34-a85f-55d2a419f40b</name>
@@ -2541,8 +2621,28 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Event_Fee_Submit_List_Label__c</fieldItem>
-                <identifier>record_item_116</identifier>
+                <fieldItem>Record.Event_Fees_Received_Label__c</fieldItem>
+                <identifier>RecordEvent_Fees_Received_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Payment_Due_Heading_Label__c</fieldItem>
+                <identifier>RecordEvent_Payment_Due_Heading_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Payment_Due_Description__c</fieldItem>
+                <identifier>RecordEvent_Payment_Due_Description_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-898af6dc-1c84-435e-be26-075f1ef026e6</name>
@@ -2557,6 +2657,36 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Event_Fee_Total_Label__c</fieldItem>
                 <identifier>record_item_117</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Fee_Submit_List_Label__c</fieldItem>
+                <identifier>record_item_116</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Payment_Received_Heading_Label__c</fieldItem>
+                <identifier>RecordEvent_Payment_Received_Heading_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Event_Payment_Received_Description__c</fieldItem>
+                <identifier>RecordEvent_Payment_Received_Description_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-59d9f745-618f-4d64-bc94-e4bc5cf26806</name>

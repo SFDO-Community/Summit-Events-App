@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Payment_Received_Description__c</fullName>
+    <description>This is an optional opportunity to add more description when a payment was not received and fees are still due. It appears after the Payment Due heading and before the fee list.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is an optional opportunity to add more description when a payment was not received and fees are still due. It appears after the Payment Due heading and before the fee list.</inlineHelpText>
+    <label>Event Payment Received Description</label>
+    <length>32768</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Html</type>
+    <visibleLines>25</visibleLines>
+</CustomField>

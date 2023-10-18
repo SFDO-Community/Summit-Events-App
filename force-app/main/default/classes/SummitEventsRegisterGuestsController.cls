@@ -5,8 +5,7 @@
 
 public with sharing class SummitEventsRegisterGuestsController {
 
-    public SummitEventsShared seaShared = new SummitEventsShared();
-    public SummitEventsShared.SummitEventsInfo eventInformation { get; set; }
+    public SummitEventsInfo eventInformation { get; set; }
     public String formattedNavDate { get; set; }
     public Summit_Events__c eventPage { get; set; }
     public Summit_Events_Instance__c eventInstance { get; set; }
@@ -49,7 +48,7 @@ public with sharing class SummitEventsRegisterGuestsController {
     }
 
     public SummitEventsRegisterGuestsController() {
-        eventInformation = seaShared.getSummitEventsInfo();
+        eventInformation = SummitEventsShared.getSummitEventsInfo();
         String namespace = SummitEventsNamespace.getNamespace();
         if (String.isNotBlank(namespace)) {
             namespace = namespace.toLowerCase() + '__';
@@ -60,7 +59,8 @@ public with sharing class SummitEventsRegisterGuestsController {
                             Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
                             Guest_Registration_Title__c, Guest_Max_Amount__c, Guest_Registration_Description__c, Guest_Table_Size__c, Guest_Tables_Available__c,
                             Display_Guest_Registration__c, Guest_Registration_Add_Button_Label__c, No_Guest_Registrations_Added_Message__c,
-                            Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c
+                            Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c, Guest_Unsaved_Cancel_Label__c, Guest_Unsaved_Continue_Label__c,
+                            Guest_Unsaved_Modal_Text__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -77,7 +77,7 @@ public with sharing class SummitEventsRegisterGuestsController {
             eventGuestQuestions = new Map<Id, Summit_Events_Question__c>([
                     SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
                             Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c,
-                            Existing_Picklist_Values__c
+                            Existing_Picklist_Values__c, Picklist_Values_Long__c
                     FROM Summit_Events_Question__c
                     WHERE Event__c = :eventInformation.eventId
                     AND (Registrant_Type__c = 'Guest' OR Registrant_Type__c = 'Registrant and Guest')
@@ -94,18 +94,18 @@ public with sharing class SummitEventsRegisterGuestsController {
                 //Check all mapTo fields before adding question
                 q.setupFail = false;
                 q.setupError = '';
-                q.setupError = seaShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', eventGuestQuestions.get(key).Map_to_Field__c, '', true, '');
+                q.setupError = SummitEventsShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', eventGuestQuestions.get(key).Map_to_Field__c, '', true, '');
                 q.name = seaQuestion.Name;
                 q.question = seaQuestion.Question_Label__c;
-                q.id = seaShared.encryptString(seaQuestion.Id);
+                q.id = SummitEventsShared.encryptString(seaQuestion.Id);
                 q.name = seaQuestion.Name;
                 q.question = seaQuestion.Question_Label__c;
                 q.type = seaQuestion.Question_Field_Type__c;
                 q.required = seaQuestion.Required__c;
                 if (String.isNotBlank(seaQuestion.Existing_Picklist_Values__c)) {
                     q.picklist = createExistingPicklist(seaQuestion.Existing_Picklist_Values__c);
-                } else if (String.isNotBlank(seaQuestion.Picklist_Values__c)) {
-                    q.picklist = createPicklists(seaQuestion.Picklist_Values__c);
+                } else if (String.isNotBlank(seaQuestion.Picklist_Values__c) || String.isNotBlank(seaQuestion.Picklist_Values_Long__c)) {
+                    q.picklist = createPicklists(seaQuestion.Picklist_Values__c, seaQuestion.Picklist_Values_Long__c);
                 }
                 q.help = seaQuestion.Help_Text__c;
                 q.instructions = seaQuestion.Instructions__c;
@@ -116,7 +116,7 @@ public with sharing class SummitEventsRegisterGuestsController {
                     questionList.add(q);
                 } else {
                     questionData hiddenQuestion = new questionData();
-                    hiddenQuestion.id = seaShared.encryptString(seaQuestion.Id);
+                    hiddenQuestion.id = SummitEventsShared.encryptString(seaQuestion.Id);
                     hiddenQuestion.value = seaQuestion.Default_Value__c;
                     hiddenQuestion.question = seaQuestion.Question_Label__c;
                     hiddenQuestions.add(hiddenQuestion);
@@ -142,7 +142,7 @@ public with sharing class SummitEventsRegisterGuestsController {
                     for (Integer yy = 0; yy < hostedGuests[xx].questions.size(); yy++) {
                         Id questionId = null;
                         try {
-                            questionId = seaShared.decryptString(hostedGuests[xx].questions[yy].id, true);
+                            questionId = SummitEventsShared.decryptString(hostedGuests[xx].questions[yy].id, true);
                         } catch (Exception e) {
                             System.debug(e.getMessage());
                         }
@@ -161,31 +161,23 @@ public with sharing class SummitEventsRegisterGuestsController {
 
             oldRegId = eventRegistration.Id;
             eventRegistration.Id = null;
-            pageFlow = seaShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
-            templateSelected = seaShared.getTemplate(eventPage.Template__c);
+            pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
+            templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
 
-            eventIsClosed = seaShared.isEventClosed(eventInstance);
+            eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
 
-            formattedNavDate = seaShared.navBreadcrumbBuilder(eventInstance);
+            formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
 
         }
     }
 
-    public List<Map<String, String>> createPicklists(String returnSepStringList) {
+    public List<Map<String, String>> createPicklists(String pickListString, String pickListString2) {
         List<Map<String, String>> cpl = new List<Map<String, String>>();
-        if (!String.isBlank(returnSepStringList)) {
+        List<SelectOption> splitList = SummitEventsShared.createPicklistsFromStrings(pickListString, pickListString2);
+        for (SelectOption p : splitList) {
             cpl.add(new Map<String, String>{
-                    'Select...' => ''
+                    p.getLabel() => p.getValue()
             });
-            returnSepStringList = returnSepStringList.trim();
-            returnSepStringList = returnSepStringList.replace('\n\n', '\n');
-            String[] splitList = returnSepStringList.split('\n');
-            for (String p : splitList) {
-                p = p.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', '');
-                cpl.add(new Map<String, String>{
-                        p => p
-                });
-            }
         }
         return cpl;
     }
@@ -219,7 +211,7 @@ public with sharing class SummitEventsRegisterGuestsController {
     }
 
     public PageReference checkEventDetails() {
-        return seaShared.checkForEvent();
+        return SummitEventsShared.checkForEvent('guest');
     }
 
     public PageReference saveGuests() {
@@ -232,7 +224,7 @@ public with sharing class SummitEventsRegisterGuestsController {
                 for (questionData q : guestAnswers[xx].questions) {
                     Id questionId = null;
                     try {
-                        questionId = seaShared.decryptString(q.id, true);
+                        questionId = SummitEventsShared.decryptString(q.id, true);
                     } catch (Exception e) {
                         System.debug(e.getMessage());
                     }

@@ -307,6 +307,45 @@ function removeById(idToRemove, element) {
     setGuestRemaining();
 }
 
+function saveGuestModal() {
+    let form = document.getElementById('guestInput');
+    let allInputs = form.querySelectorAll('input, select, textarea');
+    let submitButton = document.querySelector("[id$='submitOptions']");
+    let noValues = true;
+    let modalElem = document.getElementById('unsavedGuestModal');
+    let modalBack = document.getElementById('unsavedGuestBackground');
+    allInputs.forEach(input => {
+        if (input.value) {
+            noValues = false;
+        }
+    });
+    if (!noValues) {
+        modalElem.classList.add('slds-fade-in-open');
+        modalBack.classList.add('slds-fade-in-open');
+        modalElem.querySelectorAll('.cancelSubmit').forEach(cancel => {
+            cancel.addEventListener('click', () => {
+                modalElem.classList.remove('slds-fade-in-open');
+                modalBack.classList.remove('slds-fade-in-open');
+            });
+        })
+    }
+    modalElem.querySelectorAll('.continueSubmit').forEach(submit => {
+        submit.addEventListener('click', () => {
+            modalElem.classList.remove('slds-fade-in-open');
+            modalBack.classList.remove('slds-fade-in-open');
+            allInputs.forEach(input => {
+                input.value = '';
+            });
+            submitButton.click();
+        })
+    });
+    if (noValues) {
+        fadeout();
+    }
+    return noValues;
+    //fadeout();
+}
+
 
 //Templates
 

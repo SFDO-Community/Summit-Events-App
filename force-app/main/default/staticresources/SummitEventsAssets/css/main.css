@@ -126,6 +126,10 @@ textarea {
     border: solid 1px red;
 }
 
+.slds-scope .slds-has-info .slds-input {
+    border-width: 2px;
+}
+
 /*Loading image*/
 #backpage {
     display: none;
@@ -170,7 +174,7 @@ textarea {
     font-size: 1em;
 }
 
-.slds-form-element.slds-has-error .slds-form-element__help {
+.slds-form-element.slds-has-error .slds-form-element__help, .slds-form-element.slds-has-info .slds-form-element__help {
     display: block;
 }
 
