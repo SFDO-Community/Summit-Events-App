@@ -1,17 +1,42 @@
-Insert Contact:
-  sf_object: Contact
+Insert Account:
+  sf_object: Account
   fields:
-  - Created_with_Summit_Events__c
-  - FirstName
-  - LastName
+  - Name
   lookups:
-    ReportsToId:
-      table: Contact
-      after: Insert Contact
+    ParentId:
+      table: Account
+      after: Insert Account
+Insert Lead:
+  sf_object: Lead
+  fields:
+  - Company
+  - DoNotCall
+  - FirstName
+  - HasOptedOutOfEmail
+  - HasOptedOutOfFax
+  - IsConverted
+  - IsUnreadByOwner
+  - LastName
+  - Status
 Insert Summit_Events_Fee_Allocation__c:
   sf_object: Summit_Events_Fee_Allocation__c
   fields:
   - Name
+Insert Contact:
+  sf_object: Contact
+  fields:
+  - Created_with_Summit_Events__c
+  - DoNotCall
+  - FirstName
+  - HasOptedOutOfEmail
+  - HasOptedOutOfFax
+  - LastName
+  lookups:
+    AccountId:
+      table: Account
+    ReportsToId:
+      table: Contact
+      after: Insert Contact
 Insert Summit_Events__c:
   sf_object: Summit_Events__c
   fields:
@@ -23,6 +48,11 @@ Insert Summit_Events__c:
   - Add_Info_Question_Pick_List_3__c
   - Add_Info_Question_Pick_List_4__c
   - Add_Info_Question_Pick_List_5__c
+  - Add_Info_Question_Pick_List_Long_1__c
+  - Add_Info_Question_Pick_List_Long_2__c
+  - Add_Info_Question_Pick_List_Long_3__c
+  - Add_Info_Question_Pick_List_Long_4__c
+  - Add_Info_Question_Pick_List_Long_5__c
   - Add_Info_Question_Text_1__c
   - Add_Info_Question_Text_2__c
   - Add_Info_Question_Text_3__c
@@ -66,6 +96,7 @@ Insert Summit_Events__c:
   - Date_Of_Birth_Label__c
   - Display_Guest_Registration__c
   - Display_Optional_Donation__c
+  - Do_not_show_receive_text_question__c
   - Donation_Description__c
   - Donation_Suggested_Amount_List__c
   - Donation_Title__c
@@ -73,8 +104,12 @@ Insert Summit_Events__c:
   - End_Date__c
   - Event_Additional_Question_Title__c
   - Event_Additional_Questions_Description__c
+  - Event_Appointment_Chosen_Label__c
   - Event_Appointment_Description__c
+  - Event_Appointment_Next_Instructions__c
+  - Event_Appointment_Submit_List_Label__c
   - Event_Appointment_Title__c
+  - Event_Appointment_Unchosen_Label__c
   - Event_Cancel_Review_Description__c
   - Event_Cancel_Review_Title__c
   - Event_Cancelled_Notification_Text__c
@@ -85,11 +120,17 @@ Insert Summit_Events__c:
   - Event_Fee_Submit_List_Label__c
   - Event_Fee_Total_Label__c
   - Event_Fee__c
+  - Event_Fees_Received_Label__c
   - Event_Footer__c
   - Event_Full_Text__c
+  - Event_Guest_Submit_List_Label__c
   - Event_Home_Link_Title__c
   - Event_Home_Link_URL__c
   - Event_Name__c
+  - Event_Payment_Due_Description__c
+  - Event_Payment_Due_Heading_Label__c
+  - Event_Payment_Received_Description__c
+  - Event_Payment_Received_Heading_Label__c
   - Event_Short_Listing_Description__c
   - Event_Sponsor__c
   - Event_Status__c
@@ -98,6 +139,8 @@ Insert Summit_Events__c:
   - Event_Type__c
   - Event_description__c
   - Feed_Registration_Button_Text__c
+  - Filter_Category__c
+  - Filter_Where_To_Display__c
   - First_Name_Label__c
   - Gender_Label__c
   - Guest_Max_Amount__c
@@ -106,8 +149,26 @@ Insert Summit_Events__c:
   - Guest_Registration_Title__c
   - Guest_Table_Size__c
   - Guest_Tables_Available__c
+  - Guest_Unsaved_Cancel_Label__c
+  - Guest_Unsaved_Continue_Label__c
+  - Guest_Unsaved_Modal_Text__c
   - Hand_Raise_Action__c
   - Include_Time_frame_List__c
+  - Itinerary_Display_Options__c
+  - Itinerary_Item_1__c
+  - Itinerary_Item_2__c
+  - Itinerary_Item_3__c
+  - Itinerary_Item_4__c
+  - Itinerary_Item_5__c
+  - Itinerary_Label_1__c
+  - Itinerary_Label_2__c
+  - Itinerary_Label_3__c
+  - Itinerary_Label_4__c
+  - Itinerary_Label_5__c
+  - Itinerary_Table_Head_Or_Title_2__c
+  - Itinerary_Table_Head_Or_Title_3__c
+  - Itinerary_Table_Head_Or_Title_4__c
+  - Itinerary_Table_Head_Or_Title_5__c
   - Keep_Registration_Open_During_Event__c
   - Last_Name_As_Student_Label__c
   - Last_Name_Label__c
@@ -148,6 +209,8 @@ Insert Summit_Events__c:
   - Tracking_Options_Registration__c
   - Tracking_Submit_Registration__c
   lookups:
+    Account__c:
+      table: Account
     Donation_Allocation_1__c:
       table: Summit_Events_Fee_Allocation__c
     Donation_Allocation_2__c:
@@ -224,6 +287,7 @@ Insert Summit_Events_Question__c:
   - Controlling_Logic__c
   - Default_Value__c
   - Display_Order__c
+  - Display_Style__c
   - Error_Assist_Text__c
   - Existing_Picklist_Values__c
   - Help_Text__c
@@ -239,6 +303,7 @@ Insert Summit_Events_Question__c:
   - Lookup_Where_Clause__c
   - Map_to_Field__c
   - Name
+  - Picklist_Values_Long__c
   - Picklist_Values__c
   - Question_Field_Type__c
   - Question_Label__c
@@ -299,6 +364,7 @@ Insert Summit_Events_Host__c:
   - Location__c
   - Max_Available__c
   - Preferred_Title__c
+  - RecordTypeId
   - Time__c
   - Undergrad_Major__c
   lookups:
@@ -322,6 +388,8 @@ Insert Summit_Events_Registration__c:
   - Answer_4_Numeric__c
   - Answer_5_Numeric__c
   - Appointment_Table__c
+  - BCC_Transactional_Email_Statuses__c
+  - BCC_Transactional_Emails__c
   - Campus_Tour_Location__c
   - Campus_Tour_Time__c
   - Confirmation_Call_Result__c
@@ -331,10 +399,13 @@ Insert Summit_Events_Registration__c:
   - Encrypted_Registration_Id_2__c
   - Event_Instance_Date_Time_Formatted__c
   - Event_Registration_Requested_Date__c
+  - Event_Website_Referrer__c
+  - Event_Website__c
   - Generated_Itinerary__c
   - Generated_Requested_Appointments__c
   - Guest_Host_Status__c
   - Guest_JSON__c
+  - Hosted_Registrants__c
   - Last_Name_as_Student__c
   - Matching_Log__c
   - New_Contact_Created__c
@@ -394,6 +465,16 @@ Insert Summit_Events_Registration__c:
   - Session__c
   - Status__c
   - Substatus__c
+  - gclid__c
+  - utm_campaign__c
+  - utm_content__c
+  - utm_creative_format__c
+  - utm_id__c
+  - utm_marketing_tactic__c
+  - utm_medium__c
+  - utm_source__c
+  - utm_source_platform__c
+  - utm_term__c
   lookups:
     Contact__c:
       table: Contact
@@ -419,6 +500,7 @@ Insert Summit_Events_Appointments__c:
   - Appointment_Time__c
   - Appointment_Title__c
   - Appointment_Type__c
+  - Appointment_Virtual_Meeting_URL__c
   - Building__c
   - Chosen_State__c
   - Class_Title__c
