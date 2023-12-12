@@ -169,10 +169,7 @@ public with sharing class SummitEventsShared {
                 }
             }
         }
-
-        System.debug(pageMovement);
         return pageMovement;
-
     }
 
     public static SummitEventsInfo getSummitEventsInfo() {
@@ -342,7 +339,6 @@ public with sharing class SummitEventsShared {
 
     public static String createEncryptedCookie(String audience, String instanceId, String eventId, String registrationId, Boolean valid) {
         //Check everything to not let nulls through to JSON string
-        System.debug('Create cookie reg id: '+ registrationId);
         return createEncryptedCookieWithNow(audience, instanceId, eventId, registrationId, Datetime.now(), valid);
     }
 
@@ -427,16 +423,14 @@ public with sharing class SummitEventsShared {
             Boolean adminOpen = isBoolean(ApexPages.currentPage().getParameters().get('adminopen'));
             eventIsClosed = !adminOpen;
         } else {
-            Date compareCloseDate = Date.today();
-            // Get time in timezone fo event
             Datetime dt = Datetime.now();
+            Time compareCloseTime = dt.timeGmt();
             String timeZonePick = getTimeZonePick(evtInstance.Instance_Time_Zone__c);
             TimeZone tz = getTimeZone(timeZonePick);
-            dt = dt.addSeconds((tz.getOffset(dt) / 1000));
-            Time compareCloseTime = dt.time();
-
-            if (evtInstance.Registration_Close_Date__c <= compareCloseDate) {
-                if (evtInstance.Registration_Close_Date__c == compareCloseDate) {
+            dt = dt.addSeconds(tz.getOffset(dt) / 1000);
+            compareCloseTime = compareCloseTime.addMilliseconds(tz.getOffset(dt));
+            if (evtInstance.Registration_Close_Date__c <= dt.date()) {
+                if (evtInstance.Registration_Close_Date__c == dt.date()) {
                     if (evtInstance.Registration_Close_Time__c < compareCloseTime) {
                         eventIsClosed = true;
                     }
@@ -471,51 +465,28 @@ public with sharing class SummitEventsShared {
         return tz;
     }
 
-    public static String getTimeZoneDisplay(String timeZonePick, Boolean shortDisplay) {
-        String displayName = '';
-        if (String.isNotBlank(timeZonePick)) {
-            timeZonePick = getTimeZonePick(timeZonePick);
-            TimeZone tz = getTimeZone(timeZonePick);
-            if (tz != null) {
-                displayName = tz.getDisplayName();
-                //remove all parenthesis items
-                displayName = displayName.replaceAll('(\\(([^\\)]+)\\))', '');
-                displayName = displayName.trim();
-            }
-            if (shortDisplay) {
-                String[] displayNameWordList = displayName.split(' ');
-                String shortDisplayOut = '';
-                for (String word : displayNameWordList) {
-                    shortDisplayOut += word.substring(0, 1);
-                }
-                return shortDisplayOut;
-            }
-        }
-        return displayName;
-    }
-
     public static String navBreadcrumbBuilder(Summit_Events_Instance__c eventInstance) {
         String instanceDate = '';
 
         if (eventInstance.Instance_Start_Date__c != null && eventInstance.Instance_End_Date__c != null) {
+
             //Get timezone to check if offset is not 0 (not GMT)
-            TimeZone tz = UserInfo.getTimeZone();
+            String timeZonePick = getTimeZonePick(eventInstance.Instance_Time_Zone__c);
+            TimeZone tz = getTimeZone(timeZonePick);
             Integer timezoneOffset = tz.getOffset(Datetime.now());
 
             Datetime convertedStartDate = Datetime.newInstance(
                     eventInstance.Instance_Start_Date__c,
                     eventInstance.Instance_Start_Time__c
             );
-            Datetime convertedEndDate = Datetime.newInstanceGmt(
+
+            Datetime convertedEndDate = Datetime.newInstance(
                     eventInstance.Instance_End_Date__c,
                     eventInstance.Instance_End_Time__c
             );
 
-            //If the user is logged in and offset for user is not GMT than adjust datetime to act like GMT by removing the offset
-            if (timezoneOffset != 0) {
-                convertedStartDate = convertedStartDate.addSeconds(-(timezoneOffset) / 1000);
-                convertedEndDate = convertedEndDate.addSeconds(-(timezoneOffset) / 1000);
-            }
+            convertedStartDate = convertedStartDate.addSeconds(timezoneOffset / 1000);
+            convertedEndDate = convertedEndDate.addSeconds(timezoneOffset / 1000);
 
             String monthStart = convertedStartDate.format('MMMM');
             String monthEnd = convertedEndDate.format('MMMM');
@@ -550,7 +521,7 @@ public with sharing class SummitEventsShared {
             }
 
             if (String.isNotBlank(eventInstance.Instance_Time_Zone__c)) {
-                String timeZoneDisplay = getTimeZoneDisplay(eventInstance.Instance_Time_Zone__c, true);
+                String timeZoneDisplay = convertedStartDate.format('z', timeZonePick);
                 instanceDate += ' ' + timeZoneDisplay;
             }
 
@@ -584,22 +555,30 @@ public with sharing class SummitEventsShared {
 
     public static String formatTime(Time myTime, Boolean military) {
         String formatTime = '';
-        if (myTime.hour() >= 13 && myTime.hour() > 0 && !military) {
-            formatTime = String.valueOf(myTime.hour() - 12);
+        Integer hour = myTime.hour();
+        Integer minute = myTime.minute();
+        if (hour == 0 && !military) {
+            formatTime = '12';
+        } else if (hour >= 13 && hour >= 0 && !military) {
+            if (myTime.hour() == 0) {
+
+            } else {
+                formatTime = String.valueOf(hour - 12);
+            }
         } else {
-            formatTime = String.valueOf(myTime.hour());
-            if (myTime.hour() < 10 && military) {
+            formatTime = String.valueOf(hour);
+            if (hour < 10 && military) {
                 formatTime = '0' + formatTime;
             }
         }
         formatTime += ':';
-        if (myTime.minute() < 10) {
-            formatTime += '0' + String.valueOf(myTime.minute());
+        if (minute < 10) {
+            formatTime += '0' + String.valueOf(minute);
         } else {
-            formatTime += String.valueOf(myTime.minute());
+            formatTime += String.valueOf(minute);
         }
         if (!military) {
-            if (myTime.hour() >= 12) {
+            if (hour >= 12) {
                 formatTime += ' PM';
             } else {
                 formatTime += ' AM';
