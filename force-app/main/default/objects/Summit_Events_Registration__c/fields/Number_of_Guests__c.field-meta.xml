@@ -5,7 +5,7 @@
     <externalId>false</externalId>
     <inlineHelpText>Total Number of Guests not including the Registrant</inlineHelpText>
     <label>Number of Guests</label>
-    <precision>2</precision>
+    <precision>3</precision>
     <required>false</required>
     <scale>0</scale>
     <trackHistory>false</trackHistory>
