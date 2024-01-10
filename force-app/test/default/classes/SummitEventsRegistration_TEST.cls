@@ -10,9 +10,9 @@ public class SummitEventsRegistration_TEST {
 
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Test', 'Tester', 'test@test.net', '55555', '1971-03-22', '2012', null);
+
         Summit_Events__c seaTestEvent = SummitEventsTestSharedDataFactory.getEventRecord(seaTestInstances[1].Event__c);
 
-        Test.startTest();
         Summit_Events_Email__c email1 = new Summit_Events_Email__c();
         email1.Event__c = seaTestInstances[1].Event__c;
         email1.Action_Status__c = 'Registered';
@@ -30,6 +30,7 @@ public class SummitEventsRegistration_TEST {
         email2.BCC_Email__c = 'bcc@example.com';
         insert email2;
 
+        Test.startTest();
         seaTestRegistration.Status__c = 'Registered';
         update seaTestRegistration;
 
@@ -37,7 +38,7 @@ public class SummitEventsRegistration_TEST {
         update seaTestRegistration;
 
         List<Task> emailTasks = [
-                SELECT Id, Subject
+                SELECT Id, Subject, Description
                 FROM Task
                 WHERE WhatId = :seaTestRegistration.Id
                 AND Type = 'Email'
@@ -46,6 +47,7 @@ public class SummitEventsRegistration_TEST {
                 AND WhoId = :seaTestRegistration.Contact__c
         ];
 
+        System.debug(JSON.serialize(emailTasks));
         //Two tasks should have been created when both status emails were sent
         System.assertEquals(emailTasks.size(), 2);
         Test.stopTest();
