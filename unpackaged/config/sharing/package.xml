@@ -8,5 +8,9 @@
         <members>Account</members>
         <name>SharingRules</name>
     </types>
+    <types>
+        <members>Summit_Events_Fee_Allocation__c</members>
+        <name>SharingRules</name>
+    </types>
     <version>56.0</version>
 </Package>

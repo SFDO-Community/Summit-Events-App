@@ -1,33 +1,40 @@
 .SummitEventsItem {
     display: block;
     white-space: normal;
-    padding: 4px 2px;
-    font-size: 1.1em;
-    line-height: 1.4em !important;
+    padding: 4px 3px;
+    font-size: .9rem;
+    line-height: 1.2rem !important;
     width: 100%;
     z-index: 0;
+    border: none;
 }
 
-.SummitEventsItem:hover {
+.fc-daygrid-event-harness a:hover, .fc-list-event-title a:hover {
     text-decoration: none !important;
 }
 
 .fc-listMonth-view .SummitEventsItem {
-    font-size: 1.1em;
-    line-height: 1.4em !important;
+    /*font-size: 1.1rem;*/
+    /*line-height: 1.4rem !important;*/
+}
+
+td.fc-list-event-graphic {
+    display: none;
 }
 
 .eventClosed .SummitEventsItem, .eventClosed .SummitEventsItem * {
     color: gray !important;
 }
+
 .slds-popover__body {
-    display:block;
+    display: block;
 }
+
 .SummitEventsItem .summitEventsTitle {
     z-index: 0;
 }
 
 .SummitEventsItem .summitEventsTimes {
-    font-size: .85em;
+    font-size: .75rem;
     z-index: 0;
 }
