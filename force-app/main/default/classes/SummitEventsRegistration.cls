@@ -87,26 +87,27 @@ public class SummitEventsRegistration {
         ];
 
         List<Task> activityUpdates = new List<Task>();
+        List<Messaging.SingleEmailMessage> emailsToSend = new List<Messaging.SingleEmailMessage>();
 
         //loop through affected event registrations - have status change from old
-        for (Summit_Events_Registration__c areg : affectedRegs) {
+        for (Summit_Events_Registration__c registration : affectedRegs) {
             //Loop through gather email templates to get template and use registration fields to fill in hooks
             for (Summit_Events_Email__c em : matchEmail) {
                 Boolean statusMatch = false;
                 Boolean bccRegStatusMatch = false;
                 List<String> BCCsToGo = new List<String>();
-                if (em.Event__c.equals(areg.Event__c)) {
+                if (em.Event__c.equals(registration.Event__c)) {
 
                     statusMatch = false;
 
-                    if (String.isNotBlank(em.Action_Sub_status__c) && String.isNotBlank(areg.Substatus__c)) {
-                        if (em.Action_Sub_status__c.equals(areg.Substatus__c) && em.Action_Status__c.equalsIgnoreCase(areg.Status__c)) {
+                    if (String.isNotBlank(em.Action_Sub_status__c) && String.isNotBlank(registration.Substatus__c)) {
+                        if (em.Action_Sub_status__c.equals(registration.Substatus__c) && em.Action_Status__c.equalsIgnoreCase(registration.Status__c)) {
                             statusMatch = true;
                         }
-                    } else if (em.Action_Status__c.equals(areg.Status__c) && String.isBlank(em.Action_Sub_status__c) && String.isBlank(areg.Substatus__c)) {
+                    } else if (em.Action_Status__c.equals(registration.Status__c) && String.isBlank(em.Action_Sub_status__c) && String.isBlank(registration.Substatus__c)) {
                         statusMatch = true;
-                        if (String.isNotBlank(areg.BCC_Transactional_Email_Statuses__c)) {
-                            if (areg.BCC_Transactional_Email_Statuses__c.contains(em.Action_Status__c)) {
+                        if (String.isNotBlank(registration.BCC_Transactional_Email_Statuses__c)) {
+                            if (registration.BCC_Transactional_Email_Statuses__c.contains(em.Action_Status__c)) {
                                 bccRegStatusMatch = true;
                             }
                         }
@@ -114,10 +115,10 @@ public class SummitEventsRegistration {
 
                     //Build the BCC list. No duplicate emails. Split strings.
                     BCCsToGo = addToEmailList(em.BCC_Email__c, BCCsToGo);
-                    BCCsToGo = addToEmailList(areg.Registrant_Other_Email__c, BCCsToGo);
-                    BCCsToGo = addToEmailList(areg.Registrant_Parent_Email__c, BCCsToGo);
+                    BCCsToGo = addToEmailList(registration.Registrant_Other_Email__c, BCCsToGo);
+                    BCCsToGo = addToEmailList(registration.Registrant_Parent_Email__c, BCCsToGo);
                     if (bccRegStatusMatch) {
-                        BCCsToGo = addToEmailList(areg.BCC_Transactional_Emails__c, BCCsToGo);
+                        BCCsToGo = addToEmailList(registration.BCC_Transactional_Emails__c, BCCsToGo);
                     }
 
                     if (statusMatch) {
@@ -147,7 +148,7 @@ public class SummitEventsRegistration {
                                 //Get the value for hook from registration have to remove any registration object names since we are already in the object
                                 String found = matcher2.group(1).replace(namespace + 'Summit_Events_Registration__c.', '');
                                 try {
-                                    found = String.valueOf(areg.get(found));
+                                    found = String.valueOf(registration.get(found));
                                 } catch (Exception e) {
                                     found = '';
                                 }
@@ -156,8 +157,8 @@ public class SummitEventsRegistration {
                                 if (String.isBlank(found)) {
                                     found = '';
                                 }
-                                //replace all hooks with found values from regstration
 
+                                //replace all hooks with found values from registration
                                 if (emailTags.contains(matcher2.group(1))) {
                                     found = found.replace('_HL_ENCODED_', '<a href="');
                                     found = found.replace('_HL__blank_HL_', '</a>');
@@ -172,13 +173,28 @@ public class SummitEventsRegistration {
                         //put email content (after hooks have been replaced with values) into the email template
                         originalTemplate = originalTemplate.replaceAll('\\[\\[DONT_DELETE_CONTENT_HERE\\]\\]', emailContent);
 
-                        //send the message
-                        String emailMessage = sendEmail2(areg.Registrant_Email__c, originalTemplate, emailContent, em.Email_Subject__c, em.Org_Email_Id__c, BCCsToGo);
+                        //Create the email
+                        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                        mail.setToAddresses(new String[]{
+                                registration.Registrant_Email__c
+                        });
+                        mail.setSubject(em.Email_Subject__c);
+                        mail.setBccAddresses(BCCsToGo);
+                        mail.setPlainTextBody(emailContent);
+                        if (String.isBlank(originalTemplate)) {
+                            mail.setHtmlBody(emailContent);
+                        } else {
+                            mail.setHtmlBody(originalTemplate);
+                        }
+                        mail.setOrgWideEmailAddressId(em.Org_Email_Id__c);
+
+                        //Add the email to the list of emails to send
+                        emailsToSend.add(mail);
 
                         //Create an activity task
                         Task nt = new Task();
-                        nt.WhatId = areg.Id;
-                        nt.WhoId = areg.Contact__c;
+                        nt.WhatId = registration.Id;
+                        nt.WhoId = registration.Contact__c;
                         nt.Type = 'Email';
                         nt.ActivityDate = Date.today();
                         nt.Subject = 'Event status email: ' + em.Action_Status__c + ' - ' + em.Email_Subject__c;
@@ -187,9 +203,10 @@ public class SummitEventsRegistration {
 
                         nt.Description = emailContent.replaceAll('</p>', '\n'); // Replaces </p> (the paragraph closing tag) with a line break, since it is functionally identical to a line break
                         nt.Description = nt.Description.replaceAll('<(.*?)>', ''); // Replaces angled brackets and everything between with an empty string
-                        nt.Description += '\n\n' + 'Registrant Email: ' + areg.Registrant_Email__c;
-                        nt.Description = emailMessage + '\n\n' + nt.Description;
+                        nt.Description += '\n\n' + 'Registrant Email: ' + registration.Registrant_Email__c;
+                        nt.Description = nt.Description;
 
+                        //Add the activity task to the list of activity tasks to save
                         activityUpdates.add(nt);
                     }
 
@@ -197,7 +214,23 @@ public class SummitEventsRegistration {
             }
         }
 
+        String emailMessage = 'Email successfully sent!';
+
+        if (emailsToSend.size() > 0) {
+            try {
+                Messaging.sendEmail(emailsToSend);
+            } catch (Exception ex) {
+                //If the email fails, we want to add the error message to the activity task description
+                emailMessage = 'Email failed with this error: ' + ex.getMessage();
+                System.debug(ex.getMessage());
+            }
+        }
+
         if (activityUpdates.size() > 0) {
+            //Add email status message to the activity task description
+            for (Task t : activityUpdates) {
+                t.Description = emailMessage + '\n\n' + t.Description;
+            }
             doCRUD crudToDo = new doCRUD();
             crudToDo.savTask(activityUpdates);
         }
@@ -246,32 +279,6 @@ public class SummitEventsRegistration {
             }
         }
         return res;
-    }
-
-    public static String sendEmail2(String EmailTo, String HTMLBody, String plainBody, String Subject, Id OrgEmailId, List<String> BccList) {
-        String emailMessage = 'Email successfully sent!';
-        try {
-            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-            mail.setToAddresses(new String[]{
-                    EmailTo
-            });
-            mail.setSubject(Subject);
-            mail.setBccAddresses(BccList);
-            mail.setPlainTextBody(plainBody);
-            if (String.isBlank(HTMLBody)) {
-                mail.setHtmlBody(plainBody);
-            } else {
-                mail.setHtmlBody(HTMLBody);
-            }
-            mail.setOrgWideEmailAddressId(OrgEmailId);
-            Messaging.SendEmailResult [] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[]{
-                    mail
-            });
-        } catch (Exception ex) {
-            emailMessage = 'Email failed with this error: ' + ex.getMessage();
-            System.debug(ex.getMessage());
-        }
-        return emailMessage;
     }
 
     private without sharing class doCRUD {
