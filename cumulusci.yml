@@ -17,7 +17,13 @@ tasks:
         options:
             namespace_inject: $project_config.project__package__namespace
             path: unpackaged/config/site
-            unmanaged: True
+
+    deploy_account_permission_set:
+        description: Deploys configuration for Development.
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            namespace_inject: $project_config.project__package__namespace
+            path: unpackaged/config/permissions
 
     create_fake_school_data:
         description: Makes fake account data to mimic schools with Educaiton as industry
@@ -54,14 +60,16 @@ tasks:
             namespace_inject: $project_config.project__package__namespace
             apex: >
                 List<PermissionSet> eventPermissionSets;
-                eventPermissionSets = [SELECT Name, Id FROM PermissionSet WHERE Name = 'Summit_Events_Admin'];
+                eventPermissionSets = [SELECT Name, Id FROM PermissionSet WHERE Name = 'Summit_Events_Admin' OR Name = 'Summit_Events_Admin_Account'];
 
                 List<PermissionSetAssignment> permissionSetList = new List<PermissionSetAssignment>();
-                if (!eventPermissionSets.isEmpty()) {
-                    for (User u: [ SELECT ID FROM User WHERE Profile.Name = 'System Administrator' ]) {
-                                     permissionSetList.add(new PermissionSetAssignment(PermissionSetId = eventPermissionSets[0].Id, AssigneeId = u.Id));
+
+                for (User u: [ SELECT ID FROM User WHERE Profile.Name = 'System Administrator' ]) {
+                    for (permissionSet p: eventPermissionSets) {
+                        permissionSetList.add(new PermissionSetAssignment(PermissionSetId = p.Id, AssigneeId = u.Id));
                     }
                 }
+
                 if (!permissionSetList.isEmpty()) {
                     upsert permissionSetList;
                 }
@@ -81,12 +89,14 @@ tasks:
                 ];
 
                 List<PermissionSet> eventPermissionSets;
-                eventPermissionSets = [SELECT Name, Id FROM PermissionSet WHERE Name = 'Summit_Events_Registrant'];
+                eventPermissionSets = [SELECT Name, Id FROM PermissionSet WHERE Name = 'Summit_Events_Registrant' OR Name = 'Summit_Events_Registrant_Account'];
 
                 List<PermissionSetAssignment> permissionSetList = new List<PermissionSetAssignment>();
-                if (!eventPermissionSets.isEmpty()) {
-                        permissionSetList.add(new PermissionSetAssignment(PermissionSetId = eventPermissionSets[0].Id, AssigneeId = site.GuestUserId));
+
+                for (permissionSet p: eventPermissionSets) {
+                    permissionSetList.add(new PermissionSetAssignment(PermissionSetId = p.Id, AssigneeId = site.GuestUserId));
                 }
+
                 if (!permissionSetList.isEmpty()) {
                     upsert permissionSetList;
                 }
@@ -113,7 +123,10 @@ tasks:
 flows:
     config_qa:
         steps:
+
             3:
+                task: deploy_account_permission_set
+            3.5:
                 task: deploy_permission_set
             4:
                 task: deploy_site_config
@@ -129,6 +142,8 @@ flows:
     config_dev:
         steps:
             3:
+                task: deploy_account_permission_set
+            3.5:
                 task: deploy_permission_set
             4:
                 task: deploy_site_config
@@ -144,6 +159,8 @@ flows:
     config_dev_namespaced:
         steps:
             3:
+                task: deploy_account_permission_set
+            3.5:
                 task: deploy_permission_set
             4:
                 task: deploy_site_config

@@ -1515,11 +1515,6 @@
         <field>Summit_Events__c.Academic_Program_Selected__c</field>
         <readable>true</readable>
     </fieldPermissions>
-<!--    <fieldPermissions>-->
-<!--        <editable>false</editable>-->
-<!--        <field>Summit_Events__c.Account__c</field>-->
-<!--        <readable>true</readable>-->
-<!--    </fieldPermissions>-->
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Add_Info_Question_Pick_List_1__c</field>
@@ -2392,15 +2387,6 @@
     </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Summit Events Registrant</label>
-<!--    <objectPermissions>-->
-<!--        <allowCreate>false</allowCreate>-->
-<!--        <allowDelete>false</allowDelete>-->
-<!--        <allowEdit>false</allowEdit>-->
-<!--        <allowRead>true</allowRead>-->
-<!--        <modifyAllRecords>false</modifyAllRecords>-->
-<!--        <object>Account</object>-->
-<!--        <viewAllRecords>false</viewAllRecords>-->
-<!--    </objectPermissions>-->
     <objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>false</allowDelete>
