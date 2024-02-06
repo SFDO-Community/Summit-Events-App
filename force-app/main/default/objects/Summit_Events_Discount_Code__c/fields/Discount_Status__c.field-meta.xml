@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Discount_Status__c</fullName>
+    <description>Displays if the Discount Code is valid.</description>
+    <externalId>false</externalId>
+    <formula>If(Active__c=False,&apos;Invalid&apos;,IF(Today()&gt;=Discount_Start_Date__c &amp;&amp; Today()&lt;Discount_End_Date__c&amp;&amp;Active__c=True,&apos;Valid&apos;,IF(ISNULL(Discount_Start_Date__c) &amp;&amp;ISNULL(Discount_End_Date__c)&amp;&amp;Active__c=True,&apos;Valid&apos;,&apos;Invalid&apos;)))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>The event start and end dates control when the code is valid.  If no dates are chosen and the active checkbox is checked, the code is always valid for the events to which it is tied.</inlineHelpText>
+    <label>Discount Status</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

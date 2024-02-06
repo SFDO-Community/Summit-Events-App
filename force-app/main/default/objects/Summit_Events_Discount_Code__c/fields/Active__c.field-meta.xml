@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Active__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>If this the field is checked it indicates the code is valid.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The discount code must be active in order for the discount code to be valid during registration and for selection in event setup.</inlineHelpText>
+    <label>Active</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

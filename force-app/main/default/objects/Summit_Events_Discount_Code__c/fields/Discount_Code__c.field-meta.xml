@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Discount_Code__c</fullName>
+    <caseSensitive>false</caseSensitive>
+    <description>Discount Code is used to provide a discount to the event.  The code needs to be unique.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Discount Code is used to provide a discount to the event.  The code needs to be unique.</inlineHelpText>
+    <label>Discount Code</label>
+    <length>255</length>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

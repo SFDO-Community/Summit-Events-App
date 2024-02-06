@@ -5,4 +5,11 @@
 
 <!-- Summit Events Discount Code Selector -->
 <template>
+    <div style="height: 300px;">
+        <lightning-datatable
+                key-field="id"
+                data={discountCodes}
+                columns={columns}>
+        </lightning-datatable>
+    </div>
 </template>
