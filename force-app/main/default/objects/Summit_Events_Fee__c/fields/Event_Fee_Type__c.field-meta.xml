@@ -11,17 +11,7 @@
     <type>Picklist</type>
     <valueSet>
         <valueSetDefinition>
-            <sorted>false</sorted>
-            <value>
-                <fullName>Event</fullName>
-                <default>false</default>
-                <label>Event</label>
-            </value>
-            <value>
-                <fullName>Event Additional</fullName>
-                <default>false</default>
-                <label>Event Additional</label>
-            </value>
+            <sorted>true</sorted>
             <value>
                 <fullName>Appointment</fullName>
                 <default>false</default>
@@ -31,6 +21,21 @@
                 <fullName>Appointment Additional</fullName>
                 <default>false</default>
                 <label>Appointment Additional</label>
+            </value>
+            <value>
+                <fullName>Discount</fullName>
+                <default>false</default>
+                <label>Discount</label>
+            </value>
+            <value>
+                <fullName>Event</fullName>
+                <default>false</default>
+                <label>Event</label>
+            </value>
+            <value>
+                <fullName>Event Additional</fullName>
+                <default>false</default>
+                <label>Event Additional</label>
             </value>
             <value>
                 <fullName>Optional Donation</fullName>
