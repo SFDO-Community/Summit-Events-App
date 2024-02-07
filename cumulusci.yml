@@ -102,6 +102,14 @@ tasks:
             path: robot/SummitEventsApp/tests
             output: robot/SummitEventsApp/doc/SummitEventsApp_tests.html
 
+    install_managed:
+        options:
+            security_type: NONE
+
+    update_dependencies:
+        options:
+            security_type: NONE
+
 flows:
     config_qa:
         steps:
@@ -160,8 +168,8 @@ plans:
         tier: primary
         is_listed: True
         preflight_message: This will install Summit Events App (SEA) into your org.
-        post_install_message: "Thanks for installing SEA. Please review the [post-install instructions](https://github.com/SFDO-Community/Summit-Events-App/wiki/0a-%E2%80%93-Setting-Up-Summit-Events-After-Installing-Package) for next steps."
-        error_message: "If you experience an issue with the installation, please post in the [Power of Us Hub](https://powerofus.force.com/s/group/0F91E000000bo8OSAQ/community-project-summit-events-app)."
+        post_install_message: "Thanks for installing SEA. Please review the [post-install instructions](https://sfdo-community-sprints.github.io/summit-events-app-documentation/docs/Getting-Started/Installing/) for next steps."
+        error_message: "If you experience an issue with the installation, please post in the [Trailblazer Community](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHi2SAE)."
         steps:
             1:
                 flow: customer_org

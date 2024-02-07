@@ -277,7 +277,7 @@
                         </apex:repeat>
                         <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-around_x-small slds-p-vertical_xx-small">
                             <p class="slds-text-body slds-p-vertical_xx-small">
-                                <apex:commandButton action="{!submitAdditionalQuestions}" onClick="fadeout();" Value="Next" id="submitQuestions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                <apex:commandButton action="{!submitAdditionalQuestions}" onClick="fadeout();" Value="{!IF(CONTAINS(nextUrl,'summiteventsconfirmation'), 'Register', 'Next')}" id="submitQuestions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                                 <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small" immediate="true"/>
                             </p>
                         </div>

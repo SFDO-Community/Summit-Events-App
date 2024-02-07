@@ -72,14 +72,6 @@ const initCalendar = function () {
 
     const audienceDD = document.getElementById(audienceDropDownId);
 
-    /*
-    if(feedURL.endsWith('/')) {
-        feedURL += 'services/apexrest/summit/summiteventsfeed';
-    } else {
-        feedURL += '/services/apexrest/summit/summiteventsfeed';
-    }
-    */
-
     if (Object.keys(hardCodeAudience).length === 1) {
         audienceDD.closest('.slds-col').style.display = 'none';
     }
@@ -121,19 +113,25 @@ const initCalendar = function () {
         },
         eventDisplay: "auto",
         eventTextColor: "#000",
+        eventClick: function (info) {
+            info.jsEvent.preventDefault();
+            if (info.event.extendedProps.eventClosed.toLowerCase() === 'false') {
+                if (info.event.url) {
+                    console.log(info.event.url);
+                    window.open(info.event.url, "_blank");
+                }
+            }
+        },
         eventContent: function (info) {
-            let wrap = document.createElement("div");
+            let wrap = document.createElement("a");
+            wrap.href = info.event.url;
             let titleWrap = document.createElement("span");
             eventCount++;
             let toolTipId = 'tool-tip-' + eventCount;
             titleWrap.classList.add("summitEventsTitle");
-            if (info.event.extendedProps.eventClosed.toLowerCase() === 'false') {
-                titleWrap.innerHTML = info.event.title;
-                wrap.href = info.event.url;
-                wrap.target = "_blank";
-            }
+            titleWrap.innerHTML = info.event.title;
             if (info.event.extendedProps.eventClosed.toLowerCase() === 'true') {
-                titleWrap.innerHTML = info.event.title + "<br/><em>Event is closed.</em><br/>";
+                titleWrap.innerHTML += "<br/><em>Event is closed.</em><br/>";
             }
             wrap.classList.add('SummitEventsItem', 'aria-describedby-tooltip');
             wrap.setAttribute('aria-describedby', toolTipId)
@@ -152,32 +150,28 @@ const initCalendar = function () {
             } else {
                 wrap.append(descWrap);
             }
-            let tooltip = document.createElement('div')
-            tooltip.id = toolTipId;
-            tooltip.classList.add('slds-popover', 'slds-popover_tooltip', 'slds-fall-into-ground');
-            tooltip.style.position = 'absolute';
-            let tooltipDesc = document.createElement('div');
-            tooltipDesc.classList.add('slds-popover__body');
-            tooltipDesc.style.whiteSpace = 'normal';
-            tooltipDesc.innerHTML = info.event.extendedProps.description;
-            tooltip.append(tooltipDesc);
-            let calWrap = document.getElementById('eventCalWrap');
-            calWrap.parentNode.insertBefore(tooltip, calWrap.nextSibling);
+            if (info.event.extendedProps.description && info.view.type === "dayGridMonth") {
+                let tooltip = document.createElement('div')
+                tooltip.id = toolTipId;
+                tooltip.classList.add('slds-popover', 'slds-popover_tooltip', 'slds-fall-into-ground');
+                tooltip.style.position = 'absolute';
+                let tooltipDesc = document.createElement('div');
+                tooltipDesc.classList.add('slds-popover__body');
+                tooltipDesc.style.whiteSpace = 'normal';
+                tooltipDesc.innerHTML = info.event.extendedProps.description;
+                tooltip.append(tooltipDesc);
+                let calWrap = document.getElementById('eventCalWrap');
+                calWrap.parentNode.insertBefore(tooltip, calWrap.nextSibling);
+            }
             let arrayOfDomNodes = [wrap]
             return {domNodes: arrayOfDomNodes}
         },
-        /*
-        eventMouseEnter: function (info) {
-            let desc = info.event.extendedProps.description;
-            tippy(info.el, {animate: "fade", content: desc});
-        },
-        */
         windowResize: function () {
             this.changeView(getCalView());
             this.refetchEvents();
             activateTooltips();
         },
-        eventDidMount: function () {
+        eventDidMount: function (info) {
             activateTooltips();
         }
     });

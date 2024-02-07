@@ -21,7 +21,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public List<questionItem> questionWrapper { get; set; }
     private Id incomingRegId { get; set; }
     public Map<String, String> lookUpDisplayValue { get; set; }
-
+    public String nextUrl { get; set; }
 
     public class questionItem {
         public String questionId { get; set; }
@@ -85,6 +85,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
             templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
             pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
+            nextUrl = pageFlow.get('Next').getUrl().toLowerCase();
             formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
             instanceName = eventInstance.Name;
             startTimeString = SummitEventsShared.formatTime(eventInstance.Instance_Start_Time__c, false);
