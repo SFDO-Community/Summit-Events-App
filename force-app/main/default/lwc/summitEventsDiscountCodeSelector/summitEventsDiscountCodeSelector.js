@@ -5,15 +5,15 @@
 import {api, LightningElement, wire} from 'lwc';
 import {getRecord} from "lightning/uiRecordApi";
 //import apex
-import getDiscountCodes from "@salesforce/apex/SummitEventsDiscountCodeShared.getDiscountCodes";
+import getDiscountCodes from "@salesforce/apex/SummitEventsDiscountCodeShared.discountCodes";
 // import all the fields from the summit_events_discount_code__c object
-import CODE_ACTIVE_FIELD from "@salesforce/schema/Summit_Events_Discount_Code__c.ACTIVE__c";
+import CODE_ACTIVE_FIELD from "@salesforce/schema/Summit_Events_Discount_Code__c.Active__c";
 import CODE_DESCRIPTION_FIELD from "@salesforce/schema/Summit_Events_Discount_Code__c.Description__c";
 import CODE_DISCOUNT_FIELD from "@salesforce/schema/Summit_Events_Discount_Code__c.Discount__c";
 import CODE_CODE_FIELD from "@salesforce/schema/Summit_Events_Discount_Code__c.Discount_Code__c";
-import CODE_END_DATE_FIELD from "@salesforce/schema/Summit_Events_Discount_Code__c.End_Date__c";
-import CODE_STATUS_FIELD from "@salesforce/schema/Summit_Events_Discount_Code__c.Status__c";
-import CODE_TYPE_FIELD from "@salesforce/schema/Summit_Events_Discount_Code__c.Type__c";
+import CODE_END_DATE_FIELD from "@salesforce/schema/Summit_Events_Discount_Code__c.Discount_End_Date__c";
+import CODE_STATUS_FIELD from "@salesforce/schema/Summit_Events_Discount_Code__c.Discount_Status__c";
+import CODE_TYPE_FIELD from "@salesforce/schema/Summit_Events_Discount_Code__c.Discount_Type__c";
 
 const CODE_FIELDS = [
     CODE_ACTIVE_FIELD,
@@ -96,7 +96,8 @@ export default class SummitEventsDiscountCodeSelector extends LightningElement {
 
     @api recordId;
 
-    @wire(getDiscountCodes) discountCodes;
+    @wire(getDiscountCodes)
+    discountCodes;
 
 
 }

@@ -32,5 +32,3 @@ public with sharing class SummitEventsDiscountCodeShared {
     }
 
 }
-
-
