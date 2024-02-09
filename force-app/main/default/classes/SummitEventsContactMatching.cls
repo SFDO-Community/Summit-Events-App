@@ -125,7 +125,7 @@ public with sharing class SummitEventsContactMatching {
                                 try {
                                     Contact con = (Contact) mRecord.getRecord();
                                     matchContacts.add(con);
-                                } catch (Exception e){
+                                } catch (Exception e) {
                                     System.debug(e);
                                 }
                             }
@@ -153,7 +153,14 @@ public with sharing class SummitEventsContactMatching {
                     ]) {
                         c.put(mapping.Contact_Field_API_Name__c, null);
                     }
-                    crud.addRecord(c);
+                    Boolean personAccountEnabled = SummitEventsShared.personAccountsEnabled();
+                    if (personAccountEnabled) {
+                        // If Person Accounts are enabled, we need to convert the contact into a person account
+                        crud.addRecord(convertContactToPersonAccount(c));
+                    } else {
+                        crud.addRecord(c);
+                    }
+
                     reg.New_Contact_Created__c = true;
                     reg.Contact__c = c.Id;
                     matchLog += matchingLog(reg, new List<Contact>(), 'Match not found using Duplicate Rule <em>' + matchType.get(reg.Event__c) + '</em></div>', 'New contact created!', true);
@@ -228,7 +235,7 @@ public with sharing class SummitEventsContactMatching {
                             try {
                                 Lead led = (Lead) mRecord.getRecord();
                                 matchLeads.add(led);
-                            } catch (Exception e){
+                            } catch (Exception e) {
                                 System.debug(e);
                             }
                         }
@@ -279,7 +286,28 @@ public with sharing class SummitEventsContactMatching {
         return matchLog;
     }
 
+    private static Account convertContactToPersonAccount(Contact c) {
+        // If Person Accounts are enabled, we need to convert the contact into a person account
+        // This is done by setting the PersonContactId field to null
+        Account personAccount = new Account();
+        personAccount.LastName = c.LastName;
+        personAccount.FirstName = c.FirstName;
+        //Assign the value to account with get method to avoid conflicting when person accounts are not enabled
+        personAccount.put('Email', c.Email);
+        personAccount.put('Birthdate', c.Birthdate);
+        personAccount.put('MailingStreet', c.MailingCity);
+        personAccount.put('MailingCity', c.MailingCity);
+        personAccount.put('MailingState', c.MailingState);
+        personAccount.put('MailingPostalCode', c.MailingPostalCode);
+        personAccount.put('MailingCountry', c.MailingCountry);
+        personAccount.put('Phone', c.Phone);
+        personAccount.put('MobilePhone', c.MobilePhone);
+        personAccount.put('Created_with_Summit_Events__c', true);
+        return personAccount;
+    }
+
     private static Contact makeContact(Summit_Events_Registration__c reg, String matchingMethod) {
+
         Contact c = new Contact();
         c.FirstName = reg.Registrant_First_Name__c;
         c.LastName = reg.Registrant_Last_Name__c;
