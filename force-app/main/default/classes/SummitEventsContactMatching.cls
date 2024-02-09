@@ -290,20 +290,29 @@ public with sharing class SummitEventsContactMatching {
         // If Person Accounts are enabled, we need to convert the contact into a person account
         // This is done by setting the PersonContactId field to null
         Account personAccount = new Account();
-        personAccount.LastName = c.LastName;
-        personAccount.FirstName = c.FirstName;
-        //Assign the value to account with get method to avoid conflicting when person accounts are not enabled
-        personAccount.put('Email', c.Email);
-        personAccount.put('Birthdate', c.Birthdate);
-        personAccount.put('MailingStreet', c.MailingCity);
-        personAccount.put('MailingCity', c.MailingCity);
-        personAccount.put('MailingState', c.MailingState);
-        personAccount.put('MailingPostalCode', c.MailingPostalCode);
-        personAccount.put('MailingCountry', c.MailingCountry);
-        personAccount.put('Phone', c.Phone);
-        personAccount.put('MobilePhone', c.MobilePhone);
-        personAccount.put('Created_with_Summit_Events__c', true);
-        personAccount.put('isPersonAccount', true);
+
+        try {
+            Id personAccountRecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PersonAccount').getRecordTypeId();
+            personAccount.RecordTypeId = personAccountRecordTypeId;
+            personAccount.LastName = c.LastName;
+            personAccount.FirstName = c.FirstName;
+            //Assign the value to account with get method to avoid conflicting when person accounts are not enabled
+            personAccount.put('Email', c.Email);
+            personAccount.put('Birthdate', c.Birthdate);
+            personAccount.put('MailingStreet', c.MailingCity);
+            personAccount.put('MailingCity', c.MailingCity);
+            personAccount.put('MailingState', c.MailingState);
+            personAccount.put('MailingPostalCode', c.MailingPostalCode);
+            personAccount.put('MailingCountry', c.MailingCountry);
+            personAccount.put('Phone', c.Phone);
+            personAccount.put('MobilePhone', c.MobilePhone);
+            personAccount.put('Created_with_Summit_Events__c', true);
+            personAccount.put('isPersonAccount', true);
+        } catch (Exception e) {
+            throw new System.Exception('Person Accounts are not enabled');
+        }
+
+
         return personAccount;
     }
 
