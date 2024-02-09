@@ -296,7 +296,7 @@ public with sharing class SummitEventsContactMatching {
             personAccount.RecordTypeId = personAccountRecordTypeId;
             personAccount.LastName = c.LastName;
             personAccount.FirstName = c.FirstName;
-            //Assign the value to account with get method to avoid conflicting when person accounts are not enabled
+            //Assign the value to account with put method to avoid conflicting when person accounts are not enabled
             personAccount.put('Email', c.Email);
             personAccount.put('Birthdate', c.Birthdate);
             personAccount.put('MailingStreet', c.MailingCity);
