@@ -307,11 +307,9 @@ public with sharing class SummitEventsContactMatching {
             personAccount.put('Phone', c.Phone);
             personAccount.put('MobilePhone', c.MobilePhone);
             personAccount.put('Created_with_Summit_Events__c', true);
-            personAccount.put('isPersonAccount', true);
         } catch (Exception e) {
             throw new System.Exception('Person Accounts are not enabled');
         }
-
 
         return personAccount;
     }
