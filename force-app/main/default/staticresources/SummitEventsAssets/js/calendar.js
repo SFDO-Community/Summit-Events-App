@@ -7,8 +7,6 @@ ready(() => {
     initCalendar();
 })
 
-let urlParams = getUrlVars();
-
 /*  feedURL:
     This should be the site URL of the salesforce site where Summit Events App is installed
  */
@@ -50,35 +48,60 @@ const audienceDropDownId = "audienceDD";
 */
 const calendarDivId = "fullCalendarView";
 
+const audienceSelect = true;
+
 let eventCount = 0;
 
 let audienceList = [];
 
-if (urlParams['audienceList']) {
-    audienceList = decodeURIComponent(urlParams['audienceList']).split(',');
-}
-
-function getUrlVars() {
-    let vars = {};
-    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
-        function (m, key, value) {
-            vars[key] = value;
-        });
-    return vars;
+function getSEAUrlParams() {
+    const seaParameters = ['audience', 'audienceList', 'rectype', 'viewStart', 'viewEnd', 'eventId', 'type', 'sponsor', 'displayon', 'category', 'filter', 'account', 'locationtype', 'building', 'longdesc', 'audienceSelect'];
+    const params = new URLSearchParams(window.location.search)
+    let parameterObj = {}
+    seaParameters.forEach(param => {
+        if (params.has(param)) {
+            if(param === 'viewStart' || param === 'viewstart') {
+                parameterObj['start'] = params.get(param);
+            }
+            parameterObj[param] = params.get(param);
+        }
+    });
+    parameterObj.feedType = "eventList";
+    return parameterObj;
 }
 
 const initCalendar = function () {
-    const calendarEl = document.getElementById(calendarDivId);
-
+    const urlParams = getSEAUrlParams();
     const audienceDD = document.getElementById(audienceDropDownId);
-
-    if (Object.keys(hardCodeAudience).length === 1) {
-        audienceDD.closest('.slds-col').style.display = 'none';
-    }
-
+    let urlAudiences = [];
     if (audienceDD) {
-        loadAudienceDD();
+        if (urlParams['audienceList']) {
+            urlAudiences = urlParams['audienceList'].split(',');
+            if (urlAudiences.length === 1 || urlParams['audienceSelect'] === 'false') {
+                eraseCookie("SummitEvents");
+                audienceDD.closest('.slds-col').style.display = 'none';
+            }
+        }
+        fetch(feedURL + "?feedType=audienceDD").then((resp) => resp.json())
+            .then(function (data) {
+                    populateOptions(data, audienceDD, urlAudiences);
+                    if (SESettings != null) {
+                        if (SESettings.audience != null) {
+                            audienceDD.value = SESettings.audience;
+                            urlParams['audience'] = SESettings.audience;
+                        }
+                    }
+                    calendar.refetchEvents();
+                    if (audienceDD.value === "" && hideCalendarUntilAudience) {
+                        calendarEl.style.visibility = "hidden";
+                    }
+                }
+            ).catch(function (error) {
+            console.log(error);
+        });
     }
+
+    const calendarEl = document.getElementById(calendarDivId);
 
     function getCalView() {
         let initialView = "dayGridMonth";
@@ -88,6 +111,8 @@ const initCalendar = function () {
         return initialView;
     }
 
+    console.log(JSON.stringify(urlParams,null,2));
+
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: getCalView(),
         handleWindowResize: true,
@@ -95,9 +120,7 @@ const initCalendar = function () {
         contentHeight: "auto",
         events: {
             url: feedURL,
-            extraParams: function () {
-                return {feedType: "eventList", audience: getAudienceDDValue()};
-            },
+            extraParams: urlParams
         },
         eventDataTransform: function (rawEventData) {
             return {
@@ -117,7 +140,6 @@ const initCalendar = function () {
             info.jsEvent.preventDefault();
             if (info.event.extendedProps.eventClosed.toLowerCase() === 'false') {
                 if (info.event.url) {
-                    console.log(info.event.url);
                     window.open(info.event.url, "_blank");
                 }
             }
@@ -180,13 +202,20 @@ const initCalendar = function () {
 
     if (audienceDD) {
         audienceDD.addEventListener("change", function () {
+            if (Object.keys(hardCodeAudience).length === 1) {
+                urlParams['audience'] = hardCodeAudience[Object.keys(hardCodeAudience)[0]];
+            } else {
+                if (audienceDD) {
+                    urlParams['audience'] = audienceDD.value;
+                }
+            }
             eraseCookie("SummitEvents");
             createCookie(
                 "SummitEvents",
-                '{"audience" : "' + getAudienceDDValue() + '"}',
+                '{"audience" : "' + audienceDD.value + '"}',
                 ""
             );
-            if (getAudienceDDValue() === "" && hideCalendarUntilAudience) {
+            if (audienceDD.value === "" && hideCalendarUntilAudience) {
                 calendarEl.style.visibility = "hidden";
             } else {
                 calendarEl.style.visibility = "visible";
@@ -195,41 +224,7 @@ const initCalendar = function () {
         });
     }
 
-    function getAudienceDDValue() {
-        if (Object.keys(hardCodeAudience).length === 1) {
-            return hardCodeAudience[Object.keys(hardCodeAudience)[0]];
-        }
-        let audienceDDValue = "";
-        if (audienceDD) {
-            audienceDDValue = audienceDD.value;
-        }
-        if (audienceDDValue === "Select...") {
-            audienceDDValue = "";
-        }
-        return audienceDDValue;
-    }
-
-    function loadAudienceDD() {
-        fetch(
-            feedURL + "?feedType=audienceDD"
-        ).then((resp) => resp.json())
-            .then(function (data) {
-                populateOptions(data, audienceDD);
-                if (SESettings != null) {
-                    if (SESettings.audience != null) {
-                        audienceDD.value = SESettings.audience;
-                    }
-                }
-                calendar.refetchEvents();
-                if (getAudienceDDValue() === "" && hideCalendarUntilAudience) {
-                    calendarEl.style.visibility = "hidden";
-                }
-            }).catch(function (error) {
-            console.log(error);
-        });
-    }
-
-    function populateOptions(data, selector) {
+    function populateOptions(data, selector, urlAudienceList) {
         selector.innerHTML = "";
         let opt1 = document.createElement("option");
         opt1.value = "";
@@ -245,13 +240,24 @@ const initCalendar = function () {
                     let opt2 = document.createElement("option");
                     opt2.value = value;
                     opt2.text = key;
-                    selector.append(opt2);
-                    optionCount++;
+                    if (urlAudienceList.length > 0 && !urlAudienceList.includes('all')) {
+                        if (urlAudienceList.includes(value)) {
+                            selector.append(opt2);
+                            urlParams['audience'] = opt2.value;
+                            optionCount++;
+                        }
+                    } else {
+                        selector.append(opt2);
+                        optionCount++;
+                        urlParams['audience'] = opt2.value;
+                    }
                 }
             }
         }
         if (optionCount === 1) {
             audienceDD.closest('.slds-col').style.display = 'none';
+        } else {
+            urlParams['audience'] = "";
         }
     }
 

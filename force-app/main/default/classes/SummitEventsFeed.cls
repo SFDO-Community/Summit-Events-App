@@ -143,25 +143,31 @@ global with sharing class SummitEventsFeed {
         ///.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
         String formattedViewStart;
         String formattedViewEnd;
+
         if (String.isNotBlank(req.params.get('viewStart'))) {
             viewStart = Date.valueOf(String.escapeSingleQuotes(req.params.get('viewStart')));
         }
-        //if fullcalendar in use start is passed. start being protected variable
-        if (String.isNotBlank(req.params.get('start'))) {
-            viewStart = Date.valueOf(req.params.get('start'));
-        } else if (viewStart == null) {
-            viewStart = Datetime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(-1);
-        }
-
         if (String.isNotBlank(req.params.get('viewEnd'))) {
             viewEnd = Date.valueOf(String.escapeSingleQuotes(req.params.get('viewEnd')));
         }
-        //if fullcalendar in use end is passed. end being protected variable
-        if (String.isNotBlank(req.params.get('end'))) {
-            viewEnd = Date.valueOf(req.params.get('end'));
-        } else if (viewEnd == null) {
-            viewEnd = Datetime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(1);
 
+        //if fullcalendar in use start is passed. start being protected variable
+        if (viewStart == null) {
+            if (String.isNotBlank(req.params.get('start'))) {
+                viewStart = Date.valueOf(req.params.get('start'));
+            } else if (viewStart == null) {
+                viewStart = Datetime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(-1);
+            }
+        }
+
+        //if fullcalendar in use end is passed. end being protected variable
+        if (viewEnd == null) {
+            if (String.isNotBlank(req.params.get('end'))) {
+                viewEnd = Date.valueOf(req.params.get('end'));
+            } else if (viewEnd == null) {
+                viewEnd = Datetime.newInstance(Date.today(), Time.newInstance(0, 0, 0, 0)).addMonths(1);
+
+            }
         }
 
         formattedViewStart = viewStart.format('yyyy-MM-dd');
@@ -557,7 +563,7 @@ global with sharing class SummitEventsFeed {
         }, 'Filter events on the name of an account associated to the event via the account lookup field.'));
 
         //locationtype
-        allOptions.add(makeOption('locationtype',getObjectItemList(Summit_Events__c.Location_Type__c.getDescribe()), 'Filter events on the location type set on the event or the override on an instance of the event.'));
+        allOptions.add(makeOption('locationtype', getObjectItemList(Summit_Events__c.Location_Type__c.getDescribe()), 'Filter events on the location type set on the event or the override on an instance of the event.'));
         //filter-Building
         allOptions.add(makeOption('building', getObjectItemList(Summit_Events__c.Building__c.getDescribe()), 'Filter searches with a like statement all of these items. (&building= single or coma separated list of these items)'));
 
