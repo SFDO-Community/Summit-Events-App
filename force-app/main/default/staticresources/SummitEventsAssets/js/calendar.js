@@ -77,10 +77,10 @@ const initCalendar = function () {
     if (audienceDD) {
         if (urlParams['audienceList']) {
             urlAudiences = urlParams['audienceList'].split(',');
-            if (urlAudiences.length === 1 || urlParams['audienceSelect'] === 'false') {
-                eraseCookie("SummitEvents");
-                audienceDD.closest('.slds-col').style.display = 'none';
-            }
+        }
+        if (urlAudiences.length === 1 || (urlParams['audienceSelect'] === 'false')) {
+            eraseCookie("SummitEvents");
+            audienceDD.closest('.slds-col').style.display = 'none';
         }
         fetch(feedURL + "?feedType=audienceDD").then((resp) => resp.json())
             .then(function (data) {
@@ -254,7 +254,7 @@ const initCalendar = function () {
                 }
             }
         }
-        if (optionCount === 1) {
+        if (optionCount === 1 || urlParams['audienceSelect'] === 'false') {
             audienceDD.closest('.slds-col').style.display = 'none';
         } else {
             urlParams['audience'] = "";
