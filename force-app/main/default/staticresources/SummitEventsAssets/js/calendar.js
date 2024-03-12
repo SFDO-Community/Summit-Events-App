@@ -55,16 +55,17 @@ let eventCount = 0;
 let audienceList = [];
 
 function getSEAUrlParams() {
-    const seaParameters = ['audience', 'audienceList', 'rectype', 'viewStart', 'viewEnd', 'eventId', 'type', 'sponsor', 'displayon', 'category', 'filter', 'account', 'locationtype', 'building', 'longdesc', 'audienceSelect'];
+    const seaParameters = ['audience', 'audienceList', 'rectype', 'viewStart', 'viewEnd', 'eventId', 'type', 'sponsor', 'displayon', 'category', 'filter', 'account', 'locationtype', 'building', 'longdesc', 'audienceSelect', 'template'];
     const params = new URLSearchParams(window.location.search)
     let parameterObj = {}
+    let paramCount = 0;
     seaParameters.forEach(param => {
-        if (params.has(param)) {
-            if(param === 'viewStart' || param === 'viewstart') {
-                parameterObj['start'] = params.get(param);
-            }
-            parameterObj[param] = params.get(param);
+        //Determine if params has seaParmenter or seaParameter in lowercase and apply to paramValue or empty string
+        let paramValue = params.has(param) ? params.get(param) : params.has(param.toLowerCase()) ? params.get(param.toLowerCase()) : '';
+        if (paramValue) {
+            parameterObj[seaParameters[paramCount]] = paramValue;
         }
+        paramCount++;
     });
     parameterObj.feedType = "eventList";
     return parameterObj;
@@ -111,7 +112,7 @@ const initCalendar = function () {
         return initialView;
     }
 
-    console.log(JSON.stringify(urlParams,null,2));
+    console.log(JSON.stringify(urlParams, null, 2));
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: getCalView(),
