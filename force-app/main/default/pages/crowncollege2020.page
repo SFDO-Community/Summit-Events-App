@@ -28,7 +28,6 @@
                 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
                 <![endif]-->
                 <apex:insert name="sectionNav"/>
-                <h1>CROWN COLLEGE TEMPLATE</h1>
                 <apex:insert name="body"/>
                 <apex:insert name="footer"/>
             </div>
