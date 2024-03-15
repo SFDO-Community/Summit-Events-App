@@ -293,10 +293,10 @@ public with sharing class SummitEventsContactMatching {
 
         try {
             Id personAccountRecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PersonAccount').getRecordTypeId();
-            personAccount.RecordTypeId = personAccountRecordTypeId;
-            personAccount.LastName = c.LastName;
-            personAccount.FirstName = c.FirstName;
             //Assign the value to account with put method to avoid conflicting when person accounts are not enabled
+            personAccount.put('RecordTypeId', personAccountRecordTypeId);
+            personAccount.put('LastName', c.LastName);
+            personAccount.put('FirstName', c.FirstName);
             personAccount.put('Email', c.Email);
             personAccount.put('Birthdate', c.Birthdate);
             personAccount.put('MailingStreet', c.MailingCity);
@@ -308,7 +308,7 @@ public with sharing class SummitEventsContactMatching {
             personAccount.put('MobilePhone', c.MobilePhone);
             personAccount.put('Created_with_Summit_Events__c', true);
         } catch (Exception e) {
-            throw new System.Exception('Person Accounts are not enabled');
+            System.debug(e.getMessage() + ' - Person Accounts are not enabled');
         }
 
         return personAccount;
