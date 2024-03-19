@@ -42,8 +42,8 @@ tasks:
                 SiteDetail mySiteDetail = [SELECT SecureURL FROM SiteDetail WHERE DurableId = :mySite.Id];
                 String url = mySiteDetail.SecureURL;
                 %%%NAMESPACE%%%Summit_Events_Settings__c eventSettings = %%%NAMESPACE%%%Summit_Events_Settings__c.getOrgDefaults();
-                eventSettings.Community_Base_URL__c = url;
-                eventSettings.Managed_Package__c = false;
+                eventSettings.%%%NAMESPACE%%%Community_Base_URL__c = url;
+                eventSettings.%%%NAMESPACE%%%Managed_Package__c = false;
                 upsert eventSettings;
 
     deploy_permission_set:
