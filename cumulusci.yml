@@ -71,7 +71,7 @@ tasks:
         options:
             namespace_inject: $project_config.project__package__namespace
             apex: >
-                String siteName = '%%%NAMESPACE%%%Summit_Events';
+                String siteName = 'Summit_Events';
 
                 Site site = [
                         SELECT GuestUserId
