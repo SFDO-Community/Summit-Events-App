@@ -50,22 +50,6 @@
         </connector>
     </assignments>
     <assignments>
-        <name>Assign_Instance_to_Flow_Record</name>
-        <label>Assign Instance to Flow Record</label>
-        <locationX>116</locationX>
-        <locationY>350</locationY>
-        <assignmentItems>
-            <assignToReference>Instance</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>recordId</elementReference>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Get_Summit_Event</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
         <name>Assign_Lookup_Event_Id_to_Flow_Record</name>
         <label>Assign Lookup Event Id to Flow Record</label>
         <locationX>644</locationX>
@@ -80,30 +64,6 @@
         <connector>
             <isGoTo>true</isGoTo>
             <targetReference>Assign_Defaults_for_Instance</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <description>Assign Time and Rich Text values to Flow Record.</description>
-        <name>Assign_Values_to_Flow_Record</name>
-        <label>Assign Values to Flow Record</label>
-        <locationX>380</locationX>
-        <locationY>1232</locationY>
-        <assignmentItems>
-            <assignToReference>Instance.Instance_Start_Time__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>formula_ConvertStartTime</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>Instance.Instance_End_Time__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>formula_ConvertEndTime</elementReference>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Create_or_Update</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -142,7 +102,7 @@
         <name>Increase_Counter</name>
         <label>Increase Counter</label>
         <locationX>50</locationX>
-        <locationY>1964</locationY>
+        <locationY>1856</locationY>
         <assignmentItems>
             <assignToReference>varInstanceAppointmentCounter</assignToReference>
             <operator>Add</operator>
@@ -155,11 +115,259 @@
             <targetReference>Instance_Appointment_Loop</targetReference>
         </connector>
     </assignments>
+    <assignments>
+        <description>This is being done with direct mapping instead of simply assigning the entire the record variable to the flow variable because of a KNOWN ISSUE of Flows not supporting the Time field, including through assignment element.  By doing this we are mapping everything EXCEPT time values.</description>
+        <name>Map_Instance_to_Flow_Record</name>
+        <label>Map Instance to Flow Record</label>
+        <locationX>116</locationX>
+        <locationY>350</locationY>
+        <!-- <assignmentItems>
+            <assignToReference>Instance.Active_Status__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Active_Status__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Alternate_Registration_URL_Override__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Alternate_Registration_URL_Override__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Attendee_List__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Attendee_List__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Building_Override__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Building_Override__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Capacity__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Capacity__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Capacity_Control__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Capacity_Control__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Category__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Category__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Confirmed_Attendees__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Confirmed_Attendees__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Count_of_Attendees__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Count_of_Attendees__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Event__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Event__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Event_Fee_Additional_Allocation_Override__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Event_Fee_Additional_Allocation_Override__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Event_Fee_Additional_Override__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Event_Fee_Additional_Override__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Event_Fee_Allocation_Override__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Event_Fee_Allocation_Override__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Event_Fee_Override__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Event_Fee_Override__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Name</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Name</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Feed_Registration_Button_Text_Override__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Feed_Registration_Button_Text_Override__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Instance_End_Date__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Instance_End_Date__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Instance_Short_Description__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Instance_Short_Description__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Instance_Start_Date__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Instance_Start_Date__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Instance_Time_Zone__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Instance_Time_Zone__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Instance_Title__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Instance_Title__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Location_Address_Override__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Location_Address_Override__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Location_Map_Link_Override__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Location_Map_Link_Override__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Location_Title_Override__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Location_Title_Override__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Location_Type_Override__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Location_Type_Override__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Primary_Attendees__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Primary_Attendees__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Primary_Confirmed_Attendees__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Primary_Confirmed_Attendees__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Private_Instance__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Private_Instance__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Virtual_Appointment_Link__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Virtual_Appointment_Link__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Virtual_Meeting_Link__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Virtual_Meeting_Link__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Id</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.Start_Time_Flow__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.Start_Time_Flow__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Instance.End_Time_Flow__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId.End_Time_Flow__c</elementReference>
+            </value>
+        </assignmentItems> -->
+        <assignmentItems>
+            <assignToReference>Instance</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Summit_Event</targetReference>
+        </connector>
+    </assignments>
     <decisions>
         <name>Create_Instance_Appointments</name>
         <label>Create Instance Appointments?</label>
         <locationX>380</locationX>
-        <locationY>1640</locationY>
+        <locationY>1532</locationY>
         <defaultConnectorLabel>No</defaultConnectorLabel>
         <rules>
             <name>Yes_Instance_Appointments</name>
@@ -181,7 +389,7 @@
         <name>Create_or_Update</name>
         <label>Create or Update?</label>
         <locationX>380</locationX>
-        <locationY>1340</locationY>
+        <locationY>1232</locationY>
         <defaultConnector>
             <targetReference>Create_Instance</targetReference>
         </defaultConnector>
@@ -223,7 +431,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Assign_Instance_to_Flow_Record</targetReference>
+                <targetReference>Map_Instance_to_Flow_Record</targetReference>
             </connector>
             <label>Yes - Has Instance</label>
         </rules>
@@ -255,7 +463,7 @@
         <name>Instance_Appointment_Loop</name>
         <label>Instance Appointment Loop</label>
         <locationX>182</locationX>
-        <locationY>1748</locationY>
+        <locationY>1640</locationY>
         <defaultConnectorLabel>After Last Item</defaultConnectorLabel>
         <rules>
             <name>For_Each_Item</name>
@@ -332,12 +540,12 @@
     <formulas>
         <name>formula_ConvertEndTime</name>
         <dataType>DateTime</dataType>
-        <expression>DATETIMEVALUE( &apos;2020-01-01 &apos; &amp; {!time_Instance_End_Time.fieldValue} )</expression>
+        <expression>DATETIMEVALUE( &apos;2020-01-01 &apos; &amp; {!time_Instance_End_Time.fieldValue} &amp; &apos;Z&apos; )</expression>
     </formulas>
     <formulas>
         <name>formula_ConvertStartTime</name>
         <dataType>DateTime</dataType>
-        <expression>DATETIMEVALUE( &apos;2020-01-01 &apos; &amp; {!time_Instance_Start_Time.fieldValue} )</expression>
+        <expression>DATETIMEVALUE( &apos;2020-01-01 &apos; &amp; {!time_Instance_Start_Time.fieldValue} &amp; &apos;Z&apos; )</expression>
     </formulas>
     <interviewLabel>Summit Event Instance - Overrideable {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Summit Event Instance - Overrideable</label>
@@ -361,14 +569,178 @@
     </processMetadataValues>
     <processType>Flow</processType>
     <recordCreates>
+        <description>Create Instance is being done with direct mapping instead of the record variable because of a KNOWN ISSUE of Flows not supporting the Time field, including through assignment element.  However, a direct insert as used here will work.</description>
         <name>Create_Instance</name>
         <label>Create Instance</label>
         <locationX>512</locationX>
-        <locationY>1448</locationY>
+        <locationY>1340</locationY>
         <connector>
             <targetReference>Create_Instance_Appointments</targetReference>
         </connector>
-        <inputReference>Instance</inputReference>
+        <inputAssignments>
+            <field>Active_Status__c</field>
+            <value>
+                <elementReference>Instance.Active_Status__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Alternate_Registration_URL_Override__c</field>
+            <value>
+                <elementReference>Instance.Alternate_Registration_URL_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Attendee_List__c</field>
+            <value>
+                <elementReference>Instance.Attendee_List__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Building_Override__c</field>
+            <value>
+                <elementReference>Instance.Building_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Capacity_Control__c</field>
+            <value>
+                <elementReference>Instance.Capacity_Control__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Capacity__c</field>
+            <value>
+                <elementReference>Instance.Capacity__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Category__c</field>
+            <value>
+                <elementReference>Instance.Category__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Event_Fee_Additional_Allocation_Override__c</field>
+            <value>
+                <elementReference>Instance.Event_Fee_Additional_Allocation_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Event_Fee_Additional_Override__c</field>
+            <value>
+                <elementReference>Instance.Event_Fee_Additional_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Event_Fee_Allocation_Override__c</field>
+            <value>
+                <elementReference>Instance.Event_Fee_Allocation_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Event_Fee_Override__c</field>
+            <value>
+                <elementReference>Instance.Event_Fee_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Event__c</field>
+            <value>
+                <elementReference>Instance.Event__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Feed_Registration_Button_Text_Override__c</field>
+            <value>
+                <elementReference>Instance.Feed_Registration_Button_Text_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Instance_End_Date__c</field>
+            <value>
+                <elementReference>Instance.Instance_End_Date__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Instance_End_Time__c</field>
+            <value>
+                <elementReference>formula_ConvertEndTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Instance_Short_Description__c</field>
+            <value>
+                <elementReference>Instance.Instance_Short_Description__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Instance_Start_Date__c</field>
+            <value>
+                <elementReference>Instance.Instance_Start_Date__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Instance_Start_Time__c</field>
+            <value>
+                <elementReference>formula_ConvertStartTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Instance_Time_Zone__c</field>
+            <value>
+                <elementReference>Instance.Instance_Time_Zone__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Instance_Title__c</field>
+            <value>
+                <elementReference>Instance.Instance_Title__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Location_Address_Override__c</field>
+            <value>
+                <elementReference>Instance.Location_Address_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Location_Map_Link_Override__c</field>
+            <value>
+                <elementReference>Instance.Location_Map_Link_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Location_Title_Override__c</field>
+            <value>
+                <elementReference>Instance.Location_Title_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Location_Type_Override__c</field>
+            <value>
+                <elementReference>Instance.Location_Type_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Private_Instance__c</field>
+            <value>
+                <elementReference>Instance.Private_Instance__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Virtual_Appointment_Link__c</field>
+            <value>
+                <elementReference>Instance.Virtual_Appointment_Link__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Virtual_Meeting_Link__c</field>
+            <value>
+                <elementReference>Instance.Virtual_Meeting_Link__c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Summit_Events_Instance__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
     <recordLookups>
         <name>Get_Summit_Event</name>
@@ -396,14 +768,179 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordUpdates>
+        <description>Update Instance is being done with direct mapping instead of the record variable because of a KNOWN ISSUE of Flows not supporting the Time field, including through assignment element. However, a direct insert as used here will work.</description>
         <name>Update_Instance</name>
         <label>Update Instance</label>
         <locationX>248</locationX>
-        <locationY>1448</locationY>
+        <locationY>1340</locationY>
         <connector>
             <targetReference>Create_Instance_Appointments</targetReference>
         </connector>
-        <inputReference>Instance</inputReference>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Instance.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Active_Status__c</field>
+            <value>
+                <elementReference>Instance.Active_Status__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Alternate_Registration_URL_Override__c</field>
+            <value>
+                <elementReference>Instance.Alternate_Registration_URL_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Attendee_List__c</field>
+            <value>
+                <elementReference>Instance.Attendee_List__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Building_Override__c</field>
+            <value>
+                <elementReference>Instance.Building_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Capacity_Control__c</field>
+            <value>
+                <elementReference>Instance.Capacity_Control__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Capacity__c</field>
+            <value>
+                <elementReference>Instance.Capacity__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Category__c</field>
+            <value>
+                <elementReference>Instance.Category__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Event_Fee_Additional_Allocation_Override__c</field>
+            <value>
+                <elementReference>Instance.Event_Fee_Additional_Allocation_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Event_Fee_Additional_Override__c</field>
+            <value>
+                <elementReference>Instance.Event_Fee_Additional_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Event_Fee_Allocation_Override__c</field>
+            <value>
+                <elementReference>Instance.Event_Fee_Allocation_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Event_Fee_Override__c</field>
+            <value>
+                <elementReference>Instance.Event_Fee_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Feed_Registration_Button_Text_Override__c</field>
+            <value>
+                <elementReference>Instance.Feed_Registration_Button_Text_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Instance_End_Date__c</field>
+            <value>
+                <elementReference>Instance.Instance_End_Date__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Instance_End_Time__c</field>
+            <value>
+                <elementReference>formula_ConvertEndTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Instance_Short_Description__c</field>
+            <value>
+                <elementReference>Instance.Instance_Short_Description__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Instance_Start_Date__c</field>
+            <value>
+                <elementReference>Instance.Instance_Start_Date__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Instance_Start_Time__c</field>
+            <value>
+                <elementReference>formula_ConvertStartTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Instance_Time_Zone__c</field>
+            <value>
+                <elementReference>Instance.Instance_Time_Zone__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Instance_Title__c</field>
+            <value>
+                <elementReference>Instance.Instance_Title__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Location_Address_Override__c</field>
+            <value>
+                <elementReference>Instance.Location_Address_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Location_Map_Link_Override__c</field>
+            <value>
+                <elementReference>Instance.Location_Map_Link_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Location_Title_Override__c</field>
+            <value>
+                <elementReference>Instance.Location_Title_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Location_Type_Override__c</field>
+            <value>
+                <elementReference>Instance.Location_Type_Override__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Private_Instance__c</field>
+            <value>
+                <elementReference>Instance.Private_Instance__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Virtual_Appointment_Link__c</field>
+            <value>
+                <elementReference>Instance.Virtual_Appointment_Link__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Virtual_Meeting_Link__c</field>
+            <value>
+                <elementReference>Instance.Virtual_Meeting_Link__c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Summit_Events_Instance__c</object>
     </recordUpdates>
     <screens>
         <name>Instance_Configuration</name>
@@ -414,7 +951,7 @@
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
         <connector>
-            <targetReference>Assign_Values_to_Flow_Record</targetReference>
+            <targetReference>Create_or_Update</targetReference>
         </connector>
         <fields>
             <name>ProgressBar_CreateInstance</name>
@@ -495,7 +1032,6 @@
                     <dataType>Number</dataType>
                     <fieldText>How many Instance appointments?</fieldText>
                     <fieldType>InputField</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <scale>0</scale>
                     <visibilityRule>
@@ -529,19 +1065,16 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Private_Instance__c</objectFieldReference>
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Instance_Title__c</objectFieldReference>
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Instance_Short_Description__c</objectFieldReference>
                 </fields>
@@ -558,19 +1091,16 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Attendee_List__c</objectFieldReference>
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Active_Status__c</objectFieldReference>
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Category__c</objectFieldReference>
                 </fields>
@@ -594,7 +1124,6 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Capacity__c</objectFieldReference>
                 </fields>
@@ -611,7 +1140,6 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Capacity_Control__c</objectFieldReference>
                     <visibilityRule>
@@ -645,13 +1173,11 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Instance_Start_Date__c</objectFieldReference>
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Instance_End_Date__c</objectFieldReference>
                 </fields>
@@ -683,15 +1209,15 @@
                         </value>
                     </inputParameters>
                     <inputParameters>
-                        <name>fieldValue</name>
-                        <value>
-                            <elementReference>Instance.Instance_Start_Time__c</elementReference>
-                        </value>
-                    </inputParameters>
-                    <inputParameters>
                         <name>helpText</name>
                         <value>
                             <stringValue>The time this event starts.</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>fieldValue</name>
+                        <value>
+                            <elementReference>Instance.Start_Time_Flow__c</elementReference>
                         </value>
                     </inputParameters>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
@@ -715,15 +1241,15 @@
                         </value>
                     </inputParameters>
                     <inputParameters>
-                        <name>fieldValue</name>
-                        <value>
-                            <elementReference>Instance.Instance_End_Time__c</elementReference>
-                        </value>
-                    </inputParameters>
-                    <inputParameters>
                         <name>helpText</name>
                         <value>
                             <stringValue>The time this event will end.</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>fieldValue</name>
+                        <value>
+                            <elementReference>Instance.End_Time_Flow__c</elementReference>
                         </value>
                     </inputParameters>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
@@ -732,7 +1258,6 @@
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Instance_Time_Zone__c</objectFieldReference>
                 </fields>
@@ -781,7 +1306,6 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Feed_Registration_Button_Text_Override__c</objectFieldReference>
                 </fields>
@@ -805,13 +1329,11 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Location_Type_Override__c</objectFieldReference>
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Location_Title_Override__c</objectFieldReference>
                 </fields>
@@ -828,7 +1350,6 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Building_Override__c</objectFieldReference>
                     <visibilityRule>
@@ -895,7 +1416,6 @@
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Location_Address_Override__c</objectFieldReference>
                     <visibilityRule>
@@ -932,7 +1452,6 @@
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Location_Map_Link_Override__c</objectFieldReference>
                     <visibilityRule>
@@ -990,7 +1509,6 @@
                     <dataType>Currency</dataType>
                     <fieldText>Event Fee Override</fieldText>
                     <fieldType>InputField</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <scale>2</scale>
                 </fields>
@@ -999,7 +1517,6 @@
                     <dataType>Currency</dataType>
                     <fieldText>Event Fee Additional Override</fieldText>
                     <fieldType>InputField</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <scale>2</scale>
                     <visibilityRule>
@@ -1033,7 +1550,6 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Event_Fee_Allocation_Override__c</objectFieldReference>
                     <visibilityRule>
@@ -1056,7 +1572,6 @@
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>Instance.Event_Fee_Additional_Allocation_Override__c</objectFieldReference>
                     <visibilityRule>
@@ -1181,7 +1696,7 @@
         <name>Create_Instance_Appointment_Type</name>
         <label>Create Instance Appointment Type</label>
         <locationX>50</locationX>
-        <locationY>1856</locationY>
+        <locationY>1748</locationY>
         <connector>
             <targetReference>Increase_Counter</targetReference>
         </connector>
