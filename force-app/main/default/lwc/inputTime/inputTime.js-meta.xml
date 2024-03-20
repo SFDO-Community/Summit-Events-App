@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>59.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Time Input (Summit Events)</masterLabel>
+    <description>Time Input</description>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="fieldLabel" label="Field Label" type="String" required="true" default="Time" description="The label of the time input."/>
+            <property name="fieldValue" label="Field Value" type="String" description="The value of the time input."/>
+            <property name="required" label="Required" type="Boolean" required="true" default="false" description="Specifies whether users must enter a value. If present, an asterisk is displayed before the label when label-visible is present."/>
+            <property name="minTime" label="Minimum Time" type="String" description="The minimum acceptable value for the input using a valid string for the Time type. "/>
+            <property name="maxTime" label="Maximum Time" type="String" description="The maximum acceptable value for the input using a valid string for the Time type. "/>
+            <property name="placeholder" label="Placeholder" type="String" description="Text that is displayed when the field is empty, to prompt the user for a valid entry."/>
+            <property name="timeStyle" label="Time Format Style" type="String" description="The display style of the time. Valid values are short (default), medium, and long. Currently, medium and long styles look the same. On mobile devices this attribute has no effect."/>
+            <property name="helpText" label="Help Text" type="String" description="Help text detailing the purpose and function of the input."/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

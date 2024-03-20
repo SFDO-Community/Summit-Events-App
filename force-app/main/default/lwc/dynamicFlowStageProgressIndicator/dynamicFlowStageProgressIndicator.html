@@ -1,0 +1,306 @@
+<!--
+/*******************************************************************************************
+* @Name			dynamicFlowProgressLWC
+* @Author		Mitch Lynch (mitch.lynch@salesforce.com)
+* @Date			10/21/2021
+* @Description	LWC that displays six different kinds of progress indicators to use in a screen flow.
+*******************************************************************************************/
+/* MODIFICATION LOG
+*
+* 	Date			Developer			Story		Description
+*   09/19/2022      Mitch Lynch         n/a         Fixed typo in indicatorType property that listed "NavMenu" instead of "VertNav". Removed tabindex attribute from the Path indicator markup. Added a new showFinalComplete state for Vertical and VertNav, rather than trying to trick them into showing the showCurrent state.
+*   09/13/2022      Mitch Lynch         n/a         Configured masterLabel to "Dynamic Flow Progress".
+*   09/01/2022      Mitch Lynch         n/a         Resolved bug where VerNav wouldn't display the final step as the current step. Fixed issue where currentStepPercentage was not overriding VertNav and Bar.
+*   08/03/2022      Mitch Lynch         n/a         Style clean-up.
+*	08/03/2022		Mitch Lynch			n/a			Converted to an LWC. Removed href="#" attribute from the <a> in the horizontal path indicator type to prevent link/reload behavior. Now always shows as Completed when the current step is also the final step (does not affect VertNav, Bar, and Ring indicator types).
+*	10/28/2021		Mitch Lynch			n/a			Implemented custom labels for easy translation. General cleanup; addition of Salesforce Labs Terms and Conditions. Added NavMenu indicator type.
+*	10/27/2021		Mitch Lynch			n/a			Switched the horizontal path markup to use the direct SLDS markup, not the lightning:path component, for more controler over formatting; key issue was with the bug that would only recognize the first step as the current step. Fixed formatting of success icons in horizontal indicator; now, both vertical and horizontal versions match, using the green success check icon.
+*	10/22/2021		Mitch Lynch			n/a			Switched the horizontal indicator markup to use the direct SLDS markup, not the lightning:progressIndicator component, for more control over formatting; key issue was with the bug that auto-selects the first step's icon and displays that tooltip whenever a new screen is displayed. Switched the controller to use calculated counts in order to display the horizontal progress bar and calculate completion/length. Added support for SLDS Progress Bar and a progress ring.
+*	10/21/2021		Mitch Lynch			n/a			Initial Aura component created.
+*******************************************************************************************/
+/* NOTES
+*
+*	Resources:
+*		- https://www.lightningdesignsystem.com/components/progress-indicator/
+*		- https://www.lightningdesignsystem.com/components/progress-bar/
+*		- https://developer.salesforce.com/docs/component-library/bundle/lightning:progressIndicator/documentation
+*		- https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/ref_attr_types_collection.htm
+*		- https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_loops_for_traditional.htm
+*		- https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/labels_value_provider_platform.htm
+*		- https://help.salesforce.com/s/articleView?id=sf.cl_translate_edit.htm&type=5
+*
+*	TERMS AND CONDITIONS
+*		THIS APPLICATION IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*		INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*		DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+*		SPECIAL, EXEMPLARY, CONSEQUENTIAL OR SIMILAR DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+*		OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+*		WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+*		THIS APPLICATION, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+*		SUBJECT TO THE FOREGOING, THIS APPLICATION MAY BE FREELY REPRODUCED, DISTRIBUTED, TRANSMITTED, USED, MODIFIED, BUILT
+*		UPON, OR OTHERWISE EXPLOITED BY OR ON BEHALF OF SALESFORCE.COM OR ITS AFFILIATES, ANY CUSTOMER OR PARTNER OF
+*		SALESFORCE.COM OR ITS AFFILIATES, OR ANY DEVELOPER OF APPLICATIONS THAT INTERFACE WITH THE SALESFORCE.COM APPLICATION,
+*		FOR ANY PURPOSE, COMMERCIAL OR NON-COMMERCIAL, RELATED TO USE OF THE SALESFORCE.COM APPLICATION, AND IN ANY WAY,
+*		INCLUDING BY METHODS THAT HAVE NOT YET BEEN INVENTED OR CONCEIVED.
+*
+*******************************************************************************************/
+-->
+
+<template>
+    
+    <!-- ##### Vertical Indicator ##### -->
+    <template if:true={showTypeVertical}>
+        <div class="slds-progress slds-progress_vertical">
+            <ol class="slds-progress__list">
+                <template for:each={stepsArray} for:item="step">
+                    
+                    <!-- if FinalComplete -->
+                    <template if:true={step.showFinalComplete}>
+                        <li key={step.label} class="slds-progress__item slds-is-completed">
+                            <span class="slds-icon_container slds-icon-utility-success slds-progress__marker slds-progress__marker_icon slds-progress__marker_icon-success" title={label.DFSPI_Complete}>
+                                <div class="slds-icon slds-icon_xx-small" aria-hidden="true">
+                                    <lightning-icon icon-name="utility:success" variant="success" size="xx-small" class="slds-icon slds-icon_xx-small"></lightning-icon>
+                                </div>
+                                <span class="slds-assistive-text">{label.DFSPI_Complete}</span>
+                            </span>
+                            <div class="slds-progress__item_content slds-grid slds-grid_align-spread"><strong>{step.label}</strong></div>
+                        </li>
+                    </template>
+
+                    <!-- if Complete -->
+                    <template if:true={step.showComplete}>
+                        <li key={step.label} class="slds-progress__item slds-is-completed">
+                            <span class="slds-icon_container slds-icon-utility-success slds-progress__marker slds-progress__marker_icon slds-progress__marker_icon-success" title={label.DFSPI_Complete}>
+                                <div class="slds-icon slds-icon_xx-small" aria-hidden="true">
+                                    <lightning-icon icon-name="utility:success" variant="success" size="xx-small" class="slds-icon slds-icon_xx-small"></lightning-icon>
+                                </div>
+                                <span class="slds-assistive-text">{label.DFSPI_Complete}</span>
+                            </span>
+                            <div class="slds-progress__item_content slds-grid slds-grid_align-spread">{step.label}</div>
+                        </li>
+                    </template>
+                    
+                    <!-- if Current -->
+                    <template if:true={step.showCurrent}>
+                        <li key={step.label} class="slds-progress__item slds-is-active">
+                            <div class="slds-progress__marker">
+                                <span class="slds-assistive-text">{label.DFSPI_Current}</span>
+                            </div>
+                            <div class="slds-progress__item_content slds-grid slds-grid_align-spread"><strong>{step.label}</strong></div>
+                        </li>
+                    </template>
+                    
+                    <!-- if Upcoming -->
+                    <template if:true={step.showUpcoming}>
+                        <li key={step.label} class="slds-progress__item">
+                            <div class="slds-progress__marker">
+                                <span class="slds-assistive-text">{label.DFSPI_Upcoming}</span>
+                            </div>
+                            <div class="slds-progress__item_content slds-grid slds-grid_align-spread">{step.label}</div>
+                        </li>
+                    </template>
+                    
+                </template>
+            </ol>
+        </div>
+    </template>
+    <!-- ##### END: Vertical Indicator ##### -->
+
+
+
+    <!-- ##### VertNav ##### -->
+    <template if:true={showTypeVertNav}>
+        <!-- <nav class="slds-nav-vertical" aria-label="Dynamic Flow Progress"> -->
+        <nav class="slds-nav-vertical">
+            <div class="slds-nav-vertical__section">
+                <ul aria-describedby="entity-header">
+                    
+                    <template for:each={stepsArray} for:item="step">
+                        
+                        <!-- if FinalComplete -->
+                        <template if:true={step.showFinalComplete}>
+                            <li key={step.label} class="slds-nav-vertical__item slds-is-active">
+                                <span class="slds-nav-vertical__action no-cursor" aria-current="true">{step.label}</span>
+                                <span class="slds-assistive-text">{label.DFSPI_Complete}</span>
+                            </li>
+                        </template>
+                        
+                        <!-- if Complete -->
+                        <template if:true={step.showComplete}>
+                            <li key={step.label} class="slds-nav-vertical__item">
+                                <span class="slds-nav-vertical__action no-hover">{step.label}</span>
+                                <span class="slds-assistive-text">{label.DFSPI_Complete}</span>
+                            </li>
+                        </template>
+                        
+                        <!-- if Current -->
+                        <template if:true={step.showCurrent}>
+                            <li key={step.label} class="slds-nav-vertical__item slds-is-active">
+                                <span class="slds-nav-vertical__action no-cursor" aria-current="true">{step.label}</span>
+                                <span class="slds-assistive-text">{label.DFSPI_Current}</span>
+                            </li>
+                        </template>
+                        
+                        <!-- if Upcoming -->
+                        <template if:true={step.showUpcoming}>
+                            <li key={step.label} class="slds-nav-vertical__item">
+                                <span class="slds-nav-vertical__action no-hover">{step.label}</span>
+                                <span class="slds-assistive-text">{label.DFSPI_Upcoming}</span>
+                            </li>
+                        </template>
+                        
+                    </template>
+                </ul>
+            </div>
+        </nav>
+    </template>
+    <!-- ##### END: VertNav ##### -->
+
+
+
+    <!-- ##### Horizontal ##### -->
+    <template if:true={showTypeHorizontal}>
+        <div class="slds-progress slds-var-m-top_small slds-var-m-bottom_small">
+            <ol class="slds-progress__list">
+                
+                <div class="slds-progress-bar slds-progress-bar_x-small" aria-valuemin="0" aria-valuemax="100" aria-valuenow={pathProgress} aria-label={progressLabel} role="progressbar">
+                    <span class="slds-progress-bar__value progress-style">
+                        <span class="slds-assistive-text">{progressLabel}</span>
+                    </span>
+                </div>
+                
+                <template for:each={stepsArray} for:item="step">
+                    
+                    
+                    <!-- if Complete -->
+                    <template if:true={step.showComplete}>
+                        <li key={step.label} class="slds-progress__item slds-is-completed">
+                            <span class="slds-icon_container slds-icon-utility-success slds-progress__marker slds-progress__marker_icon" title={label.DFSPI_Complete}>
+                                <div class="slds-icon slds-icon_xx-small" aria-hidden="true">
+                                    <lightning-icon icon-name="utility:success" variant="success" size="xx-small" class="slds-icon slds-icon_xx-small"></lightning-icon>
+                                </div>
+                                <span class="slds-assistive-text">{label.DFSPI_Complete}</span>
+                            </span>
+                        </li>
+                    </template>
+                    
+                    
+                    <!-- if Current -->
+                    <template if:true={step.showCurrent}>
+                        <li key={step.label} class="slds-progress__item slds-is-active">
+                            <div class="slds-button slds-progress__marker">
+                                <span class="slds-assistive-text">{label.DFSPI_Current}</span>
+                            </div>
+                        </li>
+                    </template>
+                    
+                    
+                    <!-- if Upcoming -->
+                    <template if:true={step.showUpcoming}>
+                        <li key={step.label} class="slds-button slds-progress__item">
+                            <div class="slds-progress__marker">
+                                <span class="slds-assistive-text">{label.DFSPI_Upcoming}</span>
+                            </div>
+                        </li>
+                    </template>
+                    
+                    
+                </template>
+            </ol>
+        </div>
+    </template>
+    <!-- ##### END: Horizontal ##### -->
+
+
+
+    <!-- ##### Path ##### -->
+    <template if:true={showTypePath}>
+        <div class="slds-path slds-var-m-top_small slds-var-m-bottom_small">
+            <div class="slds-grid slds-path__track">
+                <div class="slds-grid slds-path__scroller-container">
+                    <div class="slds-path__scroller">
+                        <div class="slds-path__scroller_inner">
+                            <ul class="slds-path__nav" role="listbox" aria-orientation="horizontal">
+                                
+                                <template for:each={stepsArray} for:item="step">
+                                    
+                                    <!-- if Complete -->
+                                    <template if:true={step.showComplete}>
+                                        <li key={step.label} class="slds-path__item slds-is-complete" role="presentation">
+                                            <a aria-selected="false" class="slds-path__link" role="option">
+                                                <span class="slds-path__stage">
+                                                    <lightning-icon icon-name="utility:check" variant="inverse" size="xx-small" class="slds-icon slds-icon_x-small"></lightning-icon>
+                                                    <span class="slds-assistive-text">{label.DFSPI_Complete}</span>
+                                                </span>
+                                                <span class="slds-path__title">{step.label}</span>
+                                            </a>
+                                        </li>
+                                    </template>
+                                    
+                                    
+                                    <!-- if Current -->
+                                    <template if:true={step.showCurrent}>
+                                        <li key={step.label} class="slds-path__item slds-is-current slds-is-active" role="presentation">
+                                            <a aria-selected="true" class="slds-path__link" role="option">
+                                                <span class="slds-path__stage">
+                                                    <lightning-icon icon-name="utility:check" variant="inverse" size="xx-small" class="slds-icon slds-icon_x-small"></lightning-icon>
+                                                    <span class="slds-assistive-text">{label.DFSPI_Current}</span>
+                                                </span>
+                                                <span class="slds-path__title">{step.label}</span>
+                                            </a>
+                                        </li>
+                                    </template>
+                                    
+                                    
+                                    <!-- if Upcoming -->
+                                    <template if:true={step.showUpcoming}>
+                                        <li key={step.label} class="slds-path__item slds-is-incomplete" role="presentation">
+                                            <a aria-selected="false" class="slds-path__link" role="option">
+                                                <span class="slds-path__stage">
+                                                    <lightning-icon icon-name="utility:check" variant="inverse" size="xx-small" class="slds-icon slds-icon_x-small"></lightning-icon>
+                                                    <span class="slds-assistive-text">{label.DFSPI_Upcoming}</span>
+                                                </span>
+                                                <span class="slds-path__title">{step.label}</span>
+                                            </a>
+                                        </li>
+                                    </template>
+
+                                </template>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <!-- ##### END: Path ##### -->
+
+
+
+    <!-- ##### Bar ##### -->
+    <template if:true={showTypeBar}>
+        <div class="slds-grid slds-grid_align-spread slds-var-p-bottom_x-small" id="progress-bar-label-id-6">
+            <span><strong>{currentStep}</strong></span>
+            <span aria-hidden="true">
+                <strong>{progressLabel}</strong>
+            </span>
+        </div>
+        <div class="slds-progress-bar slds-progress-bar_circular slds-progress-bar_large" aria-valuemin="0" aria-valuemax="100" aria-valuenow={pathProgress} aria-labelledby="progress-bar-label-id-6" aria-label={progressLabel} role="progressbar">
+            <span class="slds-progress-bar__value progress-style">
+                <span class="slds-assistive-text">{progressLabel}</span>
+            </span>
+        </div>
+    </template>
+    <!-- ##### END: Bar ##### -->
+
+
+
+    <!-- ##### Ring ##### -->
+    <template if:true={showTypeRing}>
+        <div class="progress-ring" aria-valuenow={pathProgress} aria-valuemin="0" aria-valuemax="100"></div>
+    </template>
+    <!-- ##### END: Ring ##### -->
+
+</template>

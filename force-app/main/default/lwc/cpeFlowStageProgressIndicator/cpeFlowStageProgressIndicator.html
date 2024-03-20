@@ -1,0 +1,90 @@
+<template>
+    <!-- Flow Stage Progress Indicator Configuration -->
+    <lightning-card title = "0305">
+        <div class="slds-p-around_medium">
+            <c-flow-combobox 
+                name="select_steps"
+                label={inputValues.allStages.label}
+
+                value={inputValues.allStages.value}
+                value-type={inputValues.allStages.valueDataType}
+                builder-context={_builderContext}
+                builder-context-filter-collection-boolean={inputValues.allStages.isCollection}
+                builder-context-filter-type="String"
+                automatic-output-variables={automaticOutputVariables}
+                onvaluechanged={handleFlowComboboxValueChange}
+            ></c-flow-combobox>
+            <c-flow-combobox 
+                name="select_currentStep"
+                label={inputValues.currentStage.label}
+
+                value={inputValues.currentStage.value}
+                value-type={inputValues.currentStage.valueDataType}
+                builder-context={_builderContext}
+                builder-context-filter-collection-boolean={inputValues.currentStage.isCollection}
+                builder-context-filter-type="String"
+                automatic-output-variables={automaticOutputVariables}
+                onvaluechanged={handleFlowComboboxValueChange}
+            ></c-flow-combobox>
+            <!-- <c-flow-combobox
+                name="select_type"
+                label={inputValues.type.label}
+                required={inputValues.type.required}
+                value={inputValues.type.value}
+                value-type={inputValues.type.valueDataType}
+                builder-context={_builderContext}
+                builder-context-filter-collection-boolean={inputValues.type.isCollection}
+                builder-context-filter-type="String"
+                automatic-output-variables={automaticOutputVariables}
+                all-options={typeOptions}
+                onvaluechanged={handleFlowComboboxValueChange}
+            ></c-flow-combobox> -->
+            <lightning-combobox
+                name="select_type"
+                label="Select Type"
+                value={type}
+                placeholder="Select Type"
+                options={typeOptions}
+                onchange={handleTypeChange}
+                required
+            ></lightning-combobox>
+            <!-- <c-flow-combobox
+                lwc:if={isBaseType}
+                name="select_variant"
+                label={inputValues.variant.label}
+                required={inputValues.variant.required}
+                value={inputValues.variant.value}
+                value-type={inputValues.variant.valueDataType}
+                builder-context={_builderContext}
+                builder-context-filter-collection-boolean={inputValues.variant.isCollection}
+                builder-context-filter-type="String"
+                automatic-output-variables={automaticOutputVariables}
+                all-options={variantOptions}
+                onvaluechanged={handleFlowComboboxValueChange}
+            ></c-flow-combobox> -->
+            <lightning-combobox
+                lwc:if={isBaseType} 
+                name="select_variant"
+                label="Select Variant"
+                value={variant}
+                placeholder="Select Variant"
+                options={variantOptions}
+                onchange={handleVariatChange}
+                required
+            ></lightning-combobox>
+            <c-flow-combobox
+                lwc:if={isBaseType} 
+                name="select_hasError"
+                label={inputValues.hasError.label}
+                required={inputValues.hasError.required}
+                value={inputValues.hasError.value}
+                value-type={inputValues.hasError.valueDataType}
+                builder-context={_builderContext}
+                builder-context-filter-collection-boolean={inputValues.hasError.isCollection}
+                builder-context-filter-type="Boolean"
+                automatic-output-variables={automaticOutputVariables}
+                onvaluechanged={handleFlowComboboxValueChange}
+            ></c-flow-combobox>
+        </div>
+    </lightning-card>
+</template>

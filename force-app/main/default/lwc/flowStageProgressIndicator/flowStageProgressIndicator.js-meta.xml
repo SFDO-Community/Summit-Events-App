@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>51.0</apiVersion>
+    <description>Flow Stage Progress Indicator.</description>
+    <isExposed>true</isExposed>
+    <masterLabel>Flow Stage Progress Indicator</masterLabel>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen"> <!-- configurationEditor="c-cpe-flow-stage-progress-indicator" -->
+            <property name="steps" type="String[]" required="true" label="Stages" description="What stages are active? (String Collection)"> </property>
+            <property name="currentStep" type="String" required="true" label="Current Stage" description="What is the current stage? (String)"> </property>
+            <property name="type" type="String" label="Style Mode" description="Base (circles) or Path (chevrons)?"> </property>
+            <property name="variant" type="String" label="Style Variant" description="Base-Mode: Base or Shaded (light gray border)?"> </property>
+            <property name="hasError" type="Boolean" label="Has Errors?" description="Base-Mode: Display an error icon?"></property>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

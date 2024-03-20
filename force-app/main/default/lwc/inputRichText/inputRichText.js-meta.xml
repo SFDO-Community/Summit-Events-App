@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>59.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Rich Text Input (Summit Events)</masterLabel>
+    <description>Rich Text Input</description>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="fieldLabel" label="Field Label" type="String" required="true" default="Rich Text" description="The label of the rich text editor."/>
+            <property name="fieldValue" label="Field Value" type="String" description="The HTML content in the rich text editor."/>
+            <property name="required" label="Required" type="Boolean" required="true" default="false" description="Specifies whether users must enter content in the editor. If present, an asterisk is displayed before the label when label-visible is present."/>
+            <property name="fieldLength" label="Field Length" type="Integer" required="true" default="32768" description="Up to 131,072 characters on separate lines."/>
+            <property name="visibleLines" label="# Visible Lines" type="Integer" required="true" default="5" description="# of Visible Lines is the number of lines you see when you are in edit mode."/>
+            <property name="recordId" label="Share with Entity Id" type="String" description="Entity ID to share the image with. Uploaded image files are accessible to all org users by default."/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

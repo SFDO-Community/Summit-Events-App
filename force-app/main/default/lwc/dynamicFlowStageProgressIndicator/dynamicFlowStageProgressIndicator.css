@@ -1,0 +1,37 @@
+.no-hover {
+    pointer-events: none;
+    background-color:#FFFFFF;
+}
+
+.no-cursor {
+    cursor:default;
+}
+
+div.progress-ring {
+  --size: 8rem;
+  --fg: #1d96fe;
+  --bg: #dddad9;
+  --pathProgress: var(--value);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: 
+    radial-gradient(closest-side, white 80%, transparent 0 99.9%, white 0),
+    conic-gradient(var(--fg) calc(var(--pathProgress) * 1%), var(--bg) 0)
+    ;
+  font-weight:bold;
+  font-size: calc(var(--size) / 5);
+  color: #000000;
+}
+
+div.progress-ring::before {
+  counter-reset: percentage var(--value);
+  content: counter(percentage) '%';
+}
+
+span.progress-style {
+  --pathValue: var(--value);
+  width: calc(var(--pathValue) * 1%);
+}

@@ -1,0 +1,19 @@
+<template>
+    <div class="slds-p-top_medium slds-p-bottom_medium">
+        <a href="#"></a>
+        <lightning-progress-indicator
+            current-step={currentStep}
+            has-error={hasError}
+            type={type}
+            variant={variant}
+        >
+            <template for:each={steps} for:item="step">
+                <lightning-progress-step
+                label={step}
+                value={step}
+                key={step}
+                ></lightning-progress-step>
+            </template>
+        </lightning-progress-indicator>
+    </div>
+</template>
