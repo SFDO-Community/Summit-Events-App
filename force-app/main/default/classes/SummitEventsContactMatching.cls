@@ -160,7 +160,7 @@ public with sharing class SummitEventsContactMatching {
                     if (personAccountEnabled) {
                         // If Person Accounts are enabled, we need to convert the contact into a person account
                         Account newPersonAccount = (Account) crud.addRecord(convertContactToPersonAccount(c));
-                        c.Id = (Id) newPersonAccount.get('PersonalContactId');
+                        //c.Id = (Id) newPersonAccount.get('PersonalContactId');
                     } else {
                         crud.addRecord(c);
                         newContact = c.Id;
