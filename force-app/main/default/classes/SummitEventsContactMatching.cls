@@ -160,10 +160,10 @@ public with sharing class SummitEventsContactMatching {
                     if (personAccountEnabled) {
                         // If Person Accounts are enabled, we need to convert the contact into a person account
                         Account newPersonAccount = (Account) crud.addRecord(convertContactToPersonAccount(c));
-                        //c.Id = (Id) newPersonAccount.get('PersonalContactId');
+                        reg.Person_Account__c = newPersonAccount.Id;
                     } else {
                         crud.addRecord(c);
-                        newContact = c.Id;
+                        reg.Contact__c = c.Id;
                     }
 
                     System.debug('New Contact ID: ' + newContact);
@@ -307,15 +307,15 @@ public with sharing class SummitEventsContactMatching {
             personAccount.put('LastName', c.LastName);
             personAccount.put('FirstName', c.FirstName);
             personAccount.put('PersonEmail', c.Email);
-            personAccount.put('Birthdate', c.Birthdate);
-            personAccount.put('MailingStreet', c.MailingCity);
-            personAccount.put('MailingCity', c.MailingCity);
-            personAccount.put('MailingState', c.MailingState);
-            personAccount.put('MailingPostalCode', c.MailingPostalCode);
-            personAccount.put('MailingCountry', c.MailingCountry);
-            personAccount.put('Phone', c.Phone);
-            personAccount.put('PersonOtherPhone', c.MobilePhone);
-            personAccount.put('Created_with_Summit_Events__c', true);
+            personAccount.put('PersonBirthdate', c.Birthdate);
+            personAccount.put('PersonMailingStreet', c.MailingCity);
+            personAccount.put('PersonMailingCity', c.MailingCity);
+            personAccount.put('PersonMailingState', c.MailingState);
+            personAccount.put('PersonMailingPostalCode', c.MailingPostalCode);
+            personAccount.put('PersonMailingCountry', c.MailingCountry);
+            personAccount.put('PersonHomePhone', c.Phone);
+            personAccount.put('PersonMobilePhone', c.MobilePhone);
+            personAccount.put('PersonContact.Created_with_Summit_Events__c', true);
         } catch (Exception e) {
             System.debug(e.getMessage() + ' - Person Accounts are not enabled');
         }
