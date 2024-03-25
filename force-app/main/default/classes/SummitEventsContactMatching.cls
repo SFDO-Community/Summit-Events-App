@@ -75,6 +75,7 @@ public with sharing class SummitEventsContactMatching {
 
     private static void matchContactsByDuplicateRule(List<Summit_Events_Registration__c> newRegistrations) {
         // Make it easy to tell what Matching Rule we're basing this off of
+        System.debug('Matching Contacts by Duplicate Rule');
         Map<Id, String> matchType = new Map<Id, String>();
         Map<Id, String> leadMatch = new Map<Id, String>();
         Map<Id, Summit_Events__c> allEvents = new Map<Id, Summit_Events__c>();
@@ -154,15 +155,21 @@ public with sharing class SummitEventsContactMatching {
                         c.put(mapping.Contact_Field_API_Name__c, null);
                     }
                     Boolean personAccountEnabled = SummitEventsShared.personAccountsEnabled();
+                    System.debug('Person Accounts are enabled: ' + personAccountEnabled);
+                    Id newContact = null;
                     if (personAccountEnabled) {
                         // If Person Accounts are enabled, we need to convert the contact into a person account
-                        crud.addRecord(convertContactToPersonAccount(c));
+                        Account newPersonAccount = (Account) crud.addRecord(convertContactToPersonAccount(c));
+                        c.Id = (Id) newPersonAccount.get('PersonalContactId');
                     } else {
                         crud.addRecord(c);
+                        newContact = c.Id;
                     }
 
+                    System.debug('New Contact ID: ' + newContact);
+
                     reg.New_Contact_Created__c = true;
-                    reg.Contact__c = c.Id;
+                    reg.Contact__c = newContact;
                     matchLog += matchingLog(reg, new List<Contact>(), 'Match not found using Duplicate Rule <em>' + matchType.get(reg.Event__c) + '</em></div>', 'New contact created!', true);
                 } else {
                     matchLog += matchingLog(null, new List<Contact>(), 'Match not found using Duplicate Rule <em>' + matchType.get(reg.Event__c) + '</em>', 'Contact creation skipped based on "Contact Matching Skip Contact Creation" field value on Summit Events object', false);
@@ -289,6 +296,8 @@ public with sharing class SummitEventsContactMatching {
     private static Account convertContactToPersonAccount(Contact c) {
         // If Person Accounts are enabled, we need to convert the contact into a person account
         // This is done by setting the PersonContactId field to null
+
+        System.debug('Account creation accessed as Person Accounts are enabled');
         Account personAccount = new Account();
 
         try {
@@ -297,7 +306,7 @@ public with sharing class SummitEventsContactMatching {
             personAccount.put('RecordTypeId', personAccountRecordTypeId);
             personAccount.put('LastName', c.LastName);
             personAccount.put('FirstName', c.FirstName);
-            personAccount.put('Email', c.Email);
+            personAccount.put('PersonEmail', c.Email);
             personAccount.put('Birthdate', c.Birthdate);
             personAccount.put('MailingStreet', c.MailingCity);
             personAccount.put('MailingCity', c.MailingCity);
@@ -305,7 +314,7 @@ public with sharing class SummitEventsContactMatching {
             personAccount.put('MailingPostalCode', c.MailingPostalCode);
             personAccount.put('MailingCountry', c.MailingCountry);
             personAccount.put('Phone', c.Phone);
-            personAccount.put('MobilePhone', c.MobilePhone);
+            personAccount.put('PersonOtherPhone', c.MobilePhone);
             personAccount.put('Created_with_Summit_Events__c', true);
         } catch (Exception e) {
             System.debug(e.getMessage() + ' - Person Accounts are not enabled');

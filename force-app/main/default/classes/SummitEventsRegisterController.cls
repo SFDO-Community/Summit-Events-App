@@ -590,7 +590,7 @@ public with sharing class SummitEventsRegisterController {
     private without sharing class registrationCRUD {
 
         public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c eventRegistration, Id incomingEventRegistrationId, String registrantAudience, List<Summit_Events_Fee__c> upsertFees) {
-            System.debug(JSON.serializePretty(eventRegistration));
+
             try {
                 if (String.isNotBlank(incomingEventRegistrationId)) {
                     eventRegistration.Id = incomingEventRegistrationId;
