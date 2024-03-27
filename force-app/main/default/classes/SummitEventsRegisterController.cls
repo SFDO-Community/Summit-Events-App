@@ -170,8 +170,9 @@ public with sharing class SummitEventsRegisterController {
                             (String.isNotBlank(eventPage.Add_Info_Question_Type_5__c) && String.isNotBlank(eventPage.Add_Info_Question_Text_5__c)) ||
 
                             eventPage.Include_Time_frame_List__c ||
-                            eventPage.Allow_Other_Attendees__c ||
-                            (eventPage.Ask_Gender__c != 'Do not ask' && eventPage.Ask_Gender__c != null)
+                            eventPage.Allow_Other_Attendees__c 
+                            //Gender is above the "Additional Information header. Removed per Bug 553
+                            // || (eventPage.Ask_Gender__c != 'Do not ask' && eventPage.Ask_Gender__c != null)
             ) {
                 additionalQuestions = true;
             }
