@@ -8,7 +8,7 @@
             <guestUser>Summit_Events</guestUser>
         </sharedTo>
         <criteriaItems>
-            <field>%%%NAMESPACE%%%Name</field>
+            <field>Name</field>
             <operation>notEqual</operation>
             <value>null</value>
         </criteriaItems>

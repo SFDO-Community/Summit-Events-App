@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>Summit_Events__c</members>
+        <members>%%%NAMESPACE%%%Summit_Events__c</members>
         <name>SharingRules</name>
     </types>
     <types>
@@ -9,7 +9,7 @@
         <name>SharingRules</name>
     </types>
     <types>
-        <members>Summit_Events_Fee_Allocation__c</members>
+        <members>%%%NAMESPACE%%%Summit_Events_Fee_Allocation__c</members>
         <name>SharingRules</name>
     </types>
     <version>56.0</version>
