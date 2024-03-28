@@ -12,5 +12,6 @@
             <operation>notEqual</operation>
             <value>null</value>
         </criteriaItems>
+        <includeHVUOwnedRecords>false</includeHVUOwnedRecords>
     </sharingGuestRules>
 </SharingRules>
