@@ -110,4 +110,8 @@ public with sharing class SummitEventsCancelReviewController {
 
     }
 
+    public PageReference checkEventDetails() {
+        return SummitEventsShared.checkForEvent('cancel');
+    }
+
 }
