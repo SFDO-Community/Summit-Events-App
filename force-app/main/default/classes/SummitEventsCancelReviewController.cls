@@ -5,10 +5,11 @@
 
 public with sharing class SummitEventsCancelReviewController {
     public Summit_Events_Registration__c eventRegistration { get; set; }
+    public Summit_Events__c eventPage { get; set; }
     public SummitEventsInfo eventInformation { get; set; }
     public List<Summit_Events_Appointments__c> appointments { get; set; }
     public String templateSelected { get; set; }
-    public Boolean eventOver { get; set; }
+    public Boolean eventIsClosed { get; set; }
     public Boolean eventNotFound { get; set; }
     public String formattedNavDate { get; set; }
     public String eventParameter { get; set; }
@@ -17,7 +18,9 @@ public with sharing class SummitEventsCancelReviewController {
     public SummitEventsCancelReviewController() {
         eventParameter = ApexPages.currentPage().getParameters().get('eventInfo');
         eventNotFound = true;
-        eventOver = false;
+        eventIsClosed = false;
+        eventRegistration = new Summit_Events_Registration__c();
+        templateSelected = SummitEventsShared.getTemplate('');
 
         if (!String.isBlank(eventParameter)) {
             String decryptedParameter = SummitEventsShared.decryptString(eventParameter, false);
@@ -30,23 +33,13 @@ public with sharing class SummitEventsCancelReviewController {
 
                 if (String.isNotBlank(eventInformation.registrationId)) {
                     eventRegistration = [
-                            SELECT Id, Status__c, Name, Event__r.Name, Event_Instance__c, Event__r.Event_Name__c, Event__r.Event_description__c,
-                                    Event__r.Event_Footer__c, Event__r.Event_Cancel_Review_Title__c, Event_Name__c, Event_Instance__r.Instance_Title__c,
-                                    Event__r.Event_Cancel_Review_Description__c, Event__r.Event_Cancelled_Notification_Text__c,
-                                    Event__r.Template__c, Event__r.Event_Home_Link_Title__c, Event__r.Event_Home_Link_URL__c,
-                                    Event_Instance__r.Instance_Start_Date__c, Event_Instance__r.Instance_Start_Time__c,
-                                    Event_Instance__r.Instance_End_Date__c, Event_Instance__r.Instance_End_Time__c, Event_Instance__r.Instance_Time_Zone__c,
-                                    Event__r.Tracking_Cancel_Registration__c, Event__r.Account__r.Name, Event__r.Audience__c,
-                                    Event__r.Filter_Category__c, Event__r.Event_Sponsor__c
+                            SELECT Id, Status__c, Name, Event_Instance__c, Event_Name__c, Event_Instance__r.Instance_Title__c, Event__c
                             FROM Summit_Events_Registration__c
                             WHERE Id = :eventInformation.registrationId
                             WITH SECURITY_ENFORCED
                     ];
 
-
                     if (eventRegistration != null) {
-
-                        templateSelected = SummitEventsShared.getTemplate(eventRegistration.Event__r.Template__c);
 
                         appointments = [
                                 SELECT Id, Appointment_Title__c, Appointment_Category__c, Appointment_Type__c
@@ -56,20 +49,30 @@ public with sharing class SummitEventsCancelReviewController {
                         ];
 
                         eventInstance = [
-                                SELECT Id, Event__r.Event_Name__c, Instance_Title__c,
-                                        Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c
+                                SELECT Id, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c,
+                                        Registration_Close_Date__c, Current_Available_Capacity__c, Active_Status__c
                                 FROM Summit_Events_Instance__c W
                                 WHERE Id = :eventRegistration.Event_Instance__c
                                 WITH SECURITY_ENFORCED
                         ];
 
-                        if (SummitEventsShared.convertDateToDatetime(eventRegistration.Event_Instance__r.Instance_End_Date__c, null, '') < SummitEventsShared.adjustForTimeZone(Datetime.now(), eventRegistration.Event_Instance__r.Instance_Time_Zone__c)) {
-                            eventOver = true;
-                        }
+                        eventPage = [
+                                SELECT Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Cancel_Review_Title__c, Event_Cancel_Review_Description__c,
+                                Event_Cancelled_Notification_Text__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Cancel_Registration__c,
+                                Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c, Event_Full_Text__c, Template__c
+                                FROM Summit_Events__c
+                                WHERE Id = :eventRegistration.Event__c
+                                WITH SECURITY_ENFORCED
+                        ];
+
+                        templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
+
+                        eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
 
                         if (eventInstance != null) {
                             formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
                         }
+
                         eventNotFound = false;
                     }
                 }
