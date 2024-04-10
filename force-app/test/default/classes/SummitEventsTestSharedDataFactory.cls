@@ -52,10 +52,10 @@ public with sharing class SummitEventsTestSharedDataFactory {
             seaInstance.Event__c = testEvent.Id;
             seaInstance.Instance_Title__c = testEvent.Name + ' Session ' + x;
             seaInstance.Instance_Start_Date__c = Date.today().addDays(x);
-            seaInstance.Instance_End_Date__c = Date.today().addDays(x);
+            seaInstance.Instance_End_Date__c = Date.today().addDays(x+1);
             seaInstance.Instance_Start_Time__c = currentTime.addHours(-1);
             seaInstance.Instance_End_Time__c = currentTime.addHours(8);
-            seaInstance.Instance_Time_Zone__c = 'Central Daylight Time (America/Chicago)';
+            seaInstance.Instance_Time_Zone__c = 'Greenwich Mean Time (GMT)';
             seaInstance.Active_Status__c = 'Active';
             seaInstance.Capacity__c = 500;
             seaTestInstances.add(seaInstance);

@@ -8,7 +8,7 @@ public class SummitEventsAddToCalendar_TEST {
     @IsTest
     static void testIcsFileGeneration() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
         System.runAs(testUser) {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsAddToCalendar;
@@ -24,7 +24,7 @@ public class SummitEventsAddToCalendar_TEST {
     @IsTest
     static void testForNullReturns() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
         System.runAs(testUser) {
             Test.startTest();
             SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
@@ -37,7 +37,7 @@ public class SummitEventsAddToCalendar_TEST {
     @IsTest
     static void testGoogleCalendarLink() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
         System.runAs(testUser) {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsAddToCalendar;
@@ -48,7 +48,7 @@ public class SummitEventsAddToCalendar_TEST {
             SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
             String startDate = calendarController.DTStart;
             String endDate = calendarController.DTEnd;
-            String comparePageReference = 'https://www.google.com/calendar/event?action=TEMPLATE&ctz=America%2FChicago&dates=' + startDate + '%2F' + endDate + '&details=&location=123+Electric+Ave.&sprop=%5Bevent_source_url%5DMap+Link+1&text=Test+Event+-+Test+Event+Session+0';
+            String comparePageReference = 'https://www.google.com/calendar/event?action=TEMPLATE&ctz=GMT&dates=' + startDate + '%2F' + endDate + '&details=&location=123+Electric+Ave.&sprop=%5Bevent_source_url%5DMap+Link+1&text=Test+Event+-+Test+Event+Session+0';
             system.assertEquals(calendarController.calendarType().getUrl(), comparePageReference);
             Test.stopTest();
         }
@@ -57,7 +57,7 @@ public class SummitEventsAddToCalendar_TEST {
     @IsTest
     static void testYahooCalendarLink() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
         System.runAs(testUser) {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsAddToCalendar;
@@ -67,8 +67,8 @@ public class SummitEventsAddToCalendar_TEST {
             SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
             String startDate = calendarController.DTStart;
             String endDate = calendarController.DTEnd;
-            String testCalendarURL = 'https://calendar.yahoo.com?desc=&et=' + endDate + '&in_csz=America%2FChicago&in_loc=A+location&in_st=123+Electric+Ave.&st=' + startDate + '&title=Test+Event+-+Test+Event+Session+0&v=60';
-            system.assertEquals(calendarController.calendarType().getUrl(), testCalendarURL);
+            String testCalendarURL = 'https://calendar.yahoo.com?desc=&et=' + endDate + '&in_csz=GMT&in_loc=A+location&in_st=123+Electric+Ave.&st=' + startDate + '&title=Test+Event+-+Test+Event+Session+0&v=60';
+            System.assertEquals(calendarController.calendarType().getUrl(), testCalendarURL);
             Test.stopTest();
         }
     }
@@ -76,7 +76,7 @@ public class SummitEventsAddToCalendar_TEST {
     @IsTest
     static void testICalIcs() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
         System.runAs(testUser) {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsAddToCalendar;
@@ -92,7 +92,7 @@ public class SummitEventsAddToCalendar_TEST {
     @IsTest
     static void testOutlookIcs() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
         System.runAs(testUser) {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsAddToCalendar;
@@ -108,7 +108,10 @@ public class SummitEventsAddToCalendar_TEST {
     @IsTest
     static void testOutlookWeb() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+        //Change from GMT to CDT to test daylight savings works
+        seaTestInstances[1].Instance_Time_Zone__c = 'Central Daylight Time (America/Chicago)';
+        update seaTestInstances;
         System.runAs(testUser) {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsAddToCalendar;
