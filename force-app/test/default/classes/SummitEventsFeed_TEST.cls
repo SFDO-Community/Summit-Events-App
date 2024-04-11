@@ -112,7 +112,6 @@ private class SummitEventsFeed_TEST {
 
             //test filter
             req.params.put('filter', 'OCB,BCY');
-            req.params.put('startDate', String.valueOf(Date.today()));
             RestContext.request = req;
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();

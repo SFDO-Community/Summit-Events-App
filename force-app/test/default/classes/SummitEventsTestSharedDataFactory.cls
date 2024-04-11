@@ -28,8 +28,8 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Name = 'Test Event',
                 Event_Status__c = 'Active',
                 Event_Name__c = 'Test Event',
-                Start_Date__c = Date.today().addDays(-20),
-                End_Date__c = Date.today().addDays(20),
+                Start_Date__c = Date.today().addDays(-30),
+                End_Date__c = Date.today().addDays(30),
                 Template__c = 'GeneralSLDS',
                 Close_Event_Days_Before__c = 0,
                 Location_Title__c = 'A location',
@@ -38,6 +38,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Location_Address__c = '123 Electric Ave.',
                 Location_Type__c = 'On-Site',
                 Allow_Other_Attendees__c = true,
+                Private_Event__c = false,
                 Max_Other_Attendees__c = 10
         );
         insert testEvent;
@@ -56,6 +57,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
             seaInstance.Instance_Start_Time__c = currentTime.addHours(-1);
             seaInstance.Instance_End_Time__c = currentTime.addHours(8);
             seaInstance.Instance_Time_Zone__c = 'Greenwich Mean Time (GMT)';
+            seaInstance.Private_Instance__c = false;
             seaInstance.Active_Status__c = 'Active';
             seaInstance.Capacity__c = 500;
             seaTestInstances.add(seaInstance);

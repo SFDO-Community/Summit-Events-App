@@ -22,7 +22,7 @@ tasks:
         description: Makes fake account data to mimic schools with Education as industry
         class_path: cumulusci.tasks.bulkdata.snowfakery.Snowfakery
         options:
-            recipe: datasets/snowfackery/school_recipe.yml
+            recipe: datasets/snowfakery/school_recipe.yml
 
     deploy_guest_sharing_rules:
         description: Deploys configuration for Development.
