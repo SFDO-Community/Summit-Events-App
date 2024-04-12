@@ -50,7 +50,7 @@ public with sharing class SummitEventsCancelReviewController {
 
                         eventInstance = [
                                 SELECT Id, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c,
-                                        Registration_Close_Date__c, Current_Available_Capacity__c, Active_Status__c
+                                        Registration_Close_Date__c, Current_Available_Capacity__c, Active_Status__c, Registration_Close_Time__c
                                 FROM Summit_Events_Instance__c W
                                 WHERE Id = :eventRegistration.Event_Instance__c
                                 WITH SECURITY_ENFORCED
