@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
     <sharingGuestRules>
-        <fullName>Summit_Event_Guest_User_Access</fullName>
+        <fullName>Guest_Fee_Allocation_Access</fullName>
         <accessLevel>Read</accessLevel>
-        <label>Summit Event Guest User Access</label>
+        <label>Guest Fee Allocation Access</label>
         <sharedTo>
             <guestUser>Summit_Events</guestUser>
         </sharedTo>
         <criteriaItems>
-            <field>%%%NAMESPACE%%%Event_Name__c</field>
+            <field>Name</field>
             <operation>notEqual</operation>
             <value>null</value>
         </criteriaItems>

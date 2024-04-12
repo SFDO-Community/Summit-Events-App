@@ -58,6 +58,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         eventInformation = SummitEventsShared.getSummitEventsInfo();
         questionWrapper = new List<questionItem>();
         Map<String, String> hiddenValues = new Map<String, String>();
+        Map<String, String> defaultValues = new Map<String, String>();
 
         //eventInformation is an object gathered from the encrypted client cookie that contains event id and instance ids without which thou shall not pass
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
@@ -299,8 +300,11 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     //add question to question wrapper if it is visible, otherwise apply default value to the event registration.
                     if (question.Is_Visible__c) {
                         questionWrapper.add(quest);
-                    } else {
                         if (String.isNotBlank(question.Default_Value__c)) {
+                            defaultValues.put(mapToField, question.Default_Value__c);
+                        }
+                    } else {
+                        if (String.isNotBlank(question.Default_Value__c) && question.Question_Field_Type__c != 'Picklist') {
                             hiddenValues.put(mapToField, question.Default_Value__c);
                         }
                     }
@@ -332,6 +336,13 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     //Apply hidden values
                     for (String key : hiddenValues.keySet()) {
                         eventRegistration.put(key, hiddenValues.get(key));
+                    }
+
+                    //Apply default values if registration value is not blank
+                    for (String key : defaultValues.keySet()) {
+                        if (String.isBlank((String) eventRegistration.get(key))) {
+                            eventRegistration.put(key, defaultValues.get(key));
+                        }
                     }
 
                     //Get the holding values if there are any

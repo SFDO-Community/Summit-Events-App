@@ -7,6 +7,7 @@ public with sharing class SummitEventsController {
 
     public String feedURL { get; set; }
     public String communityBaseURL { get; set; }
+    public String template { get; set; }
 
     public SummitEventsController() {
 
@@ -24,6 +25,13 @@ public with sharing class SummitEventsController {
             feedURL += namespace + '/';
         }
         feedURL += 'summiteventsfeed';
+
+        if(String.isNotBlank(ApexPages.currentPage().getParameters().get('template'))) {
+            template = ApexPages.currentPage().getParameters().get('template');
+        }
+        if(String.isBlank(template)) {
+            template = 'GeneralSLDS';
+        }
 
     }
 }

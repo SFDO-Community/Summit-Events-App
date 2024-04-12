@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
     <sharingGuestRules>
-        <fullName>Summit_Event_Guest_User_Access</fullName>
+        <fullName>Education_Industry_Accounts_for_Guests</fullName>
         <accessLevel>Read</accessLevel>
-        <label>Summit Event Guest User Access</label>
+        <label>Education Industry Accounts for Guests</label>
         <sharedTo>
             <guestUser>Summit_Events</guestUser>
         </sharedTo>
         <criteriaItems>
-            <field>%%%NAMESPACE%%%Event_Name__c</field>
-            <operation>notEqual</operation>
-            <value>null</value>
+            <field>Industry</field>
+            <operation>equals</operation>
+            <value>Education</value>
         </criteriaItems>
-        <includeHVUOwnedRecords>false</includeHVUOwnedRecords>
     </sharingGuestRules>
 </SharingRules>

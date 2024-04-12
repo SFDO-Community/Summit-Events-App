@@ -17,13 +17,12 @@ tasks:
         options:
             namespace_inject: $project_config.project__package__namespace
             path: unpackaged/config/site
-            unmanaged: True
 
     create_fake_school_data:
-        description: Makes fake account data to mimic schools with Educaiton as industry
+        description: Makes fake account data to mimic schools with Education as industry
         class_path: cumulusci.tasks.bulkdata.snowfakery.Snowfakery
         options:
-            recipe: datasets/snowfackery/school_recipe.yml
+            recipe: datasets/snowfakery/school_recipe.yml
 
     deploy_guest_sharing_rules:
         description: Deploys configuration for Development.
@@ -31,7 +30,13 @@ tasks:
         options:
             namespace_inject: $project_config.project__package__namespace
             path: unpackaged/config/sharing
-            unmanaged: True
+
+    deploy_namespaced_guest_sharing_rules:
+        description: Deploys configuration for Development.
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            namespace_inject: $project_config.project__package__namespace
+            path: unpackaged/config/summit__sharing
 
     deploy_site_settings:
         description: Setup the Custom Settings for the Event Site
@@ -39,12 +44,12 @@ tasks:
         options:
             namespace_inject: $project_config.project__package__namespace
             apex: >
-                Site mySite = [SELECT Id FROM Site WHERE Name = '%%%NAMESPACE%%%Summit_Events'];
+                Site mySite = [SELECT Id FROM Site WHERE Name = 'Summit_Events'];
                 SiteDetail mySiteDetail = [SELECT SecureURL FROM SiteDetail WHERE DurableId = :mySite.Id];
                 String url = mySiteDetail.SecureURL;
                 %%%NAMESPACE%%%Summit_Events_Settings__c eventSettings = %%%NAMESPACE%%%Summit_Events_Settings__c.getOrgDefaults();
-                eventSettings.Community_Base_URL__c = url;
-                eventSettings.Managed_Package__c = false;
+                eventSettings.%%%NAMESPACE%%%Community_Base_URL__c = url;
+                eventSettings.%%%NAMESPACE%%%Managed_Package__c = false;
                 upsert eventSettings;
 
     deploy_permission_set:
@@ -72,7 +77,7 @@ tasks:
         options:
             namespace_inject: $project_config.project__package__namespace
             apex: >
-                String siteName = '%%%NAMESPACE%%%Summit_Events';
+                String siteName = 'Summit_Events';
 
                 Site site = [
                         SELECT GuestUserId

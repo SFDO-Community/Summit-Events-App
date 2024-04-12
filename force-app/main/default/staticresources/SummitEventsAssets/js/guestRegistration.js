@@ -290,6 +290,9 @@ function buildPicklist(question) {
             let selectOption = document.createElement('option');
             selectOption.text = opt;
             selectOption.value = options[opt];
+            if(question.defaultValue === options[opt]){
+                selectOption.selected = true;
+            }
             picklist.add(selectOption);
         }
     }

@@ -80,15 +80,13 @@ private class SummitEventsConfirmation_TEST {
     @IsTest static void testAdminOpen() {
         SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[2], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
         System.runAs(testUser) {
-            Test.startTest();
             PageReference pageRef = Page.SummitEventsConfirmation;
-
             Test.setCurrentPage(pageRef);
-            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, true);
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[2].Id, seaTestInstances[2].Event__c, seaTestRegistration.Id, true);
             SummitEventsConfirmationController confirmCtrl = new SummitEventsConfirmationController();
             confirmCtrl.checkEventDetails();
             Summit_Events_Registration__c checkRegistrationStatus = [
@@ -97,6 +95,7 @@ private class SummitEventsConfirmation_TEST {
                             Summit_Events_Registration__c
                     WHERE Id = :seaTestRegistration.Id
             ];
+            Test.startTest();
             System.assertEquals(checkRegistrationStatus.Status__c, 'Registered');
             Test.stopTest();
         }
