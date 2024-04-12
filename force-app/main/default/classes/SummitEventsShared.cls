@@ -127,7 +127,7 @@ public with sharing class SummitEventsShared {
         }
 
         //If event has more than 1 item in list then submit page
-        if (pagesInEvent.size() > 1) {
+        if (pagesInEvent.size() > 1 && !(pagesInEvent.size() == 2 && pagesInEvent.contains(namespace + 'SummitEventsRegister') && pagesInEvent.contains(namespace + 'SummitEventsAdditionalQuestions'))) {
             pagesInEvent.add(namespace + 'SummitEventsSubmit');
         }
 
