@@ -1,0 +1,30 @@
+<!--
+ - Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas on 4/24/2024.
+ -->
+
+<apex:page id="SummitEventsQRCode" showHeader="false" sidebar="false" applyHtmlTag="true" applyBodyTag="false" lightningStylesheets="false" standardStylesheets="false" cache="false">
+    <apex:includeScript value="{!URLFOR($Resource.SummitEventsAssets, '/js/qrcode.js')}"/>
+
+    <script type="text/javascript">
+        const urlParams = new URLSearchParams(window.location.search);
+        const qr_text = urlParams.get('text');
+        const qr_width = urlParams.get('width') ? urlParams.get('width') : 200;
+        const qr_height = urlParams.get('height') ? urlParams.get('height') : 200;
+        const qr_dark = urlParams.get('dark') ? urlParams.get('dark') : '#000000';
+        const qr_light = urlParams.get('light') ? urlParams.get('light') : '#ffffff';
+        let qrcode = new QRCode(document.createElement("img"), {
+            width: qr_width,
+            height: qr_height,
+            colorDark: qr_dark,
+            colorLight: qr_light,
+            correctLevel: QRCode.CorrectLevel.H,
+            text: qr_text,
+            success: function () {
+                let imageDataUrl = this._elImage.src;
+                //document.write(imageDataUrl);
+                document.body.appendChild(this._elImage);
+                //redirectImage(imageDataUrl); // Pass the imageDataUrl to the Apex method
+            }
+        });
+    </script>
+</apex:page>
