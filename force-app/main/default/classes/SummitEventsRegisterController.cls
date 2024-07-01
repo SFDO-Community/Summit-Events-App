@@ -34,6 +34,15 @@ public with sharing class SummitEventsRegisterController {
     public Map<String, PageReference> pageFlow { get; set; }
     public String nextUrl { get; set; }
     public String namespace { get; set; }
+    public String recaptchaResponse { get; set; }
+    public recaptchaInfo recaptcha { get; set; }
+
+    public class recaptchaInfo {
+        public Integer version { get; set; }
+        public String publicKey { get; set; }
+        public String apiUrl { get; set; }
+        public String endpointUrl { get; set; }
+    }
 
     public SummitEventsRegisterController() {
         //array for looping through additional information questions
@@ -45,6 +54,8 @@ public with sharing class SummitEventsRegisterController {
         if (String.isNotBlank(namespace)) {
             namespace = namespace.toLowerCase() + '__';
         }
+
+        Summit_Events_Settings__c seaCustomSettings = Summit_Events_Settings__c.getOrgDefaults();
 
         contactSet = false;
         eventIsClosed = false;
@@ -67,7 +78,7 @@ public with sharing class SummitEventsRegisterController {
         }
 
         //Set the default country if it is in settings and matches something in the global pick list
-        Summit_Events_Settings__c seaCustomSettings = Summit_Events_Settings__c.getOrgDefaults();
+
         String defaultCountry = seaCustomSettings.Default_Country__c;
         if (String.isNotBlank(defaultCountry) && String.isBlank(eventRegistration.Registrant_Country__c)) {
             List<SelectOption> getCountryDD = PickThePicklist('Summit_Events_Registration__c', 'Registrant_Country__c', false);
@@ -134,11 +145,21 @@ public with sharing class SummitEventsRegisterController {
                             Relationship_To_Institution_Label__c, Third_Party_Registrant_Label__c, Title_Label__c, Preferred_Class_Year_Label__c,
                             Registrant_Relationship_Label__c, Event_Fee_Label__c, Event_Fee_Total_Label__c, Event_Fee_Submit_List_Label__c, Account__r.Name,
                             Filter_Category__c, Do_not_show_receive_text_question__c, Add_Info_Question_Pick_List_Long_1__c, Add_Info_Question_Pick_List_Long_2__c,
-                            Add_Info_Question_Pick_List_Long_3__c, Add_Info_Question_Pick_List_Long_4__c, Add_Info_Question_Pick_List_Long_5__c
+                            Add_Info_Question_Pick_List_Long_3__c, Add_Info_Question_Pick_List_Long_4__c, Add_Info_Question_Pick_List_Long_5__c,
+                            reCAPTCHA_v3_Score_Fail_Text__c, reCAPTCHA__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
             ];
+
+            recaptcha = new recaptchaInfo();
+            recaptcha.version = 0;
+            if (String.IsNotBlank(eventPage.reCAPTCHA__c)) {
+                if (eventPage.reCAPTCHA__c.equalsIgnoreCase('Google reCAPTCHA v3') && String.isNotBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c) && String.isNotBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c)) {
+                    registrationCRUD rCRUD = new registrationCRUD();
+                    recaptcha = rCRUD.getRecaptchaV3Info();
+                }
+            }
 
             pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage(), evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c);
             nextUrl = pageFlow.get('Next').getUrl().toLowerCase();
@@ -440,6 +461,19 @@ public with sharing class SummitEventsRegisterController {
     public PageReference saveContactRegistration() {
         PageReference optionPage;
 
+        if (recaptcha.version == 3) {
+            Boolean reCaptchaSuccess = false;
+            // First parameter is the user recaptcha answer transmitted to the form
+            // Second parameter is a string,string map with the headers values
+            reCaptchaSuccess = summitRecaptcha.isReCAPTCHAValid(recaptchaResponse);
+            System.debug('reCaptcha Success: ' + reCaptchaSuccess);
+            if (!reCaptchaSuccess) {
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, eventPage.reCAPTCHA_v3_Score_Fail_Text__c);
+                ApexPages.addMessage(myMsg);
+                return null;
+            }
+        }
+
         if (String.isNotBlank(phoneType) && eventPage.Ask_Phone__c.containsIgnoreCase('with type')) {
             if (phoneType.equalsIgnoreCase('mobile')) {
                 eventRegistration.Registrant_Phone__c = '';
@@ -586,6 +620,16 @@ public with sharing class SummitEventsRegisterController {
      **/
 
     private without sharing class registrationCRUD {
+
+        public recaptchaInfo getRecaptchaV3Info() {
+            Summit_Events_Settings__c seaCustomSettings = Summit_Events_Settings__c.getOrgDefaults();
+            recaptchaInfo recaptchaV3Info = new recaptchaInfo();
+            recaptchaV3Info.version = 3;
+            recaptchaV3Info.publicKey = seaCustomSettings.reCAPTCHA_Public_Key__c;
+            recaptchaV3Info.apiUrl = seaCustomSettings.reCAPTCHA_Library_Url__c;
+            recaptchaV3Info.endpointUrl = seaCustomSettings.reCAPTCHA_Endpoint__c;
+            return recaptchaV3Info;
+        }
 
         public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c eventRegistration, Id incomingEventRegistrationId, String registrantAudience, List<Summit_Events_Fee__c> upsertFees) {
             System.debug(JSON.serializePretty(eventRegistration));

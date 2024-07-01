@@ -80,8 +80,14 @@ function setOldPhoneValue() {
 
 
 //Validation for the page
-function checkForm() {
+async function recaptcha() {
+    if (typeof googleRecaptchaV3 !== 'undefined') {
+        await getRecaptchaToken();
+    }
+    return true;
+}
 
+function checkForm() {
     var error_count = 0;
     var emailReg = /^([a-zA-Z0-9_.\-.'.+])+@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 

@@ -27,14 +27,33 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     'page': '{!$CurrentPage.Name}'
                 });
             </script>
+
+            <apex:outputPanel layout="none" rendered="{!recaptcha.version = 3}">
+                <script src="{!recaptcha.apiUrl}?render={!recaptcha.publicKey}" type="text/javascript"></script>
+                <script>
+                    const googleRecaptchaV3 = true;
+                    function getRecaptchaToken() {
+                        return new Promise((resolve, reject) => {
+                            grecaptcha.ready(function () {
+                                grecaptcha.execute('{!recaptcha.publicKey}',
+                                    {action: 'submit'}).then(function (token) {
+                                    let responseField = document.querySelector("[id$=recaptchaResponse]");
+                                    responseField.value = token;
+                                    console.log('Recaptcha Token: ' + JSON.stringify(token, null, 2));
+                                    return true;
+                                });
+                            });
+                        });
+                    };
+                </script>
+            </apex:outputPanel>
         </apex:define>
 
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages />
+                    <apex:messages/>
                 </div>
-
                 <apex:form id="SummitEventRegisterForm" styleClass="slds-grid slds-wrap" style="width:100%">
 
                     <apex:actionFunction name="setParentSetting" immediate="true" onComplete="dynamicValidation();fadein();" reRender="thirdPartyRegistrant">
@@ -775,7 +794,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                                     </apex:selectList>
                                                 </apex:outputPanel>
 
-                                                <div class="slds-form-element__help" >
+                                                <div class="slds-form-element__help">
                                                     {!IF(isRequired, 'This field is required', '')}
                                                 </div>
 
@@ -789,9 +808,12 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                         <apex:variable value="{!100}" var="count"/>
 
+                        <!-- Google reCAPTCHA v3 -->
+                        <apex:inputHidden id="recaptchaResponse" value="{!recaptchaResponse}" rendered="{!recaptcha.version = 3}"/>
+
                         <!-- Submit buttons -->
                         <div class="slds-col slds-p-vertical_medium slds-p-left_x-small slds-size_1-of-1">
-                            <apex:commandLink action="{!saveContactRegistration}" onClick="fadeout(); return checkForm();" Value="{!IF(CONTAINS(nextUrl,'summiteventsconfirmation'), 'Register', 'Next')}" id="submitReg1" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                            <apex:commandLink action="{!saveContactRegistration}" onClick="fadeout(); recaptcha(); return checkForm();" Value="{!IF(CONTAINS(nextUrl,'summiteventsconfirmation'), 'Register', 'Next')}" id="submitReg1" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                         </div>
                         <div class="slds-col slds-p-vertical_medium slds-p-left_x-small slds-size_1-of-1 regularLists">
                             <apex:outputText escape="false" value="{!eventPage.Event_Footer__c}"/>

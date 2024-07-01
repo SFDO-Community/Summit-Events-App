@@ -20,7 +20,9 @@ public with sharing class summitRecaptcha {
         Map<String, Object> mapOfBody = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
         System.debug('response.getBody(): ' + JSON.serializePretty(response.getBody()));
         Boolean success = (Boolean) mapOfBody.get('success');
+        System.debug('success: ' + success);
         Decimal score = (Decimal) mapOfBody.get('score');
+        System.debug('score: ' + score);
         if(score < RECAPTCHAScore){
             success = false;
         }
