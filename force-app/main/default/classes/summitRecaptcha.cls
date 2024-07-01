@@ -7,26 +7,37 @@ public with sharing class summitRecaptcha {
 
     private static final Summit_Events_Settings__c recaptchaConfig = Summit_Events_Settings__c.getOrgDefaults();
 
-    public static Boolean isReCAPTCHAValid(String tokenFromClient) {
+    public static Decimal isReCAPTCHAValid(String tokenFromClient) {
+
         String SECRET_KEY = recaptchaConfig.reCAPTCHA_Secret_Key__c;
         String RECAPTCHA_SERVICE_URL = recaptchaConfig.reCAPTCHA_Endpoint__c;
         Decimal RECAPTCHAScore = recaptchaConfig.reCAPTCHA_v3_Score__c;
+
+        Boolean success = false;
+        Decimal score = 0;
         Http http = new Http();
         HttpRequest request = new HttpRequest();
+        HttpResponse response = new HttpResponse();
+
         request.setEndpoint(RECAPTCHA_SERVICE_URL + '?secret=' + SECRET_KEY + '&response=' + tokenFromClient);
         request.setMethod('POST');
         request.setHeader('Content-Length', '0');
-        HttpResponse response = http.send(request);
-        Map<String, Object> mapOfBody = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
-        System.debug('response.getBody(): ' + JSON.serializePretty(response.getBody()));
-        Boolean success = (Boolean) mapOfBody.get('success');
-        System.debug('success: ' + success);
-        Decimal score = (Decimal) mapOfBody.get('score');
-        System.debug('score: ' + score);
-        if(score < RECAPTCHAScore){
-            success = false;
+        try {
+            response = http.send(request);
+            Map<String, Object> mapOfBody = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+            success = (Boolean) mapOfBody.get('success');
+            score = (Decimal) mapOfBody.get('score');
+        } catch (Exception e) {
+            System.debug('Error: ' + e.getMessage());
         }
-        return success;
+
+        System.debug('response.getBody(): ' + JSON.serializePretty(response.getBody()));
+        System.debug('success: ' + success);
+        System.debug('score: ' + score);
+        if (success) {
+            return score;
+        }
+        return 0;
     }
 
     @TestVisible

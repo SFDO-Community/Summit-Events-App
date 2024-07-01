@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>reCAPTCHA_v3_Score__c</fullName>
+    <description>If Google reCAPTCHA version 3 is used for the event this is the score that was returned for the registrant.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If Google reCAPTCHA version 3 is used for the event this is the score that was returned for the registrant.</inlineHelpText>
+    <label>reCAPTCHA v3 Score</label>
+    <precision>2</precision>
+    <required>false</required>
+    <scale>1</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

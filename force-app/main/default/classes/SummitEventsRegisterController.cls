@@ -36,6 +36,7 @@ public with sharing class SummitEventsRegisterController {
     public String namespace { get; set; }
     public String recaptchaResponse { get; set; }
     public recaptchaInfo recaptcha { get; set; }
+    public Summit_Events_Settings__c seaCustomSettings { get; set; }
 
     public class recaptchaInfo {
         public Integer version { get; set; }
@@ -55,7 +56,7 @@ public with sharing class SummitEventsRegisterController {
             namespace = namespace.toLowerCase() + '__';
         }
 
-        Summit_Events_Settings__c seaCustomSettings = Summit_Events_Settings__c.getOrgDefaults();
+        seaCustomSettings = Summit_Events_Settings__c.getOrgDefaults();
 
         contactSet = false;
         eventIsClosed = false;
@@ -63,6 +64,7 @@ public with sharing class SummitEventsRegisterController {
         EvtUserType = UserInfo.getUserType();
         //Get cookie or URL string variable
         eventInformation = SummitEventsShared.getSummitEventsInfo();
+        registrationCRUD rCRUD = new registrationCRUD();
 
         //Create event registration. Populate with current registration if it exists with removed id
         eventRegistration = new Summit_Events_Registration__c();
@@ -156,8 +158,7 @@ public with sharing class SummitEventsRegisterController {
             recaptcha.version = 0;
             if (String.IsNotBlank(eventPage.reCAPTCHA__c)) {
                 if (eventPage.reCAPTCHA__c.equalsIgnoreCase('Google reCAPTCHA v3') && String.isNotBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c) && String.isNotBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c)) {
-                    registrationCRUD rCRUD = new registrationCRUD();
-                    recaptcha = rCRUD.getRecaptchaV3Info();
+                    recaptcha = rCRUD.getRecaptchaInfo();
                 }
             }
 
@@ -462,16 +463,18 @@ public with sharing class SummitEventsRegisterController {
         PageReference optionPage;
 
         if (recaptcha.version == 3) {
-            Boolean reCaptchaSuccess = false;
+            Decimal recaptchaScore = 0;
+            //Boolean reCaptchaSuccess = false;
             // First parameter is the user recaptcha answer transmitted to the form
             // Second parameter is a string,string map with the headers values
-            reCaptchaSuccess = summitRecaptcha.isReCAPTCHAValid(recaptchaResponse);
-            System.debug('reCaptcha Success: ' + reCaptchaSuccess);
-            if (!reCaptchaSuccess) {
+            RECAPTCHAScore = summitRecaptcha.isReCAPTCHAValid(recaptchaResponse);
+            System.debug('RECAPTCHAScore: ' + RECAPTCHAScore);
+            if (seaCustomSettings.reCAPTCHA_v3_Score__c < RECAPTCHAScore) {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, eventPage.reCAPTCHA_v3_Score_Fail_Text__c);
                 ApexPages.addMessage(myMsg);
                 return null;
             }
+
         }
 
         if (String.isNotBlank(phoneType) && eventPage.Ask_Phone__c.containsIgnoreCase('with type')) {
@@ -621,7 +624,7 @@ public with sharing class SummitEventsRegisterController {
 
     private without sharing class registrationCRUD {
 
-        public recaptchaInfo getRecaptchaV3Info() {
+        public recaptchaInfo getRecaptchaInfo() {
             Summit_Events_Settings__c seaCustomSettings = Summit_Events_Settings__c.getOrgDefaults();
             recaptchaInfo recaptchaV3Info = new recaptchaInfo();
             recaptchaV3Info.version = 3;

@@ -1457,6 +1457,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.reCAPTCHA_v3_Score__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.utm_campaign__c</field>
         <readable>true</readable>
     </fieldPermissions>
