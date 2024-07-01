@@ -2512,6 +2512,16 @@
         <field>Summit_Events__c.Tracking_Submit_Registration__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.reCAPTCHA__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events__c.reCAPTCHA_v3_Score_Fail_Text__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Summit Events Admin</label>
     <objectPermissions>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>reCAPTCHA_v3_Score_Fail_Text__c</fullName>
+    <defaultValue>&quot;We are sorry. Your registration cannot be completed at this time. Please try again using a different browser or device.&quot;</defaultValue>
+    <description>This text appears when the registrant does not meet the reCAPTCHA v3 minimum score. The registrant will not be able to proceed with the registration because their environment is deemed suspect by Google reCAPTCHA.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This text appears when the registrant does not meet the reCAPTCHA v3 minimum score. The registrant will not be able to proceed with the registration because their environment is deemed suspect by Google reCAPTCHA.</inlineHelpText>
+    <label>reCAPTCHA v3 Score Fail Text</label>
+    <length>2000</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

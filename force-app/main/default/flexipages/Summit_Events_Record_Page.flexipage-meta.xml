@@ -91,6 +91,26 @@
                 <identifier>record_item_005</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.reCAPTCHA_v3_Score_Fail_Text__c</fieldItem>
+                <identifier>RecordreCAPTCHA_v3_Score_Fail_Text__cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.reCAPTCHA__c</fieldItem>
+                <identifier>RecordreCAPTCHA__cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-cb142f92-98ca-47b5-b688-5a65a1518288</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -1113,6 +1133,26 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Private_Event__c</fieldItem>
                 <identifier>record_item_065</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.reCAPTCHA__c</fieldItem>
+                <identifier>RecordreCAPTCHA_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.reCAPTCHA_v3_Score_Fail_Text__c</fieldItem>
+                <identifier>RecordreCAPTCHA_v3_Score_Fail_Text_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-d543eeaf-8fe9-46b3-8481-4663d648d58c</name>
