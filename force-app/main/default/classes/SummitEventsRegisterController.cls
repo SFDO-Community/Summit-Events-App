@@ -463,17 +463,17 @@ public with sharing class SummitEventsRegisterController {
         PageReference optionPage;
 
         if (recaptcha.version == 3) {
-            Decimal recaptchaScore = 0;
-            //Boolean reCaptchaSuccess = false;
-            // First parameter is the user recaptcha answer transmitted to the form
-            // Second parameter is a string,string map with the headers values
-            RECAPTCHAScore = summitRecaptcha.isReCAPTCHAValid(recaptchaResponse);
+            // Use Google reCAPTCHA v3 to get a score and validate against acceptable score in settings
+            Decimal reCAPTCHAScore = 0;
+            reCAPTCHAScore = summitRecaptcha.isReCAPTCHAValid(recaptchaResponse);
             System.debug('RECAPTCHAScore: ' + RECAPTCHAScore);
+            System.debug('reCAPTCHA setting score:' + seaCustomSettings.reCAPTCHA_v3_Score__c);
             if (seaCustomSettings.reCAPTCHA_v3_Score__c < RECAPTCHAScore) {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, eventPage.reCAPTCHA_v3_Score_Fail_Text__c);
                 ApexPages.addMessage(myMsg);
                 return null;
             }
+            eventRegistration.reCAPTCHA_v3_Score__c = reCAPTCHAScore;
 
         }
 
