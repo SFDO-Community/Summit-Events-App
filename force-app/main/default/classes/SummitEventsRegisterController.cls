@@ -465,16 +465,16 @@ public with sharing class SummitEventsRegisterController {
         if (recaptcha.version == 3) {
             // Use Google reCAPTCHA v3 to get a score and validate against acceptable score in settings
             Decimal reCAPTCHAScore = 0;
+            System.debug('recaptchaResponse: ' + recaptchaResponse);
             reCAPTCHAScore = summitRecaptcha.isReCAPTCHAValid(recaptchaResponse);
             System.debug('RECAPTCHAScore: ' + RECAPTCHAScore);
             System.debug('reCAPTCHA setting score:' + seaCustomSettings.reCAPTCHA_v3_Score__c);
-            if (seaCustomSettings.reCAPTCHA_v3_Score__c < RECAPTCHAScore) {
+            if (RECAPTCHAScore < seaCustomSettings.reCAPTCHA_v3_Score__c) {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, eventPage.reCAPTCHA_v3_Score_Fail_Text__c);
                 ApexPages.addMessage(myMsg);
                 return null;
             }
             eventRegistration.reCAPTCHA_v3_Score__c = reCAPTCHAScore;
-
         }
 
         if (String.isNotBlank(phoneType) && eventPage.Ask_Phone__c.containsIgnoreCase('with type')) {

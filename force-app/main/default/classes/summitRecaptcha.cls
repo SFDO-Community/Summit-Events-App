@@ -17,13 +17,13 @@ public with sharing class summitRecaptcha {
         Decimal score = 0;
         Http http = new Http();
         HttpRequest request = new HttpRequest();
-        HttpResponse response = new HttpResponse();
-
+        System.debug(RECAPTCHA_SERVICE_URL + '?secret=' + SECRET_KEY + '&response=' + tokenFromClient);
         request.setEndpoint(RECAPTCHA_SERVICE_URL + '?secret=' + SECRET_KEY + '&response=' + tokenFromClient);
         request.setMethod('POST');
         request.setHeader('Content-Length', '0');
         try {
-            response = http.send(request);
+            HttpResponse response = http.send(request);
+            System.debug('response.getBody(): ' + JSON.serializePretty(response.getBody()));
             Map<String, Object> mapOfBody = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
             success = (Boolean) mapOfBody.get('success');
             score = (Decimal) mapOfBody.get('score');
@@ -31,7 +31,6 @@ public with sharing class summitRecaptcha {
             System.debug('Error: ' + e.getMessage());
         }
 
-        System.debug('response.getBody(): ' + JSON.serializePretty(response.getBody()));
         System.debug('success: ' + success);
         System.debug('score: ' + score);
         if (success) {
