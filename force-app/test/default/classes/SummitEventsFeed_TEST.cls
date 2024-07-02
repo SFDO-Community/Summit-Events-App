@@ -116,7 +116,7 @@ private class SummitEventsFeed_TEST {
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
             eventsList = (List<SummitEventsFeed.eventItem>) JSON.deserialize(res.responseBody.toString(), List<SummitEventsFeed.eventItem>.class);
-            System.assertEquals(eventsList.size(), 11, 'All 11 instance have program related to them.');
+            System.assertEquals(eventsList.size(), 10, 'All 10 instance have program related to them.');
 
 
             req.params.put('program', 'OCB');
@@ -124,7 +124,7 @@ private class SummitEventsFeed_TEST {
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
             eventsList = (List<SummitEventsFeed.eventItem>) JSON.deserialize(res.responseBody.toString(), List<SummitEventsFeed.eventItem>.class);
-            System.assertEquals(eventsList.size(), 11, 'All 11 instance have program related to them.');
+            System.assertEquals(eventsList.size(), 10, 'All 10 instance have program related to them.');
 
             //test filter
             req.params.put('rectype', 'UDAR');

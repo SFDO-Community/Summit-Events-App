@@ -184,7 +184,9 @@ public with sharing class SummitEventsRegisterGuestsController {
         List<Map<String, String>> picklists = new List<Map<String, String>>();
         String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
-        Schema.DescribeSObjectResult registrationDescribe = ((SObject) Type.forName('Schema', namespace + 'Summit_Events_Registration__c').newInstance()).getSObjectType().getDescribe();
+        Type registrationType = Type.forName(namespace + 'Summit_Events_Registration__c');
+        SObject registrationObj = (SObject) registrationType.newInstance();
+        DescribeSObjectResult registrationDescribe = registrationObj.getSObjectType().getDescribe();
 
         String existingPicklistString = existingPicklist;
         if (!existingPicklistString.startsWith('c__')) {

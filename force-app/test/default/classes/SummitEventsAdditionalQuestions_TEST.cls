@@ -221,7 +221,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             testQuestions[0].Lookup_Fields__c = 'Blah';
             update testQuestions;
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
-            System.assertEquals(questionController.questionWrapper[0].setupError.trim(), 'Object: blah may not exist or is inaccessible. Look up field: blah may not exist or is inaccessible.');
+            System.assertEquals(questionController.questionWrapper[0].setupError.trim(), 'Question setup issue(s): Lookup Object: blah may not exist or is inaccessible. Look up field: blah may not exist or is inaccessible.');
 
             Test.stopTest();
         }

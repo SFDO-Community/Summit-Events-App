@@ -620,24 +620,28 @@ public with sharing class SummitEventsShared {
     public static String checkFieldGuestAccess(String objectApiName, String fieldName, String requiredFieldType, Boolean testCreatable, String qualifierLabel) {
         String returnError = '';
         DescribeFieldResult fieldDescribe;
-        SObjectType schemaType;
+        DescribeSObjectResult objDescribe;
+        SObject objInstance;
+        Type schemaType;
         if (String.isBlank(qualifierLabel)) {
             qualifierLabel = '';
         }
         try {
-            schemaType = ((SObject) Type.forName('Schema', objectApiName).newInstance()).getSObjectType();
+            schemaType = Type.forName(objectApiName);
+            objInstance = (SObject) schemaType.newInstance();
+            objDescribe = objInstance.getSObjectType().getDescribe();
         } catch (Exception ex) {
             returnError = qualifierLabel + objectApiName + ' may not exist or is inaccessible. ';
         }
 
         if (String.isBlank(returnError)) {
-            if (!schemaType.getDescribe().isAccessible()) {
+            if (!objDescribe.isAccessible()) {
                 returnError += qualifierLabel + objectApiName + ' is not accessible (check sharing rules and permissions). ';
             }
         }
         if (String.isNotBlank(fieldName) && String.isBlank(returnError)) {
             try {
-                Map<String, SObjectField> fields = schemaType.getDescribe().fields.getMap();
+                Map<String, SObjectField> fields = objDescribe.fields.getMap();
                 fieldDescribe = fields.get(fieldName).getDescribe();
             } catch (Exception ex) {
                 returnError += qualifierLabel + 'Field ' + fieldName + ' may not exist. ';

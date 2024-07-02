@@ -297,8 +297,9 @@ public with sharing class SummitEventsContactMatching {
 
         c.Created_with_Summit_Events__c = true;
 
-        SObjectType r = ((SObject) (Type.forName('Schema.Contact').newInstance())).getSObjectType();
-        DescribeSObjectResult d = r.getDescribe();
+        Type contactType = Type.forName('Schema.Contact');
+        SObject contactObj = (SObject) contactType.newInstance();
+        DescribeSObjectResult d = contactObj.getSObjectType().getDescribe();
 
         if (Schema.SObjectType.Summit_Events_Contact_Matching_Mapping__mdt.isAccessible()) {
             for (Summit_Events_Contact_Matching_Mapping__mdt mapping : [
@@ -372,8 +373,9 @@ public with sharing class SummitEventsContactMatching {
         l.Phone = reg.Registrant_Phone__c;
         l.MobilePhone = reg.Registrant_Mobile_Phone__c;
 
-        SObjectType r = ((SObject) (Type.forName('Schema.Lead').newInstance())).getSObjectType();
-        DescribeSObjectResult d = r.getDescribe();
+        Type leadType = Type.forName('Schema.Lead');
+        SObject leadObj = (SObject) leadType.newInstance();
+        DescribeSObjectResult d = leadObj.getSObjectType().getDescribe();
 
         String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
