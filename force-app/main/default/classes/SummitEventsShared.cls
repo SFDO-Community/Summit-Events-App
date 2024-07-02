@@ -36,10 +36,7 @@ public with sharing class SummitEventsShared {
         currentUrlSplit = currentUrl.split('/');
         String currentPageName = currentUrlSplit[currentUrlSplit.size() - 1];
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         String dayOfWeek = convertDateToDatetime(startDate, null, '').format('EEEE');
 
@@ -296,10 +293,7 @@ public with sharing class SummitEventsShared {
             communityBaseURL += '/';
         }
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         String newUrl = '';
 
@@ -671,10 +665,7 @@ public with sharing class SummitEventsShared {
     public static Map<String, String> getDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName, String parentValue) {
         Map<String, String> dependentItems = new Map<String, String>();
         if (null != parentObjName && null != parentFieldName && null != dependentFieldName && null != parentValue) {
-            String namespace = SummitEventsNamespace.getNamespace();
-            if (String.isNotBlank(namespace)) {
-                namespace = namespace + '__';
-            }
+            String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
             Schema.DescribeFieldResult dependentField;
             Integer parentValueIndex = -1;

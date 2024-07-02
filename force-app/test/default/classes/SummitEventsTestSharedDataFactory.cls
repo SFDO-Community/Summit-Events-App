@@ -206,10 +206,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
     public static List<Summit_Events_Question__c> addQuestions(Id eventId, String inputType, String registrantType, String mapTo, String questionText) {
         List<String> inputTypes = new List<String>();
         List<Summit_Events_Question__c> questions = new List<Summit_Events_Question__c>();
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         if (String.isNotBlank(inputType)) {
             inputTypes.add(inputType);
@@ -437,10 +434,8 @@ public with sharing class SummitEventsTestSharedDataFactory {
 
     public static List<String> getPicklistItems(String YourObjectName, String YourFieldName) {
         List<String> picklists = new List<String>();
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace.toLowerCase() + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+
         List<Schema.PicklistEntry> PicklistValues = Schema.getGlobalDescribe().get(namespace + YourObjectName).getDescribe().fields.getMap().get(namespace + YourFieldName).getDescribe().getPicklistValues();
         for (Schema.PicklistEntry PicklistValue : PicklistValues) {
             picklists.add(PicklistValue.getValue());

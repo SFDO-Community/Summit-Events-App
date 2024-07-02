@@ -375,11 +375,7 @@ public with sharing class SummitEventsContactMatching {
         SObjectType r = ((SObject) (Type.forName('Schema.Lead').newInstance())).getSObjectType();
         DescribeSObjectResult d = r.getDescribe();
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
-
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         if (Schema.SObjectType.Summit_Events_Lead_Matching_Mapping__mdt.isAccessible()) {
             for (Summit_Events_Lead_Matching_Mapping__mdt mapping : [

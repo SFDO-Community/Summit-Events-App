@@ -51,10 +51,7 @@ public with sharing class SummitEventsRegisterController {
                 '1', '2', '3', '4', '5'
         };
 
-        namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace.toLowerCase() + '__';
-        }
+        namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         seaCustomSettings = Summit_Events_Settings__c.getOrgDefaults();
 
@@ -286,7 +283,7 @@ public with sharing class SummitEventsRegisterController {
             /*get Analytic data*/
 
             //Get current URL
-            String baseURL = Url.getSalesforceBaseUrl().toExternalForm();
+            String baseURL = Url.getCurrentRequestUrl().getHost();
             String PageURL = ApexPages.currentPage().getUrl();
             eventRegistration.Event_Website__c = baseURL + PageURL.replace('\'', '').escapeHtml4();
 
@@ -430,10 +427,7 @@ public with sharing class SummitEventsRegisterController {
 
     public List<SelectOption> PickThePicklist(String YourObjectName, String YourFieldName, Boolean includeSelect) {
         List<SelectOption> picklists = new List<SelectOption>();
-        namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace.toLowerCase() + '__';
-        }
+        namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         List<Schema.PicklistEntry> PicklistValues = Schema.getGlobalDescribe().get(namespace + YourObjectName).getDescribe().fields.getMap().get(namespace + YourFieldName).getDescribe().getPicklistValues();
 
@@ -466,7 +460,7 @@ public with sharing class SummitEventsRegisterController {
             // Use Google reCAPTCHA v3 to get a score and validate against acceptable score in settings
             Decimal reCAPTCHAScore = 0;
             System.debug('recaptchaResponse: ' + recaptchaResponse);
-            reCAPTCHAScore = summitRecaptcha.isReCAPTCHAValid(recaptchaResponse);
+            reCAPTCHAScore = summitEventsRecaptcha.isReCAPTCHAValid(recaptchaResponse);
             System.debug('RECAPTCHAScore: ' + RECAPTCHAScore);
             System.debug('reCAPTCHA setting score:' + seaCustomSettings.reCAPTCHA_v3_Score__c);
             if (RECAPTCHAScore < seaCustomSettings.reCAPTCHA_v3_Score__c) {

@@ -108,10 +108,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             ];
 
             //Get namespace if packaged
-            String namespace = SummitEventsNamespace.getNamespace();
-            if (String.isNotBlank(namespace)) {
-                namespace = namespace + '__';
-            }
+            String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
             eventRegistration = new Summit_Events_Registration__c();
 
@@ -387,10 +384,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
     public List<SelectOption> createExistingPicklist(String existingPicklist) {
         List<SelectOption> picklists = new List<SelectOption>();
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace.toLowerCase() + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         String existingPicklistString = existingPicklist;
         if (!existingPicklistString.startsWith('c__')) {

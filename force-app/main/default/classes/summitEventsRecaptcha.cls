@@ -3,24 +3,22 @@
  */
 
 
-public with sharing class summitRecaptcha {
+public with sharing class summitEventsRecaptcha {
 
     private static final Summit_Events_Settings__c recaptchaConfig = Summit_Events_Settings__c.getOrgDefaults();
 
     public static Decimal isReCAPTCHAValid(String tokenFromClient) {
-
         String SECRET_KEY = recaptchaConfig.reCAPTCHA_Secret_Key__c;
         String RECAPTCHA_SERVICE_URL = recaptchaConfig.reCAPTCHA_Endpoint__c;
-        Decimal RECAPTCHAScore = recaptchaConfig.reCAPTCHA_v3_Score__c;
-
         Boolean success = false;
         Decimal score = 0;
         Http http = new Http();
+
         HttpRequest request = new HttpRequest();
-        System.debug(RECAPTCHA_SERVICE_URL + '?secret=' + SECRET_KEY + '&response=' + tokenFromClient);
         request.setEndpoint(RECAPTCHA_SERVICE_URL + '?secret=' + SECRET_KEY + '&response=' + tokenFromClient);
         request.setMethod('POST');
         request.setHeader('Content-Length', '0');
+
         try {
             HttpResponse response = http.send(request);
             System.debug('response.getBody(): ' + JSON.serializePretty(response.getBody()));
@@ -30,9 +28,6 @@ public with sharing class summitRecaptcha {
         } catch (Exception e) {
             System.debug('Error: ' + e.getMessage());
         }
-
-        System.debug('success: ' + success);
-        System.debug('score: ' + score);
         if (success) {
             return score;
         }

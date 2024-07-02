@@ -118,7 +118,7 @@ public class SummitEventsNamespace {
     * @return true if running in sandbox. false otherwise.
     ********************************************************************************************************/
     public static Boolean isSandbox() {
-        return Url.getSalesforceBaseUrl().getHost().left(2).equalsIgnoreCase('cs');
+        return Url.getCurrentRequestUrl().getHost().left(2).equalsIgnoreCase('cs');
     }
 
     /*******************************************************************************************************
