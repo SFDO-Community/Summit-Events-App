@@ -71,6 +71,34 @@ private class SummitEventsRegister_TEST {
             Test.stopTest();
         }
     }
+
+    @IsTest static void testEventWithReCAPTCHA() {
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Test', 'Tester', 'test@test.net', '55555', '1971-03-22', '2012', null);
+        Summit_Events__c seaTestEvent = SummitEventsTestSharedDataFactory.getEventRecord(seaTestInstances[1].Event__c);
+        seaTestEvent.reCAPTCHA__c = 'Google reCAPTCHA v3';
+        update seaTestEvent;
+
+        //Set up Summit_Events_Settings with reCAPTCHA keys
+        Summit_Events_Settings__c seaSettings = Summit_Events_Settings__c.getOrgDefaults();
+        seaSettings.reCAPTCHA_v3_Score__c = .5;
+        seaSettings.reCAPTCHA_Public_Key__c = 'testSiteKey';
+        seaSettings.reCAPTCHA_Secret_Key__c = 'testSecret';
+        update seaSettings;
+
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEventsRegister;
+            Test.setCurrentPage(pageRef);
+            ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
+            ApexPages.currentPage().getParameters().put('audience', 'Transfer');
+            SummitEventsRegisterController registerController = new SummitEventsRegisterController();
+            System.assert(registerController.recaptcha.version == 3);
+            Test.stopTest();
+        }
+    }
+
     @IsTest static void testEventWithUTMParameters() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Test', 'Tester', 'test@test.net', '55555', '1971-03-22', '2012', null);
