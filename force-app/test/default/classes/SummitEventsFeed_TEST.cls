@@ -115,6 +115,8 @@ private class SummitEventsFeed_TEST {
             Integer activeInstances = [SELECT COUNT() FROM Summit_Events_Instance__c WHERE Event__c = :eventUpdate.Id AND Open_Registration__c = TRUE ];
 
             //test filter
+            req.params.put('viewStart', String.valueOf(Date.today().addDays(-30)));
+            req.params.put('viewEnd', String.valueOf(Date.today().addDays(+30)));
             req.params.put('filter', 'OCB,BCY');
             RestContext.request = req;
             RestContext.response = res;

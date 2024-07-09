@@ -34,7 +34,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     const googleRecaptchaV3 = true;
                     document.addEventListener('DOMContentLoaded', function () {
                         document.querySelector("[id$=submitReg2]").addEventListener("click", function (e) {
-                            alert('click');
                             e.preventDefault();
                             grecaptcha.ready(function () {
                                 grecaptcha.execute('{!recaptcha.publicKey}', {action: 'submit'}).then(function (token) {
