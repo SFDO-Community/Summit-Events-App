@@ -380,6 +380,14 @@ public with sharing class SummitEventsRegisterController {
     }
 
     public PageReference checkEventDetails() {
+        //Check if recaptcha is ste up correctly
+        recaptcha.version = 0;
+        if (String.IsNotBlank(eventPage.reCAPTCHA__c)) {
+            if (eventPage.reCAPTCHA__c.equalsIgnoreCase('Google reCAPTCHA v3') && String.isBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c) && String.isBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c)) {
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, 'reCAPTCHA is added to this event, but appears to be configured incorrectly.');
+                ApexPages.addMessage(myMsg);
+            }
+        }
         return SummitEventsShared.checkForEvent('register');
     }
 
@@ -459,10 +467,7 @@ public with sharing class SummitEventsRegisterController {
         if (recaptcha.version == 3) {
             // Use Google reCAPTCHA v3 to get a score and validate against acceptable score in settings
             Decimal reCAPTCHAScore = 0;
-            System.debug('recaptchaResponse: ' + recaptchaResponse);
             reCAPTCHAScore = summitEventsRecaptcha.isReCAPTCHAValid(recaptchaResponse);
-            System.debug('RECAPTCHAScore: ' + RECAPTCHAScore);
-            System.debug('reCAPTCHA setting score:' + seaCustomSettings.reCAPTCHA_v3_Score__c);
             if (RECAPTCHAScore < seaCustomSettings.reCAPTCHA_v3_Score__c) {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, eventPage.reCAPTCHA_v3_Score_Fail_Text__c);
                 ApexPages.addMessage(myMsg);

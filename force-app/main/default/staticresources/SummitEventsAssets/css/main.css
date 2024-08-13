@@ -130,6 +130,17 @@ textarea {
     border-width: 2px;
 }
 
+.slds-scope .slds-notify_toast.slds-theme_warning {
+    color: black;
+    background-color: #f9f9f9;
+    border: solid 2px darkorange;
+}
+
+.slds-scope .slds-notify_toast.slds-theme_warning li {
+    width: 100%;
+    display: block;
+}
+
 /*Loading image*/
 #backpage {
     display: none;
