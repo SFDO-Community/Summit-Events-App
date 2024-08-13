@@ -138,7 +138,10 @@ textarea {
 
 .slds-scope .slds-notify_toast.slds-theme_warning li {
     width: 100%;
-    display: block;
+    display: list-item;
+    list-style-type: '⚠️';
+    margin-left: 1.5rem;
+    padding-left: .5rem;
 }
 
 /*Loading image*/

@@ -32,9 +32,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="sectionNav"/>
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
-                <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages />
-                </div>
+                <apex:messages layout="list" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-notify slds-notify_toast slds-theme_warning"/>
                 <apex:form id="SummitEventsRegisterSubmitForm" styleClass="slds-grid slds-wrap">
                     <!-- EVENT BREADCRUMB -->
                     <div class="slds-col slds-p-vertical-small slds-size_1-of-1">
@@ -53,25 +51,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </nav>
                     </div>
 
-                    <apex:outputPanel layout="block" id="pageMessages" styleClass="slds-notify slds-notify_alert slds-alert_warning slds-m-vertical_small" rendered="{!hasMessages}">
-                        <span class="slds-assistive-text">Warning</span>
-                        <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Warning message">
-                            <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
-                              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#warning"></use>
-                            </svg>
-                          </span>
-                        <h2>
-                            <apex:messages />
-                        </h2>
-                        <div class="slds-notify__close">
-                            <button class="slds-button slds-button_icon slds-button_icon-small" title="Close">
-                                <svg class="slds-button__icon" aria-hidden="true">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
-                                </svg>
-                                <span class="slds-assistive-text">Close</span>
-                            </button>
-                        </div>
-                    </apex:outputPanel>
+                    <apex:messages layout="list" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-notify slds-notify_toast slds-theme_warning"/>
 
                     <apex:outputPanel rendered="{!eventIsClosed}" layout="block" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small regularLists">
                         <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
