@@ -384,7 +384,7 @@ public with sharing class SummitEventsRegisterController {
         recaptcha.version = 0;
         if (String.IsNotBlank(eventPage.reCAPTCHA__c)) {
             if (eventPage.reCAPTCHA__c.equalsIgnoreCase('Google reCAPTCHA v3') && String.isBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c) && String.isBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c)) {
-                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, 'reCAPTCHA is added to this event, but appears to be configured incorrectly.');
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, 'reCAPTCHA v3 is set to be used in this event, but appears to be configured incorrectly. Check to make sure custom settings for reCAPTCHA have been fully configured.');
                 ApexPages.addMessage(myMsg);
             }
         }
