@@ -111,6 +111,56 @@
                 <identifier>RecordreCAPTCHA__cField</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Ask_Accomidations__c</fieldItem>
+                <identifier>RecordAsk_Accomidations__cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Accommodations_Label__c</fieldItem>
+                <identifier>RecordAccommodations_Label__cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Accomodations_Detail_Label__c</fieldItem>
+                <identifier>RecordAccomodations_Detail_Lable__cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Ask_Dietary_Restrictions__c</fieldItem>
+                <identifier>RecordAsk_Dietary_Restrictions__cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Dietary_Resstrictions_Label__c</fieldItem>
+                <identifier>RecordDietary_Resstrictions_Label__cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-cb142f92-98ca-47b5-b688-5a65a1518288</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -851,6 +901,26 @@
                 <identifier>record_item_046</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Ask_Dietary_Restrictions__c</fieldItem>
+                <identifier>RecordAsk_Dietary_Restrictions_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Ask_Accomidations__c</fieldItem>
+                <identifier>RecordAsk_Accomidations_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-290466e5-6049-4759-9618-a692c763459b</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -973,6 +1043,36 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Third_Party_Registrant_Label__c</fieldItem>
                 <identifier>record_item_058</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Dietary_Resstrictions_Label__c</fieldItem>
+                <identifier>RecordDietary_Resstrictions_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Accommodations_Label__c</fieldItem>
+                <identifier>RecordAccommodations_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Accomodations_Detail_Label__c</fieldItem>
+                <identifier>RecordAccomodations_Detail_Label_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-15135212-0621-462f-9bc1-8627cdfdae88</name>

@@ -807,6 +807,16 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.Accessibility_Need_Detail__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events_Registration__c.Accessibility_Need__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Actual_Number_of_Guests__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -958,6 +968,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Registration__c.Date_All_Appointments_Confirmed_del__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events_Registration__c.Dietary_Ristrictions__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1457,7 +1472,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Summit_Events_Registration__c.reCAPTCHA_v3_Score__c</field>
+        <field>Summit_Events_Registration__c.reCAPTCHA_Score__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1518,6 +1533,16 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Academic_Program_Selected__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Accessibility_Detail_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Accessibility_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1642,6 +1667,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Ask_Accessibility_Needs__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.Ask_Applicant_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1653,6 +1683,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Ask_Date_Of_Birth__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Ask_Dietary_Restrictions__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1788,6 +1823,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Date_Of_Birth_Label__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Dietary_Resstrictions_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
