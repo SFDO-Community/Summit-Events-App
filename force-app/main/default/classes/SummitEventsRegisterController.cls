@@ -146,7 +146,7 @@ public with sharing class SummitEventsRegisterController {
                             Filter_Category__c, Do_not_show_receive_text_question__c, Add_Info_Question_Pick_List_Long_1__c, Add_Info_Question_Pick_List_Long_2__c,
                             Add_Info_Question_Pick_List_Long_3__c, Add_Info_Question_Pick_List_Long_4__c, Add_Info_Question_Pick_List_Long_5__c,
                             reCAPTCHA_v3_Score_Fail_Text__c, reCAPTCHA__c, Ask_Dietary_Restrictions__c, Dietary_Resstrictions_Label__c, Accessibility_Detail_Label__c,
-                            Accessibility_Label__c
+                            Accessibility_Label__c, Ask_Accessibility_Needs__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -434,6 +434,11 @@ public with sharing class SummitEventsRegisterController {
     public List<SelectOption> getPronounDD() {
         return PickThePicklist('Summit_Events_Registration__c', 'Registrant_Pronouns__c', true);
     }
+
+    public List<SelectOption> getAccessibilityDD() {
+        return PickThePicklist('Summit_Events_Registration__c', 'Accessibility_Need__c', true);
+    }
+
 
     public List<SelectOption> PickThePicklist(String YourObjectName, String YourFieldName, Boolean includeSelect) {
         List<SelectOption> picklists = new List<SelectOption>();

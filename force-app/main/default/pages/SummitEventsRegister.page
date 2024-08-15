@@ -65,6 +65,9 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                     <apex:actionFunction name="setPhoneSetting" immediate="true" onComplete="setOldPhoneValue();dynamicValidation();" reRender="phoneBlock">
                         <apex:param name="phoneSetting" value="" assignTo="{!phoneType}"/>
                     </apex:actionFunction>
+                    <apex:actionFunction name="setAccessibility" immediate="true" onComplete="dynamicValidation();fadein();" reRender="accessibilityWrap">
+                        <apex:param name="accessibilitySettings" value="" assignTo="{!eventRegistration.Accessibility_Need__c}"/>
+                    </apex:actionFunction>
 
                     <!-- EVENT BREADCRUMB -->
                     <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
@@ -723,6 +726,53 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </apex:outputPanel>
                         </apex:outputPanel>
 
+                        <!-- Accessibility Question -->
+                        <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" layout="block" rendered="{!IF(eventPage.Ask_Accessibility_Needs__c != 'Do not ask' && !ISBLANK(eventPage.Ask_Accessibility_Needs__c), true, false)}" id="accessibilityWrap">
+                            <div class="slds-form-element {!IF(CONTAINS(eventPage.Ask_Accessibility_Needs__c, 'require'), 'slds-is-required', '')}">
+                                <apex:outputLabel for="Accessibility" styleClass="slds-form-element__label">
+                                    {!IF(!ISBLANK(eventPage.Accessibility_Label__c), eventPage.Accessibility_Label__c, 'Do you have any accessibility needs for this event?')}
+                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Accessibility_Needs__c == 'Ask and require', true, false)}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </apex:outputText>
+                                </apex:outputLabel>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-select_container">
+                                        <apex:selectList value="{!eventRegistration.Accessibility_Need__c}" size="1" id="Accessibility" multiselect="false" required="{!IF(eventPage.Ask_Accessibility_Needs__c == 'Ask and require', true, false)}" styleClass="slds-select" onChange="setAccessibility(this.value)">
+                                            <apex:selectOptions value="{!accessibilityDD}"/>
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>
+                            <apex:outputPanel layout="block" styleClass="slds-form-element {!IF(CONTAINS(eventPage.Ask_Accessibility_Needs__c, 'require'), 'slds-is-required', '')}" rendered="{!eventRegistration.Accessibility_Need__c == 'Yes'}">
+                                <apex:outputLabel for="AccessibilityDetails" styleClass="slds-form-element__label">
+                                    {!IF(!ISBLANK(eventPage.Accessibility_Detail_Label__c), eventPage.Accessibility_Detail_Label__c, 'Please indicate your accessibility request below.')} {!eventRegistration.Accessibility_Need__c}
+                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Accessibility_Needs__c == 'Ask and require', true, false)}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </apex:outputText>
+                                </apex:outputLabel>
+
+                                <apex:outputPanel layout="block" styleClass="slds-form-element__control">
+                                    <apex:inputTextarea value="{!eventRegistration.Accessibility_Need_Detail__c}" styleClass="slds-input input-textbox" Id="AccessibilityDetails"/>
+                                </apex:outputPanel>
+
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+
+                        <!-- Dietary Restrictions Question -->
+                        <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-6 slds-large-size_3-of-6" layout="block" rendered="{!IF(eventPage.Ask_Dietary_Restrictions__c != 'Do not ask' && !ISBLANK(eventPage.Ask_Dietary_Restrictions__c), true, false)}">
+                            <div class="slds-form-element {!IF(CONTAINS(eventPage.Ask_Dietary_Restrictions__c, 'require'), 'slds-is-required', '')}">
+                                <apex:outputLabel for="Dietary" styleClass="slds-form-element__label">
+                                    {!IF(!ISBLANK(eventPage.Dietary_Resstrictions_Label__c), eventPage.Dietary_Resstrictions_Label__c, 'To help us accommodate everyone\'s needs, please let us know if you have any dietary restrictions or allergies. If so, kindly specify them below.')}
+                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Dietary_Restrictions__c == 'Ask and require', true, false)}">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                    </apex:outputText>
+                                </apex:outputLabel>
+                                <apex:outputPanel layout="block" styleClass="slds-form-element__control">
+                                    <apex:inputTextarea value="{!eventRegistration.Dietary_Ristrictions__c}" styleClass="slds-input input-textbox" Id="Dietary"/>
+                                </apex:outputPanel>
+                            </div>
+                        </apex:outputPanel>
+
                         <!-- Additional Questions -->
                         <apex:outputPanel layout="block" id="addInfo" styleClass="slds-grid slds-wrap" rendered="{!additionalQuestions}" style="width:100%">
 
@@ -746,7 +796,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                 </div>
                             </apex:outputPanel>
 
-                            <!-- Addditional Guests -->
+                            <!-- Additional Guests -->
                             <apex:outputPanel styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6" layout="block" rendered="{!IF(eventPage.Allow_Other_Attendees__c, true,false)}">
                                 <div class="slds-form-element">
                                     <apex:outputLabel value="Additional guests" for="guests" styleClass="slds-form-element__label"/>
