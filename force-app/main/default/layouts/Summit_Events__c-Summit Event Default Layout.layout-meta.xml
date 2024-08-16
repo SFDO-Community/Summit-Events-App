@@ -385,7 +385,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Dietary_Resstrictions_Label__c</field>
+                <field>Dietary_Restrictions_Label__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>

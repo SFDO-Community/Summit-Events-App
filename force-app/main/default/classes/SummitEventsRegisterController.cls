@@ -145,7 +145,7 @@ public with sharing class SummitEventsRegisterController {
                             Registrant_Relationship_Label__c, Event_Fee_Label__c, Event_Fee_Total_Label__c, Event_Fee_Submit_List_Label__c, Account__r.Name,
                             Filter_Category__c, Do_not_show_receive_text_question__c, Add_Info_Question_Pick_List_Long_1__c, Add_Info_Question_Pick_List_Long_2__c,
                             Add_Info_Question_Pick_List_Long_3__c, Add_Info_Question_Pick_List_Long_4__c, Add_Info_Question_Pick_List_Long_5__c,
-                            reCAPTCHA_v3_Score_Fail_Text__c, reCAPTCHA__c, Ask_Dietary_Restrictions__c, Dietary_Resstrictions_Label__c, Accessibility_Detail_Label__c,
+                            reCAPTCHA_v3_Score_Fail_Text__c, reCAPTCHA__c, Ask_Dietary_Restrictions__c, Dietary_Restrictions_Label__c, Accessibility_Detail_Label__c,
                             Accessibility_Label__c, Ask_Accessibility_Needs__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Dietary_Resstrictions_Label__c</fullName>
+    <fullName>Dietary_Restrictions_Label__c</fullName>
     <defaultValue>&apos;Do you have any dietary restrictions?&apos;</defaultValue>
     <description>Label for the Dietary Restrictions field in the Registration Form.</description>
     <externalId>false</externalId>

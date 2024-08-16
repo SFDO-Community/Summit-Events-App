@@ -1827,7 +1827,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Summit_Events__c.Dietary_Resstrictions_Label__c</field>
+        <field>Summit_Events__c.Dietary_Restrictions_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
