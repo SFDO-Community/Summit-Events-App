@@ -827,6 +827,32 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.Ask_Accessibility_Needs__c</fieldItem>
+                <identifier>RecordAsk_Accessibility_Needs_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Ask_Dietary_Restrictions__c</fieldItem>
+                <identifier>RecordAsk_Dietary_Restrictions_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentName>flexipage:blankSpace</componentName>
+                <identifier>flexipage_blankSpace</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.Ask_Third_Party_Registrant__c</fieldItem>
                 <identifier>record_item_046</identifier>
             </fieldInstance>
@@ -943,6 +969,36 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Last_Name_As_Student_Label__c</fieldItem>
                 <identifier>record_item_057</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Dietary_Restrictions_Label__c</fieldItem>
+                <identifier>RecordDietary_Restrictions_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Accessibility_Label__c</fieldItem>
+                <identifier>RecordAccessibility_Label_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Accessibility_Detail_Label__c</fieldItem>
+                <identifier>RecordAccessibility_Detail_Label_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
