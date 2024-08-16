@@ -6,7 +6,7 @@
 @IsTest
 private class summitRecaptcha_TEST {
     @TestSetup static void init() {
-        insert new Summit_Events_Settings__c(reCAPTCHA_Public_Key__c = 'public', reCAPTCHA_Secret_Key__c = 'private');
+        insert new Summit_Events_Settings__c(reCAPTCHA_Site_Key__c = 'public', reCAPTCHA_Secret_Key__c = 'private');
     }
 
     @IsTest static void testVerify() {

@@ -634,7 +634,7 @@ public with sharing class SummitEventsRegisterController {
             Summit_Events_Settings__c seaCustomSettings = Summit_Events_Settings__c.getOrgDefaults();
             recaptchaInfo recaptchaV3Info = new recaptchaInfo();
             recaptchaV3Info.version = 3;
-            recaptchaV3Info.publicKey = seaCustomSettings.reCAPTCHA_Public_Key__c;
+            recaptchaV3Info.publicKey = seaCustomSettings.reCAPTCHA_Site_Key__c;
             recaptchaV3Info.apiUrl = seaCustomSettings.reCAPTCHA_Library_Url__c;
             recaptchaV3Info.endpointUrl = seaCustomSettings.reCAPTCHA_Endpoint__c;
             return recaptchaV3Info;

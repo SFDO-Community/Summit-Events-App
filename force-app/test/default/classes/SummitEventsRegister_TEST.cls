@@ -82,7 +82,7 @@ private class SummitEventsRegister_TEST {
         //Set up Summit_Events_Settings with reCAPTCHA keys
         Summit_Events_Settings__c seaSettings = Summit_Events_Settings__c.getOrgDefaults();
         seaSettings.reCAPTCHA_v3_Score__c = .5;
-        seaSettings.reCAPTCHA_Public_Key__c = 'testSiteKey';
+        seaSettings.reCAPTCHA_Site_Key__c = 'testSiteKey';
         seaSettings.reCAPTCHA_Secret_Key__c = 'testSecret';
         update seaSettings;
 

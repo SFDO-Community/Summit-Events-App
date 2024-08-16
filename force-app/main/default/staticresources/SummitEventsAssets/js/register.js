@@ -29,13 +29,8 @@ ready(() => {
 
     //make sure phone is formated correctly
     adjustLabelsFor();
-    dynamicValidation();
     validYear();
-
-    //Makes textareas look like textboxes
-    document.querySelectorAll('textarea.input-textbox').forEach(textbox => {
-        textbox.rows = 1;
-    });
+    dynamicValidation();
 
 });
 
@@ -56,6 +51,17 @@ function dynamicValidation() {
             fillInCityStateOnZip(zp);
         });
     });
+
+    //Makes textareas look like textboxes
+    document.querySelectorAll('textarea.input-textbox').forEach(textbox => {
+        textbox.rows = 1;
+    });
+
+    //If ul with role alert is preset scroll to that element
+    let alertToast = document.querySelector('ul[role="alert"]');
+    if (alertToast) {
+        alertToast.scrollIntoView();
+    }
 }
 
 //Carries over number values when toggling between type of mobile and home
@@ -129,8 +135,13 @@ function checkForm() {
 
     if (error_count > 0) {
         fadein();
+        let alertToast = document.querySelector('ul[role="alert"]');
         let foundErrors = document.querySelectorAll(".slds-has-error");
-        window.scrollTo(0, foundErrors[0].offsetTop);
+        if (alertToast) {
+            alertToast.scrollIntoView();
+        } else {
+            foundErrors[0].scrollIntoView();
+        }
         return false;
     }
     return true;
