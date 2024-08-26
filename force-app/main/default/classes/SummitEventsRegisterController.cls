@@ -154,7 +154,7 @@ public with sharing class SummitEventsRegisterController {
 
             recaptcha = new recaptchaInfo();
             recaptcha.version = 0;
-            if (String.IsNotBlank(eventPage.reCAPTCHA__c)) {
+            if (String.isNotBlank(eventPage.reCAPTCHA__c)) {
                 if (eventPage.reCAPTCHA__c.equalsIgnoreCase('Google reCAPTCHA v3') && String.isNotBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c) && String.isNotBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c)) {
                     recaptcha = rCRUD.getRecaptchaInfo();
                 }
@@ -370,7 +370,7 @@ public with sharing class SummitEventsRegisterController {
                         Registrant_Other_Phone__c, Registrant_Other_Relationship__c, Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c,
                         Registrant_Pronouns__c, Registrant_Title__c, Registrant_Company_Organization__c, Event_Website__c, Event_Website_Referrer__c, gclid__c, utm_campaign__c, utm_content__c,
                         utm_creative_format__c, utm_id__c, utm_marketing_tactic__c, utm_medium__c, utm_source__c, utm_source_platform__c, utm_term__c, Dietary_Ristrictions__c,
-                        Accessibility_Need__c, Accessibility_Need_Detail__c
+                        Accessibility_Need__c, Accessibility_Need_Detail__c, reCAPTCHA_Score__c
                 FROM Summit_Events_Registration__c
                 WHERE Id = :eventRegistrationId
                 WITH SECURITY_ENFORCED
@@ -383,7 +383,6 @@ public with sharing class SummitEventsRegisterController {
 
     public PageReference checkEventDetails() {
         //Check if recaptcha is ste up correctly
-        recaptcha.version = 0;
         if (String.isNotBlank(eventPage.reCAPTCHA__c)) {
             if (eventPage.reCAPTCHA__c.equalsIgnoreCase('Google reCAPTCHA v3') && String.isBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c) && String.isBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c)) {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, 'reCAPTCHA v3 is set to be used in this event, but appears to be configured incorrectly. Check to make sure custom settings for reCAPTCHA have been fully configured.');
@@ -475,12 +474,15 @@ public with sharing class SummitEventsRegisterController {
             // Use Google reCAPTCHA v3 to get a score and validate against acceptable score in settings
             Decimal reCAPTCHAScore = 0;
             reCAPTCHAScore = summitEventsRecaptcha.isReCAPTCHAValid(recaptchaResponse);
-/*            if (RECAPTCHAScore < seaCustomSettings.reCAPTCHA_v3_Score__c) {
+            if (RECAPTCHAScore < seaCustomSettings.reCAPTCHA_v3_Score__c) {
                 ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, eventPage.reCAPTCHA_v3_Score_Fail_Text__c);
+                if (RECAPTCHAScore == -1) {
+                    myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, 'reCaptcha v3 Unauthorized endpoint, please add reCaptcha endpoint to Setup->Security->Remote site settings.');
+                }
                 ApexPages.addMessage(myMsg);
                 return null;
             }
-            eventRegistration.reCAPTCHA_v3_Score__c = reCAPTCHAScore;*/
+            eventRegistration.reCAPTCHA_Score__c = reCAPTCHAScore;
         }
 
         if (String.isNotBlank(phoneType) && eventPage.Ask_Phone__c.containsIgnoreCase('with type')) {
@@ -641,7 +643,6 @@ public with sharing class SummitEventsRegisterController {
         }
 
         public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c eventRegistration, Id incomingEventRegistrationId, String registrantAudience, List<Summit_Events_Fee__c> upsertFees) {
-            System.debug(JSON.serializePretty(eventRegistration));
             try {
                 if (String.isNotBlank(incomingEventRegistrationId)) {
                     eventRegistration.Id = incomingEventRegistrationId;

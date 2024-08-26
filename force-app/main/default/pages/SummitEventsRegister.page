@@ -859,7 +859,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         <apex:variable value="{!100}" var="count"/>
 
                         <!-- Google reCAPTCHA v3 -->
-                        <apex:inputHidden id="recaptchaResponse" value="{!recaptchaResponse}" rendered="{!recaptcha.version = 3}"/>
+                        <apex:inputHidden id="recaptchaResponse" value="{!recaptchaResponse}" rendered="{!recaptcha.version == 3}"/>
 
                         <!-- Submit buttons -->
                         <apex:outputPanel layout="block" styleClass="slds-col slds-p-vertical_medium slds-p-left_x-small slds-size_1-of-1" style="{!IF(recaptcha.version == 3, 'display:none', '')}">

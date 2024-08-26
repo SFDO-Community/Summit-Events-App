@@ -21,17 +21,18 @@ public with sharing class summitEventsRecaptcha {
 
         try {
             HttpResponse response = http.send(request);
-            System.debug('response.getBody(): ' + JSON.serializePretty(response.getBody()));
             Map<String, Object> mapOfBody = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
             success = (Boolean) mapOfBody.get('success');
             score = (Decimal) mapOfBody.get('score');
         } catch (Exception e) {
-            System.debug('Error: ' + e.getMessage());
+            if(e.getMessage().contains('Unauthorized endpoint')) {
+                score = -1;
+            }
         }
         if (success) {
             return score;
         }
-        return 0;
+        return score;
     }
 
     @TestVisible
