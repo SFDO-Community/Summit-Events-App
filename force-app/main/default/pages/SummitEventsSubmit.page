@@ -167,7 +167,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                         <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
                             <p class="slds-text-body slds-p-vertical_xx-small">
-                                <apex:commandLink action="{!submitRegistration}" onClick="fadeout();" Value="{!IF(hasPaymentGateway, IF(ISBLANK(eventPage.Payment_Button_Label__c),'Make Payment', eventPage.Payment_Button_Label__c), 'Submit Registration')}" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                <apex:commandLink action="{!submitRegistration}" onClick="fadeout();" Value="{!IF(hasPaymentGateway, IF(ISBLANK(eventPage.Payment_Button_Label__c),'Make Payment', eventPage.Payment_Button_Label__c), 'Submit Registration')}" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small" html-role="button"/>
                                 <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                             </p>
                         </div>
