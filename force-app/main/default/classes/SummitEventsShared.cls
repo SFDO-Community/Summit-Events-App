@@ -598,7 +598,7 @@ public with sharing class SummitEventsShared {
         splitList.addAll(sanitizePicklistString(returnSepStringList));
         splitList.addAll(sanitizePicklistString(returnSepStringList2));
         for (String p : splitList) {
-            p = p.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-. ]', '');
+            p = p.replaceAll('[^a-zA-Z0-9@<>?&;:\\[\\]!-./ ]', '');
             if (String.isNotBlank(p)) {
                 cpl.add(new SelectOption(p, p));
             }

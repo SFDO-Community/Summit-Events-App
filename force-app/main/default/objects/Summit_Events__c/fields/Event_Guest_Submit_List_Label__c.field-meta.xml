@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Event_Guest_Submit_List_Label__c</fullName>
-    <description>Appears on the submit page as title to itemized list of Guests. Defaults to &quot;Additional guests registred&quot;</description>
+    <description>Appears on the submit page as title to itemized list of Guests. Defaults to &quot;Additional guests registered&quot;</description>
     <externalId>false</externalId>
-    <inlineHelpText>Appears on the submit page as title to itemized list of fees. Defaults to &quot;Additional guests registred&quot;</inlineHelpText>
+    <inlineHelpText>Appears on the submit page as title to itemized list of fees. Defaults to &quot;Additional guests registered&quot;</inlineHelpText>
     <label>Event Guest Submit List Label</label>
     <length>255</length>
     <required>false</required>
