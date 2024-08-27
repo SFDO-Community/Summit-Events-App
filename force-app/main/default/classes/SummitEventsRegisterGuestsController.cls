@@ -60,7 +60,7 @@ public with sharing class SummitEventsRegisterGuestsController {
                             Guest_Registration_Title__c, Guest_Max_Amount__c, Guest_Registration_Description__c, Guest_Table_Size__c, Guest_Tables_Available__c,
                             Display_Guest_Registration__c, Guest_Registration_Add_Button_Label__c, No_Guest_Registrations_Added_Message__c,
                             Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c, Guest_Unsaved_Cancel_Label__c, Guest_Unsaved_Continue_Label__c,
-                            Guest_Unsaved_Modal_Text__c
+                            Guest_Unsaved_Modal_Text__c, Event_Status__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -164,7 +164,7 @@ public with sharing class SummitEventsRegisterGuestsController {
             pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
             templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
 
-            eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
+            eventIsClosed = SummitEventsShared.isEventClosed(eventInstance, eventPage.Event_Status__c);
 
             formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
 
