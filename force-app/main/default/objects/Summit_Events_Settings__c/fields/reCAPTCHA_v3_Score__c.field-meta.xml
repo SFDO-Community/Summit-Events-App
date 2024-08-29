@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>reCAPTCHA_v3_Score__c</fullName>
-    <description>A score between 0 and 1 (.1, .2. .3, etc). Zero  is the most suspect client and 1 is the least. If you set your score to zero all traffic will be permitted (even the most suspect). If you set your score to 1 only the most pristine traffic will be allowed (very rare that a client would score a 1 so most traffic would be blocked).</description>
+    <description>This score is the Risk Definition. It ranges from 0-1 with zero being the least restrictive. A value of 1 is the most restrictive. A suggested starting value at 0.5 is recommended.</description>
     <externalId>false</externalId>
-    <inlineHelpText>A score between 0 and 1 (.1, .2. .3, etc). Zero  is the most suspect client and 1 is the least.</inlineHelpText>
+    <inlineHelpText>This score is the Risk Definition. It ranges from 0-1 with zero being the least restrictive. A value of 1 is the most restrictive. A suggested starting value at 0.5 is recommended.</inlineHelpText>
     <label>reCAPTCHA v3 Score</label>
     <precision>2</precision>
     <required>false</required>
