@@ -66,7 +66,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             eventPage = [
                     SELECT Name, Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Full_Text__c, Event_Home_Link_URL__c, Event_Home_Link_Title__c,
                             Template__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Event_Additional_Question_Title__c, Event_Additional_Questions_Description__c,
-                            Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c
+                            Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c, Event_Status__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -92,7 +92,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             startTimeString = SummitEventsShared.formatTime(eventInstance.Instance_Start_Time__c, false);
             endTimeString = SummitEventsShared.formatTime(eventInstance.Instance_End_Time__c, false);
 
-            eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
+            eventIsClosed = SummitEventsShared.isEventClosed(eventInstance, eventPage.Event_Status__c);
 
             //Get the question object questions
             additionalQuestions = [

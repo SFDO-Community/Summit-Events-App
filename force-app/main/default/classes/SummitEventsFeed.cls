@@ -416,7 +416,7 @@ global with sharing class SummitEventsFeed {
                 evt.locationMapLink = '';
             }
 
-            if (SummitEventsShared.isEventClosed(eventInstance)) {
+            if (SummitEventsShared.isEventClosed(eventInstance, eventInstance.Event__r.Event_Status__c )) {
                 evt.eventClosed = true;
                 evt.eventUrl = 'javascript:;';
                 evt.className = 'eventClosed';

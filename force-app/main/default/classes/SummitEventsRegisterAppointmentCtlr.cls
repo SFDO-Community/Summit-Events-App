@@ -46,7 +46,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     SELECT Event_Name__c, Event_description__c, Event_Appointment_Title__c, Event_Appointment_Description__c, Event_Footer__c,
                             Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Options_Registration__c, Event_Full_Text__c,
                             Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Display_Optional_Donation__c, Event_Appointment_Chosen_Label__c,
-                            Event_Appointment_Unchosen_Label__c, Event_Appointment_Next_Instructions__c, Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c
+                            Event_Appointment_Unchosen_Label__c, Event_Appointment_Next_Instructions__c, Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c,
+                            Event_Status__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -66,7 +67,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
                 pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage(), evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c);
 
-                eventIsClosed = SummitEventsShared.isEventClosed(evtInstance);
+                eventIsClosed = SummitEventsShared.isEventClosed(evtInstance, eventPage.Event_Status__c);
 
                 if (evtInstance != null) {
                     String dayOfWeek = SummitEventsShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');

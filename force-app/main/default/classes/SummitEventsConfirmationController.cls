@@ -38,7 +38,8 @@ public with sharing class SummitEventsConfirmationController {
                             Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Hand_Raise_Action__c, Account__r.Name, Audience__c,
                             Filter_Category__c, Event_Sponsor__c, Event_Fee_Label__c, Event_Fee_Submit_List_Label__c, Event_Fee_Total_Label__c,
                             Event_Fee__c, Event_Fee_Allocation__c, Event_Fee_Additional__c, Event_Fees_Received_Label__c, Event_Payment_Due_Description__c,
-                            Event_Payment_Due_Heading_Label__c, Event_Payment_Received_Heading_Label__c, Event_Payment_Received_Description__c
+                            Event_Payment_Due_Heading_Label__c, Event_Payment_Received_Heading_Label__c, Event_Payment_Received_Description__c,
+                            Event_Status__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -57,7 +58,7 @@ public with sharing class SummitEventsConfirmationController {
                             LIMIT 1
                     ];
 
-                    eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
+                    eventIsClosed = SummitEventsShared.isEventClosed(eventInstance, eventPage.Event_Status__c);
 
                     formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
                 }
@@ -84,7 +85,7 @@ public with sharing class SummitEventsConfirmationController {
         Boolean eventRegistrationSuccess = true;
 
         //Make sure the event has not expired
-        eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
+        eventIsClosed = SummitEventsShared.isEventClosed(eventInstance, eventPage.Event_Status__c);
 
         // Default to submit page, submit will redirect to beginning if no reg id is present. Prevents pre-filled forms in one step registrations.
         ApexPages.currentPage().getHeaders().put('referer', Page.SummitEventsSubmit.getUrl());

@@ -410,7 +410,7 @@ public with sharing class SummitEventsShared {
         return b;
     }
 
-    public static Boolean isEventClosed(Summit_Events_Instance__c evtInstance) {
+    public static Boolean isEventClosed(Summit_Events_Instance__c evtInstance, String masterEventStatus) {
         // Figure out if the event is closed.
         Boolean eventIsClosed = false;
         if (ApexPages.currentPage() != null && String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
@@ -433,7 +433,7 @@ public with sharing class SummitEventsShared {
                 }
             }
 
-            if (evtInstance.Current_Available_Capacity__c <= 0 || evtInstance.Active_Status__c != 'Active') {
+            if (evtInstance.Current_Available_Capacity__c <= 0 || evtInstance.Active_Status__c != 'Active' || masterEventStatus != 'Active') {
                 eventIsClosed = true;
             }
         }
