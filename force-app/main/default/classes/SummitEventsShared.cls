@@ -36,10 +36,7 @@ public with sharing class SummitEventsShared {
         currentUrlSplit = currentUrl.split('/');
         String currentPageName = currentUrlSplit[currentUrlSplit.size() - 1];
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         String dayOfWeek = convertDateToDatetime(startDate, null, '').format('EEEE');
 
@@ -296,10 +293,7 @@ public with sharing class SummitEventsShared {
             communityBaseURL += '/';
         }
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         String newUrl = '';
 
@@ -626,24 +620,28 @@ public with sharing class SummitEventsShared {
     public static String checkFieldGuestAccess(String objectApiName, String fieldName, String requiredFieldType, Boolean testCreatable, String qualifierLabel) {
         String returnError = '';
         DescribeFieldResult fieldDescribe;
-        SObjectType schemaType;
+        DescribeSObjectResult objDescribe;
+        SObject objInstance;
+        Type schemaType;
         if (String.isBlank(qualifierLabel)) {
             qualifierLabel = '';
         }
         try {
-            schemaType = ((SObject) Type.forName('Schema', objectApiName).newInstance()).getSObjectType();
+            schemaType = Type.forName(objectApiName);
+            objInstance = (SObject) schemaType.newInstance();
+            objDescribe = objInstance.getSObjectType().getDescribe();
         } catch (Exception ex) {
             returnError = qualifierLabel + objectApiName + ' may not exist or is inaccessible. ';
         }
 
         if (String.isBlank(returnError)) {
-            if (!schemaType.getDescribe().isAccessible()) {
+            if (!objDescribe.isAccessible()) {
                 returnError += qualifierLabel + objectApiName + ' is not accessible (check sharing rules and permissions). ';
             }
         }
         if (String.isNotBlank(fieldName) && String.isBlank(returnError)) {
             try {
-                Map<String, SObjectField> fields = schemaType.getDescribe().fields.getMap();
+                Map<String, SObjectField> fields = objDescribe.fields.getMap();
                 fieldDescribe = fields.get(fieldName).getDescribe();
             } catch (Exception ex) {
                 returnError += qualifierLabel + 'Field ' + fieldName + ' may not exist. ';
@@ -671,10 +669,7 @@ public with sharing class SummitEventsShared {
     public static Map<String, String> getDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName, String parentValue) {
         Map<String, String> dependentItems = new Map<String, String>();
         if (null != parentObjName && null != parentFieldName && null != dependentFieldName && null != parentValue) {
-            String namespace = SummitEventsNamespace.getNamespace();
-            if (String.isNotBlank(namespace)) {
-                namespace = namespace + '__';
-            }
+            String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
             Schema.DescribeFieldResult dependentField;
             Integer parentValueIndex = -1;

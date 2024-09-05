@@ -17,10 +17,7 @@ private class SummitEventsRegisterAppointment_TEST {
         System.runAs(testUser) {
             Test.startTest();
 
-            String namespace = SummitEventsNamespace.getNamespace();
-            if (String.isNotBlank(namespace)) {
-                namespace = namespace + '__';
-            }
+            String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
             PageReference pageRef = Page.SummitEventsRegisterAppointments;
             Test.setCurrentPage(pageRef);

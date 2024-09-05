@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>reCAPTCHA_v3_Score__c</fullName>
+    <description>This score is the Risk Definition. It ranges from 0-1 with zero being the least restrictive. A value of 1 is the most restrictive. A suggested starting value at 0.5 is recommended.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This score is the Risk Definition. It ranges from 0-1 with zero being the least restrictive. A value of 1 is the most restrictive. A suggested starting value at 0.5 is recommended.</inlineHelpText>
+    <label>reCAPTCHA v3 Score</label>
+    <precision>2</precision>
+    <required>false</required>
+    <scale>1</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

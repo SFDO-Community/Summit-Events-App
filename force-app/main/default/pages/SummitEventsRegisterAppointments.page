@@ -21,6 +21,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 dataLayer.push({
                     'account': '{!IF(!ISBLANK(eventPage.Account__r.Name),eventPage.Account__r.Name, '')}',
                     'audience': '{!IF(!ISBLANK(eventPage.Audience__c),eventPage.Audience__c, '')}',
+                    'event': 'summit_appointments',
                     'eventLabel': '{!eventPage.Event_Name__c}{!IF(!ISBLANK(evtInstance.Instance_Title__c),' - ' + evtInstance.Instance_Title__c,'')}',
                     'category': '{!IF(!ISBLANK(eventPage.Filter_Category__c), eventPage.Filter_Category__c, '')}',
                     'sponsor': '{!IF(!ISBLANK(eventPage.Event_Sponsor__c), eventPage.Event_Sponsor__c, '')}',
@@ -31,9 +32,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="sectionNav"/>
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
-                <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
-                    <apex:messages />
-                </div>
+                <apex:messages layout="list" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-notify slds-notify_toast slds-theme_warning"/>
 
                 <apex:form id="SummitEventsRegisterAppointmentsForm" styleClass="slds-grid slds-wrap">
                     <!-- EVENT BREADCRUMB -->
@@ -197,7 +196,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
                             <p class="slds-text-body slds-p-vertical_xx-small nextAppointmentInstructions">{!IF(ISBLANK(eventPage.Event_Appointment_Next_Instructions__c), 'Once you have made your selections click next.', eventPage.Event_Appointment_Next_Instructions__c)}</p>
                             <p class="slds-text-body slds-p-vertical_xx-small">
-                                <apex:commandLink action="{!saveOptions}" onClick="fadeout(); return populateAppJSON();" Value="Next" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                <apex:commandLink action="{!saveOptions}" onClick="fadeout(); return populateAppJSON();" Value="Next" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small" html-role="button"/>
                                 <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small" immediate="true"/>
                             </p>
                         </div>
