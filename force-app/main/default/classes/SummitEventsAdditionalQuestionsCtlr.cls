@@ -108,10 +108,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             ];
 
             //Get namespace if packaged
-            String namespace = SummitEventsNamespace.getNamespace();
-            if (String.isNotBlank(namespace)) {
-                namespace = namespace + '__';
-            }
+            String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
             eventRegistration = new Summit_Events_Registration__c();
 
@@ -387,17 +384,16 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
     public List<SelectOption> createExistingPicklist(String existingPicklist) {
         List<SelectOption> picklists = new List<SelectOption>();
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace.toLowerCase() + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         String existingPicklistString = existingPicklist;
         if (!existingPicklistString.startsWith('c__')) {
             existingPicklistString = namespace + existingPicklistString;
         }
 
-        Schema.DescribeSObjectResult registrationDescribe = ((SObject) Type.forName('Schema', namespace + 'Summit_Events_Registration__c').newInstance()).getSObjectType().getDescribe();
+        Type registrationType = Type.forName(namespace + 'Summit_Events_Registration__c');
+        SObject registrationObj = (SObject) registrationType.newInstance();
+        DescribeSObjectResult registrationDescribe = registrationObj.getSObjectType().getDescribe();
 
         List<Schema.PicklistEntry> PicklistValues = registrationDescribe.fields.getMap().get(existingPicklistString).getDescribe().getPicklistValues();
         picklists.add(new SelectOption('', 'Select...'));
@@ -474,10 +470,11 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             Map<String, String> queryInfo = (Map<String, String>) JSON.deserialize(question, Map<String, String>.class);
             if (queryInfo.size() > 0) {
                 String lookupQuery = '';
-                Schema.DescribeSObjectResult lookupObjectDesc = null;
+                DescribeSObjectResult lookupObjectDesc = null;
                 try {
-                    //Define lookup object
-                    lookupObjectDesc = ((SObject) Type.forName('Schema', queryInfo.get('Lookup_Object__c')).newInstance()).getSObjectType().getDescribe();
+                    Type lookupObjType = Type.forName(queryInfo.get('Lookup_Object__c'));
+                    SObject lookupObject = (SObject) lookupObjType.newInstance();
+                    lookupObjectDesc = lookupObject.getSObjectType().getDescribe();//Define lookup object
                 } catch (Exception e) {
                     ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Lookup object is inaccessible.' + e.getMessage()));
                 }
@@ -538,8 +535,11 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                         validLookupFields.add('Id');
                                         for (Integer xx = 0; xx < validLookupFields.size(); xx++) {
                                             //Don't ever show Ids in the returned value list
-                                            SObjectType lookupObjectDescribe = ((SObject) Type.forName('Schema', queryInfo.get('Lookup_Object__c')).newInstance()).getSObjectType();
-                                            String fieldType = String.valueOf(lookupObjectDescribe.getDescribe().fields.getMap().get(validLookupFields[xx]).getDescribe().getType()).toLowerCase();
+                                            Type lookupObjectType = Type.forName(queryInfo.get('Lookup_Object__c'));
+                                            SObject lookupObject = (SObject) lookupObjectType.newInstance();
+                                            DescribeSObjectResult lookupObjectDescribe = lookupObject.getSObjectType().getDescribe();
+                                            String fieldType = String.valueOf(lookupObjectDescribe.fields.getMap().get(validLookupFields[xx]).getDescribe().getType()).toLowerCase();
+
                                             if (fieldType != 'id') {
                                                 if (xx == 0) {
                                                     lineOne = (String) obj.get(validLookupFields[xx]);

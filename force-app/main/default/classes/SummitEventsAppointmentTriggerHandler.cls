@@ -25,10 +25,7 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
 
         if (uniqueRegistrationIds.size() > 0) {
 
-            String namespace = SummitEventsNamespace.getNamespace();
-            if (String.isNotBlank(namespace)) {
-                namespace = namespace.toLowerCase() + '__';
-            }
+            String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
             //Get the all query fields from global picklist
             String appointmentFields = getAppointmentQueryFields();
@@ -206,10 +203,7 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                 'Host_Location__c', 'Host_Name__c', 'Registrant_Input__c', 'Room__c'
         };
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace.toLowerCase() + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         List<Schema.PicklistEntry> PicklistValues = Schema.getGlobalDescribe().get(namespace + 'Summit_Events__c').getDescribe().fields.getMap().get(namespace + 'Itinerary_Item_1__c').getDescribe().getPicklistValues();
 

@@ -43,10 +43,7 @@ global with sharing class SummitEventsFeed {
         String recType = RestContext.request.params.get('rectype');
 
         //Get namespace if packaged
-        namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         if (String.isNotBlank(recType)) {
             List<RecordType> recTypeList = [

@@ -34,6 +34,16 @@ public with sharing class SummitEventsRegisterController {
     public Map<String, PageReference> pageFlow { get; set; }
     public String nextUrl { get; set; }
     public String namespace { get; set; }
+    public String recaptchaResponse { get; set; }
+    public recaptchaInfo recaptcha { get; set; }
+    public Summit_Events_Settings__c seaCustomSettings { get; set; }
+
+    public class recaptchaInfo {
+        public Integer version { get; set; }
+        public String publicKey { get; set; }
+        public String apiUrl { get; set; }
+        public String endpointUrl { get; set; }
+    }
 
     public SummitEventsRegisterController() {
         //array for looping through additional information questions
@@ -41,10 +51,9 @@ public with sharing class SummitEventsRegisterController {
                 '1', '2', '3', '4', '5'
         };
 
-        namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace.toLowerCase() + '__';
-        }
+        namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+
+        seaCustomSettings = Summit_Events_Settings__c.getOrgDefaults();
 
         contactSet = false;
         eventIsClosed = false;
@@ -52,6 +61,7 @@ public with sharing class SummitEventsRegisterController {
         EvtUserType = UserInfo.getUserType();
         //Get cookie or URL string variable
         eventInformation = SummitEventsShared.getSummitEventsInfo();
+        registrationCRUD rCRUD = new registrationCRUD();
 
         //Create event registration. Populate with current registration if it exists with removed id
         eventRegistration = new Summit_Events_Registration__c();
@@ -67,7 +77,7 @@ public with sharing class SummitEventsRegisterController {
         }
 
         //Set the default country if it is in settings and matches something in the global pick list
-        Summit_Events_Settings__c seaCustomSettings = Summit_Events_Settings__c.getOrgDefaults();
+
         String defaultCountry = seaCustomSettings.Default_Country__c;
         if (String.isNotBlank(defaultCountry) && String.isBlank(eventRegistration.Registrant_Country__c)) {
             List<SelectOption> getCountryDD = PickThePicklist('Summit_Events_Registration__c', 'Registrant_Country__c', false);
@@ -134,12 +144,21 @@ public with sharing class SummitEventsRegisterController {
                             Relationship_To_Institution_Label__c, Third_Party_Registrant_Label__c, Title_Label__c, Preferred_Class_Year_Label__c,
                             Registrant_Relationship_Label__c, Event_Fee_Label__c, Event_Fee_Total_Label__c, Event_Fee_Submit_List_Label__c, Account__r.Name,
                             Filter_Category__c, Do_not_show_receive_text_question__c, Add_Info_Question_Pick_List_Long_1__c, Add_Info_Question_Pick_List_Long_2__c,
-                            Add_Info_Question_Pick_List_Long_3__c, Add_Info_Question_Pick_List_Long_4__c, Add_Info_Question_Pick_List_Long_5__c,
-                            Event_Status__c
+                            Add_Info_Question_Pick_List_Long_3__c, Add_Info_Question_Pick_List_Long_4__c, Add_Info_Question_Pick_List_Long_5__c, Event_Status__c,
+                            reCAPTCHA_v3_Score_Fail_Text__c, reCAPTCHA__c, Ask_Dietary_Restrictions__c, Dietary_Restrictions_Label__c, Accessibility_Detail_Label__c,
+                            Accessibility_Label__c, Ask_Accessibility_Needs__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
             ];
+
+            recaptcha = new recaptchaInfo();
+            recaptcha.version = 0;
+            if (String.isNotBlank(eventPage.reCAPTCHA__c)) {
+                if (eventPage.reCAPTCHA__c.equalsIgnoreCase('Google reCAPTCHA v3') && String.isNotBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c) && String.isNotBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c)) {
+                    recaptcha = rCRUD.getRecaptchaInfo();
+                }
+            }
 
             pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage(), evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c);
             nextUrl = pageFlow.get('Next').getUrl().toLowerCase();
@@ -265,7 +284,7 @@ public with sharing class SummitEventsRegisterController {
             /*get Analytic data*/
 
             //Get current URL
-            String baseURL = Url.getSalesforceBaseUrl().toExternalForm();
+            String baseURL = Url.getCurrentRequestUrl().getHost();
             String PageURL = ApexPages.currentPage().getUrl();
             eventRegistration.Event_Website__c = baseURL + PageURL.replace('\'', '').escapeHtml4();
 
@@ -350,7 +369,8 @@ public with sharing class SummitEventsRegisterController {
                         Registrant_Date_of_Birth__c, Last_Name_as_Student__c, Preferred_Class_Year__c, Relationship_To_Institution__c, Registrant_Other_Email__c, Registrant_Other_First_Name__c, Registrant_Other_Last_Name__c,
                         Registrant_Other_Phone__c, Registrant_Other_Relationship__c, Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c,
                         Registrant_Pronouns__c, Registrant_Title__c, Registrant_Company_Organization__c, Event_Website__c, Event_Website_Referrer__c, gclid__c, utm_campaign__c, utm_content__c,
-                        utm_creative_format__c, utm_id__c, utm_marketing_tactic__c, utm_medium__c, utm_source__c, utm_source_platform__c, utm_term__c
+                        utm_creative_format__c, utm_id__c, utm_marketing_tactic__c, utm_medium__c, utm_source__c, utm_source_platform__c, utm_term__c, Dietary_Ristrictions__c,
+                        Accessibility_Need__c, Accessibility_Need_Detail__c, reCAPTCHA_Score__c
                 FROM Summit_Events_Registration__c
                 WHERE Id = :eventRegistrationId
                 WITH SECURITY_ENFORCED
@@ -362,6 +382,13 @@ public with sharing class SummitEventsRegisterController {
     }
 
     public PageReference checkEventDetails() {
+        //Check if recaptcha is ste up correctly
+        if (String.isNotBlank(eventPage.reCAPTCHA__c)) {
+            if (eventPage.reCAPTCHA__c.equalsIgnoreCase('Google reCAPTCHA v3') && String.isBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c) && String.isBlank(seaCustomSettings.reCAPTCHA_Secret_Key__c)) {
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, 'reCAPTCHA v3 is set to be used in this event, but appears to be configured incorrectly. Check to make sure custom settings for reCAPTCHA have been fully configured.');
+                ApexPages.addMessage(myMsg);
+            }
+        }
         return SummitEventsShared.checkForEvent('register');
     }
 
@@ -407,12 +434,14 @@ public with sharing class SummitEventsRegisterController {
         return PickThePicklist('Summit_Events_Registration__c', 'Registrant_Pronouns__c', true);
     }
 
+    public List<SelectOption> getAccessibilityDD() {
+        return PickThePicklist('Summit_Events_Registration__c', 'Accessibility_Need__c', true);
+    }
+
+
     public List<SelectOption> PickThePicklist(String YourObjectName, String YourFieldName, Boolean includeSelect) {
         List<SelectOption> picklists = new List<SelectOption>();
-        namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace.toLowerCase() + '__';
-        }
+        namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         List<Schema.PicklistEntry> PicklistValues = Schema.getGlobalDescribe().get(namespace + YourObjectName).getDescribe().fields.getMap().get(namespace + YourFieldName).getDescribe().getPicklistValues();
 
@@ -440,6 +469,21 @@ public with sharing class SummitEventsRegisterController {
 
     public PageReference saveContactRegistration() {
         PageReference optionPage;
+
+        if (recaptcha.version == 3) {
+            // Use Google reCAPTCHA v3 to get a score and validate against acceptable score in settings
+            Decimal reCAPTCHAScore = 0;
+            reCAPTCHAScore = summitEventsRecaptcha.isReCAPTCHAValid(recaptchaResponse);
+            if (RECAPTCHAScore < seaCustomSettings.reCAPTCHA_v3_Score__c) {
+                ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, eventPage.reCAPTCHA_v3_Score_Fail_Text__c);
+                if (RECAPTCHAScore == -1) {
+                    myMsg = new ApexPages.Message(ApexPages.Severity.ERROR, 'reCaptcha v3 Unauthorized endpoint, please add reCaptcha endpoint to Setup->Security->Remote site settings.');
+                }
+                ApexPages.addMessage(myMsg);
+                return null;
+            }
+            eventRegistration.reCAPTCHA_Score__c = reCAPTCHAScore;
+        }
 
         if (String.isNotBlank(phoneType) && eventPage.Ask_Phone__c.containsIgnoreCase('with type')) {
             if (phoneType.equalsIgnoreCase('mobile')) {
@@ -588,8 +632,17 @@ public with sharing class SummitEventsRegisterController {
 
     private without sharing class registrationCRUD {
 
+        public recaptchaInfo getRecaptchaInfo() {
+            Summit_Events_Settings__c seaCustomSettings = Summit_Events_Settings__c.getOrgDefaults();
+            recaptchaInfo recaptchaV3Info = new recaptchaInfo();
+            recaptchaV3Info.version = 3;
+            recaptchaV3Info.publicKey = seaCustomSettings.reCAPTCHA_Site_Key__c;
+            recaptchaV3Info.apiUrl = seaCustomSettings.reCAPTCHA_Library_Url__c;
+            recaptchaV3Info.endpointUrl = seaCustomSettings.reCAPTCHA_Endpoint__c;
+            return recaptchaV3Info;
+        }
+
         public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c eventRegistration, Id incomingEventRegistrationId, String registrantAudience, List<Summit_Events_Fee__c> upsertFees) {
-            System.debug(JSON.serializePretty(eventRegistration));
             try {
                 if (String.isNotBlank(incomingEventRegistrationId)) {
                     eventRegistration.Id = incomingEventRegistrationId;
