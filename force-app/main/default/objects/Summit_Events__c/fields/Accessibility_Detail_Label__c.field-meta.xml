@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Accessibility_Detail_Label__c</fullName>
+    <defaultValue>&apos;Please indicate your accessibility request below.&apos;</defaultValue>
+    <description>The label to the question where the applicant is asked specifics about the accessibility needs they require.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The label to the question where the applicant is asked specifics about the accessibility needs they require.</inlineHelpText>
+    <label>Accessibility Detail Label</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -33,6 +33,7 @@
                 dataLayer.push({
                     'account': '{!IF(!ISBLANK(eventPage.Account__r.Name),eventPage.Account__r.Name, '')}',
                     'audience': '{!IF(!ISBLANK(eventPage.Audience__c),eventPage.Audience__c, '')}',
+                    'event': 'summit_additional_questions',
                     'eventLabel': '{!eventPage.Event_Name__c}{!IF(!ISBLANK(eventInstance.Instance_Title__c),' - ' + eventInstance.Instance_Title__c,'')}',
                     'category': '{!IF(!ISBLANK(eventPage.Filter_Category__c), eventPage.Filter_Category__c, '')}',
                     'sponsor': '{!IF(!ISBLANK(eventPage.Event_Sponsor__c), eventPage.Event_Sponsor__c, '')}',
@@ -44,9 +45,7 @@
         <apex:define name="body">
 
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
-                <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages />
-                </div>
+                <apex:messages layout="list" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-notify slds-notify_toast slds-theme_warning"/>
 
                 <!-- EVENT BREADCRUMB -->
                 <div class="slds-col slds-p-around_x-small slds-size_1-of-1">

@@ -43,10 +43,7 @@ global with sharing class SummitEventsFeed {
         String recType = RestContext.request.params.get('rectype');
 
         //Get namespace if packaged
-        namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         if (String.isNotBlank(recType)) {
             List<RecordType> recTypeList = [
@@ -419,7 +416,7 @@ global with sharing class SummitEventsFeed {
                 evt.locationMapLink = '';
             }
 
-            if (SummitEventsShared.isEventClosed(eventInstance)) {
+            if (SummitEventsShared.isEventClosed(eventInstance, eventInstance.Event__r.Event_Status__c )) {
                 evt.eventClosed = true;
                 evt.eventUrl = 'javascript:;';
                 evt.className = 'eventClosed';

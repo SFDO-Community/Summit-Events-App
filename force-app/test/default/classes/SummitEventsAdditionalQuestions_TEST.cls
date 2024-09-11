@@ -12,10 +12,7 @@ private class SummitEventsAdditionalQuestions_TEST {
         SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         System.runAs(testUser) {
             Test.startTest();
@@ -74,10 +71,7 @@ private class SummitEventsAdditionalQuestions_TEST {
 
         SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, '', 'Registrant and Guest');
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         System.runAs(testUser) {
             Test.startTest();
@@ -112,10 +106,7 @@ private class SummitEventsAdditionalQuestions_TEST {
 
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'lookup', 'Registrant and Guest');
         testQuestions[0].Lookup_Where_Clause__c = ' WHERE ' + namespace + 'Registrant_First_Name__c != null ';
@@ -174,10 +165,7 @@ private class SummitEventsAdditionalQuestions_TEST {
         System.runAs(testUser) {
             Test.startTest();
 
-            String namespace = SummitEventsNamespace.getNamespace();
-            if (String.isNotBlank(namespace)) {
-                namespace = namespace + '__';
-            }
+            String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
             PageReference pageRef = Page.SummitEventsAdditionalQuestions;
             Test.setCurrentPage(pageRef);
@@ -222,10 +210,7 @@ private class SummitEventsAdditionalQuestions_TEST {
         System.runAs(testUser) {
             Test.startTest();
 
-            String namespace = SummitEventsNamespace.getNamespace();
-            if (String.isNotBlank(namespace)) {
-                namespace = namespace + '__';
-            }
+            String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
             PageReference pageRef = Page.SummitEventsAdditionalQuestions;
             Test.setCurrentPage(pageRef);
@@ -252,13 +237,11 @@ private class SummitEventsAdditionalQuestions_TEST {
         //Test question with empty map_to_field defined.
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'picklist', 'Registrant and Guest');
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+
         testQuestions[0].Picklist_Values__c = '';
         testQuestions[0].Question_Field_Type__c = 'Picklist';
-        testQuestions[0].Existing_Picklist_Values__c = 'Registrant_State_Global__c';
+        testQuestions[0].Existing_Picklist_Values__c = namespace + 'Registrant_State_Global__c';
         testQuestions[0].Map_to_Field__c = namespace + 'Registrant_State_Global__c';
         update testQuestions;
 

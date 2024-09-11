@@ -27,11 +27,7 @@ private class SummitEventsRegisterGuests_TEST {
         //Test question with empty map_to_field defined.
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Guest');
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
-
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         System.runAs(testUser) {
             Test.startTest();
@@ -102,10 +98,7 @@ private class SummitEventsRegisterGuests_TEST {
         testQuestions2[0].Is_Visible__c = false;
         update testQuestions2;
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         System.runAs(testUser) {
             Test.startTest();
@@ -176,10 +169,7 @@ private class SummitEventsRegisterGuests_TEST {
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
         //Test question with empty map_to_field defined.
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Guest');
         testQuestions.addAll(SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Guest'));
@@ -222,10 +212,7 @@ private class SummitEventsRegisterGuests_TEST {
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Guest');
         testQuestions.addAll(SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Guest'));
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         testQuestions[0].Existing_Picklist_Values__c = 'Registrant_State_Global__c';
         testQuestions[0].Map_to_Field__c = namespace + 'Registrant_State_Global__c';

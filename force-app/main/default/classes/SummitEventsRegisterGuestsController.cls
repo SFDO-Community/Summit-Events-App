@@ -49,10 +49,8 @@ public with sharing class SummitEventsRegisterGuestsController {
 
     public SummitEventsRegisterGuestsController() {
         eventInformation = SummitEventsShared.getSummitEventsInfo();
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace.toLowerCase() + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
             eventPage = [
                     SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
@@ -60,7 +58,7 @@ public with sharing class SummitEventsRegisterGuestsController {
                             Guest_Registration_Title__c, Guest_Max_Amount__c, Guest_Registration_Description__c, Guest_Table_Size__c, Guest_Tables_Available__c,
                             Display_Guest_Registration__c, Guest_Registration_Add_Button_Label__c, No_Guest_Registrations_Added_Message__c,
                             Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c, Guest_Unsaved_Cancel_Label__c, Guest_Unsaved_Continue_Label__c,
-                            Guest_Unsaved_Modal_Text__c
+                            Guest_Unsaved_Modal_Text__c, Event_Status__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -164,7 +162,7 @@ public with sharing class SummitEventsRegisterGuestsController {
             pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
             templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
 
-            eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
+            eventIsClosed = SummitEventsShared.isEventClosed(eventInstance, eventPage.Event_Status__c);
 
             formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
 
@@ -184,12 +182,11 @@ public with sharing class SummitEventsRegisterGuestsController {
 
     public List<Map<String, String>> createExistingPicklist(String existingPicklist) {
         List<Map<String, String>> picklists = new List<Map<String, String>>();
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace.toLowerCase() + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
-        Schema.DescribeSObjectResult registrationDescribe = ((SObject) Type.forName('Schema', namespace + 'Summit_Events_Registration__c').newInstance()).getSObjectType().getDescribe();
+        Type registrationType = Type.forName(namespace + 'Summit_Events_Registration__c');
+        SObject registrationObj = (SObject) registrationType.newInstance();
+        DescribeSObjectResult registrationDescribe = registrationObj.getSObjectType().getDescribe();
 
         String existingPicklistString = existingPicklist;
         if (!existingPicklistString.startsWith('c__')) {
