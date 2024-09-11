@@ -102,7 +102,7 @@ private class SummitEventsFeed_TEST {
             RestContext.request = req;
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
-            System.assert(res.responseBody.toString().contains('[]'),'No events target the filter so this should be empty');
+            System.assert(res.responseBody.toString().contains('[]'), 'No events target the filter so this should be empty');
 
             //test filter
 
@@ -112,9 +112,23 @@ private class SummitEventsFeed_TEST {
 
             //Select all instances that have a  start date and time in the future
             Time rightNow = Time.newInstance(System.now().hour(), System.now().minute(), System.now().second(), System.now().millisecond());
-            Integer activeInstances = [SELECT COUNT() FROM Summit_Events_Instance__c WHERE Event__c = :eventUpdate.Id AND Open_Registration__c = TRUE ];
 
-            //test filter
+            // Verify the count of active instances
+            Integer activeInstances = [
+                    SELECT COUNT()
+                    FROM Summit_Events_Instance__c
+                    WHERE Event__c = :eventUpdate.Id
+                    AND Open_Registration__c = TRUE
+                    AND Event__r.Event_Status__c = 'Active'
+                    AND Active_Status__c = 'Active'
+                    AND Event__r.Private_Event__c = false
+                    AND Private_Instance__c = false
+                    AND Event__r.Audience__c EXCLUDES ('No Audience')
+                    AND Instance_Start_Date__c >= :Date.today().addDays(-30)
+                    AND Instance_Start_Date__c <= :Date.today().addDays(+30)
+            ];
+
+            // Apply the same filter criteria to the request parameters
             req.params.put('viewStart', String.valueOf(Date.today().addDays(-30)));
             req.params.put('viewEnd', String.valueOf(Date.today().addDays(+30)));
             req.params.put('filter', 'OCB,BCY');
@@ -122,6 +136,8 @@ private class SummitEventsFeed_TEST {
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
             eventsList = (List<SummitEventsFeed.eventItem>) JSON.deserialize(res.responseBody.toString(), List<SummitEventsFeed.eventItem>.class);
+
+            // Update the assertion to reflect the correct expected value
             System.assertEquals(eventsList.size(), activeInstances, 'All ' + activeInstances + ' instance have program related to them.');
 
 
