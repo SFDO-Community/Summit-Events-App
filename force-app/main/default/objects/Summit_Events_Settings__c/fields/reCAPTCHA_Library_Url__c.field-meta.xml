@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>reCAPTCHA_Library_Url__c</fullName>
+    <defaultValue>&quot;https://www.google.com/recaptcha/api.js&quot;</defaultValue>
+    <externalId>false</externalId>
+    <label>reCAPTCHA Library Url</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

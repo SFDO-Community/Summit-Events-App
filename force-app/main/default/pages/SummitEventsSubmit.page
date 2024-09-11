@@ -21,6 +21,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 dataLayer.push({
                     'account': '{!IF(!ISBLANK(eventPage.Account__r.Name),eventPage.Account__r.Name, '')}',
                     'audience': '{!IF(!ISBLANK(eventPage.Audience__c),eventPage.Audience__c, '')}',
+                    'event': 'summit_submit',
                     'eventLabel': '{!eventPage.Event_Name__c}{!IF(!ISBLANK(eventInstance.Instance_Title__c),' - ' + eventInstance.Instance_Title__c,'')}',
                     'category': '{!IF(!ISBLANK(eventPage.Filter_Category__c), eventPage.Filter_Category__c, '')}',
                     'sponsor': '{!IF(!ISBLANK(eventPage.Event_Sponsor__c), eventPage.Event_Sponsor__c, '')}',
@@ -31,9 +32,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
         <apex:define name="sectionNav"/>
         <apex:define name="body">
             <div class="slds-grid slds-wrap" xmlns="http://www.w3.org/2000/svg" version="1.1">
-                <div class="slds-col slds-p-around_x-small slds-size_1-of-1">
-                    <apex:messages />
-                </div>
+                <apex:messages layout="list" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-notify slds-notify_toast slds-theme_warning"/>
                 <apex:form id="SummitEventsRegisterSubmitForm" styleClass="slds-grid slds-wrap">
                     <!-- EVENT BREADCRUMB -->
                     <div class="slds-col slds-p-vertical-small slds-size_1-of-1">
@@ -52,25 +51,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </nav>
                     </div>
 
-                    <apex:outputPanel layout="block" id="pageMessages" styleClass="slds-notify slds-notify_alert slds-alert_warning slds-m-vertical_small" rendered="{!hasMessages}">
-                        <span class="slds-assistive-text">Warning</span>
-                        <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Warning message">
-                            <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
-                              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#warning"></use>
-                            </svg>
-                          </span>
-                        <h2>
-                            <apex:messages />
-                        </h2>
-                        <div class="slds-notify__close">
-                            <button class="slds-button slds-button_icon slds-button_icon-small" title="Close">
-                                <svg class="slds-button__icon" aria-hidden="true">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
-                                </svg>
-                                <span class="slds-assistive-text">Close</span>
-                            </button>
-                        </div>
-                    </apex:outputPanel>
+                    <apex:messages layout="list" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-notify slds-notify_toast slds-theme_warning"/>
 
                     <apex:outputPanel rendered="{!eventIsClosed}" layout="block" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small regularLists">
                         <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
@@ -186,7 +167,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
 
                         <div class="slds-col slds-size_1-of-1 slds-clearfix slds-p-vertical_x-small slds-p-vertical_xx-small">
                             <p class="slds-text-body slds-p-vertical_xx-small">
-                                <apex:commandLink action="{!submitRegistration}" onClick="fadeout();" Value="{!IF(hasPaymentGateway, IF(ISBLANK(eventPage.Payment_Button_Label__c),'Make Payment', eventPage.Payment_Button_Label__c), 'Submit Registration')}" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
+                                <apex:commandLink action="{!submitRegistration}" onClick="fadeout();" Value="{!IF(hasPaymentGateway, IF(ISBLANK(eventPage.Payment_Button_Label__c),'Make Payment', eventPage.Payment_Button_Label__c), 'Submit Registration')}" id="submitOptions" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small" html-role="button"/>
                                 <apex:commandLink action="{!previousPage}" onClick="fadeout();" Value="Previous" id="previousPage" styleClass="slds-button slds-button_neutral slds-p-horizontal_xx-large slds-p-vertical_xx-small"/>
                             </p>
                         </div>

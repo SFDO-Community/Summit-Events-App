@@ -12,10 +12,7 @@ private class SummitEventsSubmit_TEST {
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
         //Get namespace if packaged
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
         System.runAs(testUser) {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsSubmit;
@@ -46,10 +43,7 @@ private class SummitEventsSubmit_TEST {
         }
         insert testAppointments;
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
         System.runAs(testUser) {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsSubmit;
@@ -91,10 +85,8 @@ private class SummitEventsSubmit_TEST {
         }
         insert testFees;
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+
         System.runAs(testUser) {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsSubmit;
@@ -115,10 +107,7 @@ private class SummitEventsSubmit_TEST {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         //Test question with empty map_to_field defined.
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEventWithMapTo(seaTestInstances[1].Event__c, 'date', 'Guest', 'Question Text 1', 'Answer_1_Numeric__c');

@@ -780,6 +780,16 @@
             <field>Account__c</field>
             <table>Summit_Events__c</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>reCAPTCHA_v3_Score_Fail_Text__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>reCAPTCHA__c</field>
+            <table>Summit_Events__c</table>
+        </columns>
         <masterLabel>Summit Events</masterLabel>
     </sections>
     <sections>

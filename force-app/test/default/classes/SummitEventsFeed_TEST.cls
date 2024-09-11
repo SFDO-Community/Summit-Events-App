@@ -110,13 +110,19 @@ private class SummitEventsFeed_TEST {
             eventUpdate.Program_Filter__c = 'OCB,BCY';
             update eventUpdate;
 
+            //Select all instances that have a  start date and time in the future
+            Time rightNow = Time.newInstance(System.now().hour(), System.now().minute(), System.now().second(), System.now().millisecond());
+            Integer activeInstances = [SELECT COUNT() FROM Summit_Events_Instance__c WHERE Event__c = :eventUpdate.Id AND Open_Registration__c = TRUE ];
+
             //test filter
+            req.params.put('viewStart', String.valueOf(Date.today().addDays(-30)));
+            req.params.put('viewEnd', String.valueOf(Date.today().addDays(+30)));
             req.params.put('filter', 'OCB,BCY');
             RestContext.request = req;
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
             eventsList = (List<SummitEventsFeed.eventItem>) JSON.deserialize(res.responseBody.toString(), List<SummitEventsFeed.eventItem>.class);
-            System.assertEquals(eventsList.size(), 11, 'All 11 instance have program related to them.');
+            System.assertEquals(eventsList.size(), activeInstances, 'All ' + activeInstances + ' instance have program related to them.');
 
 
             req.params.put('program', 'OCB');
@@ -124,7 +130,7 @@ private class SummitEventsFeed_TEST {
             RestContext.response = res;
             SummitEventsFeed.getSummitEventsFeed();
             eventsList = (List<SummitEventsFeed.eventItem>) JSON.deserialize(res.responseBody.toString(), List<SummitEventsFeed.eventItem>.class);
-            System.assertEquals(eventsList.size(), 11, 'All 11 instance have program related to them.');
+            System.assertEquals(eventsList.size(), activeInstances, 'All ' + activeInstances + ' instance have program related to them.');
 
             //test filter
             req.params.put('rectype', 'UDAR');

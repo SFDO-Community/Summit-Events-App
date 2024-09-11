@@ -10,10 +10,7 @@ public class SummitEventsRegistration {
         Map<Id, Id> affectedContactIds = new Map<Id, Id>();
         List<Summit_Events_Registration__c> affectedRegs = new List<Summit_Events_Registration__c>();
 
-        String namespace = SummitEventsNamespace.getNamespace();
-        if (String.isNotBlank(namespace)) {
-            namespace = namespace.toLowerCase() + '__';
-        }
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         //Tags that need a little TLC to turn them into real links
         List<String> emailTags = new List<String>{

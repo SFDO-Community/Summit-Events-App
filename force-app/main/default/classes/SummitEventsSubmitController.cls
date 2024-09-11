@@ -45,7 +45,7 @@ public with sharing class SummitEventsSubmitController {
                             Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
                             Donation_Description__c, Display_Optional_Donation__c, Payment_Gateway__c, Event_Fee_Label__c, Event_Fee_Total_Label__c,
                             Event_Fee_Submit_List_Label__c, Payment_Button_Label__c, Event_Appointment_Submit_List_Label__c, Event_Guest_Submit_List_Label__c,
-                            Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c
+                            Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c, Event_Status__c
                     FROM Summit_Events__c
                     WHERE Id = :eventInformation.eventId
                     WITH SECURITY_ENFORCED
@@ -69,7 +69,7 @@ public with sharing class SummitEventsSubmitController {
 
             pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
 
-            eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
+            eventIsClosed = SummitEventsShared.isEventClosed(eventInstance, eventPage.Event_Status__c);
 
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('error'))) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ApexPages.currentPage().getParameters().get('error')));

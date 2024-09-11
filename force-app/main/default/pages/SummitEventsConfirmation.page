@@ -20,6 +20,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 dataLayer.push({
                     'account': '{!IF(!ISBLANK(eventPage.Account__r.Name),eventPage.Account__r.Name, '')}',
                     'audience': '{!IF(!ISBLANK(eventPage.Audience__c),eventPage.Audience__c, '')}',
+                    'event': 'summit_confirmation',
                     'eventLabel': '{!eventPage.Event_Name__c}{!IF(!ISBLANK(eventInstance.Instance_Title__c),' - ' + eventInstance.Instance_Title__c,'')}',
                     'category': '{!IF(!ISBLANK(eventPage.Filter_Category__c), eventPage.Filter_Category__c, '')}',
                     'sponsor': '{!IF(!ISBLANK(eventPage.Event_Sponsor__c), eventPage.Event_Sponsor__c, '')}',
@@ -48,9 +49,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </nav>
                     </div>
 
-                    <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small">
-                        <apex:messages layout="list" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small"/>
-                    </div>
+                    <apex:messages layout="list" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-notify slds-notify_toast slds-theme_warning"/>
 
                     <!-- EVENT CLOSED MESSAGE -->
                     <apex:outputPanel styleClass="slds-col slds-p-vertical_x-small slds-size_1-of-1" rendered="{!eventIsClosed}">

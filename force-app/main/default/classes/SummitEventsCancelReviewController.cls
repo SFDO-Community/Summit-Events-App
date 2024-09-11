@@ -59,7 +59,7 @@ public with sharing class SummitEventsCancelReviewController {
                         eventPage = [
                                 SELECT Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Cancel_Review_Title__c, Event_Cancel_Review_Description__c,
                                 Event_Cancelled_Notification_Text__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Cancel_Registration__c,
-                                Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c, Event_Full_Text__c, Template__c
+                                Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c, Event_Full_Text__c, Template__c, Event_Status__c
                                 FROM Summit_Events__c
                                 WHERE Id = :eventRegistration.Event__c
                                 WITH SECURITY_ENFORCED
@@ -67,7 +67,7 @@ public with sharing class SummitEventsCancelReviewController {
 
                         templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
 
-                        eventIsClosed = SummitEventsShared.isEventClosed(eventInstance);
+                        eventIsClosed = SummitEventsShared.isEventClosed(eventInstance, eventPage.Event_Status__c);
 
                         if (eventInstance != null) {
                             formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);

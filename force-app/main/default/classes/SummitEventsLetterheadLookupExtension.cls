@@ -81,9 +81,9 @@ public with sharing class SummitEventsLetterheadLookupExtension {
         Integer matchCounter = 0;
         while (matcher2.find() == true) {
             if (matchCounter == 0) {
-                headerImg = '<img src="' + Url.getSalesforceBaseUrl().toExternalForm() + matcher2.group(1) + '"/>';
+                headerImg = '<img src="' + Url.getCurrentRequestUrl().getHost() + matcher2.group(1) + '"/>';
             } else if (matchCounter == 1) {
-                footerImg = '<img src="' + Url.getSalesforceBaseUrl().toExternalForm() + matcher2.group(1) + '"/>';
+                footerImg = '<img src="' + Url.getCurrentRequestUrl().getHost() + matcher2.group(1) + '"/>';
             }
             matchCounter++;
         }

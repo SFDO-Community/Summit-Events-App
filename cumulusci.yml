@@ -4,7 +4,7 @@ project:
     package:
         name: Summit Events App
         namespace: summit
-        api_version: "56.0"
+        api_version: "61.0"
     source_format: sfdx
     git:
         default_branch: master
