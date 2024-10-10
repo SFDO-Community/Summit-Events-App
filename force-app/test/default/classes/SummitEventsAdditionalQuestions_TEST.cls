@@ -241,7 +241,7 @@ private class SummitEventsAdditionalQuestions_TEST {
 
         testQuestions[0].Picklist_Values__c = '';
         testQuestions[0].Question_Field_Type__c = 'Picklist';
-        testQuestions[0].Existing_Picklist_Values__c = namespace + 'Registrant_State_Global__c';
+        testQuestions[0].Existing_Picklist_Values__c = 'Registrant_State_Global__c';
         testQuestions[0].Map_to_Field__c = namespace + 'Registrant_State_Global__c';
         update testQuestions;
 
