@@ -29,7 +29,9 @@ loadReady(() => {
 
 function fadein() {
     let fadeWrapper = document.getElementById('backpage');
-    fadeWrapper.style.display = "none";
+    if(fadeWrapper){
+        fadeWrapper.style.display = "none";
+    }
     return true;
 }
 
