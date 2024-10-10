@@ -182,6 +182,6 @@ plans:
 orgs:
     scratch:
         dev_namespaced:
-            config_file: orgs/dev.json
+            config_file: orgs/namespaced.json
             days: 7
             namespaced: true
