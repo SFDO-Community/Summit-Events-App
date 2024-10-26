@@ -16,12 +16,15 @@
         <shouldOverrideOrgTheme>true</shouldOverrideOrgTheme>
     </brand>
     <description>The open source community events app for EDUs and NGOs</description>
+    <formFactors>Small</formFactors>
     <formFactors>Large</formFactors>
     <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
     <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
     <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
     <label>Summit Events</label>
     <navType>Standard</navType>
+    <setupExperience>all</setupExperience>
     <tabs>standard-home</tabs>
     <tabs>Summit_Events__c</tabs>
     <tabs>Summit_Events_Instance__c</tabs>
@@ -30,5 +33,6 @@
     <tabs>Summit_Events_Appointment_Type__c</tabs>
     <tabs>Summit_Events_Appointments__c</tabs>
     <tabs>standard-report</tabs>
+    <tabs>About</tabs>
     <uiType>Lightning</uiType>
 </CustomApplication>
