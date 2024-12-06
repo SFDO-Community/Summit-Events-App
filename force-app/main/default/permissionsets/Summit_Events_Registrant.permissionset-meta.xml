@@ -1822,6 +1822,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Custom_Metadata_Person_Matching_Method__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.Date_Of_Birth_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -2328,6 +2333,26 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Payment_Gateway__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Person_Creation_Duplicate_Rule__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Person_Matching_Multiple_Match_Behavior__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Person_Matching_No_Match_Behavior__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Person_Matching_Rules__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
