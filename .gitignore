@@ -26,6 +26,7 @@ robot/SummitEventsApp/results/
 
 # Illuminated Cloud (IntelliJ IDEA)
 IlluminatedCloud
+.illuminatedCloud/
 out
 .idea
 *.iml
