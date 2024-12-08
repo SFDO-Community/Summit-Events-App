@@ -14,20 +14,11 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Summit Events Person Account Creation</fullName>
-                <default>false</default>
-                <label>Summit Events Person Account Creation</label>
-            </value>
-            <value>
                 <fullName>Standard Person Account Duplicate Rule</fullName>
                 <default>false</default>
                 <label>Standard Person Account Duplicate Rule</label>
             </value>
         </valueSetDefinition>
-        <valueSettings>
-            <controllingFieldValue>Use Salesforce Duplicate Rule</controllingFieldValue>
-            <valueName>Summit Events Person Account Creation</valueName>
-        </valueSettings>
         <valueSettings>
             <controllingFieldValue>Use Salesforce Duplicate Rule</controllingFieldValue>
             <valueName>Standard Person Account Duplicate Rule</valueName>
