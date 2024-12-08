@@ -188,6 +188,6 @@ orgs:
             namespaced: true
 
         dev:
-            config_file: orgs/educloud.json
+            config_file: orgs/dev.json
             days: 7
             namespaced: false
