@@ -117,7 +117,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </ul>
                             <apex:outputPanel layout="block" rendered="{!IF (evt.Status__c != 'Cancelled', true, false)}">
                                 <p class="slds-text-body slds-p-vertical_small">
-                                    <apex:commandLink action="{!cancelRegistration}" Value="Cancel Regisistration" id="cancelReg" onClick="return confirm('Are you sure you want to cancel this registration?');" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small" html-role="button"/>
+                                    <apex:commandLink action="{!cancelRegistration}" Value="Cancel Registration" id="cancelReg" onClick="return confirm('Are you sure you want to cancel this registration?');" styleClass="slds-button slds-button_brand slds-p-horizontal_xx-large slds-p-vertical_xx-small" html-role="button"/>
                                 </p>
                             </apex:outputPanel>
                             <apex:outputPanel layout="block" rendered="{!IF (evt.Status__c = 'Cancelled', true, false)}">
