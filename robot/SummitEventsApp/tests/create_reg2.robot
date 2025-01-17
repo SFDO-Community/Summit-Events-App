@@ -25,7 +25,7 @@ Create_SEA_reg
     #Open the registration page for the instance
     Go To Registration Page For Instance    ${instance_id}
     
-    #Creat face data for the registration form
+    #Create fake data for the registration form
     ${first_name}=       Get fake data    first_name
     ${last_name}=        Get fake data    last_name
     ${email}=            Get fake data    ascii_email
