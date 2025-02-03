@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>github</label>
+    <protected>false</protected>
+    <values>
+        <field>Contact_Field_API_Name__c</field>
+        <value xsi:type="xsd:string">Description</value>
+    </values>
+    <values>
+        <field>Contact_Matching_Method__c</field>
+        <value xsi:type="xsd:string">Red</value>
+    </values>
+    <values>
+        <field>Matching_Only__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Source_Object__c</field>
+        <value xsi:type="xsd:string">summit__Summit_Events_Registration__c</value>
+    </values>
+    <values>
+        <field>Source_Type__c</field>
+        <value xsi:type="xsd:string">Field</value>
+    </values>
+    <values>
+        <field>Source_Value__c</field>
+        <value xsi:type="xsd:string">Add_Info_Answer_3__c</value>
+    </values>
+</CustomMetadata>

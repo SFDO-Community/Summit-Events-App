@@ -8,6 +8,14 @@ public with sharing class SummitEventsContactMatching {
     @TestVisible
     private static Map<String, List<SObject>> mappedMatchingMethods { get; set; }
 
+    //Make a wrapper class to list registrations and their matching contacts
+    public class RegistrationContactWrapper {
+        public Summit_Events_Registration__c registration { get; set; }
+        public List<Contact> contacts { get; set; }
+        public List<Account> accounts { get; set; }
+        public List<Lead> leads { get; set; }
+    }
+
     public static void matchContacts(List<Summit_Events_Registration__c> newRegistrations) {
         Map<Id, Summit_Events__c> matchingRules = new Map<Id, Summit_Events__c>();
 
@@ -19,24 +27,26 @@ public with sharing class SummitEventsContactMatching {
             matchingRules = new Map<Id, Summit_Events__c>([
                     SELECT Id, Contact_Matching_Rules__c, Lead_matching_rules__c, Person_Matching_Rules__c, Custom_Metadata_Person_Matching_Method__c, Person_Creation_Duplicate_Rule__c, Person_Matching_No_Match_Behavior__c,
                             Contact_Creation_Duplicate_Rule__c, Custom_Metadata_Contact_Matching_Method__c, Contact_Matching_Multiple_Match_Behavior__c, Contact_Matching_No_Match_Behavior__c,
-                            Lead_Creation_Duplicate_Rule__c, Custom_Metadata_Lead_Matching_Method__c, Lead_Matching_Multiple_Match_Behavior__c, Lead_Matching_No_Match_Behavior__c
+                            Lead_Creation_Duplicate_Rule__c, Custom_Metadata_Lead_Matching_Method__c, Lead_Matching_Multiple_Match_Behavior__c, Lead_Matching_No_Match_Behavior__c, Person_Matching_Multiple_Match_Behavior__c
                     FROM Summit_Events__c
                     WHERE Id IN :matchingRules.keySet()
                     AND (Custom_Metadata_Contact_Matching_Method__c != NULL OR Custom_Metadata_Lead_Matching_Method__c != NULL OR Custom_Metadata_Person_Matching_Method__c != NULL)
             ]);
         }
 
-        //System.debug('Matching Rules: ' + JSON.serializePretty(matchingRules));
         if (!matchingRules.isEmpty()) {
-
             // Setting up contact matching methods and mappings
             Set<String> matchingMethods = new Set<String>();
+            Set<String> personMatchingMethods = new Set<String>();
             Map<String, List<SObject>> contactMappings = new Map<String, List<SObject>>();
+            Map<String, List<SObject>> personAccountMappings = new Map<String, List<SObject>>();
             for (Summit_Events__c evt : matchingRules.values()) {
                 matchingMethods.add(evt.Custom_Metadata_Contact_Matching_Method__c);
+                personMatchingMethods.add(evt.Custom_Metadata_Person_Matching_Method__c);
             }
             if (!matchingMethods.isEmpty()) {
                 contactMappings = processMappings(matchingMethods, 'Summit_Events_Contact_Matching_Mapping__mdt', 'Contact_Matching_Method__c', 'Contact_Field_API_Name__c');
+                personAccountMappings = processMappings(personMatchingMethods, 'Summit_Events_Contact_Matching_Mapping__mdt', 'Contact_Matching_Method__c', 'Contact_Field_API_Name__c');
             }
 
             // Setting up lead matching methods and mappings
@@ -49,7 +59,7 @@ public with sharing class SummitEventsContactMatching {
                 leadMappings = processMappings(leadMatchingMethods, 'Summit_Events_Lead_Matching_Mapping__mdt', 'Lead_Matching_Method__c', 'Lead_Field_API_Name__c');
             }
 
-            List<Summit_Events_Registration__c> byDuplicateRule = new List<Summit_Events_Registration__c>();
+            List<Summit_Events_Registration__c> findContact = new List<Summit_Events_Registration__c>();
             List<Summit_Events_Registration__c> findLead = new List<Summit_Events_Registration__c>();
             List<Summit_Events_Registration__c> findPerson = new List<Summit_Events_Registration__c>();
 
@@ -72,43 +82,174 @@ public with sharing class SummitEventsContactMatching {
                 // Assemble the reg record for lead, person, contact matching
                 Summit_Events__c event = matchingRules.get(reg.Event__c);
 
+                //Find all registrations that have Salesforce Duplicate Rule selected
                 if (event.Contact_Matching_Rules__c == 'Use Salesforce Duplicate Rule' && contactEmpty && !personAccountActive) {
-                    byDuplicateRule.add(reg);
+                    findContact.add(reg);
                 } else if (event.Lead_matching_rules__c == 'Use Salesforce Duplicate Rule' && (!personAccountActive && contactEmpty || personAccountActive && personAccountActive) && String.isBlank(reg.Lead__c)) {
                     findLead.add(reg);
                 }
-
                 if (event.Person_Matching_Rules__c == 'Use Salesforce Duplicate Rule' && personEmpty) {
-                    //System.debug('Person Account Active and matching rules');
                     findPerson.add(reg);
                 }
             }
 
-            if (!byDuplicateRule.isEmpty()) {
-                searchForContacts(byDuplicateRule, matchingRules, contactMappings, leadMappings);
+            List<RegistrationContactWrapper> registrationContactWrappers = new List<RegistrationContactWrapper>();
+
+            if (!findContact.isEmpty() || !findPerson.isEmpty() || !findLead.isEmpty()) {
+
+                for (Summit_Events_Registration__c reg : newRegistrations) {
+                    List<Contact> matchContacts = new List<Contact>();
+                    List<Account> matchAccounts = new List<Account>();
+                    List<Lead> matchLeads = new List<Lead>();
+                    Summit_Events__c event = matchingRules.get(reg.Event__c);
+
+                    if (!findContact.isEmpty()) {
+                        matchContacts = handleMatching(reg, event.Contact_Creation_Duplicate_Rule__c, event.Contact_Matching_No_Match_Behavior__c, event.Contact_Matching_Multiple_Match_Behavior__c, event.Custom_Metadata_Contact_Matching_Method__c, contactMappings, 'Contact', 'Contact__c', 'New_Contact_Created__c');
+                    }
+
+                    if (!findPerson.isEmpty()) {
+                        matchAccounts = handleMatching(reg, event.Person_Creation_Duplicate_Rule__c, event.Person_Matching_No_Match_Behavior__c, event.Person_Matching_Multiple_Match_Behavior__c, event.Custom_Metadata_Person_Matching_Method__c, personAccountMappings, 'Account', 'Person_Account__c', 'New_Person_Account_Created__c');
+                    }
+
+                    if (!findLead.isEmpty()) {
+                        matchLeads = handleMatching(reg, event.Lead_Creation_Duplicate_Rule__c, event.Lead_Matching_No_Match_Behavior__c, event.Lead_Matching_Multiple_Match_Behavior__c, event.Custom_Metadata_Lead_Matching_Method__c, leadMappings, 'Lead', 'Lead__c', 'New_Lead_Created__c');
+                    }
+
+                    RegistrationContactWrapper rcw = new RegistrationContactWrapper();
+                    rcw.registration = reg;
+                    rcw.contacts = matchContacts;
+                    rcw.accounts = matchAccounts;
+                    rcw.leads = matchLeads;
+                    registrationContactWrappers.add(rcw);
+                }
+
+                Set<Id> accountIds = new Set<Id>();
+                Set<Id> contactIds = new Set<Id>();
+                Set<Id> leadIds = new Set<Id>();
+                for (RegistrationContactWrapper rw : registrationContactWrappers) {
+                    for (Contact c : rw.contacts) {
+                        contactIds.add(c.Id);
+                    }
+                    for (Account a : rw.accounts) {
+                        accountIds.add(a.Id);
+                    }
+                    for (Lead l : rw.leads) {
+                        leadIds.add(l.Id);
+                    }
+                }
+                //Query all contacts, accounts, and leads to get the most recent data using queryMatchedRecords method. This is to bulkify the query and not inline for each new registration
+                Map<Id, SObject> contactsComplete = new Map<Id, SObject>();
+                Map<Id, SObject> accountsComplete = new Map<Id, SObject>();
+                Map<Id, SObject> leadsComplete = new Map<Id, SObject>();
+                if (contactIds.size() > 0) {
+                    contactsComplete = new doCRUD().queryMatchedRecords('Email, MailingPostalCode', 'Contact', contactIds);
+                }
+                if (accountIds.size() > 0) {
+                    accountsComplete = new doCRUD().queryMatchedRecords('PersonEmail, PersonMailingPostalCode', 'Account', accountIds);
+                }
+                if (leadIds.size() > 0) {
+                    leadsComplete = new doCRUD().queryMatchedRecords('Email, PostalCode', 'Lead', leadIds);
+                }
+
+                //Update the registration records with the matched contact, account, and lead
+                for (RegistrationContactWrapper rw : registrationContactWrappers) {
+                    List<Contact> contactsQueried = new List<Contact>();
+                    List<Account> accountsQueried = new List<Account>();
+                    List<Lead> leadsQueried = new List<Lead>();
+
+                    for (Contact c : rw.contacts) {
+                        if (contactsComplete.containsKey(c.Id)) {
+                            contactsQueried.add((Contact) contactsComplete.get(c.Id));
+                        }
+                    }
+                    rw.contacts = contactsQueried;
+
+                    for (Account a : rw.accounts) {
+                        if (accountsComplete.containsKey(a.Id)) {
+                            accountsQueried.add((Account) accountsComplete.get(a.Id));
+                        }
+                    }
+                    rw.accounts = accountsQueried;
+
+                    for (Lead l : rw.leads) {
+                        if (leadsComplete.containsKey(l.Id)) {
+                            leadsQueried.add((Lead) leadsComplete.get(l.Id));
+                        }
+                    }
+                    rw.leads = leadsQueried;
+                }
+
+                //Build matching logs
+                for (RegistrationContactWrapper rw : registrationContactWrappers) {
+                    Summit_Events__c event = matchingRules.get(rw.registration.Event__c);
+                    rw.registration.Matching_Log__c = '';
+                    rw.registration.Matching_Log__c += handleMatchingLog('Contact', findContact.isEmpty(), event.Contact_Matching_No_Match_Behavior__c, event.Contact_Matching_Multiple_Match_Behavior__c, rw.registration.New_Contact_Created__c, rw.registration.Contact__c, rw.contacts, matchingRules.get(rw.registration.Event__c).Contact_Creation_Duplicate_Rule__c);
+                    rw.registration.Matching_Log__c += handleMatchingLog('Person Account', findPerson.isEmpty(), event.Person_Matching_No_Match_Behavior__c, event.Person_Matching_Multiple_Match_Behavior__c, rw.registration.New_Person_Account_Created__c, rw.registration.Person_Account__c, rw.accounts, matchingRules.get(rw.registration.Event__c).Person_Creation_Duplicate_Rule__c);
+                    rw.registration.Matching_Log__c += handleMatchingLog('Lead', findLead.isEmpty(), event.Lead_Matching_No_Match_Behavior__c, event.Lead_Matching_Multiple_Match_Behavior__c, rw.registration.New_Lead_Created__c, rw.registration.Lead__c, rw.leads, matchingRules.get(rw.registration.Event__c).Lead_Creation_Duplicate_Rule__c);
+                }
             }
 
-            if (!findLead.isEmpty()) {
-                leadSearch(findLead, matchingRules, leadMappings);
-            }
-
-            if (!findPerson.isEmpty()) {
-                searchForPersons(findPerson, matchingRules, contactMappings, leadMappings);
-            }
         }
     }
 
+    private static String handleMatchingLog(String sObjectType, Boolean isEmpty, String noMatchBehavior, String multipleMatchBehavior, Boolean newCreated, Id sObjectId, List<SObject> sObjects, String duplicateRule) {
+        String matchLog = '';
+        if (!isEmpty) {
+            if (noMatchBehavior.equals('Create ' + sObjectType) && newCreated && sObjectId != null) {
+                matchLog += matchingLog(sObjects, 'Match not found using Duplicate Rule <em>' + duplicateRule.replaceAll(' ', '_') + '</em></div>', 'New ' + sObjectType + ' created!', true);
+            }
+            if (!sObjects.isEmpty() && !newCreated) {
+                if (multipleMatchBehavior.equals('Skip matching')) {
+                    matchLog += matchingLog(sObjects, 'Multiple matches found using Salesforce Duplicate Rule <em>' + duplicateRule.replaceAll(' ', '_') + '</em>, ' + sObjectType + ' matching skipped based on "Multiple Match Behavior" field value on Summit Events object', '', false);
+                } else if (multipleMatchBehavior.equals('Match with most recently modified')) {
+                    matchLog += matchingLog(sObjects, 'Multiple matches found using Salesforce Duplicate Rule <em>' + duplicateRule.replaceAll(' ', '_') + '</em>, Most recently modified ' + sObjectType + ' was selected based on "Multiple Match Behavior" field value on Summit Events object', '', false);
+                }
+            }
+        }
+        return matchLog;
+    }
+
+    private static List<SObject> handleMatching(Summit_Events_Registration__c reg, String matchingMethod, String noMatchBehavior, String multipleMatchBehavior, String customMappingType, Map<String, List<SObject>> mappings, String sObjectType, String fieldAPIName, String newFieldAPIName) {
+        //Build a Contact, Account, or Lead object
+        List<SObject> matches = new List<SObject>();
+        if (String.isNotBlank(matchingMethod)) {
+            SObject newObj = makeSObject(reg, customMappingType, mappings, sObjectType);
+            String matchType = matchingMethod.replaceAll(' ', '_');
+            matches = findMatches(newObj, matchType);
+            doCRUD crud = new doCRUD();
+
+            if (matches.isEmpty() && noMatchBehavior.startsWithIgnoreCase('Create')) {
+                crud.addRecord(newObj);
+                reg.put(fieldAPIName, newObj.Id);
+                reg.put(newFieldAPIName, true);
+                matches.add(newObj);
+            } else if (!matches.isEmpty() && multipleMatchBehavior.equals('Match with most recently modified')) {
+                reg.put(fieldAPIName, matches.get(0).Id);
+                reg.put(newFieldAPIName, false);
+            }
+        }
+        return matches;
+    }
+
+    private static SObject makeSObject(Summit_Events_Registration__c reg, String customMappingType, Map<String, List<SObject>> mappings, String sObjectType) {
+        if (sObjectType.equals('Contact')) {
+            return makeContact(reg, customMappingType, mappings);
+        } else if (sObjectType.equals('Account')) {
+            return makePerson(reg, customMappingType, mappings);
+        } else if (sObjectType.equals('Lead')) {
+            return makeLead(reg, customMappingType, mappings);
+        }
+        return null;
+    }
+
     @TestVisible
-    private static Map<String, List<SObject>> processMappings(Set<String> matchingMethods, String sObjectType, String fieldAPIName, String sourceValue) {
+    private static Map<String, List<SObject>> processMappings(Set <String> matchingMethods, String sObjectType, String fieldAPIName, String sourceValue) {
         String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
         mappedMatchingMethods = new Map<String, List<SObject>>();
         if (mappedMatchingMethods.isEmpty()) {
             if (matchingMethods.size() > 0) {
-                System.debug('Matching Methods: ' + matchingMethods);
                 String query = 'SELECT Source_Value__c, Source_Type__c, ' + fieldAPIName + ', ' + sourceValue + ' FROM ' + namespace + sObjectType + ' WHERE ' + fieldAPIName + ' IN :matchingMethods';
-                System.debug('Query: ' + query);
                 List<SObject> results = Database.query(query);
-                System.debug('Results: ' + JSON.serializePretty(results));
                 for (SObject mapping : results) {
                     String method = (String) mapping.get(fieldAPIName);
                     if (!mappedMatchingMethods.containsKey(method)) {
@@ -121,136 +262,8 @@ public with sharing class SummitEventsContactMatching {
         return mappedMatchingMethods;
     }
 
-    private static void searchForPersons(List<Summit_Events_Registration__c> newRegistrations, Map<Id, Summit_Events__c> matchingRules, Map<String, List<SObject>> contactMappings, Map<String, List<SObject>> leadMappings) {
-        // Find out which Registrations need new Contacts, creates them,
-        // and matches with existing Contacts whenever possible as defined by existing Duplicate Rules
-        Boolean personAccountActive = SummitEventsShared.personAccountsEnabled();
-        for (Summit_Events_Registration__c reg : newRegistrations) {
-            Summit_Events__c event = matchingRules.get(reg.Event__c);
-            Account a = makePerson(reg, event.Custom_Metadata_Contact_Matching_Method__c, contactMappings);
-            doCRUD crud = new doCRUD();
-            String matchType = matchingRules.get(reg.Event__c).Person_Creation_Duplicate_Rule__c.replaceAll(' ', '_');
-            List<Account> matchPersons = findMatches(a, matchType);
-            String matchLog = '';
-            if (matchPersons == null || matchPersons.isEmpty()) { // SOQL queries return null instead of empty lists
-                if (event.Person_Matching_No_Match_Behavior__c == 'Create Person Account') {
-                    crud.addRecord(a);
-                    reg.New_Contact_Created__c = true;
-                    if (personAccountActive) {
-                        reg.Person_Account__c = a.Id;
-                        reg.Contact__c = (Id) a.get('PersonContactId');
-                    }
-                    matchLog += matchingLog(reg, new List<Account>(), 'Match not found using Duplicate Rule <em>' + matchingRules.get(reg.Event__c).Person_Creation_Duplicate_Rule__c.replaceAll(' ', '_') + '</em></div>', 'New Person Account created!', true);
-                } else {
-                    matchLog += matchingLog(null, new List<Account>(), 'Match not found using Duplicate Rule <em>' + matchType + '</em>', 'Contact creation skipped based on "Contact Matching Skip Contact Creation" field value on Summit Events object', false);
-                    matchLog += '<hr>';
-                    String leadMatch = matchingRules.get(reg.Event__c).Lead_Creation_Duplicate_Rule__c;
-                    if (String.isNotBlank(leadMatch)) {
-                        leadMatch = leadMatch.replaceAll(' ', '_');
-                        matchLog += searchForLead(reg, event, leadMatch, leadMappings);
-                    }
-                }
-            } else if (matchPersons.size() == 1) {
-                reg.Person_Account__c = matchPersons[0].Id;
-                reg.New_Contact_Created__c = false;
-                matchLog += matchingLog(reg, new List<Contact>(), 'Match found using Salesforce Duplicate Rule <em>' + matchType + '</em>', '', false);
-            } else {
-                if (event.Contact_Matching_Multiple_Match_Behavior__c == 'Skip matching') {
-                    matchLog += matchingLog(null, matchPersons, 'Multiple matches found using Salesforce Duplicate Rule <em>' + matchType + '</em>, Person Account matching skipped based on "Person Matching Multiple Match Behavior" field value on Summit Events object', '', false);
-                } else if (event.Contact_Matching_Multiple_Match_Behavior__c == 'Match with most recently modified') {
-                    matchLog += matchingLog(null, matchPersons, 'Multiple matches found using Salesforce Duplicate Rule <em>' + matchType + '</em>, Most recently modified Person Account was selected based on "Person Matching Multiple Match Behavior" field value on Summit Events object', '', true);
-                    reg.Contact__c = matchPersons[0].Id;
-                }
-            }
-            reg.Matching_Log__c = matchLog;
-        }
-    }
-
-    @TestVisible
-    private static void searchForContacts(List<Summit_Events_Registration__c> newRegistrations, Map<Id, Summit_Events__c> matchingRules, Map<String, List<SObject>> contactMappings, Map<String, List<SObject>> leadMappings) {
-        // Find out which Registrations need new Contacts, creates them,
-        // and matches with existing Contacts whenever possible as defined by existing Duplicate Rules
-        for (Summit_Events_Registration__c reg : newRegistrations) {
-            Summit_Events__c event = matchingRules.get(reg.Event__c);
-            Contact c = makeContact(reg, event.Custom_Metadata_Contact_Matching_Method__c, contactMappings);
-            doCRUD crud = new doCRUD();
-            String matchType = matchingRules.get(reg.Event__c).Contact_Creation_Duplicate_Rule__c.replaceAll(' ', '_');
-            List<Contact> matchContacts = findMatches(c, matchType);
-            System.debug('matchContacts: ' + matchContacts);
-            String matchLog = '';
-            if (matchContacts == null || matchContacts.isEmpty()) { // SOQL queries return null instead of empty lists
-                if (event.Contact_Matching_No_Match_Behavior__c == 'Create Contact') {
-                    crud.addRecord(c);
-                    reg.New_Contact_Created__c = true;
-                    reg.Contact__c = c.Id;
-                    matchLog += matchingLog(reg, new List<Contact>(), 'Match not found using Duplicate Rule <em>' + matchingRules.get(reg.Event__c).Contact_Creation_Duplicate_Rule__c.replaceAll(' ', '_') + '</em></div>', 'New contact created!', true);
-                } else {
-                    matchLog += matchingLog(null, new List<Contact>(), 'Match not found using Duplicate Rule <em>' + matchType + '</em>', 'Contact creation skipped based on "Contact Matching Skip Contact Creation" field value on Summit Events object', false);
-                    matchLog += '<hr>';
-                    String leadMatch = matchingRules.get(reg.Event__c).Lead_Creation_Duplicate_Rule__c;
-                    if (String.isNotBlank(leadMatch)) {
-                        leadMatch = leadMatch.replaceAll(' ', '_');
-                        matchLog += searchForLead(reg, event, leadMatch, leadMappings);
-                    }
-                }
-            } else if (matchContacts.size() == 1) {
-                reg.Contact__c = matchContacts[0].Id;
-                reg.New_Contact_Created__c = false;
-                matchLog += matchingLog(reg, new List<Contact>(), 'Match found using Salesforce Duplicate Rule <em>' + matchType + '</em>', '', false);
-            } else {
-                if (event.Contact_Matching_Multiple_Match_Behavior__c == 'Skip matching') {
-                    matchLog += matchingLog(null, matchContacts, 'Multiple matches found using Salesforce Duplicate Rule <em>' + matchType + '</em>, Contact matching skipped based on "Contact Matching Multiple Match Behavior" field value on Summit Events object', '', false);
-                } else if (event.Contact_Matching_Multiple_Match_Behavior__c == 'Match with most recently modified') {
-                    matchLog += matchingLog(null, matchContacts, 'Multiple matches found using Salesforce Duplicate Rule <em>' + matchType + '</em>, Most recently modified Contact was selected based on "Contact Matching Multiple Match Behavior" field value on Summit Events object', '', true);
-                    reg.Contact__c = matchContacts[0].Id;
-                }
-            }
-            reg.Matching_Log__c = matchLog;
-        }
-    }
-
-    private static void leadSearch(List<Summit_Events_Registration__c> newRegistrations, Map<Id, Summit_Events__c> matchingRules, Map<String, List<SObject>> leadMappings) {
-        for (Summit_Events_Registration__c newReg : newRegistrations) {
-            Summit_Events__c seaEvent = matchingRules.get(newReg.Event__c);
-            String leadRuleName = matchingRules.get(newReg.Event__c).Lead_Creation_Duplicate_Rule__c;
-            newReg.Matching_Log__c = searchForLead(newReg, seaEvent, leadRuleName, leadMappings);
-        }
-    }
-
-    private static String searchForLead(Summit_Events_Registration__c reg, Summit_Events__c event, String matchingRule, Map<String, List<SObject>> leadMappings) {
-
-        //Matching rules match be label
-        matchingRule = matchingRule.replaceAll(' ', '_');
-        Lead l = makeLead(reg, event.Custom_Metadata_Lead_Matching_Method__c, leadMappings);
-        List<Lead> matchLeads = findMatches(l, matchingRule);
-        doCRUD crud = new doCRUD();
-        String matchLog = '';
-        if (matchLeads == null || matchLeads.isEmpty()) { // SOQL queries return null instead of empty lists
-            if (event.Lead_Matching_No_Match_Behavior__c == 'Create Lead') {
-                crud.addRecord(l);
-                reg.New_Lead_Created__c = true;
-                reg.Lead__c = l.Id;
-                matchLog += matchingLog(reg, new List<Lead>(), 'Match not found using Duplicate Rule <em>' + matchingRule + '</em></div>', '<a href="/' + l.Id + '" target="_blank">New lead created!</a>', true);
-            } else {
-                matchLog += matchingLog(null, new List<Lead>(), 'Match not found using Duplicate Rule <em>' + matchingRule + '</em>', 'Lead creation skipped based on "Lead Matching Skip Lead Creation" field value on Summit Events object', true);
-            }
-        } else if (matchLeads.size() == 1) {
-            reg.Lead__c = matchLeads[0].Id;
-            reg.New_Lead_Created__c = false;
-            matchLog += matchingLog(reg, new List<Lead>(), 'Match found using Salesforce Duplicate Rule <em>' + matchingRule.replaceAll('_', ' ') + '</em>', '', false);
-        } else {
-            if (event.Lead_Matching_Multiple_Match_Behavior__c == 'Skip matching') {
-                matchLog += matchingLog(null, matchLeads, 'Multiple matches found using Salesforce Duplicate Rule <em>' + matchingRule.replaceAll('_', ' ') + '</em>, Lead matching skipped based on "Lead Matching Multiple Match Behavior" field value on Summit Events object', '', false);
-            } else if (event.Lead_Matching_Multiple_Match_Behavior__c == 'Match with most recently modified') {
-                matchLog += matchingLog(null, matchLeads, 'Multiple matches found using Salesforce Duplicate Rule <em>' + matchingRule.replaceAll('_', ' ') + '</em>, Most recently modified Lead was selected based on "Lead Matching Multiple Match Behavior" field value on Summit Events object', '', true);
-                reg.Lead__c = matchLeads[0].Id;
-            }
-        }
-
-        return matchLog;
-    }
-
     private static List<SObject> findMatches(SObject record, String matchingRule) {
+
         List<Datacloud.FindDuplicatesResult> results = new List<Datacloud.FindDuplicatesResult>();
         doCRUD crud = new doCRUD();
 
@@ -262,13 +275,11 @@ public with sharing class SummitEventsContactMatching {
         } catch (Exception e) {
             System.debug(e.getMessage());
         }
-
         List<SObject> matchSObjects = new List<SObject>();
-        if (results.size() > 0) {
-            for (Datacloud.DuplicateResult dr : results[0].getDuplicateResults()) {
-
-                if (matchingRule == dr.getDuplicateRule()) {
-                    for (Datacloud.MatchResult mr : dr.getMatchResults()) {
+        for (Datacloud.FindDuplicatesResult findDupeResult : results) {
+            for (Datacloud.DuplicateResult dupeResult : findDupeResult.getDuplicateResults()) {
+                if (matchingRule == dupeResult.getDuplicateRule()) {
+                    for (Datacloud.MatchResult mr : dupeResult .getMatchResults()) {
                         for (Datacloud.MatchRecord mRecord : mr.getMatchRecords()) {
                             try {
                                 matchSObjects.add(mRecord.getRecord());
@@ -280,6 +291,8 @@ public with sharing class SummitEventsContactMatching {
                 }
             }
         }
+
+        //matchSObjects.addAll(crud.queryMatchedRecords('Id, FirstName, LastName, Email, MailingPostalCode', objectTypeName, matchIdsMapToReg));
         return matchSObjects;
     }
 
@@ -290,34 +303,35 @@ public with sharing class SummitEventsContactMatching {
         c.LastName = reg.Registrant_Last_Name__c;
         c.Email = reg.Registrant_Email__c;
         c.Birthdate = reg.Registrant_Date_of_Birth__c;
-
         c.MailingStreet = reg.Registrant_Street_1__c;
         c.MailingCity = reg.Registrant_City__c;
         c.MailingState = reg.Registrant_State__c;
         c.MailingPostalCode = reg.Registrant_Zip__c != '' ? reg.Registrant_Zip__c : reg.Registrant_Postal_Code__c;
         c.MailingCountry = reg.Registrant_Country__c;
-
         c.Phone = reg.Registrant_Phone__c;
         c.MobilePhone = reg.Registrant_Mobile_Phone__c;
-
         c.Created_with_Summit_Events__c = true;
 
         // Apply any mapped values from custom metadata to the contact
-        if (contactMappings.containsKey(matchingMethod)) {
-            List<Summit_Events_Contact_Matching_Mapping__mdt> mappings = contactMappings.get(matchingMethod);
-            for (Summit_Events_Contact_Matching_Mapping__mdt mapping : mappings) {
-                if (mapping.Source_Type__c.equalsIgnoreCase('Hardcoded')) {
-                    c = (Contact) applyCorrectFieldTypesToValues(c, mapping.Contact_Field_API_Name__c, mapping.Source_Value__c);
-                } else {
-                    c = (Contact) applyCorrectFieldTypesToValues(c, mapping.Contact_Field_API_Name__c, reg.get(mapping.Source_Value__c));
-                }
-            }
-        }
+        c = (Contact) applyMappings(c, matchingMethod, contactMappings, reg);
 
         return c;
     }
 
-    private static Account makePerson(Summit_Events_Registration__c reg, String matchingMethod, Map<String, List<SObject>> contactMappings) {
+    private static SObject applyMappings(SObject record, String matchingMethod, Map<String, List<SObject>> mappings, Summit_Events_Registration__c reg) {
+        if (mappings.containsKey(matchingMethod)) {
+            List<SObject> mappingList = mappings.get(matchingMethod);
+            for (SObject mapping : mappingList) {
+                String sourceType = (String) mapping.get('Source_Type__c');
+                String fieldAPIName = (String) mapping.get('Contact_Field_API_Name__c');
+                Object value = sourceType.equalsIgnoreCase('Hardcoded') ? mapping.get('Source_Value__c') : reg.get((String) mapping.get('Source_Value__c'));
+                record = applyCorrectFieldTypesToValues(record, fieldAPIName, value);
+            }
+        }
+        return record;
+    }
+
+    private static Account makePerson(Summit_Events_Registration__c reg, String customMappingType, Map<String, List<SObject>> contactMappings) {
         Account personAccount = new Account();
         Boolean personAccountActive = SummitEventsShared.personAccountsEnabled();
         try {
@@ -344,17 +358,7 @@ public with sharing class SummitEventsContactMatching {
         }
 
         // Apply any mapped values from custom metadata to the contact
-        if (contactMappings.containsKey(matchingMethod)) {
-            List<Summit_Events_Contact_Matching_Mapping__mdt> mappings = contactMappings.get(matchingMethod);
-            for (Summit_Events_Contact_Matching_Mapping__mdt mapping : mappings) {
-                if (mapping.Source_Type__c.equalsIgnoreCase('Hardcoded')) {
-                    personAccount = (Account) applyCorrectFieldTypesToValues(personAccount, mapping.Contact_Field_API_Name__c, mapping.Source_Value__c);
-                } else {
-                    personAccount = (Account) applyCorrectFieldTypesToValues(personAccount, mapping.Contact_Field_API_Name__c, reg.get(mapping.Source_Value__c));
-                }
-            }
-        }
-
+        personAccount = (Account) applyMappings(personAccount, customMappingType, contactMappings, reg);
         return personAccount;
     }
 
@@ -364,27 +368,16 @@ public with sharing class SummitEventsContactMatching {
         l.LastName = reg.Registrant_Last_Name__c;
         l.Email = reg.Registrant_Email__c;
         l.Company = reg.Preferred_First_Name_Formatted__c;
-
         l.Street = reg.Registrant_Street_1__c;
         l.City = reg.Registrant_City__c;
         l.State = reg.Registrant_State__c;
         l.PostalCode = reg.Registrant_Zip__c != '' ? reg.Registrant_Zip__c : reg.Registrant_Postal_Code__c;
         l.Country = reg.Registrant_Country__c;
-
         l.Phone = reg.Registrant_Phone__c;
         l.MobilePhone = reg.Registrant_Mobile_Phone__c;
 
         //Apply any values mapped in custom metadata to the lead
-        if (leadMappings.containsKey(matchingMethod)) {
-            List<Summit_Events_Lead_Matching_Mapping__mdt> mappings = leadMappings.get(matchingMethod);
-            for (Summit_Events_Lead_Matching_Mapping__mdt mapping : mappings) {
-                if (mapping.Source_Type__c.equalsIgnoreCase('Hardcoded')) {
-                    l = (Lead) applyCorrectFieldTypesToValues(l, mapping.Lead_Field_API_Name__c, mapping.Source_Value__c);
-                } else {
-                    l = (Lead) applyCorrectFieldTypesToValues(l, mapping.Lead_Field_API_Name__c, reg.get(mapping.Source_Value__c));
-                }
-            }
-        }
+        l = (Lead) applyMappings(l, matchingMethod, leadMappings, reg);
 
         return l;
     }
@@ -414,7 +407,7 @@ public with sharing class SummitEventsContactMatching {
     }
 
     @TestVisible
-    private static String matchingLog(Summit_Events_Registration__c registration, List<SObject> foundObjects, String heading1, String heading2, Boolean isNew) {
+    private static String matchingLog(List<SObject> foundObjects, String heading1, String heading2, Boolean isNew) {
         String mOut = '';
         if (String.isNotBlank(heading1)) {
             mOut += '<div class="slds-text-heading_small slds-m-vertical_medium">' + heading1 + '</div>';
@@ -423,7 +416,7 @@ public with sharing class SummitEventsContactMatching {
             mOut += '<div class="slds-text-heading_small slds-m-vertical_medium">' + heading2 + '</div>';
         }
 
-        if (registration != null || foundObjects.size() > 0) {
+        if (foundObjects.size() > 0) {
 
             mOut += '<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered slds-size_1-of-1" style="width:100%">';
             mOut += '<thead><tr class="slds-line-height_reset">';
@@ -431,19 +424,24 @@ public with sharing class SummitEventsContactMatching {
             mOut += '<th scope="col"><div class="slds-truncate" title="First Name">First Name</div></th>';
             mOut += '<th scope="col"><div class="slds-truncate" title="Email">Email</div></th>';
             mOut += '<th scope="col"><div class="slds-truncate" title="Zip">Zip</div></th>';
+            mOut += '<th scope="col"><div class="slds-truncate" title="Modified">Modified</div></th>';
             mOut += '<th scope="col"><div class="slds-truncate" title="Action">Action</div></th>';
             mOut += '</tr></thead>';
             mOut += '<tbody>';
-            if (registration != null) {
-                mOut += matchingRow(registration.Id, registration.Registrant_Last_Name__c, registration.Registrant_First_Name__c, registration.Registrant_Email__c, registration.Registrant_Zip__c, (isNew ? 'Created' : 'Matched'));
-            }
-            Boolean isFirst = isNew;
+            Boolean isFirst = true;
             for (SObject sObj : foundObjects) {
                 Map<String, Object> sObjMapStringObj = (Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(sObj));
-                String zip = '';
+                String zip = '---';
                 String firstName = '';
                 String lastName = '';
                 String email = '';
+
+                // Get the org's time zone
+                TimeZone orgTimeZone = UserInfo.getTimeZone();
+
+                //Adjust the datetime to reflect the org's time zone
+                Datetime lastModifiedDatetime = (Datetime) sObj.get('LastModifiedDate');
+                String lastModifiedString = lastModifiedDatetime != null ? lastModifiedDatetime.format('MM/dd/yyyy hh:mm:ss', orgTimeZone.getID()) : '';
 
                 if (sObj.getSObjectType() == Lead.SObjectType) {
                     if (sObjMapStringObj.containsKey('PostalCode')) {
@@ -456,8 +454,8 @@ public with sharing class SummitEventsContactMatching {
                     if (sObjMapStringObj.containsKey('PersonMailingPostalCode')) {
                         zip = (String) sObj.get('PersonMailingPostalCode');
                     }
-                    if (sObjMapStringObj.containsKey('PersonalEmail')) {
-                        email = (String) sObj.get('PersonalEmail');
+                    if (sObjMapStringObj.containsKey('PersonEmail')) {
+                        email = (String) sObj.get('PersonEmail');
                     }
                 } else if (sObj.getSObjectType() == Contact.SObjectType) {
                     if (sObjMapStringObj.containsKey('MailingPostalCode')) {
@@ -467,21 +465,25 @@ public with sharing class SummitEventsContactMatching {
                         email = (String) sObj.get('Email');
                     }
                 }
-                if (sObjMapStringObj.containsKey('Name')) {
+
+                if (sObjMapStringObj.containsKey('LastName') && sObjMapStringObj.containsKey('FirstName')) {
+                    firstName = (String) sObj.get('FirstName');
+                    lastName = (String) sObj.get('LastName');
+                } else if (sObjMapStringObj.containsKey('Name')) {
                     String[] name = ((String) sObj.get('Name')).split(' ');
                     if (name.size() > 1) {
                         firstName = name[0];
-                        lastName = name[1];
+                        lastName = name[name.size() - 1];
                     } else {
                         lastName = name[0];
                     }
-                } else {
-                    if (sObjMapStringObj.containsKey('FirstName')) {
-                        firstName = (String) sObj.get('FirstName');
-                    }
-                    if (sObjMapStringObj.containsKey('LastName')) {
-                        lastName = (String) sObj.get('LastName');
-                    }
+                }
+
+                String action = 'Skipped';
+                if (isNew) {
+                    action = 'Created';
+                } else if (isFirst) {
+                    action = 'Selected';
                 }
 
                 mOut += matchingRow(
@@ -490,7 +492,8 @@ public with sharing class SummitEventsContactMatching {
                         firstName,
                         email,
                         zip,
-                        isFirst ? 'Selected' : 'Skipped'
+                        action,
+                        lastModifiedString
                 );
                 isFirst = false;
             }
@@ -499,18 +502,15 @@ public with sharing class SummitEventsContactMatching {
         return mOut;
     }
 
-    private static String matchingRow(String recordId, String LastName, String FirstName, String Email, String Zip, String Action) {
+    private static String matchingRow(String recordId, String lastName, String firstName, String email, String zip, String action, String lastModifiedString) {
         String matchRow = '';
         matchRow += '<tr class="slds-hint-parent">';
-        matchRow += '<td data-label="Last Name"><div class="slds-truncate"><a href="/' + recordId + '" target="_blank">' + LastName + '</a></div></td>';
-        matchRow += '<td data-label="First Name"><div class="slds-truncate"><a href="/' + recordId + '" target="_blank">' + FirstName + '</a></div></td>';
-        matchRow += '<td data-label="Email"><div class="slds-truncate">' + (String.isNotBlank(Email) ? Email : '') + '</div></td>';
-        if (String.isNotBlank(Zip)) {
-            matchRow += '<td data-label="Zip"><div class="slds-truncate">' + (String.isNotBlank(Zip) ? Zip : '') + '</div></td>';
-        } else {
-            matchRow += '<td data-label="Zip">--</td>';
-        }
-        matchRow += '<td data-label="Action"><div class="slds-truncate"> ' + (String.isNotBlank(Action) ? Action : 'None') + ' </div></td>';
+        matchRow += '<td data-label="Last Name"><div class="slds-truncate"><a href="/' + recordId + '" target="_blank">' + lastName + '</a></div></td>';
+        matchRow += '<td data-label="First Name"><div class="slds-truncate"><a href="/' + recordId + '" target="_blank">' + firstName + '</a></div></td>';
+        matchRow += '<td data-label="Email"><div class="slds-truncate">' + email + '</div></td>';
+        matchRow += '<td data-label="Zip"><div class="slds-truncate">' + zip + '</div></td>';
+        matchRow += '<td data-label="Action"><div class="slds-truncate"> ' + lastModifiedString + ' </div></td>';
+        matchRow += '<td data-label="Action"><div class="slds-truncate"> ' + action + ' </div></td>';
         matchRow += '</tr>';
         return matchRow;
     }
@@ -519,15 +519,32 @@ public with sharing class SummitEventsContactMatching {
 
         public SObject addRecord(SObject recordToAdd) {
             try {
-                upsert recordToAdd;
+                insert recordToAdd;
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
             }
             return recordToAdd;
         }
 
-        public List<Datacloud.FindDuplicatesResult> findDuplicatesResults(List<SObject> cons) {
-            return Datacloud.FindDuplicates.findDuplicates(cons);
+        public Map<Id, SObject> queryMatchedRecords(String queryFields, String sObjectName, Set<Id> matchedIds) {
+            // Query all records for matched IDs
+            String extraWhere = '';
+            if (sObjectName == 'Account') {
+                Id personAccountRecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PersonAccount').getRecordTypeId();
+                extraWhere = ' AND IsPersonAccount = true And RecordTypeId = :personAccountRecordTypeId';
+            }
+            String query = 'SELECT Id, FirstName, LastName, LastModifiedDate, ' + queryFields + ' FROM ' + sObjectName + ' WHERE Id IN :matchedIds ' + extraWhere + ' ORDER BY LastModifiedDate DESC';
+            List<SObject> matchedRecords = Database.query(query);
+
+            Map<Id, SObject> matchedRecordsMap = new Map<Id, SObject>();
+            for (SObject record : matchedRecords) {
+                matchedRecordsMap.put(record.Id, record);
+            }
+            return matchedRecordsMap;
+        }
+
+        public List<Datacloud.FindDuplicatesResult> findDuplicatesResults(List<SObject> record) {
+            return Datacloud.FindDuplicates.findDuplicates(record);
         }
 
     }

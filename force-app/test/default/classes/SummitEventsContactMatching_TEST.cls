@@ -6,18 +6,6 @@
 @IsTest
 public class SummitEventsContactMatching_TEST {
 
-    // Mock class within the test class
-    public class SummitEventsFindDuplicatesMock implements HttpCalloutMock {
-        public HttpResponse respond(HttpRequest req) {
-            // Create a fake response
-            HttpResponse res = new HttpResponse();
-            res.setHeader('Content-Type', 'application/json');
-            res.setBody('[{"duplicateResults":[{"duplicateRule":"Standard_Contact_Duplicate_Rule","matchResults":[{"matchRecords":[{"record":{"Id":"0031t00000XXXXXXAA1","Name":"Test Record"}}]}]}]}]');
-            res.setStatusCode(200);
-            return res;
-        }
-    }
-
     @TestSetup
     static void setup() {
 
@@ -128,40 +116,6 @@ public class SummitEventsContactMatching_TEST {
 
             Test.stopTest();
         }
-    }
-
-    @IsTest
-    static void testSearchForContacts() {
-        // Prepare test data
-        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Test', 'Record', 'test@example.com', '55555', '1971-03-22', '2012', null);
-
-        Summit_Events__c seaTestEvent = SummitEventsTestSharedDataFactory.getEventRecord(seaTestInstances[1].Event__c);
-        seaTestEvent.Contact_Matching_Rules__c = 'Use Salesforce Duplicate Rule';
-        seaTestEvent.Contact_Creation_Duplicate_Rule__c = 'Standard Contact Duplicate Rule';
-        seaTestEvent.Custom_Metadata_Contact_Matching_Method__c = 'Admissions';
-        seaTestEvent.Contact_Matching_No_Match_Behavior__c = 'Create Contact';
-        seaTestEvent.Contact_Matching_Multiple_Match_Behavior__c = 'Match with most recently modified';
-        update seaTestEvent;
-
-        Map<Id, Summit_Events__c> matchingRules = new Map<Id, Summit_Events__c>();
-        matchingRules.put(seaTestEvent.Id, seaTestEvent);
-
-        Map<String, List<SObject>> contactMappings = new Map<String, List<SObject>>();
-        Map<String, List<SObject>> leadMappings = new Map<String, List<SObject>>();
-
-        // Set the mock
-        Test.setMock(HttpCalloutMock.class, new SummitEventsFindDuplicatesMock());
-
-        List<Summit_Events_Registration__c> newRegistrations = new List<Summit_Events_Registration__c>();
-        newRegistrations.add(seaTestRegistration);
-        // Call the method to test
-        Test.startTest();
-        SummitEventsContactMatching.searchForContacts(newRegistrations, matchingRules, contactMappings, leadMappings);
-        Test.stopTest();
-
-        // Add assertions to verify the behavior
-        System.assertNotEquals(null, seaTestRegistration.Contact__c, 'The Contact__c field should not be null');
     }
 
     @IsTest
@@ -280,20 +234,16 @@ public class SummitEventsContactMatching_TEST {
         foundObjects.add(lead);
 
         // Call the matchingLog method
-        String result = SummitEventsContactMatching.matchingLog(seaTestRegistration, foundObjects, 'Heading 1', 'Heading 2', true);
-
+        String result = SummitEventsContactMatching.matchingLog(foundObjects, 'Heading 1', 'Heading 2', true);
+        System.debug('Result: ' + JSON.serializePretty(result));
         // Verify the result
         System.assertNotEquals(null, result, 'The result should not be null');
-        System.assert(result.contains('Doe'), 'The result should contain the last name Doe');
-        System.assert(result.contains('John'), 'The result should contain the first name John');
-        System.assert(result.contains('john.doe@example.com'), 'The result should contain the email john.doe@example.com');
-        System.assert(result.contains('12345'), 'The result should contain the zip code 12345');
         System.assert(result.contains('Smith'), 'The result should contain the last name Smith');
         System.assert(result.contains('Jane'), 'The result should contain the first name Jane');
-        System.assert(result.contains('jane.smith@example.com'), 'The result should contain the email jane.smith@example.com');
-        System.assert(result.contains('67890'), 'The result should contain the zip code 67890');
         System.assert(result.contains('Brown'), 'The result should contain the last name Brown');
         System.assert(result.contains('Charlie'), 'The result should contain the first name Charlie');
+        System.assert(result.contains('jane.smith@example.com'), 'The result should contain the email jane.smith@example.com');
+        System.assert(result.contains('67890'), 'The result should contain the zip code 67890');
         System.assert(result.contains('charlie.brown@example.com'), 'The result should contain the email charlie.brown@example.com');
         System.assert(result.contains('54321'), 'The result should contain the zip code 54321');
     }

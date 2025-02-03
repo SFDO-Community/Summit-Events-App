@@ -6,6 +6,11 @@
     </classAccesses>
     <description>Permissions to allow a public guest user to fill out an event registration.</description>
     <fieldPermissions>
+        <editable>true</editable>
+        <field>Account.Description</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events_Appointment_Type__c.Appointment_Category__c</field>
         <readable>true</readable>
@@ -1158,6 +1163,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Registration__c.New_Lead_Created__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events_Registration__c.New_Person_Account_Created__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -2478,7 +2488,7 @@
     <hasActivationRequired>false</hasActivationRequired>
     <label>Summit Events Registrant</label>
     <objectPermissions>
-        <allowCreate>false</allowCreate>
+        <allowCreate>true</allowCreate>
         <allowDelete>false</allowDelete>
         <allowEdit>false</allowEdit>
         <allowRead>true</allowRead>
@@ -2647,4 +2657,8 @@
         <apexPage>SummitEventsSubmit</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
+    <recordTypeVisibilities>
+        <recordType>PersonAccount.PersonAccount</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
 </PermissionSet>

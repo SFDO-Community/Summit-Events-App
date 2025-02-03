@@ -1284,6 +1284,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.New_Person_Account_Created__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Number_of_Guests__c</field>
         <readable>true</readable>
     </fieldPermissions>
