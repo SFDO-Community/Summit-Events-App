@@ -2657,8 +2657,4 @@
         <apexPage>SummitEventsSubmit</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
-    <recordTypeVisibilities>
-        <recordType>PersonAccount.PersonAccount</recordType>
-        <visible>true</visible>
-    </recordTypeVisibilities>
 </PermissionSet>

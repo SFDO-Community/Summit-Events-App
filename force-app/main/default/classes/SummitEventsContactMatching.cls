@@ -85,7 +85,8 @@ public with sharing class SummitEventsContactMatching {
                 //Find all registrations that have Salesforce Duplicate Rule selected
                 if (event.Contact_Matching_Rules__c == 'Use Salesforce Duplicate Rule' && contactEmpty && !personAccountActive) {
                     findContact.add(reg);
-                } else if (event.Lead_matching_rules__c == 'Use Salesforce Duplicate Rule' && (!personAccountActive && contactEmpty || personAccountActive && personAccountActive) && String.isBlank(reg.Lead__c)) {
+                }
+                if (event.Lead_matching_rules__c == 'Use Salesforce Duplicate Rule' && (!personAccountActive && contactEmpty || personAccountActive && personAccountActive) && String.isBlank(reg.Lead__c)) {
                     findLead.add(reg);
                 }
                 if (event.Person_Matching_Rules__c == 'Use Salesforce Duplicate Rule' && personEmpty) {
@@ -156,12 +157,15 @@ public with sharing class SummitEventsContactMatching {
                     List<Contact> contactsQueried = new List<Contact>();
                     List<Account> accountsQueried = new List<Account>();
                     List<Lead> leadsQueried = new List<Lead>();
+                    lastModCompare lastModCompare = new lastModCompare();
 
                     for (Contact c : rw.contacts) {
                         if (contactsComplete.containsKey(c.Id)) {
                             contactsQueried.add((Contact) contactsComplete.get(c.Id));
                         }
                     }
+
+                    contactsQueried.sort(lastModCompare);
                     rw.contacts = contactsQueried;
 
                     for (Account a : rw.accounts) {
@@ -169,6 +173,7 @@ public with sharing class SummitEventsContactMatching {
                             accountsQueried.add((Account) accountsComplete.get(a.Id));
                         }
                     }
+                    accountsQueried.sort(lastModCompare);
                     rw.accounts = accountsQueried;
 
                     for (Lead l : rw.leads) {
@@ -176,6 +181,7 @@ public with sharing class SummitEventsContactMatching {
                             leadsQueried.add((Lead) leadsComplete.get(l.Id));
                         }
                     }
+                    leadsQueried.sort(lastModCompare);
                     rw.leads = leadsQueried;
                 }
 
@@ -189,6 +195,15 @@ public with sharing class SummitEventsContactMatching {
                 }
             }
 
+        }
+    }
+
+    // Class to compare Employees by year joined
+    public class lastModCompare implements Comparator<SObject> {
+        public Integer compare(SObject a, SObject b) {
+            Datetime dateA = (Datetime) a.get('LastModifiedDate');
+            Datetime dateB = (Datetime) b.get('LastModifiedDate');
+            return dateA > dateB ? -1 : dateA == dateB ? 0 : 1;
         }
     }
 
@@ -292,7 +307,6 @@ public with sharing class SummitEventsContactMatching {
             }
         }
 
-        //matchSObjects.addAll(crud.queryMatchedRecords('Id, FirstName, LastName, Email, MailingPostalCode', objectTypeName, matchIdsMapToReg));
         return matchSObjects;
     }
 
@@ -533,7 +547,7 @@ public with sharing class SummitEventsContactMatching {
                 Id personAccountRecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PersonAccount').getRecordTypeId();
                 extraWhere = ' AND IsPersonAccount = true And RecordTypeId = :personAccountRecordTypeId';
             }
-            String query = 'SELECT Id, FirstName, LastName, LastModifiedDate, ' + queryFields + ' FROM ' + sObjectName + ' WHERE Id IN :matchedIds ' + extraWhere + ' ORDER BY LastModifiedDate DESC';
+            String query = 'SELECT Id, FirstName, LastName, LastModifiedDate, ' + queryFields + ' FROM ' + sObjectName + ' WHERE Id IN :matchedIds ' + extraWhere + ' ORDER BY LastModifiedDate ASC';
             List<SObject> matchedRecords = Database.query(query);
 
             Map<Id, SObject> matchedRecordsMap = new Map<Id, SObject>();
