@@ -1,15 +1,11 @@
 trigger SummitEventsRegistrationTrigger on Summit_Events_Registration__c (before insert, before update, after insert, after update) {
-    /* Caused issues, reason unknown
-    if (Trigger.isBefore && Trigger.isInsert) {
-        SummitEventsContactMatching SECM = new SummitEventsContactMatching();
-        SECM.matchContacts(Trigger.new);
-    } */
+
     Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
     if (!SummitEventsSettings.Turn_off_Registration_Trigger__c) {
-        if (Trigger.isBefore) {
-            if (Trigger.isUpdate || Trigger.isInsert) {
-                SummitEventsContactMatching.matchContacts(Trigger.new);
-            }
+
+        // isBefore isUpdate because SEA pages immediately update on next page and asynchronous matching can't keep up
+        if (Trigger.isBefore && Trigger.isUpdate) {
+            SummitEventsContactMatching.matchContacts(Trigger.new);
         }
 
         if (Trigger.isAfter && Trigger.isInsert) {
