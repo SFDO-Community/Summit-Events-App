@@ -34,7 +34,8 @@ public with sharing class SummitEventsContactMatching {
             matchingRules = new Map<Id, Summit_Events__c>([
                     SELECT Id, Contact_Matching_Rules__c, Lead_matching_rules__c, Person_Matching_Rules__c, Custom_Metadata_Person_Matching_Method__c, Person_Creation_Duplicate_Rule__c, Person_Matching_No_Match_Behavior__c,
                             Contact_Creation_Duplicate_Rule__c, Custom_Metadata_Contact_Matching_Method__c, Contact_Matching_Multiple_Match_Behavior__c, Contact_Matching_No_Match_Behavior__c,
-                            Lead_Creation_Duplicate_Rule__c, Custom_Metadata_Lead_Matching_Method__c, Lead_Matching_Multiple_Match_Behavior__c, Lead_Matching_No_Match_Behavior__c, Person_Matching_Multiple_Match_Behavior__c
+                            Lead_Creation_Duplicate_Rule__c, Custom_Metadata_Lead_Matching_Method__c, Lead_Matching_Multiple_Match_Behavior__c, Lead_Matching_No_Match_Behavior__c, Person_Matching_Multiple_Match_Behavior__c,
+                            Use_Matching_for_Guest_Registrations__c
                     FROM Summit_Events__c
                     WHERE Id IN :matchingRules.keySet()
                     AND (Custom_Metadata_Contact_Matching_Method__c != NULL OR Custom_Metadata_Lead_Matching_Method__c != NULL OR Custom_Metadata_Person_Matching_Method__c != NULL)
@@ -118,6 +119,10 @@ public with sharing class SummitEventsContactMatching {
                         if (oldReg.Registrant_Email__c == reg.Registrant_Email__c && oldReg.Registrant_First_Name__c == reg.Registrant_First_Name__c && oldReg.Registrant_Last_Name__c == reg.Registrant_Last_Name__c && String.isNotBlank(reg.Matching_Log__c)) {
                             skipThisRegMatching = true;
                         }
+                    }
+
+                    if( String.isNotBlank(reg.Guest_Host_Status__c) && !event.Use_Matching_for_Guest_Registrations__c && reg.Guest_Host_Status__c.equalsIgnoreCase('hosted registrant')) {
+                        skipThisRegMatching = true;
                     }
 
                     if (!skipThisRegMatching) {

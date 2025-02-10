@@ -91,6 +91,16 @@
                 <identifier>record_item_005</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Use_Matching_for_Guest_Registrations__c</fieldItem>
+                <identifier>RecordUse_Matching_for_Guest_Registrations__cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-cb142f92-98ca-47b5-b688-5a65a1518288</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -2391,6 +2401,34 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.Use_Matching_for_Guest_Registrations__c</fieldItem>
+                <identifier>RecordUse_Matching_for_Guest_Registrations_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <name>Facet-514308ce-1507-4296-99b2-0e45ac514a1f</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>Facet-514308ce-1507-4296-99b2-0e45ac514a1f</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:column</componentName>
+                <identifier>flexipage_column5</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>Facet-d418ff69-6281-4da5-a203-16d51050c2fe</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.Contact_Matching_Rules__c</fieldItem>
                 <identifier>record_item_099</identifier>
             </fieldInstance>
@@ -2651,6 +2689,24 @@
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>columns</name>
+                    <value>Facet-d418ff69-6281-4da5-a203-16d51050c2fe</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>horizontalAlignment</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>label</name>
+                    <value>Guest Registration Matching</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:fieldSection</componentName>
+                <identifier>flexipage_fieldSection3</identifier>
+            </componentInstance>
+        </itemInstances>
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
@@ -3191,7 +3247,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>title</name>
-                    <value>Contact &amp; Lead Matching</value>
+                    <value>Registration Matching</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
                 <identifier>flex_tab_17</identifier>

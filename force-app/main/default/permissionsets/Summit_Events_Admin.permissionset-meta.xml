@@ -2594,6 +2594,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events__c.Use_Matching_for_Guest_Registrations__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events__c.reCAPTCHA__c</field>
         <readable>true</readable>
     </fieldPermissions>
