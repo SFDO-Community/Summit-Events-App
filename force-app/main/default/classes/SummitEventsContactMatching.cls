@@ -16,11 +16,18 @@ public with sharing class SummitEventsContactMatching {
         public List<Lead> leads { get; set; }
     }
 
-    public static void matchContacts(List<Summit_Events_Registration__c> newRegistrations) {
+    public static void matchReg(List<Summit_Events_Registration__c> newRegistrations, List<Summit_Events_Registration__c> oldRegistrations) {
         Map<Id, Summit_Events__c> matchingRules = new Map<Id, Summit_Events__c>();
 
         for (Summit_Events_Registration__c reg : newRegistrations) {
             matchingRules.put(reg.Event__c, null);
+        }
+        //Map old reg id to reg
+        Map<Id, Summit_Events_Registration__c> oldRegMap = new Map<Id, Summit_Events_Registration__c>();
+        if (oldRegistrations != null) {
+            for (Summit_Events_Registration__c reg : oldRegistrations) {
+                oldRegMap.put(reg.Id, reg);
+            }
         }
 
         if (Schema.SObjectType.Summit_Events__c.isAccessible()) {
@@ -104,24 +111,36 @@ public with sharing class SummitEventsContactMatching {
                     List<Lead> matchLeads = new List<Lead>();
                     Summit_Events__c event = matchingRules.get(reg.Event__c);
 
-                    if (!findContact.isEmpty()) {
-                        matchContacts = handleMatching(reg, event.Contact_Creation_Duplicate_Rule__c, event.Contact_Matching_No_Match_Behavior__c, event.Contact_Matching_Multiple_Match_Behavior__c, event.Custom_Metadata_Contact_Matching_Method__c, contactMappings, 'Contact', 'Contact__c', 'New_Contact_Created__c');
+                    //Compare old reg to new to see if it should move on
+                    Boolean skipThisRegMatching = false;
+                    if (String.isNotBlank(reg.Id) && oldRegMap.containsKey(reg.Id)) {
+                        Summit_Events_Registration__c oldReg = oldRegMap.get(reg.Id);
+                        if (oldReg.Registrant_Email__c == reg.Registrant_Email__c && oldReg.Registrant_First_Name__c == reg.Registrant_First_Name__c && oldReg.Registrant_Last_Name__c == reg.Registrant_Last_Name__c) {
+                            skipThisRegMatching = true;
+                        }
                     }
+                    System.debug(skipThisRegMatching);
 
-                    if (!findPerson.isEmpty()) {
-                        matchAccounts = handleMatching(reg, event.Person_Creation_Duplicate_Rule__c, event.Person_Matching_No_Match_Behavior__c, event.Person_Matching_Multiple_Match_Behavior__c, event.Custom_Metadata_Person_Matching_Method__c, personAccountMappings, 'Account', 'Person_Account__c', 'New_Person_Account_Created__c');
+                    if (!skipThisRegMatching) {
+                        if (!findContact.isEmpty()) {
+                            matchContacts = handleMatching(reg, event.Contact_Creation_Duplicate_Rule__c, event.Contact_Matching_No_Match_Behavior__c, event.Contact_Matching_Multiple_Match_Behavior__c, event.Custom_Metadata_Contact_Matching_Method__c, contactMappings, 'Contact', 'Contact__c', 'New_Contact_Created__c');
+                        }
+
+                        if (!findPerson.isEmpty()) {
+                            matchAccounts = handleMatching(reg, event.Person_Creation_Duplicate_Rule__c, event.Person_Matching_No_Match_Behavior__c, event.Person_Matching_Multiple_Match_Behavior__c, event.Custom_Metadata_Person_Matching_Method__c, personAccountMappings, 'Account', 'Person_Account__c', 'New_Person_Account_Created__c');
+                        }
+
+                        if (!findLead.isEmpty()) {
+                            matchLeads = handleMatching(reg, event.Lead_Creation_Duplicate_Rule__c, event.Lead_Matching_No_Match_Behavior__c, event.Lead_Matching_Multiple_Match_Behavior__c, event.Custom_Metadata_Lead_Matching_Method__c, leadMappings, 'Lead', 'Lead__c', 'New_Lead_Created__c');
+                        }
+
+                        RegistrationContactWrapper rcw = new RegistrationContactWrapper();
+                        rcw.registration = reg;
+                        rcw.contacts = matchContacts;
+                        rcw.accounts = matchAccounts;
+                        rcw.leads = matchLeads;
+                        registrationContactWrappers.add(rcw);
                     }
-
-                    if (!findLead.isEmpty()) {
-                        matchLeads = handleMatching(reg, event.Lead_Creation_Duplicate_Rule__c, event.Lead_Matching_No_Match_Behavior__c, event.Lead_Matching_Multiple_Match_Behavior__c, event.Custom_Metadata_Lead_Matching_Method__c, leadMappings, 'Lead', 'Lead__c', 'New_Lead_Created__c');
-                    }
-
-                    RegistrationContactWrapper rcw = new RegistrationContactWrapper();
-                    rcw.registration = reg;
-                    rcw.contacts = matchContacts;
-                    rcw.accounts = matchAccounts;
-                    rcw.leads = matchLeads;
-                    registrationContactWrappers.add(rcw);
                 }
 
                 //Get all the IDs for the contacts, accounts, and leads to query them all at once
@@ -188,10 +207,10 @@ public with sharing class SummitEventsContactMatching {
                 //Build matching logs for each registration
                 for (RegistrationContactWrapper rw : registrationContactWrappers) {
                     Summit_Events__c event = matchingRules.get(rw.registration.Event__c);
-                    String matchLogString = '';
-                    matchLogString += handleMatchingLog('Contact',          findContact.isEmpty(),  event.Contact_Matching_No_Match_Behavior__c,    event.Contact_Matching_Multiple_Match_Behavior__c,  rw.registration.New_Contact_Created__c,         rw.registration.Contact__c,         rw.contacts,    matchingRules.get(rw.registration.Event__c).Contact_Creation_Duplicate_Rule__c);
-                    matchLogString += handleMatchingLog('Person Account',   findPerson.isEmpty(),   event.Person_Matching_No_Match_Behavior__c,     event.Person_Matching_Multiple_Match_Behavior__c,   rw.registration.New_Person_Account_Created__c,  rw.registration.Person_Account__c,  rw.accounts,    matchingRules.get(rw.registration.Event__c).Person_Creation_Duplicate_Rule__c);
-                    matchLogString += handleMatchingLog('Lead',             findLead.isEmpty(),     event.Lead_Matching_No_Match_Behavior__c,       event.Lead_Matching_Multiple_Match_Behavior__c,     rw.registration.New_Lead_Created__c,            rw.registration.Lead__c,            rw.leads,       matchingRules.get(rw.registration.Event__c).Lead_Creation_Duplicate_Rule__c);
+                    String matchLogString = rw.registration.Matching_Log__c;
+                    matchLogString += handleMatchingLog('Contact', findContact.isEmpty(), event.Contact_Matching_No_Match_Behavior__c, event.Contact_Matching_Multiple_Match_Behavior__c, rw.registration.New_Contact_Created__c, rw.registration.Contact__c, rw.contacts, matchingRules.get(rw.registration.Event__c).Contact_Creation_Duplicate_Rule__c);
+                    matchLogString += handleMatchingLog('Person Account', findPerson.isEmpty(), event.Person_Matching_No_Match_Behavior__c, event.Person_Matching_Multiple_Match_Behavior__c, rw.registration.New_Person_Account_Created__c, rw.registration.Person_Account__c, rw.accounts, matchingRules.get(rw.registration.Event__c).Person_Creation_Duplicate_Rule__c);
+                    matchLogString += handleMatchingLog('Lead', findLead.isEmpty(), event.Lead_Matching_No_Match_Behavior__c, event.Lead_Matching_Multiple_Match_Behavior__c, rw.registration.New_Lead_Created__c, rw.registration.Lead__c, rw.leads, matchingRules.get(rw.registration.Event__c).Lead_Creation_Duplicate_Rule__c);
                     //html encode the string
                     System.debug(matchLogString);
                     rw.registration.Matching_Log__c = matchLogString;

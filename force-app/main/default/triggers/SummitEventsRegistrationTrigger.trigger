@@ -4,8 +4,8 @@ trigger SummitEventsRegistrationTrigger on Summit_Events_Registration__c (before
     if (!SummitEventsSettings.Turn_off_Registration_Trigger__c) {
 
         // isBefore isUpdate because SEA pages immediately update on next page and asynchronous matching can't keep up
-        if (Trigger.isBefore && Trigger.isUpdate) {
-            SummitEventsContactMatching.matchContacts(Trigger.new);
+        if (Trigger.isBefore && Trigger.isInsert || Trigger.isBefore && Trigger.isUpdate) {
+            SummitEventsContactMatching.matchReg(Trigger.new, Trigger.old);
         }
 
         if (Trigger.isAfter && Trigger.isInsert) {
