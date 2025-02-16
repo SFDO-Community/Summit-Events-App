@@ -762,6 +762,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events_Question__c.Lookup_Order_By__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events_Question__c.Lookup_Results_Icon__c</field>
         <readable>true</readable>
     </fieldPermissions>
