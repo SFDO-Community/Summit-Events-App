@@ -284,7 +284,7 @@ public with sharing class SummitEventsRegisterController {
             /*get Analytic data*/
 
             //Get current URL
-            String baseURL = Url.getCurrentRequestUrl().getHost();
+            String baseURL = 'https://' + Url.getCurrentRequestUrl().getHost();
             String PageURL = ApexPages.currentPage().getUrl();
             eventRegistration.Event_Website__c = baseURL + PageURL.replace('\'', '').escapeHtml4();
 
