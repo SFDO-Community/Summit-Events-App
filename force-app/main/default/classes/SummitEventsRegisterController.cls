@@ -698,6 +698,7 @@ public with sharing class SummitEventsRegisterController {
             notAcceptableStatuses.add('Cancelled');
             notAcceptableStatuses.add('Started');
             notAcceptableStatuses.add('Status');
+            notAcceptableStatuses.add('No-Show');
 
             List<Summit_Events_Registration__c> foundRegistrations = new List<Summit_Events_Registration__c>();
             Summit_Events_Registration__c foundRegistration = null;
