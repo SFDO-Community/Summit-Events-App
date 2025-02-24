@@ -204,7 +204,7 @@ public with sharing class SummitEventsConfirmationController {
                             if (guestRegistration != null) {
                                 guestRegistration.Event_Instance__c = eventInformation.instanceId;
                                 guestRegistration.Event__c = eventInformation.eventId;
-                                guestRegistration.Event_Name__c = eventRegistration.Event_Instance_Title__c;
+                                guestRegistration.Event_Instance_Date_Time_Formatted__c = eventRegistration.Event_Instance_Date_Time_Formatted__c;
                                 guestRegistration.Guest_Host_Status__c = 'Hosted registrant';
                                 guestRegistration.Status__c = 'Registered';
                                 //Get original registration id for host
