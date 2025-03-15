@@ -72,11 +72,12 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                 if (evtInstance != null) {
                     String dayOfWeek = SummitEventsShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
                     // = dayOfWeek;
-                    //Build available appointments
+                    //Build appointments
                     appointments = new Map<Id, Summit_Events_Appointment_Type__c>([
                             SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Appointment_Limits__c, Chosen_State__c,
                                     Registrant_Input__c, Custom_Picklist__c, Sort_Order__c, Auto_Confirm_Appointment__c, Auto_add_building__c, Auto_Add_Time__c, Do_Not_Show_Time__c,
-                                    Date_Available_Start__c, Date_Available_End__c, Day_of_Week_Availability__c, Required_Appointment__c, Appointment_Type_Status__c
+                                    Date_Available_Start__c, Date_Available_End__c, Day_of_Week_Availability__c, Required_Appointment__c, Appointment_Type_Status__c,
+                                    Enforce_Registrations_Limit__c, Appointment_Registrations_Limit__c, (SELECT Id FROM UG_Visit_Appointments__r)
                             FROM Summit_Events_Appointment_Type__c
                             WHERE Summit_Events__c = :eventInformation.eventId
                             AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
@@ -88,6 +89,18 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             ORDER BY Sort_Order__c ASC NULLS LAST
                     ]);
 
+                    List<Id> unavailableAppointments = new List<Id>();
+                    for(Summit_Events_Appointment_Type__c apt : appointments.values()){
+                        if(apt.Enforce_Registrations_Limit__c){
+                            if( apt.UG_Visit_Appointments__r.size() >= apt.Appointment_Registrations_Limit__c){
+                                unavailableAppointments.add(apt.Id);
+                            }
+                        }
+                    }
+                    for(Id unavailableAppointmentId : unavailableAppointments){
+                        appointments.remove(unavailableAppointmentId);
+                    }
+                    
                     formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(evtInstance);
 
                     //Check if the user gets to select any appointments or they are all auto added
