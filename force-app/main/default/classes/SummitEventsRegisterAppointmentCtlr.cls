@@ -89,17 +89,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             ORDER BY Sort_Order__c ASC NULLS LAST
                     ]);
 
-                    List<Id> unavailableAppointments = new List<Id>();
-                    for(Summit_Events_Appointment_Type__c apt : appointments.values()){
-                        if(apt.Enforce_Registrations_Limit__c){
-                            if( apt.UG_Visit_Appointments__r.size() >= apt.Appointment_Registrations_Limit__c){
-                                unavailableAppointments.add(apt.Id);
-                            }
-                        }
-                    }
-                    for(Id unavailableAppointmentId : unavailableAppointments){
-                        appointments.remove(unavailableAppointmentId);
-                    }
+                    removeAppointmentsWithExceedingRegistrationLimit(appointments);
                     
                     formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(evtInstance);
 
@@ -203,7 +193,6 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         }
     }
 
-
     public PageReference checkEventDetails() {
         return SummitEventsShared.checkForEvent('appointment');
     }
@@ -280,6 +269,19 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         return pageFlow.get('Previous');
     }
 
+    private static void removeAppointmentsWithExceedingRegistrationLimit(Map<Id, Summit_Events_Appointment_Type__c> appointments){
+        List<Id> unavailableAppointments = new List<Id>();
+        for(Summit_Events_Appointment_Type__c apt : appointments.values()){
+            if(apt.Enforce_Registrations_Limit__c){
+                if( apt.UG_Visit_Appointments__r.size() >= apt.Appointment_Registrations_Limit__c){
+                    unavailableAppointments.add(apt.Id);
+                }
+            }
+        }
+        for(Id unavailableAppointmentId : unavailableAppointments){
+            appointments.remove(unavailableAppointmentId);
+        }
+    }
     /**
      * Summit Events is a multi-step, guest user, registration solution so CRUD work needs to be done on records where guest record ownership is lost between steps.
      * The security aspects of guest record updating is achieved by:
