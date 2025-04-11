@@ -1,0 +1,16 @@
+<!--
+ - Created by Thad-PC-2019 on 4/9/2025.
+ -->
+
+<!-- Ust Map -->
+<template>
+    <lightning-card title="Registrants Map">
+        <lightning-map
+                map-markers={mapMarkers}
+                zoom-level="10"
+                center={center}
+                list-view="visible"
+                onclick={handleMapClick}>
+        </lightning-map>
+    </lightning-card>
+</template>

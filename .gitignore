@@ -25,6 +25,7 @@ robot/SummitEventsApp/results/
 .DS_Store
 
 # Illuminated Cloud (IntelliJ IDEA)
+.IlluminatedCloud
 IlluminatedCloud
 out
 .idea
