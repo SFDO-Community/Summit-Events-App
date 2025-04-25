@@ -33,3 +33,11 @@ out
 
 # CumulusCI
 /test_results.*
+
+# Added by Illuminated Cloud
+.localdev/
+target/
+node_modules/
+/.illuminatedCloud/
+**/tsconfig*.json
+**/*.tsbuildinfo

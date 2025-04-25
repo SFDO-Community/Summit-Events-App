@@ -8,7 +8,7 @@ import {gql, graphql} from "lightning/uiGraphQLApi";
 export default class UstMap extends LightningElement {
 
     @api recordId;
-
+    @api objectApiName;
     @track mapMarkers;
 
     // Define the center of the map
@@ -27,7 +27,7 @@ export default class UstMap extends LightningElement {
     //Use LWC graphQl to query all summit_event_registrations using registrant_city__c registrant_state__c registrant_country__c, registrant_postal_code__c to build out mapParkers
     @wire(graphql, {
         query: gql`
-            query getRegistrations($recordId: ID) {
+            query getRegistrations($recordId: ID, $objectApiName: String, $namespace: String, $query: String) {
                 uiapi {
                     query {
                         summit__Summit_Events_Registration__c(
@@ -96,8 +96,18 @@ export default class UstMap extends LightningElement {
     }
 
     get variables() {
+        //get the object api name from the record id
+        let namespace = '';
+        if(this.objectApiName.toLowerCase().startsWith('summit__')) {
+            namespace = 'summit__';
+        }
+
+        let query = 'summit__Summit_Events_Registration__c(\n                            where: {\n                                and: [\n                                    { summit__Event_Instance__c: { eq: $recordId } }\n                                    { summit__Registrant_City__c: { ne: null } }\n                                    { summit__Registrant_State__c: { ne: null } }\n                                    { summit__Registrant_Zip__c: { ne: null } }\n                                ]\n                            }\n                        ) {\n                            edges {\n                                node {\n                                    Id\n                                    summit__Registrant_Street_1__c {\n                                        value\n                                    }\n                                    summit__Preferred_First_Name_Formatted__c {\n                                        value\n                                    }\n                                    summit__Registrant_Street_2__c {\n                                        value\n                                    }\n                                    summit__Registrant_City__c {\n                                        value\n                                    }\n                                    summit__Registrant_State__c {\n                                        value\n                                    }\n                                    summit__Registrant_Country__c {\n                                        value\n                                    }\n                                    summit__Registrant_Zip__c {\n                                        value\n                                    }\n                                }\n                            }\n                        }'
         return {
             recordId: this.recordId,
+            objectApiName: this.objectApiName,
+            namespace: namespace,
+            query: query,
             // dateFilter: this.dateFilter,
         }
     }
