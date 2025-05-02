@@ -36,5 +36,6 @@ out
 .localdev/
 target/
 node_modules/
+/.illuminatedCloud/
 **/tsconfig*.json
 **/*.tsbuildinfo
