@@ -619,20 +619,7 @@ public with sharing class SummitEventsShared {
     // Test to see if person accounts are enabled.
     public static Boolean personAccountsEnabled()
     {
-        try
-        {
-            // Try to use the isPersonAccount field.
-            sObject testObject = new Account();
-            testObject.get( 'isPersonAccount' );
-            // If we got here without an exception, return true.
-            return true;
-        }
-        catch( Exception ex )
-        {
-            // An exception was generated trying to access the isPersonAccount field
-            // so person accounts aren't enabled; return false.
-            return false;
-        }
+        return Schema.SObjectType.Account.fields.getMap().containsKey( 'isPersonAccount' );
     }
 
     //Method to test object and field availability for current user (Guest user)
