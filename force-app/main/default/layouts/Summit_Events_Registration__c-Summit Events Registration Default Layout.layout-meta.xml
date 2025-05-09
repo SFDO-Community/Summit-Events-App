@@ -17,6 +17,10 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>Person_Account__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>Lead__c</field>
             </layoutItems>
             <layoutItems>
@@ -245,6 +249,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>New_Lead_Created__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>New_Person_Account_Created__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -798,7 +806,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h6t000003YwxN</masterLabel>
+        <masterLabel>00hDK000003u7De</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
