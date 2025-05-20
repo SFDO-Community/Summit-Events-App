@@ -79,11 +79,12 @@ public with sharing class SummitEventsLetterheadLookupExtension {
         Pattern TAG_REGEX2 = Pattern.compile('<img*[\\w\\d\\s\\n="<>!\\[\\/\\.\\?\\&\\]]*\\<\\!\\[CDATA\\[(.+?)]]>*<\\/img>');
         Matcher matcher2 = TAG_REGEX2.matcher(LHTemplate);
         Integer matchCounter = 0;
+        String imgUrl = 'https://' + Url.getCurrentRequestUrl().getHost();
         while (matcher2.find() == true) {
             if (matchCounter == 0) {
-                headerImg = '<img src="' + Url.getCurrentRequestUrl().getHost() + matcher2.group(1) + '"/>';
+                headerImg = '<img src="' + imgUrl + matcher2.group(1) + '"/>';
             } else if (matchCounter == 1) {
-                footerImg = '<img src="' + Url.getCurrentRequestUrl().getHost() + matcher2.group(1) + '"/>';
+                footerImg = '<img src="' + imgUrl + matcher2.group(1) + '"/>';
             }
             matchCounter++;
         }

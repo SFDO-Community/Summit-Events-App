@@ -6,9 +6,9 @@
 
 $Setup.Summit_Events_Settings__c.Managed_Package__c,
 
-IMAGE(&apos;https://chart.googleapis.com/chart?chs=400x400&amp;cht=qr&amp;chl=&apos; +  Event__r.Community_Base_URL__c + &apos;summit__SummitEventsRegister?instanceID=&apos; +  Id ,&apos;Scan QR code to open record in mobile.&apos;,250,250),
+IMAGE(&apos;https://api.qrserver.com/v1/create-qr-code/?size=400x400&amp;data=&apos; +  Event__r.Community_Base_URL__c + &apos;summit__SummitEventsRegister?instanceID=&apos; +  Id ,&apos;Scan QR code to open record in mobile.&apos;,250,250),
 
-IMAGE(&apos;https://chart.googleapis.com/chart?chs=400x400&amp;cht=qr&amp;chl=&apos; +  Event__r.Community_Base_URL__c + &apos;SummitEventsRegister?instanceID=&apos; +  Id ,&apos;Scan QR code to open record in mobile.&apos;,250,250)
+IMAGE(&apos;https://api.qrserver.com/v1/create-qr-code/?size=400x400&amp;data=&apos; +  Event__r.Community_Base_URL__c + &apos;SummitEventsRegister?instanceID=&apos; +  Id ,&apos;Scan QR code to open record in mobile.&apos;,250,250)
 
 )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
