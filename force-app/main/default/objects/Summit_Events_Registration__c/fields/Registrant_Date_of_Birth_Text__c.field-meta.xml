@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Registrant_Date_of_Birth_Text__c</fullName>
+    <description>Text version of the Registrant Date of Birth in yyyy-MM-dd format. This allows for duplicate matching to have a matching rule on date of birth.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Text version of the Registrant Date of Birth in yyyy-MM-dd format. This allows for duplicate matching to have a matching rule on date of birth.</inlineHelpText>
+    <label>Registrant Date of Birth Text</label>
+    <length>10</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

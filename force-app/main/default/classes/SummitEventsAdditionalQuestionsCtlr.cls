@@ -99,7 +99,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
                             Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c,
                             Lookup_Object__c, Lookup_Fields__c, Lookup_Where_Clause__c, Lookup_No_Results_Label__c, Lookup_Secondary_Input_Link_Text__c, Lookup_Secondary_Value_Field__c,
-                            Lookup_Secondary_Input_Instructions__c, Lookup_Results_Icon__c, Existing_Picklist_Values__c, Display_Style__c, Picklist_Values_Long__c
+                            Lookup_Secondary_Input_Instructions__c, Lookup_Results_Icon__c, Existing_Picklist_Values__c, Display_Style__c, Picklist_Values_Long__c,
+                            Lookup_Order_By__c
                     FROM Summit_Events_Question__c
                     WHERE Event__c = :eventInformation.eventId
                     AND (Registrant_Type__c = 'Registrant' OR Registrant_Type__c = 'Registrant and Guest')
@@ -277,6 +278,13 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             queryInfo.put('Lookup_Where_Clause__c', question.Lookup_Where_Clause__c);
                         }
 
+                        if (String.isNotBlank(question.Lookup_Order_By__c)) {
+                            if (!question.Lookup_Order_By__c.startsWithIgnoreCase('order by')) {
+                                question.Lookup_Order_By__c = 'ORDER BY ' + question.Lookup_Order_By__c;
+                            }
+                            queryInfo.put('Lookup_Order_By__c', question.Lookup_Order_By__c);
+                        }
+
                         if (question.Question_Field_Type__c.equalsIgnoreCase('lookup')) {
                             //serialize object with query info in it to retrieve later when decrypted
                             quest.lookup = SummitEventsShared.encryptString(JSON.serialize(queryInfo));
@@ -289,7 +297,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
                         if (question.Question_Field_Type__c.equalsIgnoreCase('lookup picklist')) {
                             if (String.isBlank(quest.setupError)) {
-                                quest.picklist = createLookupPicklist(queryInfo.get('Lookup_Object__c'), queryInfo.get('Lookup_Where_Clause__c'), queryInfo.get('Lookup_Fields__c'));
+                                quest.picklist = createLookupPicklist(queryInfo.get('Lookup_Object__c'), queryInfo.get('Lookup_Where_Clause__c'), queryInfo.get('Lookup_Fields__c'), queryInfo.get('Lookup_Order_By__c'));
                             }
                         }
                     }
@@ -403,7 +411,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         return picklists;
     }
 
-    public List<SelectOption> createLookupPicklist(String objectName, String filter, String fields) {
+    public List<SelectOption> createLookupPicklist(String objectName, String filter, String fields, String orderBy) {
         List<SelectOption> pl = new List<SelectOption>();
         pl.add(new SelectOption('', 'Select...'));
 
@@ -416,7 +424,11 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             query += ' WHERE ' + filter;
         }
 
-        query += ' ORDER BY ' + fieldNames.get(0);
+        if (String.isNotBlank(orderBy)) {
+            query += ' ' + orderBy;
+        } else {
+            query += ' ORDER BY ' + fieldNames.get(0);
+        }
 
         List<SObject> results = Database.query(query);
 
@@ -517,7 +529,11 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                                     }
 
                                     lookupQuery += ' ( ' + likeStatement.removeEnd(' OR ') + ' )';
-                                    lookupQuery += ' ORDER BY ' + String.join(validLookupFields, ', ') + ' ASC';
+                                    if (String.isNotBlank(queryInfo.get('Lookup_Order_By__c'))) {
+                                        lookupQuery += ' ' + queryInfo.get('Lookup_Order_By__c');
+                                    } else {
+                                        lookupQuery += ' ORDER BY ' + String.join(validLookupFields, ', ') + ' ASC';
+                                    }
                                     lookupQuery += ' LIMIT 50';
 
                                     List<SObject> foundValues = new List<SObject>();
