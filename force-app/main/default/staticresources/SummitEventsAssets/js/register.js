@@ -65,8 +65,8 @@ function dynamicValidation() {
 }
 
 //Carries over number values when toggling between type of mobile and home
-var phoneCarryover;
-var newPhoneType;
+let phoneCarryover;
+let newPhoneType;
 
 function phoneTypeToggle(phoneType) {
     let phones = document.querySelectorAll('input[id$=mobile], input[id$=phone]');
@@ -94,8 +94,8 @@ async function recaptcha() {
 }
 
 function checkForm() {
-    var error_count = 0;
-    var emailReg = /^([a-zA-Z0-9_.\-.'.+])+@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    let error_count = 0;
+    let emailReg = /^([a-zA-Z0-9_.\-.'.+])+@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
     document.querySelectorAll(".slds-is-required .slds-input, .slds-is-required .slds-textarea, .slds-is-required .slds-select").forEach(item => {
         let inputWrap = item.closest('.slds-form-element');
@@ -274,7 +274,7 @@ function validYear() {
     });
 }
 
-var RFIStates = {
+let RFIStates = {
     'AL': 'Alabama',
     'AK': 'Alaska',
     'AZ': 'Arizona',
@@ -346,10 +346,10 @@ var RFIStates = {
 };
 
 function createCookie(name, value, days) {
-    var expires;
+    let expires;
 
     if (days) {
-        var date = new Date();
+        let date = new Date();
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toGMTString();
     } else {
@@ -359,9 +359,9 @@ function createCookie(name, value, days) {
 }
 
 function readCookie(name) {
-    var nameEQ = encodeURIComponent(name) + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
+    let nameEQ = encodeURIComponent(name) + "=";
+    let ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
         var c = ca[i];
         while (c.charAt(0) === ' ') c = c.substring(1, c.length);
         if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
@@ -374,7 +374,7 @@ function eraseCookie(name) {
 }
 
 var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)), sURLVariables = sPageURL.split('&'),
+    let sPageURL = decodeURIComponent(window.location.search.substring(1)), sURLVariables = sPageURL.split('&'),
         sParameterName, i;
 
     for (i = 0; i < sURLVariables.length; i++) {
