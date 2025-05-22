@@ -89,6 +89,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Appointment_Type__c.Appointment_Registrations_Limit__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Appointment_Type__c.Appointment_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -140,6 +145,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Appointment_Type__c.Do_Not_Show_Time__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events_Appointment_Type__c.Enforce_Registrations_Limit__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
