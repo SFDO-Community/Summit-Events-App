@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Lookup_Order_By__c</fullName>
+    <description>ORDER BY query segment for which to order lookup query results.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>ORDER BY query segment for which to order lookup query results.</inlineHelpText>
+    <label>Lookup Order By</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

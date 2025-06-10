@@ -12,15 +12,15 @@ Create_SEA_reg
 
     #Query for the an SEA instance Id to test upon
     @{records}=  Salesforce Query  Summit_Events_Instance__c  select=Id,Name
-    ...          Event__r.Name=Sample - Open Source Sprint Event - Single Step
-    ...          Instance_Title__c=In-Person
+    ...          Event__r.Name=Sample - Sample - 2024 Alumni Tours
+    ...          Instance_Title__c= Cruise to Japan
     ...          limit=1
     FOR  ${record}  IN  @{records}
         log  Name: ${record['Name']} Id: ${record['Id']}
     END
 
     #Assign found instance Id to global variable
-    ${instance_id}    Set Variable    ${record}[Id]
+    ${instance_id}    Set Variable    ${records}[Id]
 
     #Open the registration page for the instance
     Go To Registration Page For Instance    ${instance_id}
@@ -65,4 +65,4 @@ Go To Registration Page For Instance
     &{instance}=     Salesforce Get  Summit_Events_Instance__c  ${instance_id}
     &{event}=        Salesforce Get  Summit_Events__c  ${instance}[Event__c]
     ${url}=          Catenate        SEPARATOR=  ${event}[Community_Base_URL__c]  SummitEventsRegister?instanceID=  ${instance_id}
-    Go To            ${url}
+    Go To             ${url}
