@@ -17,6 +17,10 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>Person_Account__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>Lead__c</field>
             </layoutItems>
             <layoutItems>
@@ -121,10 +125,6 @@
             <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>UG_Parking_Pass_Link__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Readonly</behavior>
-                <field>Registrant_Id_QR_Code__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -252,6 +252,10 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>New_Person_Account_Created__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>Matching_Log__c</field>
             </layoutItems>
         </layoutColumns>
@@ -348,10 +352,6 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Registrant_Date_of_Birth__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Registrant_Date_of_Birth_Text__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -806,7 +806,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hDd000000XLcS</masterLabel>
+        <masterLabel>00h6t000003YwxN</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
