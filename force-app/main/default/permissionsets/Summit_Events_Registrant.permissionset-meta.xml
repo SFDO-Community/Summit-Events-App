@@ -772,6 +772,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events_Question__c.Lookup_Order_By__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events_Question__c.Lookup_Results_Icon__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1252,6 +1257,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.Registrant_Date_of_Birth_Text__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Registrant_Date_of_Birth__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1293,6 +1303,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Registration__c.Registrant_High_School__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Registration__c.Registrant_Id_QR_Code__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

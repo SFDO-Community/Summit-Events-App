@@ -94,7 +94,7 @@ public with sharing class SummitEventsConfirmationController {
             if (String.isNotBlank(eventInformation.registrationId)) {
 
                 Summit_Events_Registration__c eventRegistration = [
-                        SELECT Id, Status__c, Event_Name__c, Event_Instance_Title__c, Guest_JSON__c, Event__r.Payment_Gateway__c
+                        SELECT Id, Status__c, Event_Name__c, Event_Instance_Title__c, Guest_JSON__c, Event__r.Payment_Gateway__c, Event_Instance_Date_Time_Formatted__c
                         FROM Summit_Events_Registration__c
                         WHERE Id = :eventInformation.registrationId
                         WITH SECURITY_ENFORCED
@@ -204,6 +204,7 @@ public with sharing class SummitEventsConfirmationController {
                             if (guestRegistration != null) {
                                 guestRegistration.Event_Instance__c = eventInformation.instanceId;
                                 guestRegistration.Event__c = eventInformation.eventId;
+                                guestRegistration.Event_Instance_Date_Time_Formatted__c = eventRegistration.Event_Instance_Date_Time_Formatted__c;
                                 guestRegistration.Guest_Host_Status__c = 'Hosted registrant';
                                 guestRegistration.Status__c = 'Registered';
                                 //Get original registration id for host
