@@ -271,11 +271,11 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
     private static void removeAppointmentsWithExceedingRegistrationLimit(Map<Id, Summit_Events_Appointment_Type__c> appointments, Summit_Events_Instance__c evtInstance){
         AggregateResult[] eventAppointmentCounts = [
-            SELECT Count(Id) aCount, Event_Registration__r.Event_Instance__c, Event_Appointment_Type__c
+            SELECT Count(Id) aCount, Event_Appointment_Type__c
             FROM Summit_Events_Appointments__c
             WHERE Event_Appointment_Type__r.Enforce_Registrations_Limit__c = TRUE
             AND Event_Registration__r.Event_Instance__c =: evtInstance.Id
-            Group by Event_Registration__r.Event_Instance__c, Event_Appointment_Type__c
+            GROUP BY Event_Appointment_Type__c
         ];
 
         Map<Id, Integer> appointmentTypeIdMapToCount = new Map<Id, Integer>();
