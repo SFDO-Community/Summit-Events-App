@@ -77,7 +77,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Appointment_Limits__c, Chosen_State__c,
                                     Registrant_Input__c, Custom_Picklist__c, Sort_Order__c, Auto_Confirm_Appointment__c, Auto_add_building__c, Auto_Add_Time__c, Do_Not_Show_Time__c,
                                     Date_Available_Start__c, Date_Available_End__c, Day_of_Week_Availability__c, Required_Appointment__c, Appointment_Type_Status__c,
-                                    Enforce_Registrations_Limit__c, Appointment_Registrations_Limit__c, (SELECT Id FROM UG_Visit_Appointments__r)
+                                    Enforce_Registrations_Limit__c, Appointment_Registrations_Limit__c
                             FROM Summit_Events_Appointment_Type__c
                             WHERE Summit_Events__c = :eventInformation.eventId
                             AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
