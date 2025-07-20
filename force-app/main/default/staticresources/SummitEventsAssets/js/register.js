@@ -62,6 +62,12 @@ function dynamicValidation() {
     if (alertToast) {
         alertToast.scrollIntoView();
     }
+
+    //Validate email confirmation on change
+    let emailConfirmationItem = document.querySelector('[id$="confirm-email"]');
+    emailConfirmationItem.addEventListener('input', function (e) {
+        confirmEmailMatching(emailConfirmationItem);
+    });
 }
 
 //Carries over number values when toggling between type of mobile and home
@@ -224,6 +230,13 @@ function fillInCityStateOnZip(zipObj) {
                 }
             }
         });
+    }
+}
+
+function confirmEmailMatching(emailConfirmationItem) {
+    let emailItem = document.querySelector('[id$="email"]');
+    if(emailItem.value != emailConfirmationItem.value){
+        console.log('Email does not match');
     }
 }
 
