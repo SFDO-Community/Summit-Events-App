@@ -63,11 +63,6 @@ function dynamicValidation() {
         alertToast.scrollIntoView();
     }
 
-    //Validate email confirmation on change
-    let emailConfirmationItem = document.querySelector('[id$="confirm-email"]');
-    emailConfirmationItem.addEventListener('input', function (e) {
-        confirmEmailMatching(emailConfirmationItem);
-    });
 }
 
 //Carries over number values when toggling between type of mobile and home
@@ -126,6 +121,12 @@ function checkForm() {
             }
         }
     });
+
+    console.log(error_count);
+    if(error_count == 0){
+        console.log('error_count');
+        error_count = validateEmailsMatch(error_count);
+    }
 
     document.querySelectorAll(".selectableOL").forEach(sel => {
         let selWrap = sel.closest('.slds-form-element');
@@ -230,13 +231,6 @@ function fillInCityStateOnZip(zipObj) {
                 }
             }
         });
-    }
-}
-
-function confirmEmailMatching(emailConfirmationItem) {
-    let emailItem = document.querySelector('[id$="email"]');
-    if(emailItem.value != emailConfirmationItem.value){
-        console.log('Email does not match');
     }
 }
 
@@ -488,4 +482,21 @@ function createSpinner() {
     overlay1.append(overlay4);
     overlay.append(overlay1);
     return overlay;
+}
+
+function validateEmailsMatch(error_count){
+    let emailInput = document.querySelector('input[id$=email]');
+    let confirmEmailInput = document.querySelector('input[id$=confirm-email]');
+    console.log(emailInput.value);
+    console.log(confirmEmailInput.value);
+    if(emailInput.value !== confirmEmailInput.value){
+        let inputWrap = confirmEmailInput.closest('.slds-form-element');
+        inputWrap.classList.add("slds-has-error");
+        addErrorFixerListener(confirmEmailInput, inputWrap, 'change');
+        let parentDiv = confirmEmailInput.closest('.slds-form-element');
+        let childDiv = parentDiv.querySelector('.slds-form-element__help');
+        childDiv.textContent = 'Email addresses do not match.';
+        error_count++;
+    }
+    return error_count;
 }
