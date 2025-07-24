@@ -62,7 +62,6 @@ function dynamicValidation() {
     if (alertToast) {
         alertToast.scrollIntoView();
     }
-
 }
 
 //Carries over number values when toggling between type of mobile and home
@@ -122,9 +121,7 @@ function checkForm() {
         }
     });
 
-    console.log(error_count);
     if(error_count == 0){
-        console.log('error_count');
         error_count = validateEmailsMatch(error_count);
     }
 
@@ -487,8 +484,6 @@ function createSpinner() {
 function validateEmailsMatch(error_count){
     let emailInput = document.querySelector('input[id$=email]');
     let confirmEmailInput = document.querySelector('input[id$=confirm-email]');
-    console.log(emailInput.value);
-    console.log(confirmEmailInput.value);
     if(emailInput.value !== confirmEmailInput.value){
         let inputWrap = confirmEmailInput.closest('.slds-form-element');
         inputWrap.classList.add("slds-has-error");
