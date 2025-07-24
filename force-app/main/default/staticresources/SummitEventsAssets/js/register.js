@@ -121,6 +121,10 @@ function checkForm() {
         }
     });
 
+    if(error_count == 0){
+        error_count = validateEmailsMatch(error_count);
+    }
+
     document.querySelectorAll(".selectableOL").forEach(sel => {
         let selWrap = sel.closest('.slds-form-element');
         let hiddenData = document.querySelector('[id$="' + sel.dataset.hiddendataid + '"]').id;
@@ -475,4 +479,19 @@ function createSpinner() {
     overlay1.append(overlay4);
     overlay.append(overlay1);
     return overlay;
+}
+
+function validateEmailsMatch(error_count){
+    let emailInput = document.querySelector('input[id$=email]');
+    let confirmEmailInput = document.querySelector('input[id$=confirm-email]');
+    if(emailInput.value !== confirmEmailInput.value){
+        let inputWrap = confirmEmailInput.closest('.slds-form-element');
+        inputWrap.classList.add("slds-has-error");
+        addErrorFixerListener(confirmEmailInput, inputWrap, 'change');
+        let parentDiv = confirmEmailInput.closest('.slds-form-element');
+        let childDiv = parentDiv.querySelector('.slds-form-element__help');
+        childDiv.textContent = 'Email addresses do not match.';
+        error_count++;
+    }
+    return error_count;
 }
