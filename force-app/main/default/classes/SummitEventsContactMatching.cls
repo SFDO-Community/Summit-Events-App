@@ -55,7 +55,7 @@ public with sharing class SummitEventsContactMatching {
             }
             if (!matchingMethods.isEmpty()) {
                 contactMappings = processMappings(matchingMethods, 'Summit_Events_Contact_Matching_Mapping__mdt', 'Contact_Matching_Method__c', 'Contact_Field_API_Name__c');
-                personAccountMappings = processMappings(personMatchingMethods, 'Summit_Events_Contact_Matching_Mapping__mdt', 'Contact_Matching_Method__c', 'Contact_Field_API_Name__c');
+                personAccountMappings = processMappings(personMatchingMethods, 'Summit_Events_Person_Matching_Mapping__mdt', 'Person_Account_Matching_Method__c', 'Person_Account_Field_API_Name__c');
             }
 
             // Setting up lead matching methods and mappings
@@ -121,7 +121,7 @@ public with sharing class SummitEventsContactMatching {
                         }
                     }
 
-                    if( String.isNotBlank(reg.Guest_Host_Status__c) && !event.Use_Matching_for_Guest_Registrations__c && reg.Guest_Host_Status__c.equalsIgnoreCase('hosted registrant')) {
+                    if (String.isNotBlank(reg.Guest_Host_Status__c) && !event.Use_Matching_for_Guest_Registrations__c && reg.Guest_Host_Status__c.equalsIgnoreCase('hosted registrant')) {
                         skipThisRegMatching = true;
                     }
 
@@ -212,7 +212,7 @@ public with sharing class SummitEventsContactMatching {
                 for (RegistrationContactWrapper rw : registrationContactWrappers) {
                     Summit_Events__c event = matchingRules.get(rw.registration.Event__c);
                     String matchLogString = '';
-                    if(String.isNotBlank(rw.registration.Matching_Log__c)) {
+                    if (String.isNotBlank(rw.registration.Matching_Log__c)) {
                         matchLogString = rw.registration.Matching_Log__c;
                     }
                     matchLogString += handleMatchingLog('Contact', findContact.isEmpty(), event.Contact_Matching_No_Match_Behavior__c, event.Contact_Matching_Multiple_Match_Behavior__c, rw.registration.New_Contact_Created__c, rw.registration.Contact__c, rw.contacts, matchingRules.get(rw.registration.Event__c).Contact_Creation_Duplicate_Rule__c);
@@ -353,18 +353,19 @@ public with sharing class SummitEventsContactMatching {
         c.Created_with_Summit_Events__c = true;
 
         // Apply any mapped values from custom metadata to the contact
-        c = (Contact) applyMappings(c, matchingMethod, contactMappings, reg);
+        c = (Contact) applyMappings(c, matchingMethod, contactMappings, reg, 'Contact_Field_API_Name__c');
 
         return c;
     }
 
-    private static SObject applyMappings(SObject record, String matchingMethod, Map<String, List<SObject>> mappings, Summit_Events_Registration__c reg) {
+    private static SObject applyMappings(SObject record, String matchingMethod, Map<String, List<SObject>> mappings, Summit_Events_Registration__c reg, String objFieldAPIName) {
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
         if (mappings.containsKey(matchingMethod)) {
             List<SObject> mappingList = mappings.get(matchingMethod);
             for (SObject mapping : mappingList) {
-                String sourceType = (String) mapping.get('Source_Type__c');
-                String fieldAPIName = (String) mapping.get('Contact_Field_API_Name__c');
-                Object value = sourceType.equalsIgnoreCase('Hardcoded') ? mapping.get('Source_Value__c') : reg.get((String) mapping.get('Source_Value__c'));
+                String sourceType = (String) mapping.get(namespace + 'Source_Type__c');
+                String fieldAPIName = (String) mapping.get(namespace + objFieldAPIName);
+                Object value = sourceType.equalsIgnoreCase('Hardcoded') ? mapping.get(namespace + 'Source_Value__c') : reg.get((String) mapping.get(namespace + 'Source_Value__c'));
                 record = applyCorrectFieldTypesToValues(record, fieldAPIName, value);
             }
         }
@@ -398,7 +399,7 @@ public with sharing class SummitEventsContactMatching {
         }
 
         // Apply any mapped values from custom metadata to the contact
-        personAccount = (Account) applyMappings(personAccount, customMappingType, contactMappings, reg);
+        personAccount = (Account) applyMappings(personAccount, customMappingType, contactMappings, reg, 'Person_Account_Field_API_Name__c');
         return personAccount;
     }
 
@@ -417,7 +418,7 @@ public with sharing class SummitEventsContactMatching {
         l.MobilePhone = reg.Registrant_Mobile_Phone__c;
 
         //Apply any values mapped in custom metadata to the lead
-        l = (Lead) applyMappings(l, matchingMethod, leadMappings, reg);
+        l = (Lead) applyMappings(l, matchingMethod, leadMappings, reg, 'Lead_Field_API_Name__c');
 
         return l;
     }
