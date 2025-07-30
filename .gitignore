@@ -4,7 +4,6 @@
 .sf
 /src.orig
 /src
-.sf
 
 # Python
 *.pyc
@@ -27,8 +26,8 @@ robot/SummitEventsApp/results/
 # Illuminated Cloud (IntelliJ IDEA)
 .IlluminatedCloud
 IlluminatedCloud
+.IlluminatedCloud
 out
-.idea
 *.iml
 
 # CumulusCI
