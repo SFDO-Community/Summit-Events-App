@@ -94,11 +94,11 @@ public with sharing class SummitEventsContactMatching {
                 if (event.Contact_Matching_Rules__c == 'Use Salesforce Duplicate Rule' && contactEmpty && !personAccountActive) {
                     findContact.add(reg);
                 }
-                if (event.Lead_matching_rules__c == 'Use Salesforce Duplicate Rule' && (!personAccountActive && contactEmpty || personAccountActive && personAccountActive) && String.isBlank(reg.Lead__c)) {
-                    findLead.add(reg);
-                }
                 if (event.Person_Matching_Rules__c == 'Use Salesforce Duplicate Rule' && personEmpty) {
                     findPerson.add(reg);
+                }
+                if (event.Lead_matching_rules__c == 'Use Salesforce Duplicate Rule' && (!personAccountActive && contactEmpty || personAccountActive && personEmpty) && String.isBlank(reg.Lead__c)) {
+                    findLead.add(reg);
                 }
             }
 
@@ -189,6 +189,7 @@ public with sharing class SummitEventsContactMatching {
                         }
                     }
                     contactsQueried.sort(lastModCompare);
+                    rw.registration.Contact__c = contactsQueried.isEmpty() ? null : contactsQueried.get(0).Id;
                     rw.contacts = contactsQueried;
 
                     for (Account a : rw.accounts) {
@@ -197,6 +198,7 @@ public with sharing class SummitEventsContactMatching {
                         }
                     }
                     accountsQueried.sort(lastModCompare);
+                    rw.registration.Person_Account__c = accountsQueried.isEmpty() ? null : accountsQueried.get(0).Id;
                     rw.accounts = accountsQueried;
 
                     for (Lead l : rw.leads) {
@@ -205,6 +207,7 @@ public with sharing class SummitEventsContactMatching {
                         }
                     }
                     leadsQueried.sort(lastModCompare);
+                    rw.registration.Lead__c = leadsQueried.isEmpty() ? null : leadsQueried.get(0).Id;
                     rw.leads = leadsQueried;
                 }
 
