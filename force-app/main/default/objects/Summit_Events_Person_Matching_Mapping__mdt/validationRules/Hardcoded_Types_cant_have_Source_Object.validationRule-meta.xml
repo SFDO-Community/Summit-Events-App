@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Hardcoded_Types_cant_have_Source_Object</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISPICKVAL(Source_Type__c, &apos;Hardcoded&apos;) &amp;&amp; 
+NOT(ISPICKVAL(Source_Object__c, &apos;&apos;))</errorConditionFormula>
+    <errorMessage>Source Object must be blank when Source Type equals &quot;Hardcoded&quot;</errorMessage>
+</ValidationRule>

@@ -91,6 +91,16 @@
                 <identifier>record_item_005</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Use_Matching_for_Guest_Registrations__c</fieldItem>
+                <identifier>RecordUse_Matching_for_Guest_Registrations__cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-cb142f92-98ca-47b5-b688-5a65a1518288</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -2391,6 +2401,34 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.Use_Matching_for_Guest_Registrations__c</fieldItem>
+                <identifier>RecordUse_Matching_for_Guest_Registrations_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <name>Facet-514308ce-1507-4296-99b2-0e45ac514a1f</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>Facet-514308ce-1507-4296-99b2-0e45ac514a1f</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:column</componentName>
+                <identifier>flexipage_column5</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>Facet-d418ff69-6281-4da5-a203-16d51050c2fe</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.Contact_Matching_Rules__c</fieldItem>
                 <identifier>record_item_099</identifier>
             </fieldInstance>
@@ -2474,6 +2512,88 @@
             </componentInstance>
         </itemInstances>
         <name>Facet-514adf7f-50da-4869-8bfa-25344d64cd70</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Person_Matching_Rules__c</fieldItem>
+                <identifier>RecordPerson_Matching_Rules_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Person_Creation_Duplicate_Rule__c</fieldItem>
+                <identifier>RecordPerson_Creation_Duplicate_Rule_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Custom_Metadata_Person_Matching_Method__c</fieldItem>
+                <identifier>RecordCustom_Metadata_Person_Matching_Method_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <name>Facet-ac8e3d0b-870a-4b48-a3b5-52fd82d4ebd9</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Person_Matching_No_Match_Behavior__c</fieldItem>
+                <identifier>RecordPerson_Matching_No_Match_Behavior_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Person_Matching_Multiple_Match_Behavior__c</fieldItem>
+                <identifier>RecordPerson_Matching_Multiple_Match_Behavior_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <name>Facet-0cab5c79-911b-4bd1-a8ac-25bfa23229eb</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>Facet-ac8e3d0b-870a-4b48-a3b5-52fd82d4ebd9</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:column</componentName>
+                <identifier>flexipage_column3</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>Facet-0cab5c79-911b-4bd1-a8ac-25bfa23229eb</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:column</componentName>
+                <identifier>flexipage_column4</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>Facet-b0202753-acc5-45d9-aba9-87e527f49ad9</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -2573,6 +2693,24 @@
             <componentInstance>
                 <componentInstanceProperties>
                     <name>columns</name>
+                    <value>Facet-d418ff69-6281-4da5-a203-16d51050c2fe</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>horizontalAlignment</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>label</name>
+                    <value>Guest Registration Matching</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:fieldSection</componentName>
+                <identifier>flexipage_fieldSection3</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>columns</name>
                     <value>Facet-514adf7f-50da-4869-8bfa-25344d64cd70</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
@@ -2585,6 +2723,24 @@
                 </componentInstanceProperties>
                 <componentName>flexipage:fieldSection</componentName>
                 <identifier>flexi_field_sec_22</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>columns</name>
+                    <value>Facet-b0202753-acc5-45d9-aba9-87e527f49ad9</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>horizontalAlignment</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>label</name>
+                    <value>Person Account Matching</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:fieldSection</componentName>
+                <identifier>flexipage_fieldSection2</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -3091,7 +3247,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>title</name>
-                    <value>Contact &amp; Lead Matching</value>
+                    <value>Registration Matching</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
                 <identifier>flex_tab_17</identifier>
