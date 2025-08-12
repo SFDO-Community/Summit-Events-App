@@ -13,6 +13,7 @@ public without sharing class SummitEventsReadShared {
                         Registration_Close_Time__c, Event__r.Event_Home_Link_URL__c, Event_Name__c, Instance_Short_Description__c, Event__r.Event_Short_Listing_Description__c,
                         Virtual_Meeting_Link__c, Event__r.Location_Title__c, Event__r.Location_Address__c, Event__r.Location_Map_Link__c,
                         Building_Override__c, Event__r.Building__c
+
                 FROM Summit_Events_Instance__c
                 WHERE Id = :instanceId
                 WITH SECURITY_ENFORCED
@@ -54,7 +55,9 @@ public without sharing class SummitEventsReadShared {
                         Event_Appointment_Submit_List_Label__c, Event_Guest_Submit_List_Label__c, Event_Confirmation_Title__c, Event_Confirmation_Description__c,
                         Tracking_Confirmation_Registration__c, Hand_Raise_Action__c, Event_Fees_Received_Label__c, Event_Payment_Due_Description__c,
                         Event_Payment_Due_Heading_Label__c, Event_Payment_Received_Heading_Label__c, Event_Payment_Received_Description__c,
-                        Event_Cancel_Review_Title__c, Event_Cancel_Review_Description__c, Event_Cancelled_Notification_Text__c, Tracking_Cancel_Registration__c
+                        Event_Cancel_Review_Title__c, Event_Cancel_Review_Description__c, Event_Cancelled_Notification_Text__c, Tracking_Cancel_Registration__c,
+                        Event_Appointment_Title__c, Event_Appointment_Description__c, Tracking_Options_Registration__c, Event_Appointment_Chosen_Label__c,
+                        Event_Appointment_Unchosen_Label__c, Event_Appointment_Next_Instructions__c
                 FROM Summit_Events__c
                 WHERE Id = :eventId
                 WITH SECURITY_ENFORCED
@@ -116,6 +119,17 @@ public without sharing class SummitEventsReadShared {
         ];
     }
 
+    public static List<Summit_Events_Appointments__c> getChosenAppointmentsByRegistrationId(Id registrationId) {
+        return [
+                SELECT Id, Appointment_Category__c, Event_Appointment_Type__c, Appointment_Type__c, Appointment_Title__c, Chosen_State__c, Description__c, Sort_Order__c,
+                        Registrant_Input__c, Do_Not_Show_Time__c, Event_Registration__c, Client_Created_Appointment__c
+                FROM Summit_Events_Appointments__c
+                WHERE Event_Registration__c = :registrationId
+                AND Client_Created_Appointment__c = TRUE
+                WITH SECURITY_ENFORCED
+        ];
+    }
+
     public static List<Summit_Events_Payment__c> getPaymentsByRegistrationId(Id registrationId) {
         return [
                 SELECT Id, Payment_Amount__c, TouchnetReceiptNumber__c, Event_Registration__c
@@ -143,6 +157,23 @@ public without sharing class SummitEventsReadShared {
                 AND Event_Fee_Type__c = 'Optional Donation'
                 WITH SECURITY_ENFORCED
         ];
+    }
+
+    public static Map<Id, Summit_Events_Appointment_Type__c> getAppointmentTypesByEventId(Id eventId, String instanceTitle, Date startDate, Date endDate, String dayOfWeek) {
+        return new Map<Id, Summit_Events_Appointment_Type__c>([
+                SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Appointment_Limits__c, Chosen_State__c,
+                        Registrant_Input__c, Custom_Picklist__c, Sort_Order__c, Auto_Confirm_Appointment__c, Auto_add_building__c, Auto_Add_Time__c, Do_Not_Show_Time__c,
+                        Date_Available_Start__c, Date_Available_End__c, Day_of_Week_Availability__c, Required_Appointment__c, Appointment_Type_Status__c
+                FROM Summit_Events_Appointment_Type__c
+                WHERE Summit_Events__c = :eventId
+                AND (Restrict_To_Instance_Title__r.Instance_Title__c = :instanceTitle OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
+                AND (Date_Available_Start__c <= :startDate OR Date_Available_Start__c = NULL)
+                AND (Date_Available_End__c >= :endDate OR Date_Available_End__c = NULL)
+                AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
+                AND (Appointment_Type_Status__c = 'Active' OR Appointment_Type_Status__c = NULL)
+                WITH SECURITY_ENFORCED
+                ORDER BY Sort_Order__c ASC NULLS LAST
+        ]);
     }
 
     public static Integer getAppointmentTypeCount(Id eventId, String instanceTitle, Date startDate, Date endDate, String dayOfWeek) {
