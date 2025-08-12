@@ -1,7 +1,7 @@
-/**
- * Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas on 2/1/2023.
- */
-
+// Copyright (c) 2020, Salesforce.org. All rights reserved.
+// Use of this source code is governed by a BSD 3-Clause.
+// License can be found found in the LICENSE file in this repository.
+// Created by Thaddaeus Dahlberg on 2/1/2023.
 
 public without sharing class SummitEventsAppointmentTriggerHandler {
 
