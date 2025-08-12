@@ -77,7 +77,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             eventIsClosed = SummitEventsShared.isEventClosed(eventInstance, eventPage.Event_Status__c);
 
             //Get the question object questions
-            additionalQuestions = SummitEventsReadShared.getAdditionalQuestionsByEventId(eventInformation.eventId);
+            List<String> registrantTypes = new List<String>{'Registrant', 'Registrant and Guest'};
+            additionalQuestions = SummitEventsReadShared.getAdditionalQuestionsByEventId(eventInformation.eventId, registrantTypes);
 
             //Get namespace if packaged
             String namespace = SummitEventsNamespace.StrTokenNSPrefix('');

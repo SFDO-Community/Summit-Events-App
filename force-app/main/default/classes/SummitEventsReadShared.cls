@@ -43,7 +43,10 @@ public without sharing class SummitEventsReadShared {
                         Add_Info_Question_Pick_List_Long_3__c, Add_Info_Question_Pick_List_Long_4__c, Add_Info_Question_Pick_List_Long_5__c, Event_Status__c,
                         reCAPTCHA_v3_Score_Fail_Text__c, reCAPTCHA__c, Ask_Dietary_Restrictions__c, Dietary_Restrictions_Label__c, Accessibility_Detail_Label__c,
                         Accessibility_Label__c, Ask_Accessibility_Needs__c, Display_Guest_Registration__c, Payment_Gateway__c, Event_Additional_Question_Title__c,
-                        Event_Additional_Questions_Description__c
+                        Event_Additional_Questions_Description__c, Event_Submit_Title__c, Event_Submit_Description__c, Tracking_Submit_Registration__c,
+                        Guest_Registration_Title__c, Guest_Max_Amount__c, Guest_Registration_Description__c, Guest_Table_Size__c, Guest_Tables_Available__c,
+                        Guest_Registration_Add_Button_Label__c, No_Guest_Registrations_Added_Message__c, Guest_Unsaved_Cancel_Label__c, Guest_Unsaved_Continue_Label__c,
+                        Guest_Unsaved_Modal_Text__c
                 FROM Summit_Events__c
                 WHERE Id = :eventId
                 WITH SECURITY_ENFORCED
@@ -62,23 +65,23 @@ public without sharing class SummitEventsReadShared {
                         Registrant_Other_Phone__c, Registrant_Other_Relationship__c, Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c,
                         Registrant_Pronouns__c, Registrant_Title__c, Registrant_Company_Organization__c, Event_Website__c, Event_Website_Referrer__c, gclid__c, utm_campaign__c, utm_content__c,
                         utm_creative_format__c, utm_id__c, utm_marketing_tactic__c, utm_medium__c, utm_source__c, utm_source_platform__c, utm_term__c, Dietary_Ristrictions__c,
-                        Accessibility_Need__c, Accessibility_Need_Detail__c, reCAPTCHA_Score__c, Registrant_Date_of_Birth_Text__c
+                        Accessibility_Need__c, Accessibility_Need_Detail__c, reCAPTCHA_Score__c, Registrant_Date_of_Birth_Text__c, Guest_JSON__c
                 FROM Summit_Events_Registration__c
                 WHERE Id = :registrationId
                 WITH SECURITY_ENFORCED
         ];
     }
 
-    public static List<Summit_Events_Question__c> getAdditionalQuestionsByEventId(Id eventId) {
+    public static List<Summit_Events_Question__c> getAdditionalQuestionsByEventId(Id eventId, List<String> registrantTypes) {
         return [
-                SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
+                SELECT Id, Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
                         Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c,
                         Lookup_Object__c, Lookup_Fields__c, Lookup_Where_Clause__c, Lookup_No_Results_Label__c, Lookup_Secondary_Input_Link_Text__c, Lookup_Secondary_Value_Field__c,
                         Lookup_Secondary_Input_Instructions__c, Lookup_Results_Icon__c, Existing_Picklist_Values__c, Display_Style__c, Picklist_Values_Long__c,
                         Lookup_Order_By__c
                 FROM Summit_Events_Question__c
                 WHERE Event__c = :eventId
-                AND (Registrant_Type__c = 'Registrant' OR Registrant_Type__c = 'Registrant and Guest')
+                AND Registrant_Type__c IN :registrantTypes
                 WITH SECURITY_ENFORCED
                 ORDER BY Display_Order__c NULLS LAST
         ];
