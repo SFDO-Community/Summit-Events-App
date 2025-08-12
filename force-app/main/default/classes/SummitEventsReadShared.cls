@@ -49,7 +49,9 @@ public without sharing class SummitEventsReadShared {
                         Guest_Unsaved_Modal_Text__c, Donation_Suggested_Amount_List__c, Donation_Description__c, Donation_Allocation_1__c, Donation_Allocation_2__c,
                         Donation_Allocation_3__c, Donation_Allocation_4__c, Donation_Allocation_5__c, Donation_Allocation_1__r.Name, Donation_Allocation_2__r.Name,
                         Donation_Allocation_3__r.Name, Donation_Allocation_4__r.Name, Donation_Allocation_5__r.Name, Donation_Title__c, Payment_Button_Label__c,
-                        Event_Appointment_Submit_List_Label__c, Event_Guest_Submit_List_Label__c
+                        Event_Appointment_Submit_List_Label__c, Event_Guest_Submit_List_Label__c, Event_Confirmation_Title__c, Event_Confirmation_Description__c,
+                        Tracking_Confirmation_Registration__c, Hand_Raise_Action__c, Event_Fees_Received_Label__c, Event_Payment_Due_Description__c,
+                        Event_Payment_Due_Heading_Label__c, Event_Payment_Received_Heading_Label__c, Event_Payment_Received_Description__c
                 FROM Summit_Events__c
                 WHERE Id = :eventId
                 WITH SECURITY_ENFORCED
@@ -58,7 +60,7 @@ public without sharing class SummitEventsReadShared {
 
     public static Summit_Events_Registration__c getRegistrationById(Id registrationId) {
         return [
-                SELECT Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c, Number_of_Guests__c, Registrant_Applicant_Type__c,
+                SELECT Id, Status__c, Event_Name__c, Event_Instance_Title__c, Registrant_Email__c, Number_of_Guests__c, Registrant_Applicant_Type__c,
                         Registrant_Gender__c, Registrant_Street_1__c, Registrant_Street_2__c, Registrant_State__c, Registrant_City__c, Preferred_Visit_Time__c,
                         Registrant_Zip__c, Registrant_Phone__c, Registrant_Mobile_Phone__c, Registrant_College__c, Registrant_College_Code__c, Registrant_College_Year__c,
                         Registrant_High_School__c, Registrant_High_School_Code__c, Registrant_Receive_Texts__c, Registrant_High_School_Grad_Year__c, Registrant_High_School_Not_Found__c,
@@ -68,7 +70,8 @@ public without sharing class SummitEventsReadShared {
                         Registrant_Other_Phone__c, Registrant_Other_Relationship__c, Registrant_Country__c, Registrant_State_Province__c, Registrant_Postal_Code__c, Registrant_Third_Party_Status__c,
                         Registrant_Pronouns__c, Registrant_Title__c, Registrant_Company_Organization__c, Event_Website__c, Event_Website_Referrer__c, gclid__c, utm_campaign__c, utm_content__c,
                         utm_creative_format__c, utm_id__c, utm_marketing_tactic__c, utm_medium__c, utm_source__c, utm_source_platform__c, utm_term__c, Dietary_Ristrictions__c,
-                        Accessibility_Need__c, Accessibility_Need_Detail__c, reCAPTCHA_Score__c, Registrant_Date_of_Birth_Text__c, Guest_JSON__c
+                        Accessibility_Need__c, Accessibility_Need_Detail__c, reCAPTCHA_Score__c, Registrant_Date_of_Birth_Text__c, Guest_JSON__c,
+                        Event__r.Payment_Gateway__c, Event_Instance_Date_Time_Formatted__c
                 FROM Summit_Events_Registration__c
                 WHERE Id = :registrationId
                 WITH SECURITY_ENFORCED
@@ -77,7 +80,7 @@ public without sharing class SummitEventsReadShared {
 
     public static Map<Id, Summit_Events_Question__c> getAdditionalQuestionsByEventId(Id eventId, List<String> registrantTypes) {
         return new Map<Id, Summit_Events_Question__c>([
-                SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
+                SELECT Id, Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
                         Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c
                 FROM Summit_Events_Question__c
                 WHERE Event__c = :eventId
@@ -110,7 +113,7 @@ public without sharing class SummitEventsReadShared {
 
     public static List<Summit_Events_Fee__c> getFeesByRegistrationId(Id registrationId) {
         return [
-                SELECT Id, Event_Fee__c, Event_Fee_Allocation__c, Description__c, Event_Fee_Type__c, Event_Appointment_Type__c,
+                SELECT Id, Name, Event_Fee__c, Event_Fee_Allocation__c, Description__c, Event_Fee_Type__c, Event_Appointment_Type__c,
                         Event_Appointment_Type__r.Title__c, Event_Fee_Allocation__r.Name
                 FROM Summit_Events_Fee__c
                 WHERE Event_Registration__c = :registrationId
