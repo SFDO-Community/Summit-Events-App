@@ -10,7 +10,9 @@ public without sharing class SummitEventsReadShared {
                         Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c,
                         Event_Fee_Additional_Allocation_Override__c, Event_Fee_Additional_Override__c, Event_Fee_Override__c, Event_Fee_Allocation_Override__c,
                         Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c, Registration_Close_Date__c,
-                        Registration_Close_Time__c, Event__r.Event_Home_Link_URL__c
+                        Registration_Close_Time__c, Event__r.Event_Home_Link_URL__c, Event_Name__c,  Instance_Short_Description__c, Event__r.Event_Short_Listing_Description__c,
+                        Virtual_Meeting_Link__c, Event__r.Location_Title__c, Event__r.Location_Address__c, Event__r.Location_Map_Link__c,
+                        Building_Override__c, Event__r.Building__c
                 FROM Summit_Events_Instance__c
                 WHERE Id = :instanceId
                 WITH SECURITY_ENFORCED

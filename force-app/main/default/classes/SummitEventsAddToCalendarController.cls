@@ -32,7 +32,8 @@ public with sharing class SummitEventsAddToCalendarController {
         }
 
         if (URLInstanceID != null) {
-            Summit_Events_Instance__c eventInformation = getEventInformation(URLInstanceID);
+
+            Summit_Events_Instance__c eventInformation = SummitEventsReadShared.getInstanceById(URLInstanceID);
 
             if (eventInformation != null) {
                 DTStart = SummitEventsShared.convertDateToDatetime(eventInformation.Instance_Start_Date__c, eventInformation.Instance_Start_Time__c, eventInformation.Instance_Time_Zone__c).format('yyyyMMdd\'T\'HHmmss\'Z\'');
@@ -169,24 +170,6 @@ public with sharing class SummitEventsAddToCalendarController {
         return locationLink;
     }
 
-    public Summit_Events_Instance__c getEventInformation(Id eventId) {
-        List<Summit_Events_Instance__c> eventInstanceList = [
-                SELECT Id, Event_Name__c, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c,
-                        Instance_End_Time__c, Instance_Time_Zone__c, Instance_Short_Description__c, Event__r.Event_Short_Listing_Description__c,
-                        Virtual_Meeting_Link__c, Event__r.Location_Title__c, Event__r.Location_Address__c, Event__r.Location_Map_Link__c,
-                        Location_Title_Override__c, Location_Address_Override__c, Location_Map_Link_Override__c, Building_Override__c,
-                        Event__r.Building__c, Event__r.Event_description__c
-                FROM Summit_Events_Instance__c
-                WHERE Id = :eventId
-                WITH SECURITY_ENFORCED
-        ];
-
-        if (eventInstanceList.size() > 0) {
-            return eventInstanceList[0];
-        }
-        return null;
-    }
-
     public static String NewGuid() {
         Blob b = Crypto.generateAesKey(128);
         String h = EncodingUtil.convertToHex(b);
@@ -209,7 +192,7 @@ public with sharing class SummitEventsAddToCalendarController {
         PageReference linkPage = null;
         String urlCalendarLink = '';
         if (URLInstanceID != null) {
-            Summit_Events_Instance__c eventInformation = getEventInformation(URLInstanceID);
+            Summit_Events_Instance__c eventInformation = SummitEventsReadShared.getInstanceById(URLInstanceID);
             String type = '';
             if (String.isNotBlank(ApexPages.currentPage().getParameters().get('type'))) {
                 type = String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('type'));
