@@ -32,7 +32,6 @@ public with sharing class SummitEventsShared {
         currentUrl = currentUrl.replace('#', '?');
         List<String> currentUrlSplit = currentUrl.split('\\?');
         currentUrl = currentUrlSplit[0];
-
         currentUrlSplit = currentUrl.split('/');
         String currentPageName = currentUrlSplit[currentUrlSplit.size() - 1];
 
@@ -40,47 +39,13 @@ public with sharing class SummitEventsShared {
 
         String dayOfWeek = convertDateToDatetime(startDate, null, '').format('EEEE');
 
-        Integer appointmentTypes = [
-                SELECT COUNT()
-                FROM Summit_Events_Appointment_Type__c
-                WHERE Summit_Events__c = :eventId
-                AND (
-                        Chosen_State__c = 'Added'
-                        OR (Chosen_State__c = 'Added and Required' AND Auto_Confirm_Appointment__c = FALSE)
-                        OR Chosen_State__c = NULL
-                )
-                AND (
-                        Restrict_To_Instance_Title__r.Instance_Title__c = :instanceTitle
-                        OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
-                AND (Date_Available_Start__c <= :startDate OR Date_Available_Start__c = NULL)
-                AND (Date_Available_End__c >= :endDate OR Date_Available_End__c = NULL)
-                AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
-                AND (Appointment_Type_Status__c = 'Active' OR Appointment_Type_Status__c = NULL)
-                WITH SECURITY_ENFORCED
-        ];
+        Integer appointmentTypes = SummitEventsReadShared.getAppointmentTypeCount(eventId, instanceTitle, startDate, endDate, dayOfWeek);
 
-        Integer additionalQuestions = [
-                SELECT COUNT()
-                FROM Summit_Events_Question__c
-                WHERE Event__c = :eventId
-                AND (Registrant_Type__c = 'Registrant' OR Registrant_Type__c = 'Registrant and Guest')
-                WITH SECURITY_ENFORCED
-        ];
+        Integer additionalQuestions = SummitEventsReadShared.getAdditionalQuestionsCount(eventId);
 
-        Integer guestQuestions = [
-                SELECT COUNT()
-                FROM Summit_Events_Question__c
-                WHERE Event__c = :eventId
-                AND (Registrant_Type__c = 'Guest' OR Registrant_Type__c = 'Registrant and Guest')
-                WITH SECURITY_ENFORCED
-        ];
+        Integer guestQuestions = SummitEventsReadShared.getGuestQuestionsCount(eventId);
 
-        Summit_Events__c eventInformation = [
-                SELECT Id, Display_Optional_Donation__c, Display_Guest_Registration__c, Payment_Gateway__c
-                FROM Summit_Events__c
-                WHERE Id = :eventId
-                WITH SECURITY_ENFORCED
-        ];
+        Summit_Events__c eventInformation = SummitEventsReadShared.getEventById(eventId);
 
         Map<String, PageReference> pageMovement = new Map<String, PageReference>();
         Map<String, String> currentPageParameters = currentPage.getParameters();
@@ -230,12 +195,8 @@ public with sharing class SummitEventsShared {
         }
 
         if (String.isBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
-            Summit_Events_Instance__c instanceInfo = [
-                    SELECT Id, Event__c
-                    FROM Summit_Events_Instance__c
-                    WHERE Id = :eventInformation.instanceId
-                    WITH SECURITY_ENFORCED
-            ];
+            Summit_Events_Instance__c instanceInfo = SummitEventsReadShared.getInstanceById(eventInformation.instanceId);
+
             if (instanceInfo != null) {
                 eventInformation.eventId = instanceInfo.Event__c;
             }
@@ -274,12 +235,7 @@ public with sharing class SummitEventsShared {
         }
 
         if (String.isNotBlank(newInstanceId)) {
-            Summit_Events_Instance__c eventPage = [
-                    SELECT Event__r.Event_Home_Link_URL__c
-                    FROM Summit_Events_Instance__c
-                    WHERE Id = :newInstanceId
-                    WITH SECURITY_ENFORCED
-            ];
+            Summit_Events_Instance__c eventPage = SummitEventsReadShared.getInstanceById(newInstanceId);
             if (eventPage != null) {
                 eventHomeLink = eventPage.Event__r.Event_Home_Link_URL__c;
             }
