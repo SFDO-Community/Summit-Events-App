@@ -15,7 +15,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public String endTimeString { get; set; }
     public Map<String, PageReference> pageFlow { get; set; }
     public String formattedNavDate { get; set; }
-    public List<Summit_Events_Question__c> additionalQuestions { get; set; }
+    public Map<Id, Summit_Events_Question__c> additionalQuestions { get; set; }
     public Boolean eventIsClosed { get; set; }
     public List<String> mapToList { get; set; }
     public List<questionItem> questionWrapper { get; set; }
@@ -99,7 +99,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 mapToList.add(namespace + 'Event__c');
                 mapToList.add(namespace + 'Event_Instance__c');
 
-                for (Summit_Events_Question__c question : additionalQuestions) {
+                for (Summit_Events_Question__c question : additionalQuestions.values()) {
                     //Build each question item and add to question item list to inform creation of visualforce form.
                     questionItem quest = new questionItem();
                     quest.setupFail = false;

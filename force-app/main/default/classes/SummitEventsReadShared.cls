@@ -46,9 +46,10 @@ public without sharing class SummitEventsReadShared {
                         Event_Additional_Questions_Description__c, Event_Submit_Title__c, Event_Submit_Description__c, Tracking_Submit_Registration__c,
                         Guest_Registration_Title__c, Guest_Max_Amount__c, Guest_Registration_Description__c, Guest_Table_Size__c, Guest_Tables_Available__c,
                         Guest_Registration_Add_Button_Label__c, No_Guest_Registrations_Added_Message__c, Guest_Unsaved_Cancel_Label__c, Guest_Unsaved_Continue_Label__c,
-                        Guest_Unsaved_Modal_Text__c, Donation_Suggested_Amount_List__c, Donation_Description__c, Donation_Allocation_1__c, Donation_Allocation_2__c, Donation_Allocation_3__c,
-                        Donation_Allocation_4__c, Donation_Allocation_5__c, Donation_Allocation_1__r.Name, Donation_Allocation_2__r.Name, Donation_Allocation_3__r.Name,
-                        Donation_Allocation_4__r.Name, Donation_Allocation_5__r.Name, Donation_Title__c
+                        Guest_Unsaved_Modal_Text__c, Donation_Suggested_Amount_List__c, Donation_Description__c, Donation_Allocation_1__c, Donation_Allocation_2__c,
+                        Donation_Allocation_3__c, Donation_Allocation_4__c, Donation_Allocation_5__c, Donation_Allocation_1__r.Name, Donation_Allocation_2__r.Name,
+                        Donation_Allocation_3__r.Name, Donation_Allocation_4__r.Name, Donation_Allocation_5__r.Name, Donation_Title__c, Payment_Button_Label__c,
+                        Event_Appointment_Submit_List_Label__c, Event_Guest_Submit_List_Label__c
                 FROM Summit_Events__c
                 WHERE Id = :eventId
                 WITH SECURITY_ENFORCED
@@ -74,18 +75,46 @@ public without sharing class SummitEventsReadShared {
         ];
     }
 
-    public static List<Summit_Events_Question__c> getAdditionalQuestionsByEventId(Id eventId, List<String> registrantTypes) {
-        return [
-                SELECT Id, Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
-                        Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c,
-                        Lookup_Object__c, Lookup_Fields__c, Lookup_Where_Clause__c, Lookup_No_Results_Label__c, Lookup_Secondary_Input_Link_Text__c, Lookup_Secondary_Value_Field__c,
-                        Lookup_Secondary_Input_Instructions__c, Lookup_Results_Icon__c, Existing_Picklist_Values__c, Display_Style__c, Picklist_Values_Long__c,
-                        Lookup_Order_By__c
+    public static Map<Id, Summit_Events_Question__c> getAdditionalQuestionsByEventId(Id eventId, List<String> registrantTypes) {
+        return new Map<Id, Summit_Events_Question__c>([
+                SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
+                        Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c
                 FROM Summit_Events_Question__c
                 WHERE Event__c = :eventId
                 AND Registrant_Type__c IN :registrantTypes
                 WITH SECURITY_ENFORCED
                 ORDER BY Display_Order__c NULLS LAST
+        ]);
+    }
+
+    Public static List<Summit_Events_Appointments__c> getAppointmentsByRegistrationId(Id registrationId) {
+        return [
+                SELECT Id, Appointment_Category__c, Event_Appointment_Type__c, Appointment_Type__c, Description__c, Appointment_Title__c,
+                        Chosen_State__c, Registrant_Input__c
+                FROM Summit_Events_Appointments__c
+                WHERE Event_Registration__c = :registrationId
+                AND Chosen_State__c != 'Added but not shown'
+                WITH SECURITY_ENFORCED
+                ORDER BY Sort_Order__c
+        ];
+    }
+
+    public static List<Summit_Events_Payment__c> getPaymentsByRegistrationId(Id registrationId) {
+        return [
+                SELECT Id, Payment_Amount__c, TouchnetReceiptNumber__c, Event_Registration__c
+                FROM Summit_Events_Payment__c
+                WHERE Event_Registration__c = :registrationId
+                WITH SECURITY_ENFORCED
+        ];
+    }
+
+    public static List<Summit_Events_Fee__c> getFeesByRegistrationId(Id registrationId) {
+        return [
+                SELECT Id, Event_Fee__c, Event_Fee_Allocation__c, Description__c, Event_Fee_Type__c, Event_Appointment_Type__c,
+                        Event_Appointment_Type__r.Title__c, Event_Fee_Allocation__r.Name
+                FROM Summit_Events_Fee__c
+                WHERE Event_Registration__c = :registrationId
+                WITH SECURITY_ENFORCED
         ];
     }
 

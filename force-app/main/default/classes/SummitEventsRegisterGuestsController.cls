@@ -58,15 +58,7 @@ public with sharing class SummitEventsRegisterGuestsController {
             eventInstance = SummitEventsReadShared.getInstanceById(eventInformation.instanceId);
 
             List<String> registrantTypes = new List<String>{'Guest', 'Registrant and Guest'};
-            List<Summit_Events_Question__c> summitEventsQuestions = SummitEventsReadShared.getAdditionalQuestionsByEventId(eventInformation.eventId, registrantTypes);
-
-            //Convert summitEventsQuestions to a map id, summit_events_question__c
-            eventGuestQuestions = new Map<Id, Summit_Events_Question__c>();
-            for (Summit_Events_Question__c question : summitEventsQuestions) {
-                if (question.Registrant_Type__c == 'Guest' || question.Registrant_Type__c == 'Registrant and Guest') {
-                    eventGuestQuestions.put(question.Id, question);
-                }
-            }
+            eventGuestQuestions = SummitEventsReadShared.getAdditionalQuestionsByEventId(eventInformation.eventId, registrantTypes);
 
             List<question> questionList = new List<question>();
             hiddenQuestions = new List<questionData>();
