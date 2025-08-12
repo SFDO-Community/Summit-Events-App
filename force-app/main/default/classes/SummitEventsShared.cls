@@ -608,11 +608,11 @@ public with sharing class SummitEventsShared {
                     returnError += qualifierLabel + 'Field ' + fieldName + ' is not accessible by guest user.';
                 }
             }
-            if (String.isBlank(returnError) && testCreatable) {
+/*            if (String.isBlank(returnError) && testCreatable) {
                 if (!fieldDescribe.isCreateable()) {
                     returnError += qualifierLabel + 'Field ' + fieldName + ' is not writable. ';
                 }
-            }
+            }*/
             if (String.isBlank(returnError) && String.isNotBlank(requiredFieldType)) {
                 if (!String.valueOf(fieldDescribe.getType()).equalsIgnoreCase(requiredFieldType)) {
                     returnError += qualifierLabel + 'Field ' + fieldName + ' is not the required field type ' + requiredFieldType + '. ';
