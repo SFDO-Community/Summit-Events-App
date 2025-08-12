@@ -84,7 +84,8 @@ public without sharing class SummitEventsReadShared {
                         Registrant_Pronouns__c, Registrant_Title__c, Registrant_Company_Organization__c, Event_Website__c, Event_Website_Referrer__c, gclid__c, utm_campaign__c, utm_content__c,
                         utm_creative_format__c, utm_id__c, utm_marketing_tactic__c, utm_medium__c, utm_source__c, utm_source_platform__c, utm_term__c, Dietary_Ristrictions__c,
                         Accessibility_Need__c, Accessibility_Need_Detail__c, reCAPTCHA_Score__c, Registrant_Date_of_Birth_Text__c, Guest_JSON__c,
-                        Event__r.Payment_Gateway__c, Event_Instance_Date_Time_Formatted__c, Event_Instance__c, Event_Instance__r.Instance_Title__c, Event__c
+                        Event__r.Payment_Gateway__c, Event_Instance_Date_Time_Formatted__c, Event_Instance__c, Event_Instance__r.Instance_Title__c, Event__c,
+                        Generated_Itinerary__c, Generated_Requested_Appointments__c
                 FROM Summit_Events_Registration__c
                 WHERE Id = :registrationId
                 WITH SECURITY_ENFORCED
