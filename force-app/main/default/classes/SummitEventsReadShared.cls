@@ -46,7 +46,9 @@ public without sharing class SummitEventsReadShared {
                         Event_Additional_Questions_Description__c, Event_Submit_Title__c, Event_Submit_Description__c, Tracking_Submit_Registration__c,
                         Guest_Registration_Title__c, Guest_Max_Amount__c, Guest_Registration_Description__c, Guest_Table_Size__c, Guest_Tables_Available__c,
                         Guest_Registration_Add_Button_Label__c, No_Guest_Registrations_Added_Message__c, Guest_Unsaved_Cancel_Label__c, Guest_Unsaved_Continue_Label__c,
-                        Guest_Unsaved_Modal_Text__c
+                        Guest_Unsaved_Modal_Text__c, Donation_Suggested_Amount_List__c, Donation_Description__c, Donation_Allocation_1__c, Donation_Allocation_2__c, Donation_Allocation_3__c,
+                        Donation_Allocation_4__c, Donation_Allocation_5__c, Donation_Allocation_1__r.Name, Donation_Allocation_2__r.Name, Donation_Allocation_3__r.Name,
+                        Donation_Allocation_4__r.Name, Donation_Allocation_5__r.Name, Donation_Title__c
                 FROM Summit_Events__c
                 WHERE Id = :eventId
                 WITH SECURITY_ENFORCED
@@ -84,6 +86,16 @@ public without sharing class SummitEventsReadShared {
                 AND Registrant_Type__c IN :registrantTypes
                 WITH SECURITY_ENFORCED
                 ORDER BY Display_Order__c NULLS LAST
+        ];
+    }
+
+    public static List<Summit_Events_Fee__c> getDonationsByRegistrationId(Id registrationId) {
+        return [
+                SELECT Id, Event_Registration__c, Event_Fee__c, Event_Fee_Allocation__c
+                FROM Summit_Events_Fee__c
+                WHERE Event_Registration__c = :registrationId
+                AND Event_Fee_Type__c = 'Optional Donation'
+                WITH SECURITY_ENFORCED
         ];
     }
 

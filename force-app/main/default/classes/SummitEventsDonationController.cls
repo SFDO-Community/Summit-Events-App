@@ -22,37 +22,16 @@ public with sharing class SummitEventsDonationController {
 
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
 
-            eventPage = [
-                    SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
-                            Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Donation_Suggested_Amount_List__c,
-                            Donation_Description__c, Display_Optional_Donation__c, Donation_Allocation_1__c, Donation_Allocation_2__c, Donation_Allocation_3__c, Donation_Allocation_4__c,
-                            Donation_Allocation_5__c, Donation_Allocation_1__r.Name, Donation_Allocation_2__r.Name, Donation_Allocation_3__r.Name, Donation_Allocation_4__r.Name,
-                            Donation_Allocation_5__r.Name, Donation_Title__c, Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c, Event_Status__c
-                    FROM Summit_Events__c
-                    WHERE Id = :eventInformation.eventId
-                    WITH SECURITY_ENFORCED
-            ];
+            eventPage = SummitEventsReadShared.getEventById(eventInformation.eventId);
 
-            eventInstance = [
-                    SELECT Id, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c,
-                            Current_Available_Capacity__c, Active_Status__c, Event__r.Event_Name__c, Registration_Close_Date__c, Registration_Close_Time__c
-                    FROM Summit_Events_Instance__c
-                    WHERE Id = :eventInformation.instanceId
-                    WITH SECURITY_ENFORCED
-            ];
+            eventInstance = SummitEventsReadShared.getInstanceById(eventInformation.instanceId);
 
             pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
 
             templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
 
             //Check for current donation fees for this registration
-            List<Summit_Events_Fee__c> previousDonationFees = [
-                    SELECT Id, Event_Registration__c, Event_Fee__c, Event_Fee_Allocation__c
-                    FROM Summit_Events_Fee__c
-                    WHERE Event_Registration__c = :eventInformation.registrationId
-                    AND Event_Fee_Type__c = 'Optional Donation'
-                    WITH SECURITY_ENFORCED
-            ];
+            List<Summit_Events_Fee__c> previousDonationFees = SummitEventsReadShared.getDonationsByRegistrationId(eventInformation.registrationId);
 
             if (previousDonationFees.size() > 0) {
                 incomingFee = previousDonationFees[0];
