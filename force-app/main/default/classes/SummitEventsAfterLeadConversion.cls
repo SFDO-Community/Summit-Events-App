@@ -3,7 +3,7 @@
 // License can be found found in the LICENSE file in this repository.
 // Created by Matthew Hubert on 9/17/2021
 
-public class SummitEventsAfterLeadConversion {
+public without sharing class SummitEventsAfterLeadConversion {
     public static void afterUpdate(List<Lead> newLeads) {
         updateEventsOnConvert(newLeads);
     }

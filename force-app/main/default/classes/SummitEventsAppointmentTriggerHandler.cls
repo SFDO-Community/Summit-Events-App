@@ -3,7 +3,7 @@
  */
 
 
-public with sharing class SummitEventsAppointmentTriggerHandler {
+public without sharing class SummitEventsAppointmentTriggerHandler {
 
     public static void generateItineraries(List<SObject> newList, List<SObject> oldList) {
 
@@ -24,7 +24,7 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
         }
 
         if (uniqueRegistrationIds.size() > 0) {
-
+            doCRUD CRUDtoDo = new doCRUD();
             String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
             //Get the all query fields from global picklist
@@ -55,7 +55,7 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                 query += namespace + 'Event_Host__r.' + namespace + 'Time__c ASC, ';
                 query += namespace + 'Sort_Order__c, ';
                 query += namespace + 'Appointment_Title__c ASC ';
-                allAppointments = Database.query(query);
+                allAppointments = CRUDtoDo.getAppointmentByQueryString(query);
             } catch (DmlException dmlExc) {
                 System.debug(dmlExc.getMessage());
             } catch (Exception e) {
@@ -73,13 +73,7 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
 
                 Map<Id, Summit_Events__c> eventItinerarySetup = new Map<Id, Summit_Events__c>();
                 if (eventIds.size() > 0) {
-                    eventItinerarySetup = new Map<Id, Summit_Events__c>([
-                            SELECT Id, Itinerary_Item_1__c, Itinerary_Item_2__c, Itinerary_Item_3__c, Itinerary_Item_4__c, Itinerary_Item_5__c,
-                                    Itinerary_Label_1__c, Itinerary_Label_2__c, Itinerary_Label_3__c, Itinerary_Label_4__c, Itinerary_Label_5__c,
-                                    Itinerary_Display_Options__c
-                            FROM Summit_Events__c
-                            WHERE Id IN :eventIds
-                    ]);
+                    eventItinerarySetup = SummitEventsReadShared.getEventsByIds(new List<Id>(eventIds));
                 }
 
                 for (Summit_Events_Appointments__c appointment : allAppointments) {
@@ -185,7 +179,6 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                 }
 
                 if (registrationsWithItineraries.size() > 0) {
-                    doCRUD CRUDtoDo = new doCRUD();
                     CRUDtoDo.updateRegistration(registrationsWithItineraries);
                 }
 
@@ -250,6 +243,15 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                 upsert uRegs;
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
+            }
+        }
+
+        private List<Summit_Events_Appointments__c> getAppointmentByQueryString(String query) {
+            try {
+                return Database.query(query);
+            } catch (Exception e) {
+                System.debug(e.getMessage());
+                return null;
             }
         }
 
