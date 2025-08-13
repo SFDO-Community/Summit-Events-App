@@ -66,18 +66,18 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             eventPage = SummitEventsReadShared.getEventById(eventInformation.eventId);
             eventInstance = SummitEventsReadShared.getInstanceById(eventInformation.instanceId);
             templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
-
             pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
             nextUrl = pageFlow.get('Next').getUrl().toLowerCase();
             formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
             instanceName = eventInstance.Name;
             startTimeString = SummitEventsShared.formatTime(eventInstance.Instance_Start_Time__c, false);
             endTimeString = SummitEventsShared.formatTime(eventInstance.Instance_End_Time__c, false);
-
             eventIsClosed = SummitEventsShared.isEventClosed(eventInstance, eventPage.Event_Status__c);
 
             //Get the question object questions
-            List<String> registrantTypes = new List<String>{'Registrant', 'Registrant and Guest'};
+            List<String> registrantTypes = new List<String>{
+                    'Registrant', 'Registrant and Guest'
+            };
             additionalQuestions = SummitEventsReadShared.getAdditionalQuestionsByEventId(eventInformation.eventId, registrantTypes);
 
             //Get namespace if packaged
