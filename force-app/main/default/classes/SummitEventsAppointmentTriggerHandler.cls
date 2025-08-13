@@ -30,37 +30,31 @@ public without sharing class SummitEventsAppointmentTriggerHandler {
             //Get the all query fields from global picklist
             String appointmentFields = getAppointmentQueryFields();
 
-            try {
-                String query = 'SELECT Id, Name, ';
-                query += namespace + 'Appointment_Time__c,';
-                query += namespace + 'Event_Registration__r.Id, ';
-                query += namespace + 'Event_Registration__r.' + namespace + 'Event_Name__c, ';
-                query += namespace + 'Appointment_Status__c, ';
-                query += namespace + 'Chosen_State__c,  ';
-                query += namespace + 'Do_Not_Show_Time__c, ';
-                query += namespace + 'Sort_Order__c, ';
-                query += namespace + 'Event_Appointment_Type__r.' + namespace + 'Summit_Events__c, ';
-                query += namespace + 'Event_Registration__r.' + namespace + 'Event__c,';
-                //TODO: Maybe surface up host information on appointment record with formula
-                query += namespace + 'Event_Host__c, ';
-                query += namespace + 'Event_Host__r.' + namespace + 'Assigned__c, ';
-                query += namespace + 'Event_Host__r.' + namespace + 'Time__c, ';
-                query += namespace + 'Event_Host__r.' + namespace + 'Course_Name__c, ';
-                query += namespace + 'Event_Host__r.RecordType.Name, ';
-                query += appointmentFields + ' ';
-                query += 'FROM ' + namespace + 'Summit_Events_Appointments__c ';
-                query += 'WHERE ' + namespace + 'Event_Registration__r.Id IN :uniqueRegistrationIds ';
-                //TODO: Order by date before time
-                query += 'ORDER BY ' + namespace + 'Appointment_Time__c ASC, ';
-                query += namespace + 'Event_Host__r.' + namespace + 'Time__c ASC, ';
-                query += namespace + 'Sort_Order__c, ';
-                query += namespace + 'Appointment_Title__c ASC ';
-                allAppointments = CRUDtoDo.getAppointmentByQueryString(query);
-            } catch (DmlException dmlExc) {
-                System.debug(dmlExc.getMessage());
-            } catch (Exception e) {
-                System.debug(e.getMessage());
-            }
+            String query = 'SELECT Id, Name, ';
+            query += namespace + 'Appointment_Time__c,';
+            query += namespace + 'Event_Registration__r.Id, ';
+            query += namespace + 'Event_Registration__r.' + namespace + 'Event_Name__c, ';
+            query += namespace + 'Appointment_Status__c, ';
+            query += namespace + 'Chosen_State__c,  ';
+            query += namespace + 'Do_Not_Show_Time__c, ';
+            query += namespace + 'Sort_Order__c, ';
+            query += namespace + 'Event_Appointment_Type__r.' + namespace + 'Summit_Events__c, ';
+            query += namespace + 'Event_Registration__r.' + namespace + 'Event__c,';
+            //TODO: Maybe surface up host information on appointment record with formula
+            query += namespace + 'Event_Host__c, ';
+            query += namespace + 'Event_Host__r.' + namespace + 'Assigned__c, ';
+            query += namespace + 'Event_Host__r.' + namespace + 'Time__c, ';
+            query += namespace + 'Event_Host__r.' + namespace + 'Course_Name__c, ';
+            query += namespace + 'Event_Host__r.RecordType.Name, ';
+            query += appointmentFields + ' ';
+            query += 'FROM ' + namespace + 'Summit_Events_Appointments__c ';
+            query += 'WHERE ' + namespace + 'Event_Registration__r.Id IN :uniqueRegistrationIds ';
+            //TODO: Order by date before time
+            query += 'ORDER BY ' + namespace + 'Appointment_Time__c ASC, ';
+            query += namespace + 'Event_Host__r.' + namespace + 'Time__c ASC, ';
+            query += namespace + 'Sort_Order__c, ';
+            query += namespace + 'Appointment_Title__c ASC ';
+            allAppointments = CRUDtoDo.getAppointmentByQueryString(query);
 
             if (allAppointments.size() > 0) {
 
@@ -198,7 +192,7 @@ public without sharing class SummitEventsAppointmentTriggerHandler {
 
         String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
-        List<Schema.PicklistEntry> PicklistValues = Schema.getGlobalDescribe().get(namespace + 'Summit_Events__c').getDescribe().fields.getMap().get(namespace + 'Itinerary_Item_1__c').getDescribe().getPicklistValues();
+        List<Schema.PicklistEntry> picklistValues = Schema.SObjectType.Summit_Events__c.fields.getMap().get(namespace + 'Itinerary_Item_1__c').getDescribe().getPicklistValues();
 
         //Get the fields off of the appointment object ot make sure we don't add fields that don't exist
         Set<String> appointmentObjectFields = Schema.SObjectType.Summit_Events_Appointments__c.fields.getMap().keySet();
@@ -210,7 +204,7 @@ public without sharing class SummitEventsAppointmentTriggerHandler {
         //Keep track of already added fields so as not to corrupt the query with a duplicate
         Set<String> fieldsFound = new Set<String>();
 
-        for (Schema.PicklistEntry PicklistValue : PicklistValues) {
+        for (Schema.PicklistEntry PicklistValue : picklistValues) {
 
             //Make sure the picklist value is indeed a field ending with __c
             if (PicklistValue.getValue().endsWithIgnoreCase('__c')) {
@@ -247,12 +241,13 @@ public without sharing class SummitEventsAppointmentTriggerHandler {
         }
 
         private List<Summit_Events_Appointments__c> getAppointmentByQueryString(String query) {
+            List<Summit_Events_Appointments__c> appointments = new List<Summit_Events_Appointments__c>();
             try {
-                return Database.query(query);
+                appointments = Database.query(query);
             } catch (Exception e) {
                 System.debug(e.getMessage());
-                return null;
             }
+            return appointments;
         }
 
     }

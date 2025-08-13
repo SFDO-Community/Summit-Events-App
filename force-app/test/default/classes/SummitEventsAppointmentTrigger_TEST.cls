@@ -43,7 +43,8 @@ private class SummitEventsAppointmentTrigger_TEST {
         newAppointment.Description__c = 'TEST Description';
         newAppointment.Appointment_Title__c = 'TEST TITLE 2';
         insert newAppointment;
-        Summit_Events_Registration__c affectedEvent = [SELECT Id, Generated_Requested_Appointments__c, Generated_Itinerary__c FROM Summit_Events_Registration__c WHERE Id = :seaTestRegistration.Id];
+
+        Summit_Events_Registration__c affectedEvent = [SELECT Id, Registrant_First_Name__c, Generated_Requested_Appointments__c, Generated_Itinerary__c FROM Summit_Events_Registration__c WHERE Id = :seaTestRegistration.Id];
 
         System.runAs(testUser) {
             System.assertEquals('<b>TEST TITLE 2</b><br/>TEST Description', affectedEvent.Generated_Requested_Appointments__c);
