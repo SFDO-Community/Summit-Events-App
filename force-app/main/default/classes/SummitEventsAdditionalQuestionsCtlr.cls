@@ -83,13 +83,10 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             //Get namespace if packaged
             String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
-            eventRegistration = new Summit_Events_Registration__c();
+            eventRegistration = SummitEventsReadShared.getRegistrationById(eventInformation.registrationId);
 
             // eventInformation is an object gathered from the encrypted client cookie that contains a registration id without which thou shall not pass
             if (String.isNotBlank(eventInformation.registrationId)) {
-
-                // Apply the registration id from the cookie to a new registration object
-                eventRegistration.Id = eventInformation.registrationId;
 
                 mapToList = new List<String>();
                 lookUpDisplayValue = new Map<String, String>();
