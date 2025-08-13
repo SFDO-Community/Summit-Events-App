@@ -54,7 +54,7 @@ public without sharing class SummitEventsAppointmentTriggerHandler {
             query += namespace + 'Event_Host__r.' + namespace + 'Time__c ASC, ';
             query += namespace + 'Sort_Order__c, ';
             query += namespace + 'Appointment_Title__c ASC ';
-            allAppointments = CRUDtoDo.getAppointmentByQueryString(query);
+            allAppointments = CRUDtoDo.getAppointmentByQueryString(query, uniqueRegistrationIds);
 
             if (allAppointments.size() > 0) {
 
@@ -240,10 +240,13 @@ public without sharing class SummitEventsAppointmentTriggerHandler {
             }
         }
 
-        private List<Summit_Events_Appointments__c> getAppointmentByQueryString(String query) {
+        private List<Summit_Events_Appointments__c> getAppointmentByQueryString(String query, Set<Id> registrationIds) {
             List<Summit_Events_Appointments__c> appointments = new List<Summit_Events_Appointments__c>();
+            //convert set to list
+            List<Id> uniqueRegistrationIds = new List<Id>(registrationIds);
             try {
                 appointments = Database.query(query);
+                System.debug('Found ' + appointments.size() + ' appointments');
             } catch (Exception e) {
                 System.debug(e.getMessage());
             }
