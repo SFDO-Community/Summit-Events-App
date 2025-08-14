@@ -184,16 +184,6 @@ public without sharing class SummitEventsReadShared {
         ];
     }
 
-    public static List<Summit_Events_Fee__c> getFeesToDeleteByRegIdFeeIdList(Id registrationId, List<Id> recordedUsedIds) {
-        return [
-                SELECT Id, Event_Fee_Type__c, Event_Fee_Allocation__c, Event_Fee__c
-                FROM Summit_Events_Fee__c
-                WHERE Event_Registration__c = :registrationId
-                AND Id IN :recordedUsedIds
-                WITH SECURITY_ENFORCED
-        ];
-    }
-
     public static Map<Id, Summit_Events_Appointment_Type__c> getAppointmentTypesByEventId(Id eventId, String instanceTitle, Date startDate, Date endDate, String dayOfWeek) {
         return new Map<Id, Summit_Events_Appointment_Type__c>([
                 SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Appointment_Limits__c, Chosen_State__c,

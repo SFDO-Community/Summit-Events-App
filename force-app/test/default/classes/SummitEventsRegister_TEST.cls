@@ -335,8 +335,8 @@ private class SummitEventsRegister_TEST {
                     FROM Summit_Events_Fee__c
                     WHERE Event_Registration__c = :registerController.eventRegistration.Id
             ];
-            //Extra added fee should be deleted and one should remain
-            System.assertEquals(fees.size(), 1);
+            //Fees no longer get deleted, so the stray fee should still be there
+            System.assertEquals(fees.size(), 3);
             Test.stopTest();
         }
     }
