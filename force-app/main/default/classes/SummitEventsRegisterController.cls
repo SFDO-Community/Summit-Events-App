@@ -494,7 +494,7 @@ public with sharing class SummitEventsRegisterController {
             }
         }
 
-        eventRegistration = rCRUD.updateRegistration(eventRegistration, eventInformation.registrationId, registrantAudience, eventFeeList);
+        eventRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience, eventFeeList);
 
         String dayOfWeek = SummitEventsShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
         //Insert pre-chosen appointments for appointments page

@@ -281,7 +281,7 @@ private class SummitEventsRegister_TEST {
                     AND Registrant_Email__c = 'test@test.net'
             ];
 
-            System.assertEquals(registrations.size(), 1);
+            System.assertEquals(registrations.size(), 0);
 
             registrations = [
                     SELECT Id, Name, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Email__c
