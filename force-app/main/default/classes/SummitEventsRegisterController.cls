@@ -469,28 +469,18 @@ public with sharing class SummitEventsRegisterController {
         eventRegistration.Event_Instance_Date_Time_Formatted__c = SummitEventsShared.navBreadcrumbBuilder(evtInstance);
         eventRegistration.Event__c = eventInformation.eventId;
         eventRegistration.Event_Instance__c = eventInformation.instanceId;
-        eventInformation.registrationId = eventRegistration.Id;
+        eventInformation.registrationId = incomingEventRegistrationId;
 
         //Check and create fees and save on registration
-        List<Summit_Events_Fee__c> recordedEventFeeList = SummitEventsReadShared.getEventFeesByRegistrationId(eventInformation.registrationId);
+        List<Summit_Events_Fee__c> recordedEventFeeList = SummitEventsReadShared.getEventFeesByRegistrationId(incomingEventRegistrationId);
         if (recordedEventFeeList.size() > 0) {
             //Fees already exist so checks need to be made if current fees are there
-            List<Id> recordedUsedIds = new List<Id>();
             for (Integer ff = 0; ff < eventFeeList.size(); ff++) {
                 for (Summit_Events_Fee__c recordedFees : recordedEventFeeList) {
                     if (eventFeeList[ff].Event_Fee_Type__c == recordedFees.Event_Fee_Type__c) {
                         eventFeeList[ff].Id = recordedFees.Id;
-                        recordedUsedIds.add(recordedFees.Id);
                     }
                 }
-            }
-
-            //Get all currently recorded event fees and delete them
-            List<Summit_Events_Fee__c> deleteEventFees = SummitEventsReadShared.getFeesToDeleteByRegIdFeeIdList(eventInformation.registrationId, recordedUsedIds);
-
-            System.debug('deleteEventFees: ' + deleteEventFees);
-            if (deleteEventFees.size() > 0) {
-                rCRUD.deleteFees(deleteEventFees);
             }
         }
 
@@ -594,7 +584,7 @@ public with sharing class SummitEventsRegisterController {
                 }
                 try {
                     if (Schema.SObjectType.Summit_Events_Registration__c.isCreateable()) {
-                        insert upsertFees;
+                        upsert upsertFees;
                     }
                 } catch (Exception ex) {
                     System.debug(ex.getMessage());
