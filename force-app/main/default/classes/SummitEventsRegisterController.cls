@@ -449,7 +449,7 @@ public with sharing class SummitEventsRegisterController {
             eventRegistration.Registrant_Date_of_Birth__c = Date.parse(birthDateString);
         }
 
-        if(eventRegistration.Registrant_Date_of_Birth__c != null){
+        if (eventRegistration.Registrant_Date_of_Birth__c != null) {
             Datetime birthDateTime = Datetime.newInstance(eventRegistration.Registrant_Date_of_Birth__c, Time.newInstance(0, 0, 0, 0));
             String formattedBirthDateString = birthDateTime.format('yyyy-MM-dd');
             eventRegistration.Registrant_Date_of_Birth_Text__c = formattedBirthDateString;
@@ -465,16 +465,14 @@ public with sharing class SummitEventsRegisterController {
             eventRegistration.Registrant_Applicant_Type__c = 'Graduate';
         }
 
+        eventRegistration.Status__c = 'Started';
+        eventRegistration.Event_Instance_Date_Time_Formatted__c = SummitEventsShared.navBreadcrumbBuilder(evtInstance);
+        eventRegistration.Event__c = eventInformation.eventId;
+        eventRegistration.Event_Instance__c = eventInformation.instanceId;
+        eventInformation.registrationId = eventRegistration.Id;
+
         //Check and create fees and save on registration
-        List<Summit_Events_Fee__c> recordedEventFeeList = [
-                SELECT Id, Event_Fee_Type__c, Event_Fee_Allocation__c, Event_Fee__c
-                FROM Summit_Events_Fee__c
-                WHERE Event_Fee_Type__c != 'Appointment'
-                AND Event_Fee_Type__c != 'Appointment Additional'
-                AND Event_Fee_Type__c != 'Optional Donation'
-                AND Event_Registration__c = :eventInformation.registrationId
-                WITH SECURITY_ENFORCED
-        ];
+        List<Summit_Events_Fee__c> recordedEventFeeList = SummitEventsReadShared.getEventFeesByRegistrationId(eventInformation.registrationId);
         if (recordedEventFeeList.size() > 0) {
             //Fees already exist so checks need to be made if current fees are there
             List<Id> recordedUsedIds = new List<Id>();
@@ -486,29 +484,17 @@ public with sharing class SummitEventsRegisterController {
                     }
                 }
             }
-            List<Summit_Events_Fee__c> deleteEventFees = [
-                    SELECT Id, Event_Fee_Type__c, Event_Fee_Allocation__c, Event_Fee__c
-                    FROM Summit_Events_Fee__c
-                    WHERE Event_Fee_Type__c != 'Appointment'
-                    AND Event_Fee_Type__c != 'Appointment Additional'
-                    AND Event_Fee_Type__c != 'Optional Donation'
-                    AND Event_Registration__c = :eventInformation.registrationId
-                    AND Id NOT IN :recordedUsedIds
-                    WITH SECURITY_ENFORCED
-            ];
+
+            //Get all currently recorded event fees and delete them
+            List<Summit_Events_Fee__c> deleteEventFees = SummitEventsReadShared.getFeesToDeleteByRegIdFeeIdList(eventInformation.registrationId, recordedUsedIds);
+
+            System.debug('deleteEventFees: ' + deleteEventFees);
             if (deleteEventFees.size() > 0) {
                 rCRUD.deleteFees(deleteEventFees);
             }
         }
 
-        eventRegistration.Status__c = 'Started';
-        eventRegistration.Event_Instance_Date_Time_Formatted__c = SummitEventsShared.navBreadcrumbBuilder(evtInstance);
-        eventRegistration.Event__c = eventInformation.eventId;
-        eventRegistration.Event_Instance__c = eventInformation.instanceId;
-
-        eventRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience, eventFeeList);
-
-        eventInformation.registrationId = eventRegistration.Id;
+        eventRegistration = rCRUD.updateRegistration(eventRegistration, eventInformation.registrationId, registrantAudience, eventFeeList);
 
         String dayOfWeek = SummitEventsShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
         //Insert pre-chosen appointments for appointments page

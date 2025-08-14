@@ -1,6 +1,15 @@
+// Copyright (c) 2020, Salesforce.org. All rights reserved.
+// Use of this source code is governed by a BSD 3-Clause.
+// License can be found found in the LICENSE file in this repository.
+// Created by Thaddaeus Dahlberg on 8/11/2025.
+
 /**
- * Created by Thad-PC-2019 on 8/11/2025.
- */
+ * Summit Events is a multi-step, guest user, registration solution so CRUD work needs to be done on records where guest record ownership is lost between steps.
+ * The security aspects of guest record updating is achieved by:
+ * - Using an encrypted cookie on the client browser to keep track of registration id, event id, instance id, and audience
+ * - Dividing each controller class into a "with sharing" logic area and a sub "without sharing" CRUD area for purposeful CRUD
+ * - When the encrypted cookie is not available as in the cancel registration link an encrypted string is provided through the URL to not expose the SF ID related to the record
+ **/
 
 public without sharing class SummitEventsReadShared {
     public static Summit_Events_Instance__c getInstanceById(Id instanceId) {
@@ -110,7 +119,7 @@ public without sharing class SummitEventsReadShared {
         ]);
     }
 
-    Public static List<Summit_Events_Appointments__c> getAppointmentsByRegistrationId(Id registrationId) {
+    public static List<Summit_Events_Appointments__c> getAppointmentsByRegistrationId(Id registrationId) {
         return [
                 SELECT Id, Appointment_Category__c, Event_Appointment_Type__c, Appointment_Type__c, Description__c, Appointment_Title__c,
                         Chosen_State__c, Registrant_Input__c
@@ -144,8 +153,8 @@ public without sharing class SummitEventsReadShared {
 
     public static List<Summit_Events_Fee__c> getFeesByRegistrationId(Id registrationId) {
         return [
-                SELECT Id, Name, Event_Fee__c, Event_Fee_Allocation__c, Description__c, Event_Fee_Type__c, Event_Appointment_Type__c,
-                        Event_Appointment_Type__r.Title__c, Event_Fee_Allocation__r.Name
+                SELECT Id, Name, Event_Registration__c, Event_Fee__c, Event_Fee_Allocation__c, Description__c, Event_Fee_Type__c, Event_Appointment_Type__c,
+                        Summit_Events__c, Summit_Events_Payment__c, Event_Appointment_Type__r.Title__c, Event_Fee_Allocation__r.Name
                 FROM Summit_Events_Fee__c
                 WHERE Event_Registration__c = :registrationId
                 WITH SECURITY_ENFORCED
@@ -154,10 +163,33 @@ public without sharing class SummitEventsReadShared {
 
     public static List<Summit_Events_Fee__c> getDonationsByRegistrationId(Id registrationId) {
         return [
-                SELECT Id, Event_Registration__c, Event_Fee__c, Event_Fee_Allocation__c
+                SELECT Id, Name, Event_Registration__c, Event_Fee__c, Event_Fee_Allocation__c, Description__c, Event_Fee_Type__c, Event_Appointment_Type__c,
+                        Summit_Events__c, Summit_Events_Payment__c, Event_Appointment_Type__r.Title__c, Event_Fee_Allocation__r.Name
                 FROM Summit_Events_Fee__c
                 WHERE Event_Registration__c = :registrationId
                 AND Event_Fee_Type__c = 'Optional Donation'
+                WITH SECURITY_ENFORCED
+        ];
+    }
+
+    public static List<Summit_Events_Fee__c> getEventFeesByRegistrationId(Id registrationId) {
+        return [
+                SELECT Id, Event_Fee_Type__c, Event_Fee_Allocation__c, Event_Fee__c
+                FROM Summit_Events_Fee__c
+                WHERE Event_Fee_Type__c != 'Appointment'
+                AND Event_Fee_Type__c != 'Appointment Additional'
+                AND Event_Fee_Type__c != 'Optional Donation'
+                AND Event_Registration__c = :registrationId
+                WITH SECURITY_ENFORCED
+        ];
+    }
+
+    public static List<Summit_Events_Fee__c> getFeesToDeleteByRegIdFeeIdList(Id registrationId, List<Id> recordedUsedIds) {
+        return [
+                SELECT Id, Event_Fee_Type__c, Event_Fee_Allocation__c, Event_Fee__c
+                FROM Summit_Events_Fee__c
+                WHERE Event_Registration__c = :registrationId
+                AND Id IN :recordedUsedIds
                 WITH SECURITY_ENFORCED
         ];
     }
