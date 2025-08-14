@@ -1,7 +1,7 @@
-/**
- * Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas on 7/13/2021.
- */
-
+// Copyright (c) 2020, Salesforce.org. All rights reserved.
+// Use of this source code is governed by a BSD 3-Clause.
+// License can be found found in the LICENSE file in this repository.
+// Created by Thaddaeus Dahlberg on 7/13/2021.
 
 public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
@@ -15,7 +15,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
     public String endTimeString { get; set; }
     public Map<String, PageReference> pageFlow { get; set; }
     public String formattedNavDate { get; set; }
-    public List<Summit_Events_Question__c> additionalQuestions { get; set; }
+    public Map<Id, Summit_Events_Question__c> additionalQuestions { get; set; }
     public Boolean eventIsClosed { get; set; }
     public List<String> mapToList { get; set; }
     public List<questionItem> questionWrapper { get; set; }
@@ -63,27 +63,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         //eventInformation is an object gathered from the encrypted client cookie that contains event id and instance ids without which thou shall not pass
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
 
-            eventPage = [
-                    SELECT Name, Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Full_Text__c, Event_Home_Link_URL__c, Event_Home_Link_Title__c,
-                            Template__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Event_Additional_Question_Title__c, Event_Additional_Questions_Description__c,
-                            Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c, Event_Status__c
-                    FROM Summit_Events__c
-                    WHERE Id = :eventInformation.eventId
-                    WITH SECURITY_ENFORCED
-            ];
-
-            eventInstance = [
-                    SELECT Id, Name, Event__r.Name, Event__r.Event_Name__c, Event__r.Id, Instance_Title__c, Active_Status__c, Capacity__c,
-                            Event__r.Event_description__c, Event__r.Audience__c, Current_Available_Capacity__c,
-                            Location_Type_Override__c, Location_Address_Override__c, Event__r.Close_Event_Days_Before__c, Location_Map_Link_Override__c, Location_Title_Override__c,
-                            Event_Fee_Additional_Allocation_Override__c, Event_Fee_Additional_Override__c, Event_Fee_Override__c, Event_Fee_Allocation_Override__c,
-                            Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c,
-                            Registration_Close_Date__c, Registration_Close_Time__c
-                    FROM Summit_Events_Instance__c
-                    WHERE Id = :eventInformation.instanceId
-                    WITH SECURITY_ENFORCED
-            ];
-
+            eventPage = SummitEventsReadShared.getEventById(eventInformation.eventId);
+            eventInstance = SummitEventsReadShared.getInstanceById(eventInformation.instanceId);
             templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
             pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, eventInstance.Instance_Title__c, ApexPages.currentPage(), eventInstance.Instance_Start_Date__c, eventInstance.Instance_End_Date__c);
             nextUrl = pageFlow.get('Next').getUrl().toLowerCase();
@@ -91,33 +72,21 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             instanceName = eventInstance.Name;
             startTimeString = SummitEventsShared.formatTime(eventInstance.Instance_Start_Time__c, false);
             endTimeString = SummitEventsShared.formatTime(eventInstance.Instance_End_Time__c, false);
-
             eventIsClosed = SummitEventsShared.isEventClosed(eventInstance, eventPage.Event_Status__c);
 
             //Get the question object questions
-            additionalQuestions = [
-                    SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
-                            Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c,
-                            Lookup_Object__c, Lookup_Fields__c, Lookup_Where_Clause__c, Lookup_No_Results_Label__c, Lookup_Secondary_Input_Link_Text__c, Lookup_Secondary_Value_Field__c,
-                            Lookup_Secondary_Input_Instructions__c, Lookup_Results_Icon__c, Existing_Picklist_Values__c, Display_Style__c, Picklist_Values_Long__c,
-                            Lookup_Order_By__c
-                    FROM Summit_Events_Question__c
-                    WHERE Event__c = :eventInformation.eventId
-                    AND (Registrant_Type__c = 'Registrant' OR Registrant_Type__c = 'Registrant and Guest')
-                    WITH SECURITY_ENFORCED
-                    ORDER BY Display_Order__c NULLS LAST
-            ];
+            List<String> registrantTypes = new List<String>{
+                    'Registrant', 'Registrant and Guest'
+            };
+            additionalQuestions = SummitEventsReadShared.getAdditionalQuestionsByEventId(eventInformation.eventId, registrantTypes);
 
             //Get namespace if packaged
             String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
-            eventRegistration = new Summit_Events_Registration__c();
+            eventRegistration = SummitEventsReadShared.getRegistrationById(eventInformation.registrationId);
 
             // eventInformation is an object gathered from the encrypted client cookie that contains a registration id without which thou shall not pass
             if (String.isNotBlank(eventInformation.registrationId)) {
-
-                // Apply the registration id from the cookie to a new registration object
-                eventRegistration.Id = eventInformation.registrationId;
 
                 mapToList = new List<String>();
                 lookUpDisplayValue = new Map<String, String>();
@@ -127,7 +96,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 mapToList.add(namespace + 'Event__c');
                 mapToList.add(namespace + 'Event_Instance__c');
 
-                for (Summit_Events_Question__c question : additionalQuestions) {
+                for (Summit_Events_Question__c question : additionalQuestions.values()) {
                     //Build each question item and add to question item list to inform creation of visualforce form.
                     questionItem quest = new questionItem();
                     quest.setupFail = false;
@@ -324,7 +293,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 String regQuery = '';
                 if (mapToList.size() > 0) {
                     regQuery += 'SELECT ';
-                    regQuery += String.join(mapToList, ',');
+                    regQuery += String.escapeSingleQuotes(String.join(mapToList, ','));
                     regQuery = regQuery.trim();
                     regQuery = regQuery.removeEndIgnoreCase(',');
                     regQuery += ' FROM Summit_Events_Registration__c ';
@@ -332,8 +301,9 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                 }
 
                 if (String.isNotBlank(regQuery)) {
+                    doCRUD CRUDToDo = new doCRUD();
                     try {
-                        eventRegistration = Database.query(regQuery);
+                        eventRegistration = CRUDToDo.getRegistrationQuery(regQuery);
                     } catch (Exception e) {
                         ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, e.getMessage()));
                     }
@@ -598,6 +568,11 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         public void saveRegistration(Summit_Events_Registration__c eventRegistration, Id incomingId) {
             eventRegistration.Id = incomingId;
             update eventRegistration;
+        }
+
+        public Summit_Events_Registration__c getRegistrationQuery(String regQuery) {
+            Summit_Events_Registration__c reg = Database.query(regQuery);
+            return reg;
         }
 
     }

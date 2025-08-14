@@ -4,6 +4,12 @@
 // Created by Thaddaeus Dahlberg on 10/30/2018.
 
 public with sharing class SummitEventsHostAssignmentExtension {
+
+    public SummitEventsHostAssignmentExtension() {
+    }
+
+/* DEPRECATED 8/12/2025
+
     public Summit_Events_Appointments__c SEApt;
     public Id instanceID { get; set; }
     public Id hostId { get; set; }
@@ -80,5 +86,6 @@ public with sharing class SummitEventsHostAssignmentExtension {
         }
         return options;
     }
+*/
 
 }

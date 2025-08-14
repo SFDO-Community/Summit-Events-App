@@ -32,44 +32,20 @@ public with sharing class SummitEventsConfirmationController {
         eventIsClosed = false;
         eventInformation = SummitEventsShared.getSummitEventsInfo();
         if (!String.isEmpty(eventInformation.eventId)) {
-            eventPage = [
-                    SELECT Event_Confirmation_Title__c, Event_Name__c, Template__c, Event_Confirmation_Description__c, Event_Footer__c,
-                            Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Confirmation_Registration__c, Event_Full_Text__c,
-                            Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Hand_Raise_Action__c, Account__r.Name, Audience__c,
-                            Filter_Category__c, Event_Sponsor__c, Event_Fee_Label__c, Event_Fee_Submit_List_Label__c, Event_Fee_Total_Label__c,
-                            Event_Fee__c, Event_Fee_Allocation__c, Event_Fee_Additional__c, Event_Fees_Received_Label__c, Event_Payment_Due_Description__c,
-                            Event_Payment_Due_Heading_Label__c, Event_Payment_Received_Heading_Label__c, Event_Payment_Received_Description__c,
-                            Event_Status__c
-                    FROM Summit_Events__c
-                    WHERE Id = :eventInformation.eventId
-                    WITH SECURITY_ENFORCED
-            ];
+            eventPage = SummitEventsReadShared.getEventById(eventInformation.eventId);
 
             if (eventPage != null) {
 
                 templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
 
                 if (String.isNotBlank(eventInformation.instanceId)) {
-                    eventInstance = [
-                            SELECT Instance_Title__c, Event__r.Event_Name__c, Instance_Time_Zone__c, Instance_Start_Time__c, Instance_End_Time__c,
-                                    Instance_Start_Date__c, Instance_End_Date__c, Current_Available_Capacity__c, Active_Status__c, Registration_Close_Date__c, Registration_Close_Time__c
-                            FROM Summit_Events_Instance__c
-                            WHERE Id = :eventInformation.instanceId
-                            LIMIT 1
-                    ];
-
+                    eventInstance = SummitEventsReadShared.getInstanceById(eventInformation.instanceId);
                     eventIsClosed = SummitEventsShared.isEventClosed(eventInstance, eventPage.Event_Status__c);
-
                     formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);
                 }
 
                 if (String.isNotBlank(eventInformation.registrationId)) {
-                    eventRegistration = [
-                            SELECT Id, Status__c
-                            FROM Summit_Events_Registration__c
-                            WHERE Id = :eventInformation.registrationId
-                    ];
-
+                    eventRegistration = SummitEventsReadShared.getRegistrationById(eventInformation.registrationId);
                 }
 
                 gatherPaymentInformation();
@@ -93,12 +69,7 @@ public with sharing class SummitEventsConfirmationController {
         if (!eventIsClosed && !eventInformation.valid.equalsIgnoreCase('false')) {
             if (String.isNotBlank(eventInformation.registrationId)) {
 
-                Summit_Events_Registration__c eventRegistration = [
-                        SELECT Id, Status__c, Event_Name__c, Event_Instance_Title__c, Guest_JSON__c, Event__r.Payment_Gateway__c, Event_Instance_Date_Time_Formatted__c
-                        FROM Summit_Events_Registration__c
-                        WHERE Id = :eventInformation.registrationId
-                        WITH SECURITY_ENFORCED
-                ];
+                Summit_Events_Registration__c eventRegistration = SummitEventsReadShared.getRegistrationById(eventInformation.registrationId);
 
                 //Make sure there is returned registration information
                 if (eventRegistration != null) {
@@ -111,14 +82,10 @@ public with sharing class SummitEventsConfirmationController {
                         List<Summit_Events_Registration__c> guestRegistrations = new List<Summit_Events_Registration__c>();
 
                         //Get all questions defined for the event that are for guests
-                        Map<Id, Summit_Events_Question__c> availableQuestions = new Map<Id, Summit_Events_Question__c>([
-                                SELECT Id, Map_to_Field__c, Question_Field_Type__c, Display_Order__c, Question_Label__c
-                                FROM Summit_Events_Question__c
-                                WHERE Event__c = :eventInformation.eventId
-                                AND (Registrant_Type__c = 'Guest' OR Registrant_Type__c = 'Registrant and Guest')
-                                WITH SECURITY_ENFORCED
-                                ORDER BY Display_Order__c NULLS LAST
-                        ]);
+                        List<String> registrantTypes = new List<String>{
+                                'Guest', 'Registrant and Guest'
+                        };
+                        Map<Id, Summit_Events_Question__c> availableQuestions = SummitEventsReadShared.getAdditionalQuestionsByEventId(eventInformation.eventId, registrantTypes);
 
                         List<questionData> guestAnswers = (List<questionData>) JSON.deserialize(eventRegistration.Guest_JSON__c, List<questionData>.class);
 
@@ -282,19 +249,9 @@ public with sharing class SummitEventsConfirmationController {
         eventOnlyPaymentAmount = 0;
         totalPaymentAmount = 0;
 
-        eventFees = [
-                SELECT Name, Event_Fee__c, Event_Fee_Allocation__c, Description__c, Event_Fee_Type__c, Summit_Events__c, Event_Appointment_Type__c,
-                        Event_Appointment_Type__r.Title__c, Event_Fee_Allocation__r.Name
-                FROM Summit_Events_Fee__c
-                WHERE Event_Registration__c = :eventInformation.registrationId
-                WITH SECURITY_ENFORCED
-        ];
+        eventFees = SummitEventsReadShared.getFeesByRegistrationId(eventInformation.registrationId);
 
-        List<Summit_Events_Payment__c> payments = [
-                SELECT Id, Payment_Amount__c
-                FROM Summit_Events_Payment__c
-                WHERE Event_Registration__c = :eventInformation.registrationId
-        ];
+        List<Summit_Events_Payment__c> payments = SummitEventsReadShared.getPaymentsByRegistrationId(eventInformation.registrationId);
 
         for (Summit_Events_Fee__c fee : eventFees) {
             if (fee.Event_Fee__c != null && fee.Event_Fee__c > 0) {
