@@ -643,42 +643,47 @@ public with sharing class SummitEventsShared {
                     dependentField = d;
                 }
             }
+			Schema.DescribeFieldResult controllingField = dependentField.getController().getDescribe();
+			List<Schema.PicklistEntry> controlEntries = (controllingField.getType() == Schema.DisplayType.Boolean
+				? null
+				: controllingField.getPicklistValues()
+			);
+			String base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+			Map<Object, Map<String, String>> dependentPicklistMap = new Map<Object, Map<String, String>>();
 
             //2nd get the dependent PL values mapped to the target parent PL's value
             if (-1 != parentValueIndex && null != dependentField) {
-                Schema.PicklistEntry[] plValues = dependentField.getPicklistValues();
-                for (PicklistEntry plv : plValues) {
-                    String jsonstr = JSON.serialize(plv);
-                    Map<String, String> jMap = (Map<String, String>) JSON.deserialize(jsonstr, Map<String, String>.class);
-                    String validFor = jMap.get('validFor');
-                    String plvalue = jMap.get('value');
-                    String plId = jMap.get('id');
-                    if (null != validFor && !''.equals(validFor.trim()) && isDependentValue(parentValueIndex, validFor)) {
-                        dependentItems.put(plvalue, plvalue);
-                    }
-                }
+				for (Schema.PicklistEntry entry : dependentField.getPicklistValues()) {
+					if (entry.isActive()) {
+						List<String> base64chars = String.valueOf(((Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(entry))).get('validFor')).split('');
+
+						for (Integer index = 0; index < (controlEntries != null ? controlEntries.size() : 2); index++) {
+							Object controlValue = (controlEntries == null
+								? (Object) (index == 1)
+								: (Object) (controlEntries[index].isActive() ? controlEntries[index].getValue() : null));
+							Integer bitIndex = index / 6;
+							if (bitIndex > base64chars.size() - 1) {
+								break;
+							}
+							Integer bitShift = 5 - Math.mod(index, 6);
+
+							if (controlValue == null || (base64.indexOf(base64chars[bitIndex]) & (1 << bitShift)) == 0) {
+								continue;
+							}
+
+							if (!dependentPicklistMap.containsKey(controlValue)) {
+								dependentPicklistMap.put(controlValue, new Map<String, String>());
+							}
+							dependentPicklistMap.get(controlValue).put(entry.getValue(), entry.getLabel());
+						}
+					}
+				}
+				if (dependentPicklistMap.get(parentValue) != null) {
+					dependentItems = dependentPicklistMap.get(parentValue);
+				}
             }
         }
         return dependentItems;
-    }
-
-    private static Boolean isDependentValue(Integer index, String validFor) {
-        String decoded = EncodingUtil.convertToHex(EncodingUtil.base64Decode(validFor));
-        Integer bits = hexToInt(decoded);
-        return ((bits & (128 >> Math.mod(index, 8))) != 0);
-    }
-
-    private static Integer hexToInt(String hex) {
-
-        Map<String, Integer> hMap = new Map<String, Integer>{
-                '0' => 0, '1' => 1, '2' => 2, '3' => 3, '4' => 4, '5' => 5, '6' => 6, '7' => 7, '8' => 8, '9' => 9, 'A' => 10, 'B' => 11, 'C' => 12, 'D' => 13, 'E' => 14, 'F' => 15, 'a' => 10, 'b' => 11, 'c' => 12, 'd' => 13, 'e' => 14, 'f' => 15
-        };
-
-        Integer retVal = 0;
-        for (Integer i = 0; i < hex.length(); i += 2) {
-            retVal += (hMap.get(hex.substring(i, i + 1)) * 16) + (hMap.get(hex.substring(i + 1, i + 2)));
-        }
-        return retVal;
     }
 
     public static String getCookieKey() {
