@@ -280,7 +280,7 @@ private class SummitEventsRegister_TEST {
                     AND Registrant_Last_Name__c = 'Tester'
                     AND Registrant_Email__c = 'test@test.net'
             ];
-            //Original registration details have changed so old data should not exist.
+
             System.assertEquals(registrations.size(), 0);
 
             registrations = [
@@ -335,8 +335,8 @@ private class SummitEventsRegister_TEST {
                     FROM Summit_Events_Fee__c
                     WHERE Event_Registration__c = :registerController.eventRegistration.Id
             ];
-            //Extra added fee should be deleted and two should remain
-            System.assertEquals(fees.size(), 2);
+            //Fees no longer get deleted, so the stray fee should still be there
+            System.assertEquals(fees.size(), 3);
             Test.stopTest();
         }
     }

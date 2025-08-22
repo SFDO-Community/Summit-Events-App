@@ -1,9 +1,9 @@
-/**
- * Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas on 2/1/2023.
- */
+// Copyright (c) 2020, Salesforce.org. All rights reserved.
+// Use of this source code is governed by a BSD 3-Clause.
+// License can be found found in the LICENSE file in this repository.
+// Created by Thaddaeus Dahlberg on 2/1/2023.
 
-
-public with sharing class SummitEventsAppointmentTriggerHandler {
+public without sharing class SummitEventsAppointmentTriggerHandler {
 
     public static void generateItineraries(List<SObject> newList, List<SObject> oldList) {
 
@@ -24,43 +24,37 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
         }
 
         if (uniqueRegistrationIds.size() > 0) {
-
+            doCRUD CRUDtoDo = new doCRUD();
             String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
             //Get the all query fields from global picklist
             String appointmentFields = getAppointmentQueryFields();
 
-            try {
-                String query = 'SELECT Id, Name, ';
-                query += namespace + 'Appointment_Time__c,';
-                query += namespace + 'Event_Registration__r.Id, ';
-                query += namespace + 'Event_Registration__r.' + namespace + 'Event_Name__c, ';
-                query += namespace + 'Appointment_Status__c, ';
-                query += namespace + 'Chosen_State__c,  ';
-                query += namespace + 'Do_Not_Show_Time__c, ';
-                query += namespace + 'Sort_Order__c, ';
-                query += namespace + 'Event_Appointment_Type__r.' + namespace + 'Summit_Events__c, ';
-                query += namespace + 'Event_Registration__r.' + namespace + 'Event__c,';
-                //TODO: Maybe surface up host information on appointment record with formula
-                query += namespace + 'Event_Host__c, ';
-                query += namespace + 'Event_Host__r.' + namespace + 'Assigned__c, ';
-                query += namespace + 'Event_Host__r.' + namespace + 'Time__c, ';
-                query += namespace + 'Event_Host__r.' + namespace + 'Course_Name__c, ';
-                query += namespace + 'Event_Host__r.RecordType.Name, ';
-                query += appointmentFields + ' ';
-                query += 'FROM ' + namespace + 'Summit_Events_Appointments__c ';
-                query += 'WHERE ' + namespace + 'Event_Registration__r.Id IN :uniqueRegistrationIds ';
-                //TODO: Order by date before time
-                query += 'ORDER BY ' + namespace + 'Appointment_Time__c ASC, ';
-                query += namespace + 'Event_Host__r.' + namespace + 'Time__c ASC, ';
-                query += namespace + 'Sort_Order__c, ';
-                query += namespace + 'Appointment_Title__c ASC ';
-                allAppointments = Database.query(query);
-            } catch (DmlException dmlExc) {
-                System.debug(dmlExc.getMessage());
-            } catch (Exception e) {
-                System.debug(e.getMessage());
-            }
+            String query = 'SELECT Id, Name, ';
+            query += namespace + 'Appointment_Time__c,';
+            query += namespace + 'Event_Registration__r.Id, ';
+            query += namespace + 'Event_Registration__r.' + namespace + 'Event_Name__c, ';
+            query += namespace + 'Appointment_Status__c, ';
+            query += namespace + 'Chosen_State__c,  ';
+            query += namespace + 'Do_Not_Show_Time__c, ';
+            query += namespace + 'Sort_Order__c, ';
+            query += namespace + 'Event_Appointment_Type__r.' + namespace + 'Summit_Events__c, ';
+            query += namespace + 'Event_Registration__r.' + namespace + 'Event__c,';
+            //TODO: Maybe surface up host information on appointment record with formula
+            query += namespace + 'Event_Host__c, ';
+            query += namespace + 'Event_Host__r.' + namespace + 'Assigned__c, ';
+            query += namespace + 'Event_Host__r.' + namespace + 'Time__c, ';
+            query += namespace + 'Event_Host__r.' + namespace + 'Course_Name__c, ';
+            query += namespace + 'Event_Host__r.RecordType.Name, ';
+            query += appointmentFields + ' ';
+            query += 'FROM ' + namespace + 'Summit_Events_Appointments__c ';
+            query += 'WHERE ' + namespace + 'Event_Registration__r.Id IN :uniqueRegistrationIds ';
+            //TODO: Order by date before time
+            query += 'ORDER BY ' + namespace + 'Appointment_Time__c ASC, ';
+            query += namespace + 'Event_Host__r.' + namespace + 'Time__c ASC, ';
+            query += namespace + 'Sort_Order__c, ';
+            query += namespace + 'Appointment_Title__c ASC ';
+            allAppointments = CRUDtoDo.getAppointmentByQueryString(query, uniqueRegistrationIds);
 
             if (allAppointments.size() > 0) {
 
@@ -73,13 +67,7 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
 
                 Map<Id, Summit_Events__c> eventItinerarySetup = new Map<Id, Summit_Events__c>();
                 if (eventIds.size() > 0) {
-                    eventItinerarySetup = new Map<Id, Summit_Events__c>([
-                            SELECT Id, Itinerary_Item_1__c, Itinerary_Item_2__c, Itinerary_Item_3__c, Itinerary_Item_4__c, Itinerary_Item_5__c,
-                                    Itinerary_Label_1__c, Itinerary_Label_2__c, Itinerary_Label_3__c, Itinerary_Label_4__c, Itinerary_Label_5__c,
-                                    Itinerary_Display_Options__c
-                            FROM Summit_Events__c
-                            WHERE Id IN :eventIds
-                    ]);
+                    eventItinerarySetup = SummitEventsReadShared.getEventsByIds(new List<Id>(eventIds));
                 }
 
                 for (Summit_Events_Appointments__c appointment : allAppointments) {
@@ -185,7 +173,6 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
                 }
 
                 if (registrationsWithItineraries.size() > 0) {
-                    doCRUD CRUDtoDo = new doCRUD();
                     CRUDtoDo.updateRegistration(registrationsWithItineraries);
                 }
 
@@ -205,7 +192,7 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
 
         String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
-        List<Schema.PicklistEntry> PicklistValues = Schema.getGlobalDescribe().get(namespace + 'Summit_Events__c').getDescribe().fields.getMap().get(namespace + 'Itinerary_Item_1__c').getDescribe().getPicklistValues();
+        List<Schema.PicklistEntry> picklistValues = Schema.SObjectType.Summit_Events__c.fields.getMap().get(namespace + 'Itinerary_Item_1__c').getDescribe().getPicklistValues();
 
         //Get the fields off of the appointment object ot make sure we don't add fields that don't exist
         Set<String> appointmentObjectFields = Schema.SObjectType.Summit_Events_Appointments__c.fields.getMap().keySet();
@@ -217,7 +204,7 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
         //Keep track of already added fields so as not to corrupt the query with a duplicate
         Set<String> fieldsFound = new Set<String>();
 
-        for (Schema.PicklistEntry PicklistValue : PicklistValues) {
+        for (Schema.PicklistEntry PicklistValue : picklistValues) {
 
             //Make sure the picklist value is indeed a field ending with __c
             if (PicklistValue.getValue().endsWithIgnoreCase('__c')) {
@@ -251,6 +238,19 @@ public with sharing class SummitEventsAppointmentTriggerHandler {
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
             }
+        }
+
+        private List<Summit_Events_Appointments__c> getAppointmentByQueryString(String query, Set<Id> registrationIds) {
+            List<Summit_Events_Appointments__c> appointments = new List<Summit_Events_Appointments__c>();
+            //convert set to list
+            List<Id> uniqueRegistrationIds = new List<Id>(registrationIds);
+            try {
+                appointments = Database.query(query);
+                System.debug('Found ' + appointments.size() + ' appointments');
+            } catch (Exception e) {
+                System.debug(e.getMessage());
+            }
+            return appointments;
         }
 
     }

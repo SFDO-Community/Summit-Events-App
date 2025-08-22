@@ -3,7 +3,7 @@
 // License can be found found in the LICENSE file in this repository.
 // Created by Thaddaeus Dahlberg on 2/27/2019.
 
-public with sharing class SummitEventsContactMatching {
+public without sharing class SummitEventsContactMatching {
 
     @TestVisible
     private static Map<String, List<SObject>> mappedMatchingMethods { get; set; }

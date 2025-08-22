@@ -5,8 +5,9 @@ license that can be found in the LICENSE file.
 Created by Thaddaeus Dahlberg on 10/30/2018.
 -->
 
-<apex:page id="SummitEventsHostAssignment" showHeader="false" sideBar="false" standardController="Summit_Events_Appointments__c" extensions="SummitEventsHostAssignmentExtension">
+<apex:page id="SummitEventsHostAssignment" showHeader="false" sideBar="false">
 
+<!-- DEPRECATED: This page is no longer used.
     <script>
         function CloseAndRefresh() {
             window.opener.location.href = "/{!Summit_Events_Appointments__c.Id}";
@@ -71,5 +72,5 @@ Created by Thaddaeus Dahlberg on 10/30/2018.
                 </apex:outputPanel>
             </apex:pageBlockSection>
         </apex:pageBlock>
-    </apex:form>
+    </apex:form>-->
 </apex:page>

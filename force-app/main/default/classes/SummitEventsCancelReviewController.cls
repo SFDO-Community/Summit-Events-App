@@ -32,41 +32,14 @@ public with sharing class SummitEventsCancelReviewController {
                 }
 
                 if (String.isNotBlank(eventInformation.registrationId)) {
-                    eventRegistration = [
-                            SELECT Id, Status__c, Name, Event_Instance__c, Event_Name__c, Event_Instance__r.Instance_Title__c, Event__c
-                            FROM Summit_Events_Registration__c
-                            WHERE Id = :eventInformation.registrationId
-                            WITH SECURITY_ENFORCED
-                    ];
-
+                    eventRegistration = SummitEventsReadShared.getRegistrationById(eventInformation.registrationId);
                     if (eventRegistration != null) {
 
-                        appointments = [
-                                SELECT Id, Appointment_Title__c, Appointment_Category__c, Appointment_Type__c
-                                FROM Summit_Events_Appointments__c
-                                WHERE Event_Registration__c = :eventParameter
-                                WITH SECURITY_ENFORCED
-                        ];
+                        appointments = SummitEventsReadShared.getAppointmentsByRegistrationId(eventRegistration.Id);
 
-                        eventInstance = [
-                                SELECT Id, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c,
-                                        Registration_Close_Date__c, Current_Available_Capacity__c, Active_Status__c, Registration_Close_Time__c
-                                FROM Summit_Events_Instance__c W
-                                WHERE Id = :eventRegistration.Event_Instance__c
-                                WITH SECURITY_ENFORCED
-                        ];
-
-                        eventPage = [
-                                SELECT Id, Event_Name__c, Event_description__c, Event_Footer__c, Event_Cancel_Review_Title__c, Event_Cancel_Review_Description__c,
-                                Event_Cancelled_Notification_Text__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Cancel_Registration__c,
-                                Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c, Event_Full_Text__c, Template__c, Event_Status__c
-                                FROM Summit_Events__c
-                                WHERE Id = :eventRegistration.Event__c
-                                WITH SECURITY_ENFORCED
-                        ];
-
+                        eventInstance = SummitEventsReadShared.getInstanceById(eventRegistration.Event_Instance__c);
+                        eventPage = SummitEventsReadShared.getEventById(eventInstance.Event__c);
                         templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
-
                         eventIsClosed = SummitEventsShared.isEventClosed(eventInstance, eventPage.Event_Status__c);
 
                         if (eventInstance != null) {
