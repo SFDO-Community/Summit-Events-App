@@ -1,7 +1,12 @@
 {
   "orgName": "Summit Events Dev",
   "edition": "Developer",
-  "features": ["Sites"],
+  "features": [
+    "Communities",
+    "Sites",
+    "ForceComPlatform",
+    "EinsteinGPTForDevelopers"
+  ],
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true
@@ -20,6 +25,12 @@
     },
     "languageSettings": {
       "enableTranslationWorkbench": true
+    },
+    "experienceBundleSettings": {
+      "enableExperienceBundleMetadata": true
+    },
+    "communitiesSettings": {
+      "enableNetworksEnabled": true
     }
   }
 }

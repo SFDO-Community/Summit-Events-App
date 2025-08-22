@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>New_Person_Account_Created__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>This is checked when while registering for an event on the Web a client&apos;s person account was not found and the event app created one for them.</description>
+    <inlineHelpText>This is checked when while registering for an event on the Web a client&apos;s person account was not found and the event app created one for them.</inlineHelpText>
+    <label>New Person Account Created</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

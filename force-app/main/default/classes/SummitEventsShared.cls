@@ -563,6 +563,12 @@ public with sharing class SummitEventsShared {
         return pickList;
     }
 
+    // Test to see if person accounts are enabled.
+    public static Boolean personAccountsEnabled()
+    {
+        return Schema.SObjectType.Account.fields.getMap().containsKey( 'isPersonAccount' );
+    }
+
     //Method to test object and field availability for current user (Guest user)
     public static String checkFieldGuestAccess(String objectApiName, String fieldName, String requiredFieldType, Boolean testCreatable, String qualifierLabel) {
         String returnError = '';
