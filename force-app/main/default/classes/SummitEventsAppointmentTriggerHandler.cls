@@ -246,7 +246,6 @@ public without sharing class SummitEventsAppointmentTriggerHandler {
             List<Id> uniqueRegistrationIds = new List<Id>(registrationIds);
             try {
                 appointments = Database.query(query);
-                System.debug('Found ' + appointments.size() + ' appointments');
             } catch (Exception e) {
                 System.debug(e.getMessage());
             }
