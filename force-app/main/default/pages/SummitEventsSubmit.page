@@ -51,8 +51,6 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </nav>
                     </div>
 
-                    <apex:messages layout="list" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-notify slds-notify_toast slds-theme_warning"/>
-
                     <apex:outputPanel rendered="{!eventIsClosed}" layout="block" styleClass="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-p-vertical_xx-small regularLists">
                         <h2 class="slds-text-heading_large slds-p-vertical_xx-small">
                             <apex:outputText value="{!eventPage.Event_Submit_Title__c}"/>
