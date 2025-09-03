@@ -486,28 +486,17 @@ public with sharing class SummitEventsRegisterController {
 
         eventRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience, eventFeeList);
 
+        System.debug('Saved Registration id: ' + eventRegistration.Id);
         String dayOfWeek = SummitEventsShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
+
         //Insert pre-chosen appointments for appointments page
-        List<Summit_Events_Appointment_Type__c> autoAddAppt = [
-                SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Registrant_Input__c, Custom_Picklist__c, Appointment_Limits__c,
-                        Chosen_State__c, Sort_Order__c, Auto_Confirm_Appointment__c, Auto_add_building__c, Auto_Add_Time__c, Do_Not_Show_Time__c
-                FROM Summit_Events_Appointment_Type__c
-                WHERE Summit_Events__c = :eventInformation.eventId
-                AND (Chosen_State__c = 'Added' OR Chosen_State__c = 'Added and Required' OR Chosen_State__c = 'Added but not shown')
-                AND Id NOT IN (SELECT Event_Appointment_Type__c FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :eventInformation.registrationId)
-                AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL OR Restrict_To_Instance_Title__r.Instance_Title__c = '')
-                AND (Date_Available_Start__c <= :evtInstance.Instance_Start_Date__c OR Date_Available_Start__c = NULL)
-                AND (Date_Available_End__c >= :evtInstance.Instance_End_Date__c OR Date_Available_End__c = NULL)
-                AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
-                AND (Appointment_Type_Status__c = 'Active' OR Appointment_Type_Status__c = NULL)
-                ORDER BY Sort_Order__c ASC NULLS LAST
-        ];
+        List<Summit_Events_Appointment_Type__c> autoAddAppt = SummitEventsReadShared.getAutoAddAppointments(eventRegistration.Id, eventInformation.eventId, evtInstance.Instance_Title__c, evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c, dayOfWeek);
 
         List<Summit_Events_Appointments__c> appointmentsToAdd = new List<Summit_Events_Appointments__c>();
         for (Summit_Events_Appointment_Type__c appt : autoAddAppt) {
             Summit_Events_Appointments__c addAppt = new Summit_Events_Appointments__c();
             addAppt.Event_Appointment_Type__c = appt.Id;
-            addAppt.Event_Registration__c = eventInformation.registrationId;
+            addAppt.Event_Registration__c = eventRegistration.Id;
             addAppt.Appointment_Title__c = appt.Title__c;
             //If appointment is not shown and auto confirmed confirm it!
             if (appt.Auto_Confirm_Appointment__c) {
@@ -532,7 +521,9 @@ public with sharing class SummitEventsRegisterController {
             addAppt.Do_Not_Show_Time__c = appt.Do_Not_Show_Time__c;
             appointmentsToAdd.add(addAppt);
         }
+        System.debug('Appointments to add: ' + JSON.serializePretty(appointmentsToAdd));
         if (appointmentsToAdd.size() > 0) {
+            System.debug('Inserting ' + appointmentsToAdd.size() + ' appointments');
             rCRUD.insertAppointments(appointmentsToAdd);
         }
 
@@ -597,18 +588,11 @@ public with sharing class SummitEventsRegisterController {
             return eventRegistration;
         }
 
-        public void deleteFees(List<Summit_Events_Fee__c> deletableFees) {
-            try {
-                delete deletableFees;
-            } catch (Exception ex) {
-                System.debug(ex.getMessage());
-            }
-        }
-
         public void insertAppointments(List<Summit_Events_Appointments__c> appointments) {
             try {
                 insert appointments;
             } catch (Exception ex) {
+                System.debug(ex.getMessage());
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
         }

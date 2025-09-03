@@ -72,7 +72,7 @@ tasks:
         }
 
   deploy_guest_permission_set:
-    description: Give System Admins Event Admin Permission Set
+    description: Give Guest User Registrant Permission Set
     class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
     options:
       namespace_inject: $project_config.project__package__namespace
@@ -91,10 +91,8 @@ tasks:
         List<PermissionSetAssignment> permissionSetList = new List<PermissionSetAssignment>();
         
         for (Site site : sites) {
-            if (site.GuestUserId == null) {
-                for (permissionSet ps : eventPermissionSets) {
-                    PermissionSetList.add(new PermissionSetAssignment(PermissionSetId = ps.Id, AssigneeId = site.GuestUserId));
-                }
+            for (permissionSet ps : eventPermissionSets) {
+                PermissionSetList.add(new PermissionSetAssignment(PermissionSetId = ps.Id, AssigneeId = site.GuestUserId));
             }
         }
         
@@ -134,30 +132,26 @@ flows:
   config_qa:
     steps:
       3:
-        task: deploy_community
-      4:
         task: deploy_permission_set
+      4:
+        task: deploy_site_config
       5:
-        task: deploy_guest_permission_set
-      6:
-        task: deploy_guest_sharing_rules
-      7:
         task: deploy_site_settings
+      6:
+        task: deploy_guest_permission_set
       8:
         task: create_fake_school_data
 
   config_dev:
     steps:
       3:
-        task: deploy_community
-      4:
         task: deploy_permission_set
+      4:
+        task: deploy_site_config
       5:
-        task: deploy_guest_permission_set
-      6:
-        task: deploy_guest_sharing_rules
-      7:
         task: deploy_site_settings
+      6:
+        task: deploy_guest_permission_set
       8:
         task: create_fake_school_data
 
@@ -171,8 +165,6 @@ flows:
         task: deploy_site_settings
       6:
         task: deploy_guest_permission_set
-      7:
-        task: deploy_guest_sharing_rules
       8:
         task: create_fake_school_data
 
