@@ -224,11 +224,7 @@ public with sharing class SummitEventsConfirmationController {
     public PageReference checkForPayment() {
         String errorMessage = '';
         PageReference pageRef = null;
-        List<Summit_Events_Payment__c> payments = [
-                SELECT Id, Payment_Amount__c
-                FROM Summit_Events_Payment__c
-                WHERE Event_Registration__c = :eventInformation.registrationId
-        ];
+        List<Summit_Events_Payment__c> payments = SummitEventsReadShared.getPaymentsByRegistrationId(eventInformation.registrationId);
         if (payments.size() > 0) {
             paymentReceived = true;
         } else if (payments.size() == 0) {
