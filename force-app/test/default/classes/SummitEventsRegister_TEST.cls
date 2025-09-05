@@ -25,6 +25,7 @@ private class SummitEventsRegister_TEST {
             System.assert(registerController.getApplicantTypeDD().size() > 0);
             System.assert(registerController.getRelationshipDD().size() > 0);
             System.assert(registerController.getPronounDD().size() > 0);
+            System.assert(registerController.getAccessibilityDD().size() > 0);
             System.assertEquals(registerController.checkEventDetails(), null);
             registerController.eventRegistration.Registrant_First_Name__c = 'Test';
             registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
@@ -162,6 +163,35 @@ private class SummitEventsRegister_TEST {
             ];
             //There should be only one registration, the first one inserted as data. The second should have been restricted and not allowed through
             System.assertEquals(registrations.size(), 1);
+            Test.stopTest();
+        }
+    }
+
+
+    @IsTest static void testEventWithAutoAddAppointments() {
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events__c seaTestEvent = SummitEventsTestSharedDataFactory.getEventRecord(seaTestInstances[1].Event__c);
+        List<Summit_Events_Appointment_Type__c> testAppointmentTypes = SummitEventsTestSharedDataFactory.createAppointmentTypes(seaTestInstances[1].Event__c);
+        testAppointmentTypes[0].Chosen_State__c = 'Added but not shown';
+        testAppointmentTypes[1].Chosen_State__c = 'Added and Required';
+        testAppointmentTypes[2].Chosen_State__c = 'Added';
+        update testAppointmentTypes;
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEventsRegister;
+            Test.setCurrentPage(pageRef);
+            ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
+            SummitEventsRegisterController registerController = new SummitEventsRegisterController();
+            registerController.eventRegistration.Registrant_First_Name__c = 'Test';
+            registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
+            registerController.eventRegistration.Registrant_Email__c = 'test@test.net';
+            registerController.saveContactRegistration();
+            List<Summit_EVents_Appointments__c> appointments = [
+                    SELECT Id FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :registerController.eventRegistration.Id
+            ];
+            //There should be only one registration, the first one inserted as data. The second should have been restricted and not allowed through
+            System.assertEquals(appointments.size(), 3);
             Test.stopTest();
         }
     }
