@@ -1,4 +1,7 @@
 // DO NOT EDIT: This file is managed by Illuminated Cloud. Any external changes will be discarded.
 {
-  "extends": "../../../../.illuminatedCloud/lwc/tsconfig.json"
+  "extends": [
+    // If a file named 'tsconfig.overrides.json' exists in the same directory, it will be added to this 'extends' list.
+    "../../../../.illuminatedCloud/lwc/tsconfig.json"
+  ]
 }

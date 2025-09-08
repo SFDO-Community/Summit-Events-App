@@ -9,8 +9,8 @@
       Phone: ${{fake.phone_number}}
       MailingStreet: ${{fake.street_address}}
       MailingCity: ${{fake.city}}
-      MailingState: ${{fake.state}}
-      MailingPostalCode: ${{fake.postcode}}
+      MailingState: ${{fake.stateAbbr}}
+      MailingPostalCode: ${{fake.postCodeInState}}
       MailingCountry: ${{fake.country}}
   friends:
     - object: summit_events_Registration__c
