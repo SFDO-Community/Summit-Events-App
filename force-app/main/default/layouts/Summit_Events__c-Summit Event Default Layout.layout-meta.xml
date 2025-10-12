@@ -395,6 +395,10 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>Ask_Receive_Text_Messages__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>Private_Event__c</field>
             </layoutItems>
             <layoutItems>
