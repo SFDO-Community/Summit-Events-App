@@ -11,6 +11,9 @@ public class SummitEventsLinkHandler {
         'Event_Guest_Registration_Description__c'
     };
 
+    private static final String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+
+
     public static void run(Map<Id,SObject> newmap) {
         List<Id> idList = new List<Id>(newmap.keySet());
         newmap = null;
@@ -29,9 +32,10 @@ public class SummitEventsLinkHandler {
         for(Summit_Events__c se : seList) {
             SummitEventWrapper sew = new SummitEventWrapper();
             for (String s : RICHTEXT_FIELDS) {
-                String fieldVal = (String) se?.get(s);
+                String fieldName = namespace + s;
+                String fieldVal = (String) se?.get(fieldName);
                 if(!String.isBlank(fieldVal) && fieldVal.contains('<img src=')) {
-                    sew.fieldsWithLinks.add(s);
+                    sew.fieldsWithLinks.add(fieldName);
                 }
             }
             if(!sew.fieldsWithLinks.isEmpty()) {
@@ -217,15 +221,19 @@ public class SummitEventsLinkHandler {
      * updates to the Summit_Events__c object's RTFs, all is required is
      * to add or delete members from the global RICHTEXT_FIELDS set above
      */
+    /**
+     * Helper method to generate query dynamically. As such, for
+     * updates to the Summit_Events__c object's RTFs, all is required is
+     * to add or delete members from the global RICHTEXT_FIELDS set above
+     */
     private static String generateQuery() {
-        List<String> fieldList = new List<String>(RICHTEXT_FIELDS);
-        String fullQuery = 'SELECT ' + fieldList.remove(0);
-        for(Integer i = fieldList.size() - 1; i >= 0; i--) {
-            fullQuery += ', ' + fieldList.remove(i);
+	    List<String> fields = new List<String>();
+        for(String f : RICHTEXT_FIELDS) {
+            fields.add(namespace + f);
         }
-        fullQuery += ' FROM Summit_Events__c WHERE Id in :queryIds';
-        return fullQuery;
-    }
+	    String fieldList = String.join(fields, ', ');
+	    return 'SELECT ' + fieldList + ' FROM ' + namespace + 'Summit_Events__c WHERE Id IN :queryIds';
+	}
 
     /**
      * Helper method to generate a set of all URLs found in RTFs
