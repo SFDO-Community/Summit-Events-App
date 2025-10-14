@@ -12,7 +12,7 @@ public class SummitEventsLinkHandler {
     };
 
     public static void run(Map<Id,SObject> newmap) {
-        List<Id> idList = newmap.keySet();
+        List<Id> idList = new List<Id>(newmap.keySet());
         newmap = null;
         replaceLinks(idList);
     }
@@ -29,7 +29,7 @@ public class SummitEventsLinkHandler {
         for(Summit_Events__c se : seList) {
             SummitEventWrapper sew = new SummitEventWrapper();
             for (String s : RICHTEXT_FIELDS) {
-                String fieldVal = se?.get(s);
+                String fieldVal = (String) se?.get(s);
                 if(!String.isBlank(fieldVal) && fieldVal.contains('<img src=')) {
                     sew.fieldsWithLinks.add(s);
                 }
@@ -45,39 +45,6 @@ public class SummitEventsLinkHandler {
          * Step 2: scan fields; capture indices and URLs
          */
 
-        /*for(SummitEventWrapper sew : sewList) {
-            Map<String,List<SummitFieldItem>> tempMap = new Map<String,List<SummitFieldItem>>();
-            for(String s : sew.fieldsWithLinks) {
-                Integer offset = 0;
-                List<SummitFieldItem> itemList = new List<SummitFieldItem>();
-                String rtf = sew.event.get(s);
-                String url;
-                **
-                 * What follows is dirty and complex string surgery with
-                 * oven mitts; could potentially be refactored to use Patterns
-                 * and Matchers, but native Regex tools are insufficient
-                 * on their own for index-based logic and Regex has significant
-                 * overhead in time complexity.
-                 *
-                for (Integer i = rtf.indexOf('<img src='); i != -1; i = rtf.indexOf('<img src=')) {
-                    SummitFieldItem sfi = new SummitFieldItem();
-                    Integer length = rtf.length();
-                    i += 11; // magic number; offset of image tag
-                    offset += i;
-                    rtf = rtf.substring(i, length - 1);
-                    Integer nextQuote = rtf.indexOf('"');
-                    url = rtf.substring(0,nextQuote);
-                    sfi.url = url;
-                    sfi.start = offset;
-                    itemList.add(sfi);
-                }
-                if(!itemList.isEmpty()) {
-                    tempMap.put(s, itemList);
-                }
-            }
-            sew.fieldsToLinkMap = tempMap;
-        }*/
-
         for (SummitEventWrapper sew : sewList) {
             Map<String, List<SummitFieldItem>> tempMap = new Map<String, List<SummitFieldItem>>();
 
@@ -88,12 +55,16 @@ public class SummitEventsLinkHandler {
                 Integer searchStart = 0;
                 while (true) {
                     Integer imgStart = rtf.indexOf('<img src="', searchStart);
-                    if (imgStart == -1) break;  // no more images
-                
+                    if (imgStart == -1) {
+                        break;  // no more images
+                    }
+
                     Integer urlStart = imgStart + '<img src="'.length();
                     Integer urlEnd = rtf.indexOf('"', urlStart);
-                    if (urlEnd == -1) break;  // malformed tag, bail
-                
+                    if (urlEnd == -1) {
+                        break;  // malformed tag, bail
+                    }
+
                     String url = rtf.substring(urlStart, urlEnd);
                 
                     SummitFieldItem sfi = new SummitFieldItem();
@@ -117,30 +88,37 @@ public class SummitEventsLinkHandler {
          *         then set up some data we'll need
          */
 
-        Map<String,ContentVersion> urlToCVMap = new Map<String,ContentVersion>();
-        Map<String,ContentDistribution> urlToCDMap = new Map<String,ContentDistribution>();
         Set<String> urlSet = getURLs(sewList);
-        Set<ContentVersion> cvList = [
-            SELECT Id, 
-                   ContentUrl, 
-                   Name
-            FROM ContentVersion 
+
+        List<ContentVersion> cvList = [
+            SELECT Id,
+                   ContentUrl,
+                   Title
+            FROM ContentVersion
             WHERE ContentUrl IN :urlSet
         ];
-        Set<ContentDistribution> cdList = [
-            SELECT Id, 
-                   DistributionPublicUrl, 
-                   Name, 
+
+        Map<String, ContentVersion> urlToCVMap = new Map<String, ContentVersion>();
+        Set<Id> cvIds = new Set<Id>();
+
+        for (ContentVersion cv : cvList) {
+            urlToCVMap.put(cv.ContentUrl, cv);
+            cvIds.add(cv.Id);
+        }
+
+        List<ContentDistribution> cdList = [
+            SELECT Id,
+                   DistributionPublicUrl,
+                   Name,
                    ContentVersionId
-            FROM ContentDistribution 
-            WHERE DistributionPublicUrl IN :urlSet
+            FROM ContentDistribution
+            WHERE ContentVersionId IN :cvIds
         ];
 
-        for(ContentVersion cv : cvList) 
-            urlToCVMap.put(cv.ContentUrl,cv);
-        for(ContentDistribution cd : cdList)
-            urlToCDMap.put(cd.DistributionPublicUrl,cd);
-
+        Map<Id, ContentDistribution> cvIdToCDMap = new Map<Id, ContentDistribution>();
+        for (ContentDistribution cd : cdList) {
+            cvIdToCDMap.put(cd.ContentVersionId, cd);
+        }
 
         /**
          * Step 4: create ContentDistributions for every URL found which:
@@ -155,10 +133,10 @@ public class SummitEventsLinkHandler {
             for(String s : sew.fieldsToLinkMap.keySet()) {
                 for(SummitFieldItem sfi : sew.fieldsToLinkMap.get(s)) {
                     ContentVersion cv = urlToCVMap.get(sfi.url);
-                    ContentDistribution cd = urlToCDMap.get(sfi.url);
+                    ContentDistribution cd = cvIdToCDMap.get(cv.Id);
                     if(cd == null && cv != null) {
                         ContentDistribution newCd = new ContentDistribution();
-                        newCd.name = cv.name + '__SHARE';
+                        newCd.name = cv.Title + '__SHARE';
                         newCd.ContentVersionId = cv.Id;
                         cdInsertList.add(newCd);
                         //cvsWithoutCds.add(cv);
@@ -182,7 +160,7 @@ public class SummitEventsLinkHandler {
          */
 
         List<ContentDistribution> refreshed = [
-            SELECT Id,Name,DistributionPublicUrl
+            SELECT Id, Name, DistributionPublicUrl
             FROM ContentDistribution
             WHERE Id IN :cdInsertList 
         ];
@@ -198,11 +176,11 @@ public class SummitEventsLinkHandler {
          * which adds potential end-user friction as they must wait for records
          * to push to the database when saving via GUI. 
          */
-        for(SummitEventsWrapper sew : sewList) {
+        for(SummitEventWrapper sew : sewList) {
             Summit_Events__c se = new Summit_Events__c();
             se.Id = sew.event.Id;
             for(String field : sew.fieldsWithLinks) {
-                String rtf = sew.event.get(field);
+                String rtf = (String) sew.event.get(field);
                 for(SummitFieldItem sfi : sew.fieldsToLinkMap.get(field)) {
                     rtf = rtf.replace(sfi.url, cdIdMap.get(sfi.cd.Id).DistributionPublicUrl);
                 }
