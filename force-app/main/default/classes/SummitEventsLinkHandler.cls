@@ -7,8 +7,8 @@ public class SummitEventsLinkHandler {
         'Event_Appointment_Description__c', 'Event_Footer__c', 
         'Event_Submit_Description__c', 'Event_Cancel_Review_Description__c',
         'Event_Payment_Due_Description__c', 'Event_Payment_Received_Description__c',
-        'Event_Description__c', 'Event_Donation_Description__c', 
-        'Event_Guest_Registration_Description__c'
+        'Event_description__c', 'Donation_Description__c', 
+        'Guest_Registration_Description__c'
     };
 
     private static final String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
@@ -87,6 +87,38 @@ public class SummitEventsLinkHandler {
             sew.fieldsToLinkMap = tempMap;
         }
 
+
+        /*for(SummitEventWrapper sew : sewList) {
+            Map<String,List<SummitFieldItem>> tempMap = new Map<String,List<SummitFieldItem>>();
+            for(String s : sew.fieldsWithLinks) {
+                List<SummitFieldItem> itemList = new List<SummitFieldItem>();
+                String rtf = (String) sew.event.get(s);
+                String url;
+                **
+                 * What follows is dirty and complex string surgery with
+                 * oven mitts; could potentially be refactored to use Patterns
+                 * and Matchers, but native Regex tools are insufficient
+                 * on their own for index-based logic and Regex has significant
+                 * overhead in time complexity.
+                 *
+                for (Integer i = rtf.indexOf('<img src='); i != -1; i = rtf.indexOf('<img src=')) {
+                    SummitFieldItem sfi = new SummitFieldItem();
+                    Integer length = rtf.length();
+                    i += 11; // magic number; offset of image tag
+                    rtf = rtf.substring(i, length - 1);
+                    Integer nextQuote = rtf.indexOf('"');
+                    url = rtf.substring(0,nextQuote);
+                    sfi.url = url;
+                    itemList.add(sfi);
+                }
+                if(!itemList.isEmpty()) {
+                    tempMap.put(s, itemList);
+                }
+            }
+            sew.fieldsToLinkMap = tempMap;
+        }*/
+
+
         /**
          * Step 3: query ContentVersion and ContentDistribution against URLs,
          *         then set up some data we'll need
@@ -136,8 +168,8 @@ public class SummitEventsLinkHandler {
         for(SummitEventWrapper sew : sewList) {
             for(String s : sew.fieldsToLinkMap.keySet()) {
                 for(SummitFieldItem sfi : sew.fieldsToLinkMap.get(s)) {
-                    ContentVersion cv = urlToCVMap.get(sfi.url);
-                    ContentDistribution cd = cvIdToCDMap.get(cv.Id);
+                    ContentVersion cv = urlToCVMap?.get(sfi?.url);
+                    ContentDistribution cd = cvIdToCDMap?.get(cv?.Id);
                     if(cd == null && cv != null) {
                         ContentDistribution newCd = new ContentDistribution();
                         newCd.name = cv.Title + '__SHARE';
@@ -168,6 +200,8 @@ public class SummitEventsLinkHandler {
             FROM ContentDistribution
             WHERE Id IN :cdInsertList 
         ];
+        System.Assert.areNotEqual(null, refreshed, 'No ContentDistributions were created.');
+        System.Assert.areEqual(cdInsertList.size(), refreshed.size(), 'Not all ContentDistributions were created.');
         Map<Id,ContentDistribution> cdIdMap = new Map<Id,ContentDistribution>(refreshed);
 
         /**
