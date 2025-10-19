@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Opt_Into_Link_Automation__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Opt into automatic creation of public links backed by ContentVersion files found in Summit Events RTFs.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Opt into automatic creation of public links backed by ContentVersion files found in Summit Events RTFs.</inlineHelpText>
+    <label>Opt into link automation</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
