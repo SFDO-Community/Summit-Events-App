@@ -70,12 +70,37 @@ public class SummitEventsLinkHandler {
                     }
 
                     String url = rtf.substring(urlStart, urlEnd);
+                    Id cvId;
+
+                    Integer pathIdx = url.indexOf('/sfc/servlet.shepherd/version/download/');
+                    if (pathIdx != -1) {
+                        Integer idStart = pathIdx + '/sfc/servlet.shepherd/version/download/'.length();
+                    
+                        Integer i = idStart;
+                        while (i < url.length()) {
+                            String ch = url.substring(i, i + 1);
+                            if ('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'.indexOf(ch) == -1) {
+                                break;
+                            }
+                            i++;
+                        }
+                    
+                        String possibleId = url.substring(idStart, i);
+                    
+                        if (possibleId.startsWith('068') && (possibleId.length() == 15 || possibleId.length() == 18)) {
+                            try {
+                                cvId = (Id) possibleId;
+                            } catch (Exception e) {
+                                System.debug(e.getMessage());
+                            }
+                        }
+                    }
                 
                     SummitFieldItem sfi = new SummitFieldItem();
                     sfi.url = url;
+                    sfi.cvId = cvId;
                     itemList.add(sfi);
                 
-                    // advance search past this tag
                     searchStart = urlEnd + 1;
                 }
             
@@ -124,14 +149,14 @@ public class SummitEventsLinkHandler {
          *         then set up some data we'll need
          */
 
-        Set<String> urlSet = getURLs(sewList);
+        Set<Id> idSet = getIds(sewList);
 
         List<ContentVersion> cvList = [
             SELECT Id,
                    ContentUrl,
                    Title
             FROM ContentVersion
-            WHERE ContentUrl IN :urlSet
+            WHERE ContentUrl IN :idSet
         ];
 
         Map<String, ContentVersion> urlToCVMap = new Map<String, ContentVersion>();
@@ -217,9 +242,13 @@ public class SummitEventsLinkHandler {
         for(SummitEventWrapper sew : sewList) {
             Summit_Events__c se = new Summit_Events__c();
             se.Id = sew.event.Id;
+            System.debug('step 5: se.Id =' + se.Id);
             for(String field : sew.fieldsWithLinks) {
                 String rtf = (String) sew.event.get(field);
+                System.debug('step 5: rtf =' + rtf);
                 for(SummitFieldItem sfi : sew.fieldsToLinkMap.get(field)) {
+                    System.debug('step 5: sfi.url =' + sfi.url);
+                
                     rtf = rtf.replace(sfi.url, cdIdMap.get(sfi.cd.Id).DistributionPublicUrl);
                 }
                 se.put(field,rtf);
@@ -255,11 +284,6 @@ public class SummitEventsLinkHandler {
      * updates to the Summit_Events__c object's RTFs, all is required is
      * to add or delete members from the global RICHTEXT_FIELDS set above
      */
-    /**
-     * Helper method to generate query dynamically. As such, for
-     * updates to the Summit_Events__c object's RTFs, all is required is
-     * to add or delete members from the global RICHTEXT_FIELDS set above
-     */
     private static String generateQuery() {
 	    List<String> fields = new List<String>();
         for(String f : RICHTEXT_FIELDS) {
@@ -272,12 +296,12 @@ public class SummitEventsLinkHandler {
     /**
      * Helper method to generate a set of all URLs found in RTFs
      */
-    private static Set<String> getURLs(List<SummitEventWrapper> sewList) {
-        Set<String> returnSet = new Set<String>();
+    private static Set<Id> getIds(List<SummitEventWrapper> sewList) {
+        Set<Id> returnSet = new Set<Id>();
         for(SummitEventWrapper sew : sewList) {
             for(String s : sew.fieldsToLinkMap.keySet()) {
                 for(SummitFieldItem sfi : sew.fieldsToLinkMap.get(s)) {
-                    returnSet.add(sfi.url);
+                    returnSet.add(sfi.cvId);
                 }
             }
         }
@@ -304,6 +328,7 @@ public class SummitEventsLinkHandler {
 
     private class SummitFieldItem {
         String url;
+        Id cvId;
         ContentVersion cv;
         ContentDistribution cd;
         private SummitFieldItem() {}
