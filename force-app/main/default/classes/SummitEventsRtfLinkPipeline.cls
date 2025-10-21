@@ -13,11 +13,9 @@ public with sharing class SummitEventsRtfLinkPipeline {
 
     private static final String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
     
-    Map<Id,ContentDistribution> cvIdToCDMap;
-    Map<Id,ContentDistribution> cdIdMap;
+    private Map<Id,ContentDistribution> cvIdToCDMap;
     private List<SummitEventWrapper> sewList;
     private List<Id> idList;
-    List<ContentDistribution> refreshed;
     private String executionStage;
     
     public SummitEventsRtfLinkPipeline(Map<Id,SObject> newmap) {
@@ -31,19 +29,14 @@ public with sharing class SummitEventsRtfLinkPipeline {
             filter();
             scan();
             prepare();
+            create();
             push();
         } catch(Exception e) {
-            System.debug('Pipeline failed at stage ' + executionStage + ': ' + e.getMessage());
+            System.debug('Pipeline failed at stage ' + this.executionStage + ': ' + e.getMessage());
         }
     }
 
     private void filter() {
-        
-        if(idList.isEmpty()) {
-            if(!this.executionStage.startsWith('*'))
-                this.executionStage = '***short circuit from ' + this.executionStage + '***';
-            return;
-        }
 
         this.executionStage = 'filter';
         this.sewList = new List<SummitEventWrapper>();
@@ -59,6 +52,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
         String fieldList = String.join(fields, ', ');
         query = 'SELECT ' + fieldList + ' FROM ' + namespace + 'Summit_Events__c WHERE Id IN :this.idList';
         seList = Database.query(query);
+        // this.idList.clear();
 
         for(Summit_Events__c se : seList) {
             SummitEventWrapper sew = new SummitEventWrapper();
@@ -71,19 +65,14 @@ public with sharing class SummitEventsRtfLinkPipeline {
             }
             if(!sew.fieldsWithLinks.isEmpty()) {
                 sew.event = se;
-                sewList.add(sew);
+                this.sewList.add(sew);
+                // this.idList.add(se.Id);
             }
         } 
     }
 
     private void scan() {
         
-        if(sewList.isEmpty()) {
-            if(!this.executionStage.startsWith('*'))
-                this.executionStage = '***short circuit from ' + this.executionStage + '***';
-            return;
-        }
-
         this.executionStage = 'scan';
 
         for(SummitEventWrapper sew : sewList) {
@@ -148,8 +137,90 @@ public with sharing class SummitEventsRtfLinkPipeline {
         }
     }
     
-    private void prepare() {/* TODO */ }
-    private void push() { /* TODO */ }
+    private void prepare() {
+
+        this.executionStage = 'prepare';
+
+        Set<Id> cvIdSet = new Set<Id>();
+        for(SummitEventWrapper sew : sewList) {
+            for(String field : sew.fieldsToLinkMap.keySet()) {
+                for(SummitFieldItem sfi : sew.fieldsToLinkMap.get(field)) {
+                    cvIdSet.add(sfi.cvId);
+                }
+            }
+        }
+
+        List<ContentDistribution> cdList = [
+            SELECT Id,
+                   DistributionPublicUrl,
+                   Name,
+                   ContentVersionId
+            FROM   ContentDistribution
+            WHERE  ContentVersionId IN :cvIdSet
+        ];
+
+        this.cvIdToCDMap = new Map<Id,ContentDistribution>();
+
+        for(ContentDistribution cd : cdList) {
+            this.cvIdToCDMap.put(cd.ContentVersionId, cd);
+        }
+    }
+
+    private void create() {
+
+        this.executionStage = 'create';
+
+        List<ContentDistribution> cdInsertList = new List<ContentDistribution>();
+        
+        for(SummitEventWrapper sew : sewList) {
+            for(String field : sew.fieldsToLinkMap.keySet()) {
+                Integer i = 0;
+                for(SummitFieldItem sfi : sew.fieldsToLinkMap.get(field)) {
+                    if(!cvIdToCDMap.containsKey(sfi.cvId)) {
+                        ContentDistribution cd = new ContentDistribution();
+                        cd.ContentVersionId = sfi.cvId;
+                        cd.Name = sew.event.Name + ' - ' + field + i++;
+                        cdInsertList.add(cd);
+                    }
+                }
+            }
+        }
+
+        if(!cdInsertList.isEmpty()) {
+            insert cdInsertList;
+
+            List<ContentDistribution> refreshed = [
+                SELECT Id, 
+                       DistributionPublicUrl,
+                       Name, 
+                       ContentVersionId  
+                FROM   ContentDistribution 
+                WHERE  Id IN :cdInsertList
+            ];
+
+            for(ContentDistribution cd : refreshed) {
+                cvIdToCDMap.put(cd.ContentVersionId, cd);
+            }
+        }
+    }
+
+    private void push() { 
+
+        this.executionStage = 'push';
+
+        for(SummitEventWrapper sew : sewList) {
+            Summit_Events__c se = new Summit_Events__c();
+            se.Id = sew.event.Id;
+            for(String field : sew.fieldsWithLinks) {
+                String rtf = (String) sew.event.get(field);
+                for(SummitFieldItem sfi : sew.fieldsToLinkMap.get(field)) {
+                    rtf = rtf.replace(sfi.url, cvIdToCDMap.get(sfi.cvId).DistributionPublicUrl);
+                }
+                se.put(field,rtf);
+            }
+            update se; // DML in loop; intentional workaround for potentially enormous record heap size
+        }
+     }
 
     // Simple wrapper to aggregate relevant values we'll use
     private class SummitEventWrapper {
@@ -166,8 +237,6 @@ public with sharing class SummitEventsRtfLinkPipeline {
     private class SummitFieldItem {
         String url;
         Id cvId;
-        ContentVersion cv;
-        ContentDistribution cd;
         private SummitFieldItem() {}
     }
 }
