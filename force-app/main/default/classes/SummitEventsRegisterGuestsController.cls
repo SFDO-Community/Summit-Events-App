@@ -52,36 +52,13 @@ public with sharing class SummitEventsRegisterGuestsController {
         String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
         if (String.isNotBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
-            eventPage = [
-                    SELECT Event_Name__c, Event_Submit_Title__c, Event_Submit_Description__c, Event_Footer__c, Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c,
-                            Tracking_Submit_Registration__c, Event_Full_Text__c, Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c,
-                            Guest_Registration_Title__c, Guest_Max_Amount__c, Guest_Registration_Description__c, Guest_Table_Size__c, Guest_Tables_Available__c,
-                            Display_Guest_Registration__c, Guest_Registration_Add_Button_Label__c, No_Guest_Registrations_Added_Message__c,
-                            Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c, Guest_Unsaved_Cancel_Label__c, Guest_Unsaved_Continue_Label__c,
-                            Guest_Unsaved_Modal_Text__c, Event_Status__c
-                    FROM Summit_Events__c
-                    WHERE Id = :eventInformation.eventId
-                    WITH SECURITY_ENFORCED
-            ];
 
-            eventInstance = [
-                    SELECT Id, Instance_Title__c, Instance_Start_Date__c, Instance_End_Date__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Time_Zone__c,
-                            Current_Available_Capacity__c, Active_Status__c, Event__r.Event_Name__c, Registration_Close_Date__c, Registration_Close_Time__c
-                    FROM Summit_Events_Instance__c
-                    WHERE Id = :eventInformation.instanceId
-                    WITH SECURITY_ENFORCED
-            ];
+            eventPage = SummitEventsReadShared.getEventById(eventInformation.eventId);
 
-            eventGuestQuestions = new Map<Id, Summit_Events_Question__c>([
-                    SELECT Name, Question_Label__c, Question_Field_Type__c, Default_Value__c, Registrant_Type__c, Instructions__c, Help_Text__c, Display_Order__c,
-                            Map_to_Field__c, Picklist_Values__c, Text_Limit__c, Controlling_Question__c, Controlling_Logic__c, Required__c, Is_Visible__c, Error_Assist_Text__c,
-                            Existing_Picklist_Values__c, Picklist_Values_Long__c
-                    FROM Summit_Events_Question__c
-                    WHERE Event__c = :eventInformation.eventId
-                    AND (Registrant_Type__c = 'Guest' OR Registrant_Type__c = 'Registrant and Guest')
-                    WITH SECURITY_ENFORCED
-                    ORDER BY Display_Order__c NULLS LAST
-            ]);
+            eventInstance = SummitEventsReadShared.getInstanceById(eventInformation.instanceId);
+
+            List<String> registrantTypes = new List<String>{'Guest', 'Registrant and Guest'};
+            eventGuestQuestions = SummitEventsReadShared.getAdditionalQuestionsByEventId(eventInformation.eventId, registrantTypes);
 
             List<question> questionList = new List<question>();
             hiddenQuestions = new List<questionData>();
@@ -123,12 +100,7 @@ public with sharing class SummitEventsRegisterGuestsController {
 
             guestQuestionJSON = JSON.serialize(questionList);
 
-            eventRegistration = [
-                    SELECT Id, Guest_JSON__c
-                    FROM Summit_Events_Registration__c
-                    WHERE Id = :eventInformation.registrationId
-                    WITH SECURITY_ENFORCED
-            ];
+            eventRegistration = SummitEventsReadShared.getRegistrationById(eventInformation.registrationId);
 
             guestJSON = eventRegistration.Guest_JSON__c;
 
@@ -255,7 +227,7 @@ public with sharing class SummitEventsRegisterGuestsController {
             eventRegistration.Id = oldRegId;
             eventRegistration.Guest_JSON__c = jsonOut;
             try {
-                upsert eventRegistration;
+                update eventRegistration;
             } catch (Exception e) {
                 System.debug(e.getMessage());
             }

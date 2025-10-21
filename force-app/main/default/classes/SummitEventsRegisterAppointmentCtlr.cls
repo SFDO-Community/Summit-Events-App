@@ -42,28 +42,11 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         Map<String, Integer> appCount = new Map<String, Integer>();
 
         if (!String.isBlank(eventInformation.eventId)) {
-            eventPage = [
-                    SELECT Event_Name__c, Event_description__c, Event_Appointment_Title__c, Event_Appointment_Description__c, Event_Footer__c,
-                            Template__c, Event_Home_Link_Title__c, Event_Home_Link_URL__c, Tracking_Options_Registration__c, Event_Full_Text__c,
-                            Close_Event_Days_Before__c, Keep_Registration_Open_During_Event__c, Display_Optional_Donation__c, Event_Appointment_Chosen_Label__c,
-                            Event_Appointment_Unchosen_Label__c, Event_Appointment_Next_Instructions__c, Account__r.Name, Audience__c, Filter_Category__c, Event_Sponsor__c,
-                            Event_Status__c
-                    FROM Summit_Events__c
-                    WHERE Id = :eventInformation.eventId
-                    WITH SECURITY_ENFORCED
-            ];
-
+            eventPage = SummitEventsReadShared.getEventById(eventInformation.eventId);
             templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
 
             if (!String.isBlank(eventInformation.registrationId)) {
-                evtInstance = [
-                        SELECT Instance_Title__c, Event__r.Event_Name__c,
-                                Instance_Time_Zone__c, Instance_Start_Time__c, Instance_End_Time__c, Instance_Start_Date__c,
-                                Instance_End_Date__c, Current_Available_Capacity__c, Active_Status__c, Registration_Close_Date__c, Registration_Close_Time__c
-                        FROM Summit_Events_Instance__c
-                        WHERE Id = :eventInformation.instanceId
-                        WITH SECURITY_ENFORCED
-                ];
+                evtInstance = SummitEventsReadShared.getInstanceById(eventInformation.instanceId);
 
                 pageFlow = SummitEventsShared.getPageFlow(eventInformation.eventId, evtInstance.Instance_Title__c, ApexPages.currentPage(), evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c);
 
@@ -72,22 +55,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                 if (evtInstance != null) {
                     String dayOfWeek = SummitEventsShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
                     // = dayOfWeek;
-                    //Build appointments
-                    appointments = new Map<Id, Summit_Events_Appointment_Type__c>([
-                            SELECT Id, Name, Title__c, Description__c, Appointment_Type__c, Appointment_Category__c, Appointment_Limits__c, Chosen_State__c,
-                                    Registrant_Input__c, Custom_Picklist__c, Sort_Order__c, Auto_Confirm_Appointment__c, Auto_add_building__c, Auto_Add_Time__c, Do_Not_Show_Time__c,
-                                    Date_Available_Start__c, Date_Available_End__c, Day_of_Week_Availability__c, Required_Appointment__c, Appointment_Type_Status__c,
-                                    Enforce_Registrations_Limit__c, Appointment_Registrations_Limit__c
-                            FROM Summit_Events_Appointment_Type__c
-                            WHERE Summit_Events__c = :eventInformation.eventId
-                            AND (Restrict_To_Instance_Title__r.Instance_Title__c = :evtInstance.Instance_Title__c OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
-                            AND (Date_Available_Start__c <= :evtInstance.Instance_Start_Date__c OR Date_Available_Start__c = NULL)
-                            AND (Date_Available_End__c >= :evtInstance.Instance_End_Date__c OR Date_Available_End__c = NULL)
-                            AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
-                            AND (Appointment_Type_Status__c = 'Active' OR Appointment_Type_Status__c = NULL)
-                            WITH SECURITY_ENFORCED
-                            ORDER BY Sort_Order__c ASC NULLS LAST
-                    ]);
+                    //Build available appointments
+                    appointments = SummitEventsREadShared.getAppointmentTypesByEventId(eventInformation.eventId, evtInstance.Instance_Title__c, evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c, dayOfWeek);
 
                     removeAppointmentsWithExceedingRegistrationLimit(appointments, evtInstance);
                     
@@ -104,14 +73,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     }
 
                     //Gather up the appointments that have already been chosen.
-                    chosenApps = [
-                            SELECT Id, Appointment_Category__c, Event_Appointment_Type__c, Appointment_Type__c, Appointment_Title__c, Chosen_State__c, Description__c, Sort_Order__c,
-                                    Registrant_Input__c, Do_Not_Show_Time__c
-                            FROM Summit_Events_Appointments__c
-                            WHERE Event_Registration__c = :eventInformation.registrationId
-                            AND Client_Created_Appointment__c = TRUE
-                            WITH SECURITY_ENFORCED
-                    ];
+                    chosenApps = SummitEventsREadShared.getChosenAppointmentsByRegistrationId(eventInformation.registrationId);
 
                     //Add the chosen state appointments
                     for (Integer x = 0; x < chosenApps.size(); x++) {
@@ -150,7 +112,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                             addAppointment.appLimit = appLimit;
                             addAppointment.appRequired = apt.Required_Appointment__c;
                             addAppointment.inputRequired = false;
-                            if(String.isNotBlank(apt.Appointment_Type__c)) {
+                            if (String.isNotBlank(apt.Appointment_Type__c)) {
                                 addAppointment.appTypeSet = true;
                             }
 
@@ -201,13 +163,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         //remove old client created appointments
         crudToDo doCRUD = new crudToDo();
 
-        List<Summit_Events_Appointments__c> deleteAppointments = [
-                SELECT Id, Event_Registration__c, Client_Created_Appointment__c, Chosen_State__c, Do_Not_Show_Time__c
-                FROM Summit_Events_Appointments__c
-                WHERE Event_Registration__c = :eventInformation.registrationId
-                AND Client_Created_Appointment__c = TRUE
-                WITH SECURITY_ENFORCED
-        ];
+        List<Summit_Events_Appointments__c> deleteAppointments = SummitEventsReadShared.getChosenAppointmentsByRegistrationId(eventInformation.registrationId);
         doCRUD.deleteAppointments(deleteAppointments);
 
         List<incomingAppointments> incomingAppointments = (List<incomingAppointments>) JSON.deserialize(incomingAppointmentJSON, List<incomingAppointments>.class);

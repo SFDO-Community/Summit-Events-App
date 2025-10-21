@@ -285,7 +285,8 @@ global with sharing class SummitEventsFeed {
         eventQuery += ' WITH SECURITY_ENFORCED ';
         eventQuery += ' ORDER BY Instance_Start_Date__c, Instance_Start_Time__c ';
 
-        List<Summit_Events_Instance__c> EventInstanceList = Database.query(eventQuery);
+        doCRUD crud = new doCRUD();
+        List<Summit_Events_Instance__c> EventInstanceList = crud.getEventListQueryByString(eventQuery);
 
         Datetime regDateOpenDate = null;
         for (Summit_Events_Instance__c eventInstance : EventInstanceList) {
@@ -416,7 +417,7 @@ global with sharing class SummitEventsFeed {
                 evt.locationMapLink = '';
             }
 
-            if (SummitEventsShared.isEventClosed(eventInstance, eventInstance.Event__r.Event_Status__c )) {
+            if (SummitEventsShared.isEventClosed(eventInstance, eventInstance.Event__r.Event_Status__c)) {
                 evt.eventClosed = true;
                 evt.eventUrl = 'javascript:;';
                 evt.className = 'eventClosed';
@@ -575,5 +576,11 @@ global with sharing class SummitEventsFeed {
         newOption.description = description;
         newOption.options = items;
         return newOption;
+    }
+    private without sharing class doCRUD {
+        private List<Summit_Events_Instance__c> getEventListQueryByString(String eventQuery) {
+            //Get the event instances
+            return Database.query(eventQuery);
+        }
     }
 }

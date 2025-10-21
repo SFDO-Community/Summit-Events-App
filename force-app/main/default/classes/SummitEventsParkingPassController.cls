@@ -4,7 +4,12 @@
 // Created by Thaddaeus Dahlberg on 5/1/2018.
 
 public with sharing class SummitEventsParkingPassController {
-    public String firstName { get; set; }
+    public SummitEventsParkingPassController() {
+        //No constructor logic needed
+    }
+
+/* DEPRECIATED 8/12/2025
+   public String firstName { get; set; }
     public String warning { get; set; }
     public Summit_Events_Registration__c visitor { get; set; }
     public SummitEventsInfo eventInformation { get; set; }
@@ -49,4 +54,5 @@ public with sharing class SummitEventsParkingPassController {
             }
         }
     }
+    */
 }
