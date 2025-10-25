@@ -19,8 +19,10 @@ public with sharing class SummitEventsRtfLinkPipeline {
     private String executionStage;
     
     public SummitEventsRtfLinkPipeline(Map<Id,SObject> newmap) {
+        this.cvIdToCDMap = new Map<Id,ContentDistribution>();
+        this.sewList = new List<SummitEventWrapper>();
         this.idList = new List<Id>(newmap.keySet());
-        newmap = null;
+        newmap = null; // prayer to GC gods; likely superstition
     }
 
     public void run() {
@@ -36,10 +38,13 @@ public with sharing class SummitEventsRtfLinkPipeline {
         }
     }
 
+    /**
+     * Cheap first-pass filter to select and wrap Summit_Events__c records
+     * that have RTF fields with links to ContentVersion records.
+     */
     private void filter() {
 
         this.executionStage = 'filter';
-        this.sewList = new List<SummitEventWrapper>();
 
         List<Summit_Events__c> seList = new List<Summit_Events__c>();
         List<String> fields = new List<String>();
@@ -59,7 +64,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
             for (String s : RICHTEXT_FIELDS) {
                 String fieldName = namespace + s;
                 String fieldVal = (String) se?.get(fieldName);
-                if(!String.isBlank(fieldVal) && fieldVal.contains('<img src=') && fieldVal.contains('/sfc/servlet.shepherd/version/download/')) {
+                if(!String.isBlank(fieldVal) && fieldVal.contains('<img src=') && fieldVal.contains('versionId=068')) {
                     sew.fieldsWithLinks.add(fieldName);
                 }
             }
@@ -71,72 +76,72 @@ public with sharing class SummitEventsRtfLinkPipeline {
         } 
     }
 
+    /**
+     * scan through wrapped events and find all the ContentVersion Ids.
+     * Pattern and Matcher would have less cognitive overhead, but they
+     * come attached to significant time complexity, so we're going to
+     * roll our own manual string ops. Even without direct access to char
+     * arrays, this should still be O(n). 
+     */
     private void scan() {
         
         this.executionStage = 'scan';
 
-        for(SummitEventWrapper sew : sewList) {
+        for (SummitEventWrapper sew : sewList) {
             Map<String, List<SummitFieldItem>> tempMap = new Map<String, List<SummitFieldItem>>();
-
-            for(String field : sew.fieldsWithLinks) {
-                String rtf = (String) sew.event.get(field);
-                List<SummitFieldItem> itemList = new List<SummitFieldItem>();
-
-                Integer searchStart = 0;
+        
+            for (String field : sew.fieldsWithLinks) {
+                String html = (String) sew.event.get(field);
+                List<SummitFieldItem> items = new List<SummitFieldItem>();
+            
+                Integer pos = 0;
                 while (true) {
-                    Integer imgStart = rtf.indexOf('<img src=', searchStart);
-                    if (imgStart == -1) {
-                        break;
+                    // Find the next <img src="...">
+                    Integer tagStart = html.indexOf('<img', pos);
+                    if (tagStart == -1) break;
+                
+                    Integer srcStart = html.indexOf('src="', tagStart);
+                    if (srcStart == -1) break;
+                
+                    srcStart += 5; // past src="
+                    Integer srcEnd = html.indexOf('"', srcStart);
+                    if (srcEnd == -1) break;
+                
+                    String url = html.substring(srcStart, srcEnd);
+                    pos = srcEnd + 1;
+                
+                    // Look for versionId
+                    Integer idIdx = url.indexOf('versionId=068');
+                    if (idIdx == -1) continue;
+                
+                    Integer idStart = idIdx + 'versionId='.length();
+                    Integer i = idStart;
+                    while (i < url.length() && 
+                           'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'.indexOf(url.substring(i, i + 1)) != -1) {
+                        i++;
                     }
-
-                    Integer urlStart = imgStart + '<img src="'.length();
-                    Integer urlEnd = rtf.indexOf('"', urlStart);
-                    if (urlEnd == -1) {
-                        break;
+                
+                    String possibleId = url.substring(idStart, i);
+                    if (possibleId.startsWith('068')) {
+                        SummitFieldItem sfi = new SummitFieldItem();
+                        sfi.cvId = (Id) possibleId;
+                        sfi.url = url;
+                        items.add(sfi);
                     }
-
-                    String url = rtf.substring(urlStart, urlEnd);
-                    SummitFieldItem sfi = new SummitFieldItem();
-
-                    Integer pathIdx = url.indexOf('/sfc/servlet.shepherd/version/download/');
-                    if (pathIdx != -1) {
-                        Integer idStart = pathIdx + '/sfc/servlet.shepherd/version/download/'.length();
-
-                        Integer i = idStart;
-                        while (i < url.length()) {
-                            String ch = url.substring(i, i + 1);
-                            if ('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'.indexOf(ch) == -1) {
-                                break;
-                            }
-                            i++;
-                        }
-                        
-                        String possibleId = url.substring(idStart, i);
-
-                        // 068 is the prefix for ContentVersion; stable and unlikely to change
-                        if (possibleId.startsWith('068')) { 
-                            try {
-                                sfi.cvId = (Id) possibleId;
-                            } catch (Exception e) {
-                                System.debug(e.getMessage());
-                            }
-                        }
-                    }
-                    
-                    sfi.url = url;
-                    itemList.add(sfi);
-
-                    searchStart = urlEnd + 1;
                 }
-
-                if(!itemList.isEmpty()) {
-                    tempMap.put(field, itemList);
+            
+                if (!items.isEmpty()) {
+                    tempMap.put(field, items);
                 }
             }
             sew.fieldsToLinkMap = tempMap;
         }
     }
     
+    /**
+     * Prepare the pipeline for execution; populate some final values
+     * we'll need for execution.
+     */
     private void prepare() {
 
         this.executionStage = 'prepare';
@@ -159,13 +164,15 @@ public with sharing class SummitEventsRtfLinkPipeline {
             WHERE  ContentVersionId IN :cvIdSet
         ];
 
-        this.cvIdToCDMap = new Map<Id,ContentDistribution>();
-
         for(ContentDistribution cd : cdList) {
             this.cvIdToCDMap.put(cd.ContentVersionId, cd);
         }
     }
 
+    /**
+     * Create ContentDistribution records for any ContentVersion records
+     * that are not already linked to a ContentDistribution record.
+     */
     private void create() {
 
         this.executionStage = 'create';
@@ -204,6 +211,10 @@ public with sharing class SummitEventsRtfLinkPipeline {
         }
     }
 
+    /**
+     * Replace all URLs in the RTF fields with the corresponding ContentDistribution
+     * record's DistributionPublicUrl, and update the Summit_Events__c record.
+     */
     private void push() { 
 
         this.executionStage = 'push';
