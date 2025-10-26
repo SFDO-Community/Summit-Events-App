@@ -39,6 +39,5 @@ node_modules/
 /.illuminatedCloud/
 **/tsconfig*.json
 **/*.tsbuildinfo
-.forceignore
 package-lock.json
 package.json
