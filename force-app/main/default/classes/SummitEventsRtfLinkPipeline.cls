@@ -55,7 +55,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
         }
 	    
         String fieldList = String.join(fields, ', ');
-        query = 'SELECT ' + fieldList + ' FROM ' + namespace + 'Summit_Events__c WHERE Id IN :this.idList';
+        query = 'SELECT Name, ' + fieldList + ' FROM ' + namespace + 'Summit_Events__c WHERE Id IN :idList';
         seList = Database.query(query);
         // this.idList.clear();
 
