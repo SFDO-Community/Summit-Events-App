@@ -3,10 +3,10 @@ trigger SummitEventsSummitEventTrigger on Summit_Events__c (before insert, befor
     if (!SummitEventsSettings.Turn_off_Summit_Events_Trigger__c) {
         if (SummitEventsSettings.Opt_Into_Link_Automation__c) {
             if (Trigger.isInsert && Trigger.isAfter) {
-                SummitEventsLinkHandler.run(Trigger.newMap);
+                SummitEventsLinkHandler.run(Trigger.new);
             }
             if (Trigger.isUpdate && Trigger.isAfter) {
-                SummitEventsLinkHandler.run(Trigger.newMap);
+                SummitEventsLinkHandler.run(Trigger.new);
             }
         }
     }
