@@ -1,4 +1,4 @@
-public with sharing class SummitEventsRtfLinkPipeline {
+public without sharing class SummitEventsRtfLinkPipeline {
     
     // Inelegant, but schema introspection can't differentiate RTF from regular text fields
     private static final Set<String> RICHTEXT_FIELDS = new Set<String>{
@@ -15,14 +15,13 @@ public with sharing class SummitEventsRtfLinkPipeline {
     
     private Map<Id,ContentDistribution> cvIdToCDMap;
     private List<SummitEventWrapper> sewList;
-    private List<Id> idList;
+    private List<Summit_Events__c> triggerList;
     private String executionStage;
     
-    public SummitEventsRtfLinkPipeline(Map<Id,SObject> newmap) {
+    public SummitEventsRtfLinkPipeline(List<Summit_Events__c> triggerList) {
         this.cvIdToCDMap = new Map<Id,ContentDistribution>();
         this.sewList = new List<SummitEventWrapper>();
-        this.idList = new List<Id>(newmap.keySet());
-        newmap = null; // prayer to GC gods; likely superstition
+        this.triggerList = triggerList;
     }
 
     public void run() {
@@ -46,23 +45,10 @@ public with sharing class SummitEventsRtfLinkPipeline {
 
         this.executionStage = 'filter';
 
-        List<Summit_Events__c> seList = new List<Summit_Events__c>();
-        List<String> fields = new List<String>();
-        String query = '';
-
-        for(String f : RICHTEXT_FIELDS) {
-            fields.add(namespace + f);
-        }
-	    
-        String fieldList = String.join(fields, ', ');
-        query = 'SELECT Name, ' + fieldList + ' FROM ' + namespace + 'Summit_Events__c WHERE Id IN :idList';
-        seList = Database.query(query);
-        // this.idList.clear();
-
-        for(Summit_Events__c se : seList) {
+        for(Summit_Events__c se : triggerList) {
             SummitEventWrapper sew = new SummitEventWrapper();
-            for (String s : RICHTEXT_FIELDS) {
-                String fieldName = namespace + s;
+            for (String field : RICHTEXT_FIELDS) {
+                String fieldName = namespace + field;
                 String fieldVal = (String) se?.get(fieldName);
                 if(!String.isBlank(fieldVal) && fieldVal.contains('<img src=') && fieldVal.contains('versionId=068')) {
                     sew.fieldsWithLinks.add(fieldName);
@@ -71,7 +57,6 @@ public with sharing class SummitEventsRtfLinkPipeline {
             if(!sew.fieldsWithLinks.isEmpty()) {
                 sew.event = se;
                 this.sewList.add(sew);
-                // this.idList.add(se.Id);
             }
         } 
     }
@@ -219,6 +204,8 @@ public with sharing class SummitEventsRtfLinkPipeline {
 
         this.executionStage = 'push';
 
+        List<Summit_Events__c> updateList = new List<Summit_Events__c>();
+
         for(SummitEventWrapper sew : sewList) {
             Summit_Events__c se = new Summit_Events__c();
             se.Id = sew.event.Id;
@@ -229,7 +216,11 @@ public with sharing class SummitEventsRtfLinkPipeline {
                 }
                 se.put(field,rtf);
             }
-            update se; // DML in loop; intentional workaround for potentially enormous record heap size
+            updateList.add(se);
+        }
+
+        if(!updateList.isEmpty()) {
+            update updateList;
         }
      }
 
