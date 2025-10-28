@@ -14,14 +14,14 @@ public without sharing class SummitEventsRtfLinkPipeline {
     private static final String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
     
     private Map<Id,ContentDistribution> cvIdToCDMap;
-    private List<SummitEventWrapper> sewList;
-    private List<Summit_Events__c> triggerList;
+    private List<SummitEventWrapper> wrappedEventList;
+    private List<Id> idList;
     private String executionStage;
     
-    public SummitEventsRtfLinkPipeline(List<Summit_Events__c> triggerList) {
+    public SummitEventsRtfLinkPipeline(Map<Id,Summit_Events__c> newMap) {
         this.cvIdToCDMap = new Map<Id,ContentDistribution>();
-        this.sewList = new List<SummitEventWrapper>();
-        this.triggerList = triggerList;
+        this.wrappedEventList = new List<SummitEventWrapper>();
+        this.idList = new List<Id>(newMap.keySet());
     }
 
     public void run() {
@@ -41,70 +41,86 @@ public without sharing class SummitEventsRtfLinkPipeline {
      * Cheap first-pass filter to select and wrap Summit_Events__c records
      * that have RTF fields with links to ContentVersion records.
      */
+    @TestVisible
     private void filter() {
 
         this.executionStage = 'filter';
 
-        for(Summit_Events__c se : triggerList) {
-            SummitEventWrapper sew = new SummitEventWrapper();
-            for (String field : RICHTEXT_FIELDS) {
-                String fieldName = namespace + field;
-                String fieldVal = (String) se?.get(fieldName);
+        List<Summit_Events__c> freshEventList = new List<Summit_Events__c>();
+        List<String> fields = new List<String>();
+        String query = '';
+
+        for(String field : RICHTEXT_FIELDS) {
+            fields.add(namespace + field);
+        }
+	    
+        String fieldList = String.join(fields, ', ');
+        query = 'SELECT Name, ' + fieldList + ' FROM ' + namespace + 'Summit_Events__c WHERE Id IN :idList';
+        freshEventList = Database.query(query);
+
+        for(Summit_Events__c freshEvent : freshEventList) {
+            SummitEventWrapper wrappedEvent = new SummitEventWrapper();
+            for (String field : fields) {
+                String fieldVal = (String) freshEvent?.get(field);
                 if(!String.isBlank(fieldVal) && fieldVal.contains('<img src=') && fieldVal.contains('versionId=068')) {
-                    sew.fieldsWithLinks.add(fieldName);
+                    wrappedEvent.fieldsWithLinks.add(field);
                 }
             }
-            if(!sew.fieldsWithLinks.isEmpty()) {
-                sew.event = se;
-                this.sewList.add(sew);
+            if(!wrappedEvent.fieldsWithLinks.isEmpty()) {
+                wrappedEvent.event = freshEvent;
+                this.wrappedEventList.add(wrappedEvent);
             }
         } 
     }
 
     /**
-     * scan through wrapped events and find all the ContentVersion Ids.
+     * Scan through wrapped events and find all the ContentVersion Ids.
      * Pattern and Matcher would have less cognitive overhead, but they
      * come attached to significant time complexity, so we're going to
      * roll our own manual string ops. Even without direct access to char
      * arrays, this should still be O(n). 
      */
+    @TestVisible
     private void scan() {
         
         this.executionStage = 'scan';
 
-        for (SummitEventWrapper sew : sewList) {
+        for (SummitEventWrapper wrappedEvent : wrappedEventList) {
             Map<String, List<SummitFieldItem>> tempMap = new Map<String, List<SummitFieldItem>>();
         
-            for (String field : sew.fieldsWithLinks) {
-                String html = (String) sew.event.get(field);
+            for (String field : wrappedEvent.fieldsWithLinks) {
+                String html = (String) wrappedEvent.event.get(field);
                 List<SummitFieldItem> items = new List<SummitFieldItem>();
             
                 Integer pos = 0;
                 while (true) {
                     // Find the next <img src="...">
                     Integer tagStart = html.indexOf('<img', pos);
-                    if (tagStart == -1) break;
+                    if (tagStart == -1) 
+                        break;
                 
                     Integer srcStart = html.indexOf('src="', tagStart);
-                    if (srcStart == -1) break;
+                    if (srcStart == -1) 
+                        break;
                 
                     srcStart += 5; // past src="
                     Integer srcEnd = html.indexOf('"', srcStart);
-                    if (srcEnd == -1) break;
+                    if (srcEnd == -1) 
+                        break;
                 
                     String url = html.substring(srcStart, srcEnd);
                     pos = srcEnd + 1;
                 
                     // Look for versionId
                     Integer idIdx = url.indexOf('versionId=068');
-                    if (idIdx == -1) continue;
+                    if (idIdx == -1) 
+                        continue;
                 
                     Integer idStart = idIdx + 'versionId='.length();
                     Integer i = idStart;
-                    while (i < url.length() && 
-                           'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'.indexOf(url.substring(i, i + 1)) != -1) {
+                    String alphaNumerics = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                    while (i < url.length() && alphaNumerics.indexOf(url.substring(i, i + 1)) != -1)
                         i++;
-                    }
                 
                     String possibleId = url.substring(idStart, i);
                     if (possibleId.startsWith('068')) {
@@ -119,7 +135,7 @@ public without sharing class SummitEventsRtfLinkPipeline {
                     tempMap.put(field, items);
                 }
             }
-            sew.fieldsToLinkMap = tempMap;
+            wrappedEvent.fieldsToLinkMap = tempMap;
         }
     }
     
@@ -127,14 +143,15 @@ public without sharing class SummitEventsRtfLinkPipeline {
      * Prepare the pipeline for execution; populate some final values
      * we'll need for execution.
      */
+    @TestVisible
     private void prepare() {
 
         this.executionStage = 'prepare';
 
         Set<Id> cvIdSet = new Set<Id>();
-        for(SummitEventWrapper sew : sewList) {
-            for(String field : sew.fieldsToLinkMap.keySet()) {
-                for(SummitFieldItem sfi : sew.fieldsToLinkMap.get(field)) {
+        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
+            for(String field : wrappedEvent.fieldsToLinkMap.keySet()) {
+                for(SummitFieldItem sfi : wrappedEvent.fieldsToLinkMap.get(field)) {
                     cvIdSet.add(sfi.cvId);
                 }
             }
@@ -158,21 +175,24 @@ public without sharing class SummitEventsRtfLinkPipeline {
      * Create ContentDistribution records for any ContentVersion records
      * that are not already linked to a ContentDistribution record.
      */
+    @TestVisible
     private void create() {
 
         this.executionStage = 'create';
 
         List<ContentDistribution> cdInsertList = new List<ContentDistribution>();
+        Set<Id> visited = new Set<Id>();
         
-        for(SummitEventWrapper sew : sewList) {
-            for(String field : sew.fieldsToLinkMap.keySet()) {
+        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
+            for(String field : wrappedEvent.fieldsToLinkMap.keySet()) {
                 Integer i = 0;
-                for(SummitFieldItem sfi : sew.fieldsToLinkMap.get(field)) {
-                    if(!cvIdToCDMap.containsKey(sfi.cvId)) {
+                for(SummitFieldItem sfi : wrappedEvent.fieldsToLinkMap.get(field)) {
+                    if(!cvIdToCDMap.containsKey(sfi.cvId) && !visited.contains(sfi.cvId)) {
                         ContentDistribution cd = new ContentDistribution();
                         cd.ContentVersionId = sfi.cvId;
-                        cd.Name = sew.event.Name + ' - ' + field + i++;
+                        cd.Name = wrappedEvent.event.Name + ' - ' + field + i++;
                         cdInsertList.add(cd);
+                        visited.add(sfi.cvId);
                     }
                 }
             }
@@ -200,26 +220,28 @@ public without sharing class SummitEventsRtfLinkPipeline {
      * Replace all URLs in the RTF fields with the corresponding ContentDistribution
      * record's DistributionPublicUrl, and update the Summit_Events__c record.
      */
+    @TestVisible
     private void push() { 
 
         this.executionStage = 'push';
 
         List<Summit_Events__c> updateList = new List<Summit_Events__c>();
 
-        for(SummitEventWrapper sew : sewList) {
-            Summit_Events__c se = new Summit_Events__c();
-            se.Id = sew.event.Id;
-            for(String field : sew.fieldsWithLinks) {
-                String rtf = (String) sew.event.get(field);
-                for(SummitFieldItem sfi : sew.fieldsToLinkMap.get(field)) {
+        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
+            Summit_Events__c tempEvent = new Summit_Events__c();
+            tempEvent.Id = wrappedEvent.event.Id; // trigger records are immutable, we must create new records
+            for(String field : wrappedEvent.fieldsWithLinks) {
+                String rtf = (String) wrappedEvent.event.get(field);
+                for(SummitFieldItem sfi : wrappedEvent.fieldsToLinkMap.get(field)) {
                     rtf = rtf.replace(sfi.url, cvIdToCDMap.get(sfi.cvId).DistributionPublicUrl);
                 }
-                se.put(field,rtf);
+                tempEvent.put(field,rtf);
             }
-            updateList.add(se);
+            updateList.add(tempEvent);
         }
 
         if(!updateList.isEmpty()) {
+            this.executionStage = 'push.DML';
             update updateList;
         }
      }

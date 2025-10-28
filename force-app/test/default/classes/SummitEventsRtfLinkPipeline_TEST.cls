@@ -30,7 +30,7 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
         se = [SELECT Event_Full_Text__c,Event_Name__c,Event_Status__c,Name FROM Summit_Events__c WHERE Id = :se.Id];
 
 
-        Map<Id, SObject> newMap = new Map<Id, SObject>{ se.Id => se };
+        Map<Id, Summit_Events__c> newMap = new Map<Id, Summit_Events__c>{ se.Id => se };
 
         Test.startTest();
         SummitEventsRtfLinkPipeline rtfp = new SummitEventsRtfLinkPipeline(newMap);
