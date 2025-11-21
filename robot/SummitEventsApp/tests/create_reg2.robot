@@ -13,7 +13,7 @@ Create_SEA_reg
     #Query for the an SEA instance Id to test upon
     @{records}=  Salesforce Query  Summit_Events_Instance__c  select=Id,Name
     ...          Event__r.Name=Sample - Sample - 2024 Alumni Tours
-    ...          Instance_Title__c= Cruise to Japan
+    ...          Instance_Title__c= A Night of Giving Hope 2024
     ...          limit=1
     FOR  ${record}  IN  @{records}
         log  Name: ${record['Name']} Id: ${record['Id']}

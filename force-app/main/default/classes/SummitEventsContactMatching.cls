@@ -411,6 +411,9 @@ public without sharing class SummitEventsContactMatching {
         l.FirstName = reg.Registrant_First_Name__c;
         l.LastName = reg.Registrant_Last_Name__c;
         l.Email = reg.Registrant_Email__c;
+        if(!SummitEventsShared.personAccountsEnabled()) {
+            l.Company = reg.Preferred_First_Name_Formatted__c;
+        }
         l.Company = reg.Preferred_First_Name_Formatted__c;
         l.Street = reg.Registrant_Street_1__c;
         l.City = reg.Registrant_City__c;
@@ -558,6 +561,9 @@ public without sharing class SummitEventsContactMatching {
         matchRow += '<td data-label="Email"><div class="slds-truncate">' + email + '</div></td>';
         matchRow += '<td data-label="Zip"><div class="slds-truncate">' + zip + '</div></td>';
         matchRow += '<td data-label="Action"><div class="slds-truncate"> ' + lastModifiedString + ' </div></td>';
+        if(action.equalsIgnoreCase('selected')) {
+            action = '<strong>' + action + '</strong>';
+        }
         matchRow += '<td data-label="Action"><div class="slds-truncate"> ' + action + ' </div></td>';
         matchRow += '</tr>';
         return matchRow;

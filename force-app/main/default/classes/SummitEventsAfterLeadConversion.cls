@@ -26,7 +26,8 @@ public without sharing class SummitEventsAfterLeadConversion {
 
             for (Summit_Events_Registration__c reg : registrations) {
                 reg.Contact__c = leadMap.get(reg.Lead__c).ConvertedContactId;
-                reg.Matching_Log__c += '<hr>Lead converted to Contact - ' + System.now();
+                reg.Person_Account__c = leadMap.get(reg.Lead__c).ConvertedAccountId;
+                reg.Matching_Log__c += '<hr>Lead converted to Contact/Account - ' + System.now();
             }
 
             update registrations;

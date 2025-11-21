@@ -304,6 +304,10 @@ public with sharing class SummitEventsRegisterController {
                 eventRegistration.Registrant_Mobile_Phone__c = userContact.MobilePhone;
                 eventRegistration.Registrant_Date_of_Birth__c = userContact.Birthdate;
                 eventRegistration.Contact__c = userContact.Id;
+                
+                if(SummitEventsShared.personAccountsEnabled()) {
+                    eventRegistration.Person_Account__c = userContact.AccountId;
+                }
 
                 if (userContact.Birthdate != null) {
                     birthDateString = userContact.Birthdate.format();
