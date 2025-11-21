@@ -5,7 +5,7 @@
     <changePasswordTemplate>unfiled$public/CommunityChangePasswordEmailTemplate</changePasswordTemplate>
     <communityRoles/>
     <disableReputationRecordConversations>true</disableReputationRecordConversations>
-    <emailSenderAddress>16785863+tcdahlberg@users.noreply.github.com</emailSenderAddress>
+    <emailSenderAddress>16785863+tcdahlberg@users.noreply.github.com.invalid</emailSenderAddress>
     <emailSenderName>Summit Events</emailSenderName>
     <embeddedLoginEnabled>false</embeddedLoginEnabled>
     <enableApexCDNCaching>true</enableApexCDNCaching>
@@ -14,7 +14,7 @@
     <enableExpFriendlyUrlsAsDefault>false</enableExpFriendlyUrlsAsDefault>
     <enableExperienceBundleBasedSnaOverrideEnabled>true</enableExperienceBundleBasedSnaOverrideEnabled>
     <enableGuestChatter>false</enableGuestChatter>
-    <enableGuestFileAccess>true</enableGuestFileAccess>
+    <enableGuestFileAccess>false</enableGuestFileAccess>
     <enableGuestMemberVisibility>false</enableGuestMemberVisibility>
     <enableImageOptimizationCDN>false</enableImageOptimizationCDN>
     <enableInvitation>false</enableInvitation>
@@ -50,21 +50,25 @@
         <recaptchaScoreThreshold>0.0</recaptchaScoreThreshold>
     </networkAuthApiSettings>
     <networkMemberGroups>
+        <permissionSet>Summit_Events_Registrant</permissionSet>
         <profile>admin</profile>
+        <profile>customer community login user</profile>
     </networkMemberGroups>
     <networkPageOverrides>
         <changePasswordPageOverrideSetting>Standard</changePasswordPageOverrideSetting>
-        <forgotPasswordPageOverrideSetting>Designer</forgotPasswordPageOverrideSetting>
+        <forgotPasswordPageOverrideSetting>Standard</forgotPasswordPageOverrideSetting>
         <homePageOverrideSetting>Designer</homePageOverrideSetting>
-        <loginPageOverrideSetting>Designer</loginPageOverrideSetting>
-        <selfRegProfilePageOverrideSetting>Designer</selfRegProfilePageOverrideSetting>
+        <loginPageOverrideSetting>Standard</loginPageOverrideSetting>
+        <selfRegProfilePageOverrideSetting>Standard</selfRegProfilePageOverrideSetting>
     </networkPageOverrides>
+    <newSenderAddress>16785863+tcdahlberg@users.noreply.github.com</newSenderAddress>
     <picassoSite>Summit_Events1</picassoSite>
+    <selfRegProfile>customer community login user</selfRegProfile>
     <selfRegistration>true</selfRegistration>
     <sendWelcomeEmail>true</sendWelcomeEmail>
     <site>Summit_Events</site>
     <siteArchiveStatus>NotArchived</siteArchiveStatus>
-    <status>UnderConstruction</status>
+    <status>Live</status>
     <tabs>
         <defaultTab>home</defaultTab>
         <standardTab>Chatter</standardTab>

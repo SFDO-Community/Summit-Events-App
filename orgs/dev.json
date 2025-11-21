@@ -19,6 +19,7 @@
     },
     "securitySettings": {
       "enableAdminLoginAsAnyUser": true,
+      "enableAuditFieldsInactiveOwner": true,
       "sessionSettings": {
         "forceRelogin": false
       }
@@ -30,7 +31,8 @@
       "enableExperienceBundleMetadata": true
     },
     "communitiesSettings": {
-      "enableNetworksEnabled": true
+      "enableNetworksEnabled": true,
+      "enableOotbProfExtUserOpsEnable": true
     }
   }
 }

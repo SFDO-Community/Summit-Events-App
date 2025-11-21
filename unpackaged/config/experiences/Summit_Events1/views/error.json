@@ -1,0 +1,48 @@
+{
+  "appPageId" : "2f5e7442-a66b-4829-a210-a62eb1f72e96",
+  "componentName" : "siteforce:sldsOneColLayout",
+  "dataProviders" : [ ],
+  "id" : "d60ff27b-b984-44fb-b4ea-6f9dae86ac63",
+  "label" : "Error",
+  "regions" : [ {
+    "id" : "38dd437c-331a-4098-a207-546a248e1c59",
+    "regionName" : "header",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "richTextValue" : "<div style='text-align: center;'>Invalid Page</div>"
+      },
+      "componentName" : "forceCommunity:richTextInline",
+      "id" : "e4036f4d-cbe7-41e9-acec-d7154627b3b9",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "5cce226e-bbd3-4103-b575-c3397f9dc94a",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "id" : "89797f8c-8527-4d98-bf4a-62c79aed1986",
+    "regionName" : "footer",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "",
+        "title" : "Error"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "f6a2e3b3-1104-45a4-a528-dde33c1f8149",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "a6a735e9-9a50-4c83-85e7-980ce50456e4",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "error"
+}

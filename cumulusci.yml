@@ -52,7 +52,7 @@ tasks:
         eventSettings.%%%NAMESPACE%%%Managed_Package__c = false;
         upsert eventSettings;
 
-  deploy_permission_set:
+  deploy_admin_permission_set:
     description: Give System Admins Event Admin Permission Set
     class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
     options:
@@ -100,14 +100,51 @@ tasks:
             upsert permissionSetList;
         }
 
-  deploy_community:
-    description: Deploys the Community for Summit Events App
+  create_community:
+    description: Deploys configuration for Development.
     class_path: cumulusci.tasks.salesforce.CreateCommunity
     options:
-      template: Build Your Own
       name: Summit Events
-      description: Community for Summit Events App
-      skip_existing: true
+      description: Summit Events Community
+      template: Build Your Own
+      skip_existing: True
+
+  create_community_network:
+    description: Creates the community network for Development.
+    class_path: cumulusci.tasks.salesforce.network_member_group.CreateNetworkMemberGroups
+    options:
+      network_name: Summit Events
+      profile_names:
+        - Customer Community Login User
+      permission_set_names:
+        - Summit Events Registrant
+
+  create_community_experience_cloud_bundle:
+    description: Deploys Network config for community for Development.
+    class_path: cumulusci.tasks.salesforce.Deploy
+    options:
+      namespace_inject: $project_config.project__package__namespace
+      path: unpackaged/config/experiences
+      unmanaged: True
+      timeout: 520
+
+  role_to_userUser:
+    description: Give Guest User Registrant Permission Set
+    class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+    options:
+      namespace_inject: $project_config.project__package__namespace
+      apex: >
+        User userUser = [SELECT Id FROM User WHERE Alias = 'UUser' LIMIT 1];
+        Id seaUserRole = [SELECT Id FROM UserRole WHERE Name = 'Summit Events Community Owner'].Id;
+        userUser.UserRoleId = seaUserRole;
+        userUser.Country = 'United States';
+        update userUser;
+
+  create_community_publish:
+    description: Publishes the community for Development.
+    class_path: cumulusci.tasks.salesforce.PublishCommunity
+    options:
+      name: Summit Events
 
   robot:
     options:
@@ -131,8 +168,10 @@ tasks:
 flows:
   config_qa:
     steps:
+      1.3:
+        task: create_community
       3:
-        task: deploy_permission_set
+        task: deploy_admin_permission_set
       4:
         task: deploy_site_config
       5:
@@ -144,21 +183,31 @@ flows:
 
   config_dev:
     steps:
+      1.3:
+        task: role_to_userUser
       3:
-        task: deploy_permission_set
+        task: create_community
       4:
-        task: deploy_site_config
+        task: create_community_network
       5:
-        task: deploy_site_settings
+        task: create_community_experience_cloud_bundle
       6:
+        task: deploy_site_config
+      7:
+        task: create_community_publish
+      9:
+        task: deploy_admin_permission_set
+      11:
+        task: deploy_site_settings
+      12:
         task: deploy_guest_permission_set
-      8:
-        task: create_fake_school_data
+#      13:
+#        task: create_fake_school_data
 
   config_dev_namespaced:
     steps:
       3:
-        task: deploy_permission_set
+        task: deploy_admin_permission_set
       4:
         task: deploy_site_config
       5:

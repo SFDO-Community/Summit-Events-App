@@ -281,7 +281,7 @@ public with sharing class SummitEventsRegisterController {
 
                 userContact = [
                         SELECT Id, Name, FirstName, LastName, Email, HomePhone, MobilePhone, Birthdate, MailingStreet,
-                                MailingState, MailingCountry, MailingPostalCode, MailingCity
+                                MailingState, MailingCountry, MailingPostalCode, MailingCity, AccountId
                         FROM Contact
                         WHERE Id IN (
                                 SELECT ContactId
