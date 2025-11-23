@@ -50,10 +50,27 @@ public without sharing class SummitEventsRtfLinkPipeline {
         List<String> fields = new List<String>();
         String query = '';
 
+        Summit_Events__c schemaObject = new Summit_Events__c();
+        Map<String,SObjectField> fieldMap = 
+            schemaObject
+                .getSObjectType()
+                .getDescribe()
+                .fields
+                .getMap();
+
         for(String field : RICHTEXT_FIELDS) {
-            fields.add(namespace + field);
+
+            Boolean isUpdateable = fieldMap.get(namespace + field).getDescribe().isUpdateable();
+            
+            if(isUpdateable) {
+                fields.add(namespace + field);
+            }
         }
 	    
+        if(fields.isEmpty()) {
+            throw new SummitEventsException('No RTF fields found or user lacks sufficient permissions to update fields');
+        }
+
         String fieldList = String.join(fields, ', ');
         query = 'SELECT Name, ' + fieldList + ' FROM ' + namespace + 'Summit_Events__c WHERE Id IN :idList';
         freshEventList = Database.query(query);
