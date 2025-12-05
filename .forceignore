@@ -3,3 +3,6 @@
 **/tsconfig*.json
 **/*.tsbuildinfo
 **/eslint.config.mjs
+**/jsconfig.json
+
+**/.eslintrc.json
