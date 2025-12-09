@@ -58,6 +58,8 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
                     //Build available appointments
                     appointments = SummitEventsREadShared.getAppointmentTypesByEventId(eventInformation.eventId, evtInstance.Instance_Title__c, evtInstance.Instance_Start_Date__c, evtInstance.Instance_End_Date__c, dayOfWeek);
 
+                    removeAppointmentsWithExceedingRegistrationLimit(appointments, evtInstance);
+                    
                     formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(evtInstance);
 
                     //Check if the user gets to select any appointments or they are all auto added
@@ -222,6 +224,33 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
     public PageReference previousPage() {
         return pageFlow.get('Previous');
+    }
+
+    private static void removeAppointmentsWithExceedingRegistrationLimit(Map<Id, Summit_Events_Appointment_Type__c> appointments, Summit_Events_Instance__c evtInstance){
+        AggregateResult[] eventAppointmentCounts = [
+            SELECT Count(Id) aCount, Event_Appointment_Type__c
+            FROM Summit_Events_Appointments__c
+            WHERE Event_Appointment_Type__r.Enforce_Registrations_Limit__c = TRUE
+            AND Event_Registration__r.Event_Instance__c =: evtInstance.Id
+            GROUP BY Event_Appointment_Type__c
+        ];
+
+        Map<Id, Integer> appointmentTypeIdMapToCount = new Map<Id, Integer>();
+        for (AggregateResult ar : eventAppointmentCounts) {
+            appointmentTypeIdMapToCount.put((Id) ar.get('Event_Appointment_Type__c'), (Integer) ar.get('aCount'));
+        }
+
+        List<Id> unavailableAppointments = new List<Id>();
+        for(Summit_Events_Appointment_Type__c apt : appointments.values()){
+            if(apt.Enforce_Registrations_Limit__c && appointmentTypeIdMapToCount.containsKey(apt.Id)){
+                if(appointmentTypeIdMapToCount.get(apt.Id) >= apt.Appointment_Registrations_Limit__c){
+                    unavailableAppointments.add(apt.Id);
+                }
+            }
+        }
+        for(Id unavailableAppointmentId : unavailableAppointments){
+            appointments.remove(unavailableAppointmentId);
+        }
     }
 
     /**
