@@ -281,7 +281,7 @@ public with sharing class SummitEventsRegisterController {
 
                 userContact = [
                         SELECT Id, Name, FirstName, LastName, Email, HomePhone, MobilePhone, Birthdate, MailingStreet,
-                                MailingState, MailingCountry, MailingPostalCode, MailingCity
+                                MailingState, MailingCountry, MailingPostalCode, MailingCity, AccountId
                         FROM Contact
                         WHERE Id IN (
                                 SELECT ContactId
@@ -304,6 +304,10 @@ public with sharing class SummitEventsRegisterController {
                 eventRegistration.Registrant_Mobile_Phone__c = userContact.MobilePhone;
                 eventRegistration.Registrant_Date_of_Birth__c = userContact.Birthdate;
                 eventRegistration.Contact__c = userContact.Id;
+                
+                if(SummitEventsShared.personAccountsEnabled()) {
+                    eventRegistration.Person_Account__c = userContact.AccountId;
+                }
 
                 if (userContact.Birthdate != null) {
                     birthDateString = userContact.Birthdate.format();
@@ -486,6 +490,7 @@ public with sharing class SummitEventsRegisterController {
 
         eventRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience, eventFeeList);
 
+        System.debug('Saved Registration id: ' + eventRegistration.Id);
         String dayOfWeek = SummitEventsShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
 
         //Insert pre-chosen appointments for appointments page
@@ -520,7 +525,9 @@ public with sharing class SummitEventsRegisterController {
             addAppt.Do_Not_Show_Time__c = appt.Do_Not_Show_Time__c;
             appointmentsToAdd.add(addAppt);
         }
+        System.debug('Appointments to add: ' + JSON.serializePretty(appointmentsToAdd));
         if (appointmentsToAdd.size() > 0) {
+            System.debug('Inserting ' + appointmentsToAdd.size() + ' appointments');
             rCRUD.insertAppointments(appointmentsToAdd);
         }
 
@@ -589,6 +596,7 @@ public with sharing class SummitEventsRegisterController {
             try {
                 insert appointments;
             } catch (Exception ex) {
+                System.debug(ex.getMessage());
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
         }
