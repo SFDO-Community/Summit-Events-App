@@ -460,16 +460,23 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                             </apex:outputPanel>
 
                             <!-- TEXT MESSAGE ASK -->
-                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!IF((CONTAINS(eventPage.Ask_Phone__c, 'mobile') || eventPage.Ask_Phone__c == 'Ask mobile' || eventPage.Ask_Phone__c == 'Ask mobile and require' ||  phoneType='mobile') && !eventPage.Do_not_show_receive_text_question__c, true, false)}">
-                                <div class="slds-form-element">
+                            <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1" rendered="{!IF((CONTAINS(eventPage.Ask_Phone__c, 'mobile') || eventPage.Ask_Phone__c == 'Ask mobile' || eventPage.Ask_Phone__c == 'Ask mobile and require' ||  phoneType='mobile') && eventPage.Ask_Receive_Text_Messages__c != 'Do not ask', true, false)}">
+                                <div class="slds-form-element {!IF(eventPage.Ask_Receive_Text_Messages__c == 'Ask and require', 'slds-is-required', '')}">
                                     <div class="slds-form-element__control">
-                                        <div class="slds-checkbox">
-                                            <apex:inputCheckbox value="{!eventRegistration.Registrant_Receive_Texts__c}" id="AcceptTextMessage"/>
+                                        <span class="slds-checkbox">
+                                            <apex:inputCheckbox value="{!eventRegistration.Registrant_Receive_Texts__c}" id="AcceptTextMessage" styleClass="slds-checkbox__input"/>          
                                             <apex:outputLabel for="AcceptTextMessage" styleClass="slds-checkbox__label">
                                                 <span class="slds-checkbox_faux"></span>
-                                                <span class="slds-form-element__label">{!eventPage.Registrant_Receive_Texts_Label__c} <abbr class="slds-required" title="required">*</abbr></span>
+                                                <span class="slds-form-element__label">{!eventPage.Registrant_Receive_Texts_Label__c}
+                                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Receive_Text_Messages__c == 'Ask and require', true, false)}">
+                                                        <abbr class="slds-required" title="required">*</abbr>
+                                                    </apex:outputText>
+                                                </span>
                                             </apex:outputLabel>
-                                        </div>
+                                        </span>
+                                    </div>
+                                    <div class="slds-form-element__help" id="acceptTextMessage-required">
+                                        {!IF(eventPage.Ask_Receive_Text_Messages__c == 'Ask and require', 'This field is required', '')}
                                     </div>
                                 </div>
                             </apex:outputPanel>
