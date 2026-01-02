@@ -1,0 +1,34 @@
+.page-container {
+    min-height: 400px;
+    padding: 1rem;
+}
+
+.page-register {
+    /* Register page specific styles */
+}
+
+.page-questions {
+    /* Questions page specific styles */
+}
+
+.page-appointments {
+    /* Appointments page specific styles */
+}
+
+.page-guests {
+    /* Guests page specific styles */
+}
+
+.page-donation {
+    /* Donation page specific styles */
+}
+
+.page-submit {
+    /* Submit page specific styles */
+}
+
+.page-confirmation {
+    /* Confirmation page specific styles */
+    text-align: center;
+}
+

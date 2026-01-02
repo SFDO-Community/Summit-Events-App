@@ -1,0 +1,171 @@
+<template>
+    <div class="slds-card slds-p-around_medium">
+        <!-- Basic Information -->
+        <div class="slds-grid slds-gutters slds-wrap">
+            <!-- First Name -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                <lightning-input
+                    label={firstNameLabel}
+                    value={registration.Registrant_First_Name__c}
+                    data-field="Registrant_First_Name__c"
+                    onchange={handleInputChange}
+                    required>
+                </lightning-input>
+            </div>
+
+            <!-- Last Name -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                <lightning-input
+                    label={lastNameLabel}
+                    value={registration.Registrant_Last_Name__c}
+                    data-field="Registrant_Last_Name__c"
+                    onchange={handleInputChange}
+                    required>
+                </lightning-input>
+            </div>
+
+            <!-- Preferred First Name -->
+            <template if:true={showPreferredName}>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        label={preferredNameLabel}
+                        value={registration.Registrant_Preferred_First_Name__c}
+                        data-field="Registrant_Preferred_First_Name__c"
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                </div>
+            </template>
+
+            <!-- Email -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                <lightning-input
+                    type="email"
+                    label={emailLabel}
+                    value={registration.Registrant_Email__c}
+                    data-field="Registrant_Email__c"
+                    onchange={handleInputChange}
+                    required>
+                </lightning-input>
+            </div>
+
+            <!-- Phone -->
+            <template if:true={showPhone}>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        type="tel"
+                        label={phoneLabel}
+                        value={registration.Registrant_Phone__c}
+                        data-field="Registrant_Phone__c"
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                </div>
+            </template>
+
+            <!-- Date of Birth -->
+            <template if:true={showDateOfBirth}>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        type="date"
+                        label={dateOfBirthLabel}
+                        value={registration.Registrant_Date_of_Birth__c}
+                        data-field="Registrant_Date_of_Birth__c"
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                </div>
+            </template>
+
+            <!-- Gender -->
+            <template if:true={showGender}>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        label={genderLabel}
+                        value={registration.Registrant_Gender__c}
+                        data-field="Registrant_Gender__c"
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                </div>
+            </template>
+
+            <!-- Pronouns -->
+            <template if:true={showPronoun}>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        label={pronounsLabel}
+                        value={registration.Registrant_Pronouns__c}
+                        data-field="Registrant_Pronouns__c"
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                </div>
+            </template>
+
+            <!-- Title -->
+            <template if:true={showTitle}>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        label={titleLabel}
+                        value={registration.Registrant_Title__c}
+                        data-field="Registrant_Title__c"
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                </div>
+            </template>
+
+            <!-- Company/Organization -->
+            <template if:true={showCompanyOrganization}>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        label={companyOrganizationLabel}
+                        value={registration.Registrant_Company_Organization__c}
+                        data-field="Registrant_Company_Organization__c"
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                </div>
+            </template>
+        </div>
+
+        <!-- Mailing Address -->
+        <template if:true={showMailingAddress}>
+            <div class="slds-m-top_medium">
+                <lightning-input-address
+                    address-label={mailingAddressLabel}
+                    street-label="Street"
+                    city-label="City"
+                    province-label="State/Province"
+                    country-label="Country"
+                    postal-code-label="Postal Code"
+                    street={registration.Registrant_Street_1__c}
+                    city={registration.Registrant_City__c}
+                    province={registration.Registrant_State__c}
+                    country={registration.Registrant_Country__c}
+                    postal-code={registration.Registrant_Postal_Code__c}
+                    onchange={handleAddressChange}>
+                </lightning-input-address>
+            </div>
+        </template>
+
+        <!-- Dietary Restrictions -->
+        <template if:true={showDietaryRestrictions}>
+            <div class="slds-m-top_medium">
+                <lightning-textarea
+                    label={dietaryRestrictionsLabel}
+                    value={registration.Dietary_Ristrictions__c}
+                    data-field="Dietary_Ristrictions__c"
+                    onchange={handleInputChange}>
+                </lightning-textarea>
+            </div>
+        </template>
+
+        <!-- Accessibility Needs -->
+        <template if:true={showAccessibilityNeeds}>
+            <div class="slds-m-top_medium">
+                <lightning-textarea
+                    label={accessibilityLabel}
+                    value={registration.Accessibility_Need_Detail__c}
+                    data-field="Accessibility_Need_Detail__c"
+                    onchange={handleInputChange}>
+                </lightning-textarea>
+            </div>
+        </template>
+    </div>
+</template>
+

@@ -1,0 +1,21 @@
+<template>
+    <div class="slds-card slds-p-around_medium">
+        <template if:true={visibleQuestions}>
+            <template for:each={visibleQuestions} for:item="question">
+                <div key={question.questionId} class="slds-m-bottom_medium">
+                    <c-summit-events-question-field
+                        question={question}
+                        onquestionchange={handleQuestionChange}>
+                    </c-summit-events-question-field>
+                </div>
+            </template>
+        </template>
+
+        <template if:false={visibleQuestions.length}>
+            <div class="slds-text-align_center slds-p-around_large">
+                <p class="slds-text-body_regular">No additional questions configured for this event.</p>
+            </div>
+        </template>
+    </div>
+</template>
+

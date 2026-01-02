@@ -1,0 +1,143 @@
+<template>
+    <lightning-card>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading..." size="large"></lightning-spinner>
+        </template>
+
+        <template if:false={isLoading}>
+            <template if:true={error}>
+                <div class="slds-m-around_medium">
+                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                        <h2>Error Loading Event</h2>
+                        <p>{error}</p>
+                    </div>
+                </div>
+            </template>
+
+            <template if:false={error}>
+                <!-- Page Header -->
+                <div slot="title" class="slds-text-heading_large">
+                    {currentPage.pageHeading}
+                </div>
+
+                <!-- Page Progress Indicator -->
+                <div class="slds-m-around_medium">
+                    <lightning-progress-indicator
+                        current-step={currentPageIndex}
+                        type="path"
+                        variant="base">
+                        <template for:each={eventData.pages} for:item="page">
+                            <lightning-progress-step
+                                key={page.pageIndex}
+                                label={page.pageName}
+                                value={page.pageIndex}>
+                            </lightning-progress-step>
+                        </template>
+                    </lightning-progress-indicator>
+                </div>
+
+                <!-- Page Description -->
+                <template if:true={currentPage.pageDescription}>
+                    <div class="slds-m-horizontal_medium slds-m-bottom_medium">
+                        <lightning-formatted-rich-text value={currentPage.pageDescription}>
+                        </lightning-formatted-rich-text>
+                    </div>
+                </template>
+
+                <!-- Page Content -->
+                <div class={pageTypeClass}>
+                    <!-- Registration Page -->
+                    <template if:true={isRegisterPage}>
+                        <c-summit-events-register-page
+                            class="current-page-component"
+                            event-data={eventData}>
+                        </c-summit-events-register-page>
+                    </template>
+
+                    <!-- Additional Questions Page -->
+                    <template if:true={isQuestionsPage}>
+                        <c-summit-events-questions-page
+                            class="current-page-component"
+                            event-data={eventData}>
+                        </c-summit-events-questions-page>
+                    </template>
+
+                    <!-- Appointments Page -->
+                    <template if:true={isAppointmentsPage}>
+                        <c-summit-events-appointments-page
+                            class="current-page-component"
+                            event-data={eventData}>
+                        </c-summit-events-appointments-page>
+                    </template>
+
+                    <!-- Guests Page -->
+                    <template if:true={isGuestsPage}>
+                        <c-summit-events-guests-page
+                            class="current-page-component"
+                            event-data={eventData}>
+                        </c-summit-events-guests-page>
+                    </template>
+
+                    <!-- Donation Page -->
+                    <template if:true={isDonationPage}>
+                        <c-summit-events-donation-page
+                            class="current-page-component"
+                            event-data={eventData}>
+                        </c-summit-events-donation-page>
+                    </template>
+
+                    <!-- Submit/Review Page -->
+                    <template if:true={isSubmitPage}>
+                        <c-summit-events-submit-page
+                            class="current-page-component"
+                            event-data={eventData}>
+                        </c-summit-events-submit-page>
+                    </template>
+
+                    <!-- Confirmation Page -->
+                    <template if:true={isConfirmationPage}>
+                        <c-summit-events-confirmation-page
+                            class="current-page-component"
+                            event-data={eventData}>
+                        </c-summit-events-confirmation-page>
+                    </template>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div slot="footer" class="slds-m-around_medium">
+                    <div class="slds-grid slds-grid_align-spread">
+                        <div>
+                            <template if:true={showPreviousButton}>
+                                <lightning-button
+                                    label="Previous"
+                                    icon-name="utility:chevronleft"
+                                    onclick={handlePrevious}
+                                    variant="neutral">
+                                </lightning-button>
+                            </template>
+                        </div>
+                        <div>
+                            <template if:true={showNextButton}>
+                                <lightning-button
+                                    label="Next"
+                                    icon-name="utility:chevronright"
+                                    icon-position="right"
+                                    onclick={handleNext}
+                                    variant="brand">
+                                </lightning-button>
+                            </template>
+                            <template if:true={showSubmitButton}>
+                                <lightning-button
+                                    label="Submit Registration"
+                                    onclick={handleSubmit}
+                                    variant="brand">
+                                </lightning-button>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </template>
+    </lightning-card>
+</template>
+

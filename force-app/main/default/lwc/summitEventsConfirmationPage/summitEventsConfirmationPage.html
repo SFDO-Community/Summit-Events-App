@@ -1,0 +1,45 @@
+<template>
+    <div class="slds-card slds-p-around_large slds-text-align_center">
+        <div class="slds-m-bottom_medium">
+            <lightning-icon icon-name="action:approval" size="large" variant="success"></lightning-icon>
+        </div>
+
+        <h2 class="slds-text-heading_large slds-m-bottom_medium">
+            Thank You for Registering!
+        </h2>
+
+        <div class="slds-m-bottom_medium">
+            <p class="slds-text-body_regular">
+                Your registration for <strong>{eventName}</strong>
+                <template if:true={instanceTitle}>
+                    - <strong>{instanceTitle}</strong>
+                </template>
+                has been received.
+            </p>
+        </div>
+
+        <div class="slds-box slds-box_x-small slds-theme_shade slds-m-top_medium">
+            <dl class="slds-dl_horizontal">
+                <dt class="slds-dl_horizontal__label">
+                    <p class="slds-truncate">Registrant:</p>
+                </dt>
+                <dd class="slds-dl_horizontal__detail">
+                    <p>{registrantName}</p>
+                </dd>
+                <dt class="slds-dl_horizontal__label">
+                    <p class="slds-truncate">Email:</p>
+                </dt>
+                <dd class="slds-dl_horizontal__detail">
+                    <p>{registrantEmail}</p>
+                </dd>
+            </dl>
+        </div>
+
+        <div class="slds-m-top_large">
+            <p class="slds-text-body_small">
+                A confirmation email has been sent to {registrantEmail}.
+            </p>
+        </div>
+    </div>
+</template>
+

@@ -1,0 +1,173 @@
+<template>
+    <div class="question-field">
+        <!-- Instructions -->
+        <template if:true={question.instructions}>
+            <div class="slds-m-bottom_small">
+                <lightning-formatted-rich-text value={question.instructions}>
+                </lightning-formatted-rich-text>
+            </div>
+        </template>
+
+        <!-- Text Input -->
+        <template if:true={isText}>
+            <lightning-input
+                data-input
+                label={label}
+                value={inputValue}
+                required={isRequired}
+                field-level-help={helpText}
+                max-length={maxLength}
+                onchange={handleInputChange}>
+            </lightning-input>
+        </template>
+
+        <!-- Text Area -->
+        <template if:true={isTextArea}>
+            <lightning-textarea
+                data-input
+                label={label}
+                value={inputValue}
+                required={isRequired}
+                field-level-help={helpText}
+                max-length={maxLength}
+                onchange={handleInputChange}>
+            </lightning-textarea>
+        </template>
+
+        <!-- Email -->
+        <template if:true={isEmail}>
+            <lightning-input
+                data-input
+                type="email"
+                label={label}
+                value={inputValue}
+                required={isRequired}
+                field-level-help={helpText}
+                onchange={handleInputChange}>
+            </lightning-input>
+        </template>
+
+        <!-- Phone -->
+        <template if:true={isPhone}>
+            <lightning-input
+                data-input
+                type="tel"
+                label={label}
+                value={inputValue}
+                required={isRequired}
+                field-level-help={helpText}
+                onchange={handleInputChange}>
+            </lightning-input>
+        </template>
+
+        <!-- Number -->
+        <template if:true={isNumber}>
+            <lightning-input
+                data-input
+                type="number"
+                label={label}
+                value={inputValue}
+                required={isRequired}
+                field-level-help={helpText}
+                onchange={handleInputChange}>
+            </lightning-input>
+        </template>
+
+        <!-- Date -->
+        <template if:true={isDate}>
+            <lightning-input
+                data-input
+                type="date"
+                label={label}
+                value={inputValue}
+                required={isRequired}
+                field-level-help={helpText}
+                onchange={handleInputChange}>
+            </lightning-input>
+        </template>
+
+        <!-- Checkbox -->
+        <template if:true={isCheckbox}>
+            <lightning-input
+                data-input
+                type="checkbox"
+                label={label}
+                checked={inputValue}
+                required={isRequired}
+                field-level-help={helpText}
+                onchange={handleCheckboxChange}>
+            </lightning-input>
+        </template>
+
+        <!-- Picklist -->
+        <template if:true={isPicklist}>
+            <lightning-combobox
+                data-input
+                label={label}
+                value={inputValue}
+                options={picklistOptions}
+                required={isRequired}
+                field-level-help={helpText}
+                onchange={handleInputChange}>
+            </lightning-combobox>
+        </template>
+
+        <!-- Multi-Select Picklist -->
+        <template if:true={isMultiPicklist}>
+            <lightning-dual-listbox
+                data-input
+                label={label}
+                source-label="Available Options"
+                selected-label="Selected Options"
+                value={inputValue}
+                options={picklistOptions}
+                required={isRequired}
+                field-level-help={helpText}
+                onchange={handleInputChange}>
+            </lightning-dual-listbox>
+        </template>
+
+        <!-- Radio Group -->
+        <template if:true={isRadio}>
+            <lightning-radio-group
+                data-input
+                label={label}
+                value={inputValue}
+                options={radioOptions}
+                required={isRequired}
+                field-level-help={helpText}
+                onchange={handleInputChange}>
+            </lightning-radio-group>
+        </template>
+
+        <!-- Lookup (placeholder - you'll replace with your ported component) -->
+        <template if:true={isLookup}>
+            <lightning-input
+                data-input
+                label={label}
+                value={inputValue}
+                required={isRequired}
+                field-level-help={helpText}
+                placeholder="Lookup component to be implemented"
+                onchange={handleInputChange}>
+            </lightning-input>
+            <!-- TODO: Replace with actual lookup component
+            <c-summit-events-lookup
+                data-input
+                question={question}
+                value={inputValue}
+                required={isRequired}
+                onchange={handleLookupChange}>
+            </c-summit-events-lookup>
+            -->
+        </template>
+
+        <!-- Error/Help Text -->
+        <template if:true={question.errorAssistText}>
+            <div class="slds-form-element__help slds-m-top_x-small">
+                {question.errorAssistText}
+            </div>
+        </template>
+    </div>
+</template>
+
