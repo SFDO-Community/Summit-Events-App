@@ -1,11 +1,11 @@
 {
-  "activeViewId" : "415b9c69-0325-486a-a90b-ec53a0344078",
-  "appPageId" : "2f5e7442-a66b-4829-a210-a62eb1f72e96",
+  "activeViewId" : "3e01e181-e75b-415e-ae5e-abc2e7848689",
+  "appPageId" : "66a6f1fb-1058-4e9b-bda8-5dbeaa5a09b2",
   "configurationTags" : [ ],
   "devName" : "Home",
-  "id" : "4f3f379b-8350-42df-b16b-2aff0a93733a",
+  "id" : "0c7a207a-9743-4b03-89c7-98f76feec816",
   "label" : "Home",
-  "pageAccess" : "UseParent",
+  "pageAccess" : "Public",
   "routeType" : "home",
   "type" : "route",
   "urlPrefix" : ""
