@@ -1,0 +1,11 @@
+/**
+ * Created by Thaddaeus Dahlberg, Software Engineer, University of St. Thomas on 3/2/2023.
+ */
+
+/* Focused state for keyboard navigation */
+.slds-listbox__option.slds-has-focus {
+    background-color: #f3f3f3;
+    outline: none;
+    box-shadow: inset 0 0 0 1px #1b96ff;
+}
+

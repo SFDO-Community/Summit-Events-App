@@ -416,7 +416,7 @@ public with sharing class SummitEventsLWCController {
         registerPage.pageMetaTitle = eventInfo.Event_Home_Link_Title__c;
         registerPage.pageHeading = eventInfo.Event_Name__c;
         registerPage.pageSubheading = eventInstance.Instance_Title__c;
-        registerPage.pageDescription = eventInfo.Event_Full_Text__c;
+        registerPage.pageDescription = eventInfo.Event_description__c;
         registerPage.isActive = true;
         pages.add(registerPage);
 
@@ -449,7 +449,7 @@ public with sharing class SummitEventsLWCController {
         }
 
         // Page 4: Guest Registration (if configured)
-        if (config.hasGuestRegistration && config.maxGuests > 0) {
+        if (config.hasGuestRegistration) {
             PageInfo guestsPage = new PageInfo();
             guestsPage.pageType = 'guests';
             guestsPage.pageIndex = pageIndex++;
