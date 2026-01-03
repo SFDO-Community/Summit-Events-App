@@ -8,8 +8,8 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightningCommunity__Default">
-            <property name="eventInstanceId" type="String" label="Event Instance ID" description="The ID of the Summit Events Instance" required="true"/>
-            <property name="registrationId" type="String" label="Registration ID" description="Encrypted registration ID for existing registrations (optional)"/>
+            <property name="eventInstanceId" type="String" label="Event Instance ID" description="The ID of the Summit Events Instance (optional - can be read from URL parameter 'instanceId' or 'id')" required="false"/>
+            <property name="registrationId" type="String" label="Registration ID" description="Encrypted registration ID for existing registrations (optional - can be read from URL parameter 'registrationId' or 'regId')"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

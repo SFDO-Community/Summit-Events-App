@@ -14,17 +14,36 @@ This document describes the Lightning Web Component (LWC) implementation for the
 - Handles validation and data persistence
 - Displays progress indicator
 - Manages state across all pages
+- **Reads URL parameters for instance ID and registration ID** (matches Visualforce behavior)
 
-**Public Properties**:
-- `eventInstanceId` - Required: The Summit Events Instance ID
-- `registrationId` - Optional: Encrypted ID for existing registrations
+**URL Parameters Supported**:
+- `instanceId`, `eventInstanceId`, or `id` → Event Instance ID
+- `registrationId` or `regId` → Encrypted Registration ID
+
+**Example URLs**:
+```
+/registration?instanceId=a1X5e000000ABCD
+/registration?id=a1X5e000000ABCD&registrationId=abc123encrypted
+```
+
+**Public Properties** (Optional if using URL params):
+- `eventInstanceId` - The Summit Events Instance ID (can be read from URL)
+- `registrationId` - Encrypted ID for existing registrations (can be read from URL)
 
 **Usage in Experience Cloud**:
 ```html
+<!-- Option 1: With URL parameters (no properties needed) -->
+URL: /registration?instanceId=a1X5e000000ABCD
+
+<!-- Option 2: With component properties -->
 <c-summit-events-registration
     event-instance-id="a1X..."
     registration-id="">
 </c-summit-events-registration>
+
+<!-- Option 3: Mix (URL takes precedence if API prop not set) -->
+URL: /registration?id=a1X...
+Component with optional registrationId property
 ```
 
 ### 2. Page Components

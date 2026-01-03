@@ -69,12 +69,52 @@ export default class SummitEventsRegistration extends LightningElement {
     }
 
     connectedCallback() {
+        // Get URL parameters
+        this.readUrlParameters();
         this.loadEventData();
+    }
+
+    /**
+     * Read instance ID and registration ID from URL parameters
+     * Supports both Experience Cloud and standard URL formats
+     * URL parameters take precedence over component properties
+     */
+    readUrlParameters() {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Check for instanceId in URL - URL parameter OVERRIDES @api property
+        const urlInstanceId = urlParams.get('instanceId') ||
+                             urlParams.get('eventInstanceId') ||
+                             urlParams.get('id');
+
+        if (urlInstanceId) {
+            this.eventInstanceId = urlInstanceId;
+        }
+
+        // Check for registrationId in URL - URL parameter OVERRIDES @api property
+        const urlRegistrationId = urlParams.get('registrationId') ||
+                                 urlParams.get('regId');
+
+        if (urlRegistrationId) {
+            this.registrationId = urlRegistrationId;
+        }
+
+        // Log for debugging
+        console.log('Event Instance ID (from URL or API):', this.eventInstanceId);
+        console.log('Registration ID (from URL or API):', this.registrationId);
     }
 
     loadEventData() {
         this.isLoading = true;
         this.error = null;
+
+        // Validate that we have an instance ID
+        if (!this.eventInstanceId) {
+            this.error = 'Event Instance ID is required. Please provide it via URL parameter (instanceId, eventInstanceId, or id) or component property.';
+            this.isLoading = false;
+            this.showToast('Error', this.error, 'error');
+            return;
+        }
 
         getSummitEventData({
             eventInstanceId: this.eventInstanceId,

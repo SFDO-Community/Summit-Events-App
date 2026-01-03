@@ -194,6 +194,22 @@ summitEventsRegistration (Controller)
 - Validates current page before advancing
 - Saves data from child components
 - Handles submission to Apex
+- **Reads URL parameters for instance ID and registration ID**
+
+**URL Parameters Supported**:
+- `instanceId`, `eventInstanceId`, or `id` - The Summit Events Instance ID
+- `registrationId` or `regId` - Encrypted registration ID for resuming
+
+**Example URLs**:
+```
+/registration?instanceId=a1X5e000000ABCD
+/registration?id=a1X5e000000ABCD&registrationId=abc123encrypted
+```
+
+**Component Properties** (Optional):
+- Can still set via `@api eventInstanceId` and `@api registrationId`
+- **URL parameters OVERRIDE component properties** (for dynamic navigation)
+- Matches Visualforce behavior
 
 **Page Components**:
 - Must implement `@api validate()` method
