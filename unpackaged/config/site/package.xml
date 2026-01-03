@@ -4,5 +4,5 @@
         <members>*</members>
         <name>CustomSite</name>
     </types>
-    <version>60.0</version>
+    <version>64.0</version>
 </Package>

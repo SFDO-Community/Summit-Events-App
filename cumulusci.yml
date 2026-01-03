@@ -31,6 +31,13 @@ tasks:
       namespace_inject: $project_config.project__package__namespace
       path: unpackaged/config/sharing
 
+  deploy_trusted_site_settings:
+    description: Deploys configuration for Development.
+    class_path: cumulusci.tasks.salesforce.Deploy
+    options:
+      namespace_inject: $project_config.project__package__namespace
+      path: unpackaged/config/cspTrustedSites
+
   deploy_namespaced_guest_sharing_rules:
     description: Deploys configuration for Development.
     class_path: cumulusci.tasks.salesforce.Deploy
@@ -201,6 +208,8 @@ flows:
         task: deploy_site_settings
       12:
         task: deploy_guest_permission_set
+      13:
+        task: deploy_trusted_site_settings
 #      13:
 #        task: create_fake_school_data
 

@@ -12,5 +12,5 @@
         <members>summit__Summit_Events_Fee_Allocation__c</members>
         <name>SharingRules</name>
     </types>
-    <version>60.0</version>
+    <version>64.0</version>
 </Package>
