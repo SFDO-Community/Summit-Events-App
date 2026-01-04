@@ -197,12 +197,18 @@ summitEventsRegistration (Controller)
 - **Reads URL parameters for instance ID and registration ID**
 
 **URL Parameters Supported**:
-- `instanceId`, `eventInstanceId`, or `id` - The Summit Events Instance ID
-- `registrationId` or `regId` - Encrypted registration ID for resuming
+- `instanceId`, `instanceID` (capital D), `eventInstanceId`, or `id` - The Summit Events Instance ID
+- `registrationId`, `registrationID` (capital D), or `regId` - Encrypted registration ID for resuming
+
+**⚠️ Case Sensitivity**:
+- JavaScript URL parameters are **case-sensitive**
+- Visualforce uses `instanceID` (capital D)
+- Component supports BOTH `instanceID` and `instanceId`
 
 **Example URLs**:
 ```
 /registration?instanceId=a1X5e000000ABCD
+/registration?instanceID=a1X5e000000ABCD  (capital D - Visualforce backward compatibility)
 /registration?id=a1X5e000000ABCD&registrationId=abc123encrypted
 ```
 

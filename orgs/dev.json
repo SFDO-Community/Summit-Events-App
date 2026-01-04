@@ -27,12 +27,19 @@
     "languageSettings": {
       "enableTranslationWorkbench": true
     },
+
     "experienceBundleSettings": {
       "enableExperienceBundleMetadata": true
     },
     "communitiesSettings": {
       "enableNetworksEnabled": true,
       "enableOotbProfExtUserOpsEnable": true
+    },
+    "mobileSettings": {
+      "enableS1EncryptedStoragePref2": false
+    },
+    "orgPreferenceSettings": {
+      "enableS1EncryptedStoragePref2": false
     }
   }
 }

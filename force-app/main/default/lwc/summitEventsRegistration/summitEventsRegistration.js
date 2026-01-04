@@ -1,5 +1,6 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { CurrentPageReference } from 'lightning/navigation';
 import getSummitEventData from '@salesforce/apex/SummitEventsLWCController.getSummitEventData';
 import saveRegistration from '@salesforce/apex/SummitEventsLWCController.saveRegistration';
 
@@ -11,6 +12,10 @@ export default class SummitEventsRegistration extends LightningElement {
     @track currentPageIndex = 0;
     @track isLoading = true;
     @track error;
+
+    // Wire CurrentPageReference to get URL parameters in Experience Cloud
+    @wire(CurrentPageReference)
+    pageRef;
 
     get currentPage() {
         return this.eventData?.pages?.[this.currentPageIndex];
@@ -76,32 +81,73 @@ export default class SummitEventsRegistration extends LightningElement {
 
     /**
      * Read instance ID and registration ID from URL parameters
-     * Supports both Experience Cloud and standard URL formats
+     * Uses CurrentPageReference for Experience Cloud compatibility
      * URL parameters take precedence over component properties
      */
     readUrlParameters() {
-        const urlParams = new URLSearchParams(window.location.search);
+        // Get URL parameters from CurrentPageReference (works in Experience Cloud)
+        const stateParams = this.pageRef?.state || {};
 
-        // Check for instanceId in URL - URL parameter OVERRIDES @api property
-        const urlInstanceId = urlParams.get('instanceId') ||
-                             urlParams.get('eventInstanceId') ||
-                             urlParams.get('id');
+        console.log('PageRef State:', stateParams);
+        console.log('Full PageRef:', JSON.stringify(this.pageRef));
+
+        // Check for instanceId in URL state - URL parameter OVERRIDES @api property
+        // Experience Cloud uses 'c__' prefix for custom parameters
+        // Note: Also checking for 'instanceID' (capital D) for backward compatibility
+        const urlInstanceId = stateParams.c__instanceId ||
+                             stateParams.c__instanceID ||
+                             stateParams.instanceId ||
+                             stateParams.instanceID ||
+                             stateParams.c__eventInstanceId ||
+                             stateParams.eventInstanceId ||
+                             stateParams.c__id ||
+                             stateParams.id;
 
         if (urlInstanceId) {
+            console.log('Found instance ID in URL:', urlInstanceId);
             this.eventInstanceId = urlInstanceId;
         }
 
-        // Check for registrationId in URL - URL parameter OVERRIDES @api property
-        const urlRegistrationId = urlParams.get('registrationId') ||
-                                 urlParams.get('regId');
+        // Check for registrationId in URL state - URL parameter OVERRIDES @api property
+        const urlRegistrationId = stateParams.c__registrationId ||
+                                 stateParams.c__registrationID ||
+                                 stateParams.registrationId ||
+                                 stateParams.registrationID ||
+                                 stateParams.c__regId ||
+                                 stateParams.regId;
 
         if (urlRegistrationId) {
+            console.log('Found registration ID in URL:', urlRegistrationId);
             this.registrationId = urlRegistrationId;
         }
 
-        // Log for debugging
-        console.log('Event Instance ID (from URL or API):', this.eventInstanceId);
-        console.log('Registration ID (from URL or API):', this.registrationId);
+        // Fallback: Try standard window.location.search (for non-Experience Cloud)
+        if (!urlInstanceId) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fallbackInstanceId = urlParams.get('instanceId') ||
+                                       urlParams.get('instanceID') ||
+                                       urlParams.get('eventInstanceId') ||
+                                       urlParams.get('id');
+
+            if (fallbackInstanceId) {
+                console.log('Found instance ID in window.location:', fallbackInstanceId);
+                this.eventInstanceId = fallbackInstanceId;
+            }
+
+            if (!urlRegistrationId) {
+                const fallbackRegId = urlParams.get('registrationId') ||
+                                     urlParams.get('registrationID') ||
+                                     urlParams.get('regId');
+                if (fallbackRegId) {
+                    console.log('Found registration ID in window.location:', fallbackRegId);
+                    this.registrationId = fallbackRegId;
+                }
+            }
+        }
+
+        // Log final values for debugging
+        console.log('Final Event Instance ID (from URL or API):', this.eventInstanceId);
+        console.log('Final Registration ID (from URL or API):', this.registrationId);
     }
 
     loadEventData() {
