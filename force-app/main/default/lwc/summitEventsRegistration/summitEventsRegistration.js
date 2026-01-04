@@ -34,11 +34,32 @@ export default class SummitEventsRegistration extends LightningElement {
     }
 
     get showNextButton() {
-        return !this.isLastPage && this.currentPage?.pageType !== 'confirmation';
+        // Don't show Next on confirmation page
+        if (this.currentPage?.pageType === 'confirmation') {
+            return false;
+        }
+        // Don't show Next on submit page
+        if (this.currentPage?.pageType === 'submit') {
+            return false;
+        }
+        // Don't show Next if this is the only page (show Submit instead)
+        if (this.eventData?.pages?.length === 1) {
+            return false;
+        }
+        // Show Next if not on last page
+        return !this.isLastPage;
     }
 
     get showSubmitButton() {
-        return this.currentPage?.pageType === 'submit';
+        // Show Submit on the submit page
+        if (this.currentPage?.pageType === 'submit') {
+            return true;
+        }
+        // Show Submit if there's only one page (registration only)
+        if (this.eventData?.pages?.length === 1) {
+            return true;
+        }
+        return false;
     }
 
     get pageTypeClass() {
