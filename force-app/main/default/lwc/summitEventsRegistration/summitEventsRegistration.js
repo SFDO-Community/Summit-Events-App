@@ -220,6 +220,35 @@ export default class SummitEventsRegistration extends LightningElement {
         }
     }
 
+    handleProgressClick(event) {
+        // Get the target page index from the clicked step
+        const targetPageIndex = parseInt(event.target.value, 10);
+
+        // Don't allow navigation to confirmation page via progress indicator
+        const targetPage = this.eventData.pages[targetPageIndex];
+        if (targetPage?.pageType === 'confirmation') {
+            return;
+        }
+
+        // Don't navigate if clicking on current page
+        if (targetPageIndex === this.currentPageIndex) {
+            return;
+        }
+
+        // If navigating forward, validate and save current page
+        if (targetPageIndex > this.currentPageIndex) {
+            if (!this.validateCurrentPage()) {
+                // Validation failed, don't navigate
+                return;
+            }
+            // Save current page data before advancing
+            this.saveCurrentPageData();
+        }
+
+        // Navigate to the clicked page
+        this.navigateToPage(targetPageIndex);
+    }
+
     navigateToPage(pageIndex) {
         if (pageIndex >= 0 && pageIndex < this.eventData.pages.length) {
             // Create new pages array with updated isActive flags to trigger reactivity

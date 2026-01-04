@@ -30,7 +30,8 @@
                             <lightning-progress-step
                                 key={page.pageIndex}
                                 label={page.pageName}
-                                value={page.pageIndex}>
+                                value={page.pageIndex}
+                                onclick={handleProgressClick}>
                             </lightning-progress-step>
                         </template>
                     </lightning-progress-indicator>
