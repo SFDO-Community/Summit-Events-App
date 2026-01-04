@@ -105,7 +105,7 @@
 
                 <!-- Navigation Buttons -->
                 <div slot="footer" class="slds-m-around_medium">
-                    <div class="slds-grid slds-grid_align-spread">
+                    <div class="slds-grid slds-grid_align-spread slds-m-bottom_medium">
                         <div>
                             <template if:true={showPreviousButton}>
                                 <lightning-button
@@ -135,6 +135,14 @@
                             </template>
                         </div>
                     </div>
+
+                    <!-- Event Footer -->
+                    <template if:true={eventFooter}>
+                        <div class="slds-border_top slds-p-top_medium">
+                            <lightning-formatted-rich-text value={eventFooter}>
+                            </lightning-formatted-rich-text>
+                        </div>
+                    </template>
                 </div>
             </template>
         </template>

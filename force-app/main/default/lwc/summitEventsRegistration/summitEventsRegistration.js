@@ -94,6 +94,10 @@ export default class SummitEventsRegistration extends LightningElement {
         return this.currentPage?.pageType === 'confirmation';
     }
 
+    get eventFooter() {
+        return this.eventData?.eventInfo?.Event_Footer__c;
+    }
+
     connectedCallback() {
         // Get URL parameters
         this.readUrlParameters();
@@ -314,4 +318,3 @@ export default class SummitEventsRegistration extends LightningElement {
         this.dispatchEvent(event);
     }
 }
-
