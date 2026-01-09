@@ -144,7 +144,7 @@ public without sharing class SummitEventsReadShared {
 
     public static List<Summit_Events_Payment__c> getPaymentsByRegistrationId(Id registrationId) {
         return [
-                SELECT Id, Payment_Amount__c, TouchnetReceiptNumber__c, Event_Registration__c
+                SELECT Id, TouchnetReceiptNumber__c, Event_Registration__c, Payment_Amount__c
                 FROM Summit_Events_Payment__c
                 WHERE Event_Registration__c = :registrationId
                 WITH SECURITY_ENFORCED

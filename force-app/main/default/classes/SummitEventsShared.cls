@@ -364,22 +364,7 @@ public with sharing class SummitEventsShared {
             Boolean adminOpen = isBoolean(ApexPages.currentPage().getParameters().get('adminopen'));
             eventIsClosed = !adminOpen;
         } else {
-            Datetime dt = Datetime.now();
-            Time compareCloseTime = dt.timeGmt();
-            String timeZonePick = getTimeZonePick(evtInstance.Instance_Time_Zone__c);
-            TimeZone tz = getTimeZone(timeZonePick);
-            dt = dt.addSeconds(tz.getOffset(dt) / 1000);
-            compareCloseTime = compareCloseTime.addMilliseconds(tz.getOffset(dt));
-            if (evtInstance.Registration_Close_Date__c <= dt.date()) {
-                if (evtInstance.Registration_Close_Date__c == dt.date()) {
-                    if (evtInstance.Registration_Close_Time__c < compareCloseTime) {
-                        eventIsClosed = true;
-                    }
-                } else {
-                    eventIsClosed = true;
-                }
-            }
-
+            eventIsClosed = checkCloseDateTime(evtInstance);
             if (evtInstance.Current_Available_Capacity__c <= 0 || evtInstance.Active_Status__c != 'Active' || masterEventStatus != 'Active') {
                 eventIsClosed = true;
             }
@@ -387,6 +372,27 @@ public with sharing class SummitEventsShared {
 
         return eventIsClosed;
     }
+
+    public static Boolean checkCloseDateTime(Summit_Events_Instance__c evtInstance) {
+        Boolean eventIsClosed = false;
+        Datetime dt = Datetime.now();
+        Time compareCloseTime = dt.timeGmt();
+        String timeZonePick = getTimeZonePick(evtInstance.Instance_Time_Zone__c);
+        TimeZone tz = getTimeZone(timeZonePick);
+        dt = dt.addSeconds(tz.getOffset(dt) / 1000);
+        compareCloseTime = compareCloseTime.addMilliseconds(tz.getOffset(dt));
+        if (evtInstance.Registration_Close_Date__c <= dt.date()) {
+            if (evtInstance.Registration_Close_Date__c == dt.date()) {
+                if (evtInstance.Registration_Close_Time__c < compareCloseTime) {
+                    eventIsClosed = true;
+                }
+            } else {
+                eventIsClosed = true;
+            }
+        }
+        return eventIsClosed;
+    }
+
 
     public static String getTimeZonePick(String pickListTimeZone) {
         if (String.isNotBlank(pickListTimeZone)) {
@@ -561,6 +567,12 @@ public with sharing class SummitEventsShared {
             pickList = picklistString.split('\n');
         }
         return pickList;
+    }
+
+    // Test to see if person accounts are enabled.
+    public static Boolean personAccountsEnabled()
+    {
+        return Schema.SObjectType.Account.fields.getMap().containsKey( 'isPersonAccount' );
     }
 
     //Method to test object and field availability for current user (Guest user)

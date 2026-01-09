@@ -6,6 +6,11 @@
     </classAccesses>
     <description>Permissions to allow a public guest user to fill out an event registration.</description>
     <fieldPermissions>
+        <editable>true</editable>
+        <field>Account.Description</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events_Appointment_Type__c.Appointment_Category__c</field>
         <readable>true</readable>
@@ -1177,6 +1182,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Summit_Events_Registration__c.New_Person_Account_Created__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Summit_Events_Registration__c.Number_of_Guests__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1188,6 +1198,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events_Registration__c.Payment_Gateway_Status__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Summit_Events_Registration__c.Person_Account__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1847,6 +1862,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Custom_Metadata_Person_Matching_Method__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.Date_Of_Birth_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -2357,6 +2377,26 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Person_Creation_Duplicate_Rule__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Person_Matching_Multiple_Match_Behavior__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Person_Matching_No_Match_Behavior__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Person_Matching_Rules__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.Phone_Label__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -2462,6 +2502,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events__c.Use_Matching_for_Guest_Registrations__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events__c.reCAPTCHA__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -2473,12 +2518,21 @@
     <hasActivationRequired>false</hasActivationRequired>
     <label>Summit Events Registrant</label>
     <objectPermissions>
-        <allowCreate>false</allowCreate>
+        <allowCreate>true</allowCreate>
         <allowDelete>false</allowDelete>
         <allowEdit>false</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
         <object>Account</object>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowCreate>false</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>false</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <object>Contact</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
