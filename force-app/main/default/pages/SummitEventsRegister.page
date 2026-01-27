@@ -360,15 +360,15 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                         </apex:outputPanel>
 
                         <!-- CONFIRM EMAIL -->
-                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6">
+                        <apex:outputPanel layout="block" styleClass="slds-col slds-p-around_x-small slds-size_1-of-1 slds-large-size_3-of-6" rendered="{!IF(eventPage.Ask_Email_Confirmation__c != 'Do not ask' && !ISBLANK(eventPage.Ask_Email_Confirmation__c), true, false)}">
                             <div class="slds-form-element slds-is-required">
-                                <apex:outputLabel for="email" styleClass="required slds-form-element__label">
+                                <apex:outputLabel for="confirm-email" styleClass="required slds-form-element__label">
                                     Confirm Email <abbr class="slds-required" title="required">*</abbr>
                                 </apex:outputLabel>
                                 <div class="slds-form-element__control">
-                                    <apex:input type="email" id="confirm-email" html-aria-describedby="email-required" required="true" styleClass="slds-input validEmail" disabled="{!contactSet && !ISBLANK(eventRegistration.Registrant_Email__c)}"/>
+                                    <apex:input type="email" id="confirm-email" html-aria-describedby="confirm-email-required" required="true" styleClass="slds-input validEmail" disabled="{!contactSet && !ISBLANK(eventRegistration.Registrant_Email__c)}"/>
                                 </div>
-                                <div class="slds-form-element__help" id="email-required">This field is required</div>
+                                <div class="slds-form-element__help" id="confirm-email-required">This field is required</div>
                             </div>
                         </apex:outputPanel>
 

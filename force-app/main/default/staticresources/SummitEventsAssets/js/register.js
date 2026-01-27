@@ -121,8 +121,11 @@ function checkForm() {
         }
     });
 
-    if(error_count == 0){
-        error_count = validateEmailsMatch(error_count);
+    if (error_count == 0) {
+        let confirmEmailInput = document.querySelector('input[id$=confirm-email]');
+        if (confirmEmailInput) {
+            error_count = validateEmailsMatch(error_count);
+        }
     }
 
     document.querySelectorAll(".selectableOL").forEach(sel => {
@@ -210,9 +213,9 @@ function fillInCityStateOnZip(zipObj) {
             }
             formOverlay(true);
         }).catch(error => {
-        console.log(error);
-        formOverlay(true);
-    });
+            console.log(error);
+            formOverlay(true);
+        });
 
     function formOverlay(remove) {
         let cityState = document.querySelectorAll('input[id$=city], select[id$=state]');
@@ -481,10 +484,10 @@ function createSpinner() {
     return overlay;
 }
 
-function validateEmailsMatch(error_count){
+function validateEmailsMatch(error_count) {
     let emailInput = document.querySelector('input[id$=email]');
     let confirmEmailInput = document.querySelector('input[id$=confirm-email]');
-    if(emailInput.value !== confirmEmailInput.value){
+    if (emailInput.value !== confirmEmailInput.value) {
         let inputWrap = confirmEmailInput.closest('.slds-form-element');
         inputWrap.classList.add("slds-has-error");
         addErrorFixerListener(confirmEmailInput, inputWrap, 'change');
