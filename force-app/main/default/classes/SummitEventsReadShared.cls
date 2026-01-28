@@ -66,7 +66,7 @@ public without sharing class SummitEventsReadShared {
                         Event_Payment_Due_Heading_Label__c, Event_Payment_Received_Heading_Label__c, Event_Payment_Received_Description__c,
                         Event_Cancel_Review_Title__c, Event_Cancel_Review_Description__c, Event_Cancelled_Notification_Text__c, Tracking_Cancel_Registration__c,
                         Event_Appointment_Title__c, Event_Appointment_Description__c, Tracking_Options_Registration__c, Event_Appointment_Chosen_Label__c,
-                        Event_Appointment_Unchosen_Label__c, Event_Appointment_Next_Instructions__c
+                        Event_Appointment_Unchosen_Label__c, Event_Appointment_Next_Instructions__c, Ask_Email_Confirmation__c
                 FROM Summit_Events__c
                 WHERE Id = :eventId
                 WITH SECURITY_ENFORCED

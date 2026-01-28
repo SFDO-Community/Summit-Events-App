@@ -852,12 +852,6 @@
             </fieldInstance>
         </itemInstances>
         <itemInstances>
-            <componentInstance>
-                <componentName>flexipage:blankSpace</componentName>
-                <identifier>flexipage_blankSpace</identifier>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
                     <name>uiBehavior</name>
@@ -865,6 +859,16 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Ask_Third_Party_Registrant__c</fieldItem>
                 <identifier>record_item_046</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Ask_Email_Confirmation__c</fieldItem>
+                <identifier>RecordAsk_Email_Confirmation_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-290466e5-6049-4759-9618-a692c763459b</name>
