@@ -1,15 +1,19 @@
 Insert Account:
   sf_object: Account
   fields:
+  - Created_with_Summit_Events__pc
+  - FirstName
+  - LastName
   - Name
+  - RecordTypeId
   lookups:
     ParentId:
-      table: Account
+      table:
+      - Account
       after: Insert Account
 Insert Lead:
   sf_object: Lead
   fields:
-  - Company
   - DoNotCall
   - FirstName
   - HasOptedOutOfEmail
@@ -33,9 +37,11 @@ Insert Contact:
   - LastName
   lookups:
     AccountId:
-      table: Account
+      table:
+      - Account
     ReportsToId:
-      table: Contact
+      table:
+      - Contact
       after: Insert Contact
 Insert Summit_Events__c:
   sf_object: Summit_Events__c
@@ -43,6 +49,8 @@ Insert Summit_Events__c:
   - Academic_Program_List_Selected__c
   - Academic_Program_List__c
   - Academic_Program_Selected__c
+  - Accessibility_Detail_Label__c
+  - Accessibility_Label__c
   - Add_Info_Question_Pick_List_1__c
   - Add_Info_Question_Pick_List_2__c
   - Add_Info_Question_Pick_List_3__c
@@ -66,9 +74,11 @@ Insert Summit_Events__c:
   - Allow_Other_Attendees__c
   - Alternate_Registration_URL__c
   - Applicant_Type_Label__c
+  - Ask_Accessibility_Needs__c
   - Ask_Applicant_Type__c
   - Ask_Company_Organization__c
   - Ask_Date_Of_Birth__c
+  - Ask_Dietary_Restrictions__c
   - Ask_Gender__c
   - Ask_If_Parent__c
   - Ask_Last_Name_As_Student__c
@@ -93,7 +103,9 @@ Insert Summit_Events__c:
   - Contact_Matching_Rules__c
   - Custom_Metadata_Contact_Matching_Method__c
   - Custom_Metadata_Lead_Matching_Method__c
+  - Custom_Metadata_Person_Matching_Method__c
   - Date_Of_Birth_Label__c
+  - Dietary_Restrictions_Label__c
   - Display_Guest_Registration__c
   - Display_Optional_Donation__c
   - Do_not_show_receive_text_question__c
@@ -186,6 +198,10 @@ Insert Summit_Events__c:
   - No_Guest_Registrations_Added_Message__c
   - Payment_Button_Label__c
   - Payment_Gateway__c
+  - Person_Creation_Duplicate_Rule__c
+  - Person_Matching_Multiple_Match_Behavior__c
+  - Person_Matching_No_Match_Behavior__c
+  - Person_Matching_Rules__c
   - Phone_Label__c
   - Phone_Type_Label__c
   - Preferred_Class_Year_Label__c
@@ -208,24 +224,35 @@ Insert Summit_Events__c:
   - Tracking_Event_Registration__c
   - Tracking_Options_Registration__c
   - Tracking_Submit_Registration__c
+  - Use_Matching_for_Guest_Registrations__c
+  - reCAPTCHA__c
+  - reCAPTCHA_v3_Score_Fail_Text__c
   lookups:
     Account__c:
-      table: Account
+      table:
+      - Account
     Donation_Allocation_1__c:
-      table: Summit_Events_Fee_Allocation__c
+      table:
+      - Summit_Events_Fee_Allocation__c
     Donation_Allocation_2__c:
-      table: Summit_Events_Fee_Allocation__c
+      table:
+      - Summit_Events_Fee_Allocation__c
     Donation_Allocation_3__c:
-      table: Summit_Events_Fee_Allocation__c
+      table:
+      - Summit_Events_Fee_Allocation__c
     Donation_Allocation_4__c:
-      table: Summit_Events_Fee_Allocation__c
+      table:
+      - Summit_Events_Fee_Allocation__c
     Donation_Allocation_5__c:
-      table: Summit_Events_Fee_Allocation__c
+      table:
+      - Summit_Events_Fee_Allocation__c
     Event_Fee_Additional_Allocation__c:
-      table: Summit_Events_Fee_Allocation__c
+      table:
+      - Summit_Events_Fee_Allocation__c
     Event_Fee_Allocation__c:
-      table: Summit_Events_Fee_Allocation__c
-  anchor_date: '2023-11-12'
+      table:
+      - Summit_Events_Fee_Allocation__c
+  anchor_date: '2025-11-19'
 Insert Summit_Events_Email__c:
   sf_object: Summit_Events_Email__c
   fields:
@@ -244,8 +271,9 @@ Insert Summit_Events_Email__c:
   - Org_Email__c
   lookups:
     Event__c:
-      table: Summit_Events__c
-  anchor_date: '2023-11-12'
+      table:
+      - Summit_Events__c
+  anchor_date: '2025-11-19'
 Insert Summit_Events_Instance__c:
   sf_object: Summit_Events_Instance__c
   fields:
@@ -275,12 +303,15 @@ Insert Summit_Events_Instance__c:
   - Virtual_Meeting_Link__c
   lookups:
     Event_Fee_Additional_Allocation_Override__c:
-      table: Summit_Events_Fee_Allocation__c
+      table:
+      - Summit_Events_Fee_Allocation__c
     Event_Fee_Allocation_Override__c:
-      table: Summit_Events_Fee_Allocation__c
+      table:
+      - Summit_Events_Fee_Allocation__c
     Event__c:
-      table: Summit_Events__c
-  anchor_date: '2023-11-12'
+      table:
+      - Summit_Events__c
+  anchor_date: '2025-11-19'
 Insert Summit_Events_Question__c:
   sf_object: Summit_Events_Question__c
   fields:
@@ -296,6 +327,7 @@ Insert Summit_Events_Question__c:
   - Lookup_Fields__c
   - Lookup_No_Results_Label__c
   - Lookup_Object__c
+  - Lookup_Order_By__c
   - Lookup_Results_Icon__c
   - Lookup_Secondary_Input_Instructions__c
   - Lookup_Secondary_Input_Link_Text__c
@@ -312,11 +344,13 @@ Insert Summit_Events_Question__c:
   - Text_Limit__c
   lookups:
     Controlling_Question__c:
-      table: Summit_Events_Question__c
+      table:
+      - Summit_Events_Question__c
       after: Insert Summit_Events_Question__c
     Event__c:
-      table: Summit_Events__c
-  anchor_date: '2023-11-12'
+      table:
+      - Summit_Events__c
+  anchor_date: '2025-11-19'
 Insert Summit_Events_Appointment_Type__c:
   sf_object: Summit_Events_Appointment_Type__c
   fields:
@@ -342,14 +376,18 @@ Insert Summit_Events_Appointment_Type__c:
   - Title__c
   lookups:
     Appointment_Fee_Additional_Allocation__c:
-      table: Summit_Events_Fee_Allocation__c
+      table:
+      - Summit_Events_Fee_Allocation__c
     Appointment_Fee_Allocation__c:
-      table: Summit_Events_Fee_Allocation__c
+      table:
+      - Summit_Events_Fee_Allocation__c
     Restrict_To_Instance_Title__c:
-      table: Summit_Events_Instance__c
+      table:
+      - Summit_Events_Instance__c
     Summit_Events__c:
-      table: Summit_Events__c
-  anchor_date: '2023-11-12'
+      table:
+      - Summit_Events__c
+  anchor_date: '2025-11-19'
 Insert Summit_Events_Host__c:
   sf_object: Summit_Events_Host__c
   fields:
@@ -369,13 +407,17 @@ Insert Summit_Events_Host__c:
   - Undergrad_Major__c
   lookups:
     Contact__c:
-      table: Contact
+      table:
+      - Contact
     Event_Instance__c:
-      table: Summit_Events_Instance__c
-  anchor_date: '2023-11-12'
+      table:
+      - Summit_Events_Instance__c
+  anchor_date: '2025-11-19'
 Insert Summit_Events_Registration__c:
   sf_object: Summit_Events_Registration__c
   fields:
+  - Accessibility_Need_Detail__c
+  - Accessibility_Need__c
   - Actual_Number_of_Guests__c
   - Add_Info_Answer_1__c
   - Add_Info_Answer_2__c
@@ -394,6 +436,7 @@ Insert Summit_Events_Registration__c:
   - Campus_Tour_Time__c
   - Confirmation_Call_Result__c
   - Date_All_Appointments_Confirmed_del__c
+  - Dietary_Ristrictions__c
   - Display_Attendance_Publicly__c
   - Encrypted_Registration_Id_1__c
   - Encrypted_Registration_Id_2__c
@@ -410,6 +453,7 @@ Insert Summit_Events_Registration__c:
   - Matching_Log__c
   - New_Contact_Created__c
   - New_Lead_Created__c
+  - New_Person_Account_Created__c
   - Number_of_Guests__c
   - Participation_Type__c
   - Payment_Gateway_Status__c
@@ -425,6 +469,7 @@ Insert Summit_Events_Registration__c:
   - Registrant_College__c
   - Registrant_Company_Organization__c
   - Registrant_Country__c
+  - Registrant_Date_of_Birth_Text__c
   - Registrant_Date_of_Birth__c
   - Registrant_Do_Not_Call__c
   - Registrant_Email__c
@@ -466,6 +511,7 @@ Insert Summit_Events_Registration__c:
   - Status__c
   - Substatus__c
   - gclid__c
+  - reCAPTCHA_Score__c
   - utm_campaign__c
   - utm_content__c
   - utm_creative_format__c
@@ -477,15 +523,25 @@ Insert Summit_Events_Registration__c:
   - utm_term__c
   lookups:
     Contact__c:
-      table: Contact
+      table:
+      - Contact
     Event_Instance__c:
-      table: Summit_Events_Instance__c
+      table:
+      - Summit_Events_Instance__c
     Event__c:
-      table: Summit_Events__c
+      table:
+      - Summit_Events__c
     Guest_Host__c:
-      table: Summit_Events_Registration__c
+      table:
+      - Summit_Events_Registration__c
       after: Insert Summit_Events_Registration__c
-  anchor_date: '2023-11-12'
+    Lead__c:
+      table:
+      - Lead
+    Person_Account__c:
+      table:
+      - Account
+  anchor_date: '2025-11-19'
 Insert Summit_Events_Appointments__c:
   sf_object: Summit_Events_Appointments__c
   fields:
@@ -513,12 +569,14 @@ Insert Summit_Events_Appointments__c:
   - Sort_Order__c
   lookups:
     Event_Appointment_Type__c:
-      table: Summit_Events_Appointment_Type__c
+      table:
+      - Summit_Events_Appointment_Type__c
     Event_Host__c:
-      table: Summit_Events_Host__c
+      table:
+      - Summit_Events_Host__c
     Event_Registration__c:
-      table: Summit_Events_Registration__c
-  anchor_date: '2023-11-12'
+      table:
+      - Summit_Events_Registration__c
 Insert Summit_Events_Payment__c:
   sf_object: Summit_Events_Payment__c
   fields:
@@ -550,8 +608,9 @@ Insert Summit_Events_Payment__c:
   - Zip__c
   lookups:
     Event_Registration__c:
-      table: Summit_Events_Registration__c
-  anchor_date: '2023-11-12'
+      table:
+      - Summit_Events_Registration__c
+  anchor_date: '2025-11-19'
 Insert Summit_Events_Fee__c:
   sf_object: Summit_Events_Fee__c
   fields:
@@ -560,13 +619,18 @@ Insert Summit_Events_Fee__c:
   - Event_Fee__c
   lookups:
     Event_Appointment_Type__c:
-      table: Summit_Events_Appointment_Type__c
+      table:
+      - Summit_Events_Appointment_Type__c
     Event_Fee_Allocation__c:
-      table: Summit_Events_Fee_Allocation__c
+      table:
+      - Summit_Events_Fee_Allocation__c
     Event_Registration__c:
-      table: Summit_Events_Registration__c
+      table:
+      - Summit_Events_Registration__c
     Summit_Events_Payment__c:
-      table: Summit_Events_Payment__c
+      table:
+      - Summit_Events_Payment__c
     Summit_Events__c:
-      table: Summit_Events__c
-  anchor_date: '2023-11-12'
+      table:
+      - Summit_Events__c
+  anchor_date: '2025-11-19'

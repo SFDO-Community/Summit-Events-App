@@ -39,7 +39,7 @@ Need to build a mock package to test and throw away without worrying about ances
 this command:
 
 ```
-cci flow run build_feature_test_package
+cci  flow run build_feature_test_package 
 ```
 Use the SubscriberPackageVersion Id to append to an installation link:
 

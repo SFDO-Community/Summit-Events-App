@@ -32,7 +32,6 @@ public with sharing class SummitEventsShared {
         currentUrl = currentUrl.replace('#', '?');
         List<String> currentUrlSplit = currentUrl.split('\\?');
         currentUrl = currentUrlSplit[0];
-
         currentUrlSplit = currentUrl.split('/');
         String currentPageName = currentUrlSplit[currentUrlSplit.size() - 1];
 
@@ -40,47 +39,13 @@ public with sharing class SummitEventsShared {
 
         String dayOfWeek = convertDateToDatetime(startDate, null, '').format('EEEE');
 
-        Integer appointmentTypes = [
-                SELECT COUNT()
-                FROM Summit_Events_Appointment_Type__c
-                WHERE Summit_Events__c = :eventId
-                AND (
-                        Chosen_State__c = 'Added'
-                        OR (Chosen_State__c = 'Added and Required' AND Auto_Confirm_Appointment__c = FALSE)
-                        OR Chosen_State__c = NULL
-                )
-                AND (
-                        Restrict_To_Instance_Title__r.Instance_Title__c = :instanceTitle
-                        OR Restrict_To_Instance_Title__r.Instance_Title__c = NULL)
-                AND (Date_Available_Start__c <= :startDate OR Date_Available_Start__c = NULL)
-                AND (Date_Available_End__c >= :endDate OR Date_Available_End__c = NULL)
-                AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
-                AND (Appointment_Type_Status__c = 'Active' OR Appointment_Type_Status__c = NULL)
-                WITH SECURITY_ENFORCED
-        ];
+        Integer appointmentTypes = SummitEventsReadShared.getAppointmentTypeCount(eventId, instanceTitle, startDate, endDate, dayOfWeek);
 
-        Integer additionalQuestions = [
-                SELECT COUNT()
-                FROM Summit_Events_Question__c
-                WHERE Event__c = :eventId
-                AND (Registrant_Type__c = 'Registrant' OR Registrant_Type__c = 'Registrant and Guest')
-                WITH SECURITY_ENFORCED
-        ];
+        Integer additionalQuestions = SummitEventsReadShared.getAdditionalQuestionsCount(eventId);
 
-        Integer guestQuestions = [
-                SELECT COUNT()
-                FROM Summit_Events_Question__c
-                WHERE Event__c = :eventId
-                AND (Registrant_Type__c = 'Guest' OR Registrant_Type__c = 'Registrant and Guest')
-                WITH SECURITY_ENFORCED
-        ];
+        Integer guestQuestions = SummitEventsReadShared.getGuestQuestionsCount(eventId);
 
-        Summit_Events__c eventInformation = [
-                SELECT Id, Display_Optional_Donation__c, Display_Guest_Registration__c, Payment_Gateway__c
-                FROM Summit_Events__c
-                WHERE Id = :eventId
-                WITH SECURITY_ENFORCED
-        ];
+        Summit_Events__c eventInformation = SummitEventsReadShared.getEventById(eventId);
 
         Map<String, PageReference> pageMovement = new Map<String, PageReference>();
         Map<String, String> currentPageParameters = currentPage.getParameters();
@@ -214,28 +179,15 @@ public with sharing class SummitEventsShared {
         //check if registration id is there and whether status it is set to registered. IF so reset cookie if it is.
         if (String.isNotBlank(eventInformation.registrationId) && String.isBlank(eventInformation.valid)) {
             Summit_Events_Registration__c evtReg = new Summit_Events_Registration__c();
-            try {
-                evtReg = [
-                        SELECT Status__c
-                        FROM Summit_Events_Registration__c
-                        WHERE Id = :eventInformation.registrationId
-                        WITH SECURITY_ENFORCED
-                ];
-            } catch (Exception ex) {
-
-            }
+            evtReg = SummitEventsReadShared.getRegistrationById(eventInformation.registrationId);
             if (evtReg.Status__c != 'Started' || evtReg == null) {
                 eventInformation.registrationId = '';
             }
         }
 
         if (String.isBlank(eventInformation.eventId) && String.isNotBlank(eventInformation.instanceId)) {
-            Summit_Events_Instance__c instanceInfo = [
-                    SELECT Id, Event__c
-                    FROM Summit_Events_Instance__c
-                    WHERE Id = :eventInformation.instanceId
-                    WITH SECURITY_ENFORCED
-            ];
+            Summit_Events_Instance__c instanceInfo = SummitEventsReadShared.getInstanceById(eventInformation.instanceId);
+
             if (instanceInfo != null) {
                 eventInformation.eventId = instanceInfo.Event__c;
             }
@@ -274,12 +226,7 @@ public with sharing class SummitEventsShared {
         }
 
         if (String.isNotBlank(newInstanceId)) {
-            Summit_Events_Instance__c eventPage = [
-                    SELECT Event__r.Event_Home_Link_URL__c
-                    FROM Summit_Events_Instance__c
-                    WHERE Id = :newInstanceId
-                    WITH SECURITY_ENFORCED
-            ];
+            Summit_Events_Instance__c eventPage = SummitEventsReadShared.getInstanceById(newInstanceId);
             if (eventPage != null) {
                 eventHomeLink = eventPage.Event__r.Event_Home_Link_URL__c;
             }
@@ -417,22 +364,7 @@ public with sharing class SummitEventsShared {
             Boolean adminOpen = isBoolean(ApexPages.currentPage().getParameters().get('adminopen'));
             eventIsClosed = !adminOpen;
         } else {
-            Datetime dt = Datetime.now();
-            Time compareCloseTime = dt.timeGmt();
-            String timeZonePick = getTimeZonePick(evtInstance.Instance_Time_Zone__c);
-            TimeZone tz = getTimeZone(timeZonePick);
-            dt = dt.addSeconds(tz.getOffset(dt) / 1000);
-            compareCloseTime = compareCloseTime.addMilliseconds(tz.getOffset(dt));
-            if (evtInstance.Registration_Close_Date__c <= dt.date()) {
-                if (evtInstance.Registration_Close_Date__c == dt.date()) {
-                    if (evtInstance.Registration_Close_Time__c < compareCloseTime) {
-                        eventIsClosed = true;
-                    }
-                } else {
-                    eventIsClosed = true;
-                }
-            }
-
+            eventIsClosed = checkCloseDateTime(evtInstance);
             if (evtInstance.Current_Available_Capacity__c <= 0 || evtInstance.Active_Status__c != 'Active' || masterEventStatus != 'Active') {
                 eventIsClosed = true;
             }
@@ -440,6 +372,27 @@ public with sharing class SummitEventsShared {
 
         return eventIsClosed;
     }
+
+    public static Boolean checkCloseDateTime(Summit_Events_Instance__c evtInstance) {
+        Boolean eventIsClosed = false;
+        Datetime dt = Datetime.now();
+        Time compareCloseTime = dt.timeGmt();
+        String timeZonePick = getTimeZonePick(evtInstance.Instance_Time_Zone__c);
+        TimeZone tz = getTimeZone(timeZonePick);
+        dt = dt.addSeconds(tz.getOffset(dt) / 1000);
+        compareCloseTime = compareCloseTime.addMilliseconds(tz.getOffset(dt));
+        if (evtInstance.Registration_Close_Date__c <= dt.date()) {
+            if (evtInstance.Registration_Close_Date__c == dt.date()) {
+                if (evtInstance.Registration_Close_Time__c < compareCloseTime) {
+                    eventIsClosed = true;
+                }
+            } else {
+                eventIsClosed = true;
+            }
+        }
+        return eventIsClosed;
+    }
+
 
     public static String getTimeZonePick(String pickListTimeZone) {
         if (String.isNotBlank(pickListTimeZone)) {
@@ -616,6 +569,12 @@ public with sharing class SummitEventsShared {
         return pickList;
     }
 
+    // Test to see if person accounts are enabled.
+    public static Boolean personAccountsEnabled()
+    {
+        return Schema.SObjectType.Account.fields.getMap().containsKey( 'isPersonAccount' );
+    }
+
     //Method to test object and field availability for current user (Guest user)
     public static String checkFieldGuestAccess(String objectApiName, String fieldName, String requiredFieldType, Boolean testCreatable, String qualifierLabel) {
         String returnError = '';
@@ -652,11 +611,11 @@ public with sharing class SummitEventsShared {
                     returnError += qualifierLabel + 'Field ' + fieldName + ' is not accessible by guest user.';
                 }
             }
-            if (String.isBlank(returnError) && testCreatable) {
+/*            if (String.isBlank(returnError) && testCreatable) {
                 if (!fieldDescribe.isCreateable()) {
                     returnError += qualifierLabel + 'Field ' + fieldName + ' is not writable. ';
                 }
-            }
+            }*/
             if (String.isBlank(returnError) && String.isNotBlank(requiredFieldType)) {
                 if (!String.valueOf(fieldDescribe.getType()).equalsIgnoreCase(requiredFieldType)) {
                     returnError += qualifierLabel + 'Field ' + fieldName + ' is not the required field type ' + requiredFieldType + '. ';
@@ -696,42 +655,47 @@ public with sharing class SummitEventsShared {
                     dependentField = d;
                 }
             }
+			Schema.DescribeFieldResult controllingField = dependentField.getController().getDescribe();
+			List<Schema.PicklistEntry> controlEntries = (controllingField.getType() == Schema.DisplayType.Boolean
+				? null
+				: controllingField.getPicklistValues()
+			);
+			String base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+			Map<Object, Map<String, String>> dependentPicklistMap = new Map<Object, Map<String, String>>();
 
             //2nd get the dependent PL values mapped to the target parent PL's value
             if (-1 != parentValueIndex && null != dependentField) {
-                Schema.PicklistEntry[] plValues = dependentField.getPicklistValues();
-                for (PicklistEntry plv : plValues) {
-                    String jsonstr = JSON.serialize(plv);
-                    Map<String, String> jMap = (Map<String, String>) JSON.deserialize(jsonstr, Map<String, String>.class);
-                    String validFor = jMap.get('validFor');
-                    String plvalue = jMap.get('value');
-                    String plId = jMap.get('id');
-                    if (null != validFor && !''.equals(validFor.trim()) && isDependentValue(parentValueIndex, validFor)) {
-                        dependentItems.put(plvalue, plvalue);
-                    }
-                }
+				for (Schema.PicklistEntry entry : dependentField.getPicklistValues()) {
+					if (entry.isActive()) {
+						List<String> base64chars = String.valueOf(((Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(entry))).get('validFor')).split('');
+
+						for (Integer index = 0; index < (controlEntries != null ? controlEntries.size() : 2); index++) {
+							Object controlValue = (controlEntries == null
+								? (Object) (index == 1)
+								: (Object) (controlEntries[index].isActive() ? controlEntries[index].getValue() : null));
+							Integer bitIndex = index / 6;
+							if (bitIndex > base64chars.size() - 1) {
+								break;
+							}
+							Integer bitShift = 5 - Math.mod(index, 6);
+
+							if (controlValue == null || (base64.indexOf(base64chars[bitIndex]) & (1 << bitShift)) == 0) {
+								continue;
+							}
+
+							if (!dependentPicklistMap.containsKey(controlValue)) {
+								dependentPicklistMap.put(controlValue, new Map<String, String>());
+							}
+							dependentPicklistMap.get(controlValue).put(entry.getValue(), entry.getLabel());
+						}
+					}
+				}
+				if (dependentPicklistMap.get(parentValue) != null) {
+					dependentItems = dependentPicklistMap.get(parentValue);
+				}
             }
         }
         return dependentItems;
-    }
-
-    private static Boolean isDependentValue(Integer index, String validFor) {
-        String decoded = EncodingUtil.convertToHex(EncodingUtil.base64Decode(validFor));
-        Integer bits = hexToInt(decoded);
-        return ((bits & (128 >> Math.mod(index, 8))) != 0);
-    }
-
-    private static Integer hexToInt(String hex) {
-
-        Map<String, Integer> hMap = new Map<String, Integer>{
-                '0' => 0, '1' => 1, '2' => 2, '3' => 3, '4' => 4, '5' => 5, '6' => 6, '7' => 7, '8' => 8, '9' => 9, 'A' => 10, 'B' => 11, 'C' => 12, 'D' => 13, 'E' => 14, 'F' => 15, 'a' => 10, 'b' => 11, 'c' => 12, 'd' => 13, 'e' => 14, 'f' => 15
-        };
-
-        Integer retVal = 0;
-        for (Integer i = 0; i < hex.length(); i += 2) {
-            retVal += (hMap.get(hex.substring(i, i + 1)) * 16) + (hMap.get(hex.substring(i + 1, i + 2)));
-        }
-        return retVal;
     }
 
     public static String getCookieKey() {

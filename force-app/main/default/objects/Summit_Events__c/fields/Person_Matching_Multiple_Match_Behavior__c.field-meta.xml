@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Person_Matching_Multiple_Match_Behavior__c</fullName>
+    <externalId>false</externalId>
+    <label>Person Matching Multiple Match Behavior</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Match with most recently modified</fullName>
+                <default>true</default>
+                <label>Match with most recently modified</label>
+            </value>
+            <value>
+                <fullName>Skip matching</fullName>
+                <default>false</default>
+                <label>Skip matching</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

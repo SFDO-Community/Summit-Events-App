@@ -5,7 +5,9 @@ license that can be found in the LICENSE file.
 Created by Thaddaeus Dahlberg on 5/1/2018.
 -->
 
-<apex:page id="SummitEventsParkingPass" showHeader="false" applyHtmlTag="false" renderAs="pdf" controller="SummitEventsParkingPassController">
+<apex:page id="SummitEventsParkingPass" showHeader="false" applyHtmlTag="false" renderAs="pdf" >
+    <!-- DEPRECATED: This page is no longer used. Future work to revive this may take place
+
     <head>
         <style>
             @import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed');
@@ -166,5 +168,5 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                 </tr>
             </table>
         </div>
-    </apex:outputPanel>
+    </apex:outputPanel>-->
 </apex:page>

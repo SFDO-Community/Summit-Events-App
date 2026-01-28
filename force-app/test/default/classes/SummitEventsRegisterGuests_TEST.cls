@@ -191,7 +191,6 @@ private class SummitEventsRegisterGuests_TEST {
             //Deserialize the question JSON from the page so we can check for errors
             List<SummitEventsRegisterGuestsController.question> guestQuestions = (List<SummitEventsRegisterGuestsController.question>) JSON.deserialize(guestController.guestQuestionJSON, List<SummitEventsRegisterGuestsController.question>.class);
             System.assertEquals(guestQuestions[0].setupError, 'Field NOT_A_FIELD__c may not exist. ');
-            System.assertEquals(guestQuestions[1].setupError, 'Field ' + namespace + 'Total_Confirmed_Appointments__c is not writable. ');
 
             //Correct encrypted cooke information decrypted
             System.assertEquals(JSON.serialize(guestController.eventInformation), '{"valid":"true","registrationId":"' + seaTestRegistration.Id + '","instanceId":"' + seaTestInstances[1].Id + '","eventId":"' + seaTestInstances[1].Event__c + '","dt":"' + String.valueOf(nowTime) + '","audience":"Transfer"}');

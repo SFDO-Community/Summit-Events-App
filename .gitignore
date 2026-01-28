@@ -25,8 +25,8 @@ robot/SummitEventsApp/results/
 
 # Illuminated Cloud (IntelliJ IDEA)
 IlluminatedCloud
-.IlluminatedCloud
 out
+.idea
 *.iml
 
 # CumulusCI
@@ -39,3 +39,5 @@ node_modules/
 /.illuminatedCloud/
 **/tsconfig*.json
 **/*.tsbuildinfo
+
+**/graphql.config.yml
