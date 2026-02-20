@@ -11,28 +11,6 @@ public class SummitEventsRegistration {
         List<Summit_Events_Registration__c> affectedRegs = new List<Summit_Events_Registration__c>();
 
         String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
-
-        //Tags that need a little TLC to turn them into real links
-        List<String> emailTags = new List<String>{
-                'UG_Parking_Pass_Link__c',
-                'Add_To_Calendar_Link__c',
-                'Event_Registration_Cancel_Link__c',
-                'Add_to_Apple_Calendar__c',
-                'Add_To_Google_Calendar_Link__c',
-                'Add_to_Outlook_Calendar__c',
-                'Add_To_Outlook_Web_Calendar__c',
-                'Add_To_Yahoo_Calendar__c'
-        };
-
-        //Add the namespace to the email tags so that both namespaced and non-namespaced version work
-        if (String.isNotBlank(namespace)) {
-            List<String> emailTagsPackaged = new List<String>();
-            for (String tag : emailTags) {
-                emailTagsPackaged.add(namespace + tag);
-            }
-            emailTags.addAll(emailTagsPackaged);
-        }
-
         //Delineator of content in the email templase
         String originalTemplate = '[[DONT_DELETE_CONTENT_HERE]]';
 
@@ -155,12 +133,23 @@ public class SummitEventsRegistration {
                                     found = '';
                                 }
 
-                                //replace all hooks with found values from registration
-                                if (emailTags.contains(matcher2.group(1))) {
+                                //Fix formula links that are encoded with the following format: _HL_ENCODED_[link URL]_HL__blank_HL_[link text]_HL_
+                                if (found.startsWith('_HL_ENCODED_') && found.endsWith('_HL__blank_HL_')) {
                                     found = found.replace('_HL_ENCODED_', '<a href="');
                                     found = found.replace('_HL__blank_HL_', '</a>');
-                                    found = found.replace('_HL_', ' target="_blank">');
+                                    found = found.replace('%20target=', '');
                                     found = found.replace(' target=', '');
+                                    found = found.replace('_HL_', '" target="_blank">');
+                                }
+
+                                //Fix any image links that are encoded with the following format: _IM1_[image source]_IM2_[alt text]_IM3_[height]_IM4_[width]_IM5_
+                                if (found.startsWith('_IM1_') && found.endsWith('_IM5_')) {
+                                    found = found.replace('_IM1_', '<img src="');
+                                    found = found.replace('_IM2_', '" alt="');
+                                    found = found.replace('_IM3_', '" style="height:');
+                                    found = found.replace('_IM4_', 'px; width:');
+                                    found = found.replace('_IM5_', 'px;" border="0" ');
+                                    found += '/>';
                                 }
 
                                 emailContent = matcher2.replaceAll(found);
@@ -229,7 +218,7 @@ public class SummitEventsRegistration {
                 t.Description = emailMessage + '\n\n' + t.Description;
             }
             doCRUD crudToDo = new doCRUD();
-            crudToDo.savTask(activityUpdates);
+            crudToDo.saveTask(activityUpdates);
         }
     }
 
@@ -280,7 +269,7 @@ public class SummitEventsRegistration {
 
     private without sharing class doCRUD {
 
-        public void savTask(List<Task> taskToSave) {
+        public void saveTask(List<Task> taskToSave) {
             try {
                 insert taskToSave;
             } catch (Exception e) {

@@ -329,4 +329,158 @@ public class SummitEventsContactMatching_TEST {
 
         Test.stopTest();
     }
+
+    @IsTest
+    static void testRemoveMatchOnlyFieldsForLead() {
+        // Create a mock Lead with some fields populated
+        Lead testLead = new Lead(
+                FirstName = 'Test',
+                LastName = 'Lead',
+                Email = 'testlead@example.com',
+                Company = 'Test Company',
+                Title = 'CEO',
+                Industry = 'Technology'
+        );
+
+        // Create mock mappings with Lead-specific fields
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+        Map<String, List<SObject>> mockMappings = new Map<String, List<SObject>>();
+        List<Summit_Events_Lead_Matching_Mapping__mdt> leadMappingList = new List<Summit_Events_Lead_Matching_Mapping__mdt>();
+
+        // Create a match-only mapping for Lead (should be removed)
+        Summit_Events_Lead_Matching_Mapping__mdt matchOnlyMapping = new Summit_Events_Lead_Matching_Mapping__mdt(
+                DeveloperName = 'Title_Match_Only',
+                MasterLabel = 'Title Match Only',
+                Source_Type__c = 'Field',
+                Lead_Field_API_Name__c = 'Title',
+                Lead_Matching_Method__c = 'TestLeadMethod',
+                Matching_Only__c = true
+        );
+        leadMappingList.add(matchOnlyMapping);
+
+        // Create a regular mapping (should be kept)
+        Summit_Events_Lead_Matching_Mapping__mdt regularMapping = new Summit_Events_Lead_Matching_Mapping__mdt(
+                DeveloperName = 'Industry_Regular',
+                MasterLabel = 'Industry Regular',
+                Source_Type__c = 'Field',
+                Lead_Field_API_Name__c = 'Industry',
+                Lead_Matching_Method__c = 'TestLeadMethod',
+                Matching_Only__c = false
+        );
+        leadMappingList.add(regularMapping);
+
+        mockMappings.put('TestLeadMethod', leadMappingList);
+
+        Test.startTest();
+        // Verify fields are set before calling removeMatchOnlyFields
+        System.assertEquals('CEO', testLead.Title, 'Title should be CEO before removal');
+        System.assertEquals('Technology', testLead.Industry, 'Industry should be Technology before removal');
+
+        // Call the removeMatchOnlyFields method for Lead
+        SObject result = SummitEventsContactMatching.removeMatchOnlyFields(testLead, 'TestLeadMethod', mockMappings, 'Lead');
+
+        // Verify that the match-only field (Title) was removed
+        System.assertEquals(null, result.get('Title'), 'Title should be null after removeMatchOnlyFields');
+
+        // Verify that the regular field (Industry) was NOT removed
+        System.assertEquals('Technology', result.get('Industry'), 'Industry should still be Technology after removeMatchOnlyFields');
+
+        // Verify other fields remain intact
+        System.assertEquals('Test', result.get('FirstName'), 'FirstName should remain Test');
+        System.assertEquals('Lead', result.get('LastName'), 'LastName should remain Lead');
+        System.assertEquals('testlead@example.com', result.get('Email'), 'Email should remain testlead@example.com');
+        System.assertEquals('Test Company', result.get('Company'), 'Company should remain Test Company');
+
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testRemoveMatchOnlyFieldsForAccount() {
+        // Only run this test if Person Accounts are enabled
+        Boolean personAccountsEnabled = SummitEventsShared.personAccountsEnabled();
+        if (!personAccountsEnabled) {
+            // Skip this test in orgs without Person Accounts
+            System.assert(true, 'Skipping Person Account test - Person Accounts not enabled');
+            return;
+        }
+
+        // Create a mock Account (for Person Account testing)
+        Account testAccount = new Account(
+                Name = 'Test Account',
+                Industry = 'Education',
+                Type = 'Prospect'
+        );
+
+        // Create mock mappings with Account-specific fields
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+        Map<String, List<SObject>> mockMappings = new Map<String, List<SObject>>();
+        List<Summit_Events_Person_Matching_Mapping__mdt> accountMappingList = new List<Summit_Events_Person_Matching_Mapping__mdt>();
+
+        // Create a match-only mapping for Account (should be removed)
+        Summit_Events_Person_Matching_Mapping__mdt matchOnlyMapping = new Summit_Events_Person_Matching_Mapping__mdt(
+                DeveloperName = 'Type_Match_Only',
+                MasterLabel = 'Type Match Only',
+                Source_Type__c = 'Field',
+                Person_Account_Field_API_Name__c = 'Type',
+                Person_Account_Matching_Method__c = 'TestAccountMethod',
+                Matching_Only__c = true
+        );
+        accountMappingList.add(matchOnlyMapping);
+
+        // Create a regular mapping (should be kept)
+        Summit_Events_Person_Matching_Mapping__mdt regularMapping = new Summit_Events_Person_Matching_Mapping__mdt(
+                DeveloperName = 'Industry_Regular',
+                MasterLabel = 'Industry Regular',
+                Source_Type__c = 'Field',
+                Person_Account_Field_API_Name__c = 'Industry',
+                Person_Account_Matching_Method__c = 'TestAccountMethod',
+                Matching_Only__c = false
+        );
+        accountMappingList.add(regularMapping);
+
+        mockMappings.put('TestAccountMethod', accountMappingList);
+
+        Test.startTest();
+        // Verify fields are set before calling removeMatchOnlyFields
+        System.assertEquals('Prospect', testAccount.Type, 'Type should be Prospect before removal');
+        System.assertEquals('Education', testAccount.Industry, 'Industry should be Education before removal');
+
+        // Call the removeMatchOnlyFields method for Account
+        SObject result = SummitEventsContactMatching.removeMatchOnlyFields(testAccount, 'TestAccountMethod', mockMappings, 'Account');
+
+        // Verify that the match-only field (Type) was removed
+        System.assertEquals(null, result.get('Type'), 'Type should be null after removeMatchOnlyFields');
+
+        // Verify that the regular field (Industry) was NOT removed
+        System.assertEquals('Education', result.get('Industry'), 'Industry should still be Education after removeMatchOnlyFields');
+
+        // Verify other fields remain intact
+        System.assertEquals('Test Account', result.get('Name'), 'Name should remain Test Account');
+
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testRemoveMatchOnlyFieldsWithNoMappings() {
+        // Test case where no mappings exist for the method
+        Contact testContact = new Contact(
+                FirstName = 'Test',
+                LastName = 'Contact',
+                Email = 'test@example.com',
+                Title = 'Manager'
+        );
+
+        Map<String, List<SObject>> mockMappings = new Map<String, List<SObject>>();
+
+        Test.startTest();
+        // Call the removeMatchOnlyFields method with non-existent method name
+        SObject result = SummitEventsContactMatching.removeMatchOnlyFields(testContact, 'NonExistentMethod', mockMappings, 'Contact');
+
+        // Verify that nothing changed when no mappings exist
+        System.assertEquals('Manager', result.get('Title'), 'Title should remain Manager when no mappings exist');
+        System.assertEquals('Test', result.get('FirstName'), 'FirstName should remain Test');
+        System.assertEquals('Contact', result.get('LastName'), 'LastName should remain Contact');
+
+        Test.stopTest();
+    }
 }
