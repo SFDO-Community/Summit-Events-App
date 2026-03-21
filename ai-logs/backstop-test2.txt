@@ -1,0 +1,344 @@
+BackstopJS v6.3.25
+Loading config:  C:\Users\thad\Documents\Repositories\Summit-Events-App\backstop.json 
+
+COMMAND | Executing core for "test"
+createBitmaps | Selected 10 of 10 scenarios.
+Creating Browser
+Browser created
+Browser Console Log 0: Failed to create durable storage for cache inclusion policy
+Browser Console Log 0: ComponentProfiler:
+Browser Console Log 1: Component-level profiling has not been enabled.
+Browser Console Log 0: Failed to create durable storage for cache inclusion policy
+Browser Console Log 0: ComponentProfiler:
+Browser Console Log 1: Component-level profiling has not been enabled.
+Browser Console Log 0: Failed to create durable storage for cache inclusion policy
+Browser Console Log 0: ComponentProfiler:
+Browser Console Log 1: Component-level profiling has not been enabled.
+Browser Console Log 0: BackstopTools have been installed.
+Browser Console Log 0: BackstopTools have been installed.
+Browser Console Log 0: BackstopTools have been installed.
+x Close Browser
+x Close Browser
+x Close Browser
+Browser Console Log 0: Failed to create durable storage for cache inclusion policy
+Browser Console Log 0: ComponentProfiler:
+Browser Console Log 1: Component-level profiling has not been enabled.
+Browser Console Log 0: Failed to create durable storage for cache inclusion policy
+Browser Console Log 0: ComponentProfiler:
+Browser Console Log 1: Component-level profiling has not been enabled.
+Browser Console Log 0: Failed to create durable storage for cache inclusion policy
+Browser Console Log 0: ComponentProfiler:
+Browser Console Log 1: Component-level profiling has not been enabled.
+Browser Console Log 0: BackstopTools have been installed.
+Browser Console Log 0: BackstopTools have been installed.
+Browser Console Log 0: BackstopTools have been installed.
+x Close Browser
+x Close Browser
+x Close Browser
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+[fillAndAdvance] Step 0: current="register", target="additionalquestions"
+[fillAndAdvance] Submitting page: register
+[fillAndAdvance] Step 0: current="register", target="additionalquestions"
+[fillAndAdvance] Submitting page: register
+[fillAndAdvance] Step 0: current="register", target="appointments"
+[fillAndAdvance] Submitting page: register
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: [vf3pc] not iframed
+[fillAndAdvance] URL after register submit: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsadditionalquestions
+[fillAndAdvance] Step 1: current="additionalquestions", target="additionalquestions"
+[fillAndAdvance] Reached target page. Done.
+[fillAndAdvance] Final page: "additionalquestions", target was: "additionalquestions"
+Browser Console Log 0: BackstopTools have been installed.
+[fillAndAdvance] URL after register submit: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsadditionalquestions
+[fillAndAdvance] Step 1: current="additionalquestions", target="additionalquestions"
+[fillAndAdvance] Reached target page. Done.
+[fillAndAdvance] Final page: "additionalquestions", target was: "additionalquestions"
+x Close Browser
+Browser Console Log 0: BackstopTools have been installed.
+x Close Browser
+[fillAndAdvance] URL after register submit: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsadditionalquestions
+[fillAndAdvance] Step 1: current="additionalquestions", target="appointments"
+[fillAndAdvance] Submitting page: additionalquestions
+[fillAndAdvance] SummitEvents cookie present: false, value snippet: none
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+Browser Console Log 0: [vf3pc] not iframed
+[fillAndAdvance] Step 0: current="register", target="appointments"
+[fillAndAdvance] Submitting page: register
+[fillAndAdvance] Step 0: current="register", target="guests"
+[fillAndAdvance] Submitting page: register
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: [vf3pc] not iframed
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+[fillAndAdvance] URL after register submit: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsadditionalquestions
+[fillAndAdvance] Step 1: current="additionalquestions", target="appointments"
+[fillAndAdvance] Submitting page: additionalquestions
+[fillAndAdvance] SummitEvents cookie present: false, value snippet: none
+[fillAndAdvance] URL after register submit: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsadditionalquestions
+[fillAndAdvance] Step 1: current="additionalquestions", target="guests"
+[fillAndAdvance] Submitting page: additionalquestions
+[fillAndAdvance] SummitEvents cookie present: false, value snippet: none
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: [vf3pc] not iframed
+[fillAndAdvance] URL after +3s: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+[fillAndAdvance] Page body after submit: SAMPLE - OPEN SOURCE SPRINT - MULTI-STEP WEDNESDAY, APRIL 01, 8:30 AM - THURSDAY, APRIL 02, 2026, 5:00 PM CDT We want to treat you! We love the community and your sprinters! Make all appropriate selections below and get ready to have an amazing time! Choose your options Swag Item Selected options
+[fillAndAdvance] Step 2: current="appointments", target="appointments"
+[fillAndAdvance] Reached target page. Done.
+[fillAndAdvance] Final page: "appointments", target was: "appointments"
+Browser Console Log 0: BackstopTools have been installed.
+x Close Browser
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+[fillAndAdvance] Step 0: current="register", target="guests"
+[fillAndAdvance] Submitting page: register
+Browser Console Log 0: [vf3pc] not iframed
+[fillAndAdvance] URL after +3s: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+[fillAndAdvance] Page body after submit: SAMPLE - OPEN SOURCE SPRINT - MULTI-STEP WEDNESDAY, APRIL 01, 8:30 AM - THURSDAY, APRIL 02, 2026, 5:00 PM CDT We want to treat you! We love the community and your sprinters! Make all appropriate selections below and get ready to have an amazing time! Choose your options Swag Item Selected options
+[fillAndAdvance] Step 2: current="appointments", target="appointments"
+[fillAndAdvance] Reached target page. Done.
+[fillAndAdvance] Final page: "appointments", target was: "appointments"
+Browser Console Log 0: BackstopTools have been installed.
+x Close Browser
+[fillAndAdvance] URL after +3s: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+[fillAndAdvance] Page body after submit: SAMPLE - OPEN SOURCE SPRINT - MULTI-STEP WEDNESDAY, APRIL 01, 8:30 AM - THURSDAY, APRIL 02, 2026, 5:00 PM CDT We want to treat you! We love the community and your sprinters! Make all appropriate selections below and get ready to have an amazing time! Choose your options Swag Item Selected options
+[fillAndAdvance] Step 2: current="appointments", target="guests"
+[fillAndAdvance] Submitting page: appointments
+[fillAndAdvance] URL after register submit: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsadditionalquestions
+[fillAndAdvance] Step 1: current="additionalquestions", target="guests"
+[fillAndAdvance] Submitting page: additionalquestions
+[fillAndAdvance] SummitEvents cookie present: false, value snippet: none
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+Browser Console Log 0: Failed to create durable storage for cache inclusion policy
+Browser Console Log 0: ComponentProfiler:
+Browser Console Log 1: Component-level profiling has not been enabled.
+[fillAndAdvance] Step 0: current="register", target="donation"
+[fillAndAdvance] Submitting page: register
+Browser Console Log 0: TypeError: Failed to fetch
+    at fillInCityStateOnZip (https://nosoftware-business-7494-dev-ed.scratch.my.site.com/resource/1774104351000/SummitEventsAssets/js/register.js:173:5)
+    at HTMLInputElement.<anonymous> (https://nosoftware-business-7494-dev-ed.scratch.my.site.com/resource/1774104351000/SummitEventsAssets/js/register.js:51:13)
+    at eval (eval at evaluate (:290:30), <anonymous>:16:14)
+    at NodeList.forEach (<anonymous>)
+    at eval (eval at evaluate (:290:30), <anonymous>:11:9)
+    at UtilityScript.evaluate (<anonymous>:292:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+Browser Console Log 0: Failed to create durable storage for cache inclusion policy
+Browser Console Log 0: ComponentProfiler:
+Browser Console Log 1: Component-level profiling has not been enabled.
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/login/?ec=302&inst=di&startURL=%2Fsummiteventsregisterappointments
+[fillAndAdvance] URL after register submit: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/login/?ec=302&inst=di&startURL=%2Fsummiteventsregisterguests
+[fillAndAdvance] Step 1: current="guests", target="donation"
+[fillAndAdvance] Submitting page: guests
+[fillAndAdvance] URL after +3s: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+[fillAndAdvance] Page body after submit: SAMPLE - OPEN SOURCE SPRINT - MULTI-STEP WEDNESDAY, APRIL 01, 8:30 AM - THURSDAY, APRIL 02, 2026, 5:00 PM CDT We want to treat you! We love the community and your sprinters! Make all appropriate selections below and get ready to have an amazing time! Choose your options Swag Item Selected options
+[fillAndAdvance] Step 2: current="appointments", target="guests"
+[fillAndAdvance] Submitting page: appointments
+[fillAndAdvance] URL after +3s: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/login/?ec=302&inst=di&startURL=%2Fsummiteventsregisterappointments
+[fillAndAdvance] Page did not advance from "appointments" ΓÇö stopping.
+[fillAndAdvance] Final page: "appointments", target was: "guests"
+Browser Console Log 0: BackstopTools have been installed.
+x Close Browser
+Browser Console Log 0: Failed to create durable storage for cache inclusion policy
+Browser Console Log 0: ComponentProfiler:
+Browser Console Log 1: Component-level profiling has not been enabled.
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+[fillAndAdvance] Step 0: current="register", target="donation"
+[fillAndAdvance] Submitting page: register
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/login/?ec=302&inst=di&startURL=%2Fsummiteventsregisterappointments
+Browser Console Log 0: Failed to create durable storage for cache inclusion policy
+Browser Console Log 0: ComponentProfiler:
+Browser Console Log 1: Component-level profiling has not been enabled.
+[fillAndAdvance] URL after register submit: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/login/?ec=302&inst=di&startURL=%2Fsummiteventsregisterguests
+[fillAndAdvance] Step 1: current="guests", target="donation"
+[fillAndAdvance] Submitting page: guests
+[fillAndAdvance] URL after +3s: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/login/?ec=302&inst=di&startURL=%2Fsummiteventsregisterappointments
+[fillAndAdvance] Page did not advance from "appointments" ΓÇö stopping.
+[fillAndAdvance] Final page: "appointments", target was: "guests"
+Browser Console Log 0: BackstopTools have been installed.
+x Close Browser
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+[fillAndAdvance] Step 0: current="register", target="submit"
+[fillAndAdvance] Submitting page: register
+Browser Console Log 0: [vf3pc] not iframed
+[fillAndAdvance] URL after register submit: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsadditionalquestions
+[fillAndAdvance] Step 1: current="additionalquestions", target="submit"
+[fillAndAdvance] Submitting page: additionalquestions
+[fillAndAdvance] SummitEvents cookie present: false, value snippet: none
+Browser Console Log 0: [vf3pc] not iframed
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+[fillAndAdvance] Error on step 1: page.waitForSelector: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('[id$=":submitOptions"]') to be visible
+
+[fillAndAdvance] Final page: "guests", target was: "donation"
+Browser Console Log 0: BackstopTools have been installed.
+x Close Browser
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+[fillAndAdvance] Step 0: current="register", target="submit"
+[fillAndAdvance] Submitting page: register
+Browser Console Log 0: [vf3pc] not iframed
+[fillAndAdvance] URL after +3s: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+[fillAndAdvance] Page body after submit: SAMPLE - OPEN SOURCE SPRINT - MULTI-STEP WEDNESDAY, APRIL 01, 8:30 AM - THURSDAY, APRIL 02, 2026, 5:00 PM CDT We want to treat you! We love the community and your sprinters! Make all appropriate selections below and get ready to have an amazing time! Choose your options Swag Item Selected options
+[fillAndAdvance] Step 2: current="appointments", target="submit"
+[fillAndAdvance] Submitting page: appointments
+Browser Console Log 0: Failed to create durable storage for cache inclusion policy
+Browser Console Log 0: ComponentProfiler:
+Browser Console Log 1: Component-level profiling has not been enabled.
+[fillAndAdvance] URL after register submit: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsadditionalquestions
+[fillAndAdvance] Step 1: current="additionalquestions", target="submit"
+[fillAndAdvance] Submitting page: additionalquestions
+[fillAndAdvance] SummitEvents cookie present: false, value snippet: none
+Browser Console Log 0: [vf3pc] not iframed
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/login/?ec=302&inst=di&startURL=%2Fsummiteventsregisterappointments
+[fillAndAdvance] Error on step 1: page.waitForSelector: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('[id$=":submitOptions"]') to be visible
+
+[fillAndAdvance] Final page: "guests", target was: "donation"
+Browser Console Log 0: BackstopTools have been installed.
+x Close Browser
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+[fillAndAdvance] Step 0: current="register", target="confirmation"
+[fillAndAdvance] Submitting page: register
+[fillAndAdvance] URL after +3s: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/login/?ec=302&inst=di&startURL=%2Fsummiteventsregisterappointments
+[fillAndAdvance] Final page: "appointments", target was: "submit"
+[fillAndAdvance] Page did not advance from "appointments" ΓÇö stopping.
+Browser Console Log 0: BackstopTools have been installed.
+Browser Console Log 0: [vf3pc] not iframed
+x Close Browser
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+[fillAndAdvance] URL after +3s: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+[fillAndAdvance] Page body after submit: SAMPLE - OPEN SOURCE SPRINT - MULTI-STEP WEDNESDAY, APRIL 01, 8:30 AM - THURSDAY, APRIL 02, 2026, 5:00 PM CDT We want to treat you! We love the community and your sprinters! Make all appropriate selections below and get ready to have an amazing time! Choose your options Swag Item Selected options
+[fillAndAdvance] Step 2: current="appointments", target="submit"
+[fillAndAdvance] Submitting page: appointments
+[fillAndAdvance] Step 0: current="register", target="confirmation"
+[fillAndAdvance] Submitting page: register
+Browser Console Log 0: Failed to create durable storage for cache inclusion policy
+Browser Console Log 0: ComponentProfiler:
+Browser Console Log 1: Component-level profiling has not been enabled.
+[fillAndAdvance] URL after register submit: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsadditionalquestions
+[fillAndAdvance] Step 1: current="additionalquestions", target="confirmation"
+[fillAndAdvance] Submitting page: additionalquestions
+[fillAndAdvance] SummitEvents cookie present: false, value snippet: none
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: [vf3pc] not iframed
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/login/?ec=302&inst=di&startURL=%2Fsummiteventsregisterappointments
+[fillAndAdvance] URL after register submit: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsadditionalquestions
+[fillAndAdvance] Step 1: current="additionalquestions", target="confirmation"
+[fillAndAdvance] Submitting page: additionalquestions
+[fillAndAdvance] SummitEvents cookie present: false, value snippet: none
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+Browser Console Log 0: [vf3pc] not iframed
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+[fillAndAdvance] URL after +3s: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/login/?ec=302&inst=di&startURL=%2Fsummiteventsregisterappointments
+[fillAndAdvance] Final page: "appointments", target was: "submit"
+[fillAndAdvance] Page did not advance from "appointments" ΓÇö stopping.
+Browser Console Log 0: BackstopTools have been installed.
+x Close Browser
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+[fillAndAdvance] URL after +3s: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+[fillAndAdvance] Page body after submit: SAMPLE - OPEN SOURCE SPRINT - MULTI-STEP WEDNESDAY, APRIL 01, 8:30 AM - THURSDAY, APRIL 02, 2026, 5:00 PM CDT We want to treat you! We love the community and your sprinters! Make all appropriate selections below and get ready to have an amazing time! Choose your options Swag Item Selected options
+[fillAndAdvance] Step 2: current="appointments", target="confirmation"
+[fillAndAdvance] Submitting page: appointments
+Browser Console Log 0: Failed to create durable storage for cache inclusion policy
+Browser Console Log 0: ComponentProfiler:
+Browser Console Log 1: Component-level profiling has not been enabled.
+[fillAndAdvance] URL after +3s: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsregisterappointments
+[fillAndAdvance] Page body after submit: SAMPLE - OPEN SOURCE SPRINT - MULTI-STEP WEDNESDAY, APRIL 01, 8:30 AM - THURSDAY, APRIL 02, 2026, 5:00 PM CDT We want to treat you! We love the community and your sprinters! Make all appropriate selections below and get ready to have an amazing time! Choose your options Swag Item Selected options
+[fillAndAdvance] Step 2: current="appointments", target="confirmation"
+[fillAndAdvance] Submitting page: appointments
+x Close Browser
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+Browser Console Log 0: Failed to create durable storage for cache inclusion policy
+Browser Console Log 0: ComponentProfiler:
+Browser Console Log 1: Component-level profiling has not been enabled.
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/login/?ec=302&inst=di&startURL=%2Fsummiteventsregisterappointments
+x Close Browser
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/login/?ec=302&inst=di&startURL=%2Fsummiteventsregisterappointments
+[fillAndAdvance] URL after +3s: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/login/?ec=302&inst=di&startURL=%2Fsummiteventsregisterappointments
+[fillAndAdvance] Final page: "appointments", target was: "confirmation"
+[fillAndAdvance] Page did not advance from "appointments" ΓÇö stopping.
+Browser Console Log 0: BackstopTools have been installed.
+x Close Browser
+[fillAndAdvance] URL after +3s: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/login/?ec=302&inst=di&startURL=%2Fsummiteventsregisterappointments
+[fillAndAdvance] Page did not advance from "appointments" ΓÇö stopping.
+[fillAndAdvance] Final page: "appointments", target was: "confirmation"
+Browser Console Log 0: BackstopTools have been installed.
+x Close Browser
+Disposing Browser
+      COMMAND | Executing core for "report"
+      compare | OK: Additional Questions Page (VF reference only) sea-vf-vs-lwc_Additional_Questions_Page_VF_reference_only_0_document_0_desktop.png
+      compare | OK: Additional Questions Page (VF reference only) sea-vf-vs-lwc_Additional_Questions_Page_VF_reference_only_0_document_1_mobile.png
+      compare | OK: Cancel Review Page (VF reference only ΓÇö limited) sea-vf-vs-lwc_Cancel_Review_Page_VF_reference_only__limited_0_document_0_desktop.png
+      compare | OK: Cancel Review Page (VF reference only ΓÇö limited) sea-vf-vs-lwc_Cancel_Review_Page_VF_reference_only__limited_0_document_1_mobile.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Appointments_Page_VF_reference_only_0_document_1_mobile.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Register_Page__Campus_Tour_0_document_1_mobile.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Guest_Registration_Page_VF_reference_only_0_document_1_mobile.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Confirmation_Page_VF_reference_only_0_document_1_mobile.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 90.49%, threshold: 5% }: Register Page ΓÇô Campus Tour sea-vf-vs-lwc_Register_Page__Campus_Tour_0_document_1_mobile.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 11.36%, threshold: 0.1% }: Appointments Page (VF reference only) sea-vf-vs-lwc_Appointments_Page_VF_reference_only_0_document_1_mobile.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Submit_Review_Page_VF_reference_only_0_document_1_mobile.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 56.62%, threshold: 0.1% }: Confirmation Page (VF reference only) sea-vf-vs-lwc_Confirmation_Page_VF_reference_only_0_document_1_mobile.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 56.62%, threshold: 0.1% }: Guest Registration Page (VF reference only) sea-vf-vs-lwc_Guest_Registration_Page_VF_reference_only_0_document_1_mobile.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 56.62%, threshold: 0.1% }: Submit/Review Page (VF reference only) sea-vf-vs-lwc_Submit_Review_Page_VF_reference_only_0_document_1_mobile.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Appointments_Page_VF_reference_only_0_document_0_desktop.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Donation_Page_VF_reference_only_0_document_1_mobile.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Donation_Page_VF_reference_only_0_document_0_desktop.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Register_Page__Campus_Tour_0_document_0_desktop.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 6.71%, threshold: 0.1% }: Appointments Page (VF reference only) sea-vf-vs-lwc_Appointments_Page_VF_reference_only_0_document_0_desktop.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Register_Page__Multi-Step_Event_0_document_1_mobile.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Confirmation_Page_VF_reference_only_0_document_0_desktop.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Submit_Review_Page_VF_reference_only_0_document_0_desktop.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Register_Page__Single-Step_Event_0_document_1_mobile.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 97.48%, threshold: 5% }: Register Page ΓÇô Campus Tour sea-vf-vs-lwc_Register_Page__Campus_Tour_0_document_0_desktop.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 21.06%, threshold: 0.1% }: Donation Page (VF reference only) sea-vf-vs-lwc_Donation_Page_VF_reference_only_0_document_1_mobile.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 97.50%, threshold: 0.1% }: Confirmation Page (VF reference only) sea-vf-vs-lwc_Confirmation_Page_VF_reference_only_0_document_0_desktop.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 97.50%, threshold: 0.1% }: Submit/Review Page (VF reference only) sea-vf-vs-lwc_Submit_Review_Page_VF_reference_only_0_document_0_desktop.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 25.08%, threshold: 5% }: Register Page ΓÇô Multi-Step Event sea-vf-vs-lwc_Register_Page__Multi-Step_Event_0_document_1_mobile.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Register_Page__Multi-Step_Event_0_document_0_desktop.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Guest_Registration_Page_VF_reference_only_0_document_0_desktop.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 19.92%, threshold: 5% }: Register Page ΓÇô Single-Step Event sea-vf-vs-lwc_Register_Page__Single-Step_Event_0_document_1_mobile.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 52.66%, threshold: 0.1% }: Donation Page (VF reference only) sea-vf-vs-lwc_Donation_Page_VF_reference_only_0_document_0_desktop.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 37.06%, threshold: 5% }: Register Page ΓÇô Multi-Step Event sea-vf-vs-lwc_Register_Page__Multi-Step_Event_0_document_0_desktop.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 97.50%, threshold: 0.1% }: Guest Registration Page (VF reference only) sea-vf-vs-lwc_Guest_Registration_Page_VF_reference_only_0_document_0_desktop.png
+   See: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\failed_diff_sea-vf-vs-lwc_Register_Page__Single-Step_Event_0_document_0_desktop.png
+      compare | ERROR { requireSameDimensions: false, size: isDifferent, content: 27.78%, threshold: 5% }: Register Page ΓÇô Single-Step Event sea-vf-vs-lwc_Register_Page__Single-Step_Event_0_document_0_desktop.png
+       report | Test completed...
+       report | 4 Passed
+       report | 16 Failed
+       report | Writing browser report
+       report | Resources copied
+       report | Copied json report to: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\test\20260321-141609\report.json
+       report | Copied jsonp report to: C:\Users\thad\Documents\Repositories\Summit-Events-App\ai-logs\backstop\html_report\config.js
+      COMMAND | Executing core for "openReport"
+   openReport | Attempting to ping 
+   openReport | Remote not found. Opening ai-logs\backstop\html_report\index.html
+       report | *** Mismatch errors found ***
+      COMMAND | Command "report" ended with an error after [1.236s]
+      COMMAND | Error: Mismatch errors found.
+                    at C:\Users\thad\AppData\Roaming\npm\node_modules\backstopjs\core\command\report.js:284:17
+                    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      COMMAND | Command "test" ended with an error after [69.81s]
+      COMMAND | Error: Mismatch errors found.
+                    at C:\Users\thad\AppData\Roaming\npm\node_modules\backstopjs\core\command\report.js:284:17
+                    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)

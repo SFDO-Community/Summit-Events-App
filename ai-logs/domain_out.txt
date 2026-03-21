@@ -1,0 +1,42 @@
+Compiled successfully.
+Executed successfully.
+
+66.0 APEX_CODE,DEBUG;APEX_PROFILING,INFO
+Execute Anonymous: // Find the Force.com Site URL for VF pages
+Execute Anonymous: List<Site> sites = [SELECT Id, Name, UrlPathPrefix, Status, SiteType, GuestUserId FROM Site LIMIT 10];
+Execute Anonymous: for (Site s : sites) {
+Execute Anonymous:     System.debug('SITE:' + s.Name + '|' + s.UrlPathPrefix + '|' + s.SiteType + '|' + s.GuestUserId);
+Execute Anonymous: }
+Execute Anonymous: // Get domain info
+Execute Anonymous: List<Domain> domains = [SELECT Id, Domain, DomainType FROM Domain LIMIT 5];
+Execute Anonymous: for (Domain d : domains) {
+Execute Anonymous:     System.debug('DOMAIN:' + d.Domain + '|' + d.DomainType);
+Execute Anonymous: }
+08:42:49.32 (32676634)|USER_INFO|[EXTERNAL]|005di00000GOhVd|test-s4xolinws4bf@example.com|(GMT-07:00) Pacific Daylight Time (America/Los_Angeles)|GMT-07:00
+08:42:49.32 (32718597)|EXECUTION_STARTED
+08:42:49.32 (32733644)|CODE_UNIT_STARTED|[EXTERNAL]|execute_anonymous_apex
+08:42:49.32 (46345815)|USER_DEBUG|[4]|DEBUG|SITE:Summit_Events&#124;null&#124;ChatterNetwork&#124;005di00000GQUdxAAH
+08:42:49.32 (46409671)|USER_DEBUG|[4]|DEBUG|SITE:Summit_Events1&#124;/s&#124;ChatterNetworkPicasso&#124;005di00000GQUdxAAH
+08:42:49.32 (63485330)|USER_DEBUG|[9]|DEBUG|DOMAIN:nosoftware-business-7494-dev-ed.scratch.my.salesforce-sites.com&#124;DNS
+08:42:49.32 (63535325)|USER_DEBUG|[9]|DEBUG|DOMAIN:nosoftware-business-7494-dev-ed.scratch.my.site.com&#124;DNS
+08:42:49.63 (63621087)|CUMULATIVE_LIMIT_USAGE
+08:42:49.63 (63621087)|LIMIT_USAGE_FOR_NS|(default)|
+  Number of SOQL queries: 2 out of 100
+  Number of query rows: 4 out of 50000
+  Number of SOSL queries: 0 out of 20
+  Number of DML statements: 0 out of 150
+  Number of Publish Immediate DML: 0 out of 150
+  Number of DML rows: 0 out of 10000
+  Maximum CPU time: 0 out of 10000
+  Maximum heap size: 0 out of 6000000
+  Number of callouts: 0 out of 100
+  Number of Email Invocations: 0 out of 10
+  Number of future calls: 0 out of 50
+  Number of queueable jobs added to the queue: 0 out of 50
+  Number of Mobile Apex push calls: 0 out of 10
+
+08:42:49.63 (63621087)|CUMULATIVE_LIMIT_USAGE_END
+
+08:42:49.32 (63697043)|CODE_UNIT_FINISHED|execute_anonymous_apex
+08:42:49.32 (63706465)|EXECUTION_FINISHED
+

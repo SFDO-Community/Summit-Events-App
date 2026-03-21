@@ -22,6 +22,7 @@ public with sharing class SummitEventsLWCController {
         @AuraEnabled public List<Summit_Events_Fee__c> fees { get; set; }
         @AuraEnabled public Decimal totalEventCost { get; set; }
         @AuraEnabled public RecaptchaInfo recaptcha { get; set; }
+        @AuraEnabled public DonationSelection donationSelection { get; set; }
     }
 
     public class EventConfiguration {
@@ -111,6 +112,12 @@ public with sharing class SummitEventsLWCController {
         @AuraEnabled public String publicKey { get; set; }
         @AuraEnabled public String apiUrl { get; set; }
         @AuraEnabled public Decimal failScore { get; set; }
+    }
+
+    public class DonationSelection {
+        @AuraEnabled public Decimal amount { get; set; }
+        @AuraEnabled public String allocationId { get; set; }
+        @AuraEnabled public String existingFeeId { get; set; }
     }
 
 
@@ -205,6 +212,19 @@ public with sharing class SummitEventsLWCController {
 
             // Build recaptcha info if configured
             wrapper.recaptcha = buildRecaptchaInfo(wrapper.eventInfo);
+
+            // Initialize donation selection (populated from existing fees if re-loading)
+            wrapper.donationSelection = new DonationSelection();
+            if (wrapper.fees != null) {
+                for (Summit_Events_Fee__c fee : wrapper.fees) {
+                    if (fee.Event_Fee_Type__c == 'Optional Donation') {
+                        wrapper.donationSelection.amount = fee.Event_Fee__c;
+                        wrapper.donationSelection.allocationId = fee.Event_Fee_Allocation__c;
+                        wrapper.donationSelection.existingFeeId = fee.Id;
+                        break;
+                    }
+                }
+            }
 
         } catch (Exception e) {
             System.debug('Error in getSummitEventData: ' + e.getMessage());
@@ -580,17 +600,60 @@ public with sharing class SummitEventsLWCController {
         return guestRegistrations;
     }
 
-    // Save registration data
+    // Save registration data — handles registration record, appointments, guests, and donation fee
     @AuraEnabled
     public static String saveRegistration(String wrapperJson) {
         try {
             SummitEventWrapper wrapper = (SummitEventWrapper) JSON.deserialize(wrapperJson, SummitEventWrapper.class);
-
-            // Use the registration CRUD class for without sharing operations
             RegistrationCRUD crud = new RegistrationCRUD();
-            String registrationId = crud.saveRegistration(wrapper.primaryRegistration.registrationRecord);
 
-            // Return encrypted registration ID
+            // 1. Serialize guest registrations into Guest_JSON__c on the primary registration
+            if (wrapper.guestRegistrations != null && !wrapper.guestRegistrations.isEmpty()) {
+                List<Map<String, Object>> guestList = new List<Map<String, Object>>();
+                for (Registration guest : wrapper.guestRegistrations) {
+                    Map<String, Object> guestMap = new Map<String, Object>();
+                    if (guest.registrationRecord != null) {
+                        guestMap.put('firstName', guest.registrationRecord.Registrant_First_Name__c);
+                        guestMap.put('lastName', guest.registrationRecord.Registrant_Last_Name__c);
+                        guestMap.put('email', guest.registrationRecord.Registrant_Email__c);
+                    }
+                    guestList.add(guestMap);
+                }
+                wrapper.primaryRegistration.registrationRecord.Guest_JSON__c = JSON.serialize(guestList);
+            }
+
+            // 2. Save primary registration record
+            String registrationId = crud.saveRegistration(wrapper.primaryRegistration.registrationRecord);
+            Id regId = (Id) registrationId;
+
+            // 3. Save appointments
+            if (wrapper.primaryRegistration.appointments != null && !wrapper.primaryRegistration.appointments.isEmpty()) {
+                List<Summit_Events_Appointments__c> aptsToSave = new List<Summit_Events_Appointments__c>();
+                for (Summit_Events_Appointments__c apt : wrapper.primaryRegistration.appointments) {
+                    apt.Event_Registration__c = regId;
+                    aptsToSave.add(apt);
+                }
+                crud.upsertAppointments(aptsToSave);
+            }
+
+            // 4. Save optional donation fee
+            if (wrapper.donationSelection != null
+                && wrapper.donationSelection.amount != null
+                && wrapper.donationSelection.amount > 0) {
+                Summit_Events_Fee__c fee = new Summit_Events_Fee__c();
+                if (String.isNotBlank(wrapper.donationSelection.existingFeeId)) {
+                    fee.Id = wrapper.donationSelection.existingFeeId;
+                }
+                fee.Event_Fee__c = wrapper.donationSelection.amount;
+                fee.Event_Fee_Allocation__c = wrapper.donationSelection.allocationId;
+                fee.Event_Registration__c = regId;
+                if (wrapper.eventInfo != null) {
+                    fee.Summit_Events__c = wrapper.eventInfo.Id;
+                }
+                fee.Event_Fee_Type__c = 'Optional Donation';
+                crud.upsertFee(fee);
+            }
+
             return SummitEventsShared.encryptString(registrationId);
         } catch (Exception e) {
             throw new AuraHandledException('Error saving registration: ' + e.getMessage());
@@ -639,6 +702,24 @@ public with sharing class SummitEventsLWCController {
                 update registration;
             }
             return registration.Id;
+        }
+
+        public void upsertAppointments(List<Summit_Events_Appointments__c> appointments) {
+            List<Summit_Events_Appointments__c> toInsert = new List<Summit_Events_Appointments__c>();
+            List<Summit_Events_Appointments__c> toUpdate = new List<Summit_Events_Appointments__c>();
+            for (Summit_Events_Appointments__c apt : appointments) {
+                if (apt.Id == null) {
+                    toInsert.add(apt);
+                } else {
+                    toUpdate.add(apt);
+                }
+            }
+            if (!toInsert.isEmpty()) insert toInsert;
+            if (!toUpdate.isEmpty()) update toUpdate;
+        }
+
+        public void upsertFee(Summit_Events_Fee__c fee) {
+            upsert fee;
         }
     }
 

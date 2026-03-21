@@ -1,12 +1,106 @@
 <template>
-    <div class="slds-card slds-p-around_medium">
-        <div class="slds-text-align_center slds-p-around_large">
-            <p class="slds-text-heading_medium slds-m-bottom_medium">Appointment Selection</p>
-            <p class="slds-text-body_regular">This page will allow you to select appointments.</p>
-            <p class="slds-text-body_small slds-text-color_weak slds-m-top_medium">
-                (Component to be implemented)
+    <div class="slds-m-around_medium">
+
+        <!-- No appointments available -->
+        <template lwc:if={hasNoAppointments}>
+            <p class="slds-text-body_regular slds-text-align_center slds-p-around_large slds-text-color_weak">
+                No appointment options are available for this event.
             </p>
-        </div>
+        </template>
+
+        <template lwc:else>
+            <!-- Validation error banner -->
+            <template lwc:if={validationError}>
+                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning slds-m-bottom_small" role="alert">
+                    <span>{validationError}</span>
+                </div>
+            </template>
+
+            <div class="slds-grid slds-wrap slds-gutters">
+
+                <!-- LEFT: Available Appointment Types -->
+                <template lwc:if={hasAvailableTypes}>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <h3 class="slds-text-heading_small slds-m-bottom_small">{unchosenLabel}</h3>
+                        <template for:each={availableTypes} for:item="apt">
+                            <div key={apt.Id} class="slds-box slds-box_x-small slds-m-bottom_small">
+                                <p class="slds-text-heading_x-small slds-m-bottom_xx-small">
+                                    {apt.Title__c}
+                                    <template lwc:if={apt.Required_Appointment__c}>
+                                        <abbr class="slds-required" title="required"> *</abbr>
+                                    </template>
+                                </p>
+                                <template lwc:if={apt.Description__c}>
+                                    <p class="slds-text-body_small slds-m-bottom_x-small">{apt.Description__c}</p>
+                                </template>
+                                <!-- Picklist input -->
+                                <template lwc:if={apt.showPicklist}>
+                                    <div class="slds-m-bottom_x-small">
+                                        <lightning-combobox
+                                            data-type-id={apt.Id}
+                                            label="Select Option"
+                                            placeholder="Select..."
+                                            value={apt.inputValue}
+                                            options={apt.picklistOptions}
+                                            required={apt.inputRequired}
+                                            onchange={handleInputChange}>
+                                        </lightning-combobox>
+                                    </div>
+                                </template>
+                                <!-- Text input -->
+                                <template lwc:if={apt.showTextInput}>
+                                    <div class="slds-m-bottom_x-small">
+                                        <lightning-textarea
+                                            data-type-id={apt.Id}
+                                            label="Additional Information"
+                                            value={apt.inputValue}
+                                            required={apt.inputRequired}
+                                            onchange={handleInputChange}>
+                                        </lightning-textarea>
+                                    </div>
+                                </template>
+                                <lightning-button
+                                    label="Add"
+                                    icon-name="utility:add"
+                                    variant="brand"
+                                    data-type-id={apt.Id}
+                                    onclick={handleAdd}>
+                                </lightning-button>
+                            </div>
+                        </template>
+                        <template lwc:if={hasRequiredAppointments}>
+                            <p class="slds-text-body_small"><abbr class="slds-required" title="required">*</abbr> Selection required.</p>
+                        </template>
+                    </div>
+                </template>
+
+                <!-- RIGHT: Selected Appointments -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <h3 class="slds-text-heading_small slds-m-bottom_small">{chosenLabel}</h3>
+                    <template lwc:if={hasVisibleSelections}>
+                        <template for:each={visibleSelections} for:item="sel">
+                            <div key={sel.typeId} class="slds-box slds-box_x-small slds-m-bottom_small slds-theme_shade">
+                                <p class="slds-text-heading_x-small slds-m-bottom_xx-small">{sel.title}</p>
+                                <template lwc:if={sel.inputValue}>
+                                    <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_x-small">{sel.inputValue}</p>
+                                </template>
+                                <template lwc:if={sel.canRemove}>
+                                    <lightning-button
+                                        label="Remove"
+                                        variant="destructive-text"
+                                        data-type-id={sel.typeId}
+                                        onclick={handleRemove}>
+                                    </lightning-button>
+                                </template>
+                            </div>
+                        </template>
+                    </template>
+                    <template lwc:else>
+                        <p class="slds-text-body_small slds-text-color_weak">{nextInstructions}</p>
+                    </template>
+                </div>
+
+            </div>
+        </template>
     </div>
 </template>
-

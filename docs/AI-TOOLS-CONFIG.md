@@ -20,6 +20,38 @@ Migrate Summit Events App from Visualforce to Lightning Web Components (LWC) whi
 
 ---
 
+## SEA Access Model (Critical for Testing & BackstopJS)
+
+Understanding who can access what is essential before writing any test URLs or BackstopJS scenarios.
+
+### Public Guest Access (No Login Required)
+- **SEA registration pages are fully public** — guest users can register without any authentication
+- This applies to all registration flow pages: Register, Additional Questions, Appointments, Guests, Donation, Submit, Confirmation
+- VF URL pattern: `https://<org>/apex/SummitEventsRegister?instanceId=<id>`
+- LWC URL pattern: `https://<org>/s/<page-slug>?instanceId=<id>` (Experience Cloud)
+- **BackstopJS implication: NO login script needed** for registration page screenshots
+
+### Authenticated Community Access (Optional Enhancement)
+- When a user is logged in via an Experience Cloud community, SEA detects the session
+- SEA will **pre-fill contact information** on the registration form from the authenticated user's Contact record
+- This is an enhancement — the same pages work for both guest and logged-in users
+- BackstopJS can test both scenarios: one scenario set without auth, one with auth
+
+### Admin / Event Management (Login Required)
+- Creating and configuring events requires Salesforce org login
+- Administrators manipulate Summit Events objects (`Summit_Events__c`, `Summit_Events_Instance__c`, etc.)
+- Completed registrations are recorded on `Summit_Events_Registration__c` — only viewable by admins when logged in
+- Not relevant to the public-facing LWC registration pages we're building/comparing
+
+### Scratch Org Test Data
+- Scratch orgs come with **pre-defined sample events** at varying stages of configuration
+- **Not all events activate all pages** — some events have additional questions, appointments, donations, guests enabled; others don't
+- When setting up BackstopJS scenarios, find an event instance that has ALL features enabled to maximize page coverage
+- Query to find event instances: `SELECT Id, Name, Event__r.Event_Name__c FROM Summit_Events_Instance__c`
+- To check which pages are active for an instance, look at the `config` flags in `SummitEventWrapper` returned by `SummitEventsLWCController`
+
+---
+
 ## Critical Deployment Rules
 
 ### ⚠️ NEVER DO THIS
@@ -180,12 +212,20 @@ summitEventsRegistration (Controller)
 │   └── Uses lightning-input-address for addresses
 ├── summitEventsQuestionsPage ✅ COMPLETE
 │   └── summitEventsQuestionField ✅ COMPLETE (11+ field types)
-├── summitEventsAppointmentsPage 🔨 TODO
-├── summitEventsGuestsPage 🔨 TODO
-├── summitEventsDonationPage 🔨 TODO
-├── summitEventsSubmitPage 🔨 TODO
+├── summitEventsAppointmentsPage ✅ COMPLETE (March 2026)
+├── summitEventsGuestsPage ✅ COMPLETE (March 2026)
+│   └── summitEventsQuestionField ✅ (reused for guest questions)
+├── summitEventsDonationPage ✅ COMPLETE (March 2026)
+├── summitEventsSubmitPage ✅ COMPLETE (March 2026)
 └── summitEventsConfirmationPage ✅ COMPLETE
 ```
+
+**Deep technical reference**: See `docs/SEA-REGISTRATION-ARCHITECTURE.md` for:
+- VF architecture and patterns (cookies, page-by-page flow, UI details)
+- LWC architecture and page component contract
+- Complete `SummitEventWrapper` data structure
+- Object & field reference (appointments, guests, donations)
+- VF vs LWC differences table
 
 ### Controller Pattern
 
@@ -262,23 +302,37 @@ export default class SummitEventsMyPage extends LightningElement {
         appointments: [],         // Summit_Events_Appointments__c[]
         isGuest: false
     },
-    guestRegistrations: [],       // Registration[]
+    guestRegistrations: [],       // Registration[] (serialized to Guest_JSON__c on save)
     instance: {},                 // Summit_Events_Instance__c
-    eventInfo: {},                // Summit_Events__c
-    appointmentTypes: {},         // Map<Id, Summit_Events_Appointment_Type__c>
+    eventInfo: {                  // Summit_Events__c (includes __r relationship fields)
+        Donation_Suggested_Amount_List__c: '10\n25\n50',  // newline-delimited
+        Donation_Allocation_1__c: 'Id',  // through ..._5__c
+        Donation_Allocation_1__r: { Name: 'General Fund' },
+        Guest_Max_Amount__c: 5,
+        Event_Fee__c: 50.00,
+    },
+    // ⚠️ appointmentTypes is a MAP — serializes to a JS OBJECT, not Array!
+    // ALWAYS use Object.values(eventData.appointmentTypes || {}) to iterate
+    appointmentTypes: {           // Map<Id, Summit_Events_Appointment_Type__c>
+        'a0X...' : { Id, Title__c, Registrant_Input__c, Chosen_State__c, ... }
+    },
     registrantQuestions: [],      // SummitEventsQuestionWrapper[]
     guestQuestions: [],           // SummitEventsQuestionWrapper[]
-    config: {                     // EventConfiguration
+    config: {                     // EventConfiguration flags
         hasAdditionalQuestions: Boolean,
         hasAppointments: Boolean,
         hasGuestRegistration: Boolean,
         hasDonations: Boolean,
         hasEventFee: Boolean,
-        askThirdPartyRegistrant: Boolean,
-        // ... more config flags
+        // ... more display flags
     },
-    fees: [],                     // Summit_Events_Fee__c[]
+    fees: [],                     // Summit_Events_Fee__c[] (existing fees for this registration)
     totalEventCost: 0,
+    donationSelection: {          // Set by summitEventsDonationPage.getData()
+        amount: 0,                // Decimal — 0 means no donation
+        allocationId: null,       // Id of Summit_Events_Fee_Allocation__c
+        existingFeeId: null       // Id of existing Summit_Events_Fee__c (for upsert)
+    },
     recaptcha: {}                 // RecaptchaInfo
 }
 ```
@@ -412,56 +466,24 @@ Grant access to all fields used in registration on above objects.
 
 ## Next Development Tasks
 
-### Priority 1: Appointments Page
-**File**: `summitEventsAppointmentsPage`
+### Priority 1: Deploy & Verify (In Progress)
+- Fix `<apiVersion>` in all 4 new component `-meta.xml` files (should be `64.0`)
+- Deploy to scratch org: `cci task run deploy --path force-app/main/default --org dev`
+- Verify all components render and flow works end-to-end
+- Run BackstopJS test to compare VF vs LWC screenshots
 
-**Requirements**:
-- Display available appointment types from `eventData.appointmentTypes`
-- Allow single/multiple selection based on config
-- Handle time slots if configured
-- Validate required appointments
-- Support both primary and guest appointments
+### Priority 2: reCAPTCHA
+- Integrate reCAPTCHA on submit page (VF had native integration)
+- `summitEventsSubmitPage` has a placeholder; needs recaptcha widget rendering
 
-**Key Data**:
-```javascript
-appointmentTypes: Map<Id, {
-    Name: String,
-    Title: String,
-    Description: String,
-    Appointment_Type_Mode: String, // 'Multi-Option' | 'Single-Option'
-    Required: Boolean,
-    // ... more fields
-}>
-```
+### Priority 3: Lookup Component
+- Port custom lookup component from other repository
+- Replace placeholder in `summitEventsQuestionField` for `'Lookup'` field type
 
-### Priority 2: Guests Page
-**File**: `summitEventsGuestsPage`
-
-**Requirements**:
-- Add/remove guest registrations
-- Guest form with same questions as primary
-- Guest-specific questions if configured
-- Max guests validation
-- Guest appointments (NEW feature!)
-
-### Priority 3: Donation Page
-**File**: `summitEventsDonationPage`
-
-**Requirements**:
-- Display donation allocations
-- Suggested amounts vs custom amount
-- Multiple allocations support
-- Update total cost
-
-### Priority 4: Submit Page
-**File**: `summitEventsSubmitPage`
-
-**Requirements**:
-- Display complete registration summary
-- Show all data: registrant, guests, appointments, fees
-- Allow navigation back to edit
-- reCAPTCHA integration
-- Submit to Apex
+### Priority 4: Guest Appointments (New Feature)
+- VF did not support guest appointments
+- LWC architecture supports it via `guestRegistrations[].appointments[]`
+- Requires new UX in `summitEventsGuestsPage` and Apex save logic
 
 ---
 
@@ -510,8 +532,16 @@ getData() {
 
 ## Version History
 
+### v1.1 - March 21, 2026
+- ✅ Implemented `summitEventsAppointmentsPage` (two-column UI, auto-add, required validation)
+- ✅ Implemented `summitEventsGuestsPage` (guest form, max limit, unsaved modal)
+- ✅ Implemented `summitEventsDonationPage` (suggested amounts, allocation designations)
+- ✅ Implemented `summitEventsSubmitPage` (read-only review, fees table)
+- ✅ Updated `SummitEventsLWCController.cls`: added `DonationSelection` inner class, full `saveRegistration` (appointments, guests, donation fee)
+- ✅ Added `docs/SEA-REGISTRATION-ARCHITECTURE.md` — comprehensive VF + LWC architecture reference
+- 🔄 Pending: deploy to scratch org, BackstopJS visual comparison, reCAPTCHA
+
 ### v1.0 - January 2, 2026
-- Initial LWC implementation
 - ✅ Main controller with page flow
 - ✅ Register page (all standard fields)
 - ✅ Questions page (all field types)
@@ -520,15 +550,6 @@ getData() {
 - ✅ Apex wrapper class
 - 🔨 Placeholder pages (Appointments, Guests, Donation, Submit)
 
-### Known Issues
-- None currently
-
-### Technical Debt
-- Add console logging for debugging (removed for deployment)
-- Implement lookup component (port from other repo)
-- Add reCAPTCHA integration
-- Add payment gateway integration
-- Email confirmation automation
 
 ---
 

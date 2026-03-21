@@ -101,45 +101,51 @@ Component with optional registrationId property
 - Text limits
 
 #### d. `summitEventsAppointmentsPage`
-**Status**: 🔨 Placeholder Created
+**Status**: ✅ Fully Implemented (March 2026)
 
-**To Implement**:
-- Display available appointment types
-- Allow selection of appointments
-- Handle required vs optional appointments
-- Support appointment time slots
-- Validate required appointments selected
+**Features**:
+- Two-column layout: available types (left) → selected appointments (right)
+- Auto-adds types with `Chosen_State__c = 'Added'` or `'Added and Required'` on load
+- Types with `Chosen_State__c = 'Added but not shown'` silently included (not rendered)
+- Per-type input based on `Registrant_Input__c`: text box or custom picklist
+- Required appointments validated; cannot be removed; blocks Next if missing
+- `validate()` shows error banner if required type not selected
+- `getData()` returns `{ primaryRegistration: { appointments: [...] } }`
+
+**⚠️ Key Pattern**: `appointmentTypes` from Apex is a Map (JS object), not an Array.
+Use `Object.values(this.eventData.appointmentTypes || {})` to iterate.
 
 #### e. `summitEventsGuestsPage`
-**Status**: 🔨 Placeholder Created
+**Status**: ✅ Fully Implemented (March 2026)
 
-**To Implement**:
-- Add/remove guest registrations
-- Dynamic guest form rendering
-- Guest-specific questions
-- Guest appointments (new feature!)
-- Validate guest data
+**Features**:
+- Two-column layout: 4/12 form (left) + 8/12 guest list (right)
+- Fallback form (First Name, Last Name, Email) when no `guestQuestions` configured
+- Renders `c-summit-events-question-field` for each guest question when configured
+- Max guest limit enforced via `eventInfo.Guest_Max_Amount__c`
+- Unsaved guest modal: blocks navigation if form has unflushed data
+- `validate()` returns false and shows modal if form data exists but not yet added
+- `getData()` returns `{ guestRegistrations: [...] }` for Apex serialization
 
 #### f. `summitEventsDonationPage`
-**Status**: 🔨 Placeholder Created
+**Status**: ✅ Fully Implemented (March 2026)
 
-**To Implement**:
-- Display donation allocations
-- Suggested amount buttons
-- Custom amount input
-- Multiple allocation support
-- Fee calculation
+**Features**:
+- Suggested amounts combobox parsed from `Donation_Suggested_Amount_List__c` (newline-delimited)
+- "Other Amount" option triggers custom `lightning-input type="number"`
+- Designation combobox from `Donation_Allocation_1__c` through `5__c` (conditional on allocations existing)
+- `getData()` returns `{ donationSelection: { amount, allocationId, existingFeeId } }`
 
 #### g. `summitEventsSubmitPage`
-**Status**: 🔨 Placeholder Created
+**Status**: ✅ Fully Implemented (March 2026)
 
-**To Implement**:
-- Display registration summary
-- Show selected appointments
-- Display fees and donations
-- Show guest information
-- Allow edits (navigate back)
-- reCAPTCHA integration
+**Features**:
+- Read-only review page (no user input)
+- Guest summary section (names of all added guests)
+- Appointment summary (filters out `'Added but not shown'` types)
+- Fees table: event base fee + donation + total
+- All amounts formatted as currency via `_formatCurrency()` helper
+- `validate()` returns true trivially; `getData()` returns empty object
 
 #### h. `summitEventsConfirmationPage`
 **Status**: ✅ Fully Implemented
@@ -253,12 +259,15 @@ summitEventsRegistration (Controller)
 ├── summitEventsRegisterPage ✅
 ├── summitEventsQuestionsPage ✅
 │   └── summitEventsQuestionField ✅
-├── summitEventsAppointmentsPage 🔨
-├── summitEventsGuestsPage 🔨
-├── summitEventsDonationPage 🔨
-├── summitEventsSubmitPage 🔨
+├── summitEventsAppointmentsPage ✅ (March 2026)
+├── summitEventsGuestsPage ✅ (March 2026)
+│   └── summitEventsQuestionField ✅ (reused for guest questions)
+├── summitEventsDonationPage ✅ (March 2026)
+├── summitEventsSubmitPage ✅ (March 2026)
 └── summitEventsConfirmationPage ✅
 ```
+
+**See also**: `docs/SEA-REGISTRATION-ARCHITECTURE.md` — deep technical reference for both VF and LWC implementations, all data structures, object/field reference, and VF vs LWC comparison table.
 
 ## Testing Checklist
 

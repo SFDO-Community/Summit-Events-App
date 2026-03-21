@@ -1,12 +1,68 @@
 <template>
-    <div class="slds-card slds-p-around_medium">
-        <div class="slds-text-align_center slds-p-around_large">
-            <p class="slds-text-heading_medium slds-m-bottom_medium">Review & Submit</p>
-            <p class="slds-text-body_regular">This page will display a summary of your registration for review.</p>
-            <p class="slds-text-body_small slds-text-color_weak slds-m-top_medium">
-                (Component to be implemented)
+    <div class="slds-m-around_medium">
+
+        <!-- Guests section -->
+        <template lwc:if={hasGuests}>
+            <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium">{guestSubmitLabel}</h2>
+            <template for:each={guestSummary} for:item="guest">
+                <article key={guest.id} class="slds-card slds-clearfix slds-p-vertical_none slds-m-bottom_small">
+                    <div class="slds-card__body slds-card__body_inner">
+                        <p class="slds-text-heading_x-small slds-m-bottom_x-small">{guest.displayName}</p>
+                        <template lwc:if={guest.email}>
+                            <p class="slds-text-body_small slds-text-color_weak">{guest.email}</p>
+                        </template>
+                    </div>
+                </article>
+            </template>
+        </template>
+
+        <!-- Selected appointments section -->
+        <template lwc:if={hasAppointments}>
+            <h2 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_medium">{appointmentSubmitLabel}</h2>
+            <ul class="slds-list_dotted slds-m-bottom_medium">
+                <template for:each={appointmentSummary} for:item="apt">
+                    <li key={apt.typeId} class="slds-m-bottom_x-small">
+                        <span class="slds-text-body_regular">{apt.title}</span>
+                        <template lwc:if={apt.inputValue}>
+                            <br/>
+                            <span class="slds-text-body_small slds-text-color_weak">{apt.inputValue}</span>
+                        </template>
+                    </li>
+                </template>
+            </ul>
+        </template>
+
+        <!-- Fees / Charges section -->
+        <template lwc:if={hasCharges}>
+            <h3 class="slds-text-heading_medium slds-p-top_medium slds-p-bottom_small">{feeSubmitLabel}</h3>
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered slds-m-bottom_medium">
+                <tbody>
+                    <template lwc:if={eventFeeAmount}>
+                        <tr>
+                            <td>{eventFeeLabel}</td>
+                            <td class="slds-text-align_right">{eventFeeFormatted}</td>
+                        </tr>
+                    </template>
+                    <template lwc:if={donationAmount}>
+                        <tr>
+                            <td>Optional Donation</td>
+                            <td class="slds-text-align_right">{donationFormatted}</td>
+                        </tr>
+                    </template>
+                    <tr>
+                        <td><strong>{feeTotalLabel}</strong></td>
+                        <td class="slds-text-align_right"><strong>{totalFormatted}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </template>
+
+        <!-- Empty state -->
+        <template lwc:if={showEmptyState}>
+            <p class="slds-text-body_regular slds-text-color_weak slds-text-align_center slds-p-around_large">
+                Review your registration details and click Submit.
             </p>
-        </div>
+        </template>
+
     </div>
 </template>
-

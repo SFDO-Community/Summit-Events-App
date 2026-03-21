@@ -1,12 +1,136 @@
 <template>
-    <div class="slds-card slds-p-around_medium">
-        <div class="slds-text-align_center slds-p-around_large">
-            <p class="slds-text-heading_medium slds-m-bottom_medium">Guest Registration</p>
-            <p class="slds-text-body_regular">This page will allow you to register guests.</p>
-            <p class="slds-text-body_small slds-text-color_weak slds-m-top_medium">
-                (Component to be implemented)
-            </p>
+    <div class="slds-m-around_medium">
+
+        <!-- Description -->
+        <template lwc:if={guestDescription}>
+            <div class="slds-m-bottom_medium">
+                <lightning-formatted-rich-text value={guestDescription}></lightning-formatted-rich-text>
+            </div>
+        </template>
+
+        <div class="slds-grid slds-wrap slds-gutters">
+
+            <!-- LEFT: Guest Input Form -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                <article class="slds-card">
+                    <div class="slds-card__body slds-card__body_inner">
+
+                        <!-- No guest questions configured -->
+                        <template lwc:if={hasNoGuestQuestions}>
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                                    <lightning-input
+                                        data-field="Registrant_First_Name__c"
+                                        label="First Name"
+                                        value={guestForm.Registrant_First_Name__c}
+                                        required
+                                        onchange={handleFormChange}>
+                                    </lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                                    <lightning-input
+                                        data-field="Registrant_Last_Name__c"
+                                        label="Last Name"
+                                        value={guestForm.Registrant_Last_Name__c}
+                                        required
+                                        onchange={handleFormChange}>
+                                    </lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                                    <lightning-input
+                                        data-field="Registrant_Email__c"
+                                        label="Email"
+                                        type="email"
+                                        value={guestForm.Registrant_Email__c}
+                                        onchange={handleFormChange}>
+                                    </lightning-input>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Guest questions -->
+                        <template lwc:else>
+                            <template for:each={guestQuestions} for:item="question">
+                                <div key={question.questionId} class="slds-m-bottom_small">
+                                    <c-summit-events-question-field
+                                        question={question}
+                                        onquestionchange={handleQuestionChange}>
+                                    </c-summit-events-question-field>
+                                </div>
+                            </template>
+                        </template>
+
+                        <!-- Remaining guests indicator -->
+                        <template lwc:if={showGuestsRemaining}>
+                            <p class="slds-text-body_small slds-text-align_center slds-m-top_small slds-text-color_weak">
+                                {guestsRemainingText}
+                            </p>
+                        </template>
+
+                    </div>
+                    <footer class="slds-card__footer slds-p-top_none slds-p-bottom_large">
+                        <lightning-button
+                            label={addButtonLabel}
+                            icon-name="utility:add"
+                            variant="neutral"
+                            disabled={isAtMaxGuests}
+                            onclick={handleAddGuest}>
+                        </lightning-button>
+                    </footer>
+                </article>
+            </div>
+
+            <!-- RIGHT: Guest List -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_8-of-12" id="guestList">
+                <template lwc:if={hasGuests}>
+                    <template for:each={guestList} for:item="guest">
+                        <article key={guest.id} class="slds-card slds-m-bottom_small">
+                            <div class="slds-card__body slds-card__body_inner">
+                                <div class="slds-grid slds-grid_align-spread">
+                                    <div>
+                                        <p class="slds-text-heading_x-small">{guest.displayName}</p>
+                                        <template lwc:if={guest.email}>
+                                            <p class="slds-text-body_small slds-text-color_weak">{guest.email}</p>
+                                        </template>
+                                    </div>
+                                    <div>
+                                        <lightning-button
+                                            label="Remove"
+                                            variant="destructive-text"
+                                            data-guest-id={guest.id}
+                                            onclick={handleRemoveGuest}>
+                                        </lightning-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </template>
+                </template>
+                <template lwc:else>
+                    <p class="slds-text-body_small slds-text-color_weak">{noGuestMessage}</p>
+                </template>
+            </div>
+
         </div>
     </div>
-</template>
 
+    <!-- Unsaved Guest Modal -->
+    <template lwc:if={showUnsavedModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleModalCancel}>
+                    <lightning-icon icon-name="utility:close" size="small" alternative-text="Close"></lightning-icon>
+                    <span class="slds-assistive-text">Cancel and close</span>
+                </button>
+                <div class="slds-modal__content slds-p-around_medium slds-modal__content_headless">
+                    <p>{unsavedModalText}</p>
+                </div>
+                <div class="slds-modal__footer">
+                    <lightning-button label={unsavedCancelLabel} variant="brand" onclick={handleModalCancel}></lightning-button>
+                    <lightning-button label={unsavedContinueLabel} variant="neutral" onclick={handleModalContinue}></lightning-button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

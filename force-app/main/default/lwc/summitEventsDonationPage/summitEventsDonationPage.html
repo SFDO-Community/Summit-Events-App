@@ -1,12 +1,47 @@
 <template>
-    <div class="slds-card slds-p-around_medium">
-        <div class="slds-text-align_center slds-p-around_large">
-            <p class="slds-text-heading_medium slds-m-bottom_medium">Optional Donation</p>
-            <p class="slds-text-body_regular">This page will allow you to make an optional donation.</p>
-            <p class="slds-text-body_small slds-text-color_weak slds-m-top_medium">
-                (Component to be implemented)
-            </p>
+    <div class="slds-m-around_medium">
+
+        <div class="slds-grid slds-wrap">
+
+            <!-- Amount dropdown -->
+            <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-6 slds-p-right_x-small slds-m-bottom_small">
+                <lightning-combobox
+                    label="Amount"
+                    placeholder="Select..."
+                    value={selectedAmount}
+                    options={suggestedAmounts}
+                    onchange={handleAmountChange}>
+                </lightning-combobox>
+            </div>
+
+            <!-- Allocation / Designation dropdown (only shown when allocations exist) -->
+            <template lwc:if={hasAllocations}>
+                <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-6 slds-p-right_x-small slds-m-bottom_small">
+                    <lightning-combobox
+                        label="Designation"
+                        placeholder="Select..."
+                        value={selectedAllocationId}
+                        options={donationAllocations}
+                        onchange={handleAllocationChange}>
+                    </lightning-combobox>
+                </div>
+            </template>
+
+            <!-- Custom "Other Amount" input — only shown when 'Other Amount' is selected -->
+            <template lwc:if={showCustomAmount}>
+                <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-6 slds-p-right_x-small slds-m-bottom_small">
+                    <lightning-input
+                        type="number"
+                        label="Enter Amount"
+                        min="0"
+                        step="0.01"
+                        formatter="currency"
+                        value={customAmount}
+                        onchange={handleCustomAmountChange}>
+                    </lightning-input>
+                </div>
+            </template>
+
         </div>
     </div>
 </template>
-

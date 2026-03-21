@@ -1,0 +1,37 @@
+Compiled successfully.
+Executed successfully.
+
+66.0 APEX_CODE,DEBUG;APEX_PROFILING,INFO
+Execute Anonymous: Site mySite = [SELECT Id FROM Site WHERE Name = 'Summit_Events'];
+Execute Anonymous: SiteDetail mySiteDetail = [SELECT SecureURL FROM SiteDetail WHERE DurableId = :mySite.Id];
+Execute Anonymous: System.debug('VF_SITE_URL:' + mySiteDetail.SecureURL);
+Execute Anonymous: // Also get the LWC experience cloud site URL  
+Execute Anonymous: Site lwcSite = [SELECT Id FROM Site WHERE Name = 'Summit_Events1'];
+Execute Anonymous: SiteDetail lwcDetail = [SELECT SecureURL FROM SiteDetail WHERE DurableId = :lwcSite.Id];
+Execute Anonymous: System.debug('LWC_SITE_URL:' + lwcDetail.SecureURL);
+08:44:44.21 (21300372)|USER_INFO|[EXTERNAL]|005di00000GOhVd|test-s4xolinws4bf@example.com|(GMT-07:00) Pacific Daylight Time (America/Los_Angeles)|GMT-07:00
+08:44:44.21 (21321071)|EXECUTION_STARTED
+08:44:44.21 (21343334)|CODE_UNIT_STARTED|[EXTERNAL]|execute_anonymous_apex
+08:44:44.21 (46752203)|USER_DEBUG|[3]|DEBUG|VF_SITE_URL:https://nosoftware-business-7494-dev-ed.scratch.my.site.com/
+08:44:44.21 (59605976)|USER_DEBUG|[7]|DEBUG|LWC_SITE_URL:https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s
+08:44:44.59 (59687426)|CUMULATIVE_LIMIT_USAGE
+08:44:44.59 (59687426)|LIMIT_USAGE_FOR_NS|(default)|
+  Number of SOQL queries: 4 out of 100
+  Number of query rows: 4 out of 50000
+  Number of SOSL queries: 0 out of 20
+  Number of DML statements: 0 out of 150
+  Number of Publish Immediate DML: 0 out of 150
+  Number of DML rows: 0 out of 10000
+  Maximum CPU time: 0 out of 10000
+  Maximum heap size: 0 out of 6000000
+  Number of callouts: 0 out of 100
+  Number of Email Invocations: 0 out of 10
+  Number of future calls: 0 out of 50
+  Number of queueable jobs added to the queue: 0 out of 50
+  Number of Mobile Apex push calls: 0 out of 10
+
+08:44:44.59 (59687426)|CUMULATIVE_LIMIT_USAGE_END
+
+08:44:44.21 (59753180)|CODE_UNIT_FINISHED|execute_anonymous_apex
+08:44:44.21 (59767602)|EXECUTION_FINISHED
+

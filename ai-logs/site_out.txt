@@ -1,0 +1,9 @@
+Error (executeCompileFailure): Compilation failed at Line 7 column 28 with the error:
+
+
+SELECT SecureURL, TopLevelDomain FROM SiteDetail LIMIT
+                  ^
+ERROR at Row:1:Column:19
+No such column 'TopLevelDomain' on entity 'SiteDetail'. If you are attempting to use a custom field, be sure to append the '__c' after the custom field name. Please reference your WSDL or the describe call for the appropriate names.
+
+

@@ -1,0 +1,123 @@
+{
+  "id": "sea-vf-vs-lwc",
+  "viewports": [
+    { "label": "desktop", "width": 1280, "height": 900 },
+    { "label": "mobile", "width": 375, "height": 812 }
+  ],
+  "scenarios": [
+    {
+      "label": "Register Page – Multi-Step Event",
+      "referenceUrl": "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavrAAB",
+      "url":          "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/?instanceId=a06di00000GnavrAAB",
+      "delay": 2500,
+      "misMatchThreshold": 5.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "Register Page – Single-Step Event",
+      "referenceUrl": "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavxAAB",
+      "url":          "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/?instanceId=a06di00000GnavxAAB",
+      "delay": 2500,
+      "misMatchThreshold": 5.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "Register Page – Campus Tour",
+      "referenceUrl": "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavjAAB",
+      "url":          "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/s/?instanceId=a06di00000GnavjAAB",
+      "delay": 2500,
+      "misMatchThreshold": 5.0,
+      "requireSameDimensions": false
+    },
+    {
+      "_comment": "Starts at Register; fillAndAdvance submits Register form → lands on Additional Questions for screenshot. High threshold: dynamic question rendering may vary slightly.",
+      "label": "Additional Questions Page (VF reference only)",
+      "referenceUrl": "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavrAAB",
+      "url":          "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavrAAB",
+      "onReadyScript": "fillAndAdvance.js",
+      "targetPage": "additionalquestions",
+      "delay": 500,
+      "misMatchThreshold": 15.0,
+      "requireSameDimensions": false
+    },
+    {
+      "_comment": "Starts at Register; fillAndAdvance submits Register → Additional Questions → lands on Appointments for screenshot. High threshold: slot availability may differ run-to-run.",
+      "label": "Appointments Page (VF reference only)",
+      "referenceUrl": "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavrAAB",
+      "url":          "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavrAAB",
+      "onReadyScript": "fillAndAdvance.js",
+      "targetPage": "appointments",
+      "delay": 500,
+      "misMatchThreshold": 15.0,
+      "requireSameDimensions": false
+    },
+    {
+      "_comment": "Starts at Register; advances through Register → Additional Questions → Appointments → lands on Guests for screenshot. High threshold: dynamic guest form.",
+      "label": "Guest Registration Page (VF reference only)",
+      "referenceUrl": "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavrAAB",
+      "url":          "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavrAAB",
+      "onReadyScript": "fillAndAdvance.js",
+      "targetPage": "guests",
+      "delay": 500,
+      "misMatchThreshold": 15.0,
+      "requireSameDimensions": false
+    },
+    {
+      "_comment": "Donation event uses a different instanceId (a06di00000GnavyAAB). Advances Register → lands on Donation for screenshot. High threshold: dropdown state may vary.",
+      "label": "Donation Page (VF reference only)",
+      "referenceUrl": "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavyAAB",
+      "url":          "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavyAAB",
+      "onReadyScript": "fillAndAdvance.js",
+      "targetPage": "donation",
+      "delay": 500,
+      "misMatchThreshold": 60.0,
+      "requireSameDimensions": false
+    },
+    {
+      "_comment": "Advances through full flow (Register → Questions → Appointments → ...) to land on Submit/Review for screenshot. Very high threshold: reg-specific data varies each run.",
+      "label": "Submit/Review Page (VF reference only)",
+      "referenceUrl": "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavrAAB",
+      "url":          "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavrAAB",
+      "onReadyScript": "fillAndAdvance.js",
+      "targetPage": "submit",
+      "delay": 500,
+      "misMatchThreshold": 99.0,
+      "requireSameDimensions": false
+    },
+    {
+      "_comment": "Advances through full flow including Submit to land on Confirmation. NOTE: submits a real test registration each run — confirmation number varies. Reference-only, not for diff comparison.",
+      "label": "Confirmation Page (VF reference only)",
+      "referenceUrl": "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavrAAB",
+      "url":          "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsRegister?instanceId=a06di00000GnavrAAB",
+      "onReadyScript": "fillAndAdvance.js",
+      "targetPage": "confirmation",
+      "delay": 500,
+      "misMatchThreshold": 99.0,
+      "requireSameDimensions": false
+    },
+    {
+      "_comment": "LIMITATION: Cancel Review requires an encrypted ?eventInfo= URL param generated server-side (sent in confirmation emails). It cannot be reached via form flow. This scenario will capture whatever state the page shows without a valid eventInfo param — useful as a baseline but not a true functional screenshot. Track as future work: generate eventInfo via Apex before backstop reference run.",
+      "label": "Cancel Review Page (VF reference only — limited)",
+      "referenceUrl": "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsCancelReview?instanceId=a06di00000GnavrAAB",
+      "url":          "https://nosoftware-business-7494-dev-ed.scratch.my.site.com/apex/SummitEventsCancelReview?instanceId=a06di00000GnavrAAB",
+      "delay": 2500,
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": false
+    }
+  ],
+  "paths": {
+    "bitmaps_reference": "ai-logs/backstop/reference",
+    "bitmaps_test":      "ai-logs/backstop/test",
+    "html_report":       "ai-logs/backstop/html_report",
+    "engine_scripts":    "ai-logs/backstop/engine_scripts"
+  },
+  "engine": "playwright",
+  "engineOptions": {
+    "browser": "chromium"
+  },
+  "asyncCaptureLimit": 3,
+  "asyncCompareLimit": 50,
+  "debug": false,
+  "debugWindow": false,
+  "report": ["browser"]
+}

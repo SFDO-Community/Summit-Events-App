@@ -1,0 +1,42 @@
+BackstopJS v6.3.25
+Loading config:  C:\Users\thad\Documents\Repositories\Summit-Events-App\backstop.json 
+
+COMMAND | Executing core for "reference"
+createBitmaps | Selected 1 of 10 scenarios.
+Creating Browser
+Browser created
+CREATING NEW REFERENCE FILE
+CREATING NEW REFERENCE FILE
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: BackstopTools have been installed.
+Browser Console Log 0: BackstopTools have been installed.
+[fillAndAdvance] Step 0: current="register", target="appointments"
+[fillAndAdvance] Submitting page: register
+[fillAndAdvance] Step 0: current="register", target="appointments"
+[fillAndAdvance] Submitting page: register
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: [vf3pc] not iframed
+[fillAndAdvance] URL after register submit: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsadditionalquestions
+[fillAndAdvance] Step 1: current="additionalquestions", target="appointments"
+[fillAndAdvance] Submitting page: additionalquestions
+[fillAndAdvance] URL after register submit: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsadditionalquestions
+[fillAndAdvance] Step 1: current="additionalquestions", target="appointments"
+[fillAndAdvance] Submitting page: additionalquestions
+Browser Console Log 0: [vf3pc] not iframed
+Browser Console Log 0: [vf3pc] not iframed
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsadditionalquestions
+[fillAndAdvance] Page did not advance from "additionalquestions" ΓÇö stopping.
+[fillAndAdvance] Final page: "additionalquestions", target was: "appointments"
+Browser Console Log 0: BackstopTools have been installed.
+[fillAndAdvance] URL after nav: https://nosoftware-business-7494-dev-ed.scratch.my.site.com/summiteventsadditionalquestions
+[fillAndAdvance] Page did not advance from "additionalquestions" ΓÇö stopping.
+[fillAndAdvance] Final page: "additionalquestions", target was: "appointments"
+Browser Console Log 0: BackstopTools have been installed.
+x Close Browser
+x Close Browser
+Disposing Browser
+
+Run `$ backstop test` to generate diff report.
+
+      COMMAND | Command "reference" successfully executed in [7.091s]

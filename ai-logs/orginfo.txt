@@ -1,0 +1,31 @@
+C:\Users\thad\pipx\venvs\cumulusci\Lib\site-packages\fs\__init__.py:4: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  __import__("pkg_resources").declare_namespace(__name__)  # type: ignore
+[03/21/26 10:38:42] Getting org info from Salesforce CLI for                   
+                    test-s4xolinws4bf@example.com                              
++-----------------------------------------------------------------------------+
+| Org: dev                   |                                                |
+|----------------------------+------------------------------------------------|
+| api_version          | 66.0                                           |
+| config_file          | orgs/educloud.json                             |
+| config_name          | dev                                            |
+| created              | True                                           |
+| date_created         | 2026-03-21 14:45:34.925886                     |
+| days                 | 7                                              |
+| email_address        | thad@valleyhilldesign.com                      |
+| instance_name        | USA934S                                        |
+| instance_url         | https://nosoftware-business-7494-dev-ed.scratc |
+|                            | h.my.salesforce.com                            |
+| is_sandbox           | True                                           |
+| namespace            | None                                           |
+| namespaced           | False                                          |
+| org_id               | 00Ddi000006nqhx                                |
+| org_type             | Developer Edition                              |
+| password             | qbid*efly1rvG                                  |
+| scratch              | True                                           |
+| scratch_org_type     | workspace                                      |
+| serialization_format | pickle                                         |
+| set_password         | True                                           |
+| sfdx_alias           | SummitEventsApp__dev                           |
+| username             | test-s4xolinws4bf@example.com                  |
++-----------------------------------------------------------------------------+
+Org expires on Sat Mar 28 14:45:34 2026
