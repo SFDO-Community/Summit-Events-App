@@ -5,7 +5,7 @@
     <externalId>false</externalId>
     <inlineHelpText>The zip code reported by the event registrant upon registering. This may not be the same as on the contact record.</inlineHelpText>
     <label>Registrant Zip</label>
-    <length>10</length>
+    <length>20</length>
     <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

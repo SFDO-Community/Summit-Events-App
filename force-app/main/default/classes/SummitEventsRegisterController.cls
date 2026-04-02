@@ -291,20 +291,8 @@ public with sharing class SummitEventsRegisterController {
                         WITH SECURITY_ENFORCED
                 ];
 
-                eventRegistration.Registrant_Street_1__c = userContact.MailingStreet;
-                eventRegistration.Registrant_State__c = userContact.MailingState;
-                eventRegistration.Registrant_Country__c = userContact.MailingCountry;
-                eventRegistration.Registrant_Postal_Code__c = userContact.MailingPostalCode;
-                eventRegistration.Registrant_Zip__c = userContact.MailingPostalCode;
-                eventRegistration.Registrant_City__c = userContact.MailingCity;
-                eventRegistration.Registrant_First_Name__c = userContact.FirstName;
-                eventRegistration.Registrant_Last_Name__c = userContact.LastName;
-                eventRegistration.Registrant_Email__c = userContact.Email;
-                eventRegistration.Registrant_Phone__c = userContact.HomePhone;
-                eventRegistration.Registrant_Mobile_Phone__c = userContact.MobilePhone;
-                eventRegistration.Registrant_Date_of_Birth__c = userContact.Birthdate;
-                eventRegistration.Contact__c = userContact.Id;
-                
+                mapContactToRegistration(userContact);
+
                 if(SummitEventsShared.personAccountsEnabled()) {
                     eventRegistration.Person_Account__c = userContact.AccountId;
                 }
@@ -322,6 +310,62 @@ public with sharing class SummitEventsRegisterController {
                 contactSet = true;
             }
         }
+    }
+
+    /**
+     * Maps a Contact's fields to the eventRegistration record safely.
+     *
+     * - Text fields are truncated to their defined max length if the source value is longer
+     *   (the Salesforce platform would throw a field-overflow exception otherwise).
+     * - Registrant_Country__c is a picklist: if the contact's MailingCountry does not match
+     *   any picklist entry (case-insensitive), the raw value is stored in
+     *   Registrant_Country_Text__c instead and Registrant_Country__c is cleared so no
+     *   incorrect default country is carried over.
+     */
+    private void mapContactToRegistration(Contact userContact) {
+        eventRegistration.Registrant_First_Name__c   = truncate(userContact.FirstName, 80);
+        eventRegistration.Registrant_Last_Name__c    = truncate(userContact.LastName, 80);
+        eventRegistration.Registrant_Email__c        = userContact.Email;
+        eventRegistration.Registrant_Phone__c        = userContact.HomePhone;
+        eventRegistration.Registrant_Mobile_Phone__c = userContact.MobilePhone;
+        eventRegistration.Registrant_Street_1__c     = truncate(userContact.MailingStreet, 255);
+        eventRegistration.Registrant_State__c        = truncate(userContact.MailingState, 80);
+        eventRegistration.Registrant_City__c         = truncate(userContact.MailingCity, 100);
+        eventRegistration.Registrant_Postal_Code__c  = truncate(userContact.MailingPostalCode, 100);
+        eventRegistration.Registrant_Zip__c          = truncate(userContact.MailingPostalCode, 20);
+        eventRegistration.Registrant_Date_of_Birth__c = userContact.Birthdate;
+        eventRegistration.Contact__c                 = userContact.Id;
+
+        // Country — validate against the picklist; fall back to free-text field when no match
+        if (String.isNotBlank(userContact.MailingCountry)) {
+            String matchedCountry = null;
+            for (SelectOption opt : PickThePicklist('Summit_Events_Registration__c', 'Registrant_Country__c', false)) {
+                if (String.isNotBlank(opt.getValue()) && opt.getValue().equalsIgnoreCase(userContact.MailingCountry)) {
+                    matchedCountry = opt.getValue();
+                    break;
+                }
+            }
+            if (matchedCountry != null) {
+                eventRegistration.Registrant_Country__c      = matchedCountry;
+                eventRegistration.Registrant_Country_Text__c = null;
+            } else {
+                // Contact country is not in the picklist — store the raw value in the text field
+                // and clear any default country that may have been pre-populated
+                eventRegistration.Registrant_Country__c      = null;
+                eventRegistration.Registrant_Country_Text__c = truncate(userContact.MailingCountry, 255);
+            }
+        }
+    }
+
+    /**
+     * Truncates val to at most maxLen characters. Returns val unchanged if it fits,
+     * or null/empty string as-is without throwing.
+     */
+    private static String truncate(String val, Integer maxLen) {
+        if (String.isBlank(val)) {
+            return val;
+        }
+        return val.length() > maxLen ? val.left(maxLen) : val;
     }
 
     public PageReference checkEventDetails() {
