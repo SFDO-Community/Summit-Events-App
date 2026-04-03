@@ -97,7 +97,7 @@ function checkForm() {
     let error_count = 0;
     let emailReg = /^([a-zA-Z0-9_.\-.'.+])+@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
-    document.querySelectorAll(".slds-is-required .slds-input, .slds-is-required .slds-textarea, .slds-is-required .slds-select").forEach(item => {
+    document.querySelectorAll(".slds-is-required .slds-input, .slds-is-required .slds-textarea, .slds-is-required .slds-select, .slds-is-required .slds-checkbox").forEach(item => {
         let inputWrap = item.closest('.slds-form-element');
         let inputRequired = inputWrap.classList.contains('slds-is-required');
         if (item) {
@@ -106,7 +106,11 @@ function checkForm() {
                 inputType = item.type.toLowerCase();
             }
 
-            if (inputRequired && !item.value) {
+            if(item.className == 'slds-checkbox'){                
+                item.value = item.firstChild.checked ? true : false;
+            }
+
+            if (inputRequired && !item.value) {            
                 inputWrap.classList.add("slds-has-error");
                 addErrorFixerListener(item, inputWrap, 'change');
                 error_count++;

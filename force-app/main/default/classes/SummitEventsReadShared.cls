@@ -51,7 +51,7 @@ public without sharing class SummitEventsReadShared {
                         Phone_Label__c, Phone_Type_Label__c, Preferred_First_Name_Label__c, Pronouns_Label__c, Registrant_Receive_Texts_Label__c,
                         Relationship_To_Institution_Label__c, Third_Party_Registrant_Label__c, Title_Label__c, Preferred_Class_Year_Label__c,
                         Registrant_Relationship_Label__c, Event_Fee_Label__c, Event_Fee_Total_Label__c, Event_Fee_Submit_List_Label__c, Account__r.Name,
-                        Filter_Category__c, Do_not_show_receive_text_question__c, Add_Info_Question_Pick_List_Long_1__c, Add_Info_Question_Pick_List_Long_2__c,
+                        Filter_Category__c, Do_not_show_receive_text_question__c, Ask_Receive_Text_Messages__c, Add_Info_Question_Pick_List_Long_1__c, Add_Info_Question_Pick_List_Long_2__c,
                         Add_Info_Question_Pick_List_Long_3__c, Add_Info_Question_Pick_List_Long_4__c, Add_Info_Question_Pick_List_Long_5__c, Event_Status__c,
                         reCAPTCHA_v3_Score_Fail_Text__c, reCAPTCHA__c, Ask_Dietary_Restrictions__c, Dietary_Restrictions_Label__c, Accessibility_Detail_Label__c,
                         Accessibility_Label__c, Ask_Accessibility_Needs__c, Display_Guest_Registration__c, Payment_Gateway__c, Event_Additional_Question_Title__c,
