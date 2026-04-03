@@ -1,0 +1,24 @@
+<template>
+    <lightning-card title="Registrants Map">
+		<lightning-layout>
+			<lightning-layout-item flexibility="auto" padding="horizontal-medium">
+				<lightning-map
+					map-markers={mapMarkers}
+					markers-title="Registrants"
+					list-view="hidden"
+					selected-marker-value={selectedMarkerValue}
+					onmarkerselect={handleMarkerSelect}>
+				</lightning-map>
+			</lightning-layout-item>
+		</lightning-layout>
+		<template lwc:if={isEvent}>
+			<lightning-select
+				name="selectEventInstance"
+				label="Select Event Instance"
+				value={selectedEventInstance}
+				onchange={handleSelectEventInstanceChange}
+				options={eventInstancesOptions}>
+			</lightning-select>
+		</template>
+    </lightning-card>
+</template>
