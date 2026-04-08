@@ -263,6 +263,8 @@ public without sharing class SummitEventsContactMatching {
             doCRUD crud = new doCRUD();
 
             if (matches.isEmpty() && noMatchBehavior.startsWithIgnoreCase('Create')) {
+                //remove values of mappings set to match only so that they are not inserted into the new record
+                newObj = removeMatchOnlyFields(newObj, customMappingType, mappings, sObjectType);
                 crud.addRecord(newObj);
                 reg.put(fieldAPIName, newObj.Id);
                 reg.put(newFieldAPIName, true);
@@ -292,7 +294,7 @@ public without sharing class SummitEventsContactMatching {
         mappedMatchingMethods = new Map<String, List<SObject>>();
         if (mappedMatchingMethods.isEmpty()) {
             if (matchingMethods.size() > 0) {
-                String query = 'SELECT Source_Value__c, Source_Type__c, ' + fieldAPIName + ', ' + sourceValue + ' FROM ' + namespace + sObjectType + ' WHERE ' + fieldAPIName + ' IN :matchingMethods';
+                String query = 'SELECT Source_Value__c, Source_Type__c, Matching_Only__c, ' + fieldAPIName + ', ' + sourceValue + ' FROM ' + namespace + sObjectType + ' WHERE ' + fieldAPIName + ' IN :matchingMethods';
                 List<SObject> results = Database.query(query);
                 for (SObject mapping : results) {
                     String method = (String) mapping.get(fieldAPIName);
@@ -373,6 +375,36 @@ public without sharing class SummitEventsContactMatching {
             }
         }
         return record;
+    }
+
+    @TestVisible
+    private static SObject removeMatchOnlyFields(SObject record, String matchingMethod, Map<String, List<SObject>> mappings, String sObjectType) {
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+        String objFieldAPIName = getFieldAPINameForObjectType(sObjectType);
+
+        if (mappings.containsKey(matchingMethod)) {
+            List<SObject> mappingList = mappings.get(matchingMethod);
+            for (SObject mapping : mappingList) {
+                Boolean matchingOnly = (Boolean) mapping.get(namespace + 'Matching_Only__c');
+                if (matchingOnly != null && matchingOnly) {
+                    String fieldAPIName = (String) mapping.get(namespace + objFieldAPIName);
+                    // Set the field to null to remove it from the record before insert
+                    record.put(fieldAPIName, null);
+                }
+            }
+        }
+        return record;
+    }
+
+    private static String getFieldAPINameForObjectType(String sObjectType) {
+        if (sObjectType.equals('Contact')) {
+            return 'Contact_Field_API_Name__c';
+        } else if (sObjectType.equals('Account')) {
+            return 'Person_Account_Field_API_Name__c';
+        } else if (sObjectType.equals('Lead')) {
+            return 'Lead_Field_API_Name__c';
+        }
+        return null;
     }
 
     private static Account makePerson(Summit_Events_Registration__c reg, String customMappingType, Map<String, List<SObject>> contactMappings) {
