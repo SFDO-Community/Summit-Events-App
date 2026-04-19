@@ -37,8 +37,10 @@
         </template>
 
         <!-- FullCalendar mount point -->
+        <!-- lwc:dom="manual" allows FullCalendar to manipulate this DOM node under LWS -->
+        <!-- lwc:ref provides a stable reference to the container element -->
         <div class={calendarWrapperClass}>
-            <div class="sea-fullcalendar" lwc:ref="calendarContainer"></div>
+            <div class="sea-fullcalendar" lwc:dom="manual" lwc:ref="calendarContainer"></div>
         </div>
 
         <!-- Event Detail Popover -->

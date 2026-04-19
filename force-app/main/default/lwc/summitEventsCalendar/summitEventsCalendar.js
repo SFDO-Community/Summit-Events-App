@@ -1,11 +1,12 @@
-import { LightningElement, api, track, wire } from 'lwc';
-import { loadScript, loadStyle } from 'lightning/platformResourceLoader';
+import {LightningElement, api, track, wire} from 'lwc';
+import {loadScript, loadStyle} from 'lightning/platformResourceLoader';
 import SUMMIT_EVENTS_ASSETS from '@salesforce/resourceUrl/SummitEventsAssets';
 import getAudienceOptions from '@salesforce/apex/SummitEventsCalendarController.getAudienceOptions';
 import getCalendarEvents from '@salesforce/apex/SummitEventsCalendarController.getCalendarEvents';
 
 // FullCalendar sets a global variable when loaded via loadScript.
-// Under LWS, globals set by loadScript are accessible directly (not via window.*).
+// Under LWS on Experience Cloud (community), the global is set on window
+// and must be accessed via window.FullCalendar — bare identifier does NOT work here.
 // The /* global */ comment tells ESLint this identifier comes from an external script.
 /* global FullCalendar */
 
@@ -59,7 +60,8 @@ export default class SummitEventsCalendar extends LightningElement {
     @track isLoading = true;
     @track errorMessage = '';
 
-    _fullCalendarInitialized = false;
+    _fullCalendarLoaded = false;
+    _renderedOnce = false;
     _calendarInstance = null;
     _selectedAudience = '';
     _currentViewStart = null;
@@ -71,14 +73,37 @@ export default class SummitEventsCalendar extends LightningElement {
 
     connectedCallback() {
         this._selectedAudience = this.defaultAudience || '';
+        // Start loading scripts early so they are ready by the time renderedCallback fires.
+        // fullcalendar.js ends with `globalThis.FullCalendar = FullCalendar` so the
+        // global is accessible by bare name under LWS after the script resolves.
+        Promise.all([
+            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/css/calendar.css'),
+            loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar.js')
+        ])
+            .then(() => {
+                this._fullCalendarLoaded = true;
+                // renderedCallback may have already fired and set _renderedOnce.
+                if (this._renderedOnce) {
+                    this._mountCalendar();
+                }
+            })
+            .catch((error) => {
+                this.isLoading = false;
+                this.errorMessage = 'Unable to load the calendar library. Please refresh the page.';
+                console.error('[SEA] FullCalendar load error:', error);
+            });
     }
 
-    async renderedCallback() {
-        if (this._fullCalendarInitialized) {
+    renderedCallback() {
+        if (this._renderedOnce) {
             return;
         }
-        this._fullCalendarInitialized = true;
-        await this._initFullCalendar();
+        this._renderedOnce = true;
+        // If scripts finished loading before this callback, mount now.
+        // Otherwise, the connectedCallback .then() handler will call _mountCalendar().
+        if (this._fullCalendarLoaded) {
+            this._mountCalendar();
+        }
     }
 
     disconnectedCallback() {
@@ -93,7 +118,7 @@ export default class SummitEventsCalendar extends LightningElement {
     // -------------------------------------------------------------------------
 
     @wire(getAudienceOptions)
-    handleAudienceOptionsResult({ data, error }) {
+    handleAudienceOptionsResult({data, error}) {
         if (data) {
             this.audienceOptions = data;
         } else if (error) {
@@ -101,29 +126,17 @@ export default class SummitEventsCalendar extends LightningElement {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // FullCalendar initialisation
-    // -------------------------------------------------------------------------
-
-    async _initFullCalendar() {
-        try {
-            await Promise.all([
-                loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar/index.global.min.js'),
-                loadStyle(this, SUMMIT_EVENTS_ASSETS + '/css/calendar.css')
-            ]);
-            this._mountCalendar();
-        } catch (error) {
-            this.isLoading = false;
-            this.errorMessage = 'Unable to load the calendar library. Please refresh the page.';
-            console.error('[SEA] FullCalendar load error:', error);
-        }
-    }
-
     _mountCalendar() {
-        const containerElement = this.template.querySelector('.sea-fullcalendar');
+        // Use this.refs for reliable access to the lwc:ref="calendarContainer" element.
+        const containerElement = this.refs.calendarContainer;
         if (!containerElement) {
             this.isLoading = false;
             this.errorMessage = 'Calendar container not found.';
+            return;
+        }
+        if (!FullCalendar) {
+            this.isLoading = false;
+            this.errorMessage = 'FullCalendar library failed to initialize.';
             return;
         }
         const calendar = new FullCalendar.Calendar(containerElement, this._calendarConfig());
@@ -171,7 +184,7 @@ export default class SummitEventsCalendar extends LightningElement {
             viewEnd: this._currentViewEnd
         };
 
-        getCalendarEvents({ filters })
+        getCalendarEvents({filters})
             .then((calendarEventItems) => {
                 const fullCalendarEvents = calendarEventItems.map((item) => ({
                     id: item.instanceId,
@@ -245,7 +258,7 @@ export default class SummitEventsCalendar extends LightningElement {
         this.selectedEvent = null;
         this.dispatchEvent(
             new CustomEvent('eventselect', {
-                detail: { instanceId },
+                detail: {instanceId},
                 bubbles: true,
                 composed: true
             })
