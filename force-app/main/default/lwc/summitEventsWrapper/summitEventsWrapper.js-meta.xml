@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>60.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <!-- Registration override -->
+            <property name="eventInstanceId" type="String"
+                label="Event Instance ID"
+                description="Hardcode a specific instance ID to skip the calendar and always show registration."
+                required="false"/>
+            <property name="registrationId" type="String"
+                label="Registration ID"
+                description="Encrypted registration ID to resume an existing registration."
+                required="false"/>
+
+            <!-- Calendar - Audience dropdown -->
+            <property name="hideAudienceDropdown" type="Boolean"
+                label="Hide Audience Dropdown"
+                description="Set to true to hide the audience filter dropdown on the calendar view."
+                default="false"/>
+            <property name="audienceDropdownLabel" type="String"
+                label="Audience Dropdown Label"
+                description="Label displayed above the audience dropdown."
+                default="Select who you are to see events curated for you"/>
+            <property name="defaultAudience" type="String"
+                label="Default Audience Filter"
+                description="Pre-filter calendar to this audience (comma-separated for multiple)."
+                required="false"/>
+
+            <!-- Calendar - Content filters -->
+            <property name="recordType" type="String"
+                label="Record Type Filter"
+                description="Only show events of this Summit Events record type name."
+                required="false"/>
+            <property name="displayOn" type="String"
+                label="Display On Filter"
+                description="Filter by Filter_Where_To_Display__c field (comma-separated)."
+                required="false"/>
+            <property name="category" type="String"
+                label="Category Filter"
+                description="Filter by Filter_Category__c field (comma-separated)."
+                required="false"/>
+            <property name="eventType" type="String"
+                label="Event Type Filter"
+                description="Filter by Event_Type__c field (single value)."
+                required="false"/>
+            <property name="program" type="String"
+                label="Program Filter"
+                description="Filter by program filter fields (comma-separated)."
+                required="false"/>
+            <property name="sponsor" type="String"
+                label="Sponsor Filter"
+                description="Filter by Event_Sponsor__c (comma-separated)."
+                required="false"/>
+            <property name="building" type="String"
+                label="Building Filter"
+                description="Filter by Building__c (comma-separated)."
+                required="false"/>
+            <property name="locationType" type="String"
+                label="Location Type Filter"
+                description="Filter by location type (comma-separated)."
+                required="false"/>
+            <property name="hideClosed" type="Boolean"
+                label="Hide Closed Events"
+                description="Hide events that have reached capacity."
+                default="false"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>
+

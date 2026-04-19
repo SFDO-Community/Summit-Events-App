@@ -1,5 +1,0 @@
-Error (executeCompileFailure): Compilation failed at Line 8 column 22 with the error:
-
-Method was removed after version 58.0: getSalesforceBaseUrl
-
-

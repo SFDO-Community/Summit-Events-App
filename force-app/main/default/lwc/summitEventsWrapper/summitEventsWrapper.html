@@ -1,0 +1,41 @@
+<template>
+    <template if:true={showCalendar}>
+        <c-summit-events-calendar
+            hide-audience-dropdown={hideAudienceDropdown}
+            audience-dropdown-label={audienceDropdownLabel}
+            default-audience={defaultAudience}
+            record-type={recordType}
+            display-on={displayOn}
+            category={category}
+            event-type={eventType}
+            program={program}
+            sponsor={sponsor}
+            building={building}
+            location-type={locationType}
+            hide-closed={hideClosed}
+            oneventselect={handleEventSelect}>
+        </c-summit-events-calendar>
+    </template>
+
+    <template if:true={showRegistration}>
+        <template if:true={showBackToCalendar}>
+            <div class="slds-m-bottom_small">
+                <button
+                    class="slds-button slds-button_neutral"
+                    onclick={handleBackToCalendar}>
+                    <lightning-icon
+                        icon-name="utility:chevronleft"
+                        size="x-small"
+                        class="slds-m-right_x-small">
+                    </lightning-icon>
+                    Back to Events
+                </button>
+            </div>
+        </template>
+        <c-summit-events-registration
+            event-instance-id={activeInstanceId}
+            registration-id={registrationId}>
+        </c-summit-events-registration>
+    </template>
+</template>
+

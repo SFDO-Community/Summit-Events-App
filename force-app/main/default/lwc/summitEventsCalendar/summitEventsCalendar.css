@@ -1,0 +1,84 @@
+.sea-calendar-container {
+    position: relative;
+}
+
+.sea-calendar-mount {
+    min-height: 400px;
+    position: relative;
+}
+
+/* Dim the calendar while events are loading but keep it in the DOM
+   so FullCalendar can measure dimensions during initialisation */
+.sea-calendar-loading {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* Inline spinner (not lightning-spinner - avoids full-page overlay) */
+.sea-calendar-spinner-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+.sea-spinner {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #0070d2;
+    animation: sea-spin 0.75s linear infinite;
+}
+
+@keyframes sea-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Event status classes applied via FullCalendar classNames */
+:host .sea-event-closed {
+    opacity: 0.55;
+    cursor: default;
+}
+
+:host .sea-event-open {
+    cursor: pointer;
+}
+
+/* Event detail popover */
+.sea-event-popover {
+    position: absolute;
+    top: 3rem;
+    right: 0;
+    z-index: 999;
+    background: #fff;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    min-width: 280px;
+    max-width: 360px;
+}
+
+.sea-event-popover-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem 0.5rem;
+    border-bottom: 1px solid #dddbda;
+}
+
+.sea-event-popover-body {
+    padding: 0.75rem 1rem 1rem;
+}
+
+.sea-popover-close {
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+}
+
+.sea-event-closed-label {
+    color: #c23934;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+

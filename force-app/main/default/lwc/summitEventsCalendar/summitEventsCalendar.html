@@ -1,0 +1,94 @@
+<template>
+    <div class="sea-calendar-container">
+        <!-- Audience Dropdown -->
+        <template if:false={hideAudienceDropdown}>
+            <div class="slds-form-element slds-m-bottom_small">
+                <label class="slds-form-element__label" for="audienceSelect">
+                    {audienceDropdownLabel}
+                </label>
+                <div class="slds-form-element__control">
+                    <div class="slds-select_container">
+                        <select
+                            id="audienceSelect"
+                            class="slds-select"
+                            onchange={handleAudienceChange}>
+                            <option value="">Select...</option>
+                            <template for:each={audienceOptions} for:item="option">
+                                <option key={option.value} value={option.value}>{option.label}</option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Loading spinner -->
+        <template if:true={isLoading}>
+            <div class="sea-calendar-spinner-wrap">
+                <div class="sea-spinner"></div>
+            </div>
+        </template>
+
+        <!-- Error -->
+        <template if:true={errorMessage}>
+            <div class="slds-notify slds-notify_alert slds-theme_error slds-m-bottom_small" role="alert">
+                <p>{errorMessage}</p>
+            </div>
+        </template>
+
+        <!-- FullCalendar mount point -->
+        <div class={calendarWrapperClass}>
+            <div class="sea-fullcalendar" lwc:ref="calendarContainer"></div>
+        </div>
+
+        <!-- Event Detail Popover -->
+        <template if:true={selectedEvent}>
+            <div class="sea-event-popover" role="dialog" aria-label="Event Details">
+                <div class="sea-event-popover-header">
+                    <h2 class="slds-text-heading_small">{selectedEvent.title}</h2>
+                    <button
+                        class="slds-button slds-button_icon slds-button_icon-bare sea-popover-close"
+                        onclick={handleClosePopover}
+                        title="Close">
+                        <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                    </button>
+                </div>
+                <div class="sea-event-popover-body">
+                    <template if:true={selectedEvent.instanceDescription}>
+                        <p class="slds-m-bottom_x-small">{selectedEvent.instanceDescription}</p>
+                    </template>
+                    <template if:true={selectedEvent.locationTitle}>
+                        <p class="slds-text-color_weak slds-m-bottom_xx-small">
+                            <lightning-icon icon-name="utility:location" size="x-small"></lightning-icon>
+                            {selectedEvent.locationTitle}
+                        </p>
+                    </template>
+                    <template if:true={selectedEvent.eventClosed}>
+                        <p class="sea-event-closed-label">Registration Closed</p>
+                    </template>
+                    <template if:false={selectedEvent.eventClosed}>
+                        <div class="slds-m-top_small">
+                            <template if:true={selectedEvent.alternateRegistrationUrl}>
+                                <a
+                                    href={selectedEvent.alternateRegistrationUrl}
+                                    class="slds-button slds-button_brand"
+                                    target="_blank">
+                                    {selectedEvent.registerButtonText}
+                                </a>
+                            </template>
+                            <template if:false={selectedEvent.alternateRegistrationUrl}>
+                                <button
+                                    class="slds-button slds-button_brand"
+                                    data-instance-id={selectedEvent.instanceId}
+                                    onclick={handleRegisterClick}>
+                                    {selectedEvent.registerButtonText}
+                                </button>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>
+

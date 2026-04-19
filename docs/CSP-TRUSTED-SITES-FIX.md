@@ -34,7 +34,7 @@ Updated `unpackaged/config/cspTrustedSites/package.xml`:
         <members>*</members>
         <name>CustomSite</name>  ❌ WRONG
     </types>
-    <version>64.0</version>
+    <version>66.0</version>
 </Package>
 ```
 
@@ -46,7 +46,7 @@ Updated `unpackaged/config/cspTrustedSites/package.xml`:
         <members>*</members>
         <name>CspTrustedSite</name>  ✅ CORRECT
     </types>
-    <version>64.0</version>
+    <version>66.0</version>
 </Package>
 ```
 
