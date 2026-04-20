@@ -1,0 +1,30 @@
+/*!
+FullCalendar (Vanilla JS) v7.0.0-rc.1
+Docs & License: https://fullcalendar.io
+(c) 2025 Adam Shaw
+*/
+(function ({ F: globalLocales }) {
+    
+
+    var __ne$l53 = {
+        code: 'ne', // code for nepal
+        week: {
+            dow: 7, // Sunday is the first day of the week.
+            doy: 1, // The week that contains Jan 1st is the first week of the year.
+        },
+        prevText: 'अघिल्लो',
+        nextText: 'अर्को',
+        todayText: 'आज',
+        yearText: 'वर्ष',
+        monthText: 'महिना',
+        weekText: 'हप्ता',
+        dayText: 'दिन',
+        listText: 'सूची',
+        allDayText: 'दिनभरि',
+        moreLinkText: 'थप लिंक',
+        noEventsText: 'देखाउनको लागि कुनै घटनाहरू छैनन्',
+    };
+
+    globalLocales.push(__ne$l53);
+
+})(FullCalendar.Shared);

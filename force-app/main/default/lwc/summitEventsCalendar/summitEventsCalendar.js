@@ -5,9 +5,10 @@ import getAudienceOptions from '@salesforce/apex/SummitEventsCalendarController.
 import getCalendarEvents from '@salesforce/apex/SummitEventsCalendarController.getCalendarEvents';
 
 // FullCalendar sets a global variable when loaded via loadScript.
-// Under LWS on Experience Cloud (community), the global is set on window
-// and must be accessed via window.FullCalendar — bare identifier does NOT work here.
-// The /* global */ comment tells ESLint this identifier comes from an external script.
+// We use fullcalendar-patched.js which stubs out the CSS injection functions (xe, _e)
+// so FullCalendar does NOT try to inject <style> tags into document.head.
+// In LWC, document.head-injected CSS cannot pierce the shadow DOM boundary, so
+// styles must be loaded via loadStyle() instead (see fullcalendar-extracted.css).
 /* global FullCalendar */
 
 export default class SummitEventsCalendar extends LightningElement {
@@ -73,25 +74,23 @@ export default class SummitEventsCalendar extends LightningElement {
 
     connectedCallback() {
         this._selectedAudience = this.defaultAudience || '';
-        // Start loading scripts early so they are ready by the time renderedCallback fires.
-        // fullcalendar.js ends with `globalThis.FullCalendar = FullCalendar` so the
-        // global is accessible by bare name under LWS after the script resolves.
         Promise.all([
-            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/css/calendar.css'),
-            loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar.js')
-        ])
-            .then(() => {
-                this._fullCalendarLoaded = true;
-                // renderedCallback may have already fired and set _renderedOnce.
-                if (this._renderedOnce) {
-                    this._mountCalendar();
-                }
-            })
-            .catch((error) => {
-                this.isLoading = false;
-                this.errorMessage = 'Unable to load the calendar library. Please refresh the page.';
-                console.error('[SEA] FullCalendar load error:', error);
-            });
+            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.1/dist/skeleton.css'),
+            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.1/dist/themes/monarch/theme.css'),
+            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.1/dist/themes/monarch/palettes/purple.css'),
+            loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.1/dist/fullcalendar.global.js'),
+            loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.1/dist/themes/monarch/global.js')
+        ]).then(() => {
+            this._fullCalendarLoaded = true;
+            // renderedCallback may have already fired and set _renderedOnce.
+            if (this._renderedOnce) {
+                this._mountCalendar();
+            }
+        }).catch((error) => {
+            this.isLoading = false;
+            this.errorMessage = 'Unable to load the calendar library. Please refresh the page.';
+            console.error('[SEA] FullCalendar load error:', error);
+        });
     }
 
     renderedCallback() {
@@ -117,8 +116,7 @@ export default class SummitEventsCalendar extends LightningElement {
     // Apex wire - audience options
     // -------------------------------------------------------------------------
 
-    @wire(getAudienceOptions)
-    handleAudienceOptionsResult({data, error}) {
+    @wire(getAudienceOptions) handleAudienceOptionsResult({data, error}) {
         if (data) {
             this.audienceOptions = data;
         } else if (error) {
@@ -146,20 +144,14 @@ export default class SummitEventsCalendar extends LightningElement {
 
     _calendarConfig() {
         return {
-            initialView: 'dayGridMonth',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,listMonth'
-            },
-            events: (fetchInfo, successCallback, failureCallback) => {
+            initialView: 'dayGridMonth', headerToolbar: {
+                left: 'prev,next today', center: 'title', right: 'dayGridMonth,listMonth'
+            }, events: (fetchInfo, successCallback, failureCallback) => {
                 this._fetchEvents(fetchInfo, successCallback, failureCallback);
-            },
-            eventClick: (clickInfo) => {
+            }, eventClick: (clickInfo) => {
                 clickInfo.jsEvent.preventDefault();
                 this._handleEventClick(clickInfo.event);
-            },
-            loading: (isLoadingNow) => {
+            }, loading: (isLoadingNow) => {
                 this.isLoading = isLoadingNow;
             }
         };
@@ -256,13 +248,9 @@ export default class SummitEventsCalendar extends LightningElement {
     handleRegisterClick(event) {
         const instanceId = event.currentTarget.dataset.instanceId;
         this.selectedEvent = null;
-        this.dispatchEvent(
-            new CustomEvent('eventselect', {
-                detail: {instanceId},
-                bubbles: true,
-                composed: true
-            })
-        );
+        this.dispatchEvent(new CustomEvent('eventselect', {
+            detail: {instanceId}, bubbles: true, composed: true
+        }));
     }
 
     handleClosePopover() {
