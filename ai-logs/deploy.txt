@@ -1,0 +1,21 @@
+[04/20/26 09:31:47] Getting org info from Salesforce CLI for                   
+                    test-wnt1lzpjemcn@example.com                              
+[04/20/26 09:31:51] Beginning task: Deploy                                     
+                    As user: test-wnt1lzpjemcn@example.com                     
+                    In org: 00DO500000kIycj                                    
+                                                                               
+                    Converting from SFDX to MDAPI format.                      
+[04/20/26 09:31:53] Stripping namespace tokens from metadata for unmanaged     
+                    deployment                                                 
+                    Cleaning meta.xml files of packageVersion elements for     
+                    deploy                                                     
+                    Payload size: 128176 bytes                                 
+                    Pending                                                    
+[04/20/26 09:31:55] [Pending]: next check in 1 seconds                         
+[04/20/26 09:31:56] [InProgress]: Processing Type: ApexClass                   
+[04/20/26 09:31:58] [InProgress]: Processing Type: ApexClass                   
+[04/20/26 09:31:59] [InProgress]: Processing Type: ApexClass                   
+[04/20/26 09:32:01] [InProgress]: Processing Type: ApexClass                   
+[04/20/26 09:32:02] [Done]                                                     
+[04/20/26 09:32:03] [Success]: Succeeded                                       
+
