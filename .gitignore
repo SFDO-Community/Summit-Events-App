@@ -41,5 +41,4 @@ node_modules/
 
 **/graphql.config.yml
 
-.ai-logs
-.ai-logs/
+ai-logs/

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD 3-Clause.
 // License can be found in the LICENSE file in this repository.
 
-public with sharing class SummitEventsCalendarController {
+public without sharing class SummitEventsCalendarController {
 
     /**
      * Holds the filter criteria passed from the LWC calendar component.
@@ -122,7 +122,7 @@ public with sharing class SummitEventsCalendarController {
         eventQuery += ' AND Active_Status__c = \'Active\'';
         eventQuery += ' AND Event__r.Private_Event__c = false';
         eventQuery += ' AND Private_Instance__c = false';
-        eventQuery += ' AND Event__r.Audience__c EXCLUDES (\'No Audience\')';
+        eventQuery += ' AND (Event__r.Audience__c = null OR Event__r.Audience__c EXCLUDES (\'No Audience\'))';
 
         // Date window
         Date windowStart;
@@ -213,7 +213,6 @@ public with sharing class SummitEventsCalendarController {
                 FROM RecordType
                 WHERE SobjectType = 'Summit_Events__c'
                 AND Name = :filters.recordType
-                WITH USER_MODE
                 LIMIT 1
             ];
             if (!matchingRecordTypes.isEmpty()) {
@@ -222,7 +221,6 @@ public with sharing class SummitEventsCalendarController {
             }
         }
 
-        eventQuery += ' WITH USER_MODE';
         eventQuery += ' ORDER BY Instance_Start_Date__c, Instance_Start_Time__c';
 
         List<Summit_Events_Instance__c> instanceList = Database.query(eventQuery);
