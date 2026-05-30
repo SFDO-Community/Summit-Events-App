@@ -74,13 +74,15 @@ export default class SummitEventsCalendar extends LightningElement {
 
     connectedCallback() {
         this._selectedAudience = this.defaultAudience || '';
+        // Load CSS first, then JS, so styles are applied before FullCalendar renders.
         Promise.all([
-            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.1/dist/skeleton.css'),
-            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.1/dist/themes/monarch/theme.css'),
-            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.1/dist/themes/monarch/palettes/purple.css'),
-            loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.1/dist/fullcalendar.global.js'),
-            loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.1/dist/themes/monarch/global.js')
-        ]).then(() => {
+            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.3/dist/skeleton.css'),
+            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.3/dist/themes/monarch/theme.css'),
+            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.3/dist/themes/monarch/palettes/purple.css')
+        ]).then(() => Promise.all([
+            loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.3/dist/fullcalendar.global.js'),
+            loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.3/dist/themes/monarch/global.js')
+        ])).then(() => {
             this._fullCalendarLoaded = true;
             // renderedCallback may have already fired and set _renderedOnce.
             if (this._renderedOnce) {

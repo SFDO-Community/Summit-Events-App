@@ -21,17 +21,20 @@
                 <!-- LEFT: Available Appointment Types -->
                 <template lwc:if={hasAvailableTypes}>
                     <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                        <h3 class="slds-text-heading_small slds-m-bottom_small">{unchosenLabel}</h3>
+                        <h3 class="slds-text-heading_medium slds-m-bottom_small">{unchosenLabel}</h3>
                         <template for:each={availableTypes} for:item="apt">
                             <div key={apt.Id} class="slds-box slds-box_x-small slds-m-bottom_small">
-                                <p class="slds-text-heading_x-small slds-m-bottom_xx-small">
+                                <p class="slds-text-heading_small slds-m-bottom_xx-small">
                                     {apt.Title__c}
                                     <template lwc:if={apt.Required_Appointment__c}>
                                         <abbr class="slds-required" title="required"> *</abbr>
                                     </template>
                                 </p>
                                 <template lwc:if={apt.Description__c}>
-                                    <p class="slds-text-body_small slds-m-bottom_x-small">{apt.Description__c}</p>
+                                    <lightning-formatted-rich-text
+                                        class="slds-text-body_regular slds-m-bottom_small"
+                                        value={apt.Description__c}>
+                                    </lightning-formatted-rich-text>
                                 </template>
                                 <!-- Picklist input -->
                                 <template lwc:if={apt.showPicklist}>
