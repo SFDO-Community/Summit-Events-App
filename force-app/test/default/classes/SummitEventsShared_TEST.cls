@@ -42,11 +42,14 @@ public with sharing class SummitEventsShared_TEST {
 
     @IsTest
     static void testAdminOpenSecretAutoGeneratesWhenBlank() {
-        //Establishes Community_Base_URL__c/Cookie_Encryption_Key__c, which checkForEvent depends on;
-        //does not set Admin_Open_Secret__c, so it should still be blank going into this test.
+        //Establishes Community_Base_URL__c/Cookie_Encryption_Key__c, which checkForEvent depends on.
         SummitEventsTestSharedDataFactory.createTestEvent();
 
+        //createTestEvent pre-populates Admin_Open_Secret__c (see its comment for why), so clear it back
+        //to blank here since this test specifically exercises the auto-generate-when-blank behavior.
         Summit_Events_Settings__c seaSettings = Summit_Events_Settings__c.getOrgDefaults();
+        seaSettings.Admin_Open_Secret__c = null;
+        upsert seaSettings;
         System.assert(String.isBlank(seaSettings.Admin_Open_Secret__c), 'Secret should start blank before checkForEvent runs.');
 
         Test.startTest();

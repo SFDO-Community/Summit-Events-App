@@ -282,7 +282,7 @@ global with sharing class SummitEventsFeed {
             }
         }
 
-        eventQuery += ' WITH SECURITY_ENFORCED ';
+        eventQuery += ' WITH USER_MODE ';
         eventQuery += ' ORDER BY Instance_Start_Date__c, Instance_Start_Time__c ';
 
         doCRUD crud = new doCRUD();

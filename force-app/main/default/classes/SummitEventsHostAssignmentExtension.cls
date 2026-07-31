@@ -33,7 +33,7 @@ public with sharing class SummitEventsHostAssignmentExtension {
                     WHERE Event_Instance__c = :instanceID
                     AND RecordType.Id = :recordTypeId
                     AND Remaining__c > 0
-                    WITH SECURITY_ENFORCED
+                    WITH USER_MODE
                     ORDER BY Last_Name__c, First_Name__c, Course_Name__c
             ];
         } else {
@@ -45,7 +45,7 @@ public with sharing class SummitEventsHostAssignmentExtension {
                     FROM Summit_Events_Host__c
                     WHERE Event_Instance__c = :instanceID
                     AND Id = :SEApt.Event_Host__c
-                    WITH SECURITY_ENFORCED
+                    WITH USER_MODE
                     ORDER BY Last_Name__c, First_Name__c, Course_Name__c
             ];
         }

@@ -18,7 +18,7 @@ Full documentation: https://sfdo-community-sprints.github.io/summit-events-app-d
 ## Stack
 
 - **Build tool:** CumulusCI (`cci`) — Python CLI, config in `cumulusci.yml`
-- **Source format:** SFDX (`sfdx-project.json`), package namespace `summit`, API version 64.0
+- **Source format:** SFDX (`sfdx-project.json`), package namespace `summit`, API version 67.0
 - **Org type:** Scratch orgs only — never production
 - **Frontend (shipped/packaged):** Legacy Visualforce pages (`force-app/main/default/pages`) — this is what's actually in the managed package today
 - **Frontend (in progress, not packaged):** Lightning Web Components (`force-app/main/default/lwc`) — an early-stage, work-in-progress rewrite of the registration flow, being developed on a dedicated branch. Not released, not part of the managed package, and not feature-complete. Treat LWC work as exploratory/future-focused unless told otherwise.

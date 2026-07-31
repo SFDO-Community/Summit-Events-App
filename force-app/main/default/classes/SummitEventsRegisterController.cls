@@ -297,7 +297,7 @@ public with sharing class SummitEventsRegisterController {
                                 FROM User
                                 WHERE Id = :UserInfo.getUserId()
                         )
-                        WITH SECURITY_ENFORCED
+                        WITH USER_MODE
                 ];
 
                 mapContactToRegistration(userContact);
@@ -330,6 +330,7 @@ public with sharing class SummitEventsRegisterController {
      *   any picklist entry (case-insensitive), the raw value is stored in
      *   Registrant_Country_Text__c instead and Registrant_Country__c is cleared so no
      *   incorrect default country is carried over.
+     * @param userContact The Contact record to map.
      */
     private void mapContactToRegistration(Contact userContact) {
         eventRegistration.Registrant_First_Name__c   = truncate(userContact.FirstName, 80);
@@ -369,6 +370,9 @@ public with sharing class SummitEventsRegisterController {
     /**
      * Truncates val to at most maxLen characters. Returns val unchanged if it fits,
      * or null/empty string as-is without throwing.
+     * @param val The string to truncate.
+     * @param maxLen The maximum length to truncate to.
+     * @return String The truncated string.
      */
     private static String truncate(String val, Integer maxLen) {
         if (String.isBlank(val)) {
@@ -681,7 +685,6 @@ public with sharing class SummitEventsRegisterController {
                         WHERE Registrant_Email__c = :registrationEmail
                         AND Event_Instance__c = :eventInstanceId
                         AND Status__c NOT IN :notAcceptableStatuses
-                        WITH SECURITY_ENFORCED
                         ORDER BY LastModifiedDate
                 ];
             } else if (checkType == 'One registration per event') {
@@ -691,7 +694,6 @@ public with sharing class SummitEventsRegisterController {
                         WHERE Registrant_Email__c = :registrationEmail
                         AND Event__c = :eventId
                         AND Status__c NOT IN :notAcceptableStatuses
-                        WITH SECURITY_ENFORCED
                         ORDER BY LastModifiedDate
                 ];
             }

@@ -20,6 +20,14 @@ public with sharing class SummitEventsTestSharedDataFactory {
             SummitEventsSettings.Community_Base_URL__c = 'https://google.com/';
             upsert SummitEventsSettings;
         }
+        //Pre-populate before any test switches into a restricted System.runAs() user - Custom Settings
+        //enforce CRUD for the running user even in system-context Apex, and a restricted test user's
+        //profile/permission set does not have access to write Summit_Events_Settings__c. Matches the
+        //existing Cookie_Encryption_Key__c pattern above, which sidesteps the same landmine.
+        if (String.isBlank(SummitEventsSettings.Admin_Open_Secret__c)) {
+            SummitEventsSettings.Admin_Open_Secret__c = 'test-admin-open-secret';
+            upsert SummitEventsSettings;
+        }
 
         Summit_Events__c testEvent = new Summit_Events__c();
 

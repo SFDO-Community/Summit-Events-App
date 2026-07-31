@@ -25,7 +25,6 @@ public without sharing class SummitEventsReadShared {
 
                 FROM Summit_Events_Instance__c
                 WHERE Id = :instanceId
-                WITH SECURITY_ENFORCED
         ];
     }
 
@@ -69,7 +68,6 @@ public without sharing class SummitEventsReadShared {
                         Event_Appointment_Unchosen_Label__c, Event_Appointment_Next_Instructions__c
                 FROM Summit_Events__c
                 WHERE Id = :eventId
-                WITH SECURITY_ENFORCED
         ];
     }
 
@@ -100,7 +98,6 @@ public without sharing class SummitEventsReadShared {
                         Generated_Itinerary__c, Generated_Requested_Appointments__c, Registrant_First_Name__c, Registrant_Last_Name__c
                 FROM Summit_Events_Registration__c
                 WHERE Id = :registrationId
-                WITH SECURITY_ENFORCED
         ];
     }
 
@@ -114,7 +111,6 @@ public without sharing class SummitEventsReadShared {
                 FROM Summit_Events_Question__c
                 WHERE Event__c = :eventId
                 AND Registrant_Type__c IN :registrantTypes
-                WITH SECURITY_ENFORCED
                 ORDER BY Display_Order__c NULLS LAST
         ]);
     }
@@ -126,7 +122,6 @@ public without sharing class SummitEventsReadShared {
                 FROM Summit_Events_Appointments__c
                 WHERE Event_Registration__c = :registrationId
                 AND Chosen_State__c != 'Added but not shown'
-                WITH SECURITY_ENFORCED
                 ORDER BY Sort_Order__c
         ];
     }
@@ -138,7 +133,6 @@ public without sharing class SummitEventsReadShared {
                 FROM Summit_Events_Appointments__c
                 WHERE Event_Registration__c = :registrationId
                 AND Client_Created_Appointment__c = TRUE
-                WITH SECURITY_ENFORCED
         ];
     }
 
@@ -147,7 +141,6 @@ public without sharing class SummitEventsReadShared {
                 SELECT Id, TouchnetReceiptNumber__c, Event_Registration__c, Payment_Amount__c
                 FROM Summit_Events_Payment__c
                 WHERE Event_Registration__c = :registrationId
-                WITH SECURITY_ENFORCED
         ];
     }
 
@@ -157,7 +150,6 @@ public without sharing class SummitEventsReadShared {
                         Summit_Events__c, Summit_Events_Payment__c, Event_Appointment_Type__r.Title__c, Event_Fee_Allocation__r.Name
                 FROM Summit_Events_Fee__c
                 WHERE Event_Registration__c = :registrationId
-                WITH SECURITY_ENFORCED
         ];
 
     }
@@ -169,7 +161,6 @@ public without sharing class SummitEventsReadShared {
                 FROM Summit_Events_Fee__c
                 WHERE Event_Registration__c = :registrationId
                 AND Event_Fee_Type__c = 'Optional Donation'
-                WITH SECURITY_ENFORCED
         ];
     }
 
@@ -181,7 +172,6 @@ public without sharing class SummitEventsReadShared {
                 AND Event_Fee_Type__c != 'Appointment Additional'
                 AND Event_Fee_Type__c != 'Optional Donation'
                 AND Event_Registration__c = :registrationId
-                WITH SECURITY_ENFORCED
         ];
     }
 
@@ -218,7 +208,6 @@ public without sharing class SummitEventsReadShared {
                         Appointment_Type_Status__c = 'Active'
                         OR Appointment_Type_Status__c = NULL
                 )
-                WITH SECURITY_ENFORCED
                 ORDER BY Sort_Order__c ASC NULLS LAST
         ];
     }
@@ -235,7 +224,6 @@ public without sharing class SummitEventsReadShared {
                 AND (Date_Available_End__c >= :endDate OR Date_Available_End__c = NULL)
                 AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
                 AND (Appointment_Type_Status__c = 'Active' OR Appointment_Type_Status__c = NULL)
-                WITH SECURITY_ENFORCED
                 ORDER BY Sort_Order__c ASC NULLS LAST
         ]);
     }
@@ -257,7 +245,6 @@ public without sharing class SummitEventsReadShared {
                 AND (Date_Available_End__c >= :endDate OR Date_Available_End__c = NULL)
                 AND (Day_of_Week_Availability__c INCLUDES (:dayOfWeek) OR Day_of_Week_Availability__c = NULL)
                 AND (Appointment_Type_Status__c = 'Active' OR Appointment_Type_Status__c = NULL)
-                WITH SECURITY_ENFORCED
         ];
     }
 
@@ -267,7 +254,6 @@ public without sharing class SummitEventsReadShared {
                 FROM Summit_Events_Question__c
                 WHERE Event__c = :eventId
                 AND (Registrant_Type__c = 'Registrant' OR Registrant_Type__c = 'Registrant and Guest')
-                WITH SECURITY_ENFORCED
         ];
     }
 
@@ -277,7 +263,6 @@ public without sharing class SummitEventsReadShared {
                 FROM Summit_Events_Question__c
                 WHERE Event__c = :eventId
                 AND (Registrant_Type__c = 'Guest' OR Registrant_Type__c = 'Registrant and Guest')
-                WITH SECURITY_ENFORCED
         ];
     }
 
