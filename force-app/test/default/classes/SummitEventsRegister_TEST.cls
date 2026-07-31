@@ -380,7 +380,7 @@ private class SummitEventsRegister_TEST {
         seaTestInstances[1].Event_Fee_Allocation_Override__c = seaTestFeeAllocations[3].Id;
         seaTestInstances[1].Location_Title_Override__c = 'New Title';
         seaTestInstances[1].Location_Address_Override__c = 'New Address';
-        seaTestInstances[1].Location_Map_Link_Override__c = 'New Map Link';
+        seaTestInstances[1].Location_Map_Link_Override__c = 'https://example.com/new-map-link';
         update seaTestInstances[1];
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
         System.runAs(testUser) {

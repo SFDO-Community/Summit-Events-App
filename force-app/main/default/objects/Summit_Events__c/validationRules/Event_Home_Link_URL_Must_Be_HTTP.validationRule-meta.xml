@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Home_Link_URL_Must_Be_HTTP</fullName>
+    <active>true</active>
+    <errorConditionFormula>NOT(ISBLANK(Event_Home_Link_URL__c)) &amp;&amp;
+NOT(REGEX(Event_Home_Link_URL__c, &quot;(?i)https?://.*&quot;))</errorConditionFormula>
+    <errorDisplayField>Event_Home_Link_URL__c</errorDisplayField>
+    <errorMessage>Event Home Link URL must start with http:// or https://</errorMessage>
+</ValidationRule>

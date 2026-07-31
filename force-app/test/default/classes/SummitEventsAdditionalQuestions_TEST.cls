@@ -261,4 +261,38 @@ private class SummitEventsAdditionalQuestions_TEST {
             Test.stopTest();
         }
     }
+
+    @IsTest
+    static void testLookupSearchRejectsInjectionAttemptInWhereClause() {
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Look', 'Up', 'lookup@valleyhill.net', '55418', '1971-03-22', '2012', null);
+
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+
+        List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'lookup', 'Registrant and Guest');
+        //Attempted subquery-based injection through an admin-configured Lookup_Where_Clause__c should be blocked.
+        testQuestions[0].Lookup_Where_Clause__c = ' WHERE Id IN (SELECT Id FROM Contact) ';
+        update testQuestions;
+
+        System.runAs(testUser) {
+            Test.startTest();
+
+            PageReference pageRef = Page.SummitEventsAdditionalQuestions;
+            Test.setCurrentPage(pageRef);
+
+            Datetime nowTime = Datetime.now();
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime, true);
+
+            SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
+
+            List<SummitEventsAdditionalQuestionsCtlr.queryReturn> queryReturns = SummitEventsAdditionalQuestionsCtlr.lookupSearch(questionController.questionWrapper[0].lookup, 'Look');
+            System.assertEquals(0, queryReturns.size(), 'A Lookup_Where_Clause__c containing a nested SELECT should be rejected, returning no results.');
+
+            Test.stopTest();
+        }
+    }
 }

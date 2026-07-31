@@ -6,6 +6,7 @@
 public with sharing class SummitEventsConfirmationController {
     public SummitEventsInfo eventInformation { get; set; }
     public Summit_Events__c eventPage { get; set; }
+    public String safeEventHomeLink { get { return SummitEventsShared.getSafeUrl(eventPage != null ? eventPage.Event_Home_Link_URL__c : null); } }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public String templateSelected { get; set; }
     public String formattedNavDate { get; set; }

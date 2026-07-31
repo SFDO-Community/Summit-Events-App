@@ -201,6 +201,90 @@ private class SummitEventsRegisterGuests_TEST {
     }
 
     @IsTest
+    static void guestsExceedingMaxAmountAreRejected() {
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+
+        Summit_Events__c seaTestEvent = new Summit_Events__c(Id = seaTestInstances[1].Event__c, Guest_Max_Amount__c = 1);
+        update seaTestEvent;
+
+        System.runAs(testUser) {
+            Test.startTest();
+
+            PageReference pageRef = Page.SummitEventsRegisterGuests;
+            Test.setCurrentPage(pageRef);
+
+            Datetime nowTime = Datetime.now();
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime, true);
+
+            SummitEventsRegisterGuestsController guestController = new SummitEventsRegisterGuestsController();
+
+            //Submit two guests when the event only allows one - should be rejected server-side.
+            List<SummitEventsRegisterGuestsController.questionGuestData> guestsQuestions = new List<SummitEventsRegisterGuestsController.questionGuestData>();
+            for (Integer i = 0; i < 2; i++) {
+                SummitEventsRegisterGuestsController.questionGuestData guestAnswer = new SummitEventsRegisterGuestsController.questionGuestData();
+                guestAnswer.guestId = SummitEventsTestSharedDataFactory.getUUID();
+                guestAnswer.questions = new List<SummitEventsRegisterGuestsController.questionData>();
+                guestsQuestions.add(guestAnswer);
+            }
+            guestController.guestJSON = JSON.serialize(guestsQuestions);
+
+            PageReference result = guestController.saveGuests();
+            System.assertEquals(null, result, 'Save should be rejected when guest count exceeds Guest_Max_Amount__c.');
+            System.assert(ApexPages.hasMessages(ApexPages.Severity.ERROR), 'An error message should be added when guest max is exceeded.');
+
+            //Nothing should have been persisted.
+            Summit_Events_Registration__c unchangedRegistration = [SELECT Id, Guest_JSON__c FROM Summit_Events_Registration__c WHERE Id = :seaTestRegistration.Id];
+            System.assertEquals(null, unchangedRegistration.Guest_JSON__c);
+
+            Test.stopTest();
+        }
+    }
+
+    @IsTest
+    static void guestsWithinMaxAmountAreSaved() {
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+
+        Summit_Events__c seaTestEvent = new Summit_Events__c(Id = seaTestInstances[1].Event__c, Guest_Max_Amount__c = 2);
+        update seaTestEvent;
+
+        System.runAs(testUser) {
+            Test.startTest();
+
+            PageReference pageRef = Page.SummitEventsRegisterGuests;
+            Test.setCurrentPage(pageRef);
+
+            Datetime nowTime = Datetime.now();
+            SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime, true);
+
+            SummitEventsRegisterGuestsController guestController = new SummitEventsRegisterGuestsController();
+
+            //Two guests submitted against a max of two - should succeed (bulk-safe: multiple guest rows in one submission).
+            List<SummitEventsRegisterGuestsController.questionGuestData> guestsQuestions = new List<SummitEventsRegisterGuestsController.questionGuestData>();
+            for (Integer i = 0; i < 2; i++) {
+                SummitEventsRegisterGuestsController.questionGuestData guestAnswer = new SummitEventsRegisterGuestsController.questionGuestData();
+                guestAnswer.guestId = SummitEventsTestSharedDataFactory.getUUID();
+                guestAnswer.questions = new List<SummitEventsRegisterGuestsController.questionData>();
+                guestsQuestions.add(guestAnswer);
+            }
+            guestController.guestJSON = JSON.serialize(guestsQuestions);
+
+            PageReference result = guestController.saveGuests();
+            System.assertNotEquals(null, result, 'Save should succeed when guest count is within Guest_Max_Amount__c.');
+
+            Summit_Events_Registration__c newSEARegistration = [SELECT Id, Guest_JSON__c FROM Summit_Events_Registration__c WHERE Id = :seaTestRegistration.Id];
+            System.assertNotEquals(null, newSEARegistration.Guest_JSON__c);
+
+            Test.stopTest();
+        }
+    }
+
+    @IsTest
     static void testQuestionWithExistingPicklist() {
         SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();

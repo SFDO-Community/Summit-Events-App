@@ -6,6 +6,15 @@
 public with sharing class SummitEventsRegisterController {
     public Summit_Events_Instance__c evtInstance { get; set; }
     public Summit_Events__c eventPage { get; set; }
+    public String safeEventHomeLink { get { return SummitEventsShared.getSafeUrl(eventPage != null ? eventPage.Event_Home_Link_URL__c : null); } }
+    public String safeLocationMapLink {
+        get {
+            String rawLink = (evtInstance != null && String.isNotBlank(evtInstance.Location_Map_Link_Override__c))
+                    ? evtInstance.Location_Map_Link_Override__c
+                    : (eventPage != null ? eventPage.Location_Map_Link__c : null);
+            return SummitEventsShared.getSafeUrl(rawLink);
+        }
+    }
     public List<SelectOption> guestAmt { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
     public SummitEventsInfo eventInformation { get; set; }
@@ -456,6 +465,15 @@ public with sharing class SummitEventsRegisterController {
 
     public PageReference saveContactRegistration() {
         PageReference optionPage;
+
+        // Re-check server-side that the event isn't closed; the constructor's eventIsClosed
+        // can't be trusted to still hold true, and a guest must never be able to bypass this
+        // by posting directly to the save action (isEventClosed itself gates adminopen behind the shared secret).
+        eventIsClosed = SummitEventsShared.isEventClosed(evtInstance, eventPage.Event_Status__c);
+        if (eventIsClosed) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Registration for this event is closed.'));
+            return null;
+        }
 
         if (recaptcha.version == 3) {
             // Use Google reCAPTCHA v3 to get a score and validate against acceptable score in settings

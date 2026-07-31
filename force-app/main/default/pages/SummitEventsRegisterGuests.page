@@ -9,7 +9,7 @@
             <apex:outputText rendered="{!!ISBLANK(eventInstance.Instance_Title__c)}" value="{! ' - ' + eventInstance.Instance_Title__c}"/>
             - Guest Registration
         </apex:define>
-        <apex:define name="pageTitle"><a href="{!eventPage.Event_Home_Link_URL__c}">{!eventPage.Event_Home_Link_Title__c}</a></apex:define>
+        <apex:define name="pageTitle"><a href="{!safeEventHomeLink}">{!eventPage.Event_Home_Link_Title__c}</a></apex:define>
         <apex:define name="scriptsHead">
             <link href="{!URLFOR($Resource.SummitEventsAssets, '/css/main.css')}" rel="stylesheet" type="text/css"/>
             <script>
@@ -21,12 +21,12 @@
             <script>
                 window.dataLayer = window.dataLayer || [];
                 dataLayer.push({
-                    'account': '{!IF(!ISBLANK(eventPage.Account__r.Name),eventPage.Account__r.Name, '')}',
-                    'audience': '{!IF(!ISBLANK(eventPage.Audience__c),eventPage.Audience__c, '')}',
+                    'account': '{!JSENCODE(IF(!ISBLANK(eventPage.Account__r.Name),eventPage.Account__r.Name, ''))}',
+                    'audience': '{!JSENCODE(IF(!ISBLANK(eventPage.Audience__c),eventPage.Audience__c, ''))}',
                     'event': 'summit_guest_registration',
-                    'eventLabel': '{!eventPage.Event_Name__c}{!IF(!ISBLANK(eventInstance.Instance_Title__c),' - ' + eventInstance.Instance_Title__c,'')}',
-                    'category': '{!IF(!ISBLANK(eventPage.Filter_Category__c), eventPage.Filter_Category__c, '')}',
-                    'sponsor': '{!IF(!ISBLANK(eventPage.Event_Sponsor__c), eventPage.Event_Sponsor__c, '')}',
+                    'eventLabel': '{!JSENCODE(eventPage.Event_Name__c)}{!JSENCODE(IF(!ISBLANK(eventInstance.Instance_Title__c),' - ' + eventInstance.Instance_Title__c,''))}',
+                    'category': '{!JSENCODE(IF(!ISBLANK(eventPage.Filter_Category__c), eventPage.Filter_Category__c, ''))}',
+                    'sponsor': '{!JSENCODE(IF(!ISBLANK(eventPage.Event_Sponsor__c), eventPage.Event_Sponsor__c, ''))}',
                     'page': '{!$CurrentPage.Name}'
                 });
             </script>

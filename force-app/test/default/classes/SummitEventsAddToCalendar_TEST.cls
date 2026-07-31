@@ -48,7 +48,7 @@ public class SummitEventsAddToCalendar_TEST {
             SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
             String startDate = calendarController.DTStart;
             String endDate = calendarController.DTEnd;
-            String comparePageReference = 'https://www.google.com/calendar/event?action=TEMPLATE&ctz=GMT&dates=' + startDate + '%2F' + endDate + '&details=&location=123+Electric+Ave.&sprop=%5Bevent_source_url%5DMap+Link+1&text=Test+Event+-+Test+Event+Session+0';
+            String comparePageReference = 'https://www.google.com/calendar/event?action=TEMPLATE&ctz=GMT&dates=' + startDate + '%2F' + endDate + '&details=&location=123+Electric+Ave.&sprop=%5Bevent_source_url%5Dhttps%3A%2F%2Fexample.com%2Fmap-link-1&text=Test+Event+-+Test+Event+Session+0';
             system.assertEquals(calendarController.calendarType().getUrl(), comparePageReference);
             Test.stopTest();
         }

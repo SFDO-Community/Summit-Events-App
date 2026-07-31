@@ -34,7 +34,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Close_Event_Days_Before__c = 0,
                 Location_Title__c = 'A location',
                 Keep_Registration_Open_During_Event__c = true,
-                Location_Map_Link__c = 'Map Link 1',
+                Location_Map_Link__c = 'https://example.com/map-link-1',
                 Location_Address__c = '123 Electric Ave.',
                 Location_Type__c = 'On-Site',
                 Allow_Other_Attendees__c = true,

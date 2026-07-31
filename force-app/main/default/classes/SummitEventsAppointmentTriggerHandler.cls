@@ -135,7 +135,7 @@ public without sharing class SummitEventsAppointmentTriggerHandler {
                                     }
 
                                     if (String.isNotBlank(fieldValue)) {
-                                        confirmedAppointments += fieldValue;
+                                        confirmedAppointments += SummitEventsShared.removeHTMLandEscape(fieldValue, true);
                                         if (!fieldValue.endsWithIgnoreCase('</p>')) {
                                             confirmedAppointments += '<br/>';
                                         }
@@ -154,10 +154,10 @@ public without sharing class SummitEventsAppointmentTriggerHandler {
                             currentRegAppointment += '<b>' + apt.Appointment_Title__c.trim() + '</b><br/>';
                         }
                         if (String.isNotBlank(apt.Description__c)) {
-                            currentRegAppointment += SummitEventsShared.removeHTMLandEscape(apt.Description__c, false).trim() + '<br/>';
+                            currentRegAppointment += SummitEventsShared.removeHTMLandEscape(apt.Description__c, true).trim() + '<br/>';
                         }
                         if (String.isNotBlank(apt.Registrant_Input__c)) {
-                            currentRegAppointment += SummitEventsShared.removeHTMLandEscape(apt.Registrant_Input__c, false).trim() + '<br/>';
+                            currentRegAppointment += SummitEventsShared.removeHTMLandEscape(apt.Registrant_Input__c, true).trim() + '<br/>';
                         }
                         if (String.isNotBlank(currentRegAppointment)) {
                             requestedAppointments += currentRegAppointment + '<br/>';

@@ -111,14 +111,14 @@ function buildGuestForm() {
             }
             let label = document.createElement('label');
             label.classList.add('slds-form-element__label', 'slds-p-bottom_xxx-small');
-            label.innerHTML = q.question;
+            label.textContent = q.question;
             label.setAttribute('for', q.id);
 
             if (q.required) {
                 let requiredInput = document.createElement('abbr');
                 requiredInput.title = 'required';
                 requiredInput.classList.add('slds-required');
-                requiredInput.innerHTML = ' * ';
+                requiredInput.textContent = ' * ';
                 label.appendChild(requiredInput);
             }
             qWrap.appendChild(label);
@@ -166,7 +166,7 @@ function buildGuestForm() {
             if (q.assist) {
                 let errorHelp = document.createElement('div');
                 errorHelp.classList.add('slds-form-element__help');
-                errorHelp.innerHTML = q.assist;
+                errorHelp.textContent = q.assist;
                 errorHelp.id = 'error_' + q.id;
                 qWrap.appendChild(errorHelp);
             }
@@ -174,7 +174,7 @@ function buildGuestForm() {
             if (q.instructions) {
                 let instruct = document.createElement('p');
                 instruct.classList.add('slds-text-body_regular', 'slds-p-top_xxx-small');
-                instruct.innerHTML = q['instructions'];
+                instruct.textContent = q['instructions'];
                 qWrap.appendChild(instruct);
             }
             qWrapOuter.appendChild(qWrap);

@@ -176,7 +176,7 @@ private class SummitEventsFeed_TEST {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         seaTestInstances[2].Alternate_Registration_URL_Override__c = 'https://testingAnOverride.com';
         seaTestInstances[2].Location_Address_Override__c = 'New location override';
-        seaTestInstances[2].Location_Map_Link_Override__c = 'Map link override';
+        seaTestInstances[2].Location_Map_Link_Override__c = 'https://example.com/map-link-override';
         seaTestInstances[2].Feed_Registration_Button_Text_Override__c = 'New button override';
         update seaTestInstances;
 
@@ -196,7 +196,7 @@ private class SummitEventsFeed_TEST {
             Test.startTest();
             System.assert(res.responseBody.toString().contains('testingAnOverride.com'));
             System.assert(res.responseBody.toString().contains('New location override'));
-            System.assert(res.responseBody.toString().contains('Map link override'));
+            System.assert(res.responseBody.toString().contains('map-link-override'));
             System.assert(res.responseBody.toString().contains('New button override'));
             Test.stopTest();
         }
