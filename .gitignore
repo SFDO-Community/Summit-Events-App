@@ -41,3 +41,8 @@ node_modules/
 **/*.tsbuildinfo
 
 **/graphql.config.yml
+
+# Agentic ignore
+ai-logs
+.playwright-report/
+.playwright-mcp/
