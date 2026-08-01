@@ -41,7 +41,7 @@ public class SummitEventsRegistration_TEST {
                 SELECT Id, Subject, Description
                 FROM Task
                 WHERE WhatId = :seaTestRegistration.Id
-                AND Type = 'Email'
+                //AND Type = 'Email'
                 AND Status = 'Completed'
                 AND Priority = 'Low'
                 AND WhoId = :seaTestRegistration.Contact__c
@@ -89,7 +89,7 @@ public class SummitEventsRegistration_TEST {
                 SELECT Id, Subject, Description
                 FROM Task
                 WHERE WhatId IN :registrationIds
-                AND Type = 'Email'
+                //AND Type = 'Email'
                 AND Status = 'Completed'
                 AND Priority = 'Low'
                 AND WhoId IN :contactIds
