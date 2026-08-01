@@ -297,7 +297,7 @@ public with sharing class SummitEventsRegisterController {
                                 FROM User
                                 WHERE Id = :UserInfo.getUserId()
                         )
-                        WITH USER_MODE
+                        WITH SYSTEM_MODE
                 ];
 
                 mapContactToRegistration(userContact);
