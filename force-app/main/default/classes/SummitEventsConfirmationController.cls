@@ -6,6 +6,7 @@
 public with sharing class SummitEventsConfirmationController {
     public SummitEventsInfo eventInformation { get; set; }
     public Summit_Events__c eventPage { get; set; }
+    public String safeEventHomeLink { get { return SummitEventsShared.getSafeUrl(eventPage != null ? eventPage.Event_Home_Link_URL__c : null); } }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public String templateSelected { get; set; }
     public String formattedNavDate { get; set; }
@@ -280,7 +281,7 @@ public with sharing class SummitEventsConfirmationController {
 
         public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c newEvtReg) {
             try {
-                update newEvtReg;
+                Database.update(newEvtReg, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception ex) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
@@ -290,7 +291,7 @@ public with sharing class SummitEventsConfirmationController {
         public Boolean addGuestRegistration(List<Summit_Events_Registration__c> guestRegistrations) {
             Boolean guestAdded = false;
             try {
-                insert guestRegistrations;
+                Database.insert(guestRegistrations, true, System.AccessLevel.SYSTEM_MODE);
                 guestAdded = true;
             } catch (Exception ex) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));

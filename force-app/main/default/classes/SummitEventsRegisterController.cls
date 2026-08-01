@@ -6,6 +6,15 @@
 public with sharing class SummitEventsRegisterController {
     public Summit_Events_Instance__c evtInstance { get; set; }
     public Summit_Events__c eventPage { get; set; }
+    public String safeEventHomeLink { get { return SummitEventsShared.getSafeUrl(eventPage != null ? eventPage.Event_Home_Link_URL__c : null); } }
+    public String safeLocationMapLink {
+        get {
+            String rawLink = (evtInstance != null && String.isNotBlank(evtInstance.Location_Map_Link_Override__c))
+                    ? evtInstance.Location_Map_Link_Override__c
+                    : (eventPage != null ? eventPage.Location_Map_Link__c : null);
+            return SummitEventsShared.getSafeUrl(rawLink);
+        }
+    }
     public List<SelectOption> guestAmt { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
     public SummitEventsInfo eventInformation { get; set; }
@@ -288,7 +297,7 @@ public with sharing class SummitEventsRegisterController {
                                 FROM User
                                 WHERE Id = :UserInfo.getUserId()
                         )
-                        WITH SECURITY_ENFORCED
+                        WITH SYSTEM_MODE
                 ];
 
                 mapContactToRegistration(userContact);
@@ -321,6 +330,7 @@ public with sharing class SummitEventsRegisterController {
      *   any picklist entry (case-insensitive), the raw value is stored in
      *   Registrant_Country_Text__c instead and Registrant_Country__c is cleared so no
      *   incorrect default country is carried over.
+     * @param userContact The Contact record to map.
      */
     private void mapContactToRegistration(Contact userContact) {
         eventRegistration.Registrant_First_Name__c   = truncate(userContact.FirstName, 80);
@@ -360,6 +370,9 @@ public with sharing class SummitEventsRegisterController {
     /**
      * Truncates val to at most maxLen characters. Returns val unchanged if it fits,
      * or null/empty string as-is without throwing.
+     * @param val The string to truncate.
+     * @param maxLen The maximum length to truncate to.
+     * @return String The truncated string.
      */
     private static String truncate(String val, Integer maxLen) {
         if (String.isBlank(val)) {
@@ -456,6 +469,15 @@ public with sharing class SummitEventsRegisterController {
 
     public PageReference saveContactRegistration() {
         PageReference optionPage;
+
+        // Re-check server-side that the event isn't closed; the constructor's eventIsClosed
+        // can't be trusted to still hold true, and a guest must never be able to bypass this
+        // by posting directly to the save action (isEventClosed itself gates adminopen behind the shared secret).
+        eventIsClosed = SummitEventsShared.isEventClosed(evtInstance, eventPage.Event_Status__c);
+        if (eventIsClosed) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Registration for this event is closed.'));
+            return null;
+        }
 
         if (recaptcha.version == 3) {
             // Use Google reCAPTCHA v3 to get a score and validate against acceptable score in settings
@@ -606,10 +628,10 @@ public with sharing class SummitEventsRegisterController {
             try {
                 if (String.isNotBlank(incomingEventRegistrationId)) {
                     eventRegistration.Id = incomingEventRegistrationId;
-                    update eventRegistration;
+                    Database.update(eventRegistration, true, System.AccessLevel.SYSTEM_MODE);
                 } else {
                     if (Schema.SObjectType.Summit_Events_Registration__c.isCreateable()) {
-                        insert eventRegistration;
+                        Database.insert(eventRegistration, true, System.AccessLevel.SYSTEM_MODE);
                     }
                 }
             } catch (Exception ex) {
@@ -623,7 +645,7 @@ public with sharing class SummitEventsRegisterController {
                 }
                 try {
                     if (Schema.SObjectType.Summit_Events_Registration__c.isCreateable()) {
-                        upsert upsertFees;
+                        Database.upsert(upsertFees, true, System.AccessLevel.SYSTEM_MODE);
                     }
                 } catch (Exception ex) {
                     System.debug(ex.getMessage());
@@ -638,7 +660,7 @@ public with sharing class SummitEventsRegisterController {
 
         public void insertAppointments(List<Summit_Events_Appointments__c> appointments) {
             try {
-                insert appointments;
+                Database.insert(appointments, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
@@ -663,7 +685,7 @@ public with sharing class SummitEventsRegisterController {
                         WHERE Registrant_Email__c = :registrationEmail
                         AND Event_Instance__c = :eventInstanceId
                         AND Status__c NOT IN :notAcceptableStatuses
-                        WITH SECURITY_ENFORCED
+                        WITH SYSTEM_MODE
                         ORDER BY LastModifiedDate
                 ];
             } else if (checkType == 'One registration per event') {
@@ -673,7 +695,7 @@ public with sharing class SummitEventsRegisterController {
                         WHERE Registrant_Email__c = :registrationEmail
                         AND Event__c = :eventId
                         AND Status__c NOT IN :notAcceptableStatuses
-                        WITH SECURITY_ENFORCED
+                        WITH SYSTEM_MODE
                         ORDER BY LastModifiedDate
                 ];
             }

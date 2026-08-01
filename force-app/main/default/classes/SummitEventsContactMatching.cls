@@ -39,6 +39,7 @@ public without sharing class SummitEventsContactMatching {
                     FROM Summit_Events__c
                     WHERE Id IN :matchingRules.keySet()
                     AND (Custom_Metadata_Contact_Matching_Method__c != NULL OR Custom_Metadata_Lead_Matching_Method__c != NULL OR Custom_Metadata_Person_Matching_Method__c != NULL)
+                    WITH SYSTEM_MODE
             ]);
         }
 
@@ -295,7 +296,7 @@ public without sharing class SummitEventsContactMatching {
         if (mappedMatchingMethods.isEmpty()) {
             if (matchingMethods.size() > 0) {
                 String query = 'SELECT Source_Value__c, Source_Type__c, Matching_Only__c, ' + fieldAPIName + ', ' + sourceValue + ' FROM ' + namespace + sObjectType + ' WHERE ' + fieldAPIName + ' IN :matchingMethods';
-                List<SObject> results = Database.query(query);
+                List<SObject> results = Database.query(query, System.AccessLevel.SYSTEM_MODE);
                 for (SObject mapping : results) {
                     String method = (String) mapping.get(fieldAPIName);
                     if (!mappedMatchingMethods.containsKey(method)) {
@@ -605,7 +606,7 @@ public without sharing class SummitEventsContactMatching {
 
         public SObject addRecord(SObject recordToAdd) {
             try {
-                insert recordToAdd;
+                Database.insert(recordToAdd, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
             }
@@ -621,7 +622,7 @@ public without sharing class SummitEventsContactMatching {
                 extraWhere = ' AND IsPersonAccount = true And RecordTypeId = :personAccountRecordTypeId';
             }
             String query = 'SELECT Id, FirstName, LastName, LastModifiedDate, ' + queryFields + ' FROM ' + sObjectName + ' WHERE Id IN :matchedIds ' + extraWhere + ' ORDER BY LastModifiedDate ASC';
-            List<SObject> matchedRecords = Database.query(query);
+            List<SObject> matchedRecords = Database.query(query, System.AccessLevel.SYSTEM_MODE);
 
             Map<Id, SObject> matchedRecordsMap = new Map<Id, SObject>();
             for (SObject record : matchedRecords) {

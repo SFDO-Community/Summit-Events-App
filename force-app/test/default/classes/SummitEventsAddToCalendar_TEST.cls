@@ -48,7 +48,7 @@ public class SummitEventsAddToCalendar_TEST {
             SummitEventsAddToCalendarController calendarController = new SummitEventsAddToCalendarController();
             String startDate = calendarController.DTStart;
             String endDate = calendarController.DTEnd;
-            String comparePageReference = 'https://www.google.com/calendar/event?action=TEMPLATE&ctz=GMT&dates=' + startDate + '%2F' + endDate + '&details=&location=123+Electric+Ave.&sprop=%5Bevent_source_url%5DMap+Link+1&text=Test+Event+-+Test+Event+Session+0';
+            String comparePageReference = 'https://www.google.com/calendar/event?action=TEMPLATE&ctz=GMT&dates=' + startDate + '%2F' + endDate + '&details=&location=123+Electric+Ave.&sprop=%5Bevent_source_url%5Dhttps%3A%2F%2Fexample.com%2Fmap-link-1&text=Test+Event+-+Test+Event+Session+0';
             system.assertEquals(calendarController.calendarType().getUrl(), comparePageReference);
             Test.stopTest();
         }
@@ -111,7 +111,7 @@ public class SummitEventsAddToCalendar_TEST {
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
         //Change from GMT to CDT to test daylight savings works
         seaTestInstances[1].Instance_Time_Zone__c = 'Central Daylight Time (America/Chicago)';
-        update seaTestInstances;
+        Database.update(seaTestInstances, true, System.AccessLevel.SYSTEM_MODE);
         System.runAs(testUser) {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsAddToCalendar;

@@ -61,7 +61,7 @@ private class SummitEventsFeed_TEST {
                 Summit_Events__c eventUpdate = [SELECT Id FROM Summit_Events__c WHERE Id = :seaTestInstances[0].Event__c];
                 eventUpdate.Event_Sponsor__c = sponsor[0];
                 req.params.put('sponsor', sponsor[0]);
-                update eventUpdate;
+                Database.update(eventUpdate, true, System.AccessLevel.SYSTEM_MODE);
             }
             req.params.put('longdesc', 'true');
             RestContext.request = req;
@@ -108,7 +108,7 @@ private class SummitEventsFeed_TEST {
 
             Summit_Events__c eventUpdate = [SELECT Id, Program_Filter__c FROM Summit_Events__c WHERE Id = :seaTestInstances[0].Event__c];
             eventUpdate.Program_Filter__c = 'OCB,BCY';
-            update eventUpdate;
+            Database.update(eventUpdate, true, System.AccessLevel.SYSTEM_MODE);
 
             //Select all instances that have a  start date and time in the future
             Time rightNow = Time.newInstance(System.now().hour(), System.now().minute(), System.now().second(), System.now().millisecond());
@@ -176,9 +176,9 @@ private class SummitEventsFeed_TEST {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         seaTestInstances[2].Alternate_Registration_URL_Override__c = 'https://testingAnOverride.com';
         seaTestInstances[2].Location_Address_Override__c = 'New location override';
-        seaTestInstances[2].Location_Map_Link_Override__c = 'Map link override';
+        seaTestInstances[2].Location_Map_Link_Override__c = 'https://example.com/map-link-override';
         seaTestInstances[2].Feed_Registration_Button_Text_Override__c = 'New button override';
-        update seaTestInstances;
+        Database.update(seaTestInstances, true, System.AccessLevel.SYSTEM_MODE);
 
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
         System.runAs(testUser) {
@@ -196,7 +196,7 @@ private class SummitEventsFeed_TEST {
             Test.startTest();
             System.assert(res.responseBody.toString().contains('testingAnOverride.com'));
             System.assert(res.responseBody.toString().contains('New location override'));
-            System.assert(res.responseBody.toString().contains('Map link override'));
+            System.assert(res.responseBody.toString().contains('map-link-override'));
             System.assert(res.responseBody.toString().contains('New button override'));
             Test.stopTest();
         }

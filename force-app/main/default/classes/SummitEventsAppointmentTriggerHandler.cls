@@ -135,7 +135,7 @@ public without sharing class SummitEventsAppointmentTriggerHandler {
                                     }
 
                                     if (String.isNotBlank(fieldValue)) {
-                                        confirmedAppointments += fieldValue;
+                                        confirmedAppointments += SummitEventsShared.removeHTMLandEscape(fieldValue, true);
                                         if (!fieldValue.endsWithIgnoreCase('</p>')) {
                                             confirmedAppointments += '<br/>';
                                         }
@@ -154,10 +154,10 @@ public without sharing class SummitEventsAppointmentTriggerHandler {
                             currentRegAppointment += '<b>' + apt.Appointment_Title__c.trim() + '</b><br/>';
                         }
                         if (String.isNotBlank(apt.Description__c)) {
-                            currentRegAppointment += SummitEventsShared.removeHTMLandEscape(apt.Description__c, false).trim() + '<br/>';
+                            currentRegAppointment += SummitEventsShared.removeHTMLandEscape(apt.Description__c, true).trim() + '<br/>';
                         }
                         if (String.isNotBlank(apt.Registrant_Input__c)) {
-                            currentRegAppointment += SummitEventsShared.removeHTMLandEscape(apt.Registrant_Input__c, false).trim() + '<br/>';
+                            currentRegAppointment += SummitEventsShared.removeHTMLandEscape(apt.Registrant_Input__c, true).trim() + '<br/>';
                         }
                         if (String.isNotBlank(currentRegAppointment)) {
                             requestedAppointments += currentRegAppointment + '<br/>';
@@ -234,7 +234,7 @@ public without sharing class SummitEventsAppointmentTriggerHandler {
     private without sharing class doCRUD {
         private void updateRegistration(List<Summit_Events_Registration__c> uRegs) {
             try {
-                upsert uRegs;
+                Database.upsert(uRegs, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
             }
@@ -245,7 +245,7 @@ public without sharing class SummitEventsAppointmentTriggerHandler {
             //convert set to list
             List<Id> uniqueRegistrationIds = new List<Id>(registrationIds);
             try {
-                appointments = Database.query(query);
+                appointments = Database.query(query, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception e) {
                 System.debug(e.getMessage());
             }

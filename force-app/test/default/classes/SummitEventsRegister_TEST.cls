@@ -380,8 +380,21 @@ private class SummitEventsRegister_TEST {
         seaTestInstances[1].Event_Fee_Allocation_Override__c = seaTestFeeAllocations[3].Id;
         seaTestInstances[1].Location_Title_Override__c = 'New Title';
         seaTestInstances[1].Location_Address_Override__c = 'New Address';
-        seaTestInstances[1].Location_Map_Link_Override__c = 'New Map Link';
-        update seaTestInstances[1];
+        seaTestInstances[1].Location_Map_Link_Override__c = 'https://example.com/new-map-link';
+        //Update via a minimal sObject (Id + changed fields only) rather than the factory-returned
+        //instance, which still carries Event__c (the Master-Detail field) as populated from insert -
+        //resending it on update is unnecessary and has been observed to intermittently fail post-deploy
+        //in fresh orgs.
+        update new Summit_Events_Instance__c(
+                Id = seaTestInstances[1].Id,
+                Event_Fee_Additional_Override__c = seaTestInstances[1].Event_Fee_Additional_Override__c,
+                Event_Fee_Override__c = seaTestInstances[1].Event_Fee_Override__c,
+                Event_Fee_Additional_Allocation_Override__c = seaTestInstances[1].Event_Fee_Additional_Allocation_Override__c,
+                Event_Fee_Allocation_Override__c = seaTestInstances[1].Event_Fee_Allocation_Override__c,
+                Location_Title_Override__c = seaTestInstances[1].Location_Title_Override__c,
+                Location_Address_Override__c = seaTestInstances[1].Location_Address_Override__c,
+                Location_Map_Link_Override__c = seaTestInstances[1].Location_Map_Link_Override__c
+        );
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
         System.runAs(testUser) {
             Test.startTest();

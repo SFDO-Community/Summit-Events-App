@@ -209,6 +209,7 @@ public with sharing class SummitEventsShared {
         //Make sure there is a cookie encryption key. If no make one.
         crudToDo doCRUD = new crudToDo();
         doCRUD.setCookieKey();
+        doCRUD.setAdminOpenSecret();
 
         //Get home page link if it exists
         String eventHomeLink = '';
@@ -360,9 +361,17 @@ public with sharing class SummitEventsShared {
     public static Boolean isEventClosed(Summit_Events_Instance__c evtInstance, String masterEventStatus) {
         // Figure out if the event is closed.
         Boolean eventIsClosed = false;
-        if (ApexPages.currentPage() != null && String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
-            Boolean adminOpen = isBoolean(ApexPages.currentPage().getParameters().get('adminopen'));
-            eventIsClosed = !adminOpen;
+        // The Admin Open Registration link (Summit_Events_Instance__c.Admin_Open_Registration_Link__c)
+        // takes staff to the public registration page, which they load as the site's Guest User -
+        // being logged into the internal org doesn't authenticate them to that Community/Site domain.
+        // So this can't be gated by UserInfo.getUserType(); instead the "adminopen" URL parameter must
+        // match a secret configured in Summit_Events_Settings__c.Admin_Open_Secret__c (embedded into the
+        // link by the formula field) so a guessed/shared "adminopen=true" alone can't bypass closure.
+        // Leaving the secret blank disables the override entirely.
+        Summit_Events_Settings__c seaSettings = Summit_Events_Settings__c.getOrgDefaults();
+        String adminOpenParam = ApexPages.currentPage() != null ? ApexPages.currentPage().getParameters().get('adminopen') : null;
+        if (String.isNotBlank(seaSettings.Admin_Open_Secret__c) && String.isNotBlank(adminOpenParam) && adminOpenParam == seaSettings.Admin_Open_Secret__c) {
+            eventIsClosed = false;
         } else {
             eventIsClosed = checkCloseDateTime(evtInstance);
             if (evtInstance.Current_Available_Capacity__c <= 0 || evtInstance.Active_Status__c != 'Active' || masterEventStatus != 'Active') {
@@ -532,6 +541,42 @@ public with sharing class SummitEventsShared {
             }
         }
         return formatTime;
+    }
+
+    // Event_Home_Link_URL__c / Location_Map_Link__c / Location_Map_Link_Override__c are Text fields
+    // (can't be changed to the Url type without breaking managed-package upgrade ancestry), so a
+    // javascript:/data: value typed into one of them would otherwise render as an executable href.
+    // This guard is the render-time backstop and applies regardless of any write-time validation rule,
+    // since it also protects values already stored before a validation rule is deployed.
+    public static String getSafeUrl(String rawUrl) {
+        if (String.isNotBlank(rawUrl) && Pattern.matches('(?i)^https?://.*', rawUrl.trim())) {
+            return rawUrl.trim();
+        }
+        return '';
+    }
+
+    // Denylist filter for staff-authored Rich Text fields (event messaging). Normal formatting
+    // (bold/italic/links/lists/tables/color) is expected and preserved - end users configuring these
+    // fields are not expected to add <script>/<iframe>/event handlers, so this strips only those known
+    // XSS constructs rather than running the whole value through a full HTML sanitizer/allowlist.
+    // Covers both the standard case (payload typed via the UI Rich Text Area editor) and the case where
+    // a value is written via REST/SOAP/Data Loader/Tooling API, which bypasses the RTA editor's own
+    // client-side sanitization entirely.
+    public static String sanitizeRichText(String html) {
+        if (String.isBlank(html)) {
+            return html;
+        }
+        String sanitized = html;
+        sanitized = sanitized.replaceAll('(?is)<script\\b[^>]*>.*?</script>', '');
+        sanitized = sanitized.replaceAll('(?is)<iframe\\b[^>]*>.*?</iframe>', '');
+        sanitized = sanitized.replaceAll('(?is)<iframe\\b[^>]*/?>', '');
+        sanitized = sanitized.replaceAll('(?is)<meta\\b[^>]*http-equiv\\s*=\\s*["\']?refresh["\']?[^>]*>', '');
+        sanitized = sanitized.replaceAll('(?is)\\son\\w+\\s*=\\s*"[^"]*"', '');
+        sanitized = sanitized.replaceAll('(?is)\\son\\w+\\s*=\\s*\'[^\']*\'', '');
+        sanitized = sanitized.replaceAll('(?is)\\son\\w+\\s*=\\s*[^\\s>]+', '');
+        sanitized = sanitized.replaceAll('(?is)(href|src)(\\s*=\\s*)"\\s*(javascript|data)\\s*:[^"]*"', '$1$2"#"');
+        sanitized = sanitized.replaceAll('(?is)(href|src)(\\s*=\\s*)\'\\s*(javascript|data)\\s*:[^\']*\'', '$1$2\'#\'');
+        return sanitized;
     }
 
     public static String removeHTMLandEscape(String incomingString, Boolean escapeHTML) {
@@ -714,7 +759,19 @@ public with sharing class SummitEventsShared {
                 Blob cryptoKey = Crypto.generateAesKey(256);
                 String encryptionString = EncodingUtil.base64Encode(cryptoKey).substring(0, 32);
                 SummitEventsSettings.Cookie_Encryption_Key__c = encryptionString;
-                update SummitEventsSettings;
+                Database.upsert(SummitEventsSettings, true, System.AccessLevel.SYSTEM_MODE);
+            }
+        }
+
+        // Auto-generates the Admin Open Registration secret on first use so the feature works out of the
+        // box without a manual setup step - same self-healing pattern as setCookieKey above. Hex-encoded
+        // (0-9a-f only) so it's safe to embed directly into the formula-field URL with no encoding needed.
+        public void setAdminOpenSecret() {
+            Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
+            if (String.isBlank(SummitEventsSettings.Admin_Open_Secret__c)) {
+                Blob secretKey = Crypto.generateAesKey(128);
+                SummitEventsSettings.Admin_Open_Secret__c = EncodingUtil.convertToHex(secretKey);
+                Database.upsert(SummitEventsSettings, true, System.AccessLevel.SYSTEM_MODE);
             }
         }
     }

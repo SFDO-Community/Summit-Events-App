@@ -8,6 +8,7 @@ public with sharing class SummitEventsRegisterGuestsController {
     public SummitEventsInfo eventInformation { get; set; }
     public String formattedNavDate { get; set; }
     public Summit_Events__c eventPage { get; set; }
+    public String safeEventHomeLink { get { return SummitEventsShared.getSafeUrl(eventPage != null ? eventPage.Event_Home_Link_URL__c : null); } }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
     public Map<Id, Summit_Events_Question__c> eventGuestQuestions { get; set; }
@@ -71,10 +72,10 @@ public with sharing class SummitEventsRegisterGuestsController {
                 q.setupError = '';
                 q.setupError = SummitEventsShared.checkFieldGuestAccess(namespace + 'Summit_Events_Registration__c', eventGuestQuestions.get(key).Map_to_Field__c, '', true, '');
                 q.name = seaQuestion.Name;
-                q.question = seaQuestion.Question_Label__c;
+                q.question = String.isNotBlank(seaQuestion.Question_Label__c) ? seaQuestion.Question_Label__c.escapeHtml4() : seaQuestion.Question_Label__c;
                 q.id = SummitEventsShared.encryptString(seaQuestion.Id);
                 q.name = seaQuestion.Name;
-                q.question = seaQuestion.Question_Label__c;
+                q.question = String.isNotBlank(seaQuestion.Question_Label__c) ? seaQuestion.Question_Label__c.escapeHtml4() : seaQuestion.Question_Label__c;
                 q.type = seaQuestion.Question_Field_Type__c;
                 q.required = seaQuestion.Required__c;
                 if (String.isNotBlank(seaQuestion.Existing_Picklist_Values__c)) {
@@ -83,10 +84,10 @@ public with sharing class SummitEventsRegisterGuestsController {
                     q.picklist = createPicklists(seaQuestion.Picklist_Values__c, seaQuestion.Picklist_Values_Long__c);
                 }
                 q.help = seaQuestion.Help_Text__c;
-                q.instructions = seaQuestion.Instructions__c;
+                q.instructions = String.isNotBlank(seaQuestion.Instructions__c) ? seaQuestion.Instructions__c.escapeHtml4() : seaQuestion.Instructions__c;
                 q.defaultValue = seaQuestion.Default_Value__c;
                 q.textLimit = (Integer) seaQuestion.Text_Limit__c;
-                q.assist = seaQuestion.Error_Assist_Text__c;
+                q.assist = String.isNotBlank(seaQuestion.Error_Assist_Text__c) ? seaQuestion.Error_Assist_Text__c.escapeHtml4() : seaQuestion.Error_Assist_Text__c;
                 if (seaQuestion.Is_Visible__c) {
                     questionList.add(q);
                 } else {
@@ -188,6 +189,13 @@ public with sharing class SummitEventsRegisterGuestsController {
         //sanitize data
         if (String.isNotBlank(guestJSON)) {
             List<questionGuestData> guestAnswers = (List<questionGuestData>) JSON.deserialize(guestJSON, List<questionGuestData>.class);
+
+            Integer guestMax = eventPage.Guest_Max_Amount__c != null ? Integer.valueOf(eventPage.Guest_Max_Amount__c) : 0;
+            if (guestMax > 0 && guestAnswers.size() > guestMax) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Too many guests submitted'));
+                return null;
+            }
+
             for (Integer xx = 0; xx < guestAnswers.size(); xx++) {
                 Integer questionCount = 0;
                 for (questionData q : guestAnswers[xx].questions) {
@@ -227,7 +235,7 @@ public with sharing class SummitEventsRegisterGuestsController {
             eventRegistration.Id = oldRegId;
             eventRegistration.Guest_JSON__c = jsonOut;
             try {
-                update eventRegistration;
+                Database.update(eventRegistration, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception e) {
                 System.debug(e.getMessage());
             }

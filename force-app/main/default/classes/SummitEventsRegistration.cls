@@ -59,6 +59,7 @@ public class SummitEventsRegistration {
                 WHERE Event__r.Id IN :affectedIds.values()
                 AND Action_Status__c != NULL
                 AND Action_Status__c != '--Inactive--'
+                WITH SYSTEM_MODE
         ];
 
         List<Task> activityUpdates = new List<Task>();
@@ -271,7 +272,7 @@ public class SummitEventsRegistration {
 
         public void saveTask(List<Task> taskToSave) {
             try {
-                insert taskToSave;
+                Database.insert(taskToSave, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception e) {
                 System.debug(e.getMessage());
             }

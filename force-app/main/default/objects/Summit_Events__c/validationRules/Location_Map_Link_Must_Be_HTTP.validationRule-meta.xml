@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Location_Map_Link_Must_Be_HTTP</fullName>
+    <active>true</active>
+    <errorConditionFormula>NOT(ISBLANK(Location_Map_Link__c)) &amp;&amp;
+NOT(REGEX(Location_Map_Link__c, &quot;(?i)https?://.*&quot;))</errorConditionFormula>
+    <errorDisplayField>Location_Map_Link__c</errorDisplayField>
+    <errorMessage>Location Map Link must start with http:// or https://</errorMessage>
+</ValidationRule>

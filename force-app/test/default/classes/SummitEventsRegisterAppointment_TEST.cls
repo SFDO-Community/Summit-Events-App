@@ -73,4 +73,75 @@ private class SummitEventsRegisterAppointment_TEST {
             Test.stopTest();
         }
     }
+
+    @IsTest static void testSaveOptionsRejectsOverAppointmentTypeLimit() {
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        List<Summit_Events_Appointment_Type__c> testAppointmentTypes = SummitEventsTestSharedDataFactory.createAppointmentTypes(seaTestInstances[1].Event__c);
+
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+
+        System.runAs(testUser) {
+            Test.startTest();
+
+            PageReference pageRef = Page.SummitEventsRegisterAppointments;
+            Test.setCurrentPage(pageRef);
+
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, true);
+            SummitEventsRegisterAppointmentCtlr optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
+
+            //The first appointment type has no Appointment_Limits__c set, so it defaults to a limit of 1.
+            //Submit it twice - should be rejected before anything is inserted.
+            Summit_Events_Appointment_Type__c overLimitType = testAppointmentTypes[0];
+            String jsonAppointments = '[' +
+                    '{"appId":"' + overLimitType.Id + '","appCategory":"' + overLimitType.Appointment_Category__c + '","appType":"' + overLimitType.Appointment_Type__c + '","appTitle":"' + overLimitType.Title__c + '"},' +
+                    '{"appId":"' + overLimitType.Id + '","appCategory":"' + overLimitType.Appointment_Category__c + '","appType":"' + overLimitType.Appointment_Type__c + '","appTitle":"' + overLimitType.Title__c + '"}' +
+                    ']';
+            optionsCtrl.incomingAppointmentJSON = jsonAppointments;
+
+            PageReference result = optionsCtrl.saveOptions();
+            System.assertEquals(null, result, 'Save should be rejected when submitted count exceeds the appointment type limit.');
+            System.assert(ApexPages.hasMessages(ApexPages.Severity.ERROR), 'An error message should be added when the appointment type limit is exceeded.');
+
+            List<Summit_Events_Appointments__c> testAppointments = [SELECT Id FROM Summit_Events_Appointments__c WHERE Event_Registration__c = :seaTestRegistration.Id];
+            System.assertEquals(0, testAppointments.size(), 'No appointments should be inserted when the submission is rejected.');
+
+            Test.stopTest();
+        }
+    }
+
+    @IsTest static void testSaveOptionsRejectsWhenEventClosedForGuest() {
+        SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
+        SummitEventsTestSharedDataFactory.createAppointmentTypes(seaTestInstances[1].Event__c);
+
+        //Close registration for the instance being used. Update via a minimal sObject (Id + changed
+        //field only) rather than the factory-returned instance, which still carries Event__c (the
+        //Master-Detail field) as populated from insert - resending it on update is unnecessary and
+        //has been observed to intermittently fail post-deploy in fresh orgs.
+        update new Summit_Events_Instance__c(Id = seaTestInstances[1].Id, Active_Status__c = 'Closed');
+
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+
+        System.runAs(testUser) {
+            Test.startTest();
+
+            PageReference pageRef = Page.SummitEventsRegisterAppointments;
+            //No Admin_Open_Secret__c is configured in test data, so adminopen can never bypass closure here -
+            //registration should close purely based on Active_Status__c.
+            Test.setCurrentPage(pageRef);
+
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, true);
+            SummitEventsRegisterAppointmentCtlr optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
+
+            optionsCtrl.incomingAppointmentJSON = '[]';
+            PageReference result = optionsCtrl.saveOptions();
+            System.assertEquals(null, result, 'Save should be rejected once the instance close date has passed.');
+            System.assert(ApexPages.hasMessages(ApexPages.Severity.ERROR), 'An error message should be added when the event is closed.');
+
+            Test.stopTest();
+        }
+    }
 }

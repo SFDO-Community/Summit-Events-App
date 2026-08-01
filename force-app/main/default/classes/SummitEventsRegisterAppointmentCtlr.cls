@@ -11,6 +11,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     public String incomingAppointmentJSON { get; set; }
     public Boolean eventIsClosed { get; set; }
     public Summit_Events__c eventPage { get; set; }
+    public String safeEventHomeLink { get { return SummitEventsShared.getSafeUrl(eventPage != null ? eventPage.Event_Home_Link_URL__c : null); } }
     public String templateSelected { get; set; }
     public Boolean noOptionalAppointments { get; set; }
     public Boolean requiredAppointments { get; set; }
@@ -159,6 +160,13 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
     }
 
     public PageReference saveOptions() {
+        // Re-check the event isn't closed - this is an independent registration-writing entry point (see Bug 3 fix).
+        eventIsClosed = SummitEventsShared.isEventClosed(evtInstance, eventPage.Event_Status__c);
+        if (eventIsClosed) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Registration for this event is closed.'));
+            return null;
+        }
+
         //remove old client created appointments
         crudToDo doCRUD = new crudToDo();
 
@@ -166,6 +174,26 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
         doCRUD.deleteAppointments(deleteAppointments);
 
         List<incomingAppointments> incomingAppointments = (List<incomingAppointments>) JSON.deserialize(incomingAppointmentJSON, List<incomingAppointments>.class);
+
+        // Enforce per-appointment-type limits before inserting any of the submitted selections.
+        Map<String, Integer> submittedCountByType = new Map<String, Integer>();
+        for (incomingAppointments app : incomingAppointments) {
+            Integer count = submittedCountByType.containsKey(app.appId) ? submittedCountByType.get(app.appId) : 0;
+            submittedCountByType.put(app.appId, count + 1);
+        }
+        for (String appId : submittedCountByType.keySet()) {
+            Summit_Events_Appointment_Type__c appDefinition = appointments.get(appId);
+            if (appDefinition != null) {
+                Integer typeLimit = 1;
+                if (!String.isBlank(appDefinition.Appointment_Limits__c)) {
+                    typeLimit = Integer.valueOf(appDefinition.Appointment_Limits__c);
+                }
+                if (submittedCountByType.get(appId) > typeLimit) {
+                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Too many appointments selected for ' + appDefinition.Title__c));
+                    return null;
+                }
+            }
+        }
 
         List<Summit_Events_Appointments__c> appointmentsToAdd = new List<Summit_Events_Appointments__c>();
         for (incomingAppointments app : incomingAppointments) {
@@ -236,7 +264,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
         public void insertAppointments(List<Summit_Events_Appointments__c> appointments) {
             try {
-                insert appointments;
+                Database.insert(appointments, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception ex) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
@@ -244,7 +272,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
         public void deleteAppointments(List<Summit_Events_Appointments__c> appointments) {
             try {
-                delete appointments;
+                Database.delete(appointments, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception ex) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }

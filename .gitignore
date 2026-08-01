@@ -41,4 +41,7 @@ node_modules/
 
 **/graphql.config.yml
 
+# Agentic ignore
 ai-logs/
+.playwright-report/
+.playwright-mcp/

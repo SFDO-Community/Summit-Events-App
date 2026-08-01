@@ -14,6 +14,7 @@ public with sharing class SummitEventsDonationController {
     public Summit_Events_Fee__c incomingFee { get; set; }
     public Boolean eventIsClosed { get; set; }
     public Summit_Events__c eventPage { get; set; }
+    public String safeEventHomeLink { get { return SummitEventsShared.getSafeUrl(eventPage != null ? eventPage.Event_Home_Link_URL__c : null); } }
     public String formattedNavDate { get; set; }
     public Map<String, PageReference> pageFlow {get;set;}
 
@@ -142,12 +143,12 @@ public with sharing class SummitEventsDonationController {
     private without sharing class doCRUD {
 
         public void upsertFee(Summit_Events_Fee__c feeIn) {
-            upsert feeIn;
+            Database.upsert(feeIn, true, System.AccessLevel.SYSTEM_MODE);
         }
 
         public void deleteFee(Summit_Events_Fee__c feeIn) {
             if (Summit_Events_Fee__c.SObjectType.getDescribe().isDeletable()) {
-                delete feeIn;
+                Database.delete(feeIn, true, System.AccessLevel.SYSTEM_MODE);
             }
         }
 

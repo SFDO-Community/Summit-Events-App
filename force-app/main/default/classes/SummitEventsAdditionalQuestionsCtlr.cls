@@ -7,6 +7,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
     public String templateSelected { get; set; }
     public Summit_Events__c eventPage { get; set; }
+    public String safeEventHomeLink { get { return SummitEventsShared.getSafeUrl(eventPage != null ? eventPage.Event_Home_Link_URL__c : null); } }
     public Summit_Events_Instance__c eventInstance { get; set; }
     public Summit_Events_Registration__c eventRegistration { get; set; }
     public SummitEventsInfo eventInformation { get; set; }
@@ -381,13 +382,53 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         return picklists;
     }
 
+    // Lookup_Where_Clause__c / Lookup_Order_By__c are admin-authored SOQL fragments, so they can't be
+    // escaped like guest input without breaking normal usage (e.g. Status__c = 'Active'). Instead this
+    // blocks the constructs an admin-authored filter/order-by clause never legitimately needs: statement
+    // separators, comments, and nested SELECTs (subquery-based data exfiltration beyond the target object).
+    private static Boolean isSafeSoqlFragment(String fragment) {
+        if (String.isBlank(fragment)) {
+            return true;
+        }
+        String lower = fragment.toLowerCase();
+        return !(lower.contains(';') || lower.contains('--') || lower.contains('/*') || lower.contains('select '));
+    }
+
     public List<SelectOption> createLookupPicklist(String objectName, String filter, String fields, String orderBy) {
         List<SelectOption> pl = new List<SelectOption>();
         pl.add(new SelectOption('', 'Select...'));
 
-        List<String> fieldNames = fields.split(',');
+        if (!isSafeSoqlFragment(filter) || !isSafeSoqlFragment(orderBy)) {
+            return pl;
+        }
 
-        String query = 'SELECT Id,' + fields;
+        DescribeSObjectResult objectDesc;
+        try {
+            Type lookupObjType = Type.forName(objectName);
+            SObject lookupObject = (SObject) lookupObjType.newInstance();
+            objectDesc = lookupObject.getSObjectType().getDescribe();
+        } catch (Exception e) {
+            return pl;
+        }
+        if (objectDesc == null || !objectDesc.isAccessible()) {
+            return pl;
+        }
+
+        List<String> fieldNames = fields.split(',');
+        List<String> validFieldNames = new List<String>();
+        for (String fieldName : fieldNames) {
+            if (String.isNotBlank(fieldName)) {
+                Schema.SObjectField fieldToken = objectDesc.fields.getMap().get(fieldName.trim());
+                if (fieldToken != null && fieldToken.getDescribe().isAccessible()) {
+                    validFieldNames.add(fieldName.trim());
+                }
+            }
+        }
+        if (validFieldNames.isEmpty()) {
+            return pl;
+        }
+
+        String query = 'SELECT Id,' + String.join(validFieldNames, ',');
         query += ' FROM ' + objectName;
 
         if (String.isNotBlank(filter)) {
@@ -397,7 +438,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         if (String.isNotBlank(orderBy)) {
             query += ' ' + orderBy;
         } else {
-            query += ' ORDER BY ' + fieldNames.get(0);
+            query += ' ORDER BY ' + validFieldNames.get(0);
         }
 
         List<SObject> results = Database.query(query);
@@ -405,10 +446,10 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
         for (SObject obj : results) {
             String name = '';
 
-            for (Integer i = 0; i < fieldNames.size(); i++) {
-                String field = fieldNames.get(i);
+            for (Integer i = 0; i < validFieldNames.size(); i++) {
+                String field = validFieldNames.get(i);
 
-                if (i == 1 && fieldNames.size() > 0) {
+                if (i == 1 && validFieldNames.size() > 0) {
                     name += ' - ';
                 }
                 if (i > 1) {
@@ -481,6 +522,8 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                             if (validLookupFields.size() == 0) {
                                 //Alert if any of the fields don't make the accessibility cut
                                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'One or more of your lookup fields was inaccessible.'));
+                            } else if (!isSafeSoqlFragment(queryInfo.get('Lookup_Where_Clause__c')) || !isSafeSoqlFragment(queryInfo.get('Lookup_Order_By__c'))) {
+                                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'This lookup question is misconfigured and cannot be searched.'));
                             } else {
                                 lookupQuery = 'SELECT Id, ' + String.join(validLookupFields, ', ') + ' FROM ' + queryInfo.get('Lookup_Object__c').trim() + ' ';
                                 if (String.isNotBlank(lookupQuery)) {
@@ -567,7 +610,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
         public void saveRegistration(Summit_Events_Registration__c eventRegistration, Id incomingId) {
             eventRegistration.Id = incomingId;
-            update eventRegistration;
+            Database.update(eventRegistration, true, System.AccessLevel.SYSTEM_MODE);
         }
 
         public Summit_Events_Registration__c getRegistrationQuery(String regQuery) {

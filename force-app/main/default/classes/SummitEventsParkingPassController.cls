@@ -34,7 +34,7 @@ public with sharing class SummitEventsParkingPassController {
                             SELECT Event_Instance_Start_Date__c, Event_Instance_Time_Zone__c, Event_Instance_Start_Date_Text__c, Registrant_First_Name__c, Registrant_Last_Name__c, Registrant_Preferred_First_Name__c, Status__c
                             FROM Summit_Events_Registration__c
                             WHERE Id = :eventInformation.registrationId
-                            WITH SECURITY_ENFORCED
+                            WITH SYSTEM_MODE
                     ];
                 } catch (Exception e) {
                     System.debug(e.getMessage());

@@ -20,6 +20,14 @@ public with sharing class SummitEventsTestSharedDataFactory {
             SummitEventsSettings.Community_Base_URL__c = 'https://google.com/';
             upsert SummitEventsSettings;
         }
+        //Pre-populate before any test switches into a restricted System.runAs() user - Custom Settings
+        //enforce CRUD for the running user even in system-context Apex, and a restricted test user's
+        //profile/permission set does not have access to write Summit_Events_Settings__c. Matches the
+        //existing Cookie_Encryption_Key__c pattern above, which sidesteps the same landmine.
+        if (String.isBlank(SummitEventsSettings.Admin_Open_Secret__c)) {
+            SummitEventsSettings.Admin_Open_Secret__c = 'test-admin-open-secret';
+            upsert SummitEventsSettings;
+        }
 
         Summit_Events__c testEvent = new Summit_Events__c();
 
@@ -34,7 +42,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Close_Event_Days_Before__c = 0,
                 Location_Title__c = 'A location',
                 Keep_Registration_Open_During_Event__c = true,
-                Location_Map_Link__c = 'Map Link 1',
+                Location_Map_Link__c = 'https://example.com/map-link-1',
                 Location_Address__c = '123 Electric Ave.',
                 Location_Type__c = 'On-Site',
                 Allow_Other_Attendees__c = true,
@@ -73,7 +81,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Event_Instance__c = seaInstanceId,
                 First_Name__c = 'Host1',
                 Last_Name__c = 'Host1',
-                RecordTypeId = classRecType,
+                //RecordTypeId = classRecType,
                 Preferred_Title__c = 'Mr.',
                 Gender__c = 'M',
                 Department__c = 'Host Dept 1',
@@ -86,7 +94,7 @@ public with sharing class SummitEventsTestSharedDataFactory {
                 Event_Instance__c = seaInstanceId,
                 First_Name__c = 'Host2',
                 Last_Name__c = 'Host2',
-                RecordTypeId = classRecType,
+                //RecordTypeId = classRecType,
                 Preferred_Title__c = 'Mr.',
                 Gender__c = 'M',
                 Department__c = 'Host Dept 2',
