@@ -26,7 +26,7 @@ private class SummitEvents_TEST {
             Summit_Events_Settings__c SummitEventsSettings = Summit_Events_Settings__c.getOrgDefaults();
             //no trailing slash
             SummitEventsSettings.Community_Base_URL__c = 'https://google.com';
-            upsert SummitEventsSettings;
+            Database.upsert(SummitEventsSettings, true, System.AccessLevel.SYSTEM_MODE);
             submitCtrl = new SummitEventsController();
             if (String.isNotBlank(namespace)) {
                 System.assertEquals(submitCtrl.feedURL, 'https://google.com/services/apexrest/' + namespace + '/summiteventsfeed');

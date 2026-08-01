@@ -281,7 +281,7 @@ public with sharing class SummitEventsConfirmationController {
 
         public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c newEvtReg) {
             try {
-                update newEvtReg;
+                Database.update(newEvtReg, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception ex) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
@@ -291,7 +291,7 @@ public with sharing class SummitEventsConfirmationController {
         public Boolean addGuestRegistration(List<Summit_Events_Registration__c> guestRegistrations) {
             Boolean guestAdded = false;
             try {
-                insert guestRegistrations;
+                Database.insert(guestRegistrations, true, System.AccessLevel.SYSTEM_MODE);
                 guestAdded = true;
             } catch (Exception ex) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));

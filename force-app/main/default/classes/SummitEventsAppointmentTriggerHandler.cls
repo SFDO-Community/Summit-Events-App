@@ -234,7 +234,7 @@ public without sharing class SummitEventsAppointmentTriggerHandler {
     private without sharing class doCRUD {
         private void updateRegistration(List<Summit_Events_Registration__c> uRegs) {
             try {
-                upsert uRegs;
+                Database.upsert(uRegs, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
             }

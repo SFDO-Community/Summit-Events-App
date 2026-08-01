@@ -39,6 +39,7 @@ public without sharing class SummitEventsContactMatching {
                     FROM Summit_Events__c
                     WHERE Id IN :matchingRules.keySet()
                     AND (Custom_Metadata_Contact_Matching_Method__c != NULL OR Custom_Metadata_Lead_Matching_Method__c != NULL OR Custom_Metadata_Person_Matching_Method__c != NULL)
+                    WITH SYSTEM_MODE
             ]);
         }
 
@@ -605,7 +606,7 @@ public without sharing class SummitEventsContactMatching {
 
         public SObject addRecord(SObject recordToAdd) {
             try {
-                insert recordToAdd;
+                Database.insert(recordToAdd, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
             }

@@ -96,7 +96,7 @@ private class SummitEventsRegisterGuests_TEST {
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Guest');
         List<Summit_Events_Question__c> testQuestions2 = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'picklist', 'Guest');
         testQuestions2[0].Is_Visible__c = false;
-        update testQuestions2;
+        Database.update(testQuestions2, true, System.AccessLevel.SYSTEM_MODE);
 
         String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
@@ -175,7 +175,7 @@ private class SummitEventsRegisterGuests_TEST {
         testQuestions.addAll(SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Guest'));
         testQuestions[0].Map_to_Field__c = 'NOT_A_FIELD__c';
         testQuestions[1].Map_to_Field__c = namespace + 'Total_Confirmed_Appointments__c';
-        update testQuestions;
+        Database.update(testQuestions, true, System.AccessLevel.SYSTEM_MODE);
 
         System.runAs(testUser) {
             Test.startTest();
@@ -300,7 +300,7 @@ private class SummitEventsRegisterGuests_TEST {
         testQuestions[0].Existing_Picklist_Values__c = 'Registrant_State_Global__c';
         testQuestions[0].Map_to_Field__c = namespace + 'Registrant_State_Global__c';
         testQuestions[0].Picklist_Values__c = '';
-        update testQuestions;
+        Database.update(testQuestions, true, System.AccessLevel.SYSTEM_MODE);
 
         System.runAs(testUser) {
             Test.startTest();

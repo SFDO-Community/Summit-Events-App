@@ -110,7 +110,7 @@ private class SummitEventsAdditionalQuestions_TEST {
 
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'lookup', 'Registrant and Guest');
         testQuestions[0].Lookup_Where_Clause__c = ' WHERE ' + namespace + 'Registrant_First_Name__c != null ';
-        update testQuestions;
+        Database.update(testQuestions, true, System.AccessLevel.SYSTEM_MODE);
 
         System.runAs(testUser) {
             Test.startTest();
@@ -142,7 +142,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             questionController.submitAdditionalQuestions();
 
             testQuestions[0].Map_to_Field__c = namespace + 'Registrant_First_Name__c';
-            update testQuestions;
+            Database.update(testQuestions, true, System.AccessLevel.SYSTEM_MODE);
             questionController = new SummitEventsAdditionalQuestionsCtlr();
             System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map To Field: Field ' + namespace + 'registrant_first_name__c is not the required field type reference. ');
 
@@ -160,7 +160,7 @@ private class SummitEventsAdditionalQuestions_TEST {
         //Test question with empty map_to_field defined.
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Registrant and Guest');
         List<Summit_Events_Question__c> testQuestions2 = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Registrant and Guest');
-        update testQuestions;
+        Database.update(testQuestions, true, System.AccessLevel.SYSTEM_MODE);
 
         System.runAs(testUser) {
             Test.startTest();
@@ -178,7 +178,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             testQuestions[0].Map_to_Field__c = 'BogusField';
             testQuestions[0].Lookup_Secondary_Input_Link_Text__c = 'Secondary Link Text';
             testQuestions[0].Lookup_No_Results_Label__c = 'Nope. Nothing...';
-            update testQuestions;
+            Database.update(testQuestions, true, System.AccessLevel.SYSTEM_MODE);
             questionController = new SummitEventsAdditionalQuestionsCtlr();
             System.assertEquals(questionController.questionWrapper[0].setupError, 'Question setup issue(s): Map to field: Field bogusfield may not exist. ');
 
@@ -186,7 +186,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             testQuestions[0].Map_to_Field__c = testQuestions2[0].Map_to_Field__c;
             testQuestions[0].Lookup_Secondary_Input_Link_Text__c = 'Secondary Link Text';
             testQuestions[0].Lookup_No_Results_Label__c = 'Nope. Nothing...';
-            update testQuestions;
+            Database.update(testQuestions, true, System.AccessLevel.SYSTEM_MODE);
             questionController = new SummitEventsAdditionalQuestionsCtlr();
             System.assertEquals(questionController.additionalQuestions.size(), 2);
             System.assertEquals(questionController.questionWrapper[1].setupError, 'Question setup issue(s): You have 2 questions mapped to the same field: ' + testQuestions2[0].Map_to_Field__c.toLowerCase() + '. ');
@@ -205,7 +205,7 @@ private class SummitEventsAdditionalQuestions_TEST {
         //Test question with empty map_to_field defined.
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'lookup', 'Registrant and Guest');
         //List<Summit_Events_Question__c> testQuestions2 = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'lookup', 'Registrant and Guest');
-        update testQuestions;
+        Database.update(testQuestions, true, System.AccessLevel.SYSTEM_MODE);
 
         System.runAs(testUser) {
             Test.startTest();
@@ -219,7 +219,7 @@ private class SummitEventsAdditionalQuestions_TEST {
             SummitEventsShared.createEncryptedCookieWithNow('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, seaTestRegistration.Id, nowTime, true);
             testQuestions[0].Lookup_Object__c = 'Blah';
             testQuestions[0].Lookup_Fields__c = 'Blah';
-            update testQuestions;
+            Database.update(testQuestions, true, System.AccessLevel.SYSTEM_MODE);
             SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
             System.assertEquals(questionController.questionWrapper[0].setupError.trim(), 'Question setup issue(s): Lookup Object: blah may not exist or is inaccessible. Look up field: blah may not exist or is inaccessible.');
 
@@ -243,7 +243,7 @@ private class SummitEventsAdditionalQuestions_TEST {
         testQuestions[0].Question_Field_Type__c = 'Picklist';
         testQuestions[0].Existing_Picklist_Values__c = 'Registrant_State_Global__c';
         testQuestions[0].Map_to_Field__c = namespace + 'Registrant_State_Global__c';
-        update testQuestions;
+        Database.update(testQuestions, true, System.AccessLevel.SYSTEM_MODE);
 
         System.runAs(testUser) {
             Test.startTest();
@@ -276,7 +276,7 @@ private class SummitEventsAdditionalQuestions_TEST {
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'lookup', 'Registrant and Guest');
         //Attempted subquery-based injection through an admin-configured Lookup_Where_Clause__c should be blocked.
         testQuestions[0].Lookup_Where_Clause__c = ' WHERE Id IN (SELECT Id FROM Contact) ';
-        update testQuestions;
+        Database.update(testQuestions, true, System.AccessLevel.SYSTEM_MODE);
 
         System.runAs(testUser) {
             Test.startTest();

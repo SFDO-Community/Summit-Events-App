@@ -96,21 +96,21 @@ public class SummitEventsContactMatching_TEST {
             Test.startTest();
             seaTestRegistration.Status__c = 'Registered';
             seaTestRegistration.Registrant_Preferred_First_Name__c = 'Big T';
-            update seaTestRegistration;
+            Database.update(seaTestRegistration, true, System.AccessLevel.SYSTEM_MODE);
             System.assert(String.isBlank(seaTestRegistration.Contact__c));
 
             seaTestRegistration.Contact__c = null;
             seaTestRegistration.Registrant_Date_of_Birth__c = System.today();
-            update seaTestRegistration;
+            Database.update(seaTestRegistration, true, System.AccessLevel.SYSTEM_MODE);
 
 
             seaTestRegistration.Contact__c = null;
             seaTestRegistration.Registrant_First_Name__c = 'Tester';
-            update seaTestRegistration;
+            Database.update(seaTestRegistration, true, System.AccessLevel.SYSTEM_MODE);
 
             seaTestRegistration.Contact__c = null;
             seaTestRegistration.Registrant_Phone__c = '1234567890';
-            update seaTestRegistration;
+            Database.update(seaTestRegistration, true, System.AccessLevel.SYSTEM_MODE);
 
             System.assert(String.isBlank(seaTestRegistration.Contact__c));
 
@@ -132,7 +132,7 @@ public class SummitEventsContactMatching_TEST {
         System.runAs(testUser) {
             Test.startTest();
             seaTestRegistration.Registrant_Preferred_First_Name__c = 'Big T';
-            update seaTestRegistration;
+            Database.update(seaTestRegistration, true, System.AccessLevel.SYSTEM_MODE);
             Test.stopTest();
         }
     }
@@ -154,10 +154,10 @@ public class SummitEventsContactMatching_TEST {
             Test.startTest();
             seaTestRegistration.Status__c = 'Registered';
             seaTestRegistration.Registrant_Preferred_First_Name__c = 'Big T';
-            update seaTestRegistration;
+            Database.update(seaTestRegistration, true, System.AccessLevel.SYSTEM_MODE);
 
             seaTestRegistration.Lead__c = null;
-            update seaTestRegistration;
+            Database.update(seaTestRegistration, true, System.AccessLevel.SYSTEM_MODE);
 
             Test.stopTest();
         }
@@ -178,7 +178,7 @@ public class SummitEventsContactMatching_TEST {
         System.runAs(testUser) {
             Test.startTest();
             seaTestRegistration.Registrant_Preferred_First_Name__c = 'Big T';
-            update seaTestRegistration;
+            Database.update(seaTestRegistration, true, System.AccessLevel.SYSTEM_MODE);
 
             seaTestEvent.Contact_Matching_Multiple_Match_Behavior__c = 'Match with most recently modified';
             update seaTestEvent;

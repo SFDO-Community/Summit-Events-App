@@ -21,6 +21,7 @@ public without sharing class SummitEventsAfterLeadConversion {
                     SELECT Id, Lead__c, Matching_Log__c
                     FROM Summit_Events_Registration__c
                     WHERE Lead__c IN :converted AND Contact__c = NULL
+                    WITH SYSTEM_MODE
             ];
             Map<Id, Lead> leadMap = new Map<Id, Lead>(converted);
 
@@ -30,7 +31,7 @@ public without sharing class SummitEventsAfterLeadConversion {
                 reg.Matching_Log__c += '<hr>Lead converted to Contact/Account - ' + System.now();
             }
 
-            update registrations;
+            Database.update(registrations, true, System.AccessLevel.SYSTEM_MODE);
         }
     }
 }

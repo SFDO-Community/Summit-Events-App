@@ -111,7 +111,7 @@ public class SummitEventsAddToCalendar_TEST {
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
         //Change from GMT to CDT to test daylight savings works
         seaTestInstances[1].Instance_Time_Zone__c = 'Central Daylight Time (America/Chicago)';
-        update seaTestInstances;
+        Database.update(seaTestInstances, true, System.AccessLevel.SYSTEM_MODE);
         System.runAs(testUser) {
             Test.startTest();
             PageReference pageRef = Page.SummitEventsAddToCalendar;

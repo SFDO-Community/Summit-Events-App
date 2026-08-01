@@ -610,7 +610,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
 
         public void saveRegistration(Summit_Events_Registration__c eventRegistration, Id incomingId) {
             eventRegistration.Id = incomingId;
-            update eventRegistration;
+            Database.update(eventRegistration, true, System.AccessLevel.SYSTEM_MODE);
         }
 
         public Summit_Events_Registration__c getRegistrationQuery(String regQuery) {

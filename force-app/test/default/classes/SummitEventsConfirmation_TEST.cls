@@ -36,7 +36,7 @@ private class SummitEventsConfirmation_TEST {
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
         seaTestInstances[1].Instance_Title__c = '';
-        update seaTestInstances;
+        Database.update(seaTestInstances, true, System.AccessLevel.SYSTEM_MODE);
 
         //Test question with empty map_to_field defined.
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Guest');
@@ -108,7 +108,7 @@ private class SummitEventsConfirmation_TEST {
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
         seaTestInstances[1].Instance_Title__c = '';
-        update seaTestInstances;
+        Database.update(seaTestInstances, true, System.AccessLevel.SYSTEM_MODE);
 
         //Test question with empty map_to_field defined.
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEventWithMapTo(seaTestInstances[1].Event__c, 'Text Area', 'Guest', 'Question Text 0', 'DOES_NOT_EXIST__C');
@@ -350,7 +350,7 @@ private class SummitEventsConfirmation_TEST {
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
         seaTestInstances[1].Instance_Title__c = '';
-        update seaTestInstances;
+        Database.update(seaTestInstances, true, System.AccessLevel.SYSTEM_MODE);
 
         //Test question with empty map_to_field defined.
         List<Summit_Events_Question__c> testQuestions = SummitEventsTestSharedDataFactory.addQuestionsToEventWithMapTo(seaTestInstances[1].Event__c, 'date', 'Guest', 'Question Text 1', 'Answer_1_Numeric__c');

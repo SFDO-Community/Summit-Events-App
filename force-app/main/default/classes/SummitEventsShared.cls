@@ -759,7 +759,7 @@ public with sharing class SummitEventsShared {
                 Blob cryptoKey = Crypto.generateAesKey(256);
                 String encryptionString = EncodingUtil.base64Encode(cryptoKey).substring(0, 32);
                 SummitEventsSettings.Cookie_Encryption_Key__c = encryptionString;
-                upsert SummitEventsSettings;
+                Database.upsert(SummitEventsSettings, true, System.AccessLevel.SYSTEM_MODE);
             }
         }
 
@@ -771,7 +771,7 @@ public with sharing class SummitEventsShared {
             if (String.isBlank(SummitEventsSettings.Admin_Open_Secret__c)) {
                 Blob secretKey = Crypto.generateAesKey(128);
                 SummitEventsSettings.Admin_Open_Secret__c = EncodingUtil.convertToHex(secretKey);
-                upsert SummitEventsSettings;
+                Database.upsert(SummitEventsSettings, true, System.AccessLevel.SYSTEM_MODE);
             }
         }
     }

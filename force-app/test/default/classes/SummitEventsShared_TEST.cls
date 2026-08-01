@@ -66,8 +66,11 @@ public with sharing class SummitEventsShared_TEST {
     @IsTest
     static void testAdminOpenSecretBypassesClosureWhenMatching() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
-        seaTestInstances[1].Active_Status__c = 'Closed';
-        update seaTestInstances[1];
+        //Update via a minimal sObject (Id + changed field only) rather than the factory-returned
+        //instance, which still carries Event__c (the Master-Detail field) as populated from insert -
+        //resending it on update is unnecessary and has been observed to intermittently fail post-deploy
+        //in fresh orgs.
+        update new Summit_Events_Instance__c(Id = seaTestInstances[1].Id, Active_Status__c = 'Closed');
 
         Summit_Events_Settings__c seaSettings = Summit_Events_Settings__c.getOrgDefaults();
         seaSettings.Admin_Open_Secret__c = 'correct-secret-value';

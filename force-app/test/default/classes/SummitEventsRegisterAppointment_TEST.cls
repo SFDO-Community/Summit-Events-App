@@ -117,9 +117,11 @@ private class SummitEventsRegisterAppointment_TEST {
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         SummitEventsTestSharedDataFactory.createAppointmentTypes(seaTestInstances[1].Event__c);
 
-        //Close registration for the instance being used.
-        seaTestInstances[1].Active_Status__c = 'Closed';
-        update seaTestInstances[1];
+        //Close registration for the instance being used. Update via a minimal sObject (Id + changed
+        //field only) rather than the factory-returned instance, which still carries Event__c (the
+        //Master-Detail field) as populated from insert - resending it on update is unnecessary and
+        //has been observed to intermittently fail post-deploy in fresh orgs.
+        update new Summit_Events_Instance__c(Id = seaTestInstances[1].Id, Active_Status__c = 'Closed');
 
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 

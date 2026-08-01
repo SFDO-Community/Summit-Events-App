@@ -78,7 +78,7 @@ public with sharing class SummitEventsCancelReviewController {
 
         public Summit_Events_Registration__c updateRegistration(Summit_Events_Registration__c newEvtReg) {
             try {
-                update newEvtReg;
+                Database.update(newEvtReg, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
             }

@@ -143,12 +143,12 @@ public with sharing class SummitEventsDonationController {
     private without sharing class doCRUD {
 
         public void upsertFee(Summit_Events_Fee__c feeIn) {
-            upsert feeIn;
+            Database.upsert(feeIn, true, System.AccessLevel.SYSTEM_MODE);
         }
 
         public void deleteFee(Summit_Events_Fee__c feeIn) {
             if (Summit_Events_Fee__c.SObjectType.getDescribe().isDeletable()) {
-                delete feeIn;
+                Database.delete(feeIn, true, System.AccessLevel.SYSTEM_MODE);
             }
         }
 

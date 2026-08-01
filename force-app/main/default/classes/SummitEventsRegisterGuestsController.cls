@@ -235,7 +235,7 @@ public with sharing class SummitEventsRegisterGuestsController {
             eventRegistration.Id = oldRegId;
             eventRegistration.Guest_JSON__c = jsonOut;
             try {
-                update eventRegistration;
+                Database.update(eventRegistration, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception e) {
                 System.debug(e.getMessage());
             }

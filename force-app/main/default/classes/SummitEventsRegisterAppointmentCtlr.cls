@@ -264,7 +264,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
         public void insertAppointments(List<Summit_Events_Appointments__c> appointments) {
             try {
-                insert appointments;
+                Database.insert(appointments, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception ex) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
@@ -272,7 +272,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
         public void deleteAppointments(List<Summit_Events_Appointments__c> appointments) {
             try {
-                delete appointments;
+                Database.delete(appointments, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception ex) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }

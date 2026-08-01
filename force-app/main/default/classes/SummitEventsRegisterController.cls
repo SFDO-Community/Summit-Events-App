@@ -628,10 +628,10 @@ public with sharing class SummitEventsRegisterController {
             try {
                 if (String.isNotBlank(incomingEventRegistrationId)) {
                     eventRegistration.Id = incomingEventRegistrationId;
-                    update eventRegistration;
+                    Database.update(eventRegistration, true, System.AccessLevel.SYSTEM_MODE);
                 } else {
                     if (Schema.SObjectType.Summit_Events_Registration__c.isCreateable()) {
-                        insert eventRegistration;
+                        Database.insert(eventRegistration, true, System.AccessLevel.SYSTEM_MODE);
                     }
                 }
             } catch (Exception ex) {
@@ -645,7 +645,7 @@ public with sharing class SummitEventsRegisterController {
                 }
                 try {
                     if (Schema.SObjectType.Summit_Events_Registration__c.isCreateable()) {
-                        upsert upsertFees;
+                        Database.upsert(upsertFees, true, System.AccessLevel.SYSTEM_MODE);
                     }
                 } catch (Exception ex) {
                     System.debug(ex.getMessage());
@@ -660,7 +660,7 @@ public with sharing class SummitEventsRegisterController {
 
         public void insertAppointments(List<Summit_Events_Appointments__c> appointments) {
             try {
-                insert appointments;
+                Database.insert(appointments, true, System.AccessLevel.SYSTEM_MODE);
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
@@ -685,6 +685,7 @@ public with sharing class SummitEventsRegisterController {
                         WHERE Registrant_Email__c = :registrationEmail
                         AND Event_Instance__c = :eventInstanceId
                         AND Status__c NOT IN :notAcceptableStatuses
+                        WITH SYSTEM_MODE
                         ORDER BY LastModifiedDate
                 ];
             } else if (checkType == 'One registration per event') {
@@ -694,6 +695,7 @@ public with sharing class SummitEventsRegisterController {
                         WHERE Registrant_Email__c = :registrationEmail
                         AND Event__c = :eventId
                         AND Status__c NOT IN :notAcceptableStatuses
+                        WITH SYSTEM_MODE
                         ORDER BY LastModifiedDate
                 ];
             }
