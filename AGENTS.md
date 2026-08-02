@@ -18,7 +18,7 @@ Full documentation: https://sfdo-community-sprints.github.io/summit-events-app-d
 ## Stack
 
 - **Build tool:** CumulusCI (`cci`) — Python CLI, config in `cumulusci.yml`
-- **Source format:** SFDX (`sfdx-project.json`), package namespace `summit`, API version 67.0
+- **Source format:** SFDX (`sfdx-project.json`), package namespace `summit`, API version 67.0 (`WITH SECURITY_ENFORCED` is deprecated as of this version — see "Guest User Architecture" below)
 - **Org type:** Scratch orgs only — never production
 - **Frontend (shipped/packaged):** Legacy Visualforce pages (`force-app/main/default/pages`) — this is what's actually in the managed package today
 - **Frontend (in progress, not packaged):** Lightning Web Components (`force-app/main/default/lwc`) — an early-stage, work-in-progress rewrite of the registration flow, being developed on a dedicated branch. Not released, not part of the managed package, and not feature-complete. Treat LWC work as exploratory/future-focused unless told otherwise.
@@ -66,25 +66,53 @@ session has no persistent identity). The security model that makes this safe:
 1. **State is carried client-side**, not via session/record ownership — via an
    encrypted cookie (VF) or encrypted ID passed through the LWC wrapper/URL
    (LWC), tracking registration id, event id, instance id, and audience.
-2. **Every controller is split in two:**
+2. **Guest Users can only ever Insert and Read — never Update.** This is a
+   Salesforce platform restriction on the Guest User license, not something
+   SEA chose or can grant around via FLS/permissions. It's the real reason a
+   multi-step wizard can't just update the same registration record as the
+   guest progresses: by the time they reach a later step, updating what they
+   created in an earlier step is off the table. The encrypted client-side
+   state (point 1) plus `WITH SYSTEM_MODE` CRUD (below) is how SEA works
+   around this — later steps re-resolve identity from the encrypted
+   cookie/ID and write through the `without sharing` CRUD layer, which runs
+   as System context rather than as the Guest User, so the Update restriction
+   doesn't apply to it.
+3. **Every controller is split in two:**
    - An outer, normally-scoped class/section for read logic
    - An inner **`without sharing`** class (see `RegistrationCRUD`,
      `LookupCRUD` in `SummitEventsLWCController.cls`) that does the actual
      CRUD, because a Guest User's org-wide-defaults would otherwise block
      record creation/updates across steps.
-3. **`SummitEventsReadShared.cls` is `without sharing`** by design — comment
+4. **`SummitEventsReadShared.cls` is `without sharing`** by design — comment
    at the top of that file documents the pattern. Don't "fix" it back to
    `with sharing`.
 
-### Known gotcha: `WITH SECURITY_ENFORCED` still blocks Guest Users
+### `WITH SECURITY_ENFORCED` is deprecated — use `WITH USER_MODE` / `WITH SYSTEM_MODE`
 
-`without sharing` bypasses **record-level** sharing, but
-`WITH SECURITY_ENFORCED` in a SOQL query still enforces **object CRUD and
-field-level security (FLS)** for the running user. If the Guest User Profile
-hasn't been granted Read/Create/Edit + FLS on the Summit Events objects, these
-queries throw, get caught, and rethrown as `AuraHandledException` —
-**and `ShowToastEvent` does not surface for Guest Users in Experience Cloud**,
-so the failure is silent (blank page, "no data").
+As of API 67.0, `WITH SECURITY_ENFORCED` is deprecated in favor of the
+explicit inline SOQL security clauses:
+- **`WITH USER_MODE`** — enforces object/field CRUD+FLS *and* record-level
+  sharing for the running user. Use this where a normally-scoped (`with
+  sharing`) class is reading data the running user should genuinely be
+  restricted to.
+- **`WITH SYSTEM_MODE`** — enforces object/field CRUD+FLS but **ignores
+  record-level sharing**, running as the context (`with`/`without sharing`)
+  of the enclosing class. Most SEA guest-facing queries now use this, because
+  the Guest User has no persistent record-ownership context between wizard
+  steps (see above) — sharing has to be bypassed, but CRUD/FLS still must be
+  respected so admins retain visibility/control via the Guest User Profile.
+
+**Most of SEA is now `WITH SYSTEM_MODE`** to make guest-user queries work at
+all. If you're adding a new query in a guest-facing path, default to
+`WITH SYSTEM_MODE` unless there's a specific reason the running user's
+sharing should apply.
+
+Regardless of mode, object CRUD and field-level security (FLS) for the
+running user is still enforced. If the Guest User Profile hasn't been granted
+Read/Create/Edit + FLS on the Summit Events objects, these queries throw, get
+caught, and rethrown as `AuraHandledException` — **and `ShowToastEvent` does
+not surface for Guest Users in Experience Cloud**, so the failure is silent
+(blank page, "no data").
 
 When guest-facing data isn't loading/saving, check in this order:
 1. Guest User Profile FLS/CRUD on `Summit_Events__c`, `Summit_Events_Instance__c`,
@@ -93,10 +121,32 @@ When guest-facing data isn't loading/saving, check in this order:
    `Summit_Events_Fee__c` (create/edit) — Setup → Digital Experiences → site → Administration → Guest User Profile.
 2. Guest sharing rules deployed (`unpackaged/config/sharing`,
    `unpackaged/config/summit__sharing`) — deployed via `deploy_guest_sharing_rules`
-   / `deploy_namespaced_guest_sharing_rules` cci tasks.
+   / `deploy_namespaced_guest_sharing_rules` cci tasks. See "Sharing rules on
+   `Summit_Events__c`" below for what these rules are (and are not) for.
 3. Whether the outer class enclosing a guest-facing `@AuraEnabled` method is
    `with sharing` when it shouldn't be, or a query unexpectedly uses
-   `WITH SECURITY_ENFORCED` in a path Guest Users must hit.
+   `WITH USER_MODE` in a path Guest Users must hit (that pulls in record-level
+   sharing, which the guest session doesn't have).
+
+### Sharing rules on `Summit_Events__c` — admin-only, never packaged
+
+SEA **never relies on sharing rules on the `Summit_Events__c` (Event) record**
+for guest/general access. `Summit_Events__c` is the master in a
+master-detail chain down through `Summit_Events_Instance__c` to
+`Summit_Events_Registration__c` — a sharing rule that exposes an Event
+cascades detail-record visibility all the way down to Registration records,
+which can contain sensitive attendee/PII data. Guest and general read access
+is instead handled via the `without sharing` / `WITH SYSTEM_MODE` pattern
+described above, which exposes only what a controller explicitly selects.
+
+The only sanctioned use of sharing rules on `Summit_Events__c` is one SEA
+admins configure themselves, org-by-org, to power the **lookup feature**
+(letting other users/flows look up and reference Event records outside the
+guest registration flow). This is a deliberate, admin-driven exception — not
+a pattern to generalize — and it is **never shipped in the managed package**.
+Don't add `Summit_Events__c` sharing rules to package metadata or scratch-org
+config flows; if you see one, it belongs in an admin's org config, not in
+`unpackaged/config/sharing` or the package itself.
 
 ## Data Model
 
