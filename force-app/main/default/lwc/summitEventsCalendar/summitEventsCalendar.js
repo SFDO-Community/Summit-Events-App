@@ -12,6 +12,10 @@ import getCalendarEvents from '@salesforce/apex/SummitEventsCalendarController.g
 /* global FullCalendar */
 
 export default class SummitEventsCalendar extends LightningElement {
+    // Light DOM: FullCalendar's CSS is loaded via loadStyle() into document head,
+    // which cannot pierce a native shadow root. Light DOM lets those styles apply.
+    static renderMode = 'light';
+
     // -------------------------------------------------------------------------
     // Public (configurable from summitEventsWrapper or Experience Builder)
     // -------------------------------------------------------------------------
@@ -76,12 +80,12 @@ export default class SummitEventsCalendar extends LightningElement {
         this._selectedAudience = this.defaultAudience || '';
         // Load CSS first, then JS, so styles are applied before FullCalendar renders.
         Promise.all([
-            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.3/dist/skeleton.css'),
-            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.3/dist/themes/monarch/theme.css'),
-            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.3/dist/themes/monarch/palettes/purple.css')
+            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.2/dist/skeleton.css'),
+            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.2/dist/themes/monarch/theme.css'),
+            loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.2/dist/themes/monarch/palettes/purple.css')
         ]).then(() => Promise.all([
-            loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.3/dist/fullcalendar.global.js'),
-            loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.0-rc.3/dist/themes/monarch/global.js')
+            loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.2/dist/fullcalendar.global.js'),
+            loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.2/dist/themes/monarch/global.js')
         ])).then(() => {
             this._fullCalendarLoaded = true;
             // renderedCallback may have already fired and set _renderedOnce.

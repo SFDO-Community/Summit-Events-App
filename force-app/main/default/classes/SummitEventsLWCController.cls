@@ -669,7 +669,6 @@ public with sharing class SummitEventsLWCController {
                 SELECT Lookup_Object__c, Lookup_Fields__c, Lookup_Where_Clause__c, Lookup_Order_By__c
                 FROM Summit_Events_Question__c
                 WHERE Id = :decryptedQuestionId
-                WITH SECURITY_ENFORCED
                 LIMIT 1
             ];
 

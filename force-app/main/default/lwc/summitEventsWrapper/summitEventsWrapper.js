@@ -2,6 +2,12 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { CurrentPageReference } from 'lightning/navigation';
 
 export default class SummitEventsWrapper extends LightningElement {
+    // Light DOM: summitEventsCalendar renders FullCalendar via document-head-loaded
+    // CSS (loadStyle), which cannot pierce a native shadow root. Since this wrapper
+    // is the only shadow boundary between document.head and that calendar markup,
+    // it must be light DOM too, not just the calendar component itself.
+    static renderMode = 'light';
+
     // -------------------------------------------------------------------------
     // Public design attributes (configurable in Experience Builder)
     // -------------------------------------------------------------------------
