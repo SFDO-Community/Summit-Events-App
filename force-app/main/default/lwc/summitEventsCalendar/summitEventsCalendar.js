@@ -165,6 +165,8 @@ export default class SummitEventsCalendar extends LightningElement {
                 this._fetchEvents(fetchInfo, successCallback, failureCallback);
             }, eventContent: (arg) => {
                 return this._renderEventContent(arg);
+            }, eventDidMount: (info) => {
+                this._decorateEventElement(info);
             }, eventClick: (clickInfo) => {
                 clickInfo.jsEvent.preventDefault();
                 this._handleEventClick(clickInfo.event);
@@ -182,27 +184,57 @@ export default class SummitEventsCalendar extends LightningElement {
         return window.innerWidth <= 900 ? 'listMonth' : 'dayGridMonth';
     }
 
+    // FullCalendar's list-item event display renders a decorative dot as the
+    // first child of the event element, ahead of whatever eventContent returns.
+    // We don't want it, and neither the event object's `classNames` config nor
+    // our own component CSS (LWC's :host scoping doesn't reach DOM nodes
+    // FullCalendar inserts manually) land on this element, so everything here
+    // is applied as inline styles directly against the mounted DOM node.
+    _decorateEventElement(info) {
+        const dot = info.el.firstElementChild;
+        if (dot && dot.className.indexOf('sea-fc-event-content') === -1) {
+            dot.style.display = 'none';
+        }
+
+        const isClosed = info.event.extendedProps.eventClosed;
+        Object.assign(info.el.style, {
+            whiteSpace: 'normal',
+            overflow: 'visible',
+            alignItems: 'flex-start',
+            opacity: isClosed ? '0.55' : '1',
+            cursor: isClosed ? 'default' : 'pointer',
+            borderBottom: '1px solid #dddbda',
+            paddingBottom: '4px',
+            marginBottom: '4px',
+            // The monarch theme gives list-view rows a large pill-shaped border
+            // radius on the left corners (its hover/press affordance styling);
+            // tone it down to a subtle rounded corner instead.
+            borderRadius: '4px'
+        });
+    }
+
     _renderEventContent(arg) {
         const props = arg.event.extendedProps;
 
         const wrap = document.createElement('div');
-        wrap.classList.add('sea-fc-event-content');
+        wrap.className = 'sea-fc-event-content';
+        Object.assign(wrap.style, {whiteSpace: 'normal', fontSize: '0.95rem', lineHeight: '1.5', padding: '2px 0'});
 
         const titleEl = document.createElement('div');
-        titleEl.classList.add('sea-fc-event-title');
+        titleEl.style.fontWeight = '600';
         titleEl.textContent = arg.event.title;
         wrap.appendChild(titleEl);
 
         if (props.eventClosed) {
             const closedEl = document.createElement('div');
-            closedEl.classList.add('sea-fc-event-closed-label');
+            Object.assign(closedEl.style, {fontSize: '0.85rem', fontStyle: 'italic', opacity: '0.75'});
             closedEl.textContent = 'Registration Closed';
             wrap.appendChild(closedEl);
         }
 
         if (arg.event.start) {
             const timeEl = document.createElement('div');
-            timeEl.classList.add('sea-fc-event-time');
+            Object.assign(timeEl.style, {fontSize: '0.85rem', opacity: '0.85'});
             timeEl.textContent = this._formatEventTimeRange(arg.event.start, arg.event.end);
             wrap.appendChild(timeEl);
         }
@@ -215,6 +247,15 @@ export default class SummitEventsCalendar extends LightningElement {
         const startText = start ? start.toLocaleTimeString([], timeOptions) : '';
         const endText = end ? end.toLocaleTimeString([], timeOptions) : '';
         return endText ? `${startText} - ${endText}` : startText;
+    }
+
+    _formatEventDateTimeRange(start, end) {
+        if (!start) {
+            return '';
+        }
+        const dateOptions = {weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'};
+        const dateText = start.toLocaleDateString([], dateOptions);
+        return `${dateText}, ${this._formatEventTimeRange(start, end)}`;
     }
 
     _fetchEvents(fetchInfo, successCallback, failureCallback) {
@@ -243,7 +284,6 @@ export default class SummitEventsCalendar extends LightningElement {
                     title: item.title,
                     start: item.startDatetime,
                     end: item.endDatetime,
-                    classNames: [item.cssClass],
                     extendedProps: {
                         instanceId: item.instanceId,
                         instanceDescription: item.instanceDescription,
@@ -274,6 +314,7 @@ export default class SummitEventsCalendar extends LightningElement {
             title: fullCalendarEvent.title,
             instanceDescription: fullCalendarEvent.extendedProps.instanceDescription,
             shortDescription: fullCalendarEvent.extendedProps.shortDescription,
+            dateTimeText: this._formatEventDateTimeRange(fullCalendarEvent.start, fullCalendarEvent.end),
             locationTitle: fullCalendarEvent.extendedProps.locationTitle,
             locationType: fullCalendarEvent.extendedProps.locationType,
             locationAddress: fullCalendarEvent.extendedProps.locationAddress,
