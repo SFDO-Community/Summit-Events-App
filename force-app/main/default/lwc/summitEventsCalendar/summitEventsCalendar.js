@@ -79,14 +79,17 @@ export default class SummitEventsCalendar extends LightningElement {
     connectedCallback() {
         this._selectedAudience = this.defaultAudience || '';
         // Load CSS first, then JS, so styles are applied before FullCalendar renders.
+        // monarch/global.js reads `FullCalendar.Shared` at the top level as soon as it
+        // executes, so it must not start running until fullcalendar.global.js has fully
+        // executed and defined that global — dynamically-inserted <script> tags default to
+        // async, so loading them via Promise.all races their execution order across browsers.
         Promise.all([
             loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.2/dist/skeleton.css'),
             loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.2/dist/themes/monarch/theme.css'),
             loadStyle(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.2/dist/themes/monarch/palettes/purple.css')
-        ]).then(() => Promise.all([
-            loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.2/dist/fullcalendar.global.js'),
-            loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.2/dist/themes/monarch/global.js')
-        ])).then(() => {
+        ]).then(() => loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.2/dist/fullcalendar.global.js')
+        ).then(() => loadScript(this, SUMMIT_EVENTS_ASSETS + '/fullcalendar-7.0.2/dist/themes/monarch/global.js')
+        ).then(() => {
             this._fullCalendarLoaded = true;
             // renderedCallback may have already fired and set _renderedOnce.
             if (this._renderedOnce) {
@@ -150,17 +153,68 @@ export default class SummitEventsCalendar extends LightningElement {
 
     _calendarConfig() {
         return {
-            initialView: 'dayGridMonth', headerToolbar: {
+            initialView: this._getResponsiveView(),
+            headerToolbar: {
                 left: 'prev,next today', center: 'title', right: 'dayGridMonth,listMonth'
-            }, events: (fetchInfo, successCallback, failureCallback) => {
+            },
+            // Let day cells grow to fit full event content instead of scrolling/truncating,
+            // matching the old Visualforce calendar (contentHeight: "auto").
+            height: 'auto',
+            dayMaxEvents: false,
+            events: (fetchInfo, successCallback, failureCallback) => {
                 this._fetchEvents(fetchInfo, successCallback, failureCallback);
+            }, eventContent: (arg) => {
+                return this._renderEventContent(arg);
             }, eventClick: (clickInfo) => {
                 clickInfo.jsEvent.preventDefault();
                 this._handleEventClick(clickInfo.event);
             }, loading: (isLoadingNow) => {
                 this.isLoading = isLoadingNow;
+            }, windowResize: () => {
+                this._calendarInstance.changeView(this._getResponsiveView());
             }
         };
+    }
+
+    // Below 900px, force list view regardless of the manually-selected view,
+    // matching the old Visualforce calendar's mobile breakpoint behavior.
+    _getResponsiveView() {
+        return window.innerWidth <= 900 ? 'listMonth' : 'dayGridMonth';
+    }
+
+    _renderEventContent(arg) {
+        const props = arg.event.extendedProps;
+
+        const wrap = document.createElement('div');
+        wrap.classList.add('sea-fc-event-content');
+
+        const titleEl = document.createElement('div');
+        titleEl.classList.add('sea-fc-event-title');
+        titleEl.textContent = arg.event.title;
+        wrap.appendChild(titleEl);
+
+        if (props.eventClosed) {
+            const closedEl = document.createElement('div');
+            closedEl.classList.add('sea-fc-event-closed-label');
+            closedEl.textContent = 'Registration Closed';
+            wrap.appendChild(closedEl);
+        }
+
+        if (arg.event.start) {
+            const timeEl = document.createElement('div');
+            timeEl.classList.add('sea-fc-event-time');
+            timeEl.textContent = this._formatEventTimeRange(arg.event.start, arg.event.end);
+            wrap.appendChild(timeEl);
+        }
+
+        return {domNodes: [wrap]};
+    }
+
+    _formatEventTimeRange(start, end) {
+        const timeOptions = {hour: 'numeric', minute: '2-digit'};
+        const startText = start ? start.toLocaleTimeString([], timeOptions) : '';
+        const endText = end ? end.toLocaleTimeString([], timeOptions) : '';
+        return endText ? `${startText} - ${endText}` : startText;
     }
 
     _fetchEvents(fetchInfo, successCallback, failureCallback) {

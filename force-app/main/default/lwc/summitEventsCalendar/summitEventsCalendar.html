@@ -43,53 +43,62 @@
             <div class="sea-fullcalendar" lwc:dom="manual" lwc:ref="calendarContainer"></div>
         </div>
 
-        <!-- Event Detail Popover -->
+        <!-- Event Detail Modal -->
         <template if:true={selectedEvent}>
-            <div class="sea-event-popover" role="dialog" aria-label="Event Details">
-                <div class="sea-event-popover-header">
-                    <h2 class="slds-text-heading_small">{selectedEvent.title}</h2>
-                    <button
-                        class="slds-button slds-button_icon slds-button_icon-bare sea-popover-close"
-                        onclick={handleClosePopover}
-                        title="Close">
-                        <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
-                    </button>
+            <section
+                role="dialog"
+                tabindex="-1"
+                class="slds-modal slds-fade-in-open slds-modal_small sea-event-modal"
+                aria-modal="true"
+                aria-labelledby="sea-event-modal-title">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button
+                            class="slds-button slds-button_icon slds-modal__close slds-button_icon-bare"
+                            onclick={handleClosePopover}
+                            title="Close">
+                            <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="sea-event-modal-title" class="slds-modal__title slds-hyphenate">{selectedEvent.title}</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <template if:true={selectedEvent.instanceDescription}>
+                            <p class="slds-m-bottom_x-small">{selectedEvent.instanceDescription}</p>
+                        </template>
+                        <template if:true={selectedEvent.locationTitle}>
+                            <p class="slds-text-color_weak slds-m-bottom_xx-small">
+                                <lightning-icon icon-name="utility:location" size="x-small"></lightning-icon>
+                                {selectedEvent.locationTitle}
+                            </p>
+                        </template>
+                        <template if:true={selectedEvent.eventClosed}>
+                            <p class="sea-event-closed-label">Registration Closed</p>
+                        </template>
+                        <template if:false={selectedEvent.eventClosed}>
+                            <div class="slds-m-top_small">
+                                <template if:true={selectedEvent.alternateRegistrationUrl}>
+                                    <a
+                                        href={selectedEvent.alternateRegistrationUrl}
+                                        class="slds-button slds-button_brand"
+                                        target="_blank">
+                                        {selectedEvent.registerButtonText}
+                                    </a>
+                                </template>
+                                <template if:false={selectedEvent.alternateRegistrationUrl}>
+                                    <button
+                                        class="slds-button slds-button_brand"
+                                        data-instance-id={selectedEvent.instanceId}
+                                        onclick={handleRegisterClick}>
+                                        {selectedEvent.registerButtonText}
+                                    </button>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
                 </div>
-                <div class="sea-event-popover-body">
-                    <template if:true={selectedEvent.instanceDescription}>
-                        <p class="slds-m-bottom_x-small">{selectedEvent.instanceDescription}</p>
-                    </template>
-                    <template if:true={selectedEvent.locationTitle}>
-                        <p class="slds-text-color_weak slds-m-bottom_xx-small">
-                            <lightning-icon icon-name="utility:location" size="x-small"></lightning-icon>
-                            {selectedEvent.locationTitle}
-                        </p>
-                    </template>
-                    <template if:true={selectedEvent.eventClosed}>
-                        <p class="sea-event-closed-label">Registration Closed</p>
-                    </template>
-                    <template if:false={selectedEvent.eventClosed}>
-                        <div class="slds-m-top_small">
-                            <template if:true={selectedEvent.alternateRegistrationUrl}>
-                                <a
-                                    href={selectedEvent.alternateRegistrationUrl}
-                                    class="slds-button slds-button_brand"
-                                    target="_blank">
-                                    {selectedEvent.registerButtonText}
-                                </a>
-                            </template>
-                            <template if:false={selectedEvent.alternateRegistrationUrl}>
-                                <button
-                                    class="slds-button slds-button_brand"
-                                    data-instance-id={selectedEvent.instanceId}
-                                    onclick={handleRegisterClick}>
-                                    {selectedEvent.registerButtonText}
-                                </button>
-                            </template>
-                        </div>
-                    </template>
-                </div>
-            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open sea-event-modal-backdrop" onclick={handleClosePopover}></div>
         </template>
     </div>
 </template>

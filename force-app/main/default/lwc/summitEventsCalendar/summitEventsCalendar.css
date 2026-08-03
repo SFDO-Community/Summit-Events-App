@@ -45,40 +45,50 @@
     cursor: pointer;
 }
 
-/* Event detail popover */
-.sea-event-popover {
-    position: absolute;
-    top: 3rem;
-    right: 0;
-    z-index: 999;
-    background: #fff;
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
-    min-width: 280px;
-    max-width: 360px;
+/* Event detail modal: fixed/centered via SLDS .slds-modal, just guarantee it
+   stacks above FullCalendar's own popovers (skeleton.css sets those to z-index 9999). */
+:host .sea-event-modal {
+    z-index: 10000;
 }
 
-.sea-event-popover-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 1rem 0.5rem;
-    border-bottom: 1px solid #dddbda;
-}
-
-.sea-event-popover-body {
-    padding: 0.75rem 1rem 1rem;
-}
-
-.sea-popover-close {
-    flex-shrink: 0;
-    margin-left: 0.5rem;
+:host .sea-event-modal-backdrop {
+    z-index: 9999;
 }
 
 .sea-event-closed-label {
     color: #c23934;
     font-weight: bold;
     margin-top: 0.5rem;
+}
+
+/* Full event content: let day cells grow instead of truncating (dayMaxEvents:
+   false + height: 'auto' on the calendar handle the row growth; this handles
+   the text itself, since FullCalendar's own event classes default to nowrap). */
+:host .sea-event-open,
+:host .sea-event-closed {
+    white-space: normal !important;
+    overflow: visible !important;
+    align-items: flex-start !important;
+}
+
+:host .sea-fc-event-content {
+    white-space: normal;
+    line-height: 1.3;
+    padding: 1px 0;
+}
+
+:host .sea-fc-event-title {
+    font-weight: 600;
+}
+
+:host .sea-fc-event-time {
+    font-size: 0.75rem;
+    opacity: 0.85;
+}
+
+:host .sea-fc-event-closed-label {
+    font-size: 0.75rem;
+    font-style: italic;
+    opacity: 0.75;
 }
 
