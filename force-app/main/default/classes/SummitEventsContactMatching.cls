@@ -14,6 +14,9 @@ public without sharing class SummitEventsContactMatching {
         public List<Contact> contacts { get; set; }
         public List<Account> accounts { get; set; }
         public List<Lead> leads { get; set; }
+        public Boolean noMultiMatchContact { get; set; }
+        public Boolean noMultiMatchAccounts { get; set; }
+        public Boolean noMultiMatchLeads { get; set; }
     }
 
     public static void matchReg(List<Summit_Events_Registration__c> newRegistrations, List<Summit_Events_Registration__c> oldRegistrations) {
@@ -144,6 +147,9 @@ public without sharing class SummitEventsContactMatching {
                         rcw.contacts = matchContacts;
                         rcw.accounts = matchAccounts;
                         rcw.leads = matchLeads;
+                        rcw.noMultiMatchAccounts = String.isNotBlank(event.Person_Matching_Multiple_Match_Behavior__c) ? event.Person_Matching_Multiple_Match_Behavior__c.equalsIgnoreCase('skip matching') : false;
+                        rcw.noMultiMatchContact = String.isNotBlank(event.Contact_Matching_Multiple_Match_Behavior__c) ? event.Contact_Matching_Multiple_Match_Behavior__c.equalsIgnoreCase('skip matching') : false;
+                        rcw.noMultiMatchLeads = String.isNotBlank(event.Lead_Matching_Multiple_Match_Behavior__c) ? event.Lead_Matching_Multiple_Match_Behavior__c.equalsIgnoreCase('skip matching') : false;
                         registrationContactWrappers.add(rcw);
                     }
                 }
@@ -184,32 +190,42 @@ public without sharing class SummitEventsContactMatching {
                     List<Lead> leadsQueried = new List<Lead>();
                     lastModCompare lastModCompare = new lastModCompare();
 
+                    //Get all Contacts and apply contact to reg if no skipping is not active
                     for (Contact c : rw.contacts) {
                         if (contactsComplete.containsKey(c.Id)) {
                             contactsQueried.add((Contact) contactsComplete.get(c.Id));
                         }
                     }
                     contactsQueried.sort(lastModCompare);
-                    rw.registration.Contact__c = contactsQueried.isEmpty() ? null : contactsQueried.get(0).Id;
+                    if (!rw.noMultiMatchContact) {
+                        rw.registration.Contact__c = contactsQueried.isEmpty() ? null : contactsQueried.get(0).Id;
+                    }
                     rw.contacts = contactsQueried;
 
+                    //Get all Accounts and apply contact to reg if no skipping is not active
                     for (Account a : rw.accounts) {
                         if (accountsComplete.containsKey(a.Id)) {
                             accountsQueried.add((Account) accountsComplete.get(a.Id));
                         }
                     }
                     accountsQueried.sort(lastModCompare);
-                    rw.registration.Person_Account__c = accountsQueried.isEmpty() ? null : accountsQueried.get(0).Id;
+                    if (!rw.noMultiMatchAccounts) {
+                        rw.registration.Person_Account__c = accountsQueried.isEmpty() ? null : accountsQueried.get(0).Id;
+                    }
                     rw.accounts = accountsQueried;
 
+                    //Get all Leads and apply contact to reg if no skipping is not active
                     for (Lead l : rw.leads) {
                         if (leadsComplete.containsKey(l.Id)) {
                             leadsQueried.add((Lead) leadsComplete.get(l.Id));
                         }
                     }
                     leadsQueried.sort(lastModCompare);
-                    rw.registration.Lead__c = leadsQueried.isEmpty() ? null : leadsQueried.get(0).Id;
+                    if (!rw.noMultiMatchLeads) {
+                        rw.registration.Lead__c = leadsQueried.isEmpty() ? null : leadsQueried.get(0).Id;
+                    }
                     rw.leads = leadsQueried;
+
                 }
 
                 //Build matching logs for each registration
@@ -444,7 +460,7 @@ public without sharing class SummitEventsContactMatching {
         l.FirstName = reg.Registrant_First_Name__c;
         l.LastName = reg.Registrant_Last_Name__c;
         l.Email = reg.Registrant_Email__c;
-        if(!SummitEventsShared.personAccountsEnabled()) {
+        if (!SummitEventsShared.personAccountsEnabled()) {
             l.Company = reg.Preferred_First_Name_Formatted__c;
         }
         l.Company = reg.Preferred_First_Name_Formatted__c;
@@ -594,7 +610,7 @@ public without sharing class SummitEventsContactMatching {
         matchRow += '<td data-label="Email"><div class="slds-truncate">' + email + '</div></td>';
         matchRow += '<td data-label="Zip"><div class="slds-truncate">' + zip + '</div></td>';
         matchRow += '<td data-label="Action"><div class="slds-truncate"> ' + lastModifiedString + ' </div></td>';
-        if(action.equalsIgnoreCase('selected')) {
+        if (action.equalsIgnoreCase('selected')) {
             action = '<strong>' + action + '</strong>';
         }
         matchRow += '<td data-label="Action"><div class="slds-truncate"> ' + action + ' </div></td>';
