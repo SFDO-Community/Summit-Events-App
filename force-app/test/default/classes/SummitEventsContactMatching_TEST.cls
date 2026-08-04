@@ -234,7 +234,7 @@ public class SummitEventsContactMatching_TEST {
         foundObjects.add(lead);
 
         // Call the matchingLog method
-        String result = SummitEventsContactMatching.matchingLog(foundObjects, 'Heading 1', 'Heading 2', true);
+        String result = SummitEventsContactMatching.matchingLog(foundObjects, 'Heading 1', 'Heading 2', true, false);
         System.debug('Result: ' + JSON.serializePretty(result));
         // Verify the result
         System.assertNotEquals(null, result, 'The result should not be null');

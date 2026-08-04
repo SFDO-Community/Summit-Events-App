@@ -14,6 +14,9 @@ public without sharing class SummitEventsContactMatching {
         public List<Contact> contacts { get; set; }
         public List<Account> accounts { get; set; }
         public List<Lead> leads { get; set; }
+        public Boolean noMultiMatchContact { get; set; }
+        public Boolean noMultiMatchAccounts { get; set; }
+        public Boolean noMultiMatchLeads { get; set; }
     }
 
     public static void matchReg(List<Summit_Events_Registration__c> newRegistrations, List<Summit_Events_Registration__c> oldRegistrations) {
@@ -144,6 +147,9 @@ public without sharing class SummitEventsContactMatching {
                         rcw.contacts = matchContacts;
                         rcw.accounts = matchAccounts;
                         rcw.leads = matchLeads;
+                        rcw.noMultiMatchAccounts = String.isNotBlank(event.Person_Matching_Multiple_Match_Behavior__c) ? event.Person_Matching_Multiple_Match_Behavior__c.equalsIgnoreCase('skip matching') : false;
+                        rcw.noMultiMatchContact = String.isNotBlank(event.Contact_Matching_Multiple_Match_Behavior__c) ? event.Contact_Matching_Multiple_Match_Behavior__c.equalsIgnoreCase('skip matching') : false;
+                        rcw.noMultiMatchLeads = String.isNotBlank(event.Lead_Matching_Multiple_Match_Behavior__c) ? event.Lead_Matching_Multiple_Match_Behavior__c.equalsIgnoreCase('skip matching') : false;
                         registrationContactWrappers.add(rcw);
                     }
                 }
@@ -184,31 +190,40 @@ public without sharing class SummitEventsContactMatching {
                     List<Lead> leadsQueried = new List<Lead>();
                     lastModCompare lastModCompare = new lastModCompare();
 
+                    //Get all Contacts and apply contact to reg if no skipping is not active
                     for (Contact c : rw.contacts) {
                         if (contactsComplete.containsKey(c.Id)) {
                             contactsQueried.add((Contact) contactsComplete.get(c.Id));
                         }
                     }
                     contactsQueried.sort(lastModCompare);
+                    if (!rw.noMultiMatchContact) {
                     rw.registration.Contact__c = contactsQueried.isEmpty() ? null : contactsQueried.get(0).Id;
+                    }
                     rw.contacts = contactsQueried;
 
+                    //Get all Accounts and apply contact to reg if no skipping is not active
                     for (Account a : rw.accounts) {
                         if (accountsComplete.containsKey(a.Id)) {
                             accountsQueried.add((Account) accountsComplete.get(a.Id));
                         }
                     }
                     accountsQueried.sort(lastModCompare);
+                    if (!rw.noMultiMatchAccounts) {
                     rw.registration.Person_Account__c = accountsQueried.isEmpty() ? null : accountsQueried.get(0).Id;
+                    }
                     rw.accounts = accountsQueried;
 
+                    //Get all Leads and apply contact to reg if no skipping is not active
                     for (Lead l : rw.leads) {
                         if (leadsComplete.containsKey(l.Id)) {
                             leadsQueried.add((Lead) leadsComplete.get(l.Id));
                         }
                     }
                     leadsQueried.sort(lastModCompare);
+                    if (!rw.noMultiMatchLeads) {
                     rw.registration.Lead__c = leadsQueried.isEmpty() ? null : leadsQueried.get(0).Id;
+                    }
                     rw.leads = leadsQueried;
                 }
 
@@ -241,13 +256,13 @@ public without sharing class SummitEventsContactMatching {
         String matchLog = '';
         if (!isEmpty) {
             if (noMatchBehavior.startsWithIgnoreCase('create') && newCreated && sObjectId != null) {
-                matchLog += matchingLog(sObjects, 'Match not found using Duplicate Rule <em>' + duplicateRule.replaceAll(' ', '_') + '</em></div>', 'New ' + sObjectType + ' created!', true);
+                matchLog += matchingLog(sObjects, 'Match not found using Duplicate Rule <em>' + duplicateRule.replaceAll(' ', '_') + '</em></div>', 'New ' + sObjectType + ' created!', true, false);
             }
             if (!sObjects.isEmpty() && !newCreated) {
                 if (multipleMatchBehavior.startsWithIgnoreCase('skip')) {
-                    matchLog += matchingLog(sObjects, 'Multiple matches found using Salesforce Duplicate Rule <em>' + duplicateRule.replaceAll(' ', '_') + '</em>, ' + sObjectType + ' matching skipped based on "Multiple Match Behavior" field value on Summit Events object', '', false);
+                    matchLog += matchingLog(sObjects, 'Multiple matches found using Salesforce Duplicate Rule <em>' + duplicateRule.replaceAll(' ', '_') + '</em>, ' + sObjectType + ' matching skipped based on "Multiple Match Behavior" field value on Summit Events object', '', false, true);
                 } else if (multipleMatchBehavior.equals('Match with most recently modified')) {
-                    matchLog += matchingLog(sObjects, 'Multiple matches found using Salesforce Duplicate Rule <em>' + duplicateRule.replaceAll(' ', '_') + '</em>, Most recently modified ' + sObjectType + ' was selected based on "Multiple Match Behavior" field value on Summit Events object', '', false);
+                    matchLog += matchingLog(sObjects, 'Multiple matches found using Salesforce Duplicate Rule <em>' + duplicateRule.replaceAll(' ', '_') + '</em>, Most recently modified ' + sObjectType + ' was selected based on "Multiple Match Behavior" field value on Summit Events object', '', false, false);
                 }
             }
         }
@@ -487,7 +502,7 @@ public without sharing class SummitEventsContactMatching {
     }
 
     @TestVisible
-    private static String matchingLog(List<SObject> foundObjects, String heading1, String heading2, Boolean isNew) {
+    private static String matchingLog(List<SObject> foundObjects, String heading1, String heading2, Boolean isNew, Boolean noMultiMatch) {
         String mOut = '';
         if (String.isNotBlank(heading1)) {
             mOut += '<div class="slds-text-heading_small slds-m-vertical_medium"><p>' + heading1 + '</p></div>';
@@ -564,7 +579,7 @@ public without sharing class SummitEventsContactMatching {
                 String action = 'Skipped';
                 if (isNew) {
                     action = 'Created';
-                } else if (isFirst) {
+                } else if (isFirst && !noMultiMatch) {
                     action = 'Selected';
                 }
 
