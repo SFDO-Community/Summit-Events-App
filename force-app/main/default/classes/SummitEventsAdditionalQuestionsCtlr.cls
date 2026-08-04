@@ -299,6 +299,7 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
                     regQuery = regQuery.removeEndIgnoreCase(',');
                     regQuery += ' FROM Summit_Events_Registration__c ';
                     regQuery += ' WHERE Id = \'' + String.escapeSingleQuotes(eventInformation.registrationId) + '\'';
+                    regQuery += ' WITH SYSTEM_MODE';
                 }
 
                 if (String.isNotBlank(regQuery)) {
