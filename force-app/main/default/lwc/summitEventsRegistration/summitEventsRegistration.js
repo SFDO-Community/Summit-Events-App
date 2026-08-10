@@ -98,6 +98,24 @@ export default class SummitEventsRegistration extends LightningElement {
         return this.eventData?.eventInfo?.Event_Footer__c;
     }
 
+    // Event crumb - shown at the top of every step: Event Name, Instance Title (if set), and the
+    // formatted instance date/time range (see SummitEventsShared.navBreadcrumbBuilder in Apex)
+    get crumbEventName() {
+        return this.eventData?.eventInfo?.Event_Name__c;
+    }
+
+    get crumbInstanceTitle() {
+        return this.eventData?.instance?.Instance_Title__c;
+    }
+
+    get crumbDate() {
+        return this.eventData?.formattedNavDate;
+    }
+
+    get hasEventCrumb() {
+        return Boolean(this.crumbEventName || this.crumbInstanceTitle || this.crumbDate);
+    }
+
     connectedCallback() {
         // Get URL parameters
         this.readUrlParameters();

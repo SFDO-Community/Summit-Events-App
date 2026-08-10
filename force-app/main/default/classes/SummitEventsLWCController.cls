@@ -23,6 +23,11 @@ public with sharing class SummitEventsLWCController {
         @AuraEnabled public Decimal totalEventCost { get; set; }
         @AuraEnabled public RecaptchaInfo recaptcha { get; set; }
         @AuraEnabled public DonationSelection donationSelection { get; set; }
+
+        // Event crumb shown at the top of every wizard step - Event Name, Instance Title (if set), and the
+        // formatted instance date/time range. See SummitEventsShared.navBreadcrumbBuilder for the date logic
+        // (multi-day ranges, per-instance time zone display, etc.) - ported unchanged from the VF breadcrumb.
+        @AuraEnabled public String formattedNavDate { get; set; }
     }
 
     public class EventConfiguration {
@@ -170,6 +175,7 @@ public with sharing class SummitEventsLWCController {
 
             Id eventId = wrapper.instance.Event__c;
             wrapper.eventInfo = SummitEventsReadShared.getEventById(eventId);
+            wrapper.formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(wrapper.instance);
 
             // Get day of week for appointment filtering
             String dayOfWeek = SummitEventsShared.convertDateToDatetime(

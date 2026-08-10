@@ -15,9 +15,28 @@
             </template>
 
             <template if:false={error}>
-                <!-- Page Header -->
-                <div slot="title" class="slds-text-heading_large">
-                    {currentPage.pageHeading}
+                <div slot="title">
+                    <!-- Event Crumb: Event Name / Instance Title / formatted date-time, shown on every step -->
+                    <template if:true={hasEventCrumb}>
+                        <nav class="event-crumb" aria-label="Event details">
+                            <ol>
+                                <template if:true={crumbEventName}>
+                                    <li class="event-crumb__item">{crumbEventName}</li>
+                                </template>
+                                <template if:true={crumbInstanceTitle}>
+                                    <li class="event-crumb__item">{crumbInstanceTitle}</li>
+                                </template>
+                                <template if:true={crumbDate}>
+                                    <li class="event-crumb__item event-crumb__item_date">{crumbDate}</li>
+                                </template>
+                            </ol>
+                        </nav>
+                    </template>
+
+                    <!-- Page Header -->
+                    <div class="slds-text-heading_large">
+                        {currentPage.pageHeading}
+                    </div>
                 </div>
 
                 <!-- Page Progress Indicator -->
