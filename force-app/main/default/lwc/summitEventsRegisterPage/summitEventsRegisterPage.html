@@ -31,6 +31,7 @@
                         label={preferredNameLabel}
                         value={registration.Registrant_Preferred_First_Name__c}
                         data-field="Registrant_Preferred_First_Name__c"
+                        required={preferredNameRequired}
                         onchange={handleInputChange}>
                     </lightning-input>
                 </div>
@@ -69,6 +70,7 @@
                         label={dateOfBirthLabel}
                         value={registration.Registrant_Date_of_Birth__c}
                         data-field="Registrant_Date_of_Birth__c"
+                        required={dateOfBirthRequired}
                         onchange={handleInputChange}>
                     </lightning-input>
                 </div>
@@ -77,24 +79,28 @@
             <!-- Gender -->
             <template if:true={showGender}>
                 <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                    <lightning-input
+                    <lightning-combobox
                         label={genderLabel}
                         value={registration.Registrant_Gender__c}
+                        options={genderOptions}
                         data-field="Registrant_Gender__c"
+                        required={genderRequired}
                         onchange={handleInputChange}>
-                    </lightning-input>
+                    </lightning-combobox>
                 </div>
             </template>
 
             <!-- Pronouns -->
             <template if:true={showPronoun}>
                 <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                    <lightning-input
+                    <lightning-combobox
                         label={pronounsLabel}
                         value={registration.Registrant_Pronouns__c}
+                        options={pronounOptions}
                         data-field="Registrant_Pronouns__c"
+                        required={pronounRequired}
                         onchange={handleInputChange}>
-                    </lightning-input>
+                    </lightning-combobox>
                 </div>
             </template>
 
@@ -105,6 +111,7 @@
                         label={titleLabel}
                         value={registration.Registrant_Title__c}
                         data-field="Registrant_Title__c"
+                        required={titleRequired}
                         onchange={handleInputChange}>
                     </lightning-input>
                 </div>
@@ -117,6 +124,7 @@
                         label={companyOrganizationLabel}
                         value={registration.Registrant_Company_Organization__c}
                         data-field="Registrant_Company_Organization__c"
+                        required={companyOrganizationRequired}
                         onchange={handleInputChange}>
                     </lightning-input>
                 </div>
@@ -138,6 +146,7 @@
                     province={registration.Registrant_State__c}
                     country={registration.Registrant_Country__c}
                     postal-code={registration.Registrant_Postal_Code__c}
+                    required={mailingAddressRequired}
                     onchange={handleAddressChange}>
                 </lightning-input-address>
             </div>
@@ -150,6 +159,7 @@
                     label={dietaryRestrictionsLabel}
                     value={registration.Dietary_Ristrictions__c}
                     data-field="Dietary_Ristrictions__c"
+                    required={dietaryRestrictionsRequired}
                     onchange={handleInputChange}>
                 </lightning-textarea>
             </div>
@@ -162,8 +172,77 @@
                     label={accessibilityLabel}
                     value={registration.Accessibility_Need_Detail__c}
                     data-field="Accessibility_Need_Detail__c"
+                    required={accessibilityNeedsRequired}
                     onchange={handleInputChange}>
                 </lightning-textarea>
+            </div>
+        </template>
+        <!-- Additional Information -->
+        <template if:true={hasAdditionalInfoSection}>
+            <div class="slds-m-top_medium">
+                <h3 class="slds-text-heading_medium">Additional Information</h3>
+                <div class="slds-grid slds-gutters slds-wrap slds-m-top_small">
+                    <!-- Preferred Visit Time -->
+                    <template if:true={includeTimeFrameList}>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-combobox
+                                label="Preferred visit time"
+                                value={registration.Preferred_Visit_Time__c}
+                                options={timeFrameOptions}
+                                data-field="Preferred_Visit_Time__c"
+                                required
+                                onchange={handleInputChange}>
+                            </lightning-combobox>
+                        </div>
+                    </template>
+
+                    <!-- Additional Guests -->
+                    <template if:true={allowOtherAttendees}>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-combobox
+                                label="Additional guests"
+                                value={registration.Number_of_Guests__c}
+                                options={guestAmountOptions}
+                                data-field="Number_of_Guests__c"
+                                onchange={handleInputChange}>
+                            </lightning-combobox>
+                        </div>
+                    </template>
+
+                    <!-- Event-configured free-form questions (up to 5) -->
+                    <template for:each={additionalInfoQuestions} for:item="question">
+                        <div key={question.questionNumber} class="slds-col slds-size_1-of-1">
+                            <template if:true={question.isTextBox}>
+                                <lightning-input
+                                    label={question.questionText}
+                                    value={question.currentValue}
+                                    data-field={question.mapToField}
+                                    required={question.required}
+                                    onchange={handleInputChange}>
+                                </lightning-input>
+                            </template>
+                            <template if:true={question.isTextArea}>
+                                <lightning-textarea
+                                    label={question.questionText}
+                                    value={question.currentValue}
+                                    data-field={question.mapToField}
+                                    required={question.required}
+                                    onchange={handleInputChange}>
+                                </lightning-textarea>
+                            </template>
+                            <template if:true={question.isPicklist}>
+                                <lightning-combobox
+                                    label={question.questionText}
+                                    value={question.currentValue}
+                                    options={question.picklistOptions}
+                                    data-field={question.mapToField}
+                                    required={question.required}
+                                    onchange={handleInputChange}>
+                                </lightning-combobox>
+                            </template>
+                        </div>
+                    </template>
+                </div>
             </div>
         </template>
     </div>

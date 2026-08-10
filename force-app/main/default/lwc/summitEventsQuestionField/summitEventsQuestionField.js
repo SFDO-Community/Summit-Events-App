@@ -11,7 +11,7 @@ export default class SummitEventsQuestionField extends LightningElement {
 
     // Field type detection
     get isText() {
-        return this.question?.questionFieldType === 'Text';
+        return this.question?.questionFieldType === 'Textbox';
     }
 
     get isTextArea() {
@@ -39,7 +39,7 @@ export default class SummitEventsQuestionField extends LightningElement {
     }
 
     get isPicklist() {
-        return this.question?.questionFieldType === 'Picklist';
+        return this.question?.questionFieldType === 'Picklist' || this.question?.questionFieldType === 'Lookup Picklist';
     }
 
     get isMultiPicklist() {

@@ -64,6 +64,72 @@ export default class SummitEventsRegisterPage extends LightningElement {
         return this.config.askAccessibilityNeeds;
     }
 
+    // Field required state - "Ask and require" is the only value that makes the field mandatory
+    get preferredNameRequired() {
+        return this.config.askPreferredNameRequired || false;
+    }
+
+    get dateOfBirthRequired() {
+        return this.config.askDateOfBirthRequired || false;
+    }
+
+    get genderRequired() {
+        return this.config.askGenderRequired || false;
+    }
+
+    get pronounRequired() {
+        return this.config.askPronounRequired || false;
+    }
+
+    get mailingAddressRequired() {
+        return this.config.askMailingAddressRequired || false;
+    }
+
+    get companyOrganizationRequired() {
+        return this.config.askCompanyOrganizationRequired || false;
+    }
+
+    get titleRequired() {
+        return this.config.askTitleRequired || false;
+    }
+
+    get dietaryRestrictionsRequired() {
+        return this.config.askDietaryRestrictionsRequired || false;
+    }
+
+    get accessibilityNeedsRequired() {
+        return this.config.askAccessibilityNeedsRequired || false;
+    }
+
+    // "Additional Information" section - free-form questions and built-in time frame/guest count
+    // fields configured directly on the event, separate from the Additional Questions wizard step
+    get hasAdditionalInfoSection() {
+        return this.config.hasAdditionalInfoSection;
+    }
+
+    get includeTimeFrameList() {
+        return this.config.includeTimeFrameList;
+    }
+
+    get allowOtherAttendees() {
+        return this.config.allowOtherAttendees;
+    }
+
+    get timeFrameOptions() {
+        return this.config.timeFrameOptions || [];
+    }
+
+    get guestAmountOptions() {
+        return this.config.guestAmountOptions || [];
+    }
+
+    get additionalInfoQuestions() {
+        return (this.config.additionalInfoQuestions || []).map(question => ({
+            ...question,
+            currentValue: this.registration[question.mapToField]
+        }));
+    }
+
     // Field labels (use custom labels if provided)
     get firstNameLabel() {
         return this.eventInfo.First_Name_Label__c || 'First Name';
@@ -99,6 +165,14 @@ export default class SummitEventsRegisterPage extends LightningElement {
 
     get pronounsLabel() {
         return this.eventInfo.Pronouns_Label__c || 'Pronouns';
+    }
+
+    get genderOptions() {
+        return this.config.genderOptions || [];
+    }
+
+    get pronounOptions() {
+        return this.config.pronounOptions || [];
     }
 
     get titleLabel() {

@@ -43,6 +43,42 @@ public with sharing class SummitEventsLWCController {
         @AuraEnabled public Boolean askDietaryRestrictions { get; set; }
         @AuraEnabled public Boolean askAccessibilityNeeds { get; set; }
         @AuraEnabled public Integer maxGuests { get; set; }
+
+        // Whether each asked field is "Ask and require" (vs. optional "Ask") on the event config
+        @AuraEnabled public Boolean askPreferredNameRequired { get; set; }
+        @AuraEnabled public Boolean askDateOfBirthRequired { get; set; }
+        @AuraEnabled public Boolean askGenderRequired { get; set; }
+        @AuraEnabled public Boolean askPronounRequired { get; set; }
+        @AuraEnabled public Boolean askMailingAddressRequired { get; set; }
+        @AuraEnabled public Boolean askCompanyOrganizationRequired { get; set; }
+        @AuraEnabled public Boolean askTitleRequired { get; set; }
+        @AuraEnabled public Boolean askDietaryRestrictionsRequired { get; set; }
+        @AuraEnabled public Boolean askAccessibilityNeedsRequired { get; set; }
+
+        // Options for the built-in registrant fields that are picklists on Summit_Events_Registration__c
+        @AuraEnabled public List<PicklistOption> genderOptions { get; set; }
+        @AuraEnabled public List<PicklistOption> pronounOptions { get; set; }
+
+        // "Additional Information" section on the Register page - distinct from the separate
+        // Additional Questions wizard step (Summit_Events_Question__c). Driven by the event's
+        // Include_Time_frame_List__c / Allow_Other_Attendees__c / Add_Info_Question_*_N__c fields.
+        @AuraEnabled public Boolean hasAdditionalInfoSection { get; set; }
+        @AuraEnabled public Boolean includeTimeFrameList { get; set; }
+        @AuraEnabled public Boolean allowOtherAttendees { get; set; }
+        @AuraEnabled public List<PicklistOption> timeFrameOptions { get; set; }
+        @AuraEnabled public List<PicklistOption> guestAmountOptions { get; set; }
+        @AuraEnabled public List<AdditionalInfoQuestion> additionalInfoQuestions { get; set; }
+    }
+
+    public class AdditionalInfoQuestion {
+        @AuraEnabled public String questionNumber { get; set; }
+        @AuraEnabled public String questionText { get; set; }
+        @AuraEnabled public String mapToField { get; set; }
+        @AuraEnabled public Boolean required { get; set; }
+        @AuraEnabled public Boolean isTextBox { get; set; }
+        @AuraEnabled public Boolean isTextArea { get; set; }
+        @AuraEnabled public Boolean isPicklist { get; set; }
+        @AuraEnabled public List<PicklistOption> picklistOptions { get; set; }
     }
 
     public class SummitEventsQuestionWrapper {
@@ -261,7 +297,72 @@ public with sharing class SummitEventsLWCController {
         config.askDietaryRestrictions = eventInfo.Ask_Dietary_Restrictions__c != 'Do not ask' && eventInfo.Ask_Dietary_Restrictions__c != null;
         config.askAccessibilityNeeds = eventInfo.Ask_Accessibility_Needs__c != 'Do not ask' && eventInfo.Ask_Accessibility_Needs__c != null;
 
+        // "Ask and require" is the only value on these fields that makes the field mandatory - "Ask" alone is optional
+        config.askPreferredNameRequired = eventInfo.Ask_Preferred_First_Name__c == 'Ask and require';
+        config.askDateOfBirthRequired = eventInfo.Ask_Date_Of_Birth__c == 'Ask and require';
+        config.askGenderRequired = eventInfo.Ask_Gender__c == 'Ask and require';
+        config.askPronounRequired = eventInfo.Ask_Pronoun__c == 'Ask and require';
+        config.askMailingAddressRequired = eventInfo.Ask_Mailing_Address__c == 'Ask and require';
+        config.askCompanyOrganizationRequired = eventInfo.Ask_Company_Organization__c == 'Ask and require';
+        config.askTitleRequired = eventInfo.Ask_Title__c == 'Ask and require';
+        config.askDietaryRestrictionsRequired = eventInfo.Ask_Dietary_Restrictions__c == 'Ask and require';
+        config.askAccessibilityNeedsRequired = eventInfo.Ask_Accessibility_Needs__c == 'Ask and require';
+
+        if (config.askGender) {
+            config.genderOptions = buildPicklistFromField('Registrant_Gender__c');
+        }
+        if (config.askPronoun) {
+            config.pronounOptions = buildPicklistFromField('Registrant_Pronouns__c');
+        }
+
+        buildAdditionalInfoConfig(eventInfo, config);
+
         return config;
+    }
+
+    private static void buildAdditionalInfoConfig(Summit_Events__c eventInfo, EventConfiguration config) {
+        config.includeTimeFrameList = eventInfo.Include_Time_frame_List__c == true;
+        config.allowOtherAttendees = eventInfo.Allow_Other_Attendees__c == true;
+
+        if (config.includeTimeFrameList) {
+            config.timeFrameOptions = buildPicklistFromField('Preferred_Visit_Time__c');
+        }
+
+        if (config.allowOtherAttendees) {
+            config.guestAmountOptions = new List<PicklistOption>();
+            Integer maxOtherAttendees = eventInfo.Max_Other_Attendees__c != null ? eventInfo.Max_Other_Attendees__c.intValue() : 0;
+            for (Integer i = 0; i <= maxOtherAttendees; i++) {
+                config.guestAmountOptions.add(newPicklistOption(String.valueOf(i), String.valueOf(i)));
+            }
+        }
+
+        config.additionalInfoQuestions = new List<AdditionalInfoQuestion>();
+        for (Integer i = 1; i <= 5; i++) {
+            String questionText = (String) eventInfo.get('Add_Info_Question_Text_' + i + '__c');
+            String questionType = (String) eventInfo.get('Add_Info_Question_Type_' + i + '__c');
+            if (String.isBlank(questionText) || String.isBlank(questionType)) {
+                continue;
+            }
+
+            AdditionalInfoQuestion question = new AdditionalInfoQuestion();
+            question.questionNumber = String.valueOf(i);
+            question.questionText = questionText;
+            question.mapToField = 'Add_Info_Answer_' + i + '__c';
+            question.required = questionType.containsIgnoreCase('required');
+            question.isTextBox = questionType.containsIgnoreCase('Text box');
+            question.isTextArea = questionType.containsIgnoreCase('Text area');
+            question.isPicklist = questionType.containsIgnoreCase('Pick-list');
+
+            if (question.isPicklist) {
+                String pickListValues = (String) eventInfo.get('Add_Info_Question_Pick_List_' + i + '__c');
+                String pickListValuesLong = (String) eventInfo.get('Add_Info_Question_Pick_List_Long_' + i + '__c');
+                question.picklistOptions = buildPicklistFromString(pickListValues, pickListValuesLong);
+            }
+
+            config.additionalInfoQuestions.add(question);
+        }
+
+        config.hasAdditionalInfoSection = config.includeTimeFrameList || config.allowOtherAttendees || !config.additionalInfoQuestions.isEmpty();
     }
 
     private static List<SummitEventsQuestionWrapper> buildQuestionWrappers(
@@ -301,6 +402,16 @@ public with sharing class SummitEventsLWCController {
                 wrapper.picklistValues = buildPicklistFromString(question.Picklist_Values__c, question.Picklist_Values_Long__c);
             }
 
+            // Lookup Picklist: options come from distinct records on a related object, not a static list
+            if (String.isNotBlank(question.Question_Field_Type__c) && question.Question_Field_Type__c.equalsIgnoreCase('lookup picklist')) {
+                wrapper.picklistValues = buildLookupPicklist(
+                    question.Lookup_Object__c,
+                    question.Lookup_Where_Clause__c,
+                    question.Lookup_Fields__c,
+                    question.Lookup_Order_By__c
+                );
+            }
+
             // Lookup fields
             wrapper.lookupObject = question.Lookup_Object__c;
             wrapper.lookupFields = question.Lookup_Fields__c;
@@ -329,6 +440,7 @@ public with sharing class SummitEventsLWCController {
 
     private static List<PicklistOption> buildPicklistFromField(String fieldName) {
         List<PicklistOption> options = new List<PicklistOption>();
+        options.add(newPicklistOption('', 'Select...'));
 
         try {
             String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
@@ -371,8 +483,16 @@ public with sharing class SummitEventsLWCController {
         return options;
     }
 
+    private static PicklistOption newPicklistOption(String value, String label) {
+        PicklistOption option = new PicklistOption();
+        option.value = value;
+        option.label = label;
+        return option;
+    }
+
     private static List<PicklistOption> buildPicklistFromString(String picklistValues, String picklistValuesLong) {
         List<PicklistOption> options = new List<PicklistOption>();
+        options.add(newPicklistOption('', 'Select...'));
 
         String values = String.isNotBlank(picklistValuesLong) ? picklistValuesLong : picklistValues;
         if (String.isBlank(values)) {
@@ -395,6 +515,91 @@ public with sharing class SummitEventsLWCController {
                     option.value = value;
                 }
 
+                options.add(option);
+            }
+        }
+
+        return options;
+    }
+
+    // Lookup_Where_Clause__c / Lookup_Order_By__c are admin-authored SOQL fragments, so they can't be
+    // escaped like guest input without breaking normal usage (e.g. Status__c = 'Active'). Instead this
+    // blocks the constructs an admin-authored filter/order-by clause never legitimately needs: statement
+    // separators, comments, and nested SELECTs (subquery-based data exfiltration beyond the target object).
+    private static Boolean isSafeSoqlFragment(String fragment) {
+        if (String.isBlank(fragment)) {
+            return true;
+        }
+        String lower = fragment.toLowerCase();
+        return !(lower.contains(';') || lower.contains('--') || lower.contains('/*') || lower.contains('select '));
+    }
+
+    private static List<PicklistOption> buildLookupPicklist(String objectName, String filterClause, String fields, String orderBy) {
+        List<PicklistOption> options = new List<PicklistOption>();
+        options.add(newPicklistOption('', 'Select...'));
+
+        if (String.isBlank(objectName) || String.isBlank(fields)) {
+            return options;
+        }
+
+        if (!isSafeSoqlFragment(filterClause) || !isSafeSoqlFragment(orderBy)) {
+            return options;
+        }
+
+        Schema.DescribeSObjectResult objectDescribe;
+        try {
+            Schema.SObjectType lookupType = Schema.getGlobalDescribe().get(objectName.trim().toLowerCase());
+            if (lookupType == null) {
+                return options;
+            }
+            objectDescribe = lookupType.getDescribe();
+        } catch (Exception e) {
+            return options;
+        }
+        if (objectDescribe == null || !objectDescribe.isAccessible()) {
+            return options;
+        }
+
+        List<String> validFieldNames = new List<String>();
+        for (String fieldName : fields.split(',')) {
+            fieldName = fieldName.trim();
+            if (String.isNotBlank(fieldName)) {
+                Schema.SObjectField fieldToken = objectDescribe.fields.getMap().get(fieldName);
+                if (fieldToken != null && fieldToken.getDescribe().isAccessible()) {
+                    validFieldNames.add(fieldName);
+                }
+            }
+        }
+        if (validFieldNames.isEmpty()) {
+            return options;
+        }
+
+        String query = 'SELECT Id,' + String.join(validFieldNames, ',') + ' FROM ' + objectDescribe.getName();
+        if (String.isNotBlank(filterClause)) {
+            query += ' WHERE ' + filterClause;
+        }
+        query += String.isNotBlank(orderBy) ? ' ' + orderBy : ' ORDER BY ' + validFieldNames[0];
+
+        List<SObject> results;
+        try {
+            results = Database.query(query);
+        } catch (Exception e) {
+            System.debug('Error building lookup picklist: ' + e.getMessage());
+            return options;
+        }
+
+        for (SObject record : results) {
+            List<String> parts = new List<String>();
+            for (String fieldName : validFieldNames) {
+                Object value = record.get(fieldName);
+                if (value != null) {
+                    parts.add(String.valueOf(value));
+                }
+            }
+            if (!parts.isEmpty()) {
+                PicklistOption option = new PicklistOption();
+                option.value = (String) record.get('Id');
+                option.label = String.join(parts, ' - ');
                 options.add(option);
             }
         }
