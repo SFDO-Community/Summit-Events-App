@@ -63,6 +63,9 @@ public with sharing class SummitEventsLWCController {
         // Options for the built-in registrant fields that are picklists on Summit_Events_Registration__c
         @AuraEnabled public List<PicklistOption> genderOptions { get; set; }
         @AuraEnabled public List<PicklistOption> pronounOptions { get; set; }
+        // "Primary Registrant" + whichever of Parent/Guardian, Other, Company Representative the
+        // event's Ask_Third_Party_Registrant__c multi-select picklist allows
+        @AuraEnabled public List<PicklistOption> thirdPartyOptions { get; set; }
 
         // "Additional Information" section on the Register page - distinct from the separate
         // Additional Questions wizard step (Summit_Events_Question__c). Driven by the event's
@@ -290,8 +293,9 @@ public with sharing class SummitEventsLWCController {
         config.hasDonations = eventInfo.Display_Optional_Donation__c;
         config.hasEventFee = eventInfo.Event_Fee__c != null && eventInfo.Event_Fee__c > 0;
 
-        // Questions about registrant - these are picklist fields, check if not 'Do not ask'
-        config.askThirdPartyRegistrant = eventInfo.Ask_Third_Party_Registrant__c != 'Do not ask' && eventInfo.Ask_Third_Party_Registrant__c != null;
+        // Ask_Third_Party_Registrant__c is a multi-select picklist (Parent/Guardian, Other, Company
+        // Representative) - it has no 'Do not ask' value, so blank/null is the only "don't ask" state
+        config.askThirdPartyRegistrant = String.isNotBlank(eventInfo.Ask_Third_Party_Registrant__c);
         config.askPreferredName = eventInfo.Ask_Preferred_First_Name__c != 'Do not ask' && eventInfo.Ask_Preferred_First_Name__c != null;
         config.askDateOfBirth = eventInfo.Ask_Date_Of_Birth__c != 'Do not ask' && eventInfo.Ask_Date_Of_Birth__c != null;
         config.askGender = eventInfo.Ask_Gender__c != 'Do not ask' && eventInfo.Ask_Gender__c != null;
@@ -314,6 +318,9 @@ public with sharing class SummitEventsLWCController {
         config.askDietaryRestrictionsRequired = eventInfo.Ask_Dietary_Restrictions__c == 'Ask and require';
         config.askAccessibilityNeedsRequired = eventInfo.Ask_Accessibility_Needs__c == 'Ask and require';
 
+        if (config.askThirdPartyRegistrant) {
+            config.thirdPartyOptions = buildThirdPartyOptions(eventInfo.Ask_Third_Party_Registrant__c);
+        }
         if (config.askGender) {
             config.genderOptions = buildPicklistFromField('Registrant_Gender__c');
         }
@@ -442,6 +449,24 @@ public with sharing class SummitEventsLWCController {
         }
 
         return wrappers;
+    }
+
+    // Ported from SummitEventsRegisterController.PickThePicklist's Registrant_Third_Party_Status__c
+    // branch: "Primary Registrant" is always offered, then only whichever of the schema's other
+    // picklist entries (Parent/Guardian, Other, Company Representative) the event's
+    // Ask_Third_Party_Registrant__c multi-select picklist actually allows.
+    private static List<PicklistOption> buildThirdPartyOptions(String allowedStatuses) {
+        List<PicklistOption> options = new List<PicklistOption>();
+        options.add(newPicklistOption('', 'Select...'));
+        options.add(newPicklistOption('Primary Registrant', 'Primary Registrant'));
+
+        for (PicklistOption entry : buildPicklistFromField('Registrant_Third_Party_Status__c')) {
+            if (String.isNotBlank(entry.value) && allowedStatuses.contains(entry.value)) {
+                options.add(entry);
+            }
+        }
+
+        return options;
     }
 
     private static List<PicklistOption> buildPicklistFromField(String fieldName) {

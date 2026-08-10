@@ -9,11 +9,16 @@ export default class SummitEventsRegisterPage extends LightningElement {
     // "with type" variants, where a single field toggles between Home/Mobile. See initializePhoneType.
     @track phoneType = '';
 
+    // '', 'Primary Registrant', 'Parent/Guardian', 'Other', or 'Company Representative' - who is
+    // filling out this registration. See Registrant_Third_Party_Status__c on the registration.
+    @track thirdPartyStatus = '';
+
     connectedCallback() {
         if (this.eventData?.primaryRegistration?.registrationRecord) {
             this.registration = { ...this.eventData.primaryRegistration.registrationRecord };
         }
         this.initializePhoneType();
+        this.thirdPartyStatus = this.registration.Registrant_Third_Party_Status__c || '';
     }
 
     // Ported from SummitEventsRegisterController's constructor: infer which type was previously
@@ -38,9 +43,60 @@ export default class SummitEventsRegisterPage extends LightningElement {
         return this.eventData?.eventInfo || {};
     }
 
-    // Field visibility
+    // Third Party Registrant - ported from the "THIRD PARTY REGISTRANTS" block in
+    // SummitEventsRegister.page. When configured, a person other than the registrant (a parent, or
+    // someone registering on a company's/other's behalf) can submit the registration; their own
+    // contact info is captured separately from the registrant's.
     get showThirdPartyRegistrant() {
         return this.config.askThirdPartyRegistrant;
+    }
+
+    get thirdPartyOptions() {
+        return this.config.thirdPartyOptions || [];
+    }
+
+    get thirdPartyRegistrantLabel() {
+        return this.eventInfo.Third_Party_Registrant_Label__c || 'I am the';
+    }
+
+    get showParentInfo() {
+        return this.thirdPartyStatus === 'Parent/Guardian';
+    }
+
+    get showOtherInfo() {
+        return Boolean(this.thirdPartyStatus)
+            && this.thirdPartyStatus !== 'Primary Registrant'
+            && this.thirdPartyStatus !== 'Parent/Guardian';
+    }
+
+    get showThirdPartyDetails() {
+        return this.showParentInfo || this.showOtherInfo;
+    }
+
+    // VF only relabels the main Registrant fields "Registrant Information" once a third party
+    // registrant question is configured at all - independent of what's currently selected
+    get showRegistrantInfoHeading() {
+        return this.config.askThirdPartyRegistrant;
+    }
+
+    get parentFirstNameLabel() {
+        return 'Parent ' + this.firstNameLabel;
+    }
+
+    get parentLastNameLabel() {
+        return 'Parent ' + this.lastNameLabel;
+    }
+
+    get parentEmailLabel() {
+        return 'Parent ' + this.emailLabel;
+    }
+
+    get parentPhoneLabel() {
+        return 'Parent ' + this.phoneLabel;
+    }
+
+    get relationshipLabel() {
+        return this.eventInfo.Registrant_Relationship_Label__c || 'Relationship';
     }
 
     get showPreferredName() {
@@ -296,6 +352,11 @@ export default class SummitEventsRegisterPage extends LightningElement {
         const field = event.target.dataset.field;
         const value = event.target.value;
         this.registration[field] = value;
+    }
+
+    handleThirdPartyChange(event) {
+        this.thirdPartyStatus = event.detail.value;
+        this.registration.Registrant_Third_Party_Status__c = this.thirdPartyStatus;
     }
 
     handleCheckboxChange(event) {

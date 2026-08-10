@@ -1,6 +1,126 @@
 <template>
     <div class="slds-card slds-p-around_medium">
+        <!-- Third Party Registrant -->
+        <template if:true={showThirdPartyRegistrant}>
+            <div class="slds-m-bottom_medium">
+                <lightning-combobox
+                    label={thirdPartyRegistrantLabel}
+                    value={thirdPartyStatus}
+                    options={thirdPartyOptions}
+                    required
+                    onchange={handleThirdPartyChange}>
+                </lightning-combobox>
+            </div>
+
+            <template if:true={showParentInfo}>
+                <h3 class="slds-text-heading_medium slds-m-bottom_small">My Information</h3>
+                <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_medium">
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                        <lightning-input
+                            label={parentFirstNameLabel}
+                            value={registration.Registrant_Parent_First_Name__c}
+                            data-field="Registrant_Parent_First_Name__c"
+                            onchange={handleInputChange}
+                            required>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                        <lightning-input
+                            label={parentLastNameLabel}
+                            value={registration.Registrant_Parent_Last_Name__c}
+                            data-field="Registrant_Parent_Last_Name__c"
+                            onchange={handleInputChange}
+                            required>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                        <lightning-input
+                            type="email"
+                            label={parentEmailLabel}
+                            value={registration.Registrant_Parent_Email__c}
+                            data-field="Registrant_Parent_Email__c"
+                            onchange={handleInputChange}
+                            required>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                        <lightning-input
+                            type="tel"
+                            label={parentPhoneLabel}
+                            value={registration.Registrant_Parent_Phone__c}
+                            data-field="Registrant_Parent_Phone__c"
+                            onchange={handleInputChange}
+                            onblur={handlePhoneBlur}>
+                        </lightning-input>
+                    </div>
+                </div>
+            </template>
+
+            <template if:true={showOtherInfo}>
+                <h3 class="slds-text-heading_medium slds-m-bottom_small">My Information</h3>
+                <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_medium">
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                        <lightning-input
+                            label={firstNameLabel}
+                            value={registration.Registrant_Other_First_Name__c}
+                            data-field="Registrant_Other_First_Name__c"
+                            onchange={handleInputChange}
+                            required>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                        <lightning-input
+                            label={lastNameLabel}
+                            value={registration.Registrant_Other_Last_Name__c}
+                            data-field="Registrant_Other_Last_Name__c"
+                            onchange={handleInputChange}
+                            required>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                        <lightning-input
+                            type="email"
+                            label={emailLabel}
+                            value={registration.Registrant_Other_Email__c}
+                            data-field="Registrant_Other_Email__c"
+                            onchange={handleInputChange}
+                            required>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                        <lightning-input
+                            type="tel"
+                            label={phoneLabel}
+                            value={registration.Registrant_Other_Phone__c}
+                            data-field="Registrant_Other_Phone__c"
+                            onchange={handleInputChange}
+                            onblur={handlePhoneBlur}>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-textarea
+                            label={relationshipLabel}
+                            value={registration.Registrant_Other_Relationship__c}
+                            data-field="Registrant_Other_Relationship__c"
+                            onchange={handleInputChange}>
+                        </lightning-textarea>
+                    </div>
+                </div>
+            </template>
+
+            <template if:true={showThirdPartyDetails}>
+                <p class="slds-m-bottom_medium">
+                    Enter the contact information of the individual you are registering for this activity below.
+                    <br/>
+                    <strong><em>Note: it is preferable that the registrant have a unique email (different than yours) for our records.</em></strong>
+                </p>
+            </template>
+        </template>
+
         <!-- Basic Information -->
+        <template if:true={showRegistrantInfoHeading}>
+            <h3 class="slds-text-heading_medium slds-m-bottom_small">Registrant Information</h3>
+        </template>
         <div class="slds-grid slds-gutters slds-wrap">
             <!-- First Name -->
             <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
