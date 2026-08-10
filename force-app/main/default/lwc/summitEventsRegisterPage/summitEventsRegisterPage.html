@@ -50,16 +50,64 @@
             </div>
 
             <!-- Phone -->
-            <template if:true={showPhone}>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                    <lightning-input
-                        type="tel"
-                        label={phoneLabel}
-                        value={registration.Registrant_Phone__c}
-                        data-field="Registrant_Phone__c"
-                        onchange={handleInputChange}>
-                    </lightning-input>
-                </div>
+            <template if:true={showPhoneSection}>
+                <template if:true={phoneRequireOne}>
+                    <div class="slds-col slds-size_1-of-1">
+                        <p class="slds-is-required"><strong>Please provide either a home or mobile number</strong></p>
+                    </div>
+                </template>
+
+                <template if:true={showHomePhone}>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            type="tel"
+                            label={homePhoneLabel}
+                            value={registration.Registrant_Phone__c}
+                            data-field="Registrant_Phone__c"
+                            required={homePhoneRequired}
+                            onchange={handleInputChange}
+                            onblur={handlePhoneBlur}>
+                        </lightning-input>
+                    </div>
+                </template>
+
+                <template if:true={showMobilePhone}>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            type="tel"
+                            label={mobilePhoneLabel}
+                            value={registration.Registrant_Mobile_Phone__c}
+                            data-field="Registrant_Mobile_Phone__c"
+                            required={mobilePhoneRequired}
+                            onchange={handleInputChange}
+                            onblur={handlePhoneBlur}>
+                        </lightning-input>
+                    </div>
+                </template>
+
+                <template if:true={showPhoneTypeSelect}>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-combobox
+                            label={phoneTypeLabel}
+                            value={phoneType}
+                            options={phoneTypeOptions}
+                            required={phoneTypeRequired}
+                            onchange={handlePhoneTypeChange}>
+                        </lightning-combobox>
+                    </div>
+                </template>
+
+                <template if:true={showReceiveTexts}>
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-input
+                            type="checkbox"
+                            label={receiveTextsLabel}
+                            checked={registration.Registrant_Receive_Texts__c}
+                            data-field="Registrant_Receive_Texts__c"
+                            onchange={handleCheckboxChange}>
+                        </lightning-input>
+                    </div>
+                </template>
             </template>
 
             <!-- Date of Birth -->

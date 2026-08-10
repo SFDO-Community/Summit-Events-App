@@ -5,9 +5,28 @@ export default class SummitEventsRegisterPage extends LightningElement {
 
     @track registration = {};
 
+    // 'mobile', 'home', or '' (undecided) - only meaningful when askPhoneMode is one of the
+    // "with type" variants, where a single field toggles between Home/Mobile. See initializePhoneType.
+    @track phoneType = '';
+
     connectedCallback() {
         if (this.eventData?.primaryRegistration?.registrationRecord) {
             this.registration = { ...this.eventData.primaryRegistration.registrationRecord };
+        }
+        this.initializePhoneType();
+    }
+
+    // Ported from SummitEventsRegisterController's constructor: infer which type was previously
+    // selected from which field has a value, so returning to this page keeps the right field visible.
+    initializePhoneType() {
+        const home = this.registration.Registrant_Phone__c;
+        const mobile = this.registration.Registrant_Mobile_Phone__c;
+        if (this.phoneHasType && mobile && !home) {
+            this.phoneType = 'mobile';
+        } else if (!mobile && home) {
+            this.phoneType = 'home';
+        } else {
+            this.phoneType = '';
         }
     }
 
@@ -44,8 +63,90 @@ export default class SummitEventsRegisterPage extends LightningElement {
         return this.config.askMailingAddress;
     }
 
-    get showPhone() {
-        return this.config.askPhone;
+    // Ask_Phone__c drives a lot of conditional structure - ported field-for-field from the
+    // rendered= conditions in SummitEventsRegister.page (the phoneBlock section) for parity.
+    get askPhoneMode() {
+        return this.eventInfo.Ask_Phone__c || '';
+    }
+
+    get showPhoneSection() {
+        return Boolean(this.askPhoneMode) && !this.askPhoneMode.startsWith('Do not');
+    }
+
+    get phoneHasType() {
+        return this.askPhoneMode.includes('with type');
+    }
+
+    get phoneShowBothFixed() {
+        return this.askPhoneMode.includes('home and mobile');
+    }
+
+    get phoneRequireOne() {
+        return this.askPhoneMode.includes('require one');
+    }
+
+    get showHomePhone() {
+        return this.phoneShowBothFixed || this.phoneType === 'home';
+    }
+
+    get showMobilePhone() {
+        return this.phoneShowBothFixed
+            || this.askPhoneMode === 'Ask mobile'
+            || this.askPhoneMode === 'Ask mobile and require'
+            || this.phoneType === 'mobile'
+            || (this.phoneType === '' && this.phoneHasType);
+    }
+
+    get showPhoneTypeSelect() {
+        return this.phoneHasType;
+    }
+
+    get homePhoneRequired() {
+        return this.askPhoneMode === 'Ask with type require' || this.askPhoneMode === 'Ask home and mobile require both';
+    }
+
+    get mobilePhoneRequired() {
+        return this.homePhoneRequired || this.askPhoneMode === 'Ask mobile and require';
+    }
+
+    get phoneTypeRequired() {
+        return this.askPhoneMode === 'Ask with type require';
+    }
+
+    get homePhoneLabel() {
+        // VF: no "Home " prefix while the type dropdown hasn't been resolved yet
+        const prefix = (this.phoneHasType && this.phoneType === '') ? '' : 'Home ';
+        return prefix + this.phoneLabel;
+    }
+
+    get mobilePhoneLabel() {
+        // VF: no "Mobile " prefix under "with type" modes or plain "Ask mobile" - the field is
+        // unambiguous on its own there
+        const noPrefix = this.phoneHasType
+            || this.askPhoneMode === 'Ask mobile'
+            || (this.askPhoneMode === 'Ask mobile and require' && this.phoneType === '');
+        return (noPrefix ? '' : 'Mobile ') + this.phoneLabel;
+    }
+
+    get phoneTypeLabel() {
+        return this.eventInfo.Phone_Type_Label__c || 'Phone Type';
+    }
+
+    get phoneTypeOptions() {
+        return [
+            { label: 'Select...', value: '' },
+            { label: 'Mobile', value: 'mobile' },
+            { label: 'Home', value: 'home' }
+        ];
+    }
+
+    get showReceiveTexts() {
+        return (this.askPhoneMode.includes('mobile') || this.phoneType === 'mobile')
+            && !this.eventInfo.Do_not_show_receive_text_question__c;
+    }
+
+    get receiveTextsLabel() {
+        return this.eventInfo.Registrant_Receive_Texts_Label__c || 'I agree to receive text messages';
     }
 
     get showCompanyOrganization() {
@@ -197,6 +298,52 @@ export default class SummitEventsRegisterPage extends LightningElement {
         this.registration[field] = value;
     }
 
+    handleCheckboxChange(event) {
+        const field = event.target.dataset.field;
+        this.registration[field] = event.target.checked;
+    }
+
+    // Ported from register.js phoneTypeToggle/setOldPhoneValue: carry the typed number over to
+    // whichever field the toggle switches to, instead of making the registrant retype it
+    handlePhoneTypeChange(event) {
+        const newType = event.detail.value;
+        const carryoverValue = this.phoneType === 'home'
+            ? this.registration.Registrant_Phone__c
+            : this.registration.Registrant_Mobile_Phone__c;
+
+        this.phoneType = newType;
+
+        if (newType === 'mobile') {
+            this.registration.Registrant_Mobile_Phone__c = carryoverValue;
+            this.registration.Registrant_Phone__c = '';
+        } else if (newType === 'home') {
+            this.registration.Registrant_Phone__c = carryoverValue;
+            this.registration.Registrant_Mobile_Phone__c = '';
+        }
+    }
+
+    // Ported from register.js formatPhone(): 10-digit numbers become (XXX) XXX-XXXX; a leading
+    // '+' is treated as international and left as +digits only; anything else is left as-is
+    handlePhoneBlur(event) {
+        const field = event.target.dataset.field;
+        const rawValue = event.target.value;
+        if (!rawValue) {
+            return;
+        }
+
+        const isInternational = rawValue.startsWith('+');
+        let digits = rawValue.replace(/\D/g, '');
+
+        if (isInternational) {
+            if (digits.startsWith('0')) {
+                digits = digits.substring(1);
+            }
+            this.registration[field] = '+' + digits;
+        } else {
+            this.registration[field] = digits.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+        }
+    }
+
     handleAddressChange(event) {
         this.registration.Registrant_Street_1__c = event.detail.street;
         this.registration.Registrant_City__c = event.detail.city;
@@ -218,10 +365,22 @@ export default class SummitEventsRegisterPage extends LightningElement {
 
     @api
     getData() {
+        const registration = { ...this.registration };
+
+        // Ported from SummitEventsRegisterController.saveContactRegistration: under "with type"
+        // modes, blank out whichever field wasn't the selected type before it gets saved
+        if (this.phoneType && this.phoneHasType) {
+            if (this.phoneType === 'mobile') {
+                registration.Registrant_Phone__c = '';
+            } else if (this.phoneType === 'home') {
+                registration.Registrant_Mobile_Phone__c = '';
+            }
+        }
+
         return {
             primaryRegistration: {
                 ...this.eventData.primaryRegistration,
-                registrationRecord: this.registration
+                registrationRecord: registration
             }
         };
     }
