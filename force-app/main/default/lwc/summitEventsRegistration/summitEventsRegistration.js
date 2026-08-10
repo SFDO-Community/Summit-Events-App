@@ -229,6 +229,9 @@ export default class SummitEventsRegistration extends LightningElement {
     }
 
     handlePrevious() {
+        // Persist the current page's in-progress edits before navigating away, same as handleNext -
+        // but skip validation, since backward navigation shouldn't be blocked by incomplete required fields
+        this.saveCurrentPageData();
         this.navigateToPage(this.currentPageIndex - 1);
     }
 
@@ -253,15 +256,15 @@ export default class SummitEventsRegistration extends LightningElement {
             return;
         }
 
-        // If navigating forward, validate and save current page
-        if (targetPageIndex > this.currentPageIndex) {
-            if (!this.validateCurrentPage()) {
-                // Validation failed, don't navigate
-                return;
-            }
-            // Save current page data before advancing
-            this.saveCurrentPageData();
+        // Validate only when navigating forward - backward navigation shouldn't be blocked
+        // by incomplete required fields, matching handlePrevious/handleNext behavior
+        if (targetPageIndex > this.currentPageIndex && !this.validateCurrentPage()) {
+            // Validation failed, don't navigate
+            return;
         }
+
+        // Persist the current page's in-progress edits before navigating away, either direction
+        this.saveCurrentPageData();
 
         // Navigate to the clicked page
         this.navigateToPage(targetPageIndex);

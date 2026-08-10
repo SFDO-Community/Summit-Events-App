@@ -6,10 +6,16 @@ export default class SummitEventsQuestionsPage extends LightningElement {
     @track answers = {};
 
     connectedCallback() {
-        // Initialize answers from current values
+        // Initialize answers, preferring whatever the registrant already entered on a previous
+        // visit to this page (persisted client-side in primaryRegistration.registrationRecord as
+        // the wizard navigates) over the question's static currentValue/defaultValue from Apex.
+        const registrationRecord = this.eventData?.primaryRegistration?.registrationRecord || {};
         if (this.eventData?.registrantQuestions) {
             this.eventData.registrantQuestions.forEach(question => {
-                if (question.currentValue) {
+                const savedValue = registrationRecord[question.mapToField];
+                if (savedValue !== undefined && savedValue !== null && savedValue !== '') {
+                    this.answers[question.mapToField] = savedValue;
+                } else if (question.currentValue) {
                     this.answers[question.mapToField] = question.currentValue;
                 } else if (question.defaultValue) {
                     this.answers[question.mapToField] = question.defaultValue;
@@ -19,7 +25,10 @@ export default class SummitEventsQuestionsPage extends LightningElement {
     }
 
     get questions() {
-        return this.eventData?.registrantQuestions || [];
+        return (this.eventData?.registrantQuestions || []).map(question => ({
+            ...question,
+            currentValue: this.answers[question.mapToField] ?? question.currentValue
+        }));
     }
 
     get visibleQuestions() {
