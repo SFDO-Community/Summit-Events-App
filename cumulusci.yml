@@ -11,6 +11,14 @@ project:
     repo_url: https://github.com/SFDO-Community/Summit-Events-App
 
 tasks:
+  generate_data_dictionary:
+    description: Create a data dictionary for the project in CSV format. Skips
+      metadata files that fail to parse instead of aborting (works around
+      corrupted files in old published GitHub releases, e.g. release/0.27.0.1).
+    class_path: tasks.generate_data_dictionary.SafeGenerateDataDictionary
+    options:
+      release_prefix: $project_config.project__git__prefix_release
+
   deploy_site_config:
     description: Deploys configuration for Development.
     class_path: cumulusci.tasks.salesforce.Deploy
