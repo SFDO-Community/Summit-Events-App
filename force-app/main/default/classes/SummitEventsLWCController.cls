@@ -839,7 +839,7 @@ public with sharing class SummitEventsLWCController {
     // Save registration data — handles registration record, appointments, guests, and donation fee
     @AuraEnabled
     public static String saveRegistration(String wrapperJson) {
-        try {
+       // try {
             SummitEventWrapper wrapper = (SummitEventWrapper) JSON.deserialize(wrapperJson, SummitEventWrapper.class);
             RegistrationCRUD crud = new RegistrationCRUD();
 
@@ -891,9 +891,9 @@ public with sharing class SummitEventsLWCController {
             }
 
             return SummitEventsShared.encryptString(registrationId);
-        } catch (Exception e) {
-            throw new AuraHandledException('Error saving registration: ' + e.getMessage());
-        }
+//        } catch (Exception e) {
+//            throw new AuraHandledException('Error saving registration: ' + e.getMessage());
+//        }
     }
 
     // Lookup search for question lookup fields
@@ -932,9 +932,9 @@ public with sharing class SummitEventsLWCController {
     private without sharing class RegistrationCRUD {
         public String saveRegistration(Summit_Events_Registration__c registration) {
             if (registration.Id == null) {
-                insert registration;
+                Database.insert(registration, true, System.AccessLevel.SYSTEM_MODE);
             } else {
-                update registration;
+                Database.update(registration, true, System.AccessLevel.SYSTEM_MODE);
             }
             return registration.Id;
         }
@@ -949,12 +949,16 @@ public with sharing class SummitEventsLWCController {
                     toUpdate.add(apt);
                 }
             }
-            if (!toInsert.isEmpty()) insert toInsert;
-            if (!toUpdate.isEmpty()) update toUpdate;
+            if (!toInsert.isEmpty()) {
+                Database.insert(toInsert, true, System.AccessLevel.SYSTEM_MODE);
+            }
+            if (!toUpdate.isEmpty()) {
+                Database.update(toUpdate, true, System.AccessLevel.SYSTEM_MODE);
+            }
         }
 
         public void upsertFee(Summit_Events_Fee__c fee) {
-            upsert fee;
+            Database.upsert(fee, true, System.AccessLevel.SYSTEM_MODE);
         }
     }
 
