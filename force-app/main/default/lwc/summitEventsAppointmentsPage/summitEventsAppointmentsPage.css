@@ -1,8 +1,0 @@
-/* SLDS's default form-element label (12px, muted grey) reads fine inside the Setup/Salesforce
-   app chrome it was designed for, but is too small/faded for a public-facing registration form. */
-lightning-input::part(label),
-lightning-combobox::part(label),
-lightning-textarea::part(label) {
-    font-size: 1rem;
-    color: #3e3e3c;
-}

@@ -1,3 +1,19 @@
+/* SLDS's default form-element label size/color (--lwc-formLabelFontSize: 0.75rem,
+   --lwc-colorTextLabel: #696969) reads fine inside the Setup/Salesforce app chrome it was
+   designed for, but is too small/faded for a public-facing registration form. These are real
+   LWC design tokens - confirmed via computed-style testing in the browser (getComputedStyle on
+   an actual rendered label, walking the ancestor chain to verify the token here overrides the
+   site theme's value) - that every base input/combobox/textarea/etc. component reads
+   internally. Overriding them once here, on the wizard's top-level host, cascades to every page
+   component's fields: CSS custom properties inherit through the DOM (and through LWC's shadow
+   boundaries) even though ordinary selectors like ::part() do not reliably reach here in this
+   Experience Cloud site - do not replace this with per-page ::part(label) overrides, that
+   approach was tried and does not work. */
+:host {
+    --lwc-formLabelFontSize: 1rem;
+    --lwc-colorTextLabel: #3e3e3c;
+}
+
 .event-crumb {
     margin-bottom: 0.5rem;
 }
