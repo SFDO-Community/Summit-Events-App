@@ -1,3 +1,23 @@
 .guest-field-grid > div {
     min-width: 8rem;
 }
+
+/* SLDS's default form-element label (12px, muted grey) reads fine inside the Setup/Salesforce
+   app chrome it was designed for, but is too small/faded for a public-facing registration form.
+   ::part(label) targets the label element base input/combobox/textarea components already expose
+   as a shadow part - this is a standard, supported piercing mechanism, not a hack.
+
+   NOTE: setting --lwc-formLabelFontSize on an ancestor (e.g. summitEventsWrapper) does NOT
+   reliably reach these labels - the Experience Cloud site's own theme/branding CSS sets this
+   token directly on the base component shadow hosts throughout the tree, and any rule that
+   directly matches a descendant always wins over an inherited value. ::part(label) is the
+   only mechanism proven to override the site default here. */
+lightning-input::part(label),
+lightning-combobox::part(label),
+lightning-textarea::part(label),
+lightning-input-address::part(label),
+lightning-dual-listbox::part(label) {
+    font-size: 1rem;
+    color: #3e3e3c;
+}
+

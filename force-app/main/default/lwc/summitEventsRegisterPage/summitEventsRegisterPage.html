@@ -379,15 +379,33 @@
         <!-- Relationship to the Institution -->
         <template if:true={showRelationshipToInstitution}>
             <div class="slds-m-top_medium">
-                <lightning-dual-listbox
-                    label="Relationship to the Institution"
-                    source-label="Available"
-                    selected-label="Selected"
-                    value={relationshipToInstitutionValue}
-                    options={relationshipToInstitutionOptions}
-                    required={relationshipToInstitutionRequired}
-                    onchange={handleRelationshipToInstitutionChange}>
-                </lightning-dual-listbox>
+                <fieldset class={relationshipErrorClass}>
+                    <legend class="slds-form-element__legend slds-form-element__label">
+                        Relationship to the Institution
+                        <template if:true={relationshipToInstitutionRequired}>
+                            <abbr class="slds-required" title="required"> * </abbr>
+                        </template>
+                    </legend>
+                    <div class="slds-form-element__control">
+                        <div class="slds-grid slds-wrap slds-gutters_x-small slds-m-top_x-small slds-m-left_xxx-small">
+                            <template for:each={relationshipToInstitutionPills} for:item="pill">
+                                <div key={pill.value} class="slds-p-bottom_x-small slds-p-right_x-small">
+                                    <lightning-button
+                                        label={pill.label}
+                                        variant={pill.variant}
+                                        icon-name={pill.iconName}
+                                        icon-position="left"
+                                        data-value={pill.value}
+                                        onclick={handleRelationshipPillClick}>
+                                    </lightning-button>
+                                </div>
+                            </template>
+                        </div>
+                        <template if:true={relationshipMissingError}>
+                            <p class="slds-form-element__help">Complete this field.</p>
+                        </template>
+                    </div>
+                </fieldset>
             </div>
         </template>
 

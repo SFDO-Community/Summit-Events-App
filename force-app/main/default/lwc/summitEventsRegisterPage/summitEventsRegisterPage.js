@@ -90,6 +90,10 @@ export default class SummitEventsRegisterPage extends LightningElement {
     // Debounce handle for fillInCityStateOnZip - not reactive state, just a timer id
     zipLookupTimeout;
 
+    // Relationship to the Institution is a group of individually-clickable toggle buttons, not a
+    // single input browsers can natively mark required - validate() sets this manually
+    @track relationshipMissingError = false;
+
     connectedCallback() {
         if (this.eventData?.primaryRegistration?.registrationRecord) {
             this.registration = { ...this.eventData.primaryRegistration.registrationRecord };
@@ -406,15 +410,49 @@ export default class SummitEventsRegisterPage extends LightningElement {
         return this.config.relationshipToInstitutionOptions || [];
     }
 
-    // lightning-dual-listbox needs an array value; the field itself stores a ';'-delimited
-    // string, matching how Salesforce natively stores MultiselectPicklist values
+    // The field stores a ';'-delimited string, matching how Salesforce natively stores
+    // MultiselectPicklist values
     get relationshipToInstitutionValue() {
         const raw = this.registration.Relationship_To_Institution__c;
         return raw ? raw.split(';') : [];
     }
 
-    handleRelationshipToInstitutionChange(event) {
-        this.registration.Relationship_To_Institution__c = event.detail.value.join(';');
+    // Rendered as individual clickable pill buttons rather than a dual-listbox, so selecting
+    // multiple options doesn't require holding Ctrl - closer to the VF page's clickable-pill
+    // experience. Uses lightning-button (not lightning-input type="checkbox-button", which only
+    // swaps an icon and never shows the option's label text) so each pill's text stays visible,
+    // toggling variant to show selected state.
+    get relationshipToInstitutionPills() {
+        const selected = this.relationshipToInstitutionValue;
+        return this.relationshipToInstitutionOptions
+            .filter(option => option.value)
+            .map(option => {
+                const isSelected = selected.includes(option.value);
+                return {
+                    ...option,
+                    selected: isSelected,
+                    variant: isSelected ? 'brand' : 'neutral',
+                    iconName: isSelected ? 'utility:check' : ''
+                };
+            });
+    }
+
+    get relationshipErrorClass() {
+        return this.relationshipMissingError ? 'slds-form-element slds-has-error' : 'slds-form-element';
+    }
+
+    handleRelationshipPillClick(event) {
+        const value = event.currentTarget.dataset.value;
+        const selected = new Set(this.relationshipToInstitutionValue);
+        if (selected.has(value)) {
+            selected.delete(value);
+        } else {
+            selected.add(value);
+        }
+        this.registration.Relationship_To_Institution__c = Array.from(selected).join(';');
+        if (this.relationshipMissingError && selected.size > 0) {
+            this.relationshipMissingError = false;
+        }
     }
 
     get showLastNameAsStudent() {
@@ -700,7 +738,9 @@ export default class SummitEventsRegisterPage extends LightningElement {
                 return validSoFar && inputCmp.checkValidity();
             }, true);
 
-        return allValid;
+        this.relationshipMissingError = this.relationshipToInstitutionRequired && this.relationshipToInstitutionValue.length === 0;
+
+        return allValid && !this.relationshipMissingError;
     }
 
     @api

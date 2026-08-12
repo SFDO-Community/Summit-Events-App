@@ -1,0 +1,21 @@
+/* This wrapper is the single shadow-DOM root for the entire registration flow
+   (calendar -> registration -> all wizard pages), so SLDS custom properties set
+   here inherit through every descendant shadow boundary without needing to be
+   repeated per-component - in theory.
+
+   IN PRACTICE: this alone does NOT reliably override the label size on this
+   Experience Cloud site. The site's own theme/branding CSS sets
+   --lwc-formLabelFontSize directly on the base Lightning component shadow
+   hosts throughout the tree, and any rule that directly matches a descendant
+   element always wins over a value merely inherited from an ancestor - no
+   matter how close that ancestor's declaration is. Kept here as a harmless,
+   best-effort fallback, but the per-page `::part(label)` overrides
+   (summitEventsRegisterPage, summitEventsQuestionField, summitEventsGuestsPage,
+   summitEventsDonationPage, summitEventsAppointmentsPage) are the mechanism
+   that actually controls label size, since they set font-size directly on the
+   label part rather than relying on a token the site can re-declare. If you
+   change the size, update those files too - don't rely on this variable alone. */
+:host {
+    --lwc-formLabelFontSize: 1rem;
+}
+
