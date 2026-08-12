@@ -63,6 +63,12 @@ public with sharing class SummitEventsLWCController {
         // Options for the built-in registrant fields that are picklists on Summit_Events_Registration__c
         @AuraEnabled public List<PicklistOption> genderOptions { get; set; }
         @AuraEnabled public List<PicklistOption> pronounOptions { get; set; }
+        // Mailing address Country picklist, and its dependent State/Province options keyed by
+        // country value. A country only appears in stateOptionsByCountry when it has 2+ defined
+        // states/provinces - otherwise the page falls back to a free-text state field, matching
+        // SummitEventsRegisterController.getStateDD()/getCountryDD().
+        @AuraEnabled public List<PicklistOption> countryOptions { get; set; }
+        @AuraEnabled public Map<String, List<PicklistOption>> stateOptionsByCountry { get; set; }
         // "Primary Registrant" + whichever of Parent/Guardian, Other, Company Representative the
         // event's Ask_Third_Party_Registrant__c multi-select picklist allows
         @AuraEnabled public List<PicklistOption> thirdPartyOptions { get; set; }
@@ -327,6 +333,10 @@ public with sharing class SummitEventsLWCController {
         if (config.askPronoun) {
             config.pronounOptions = buildPicklistFromField('Registrant_Pronouns__c');
         }
+        if (config.askMailingAddress) {
+            config.countryOptions = buildPicklistFromField('Registrant_Country__c');
+            config.stateOptionsByCountry = buildStateOptionsByCountry();
+        }
 
         buildAdditionalInfoConfig(eventInfo, config);
 
@@ -512,6 +522,31 @@ public with sharing class SummitEventsLWCController {
         }
 
         return options;
+    }
+
+    // Ported from SummitEventsRegisterController.getStateDD(): a country only gets a dependent
+    // State/Province dropdown when it has 2+ defined states; countries with 0 or 1 fall back to
+    // a free-text field in the LWC (Registrant_State_Province__c), same as the VF page.
+    private static Map<String, List<PicklistOption>> buildStateOptionsByCountry() {
+        Map<String, List<PicklistOption>> result = new Map<String, List<PicklistOption>>();
+
+        Map<String, Map<String, String>> allDependencies = SummitEventsShared.getAllDependentSelectOptions(
+            'Summit_Events_Registration__c', 'Registrant_Country__c', 'Registrant_State_Global__c'
+        );
+
+        for (String country : allDependencies.keySet()) {
+            Map<String, String> states = allDependencies.get(country);
+            if (states.size() > 1) {
+                List<PicklistOption> options = new List<PicklistOption>();
+                options.add(newPicklistOption('', 'Select...'));
+                for (String stateValue : states.keySet()) {
+                    options.add(newPicklistOption(stateValue, states.get(stateValue)));
+                }
+                result.put(country, options);
+            }
+        }
+
+        return result;
     }
 
     private static PicklistOption newPicklistOption(String value, String label) {

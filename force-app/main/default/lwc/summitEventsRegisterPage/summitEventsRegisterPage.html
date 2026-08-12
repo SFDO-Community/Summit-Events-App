@@ -304,16 +304,21 @@
             <div class="slds-m-top_medium">
                 <lightning-input-address
                     address-label={mailingAddressLabel}
+                    show-compact-address
                     street-label="Street"
+                    subpremise-label="Street 2"
                     city-label="City"
                     province-label="State/Province"
                     country-label="Country"
                     postal-code-label="Postal Code"
                     street={registration.Registrant_Street_1__c}
+                    subpremise={registration.Registrant_Street_2__c}
                     city={registration.Registrant_City__c}
-                    province={registration.Registrant_State__c}
+                    province={currentProvinceValue}
+                    province-options={stateOptionsForCountry}
                     country={registration.Registrant_Country__c}
-                    postal-code={registration.Registrant_Postal_Code__c}
+                    country-options={countryOptions}
+                    postal-code={registration.Registrant_Zip__c}
                     required={mailingAddressRequired}
                     onchange={handleAddressChange}>
                 </lightning-input-address>

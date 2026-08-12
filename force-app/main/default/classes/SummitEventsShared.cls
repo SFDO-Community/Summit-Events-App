@@ -671,76 +671,77 @@ public with sharing class SummitEventsShared {
     }
 
     public static Map<String, String> getDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName, String parentValue) {
-        Map<String, String> dependentItems = new Map<String, String>();
-        if (null != parentObjName && null != parentFieldName && null != dependentFieldName && null != parentValue) {
-            String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
-
-            Schema.DescribeFieldResult dependentField;
-            Integer parentValueIndex = -1;
-
-            //FIRST get the Parent PL's index value
-            Schema.DescribeSObjectResult objectMeta = Schema.describeSObjects(new String[]{
-                    namespace + parentObjName
-            })[0];
-            Schema.SObjectField[] fields = objectMeta.fields.getMap().values();
-            for (Schema.SObjectField f : fields) {
-                Schema.DescribeFieldResult d = f.getDescribe();
-                String fieldName = d.getName().toLowerCase();
-                String ftype = String.valueOf(d.getType()).toLowerCase();
-                if (fieldName.equals(namespace + parentFieldName.toLowerCase()) && ('picklist'.equals(ftype) || 'multipicklist'.equals(ftype))) {
-                    Schema.PicklistEntry[] pplvalues = d.getPicklistValues();
-                    for (Integer i = 0; i < pplvalues.size(); i++) {
-                        if (parentValue.equals(pplvalues[i].getValue())) {
-                            parentValueIndex = i;
-                            break;
-                        }
-                    }
-                }
-                if (fieldName.equals(namespace + dependentFieldName.toLowerCase()) && ('picklist'.equals(ftype) || 'multipicklist'.equals(ftype))) {
-                    dependentField = d;
-                }
-            }
-			Schema.DescribeFieldResult controllingField = dependentField.getController().getDescribe();
-			List<Schema.PicklistEntry> controlEntries = (controllingField.getType() == Schema.DisplayType.Boolean
-				? null
-				: controllingField.getPicklistValues()
-			);
-			String base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-			Map<Object, Map<String, String>> dependentPicklistMap = new Map<Object, Map<String, String>>();
-
-            //2nd get the dependent PL values mapped to the target parent PL's value
-            if (-1 != parentValueIndex && null != dependentField) {
-				for (Schema.PicklistEntry entry : dependentField.getPicklistValues()) {
-					if (entry.isActive()) {
-						List<String> base64chars = String.valueOf(((Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(entry))).get('validFor')).split('');
-
-						for (Integer index = 0; index < (controlEntries != null ? controlEntries.size() : 2); index++) {
-							Object controlValue = (controlEntries == null
-								? (Object) (index == 1)
-								: (Object) (controlEntries[index].isActive() ? controlEntries[index].getValue() : null));
-							Integer bitIndex = index / 6;
-							if (bitIndex > base64chars.size() - 1) {
-								break;
-							}
-							Integer bitShift = 5 - Math.mod(index, 6);
-
-							if (controlValue == null || (base64.indexOf(base64chars[bitIndex]) & (1 << bitShift)) == 0) {
-								continue;
-							}
-
-							if (!dependentPicklistMap.containsKey(controlValue)) {
-								dependentPicklistMap.put(controlValue, new Map<String, String>());
-							}
-							dependentPicklistMap.get(controlValue).put(entry.getValue(), entry.getLabel());
-						}
-					}
-				}
-				if (dependentPicklistMap.get(parentValue) != null) {
-					dependentItems = dependentPicklistMap.get(parentValue);
-				}
-            }
+        if (null == parentValue) {
+            return new Map<String, String>();
         }
-        return dependentItems;
+        Map<String, Map<String, String>> allDependencies = getAllDependentSelectOptions(parentObjName, parentFieldName, dependentFieldName);
+        return allDependencies.containsKey(parentValue) ? allDependencies.get(parentValue) : new Map<String, String>();
+    }
+
+    /**
+     * Same dependent-picklist decoding as getDependentSelectOptions, but returns the full
+     * controlling-value-to-dependent-options map in one pass instead of just the options for a
+     * single controlling value. Useful for callers (like the LWC Apex-first payload) that need
+     * every controlling value's options up front rather than making a round trip per selection.
+     * @param parentObjName API name of the sObject that owns both fields.
+     * @param parentFieldName API name of the controlling picklist field.
+     * @param dependentFieldName API name of the dependent picklist field.
+     * @return Map<String, Map<String, String>> Controlling field value to a map of dependent
+     *         field value -> label, for every controlling value that has dependent options.
+     */
+    public static Map<String, Map<String, String>> getAllDependentSelectOptions(String parentObjName, String parentFieldName, String dependentFieldName) {
+        Map<String, Map<String, String>> dependentPicklistMap = new Map<String, Map<String, String>>();
+        if (null == parentObjName || null == parentFieldName || null == dependentFieldName) {
+            return dependentPicklistMap;
+        }
+
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+
+        Schema.DescribeSObjectResult objectMeta = Schema.describeSObjects(new String[]{
+                namespace + parentObjName
+        })[0];
+        Schema.SObjectField dependentFieldToken = objectMeta.fields.getMap().get(namespace + dependentFieldName);
+        Schema.DescribeFieldResult dependentField = dependentFieldToken != null ? dependentFieldToken.getDescribe() : null;
+
+        if (dependentField == null) {
+            return dependentPicklistMap;
+        }
+
+		Schema.DescribeFieldResult controllingField = dependentField.getController().getDescribe();
+		List<Schema.PicklistEntry> controlEntries = (controllingField.getType() == Schema.DisplayType.Boolean
+			? null
+			: controllingField.getPicklistValues()
+		);
+		String base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+		for (Schema.PicklistEntry entry : dependentField.getPicklistValues()) {
+			if (entry.isActive()) {
+				List<String> base64chars = String.valueOf(((Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(entry))).get('validFor')).split('');
+
+				for (Integer index = 0; index < (controlEntries != null ? controlEntries.size() : 2); index++) {
+					Object controlValue = (controlEntries == null
+						? (Object) (index == 1)
+						: (Object) (controlEntries[index].isActive() ? controlEntries[index].getValue() : null));
+					Integer bitIndex = index / 6;
+					if (bitIndex > base64chars.size() - 1) {
+						break;
+					}
+					Integer bitShift = 5 - Math.mod(index, 6);
+
+					if (controlValue == null || (base64.indexOf(base64chars[bitIndex]) & (1 << bitShift)) == 0) {
+						continue;
+					}
+
+					String controlKey = String.valueOf(controlValue);
+					if (!dependentPicklistMap.containsKey(controlKey)) {
+						dependentPicklistMap.put(controlKey, new Map<String, String>());
+					}
+					dependentPicklistMap.get(controlKey).put(entry.getValue(), entry.getLabel());
+				}
+			}
+		}
+
+        return dependentPicklistMap;
     }
 
     public static String getCookieKey() {

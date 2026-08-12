@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>*</members>
+        <members>SEA_GitHub</members>
+        <members>SEA_QR_CODE</members>
+        <members>SEA_OpenStreetMap</members>
         <name>CspTrustedSite</name>
     </types>
     <version>66.0</version>

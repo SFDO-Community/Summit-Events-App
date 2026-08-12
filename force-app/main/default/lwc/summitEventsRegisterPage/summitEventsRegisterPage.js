@@ -1,5 +1,79 @@
 import { LightningElement, api, track } from 'lwc';
 
+// Ported verbatim from the VF page's static resource register.js RFIStates: maps state/
+// province codes to the full names Nominatim (OpenStreetMap) returns, so fillInCityStateOnZip
+// can translate a lookup result back into the code the picklist/free-text field expects.
+const RFI_STATES = {
+    'AL': 'Alabama',
+    'AK': 'Alaska',
+    'AZ': 'Arizona',
+    'AR': 'Arkansas',
+    'CA': 'California',
+    'CO': 'Colorado',
+    'CT': 'Connecticut',
+    'DE': 'Delaware',
+    'FL': 'Florida',
+    'GA': 'Georgia',
+    'HI': 'Hawaii',
+    'ID': 'Idaho',
+    'IL': 'Illinois',
+    'IN': 'Indiana',
+    'IA': 'Iowa',
+    'KS': 'Kansas',
+    'KY': 'Kentucky',
+    'LA': 'Louisiana',
+    'ME': 'Maine',
+    'MD': 'Maryland',
+    'MA': 'Massachusetts',
+    'MI': 'Michigan',
+    'MN': 'Minnesota',
+    'MS': 'Mississippi',
+    'MO': 'Missouri',
+    'MT': 'Montana',
+    'NE': 'Nebraska',
+    'NV': 'Nevada',
+    'NH': 'New Hampshire',
+    'NJ': 'New Jersey',
+    'NM': 'New Mexico',
+    'NY': 'New York',
+    'NC': 'North Carolina',
+    'ND': 'North Dakota',
+    'OH': 'Ohio',
+    'OK': 'Oklahoma',
+    'OR': 'Oregon',
+    'PA': 'Pennsylvania',
+    'RI': 'Rhode Island',
+    'SC': 'South Carolina',
+    'SD': 'South Dakota',
+    'TN': 'Tennessee',
+    'TX': 'Texas',
+    'UT': 'Utah',
+    'VT': 'Vermont',
+    'VA': 'Virginia',
+    'WA': 'Washington',
+    'WV': 'West Virginia',
+    'WI': 'Wisconsin',
+    'WY': 'Wyoming',
+    'AB': 'Alberta',
+    'AS': 'American Samoa',
+    'BC': 'British Columbia',
+    'DC': 'District of Columbia',
+    'GU': 'Guam ',
+    'MB': 'Manitoba',
+    'NB': 'New Brunswick',
+    'NL': 'Newfoundland and Labrador',
+    'NS': 'Nova Scotia',
+    'NT': 'Northwest Territories',
+    'NU': 'Nunavut',
+    'ON': 'Ontario',
+    'PE': 'Prince Edward Island',
+    'PR': 'Puerto Rico',
+    'QC': 'Quebec',
+    'SK': 'Saskatchewan',
+    'VI': 'Virgin Islands',
+    'YT': 'Yukon'
+};
+
 export default class SummitEventsRegisterPage extends LightningElement {
     @api eventData;
 
@@ -12,6 +86,9 @@ export default class SummitEventsRegisterPage extends LightningElement {
     // '', 'Primary Registrant', 'Parent/Guardian', 'Other', or 'Company Representative' - who is
     // filling out this registration. See Registrant_Third_Party_Status__c on the registration.
     @track thirdPartyStatus = '';
+
+    // Debounce handle for fillInCityStateOnZip - not reactive state, just a timer id
+    zipLookupTimeout;
 
     connectedCallback() {
         if (this.eventData?.primaryRegistration?.registrationRecord) {
@@ -117,6 +194,34 @@ export default class SummitEventsRegisterPage extends LightningElement {
 
     get showMailingAddress() {
         return this.config.askMailingAddress;
+    }
+
+    get countryOptions() {
+        return this.config.countryOptions || [];
+    }
+
+    // Ported from SummitEventsRegisterController.getStateDD(): a country only gets a
+    // dependent State/Province dropdown when it has 2+ defined states; lightning-input-address
+    // only falls back to a free-text province field when province-options is undefined - an
+    // empty array is still treated as "options provided" and stays in dropdown mode, so this
+    // must return undefined (not []) for countries with no dependent states.
+    get stateOptionsForCountry() {
+        const byCountry = this.config.stateOptionsByCountry || {};
+        const options = byCountry[this.registration.Registrant_Country__c];
+        return options && options.length > 0 ? options : undefined;
+    }
+
+    get showStateDropdown() {
+        return !!this.stateOptionsForCountry;
+    }
+
+    // VF stores the dropdown-selected state in Registrant_State__c, but a freetext-entered
+    // state (0/1-state countries) in the separate Registrant_State_Province__c field - mirror
+    // that split here since lightning-input-address only exposes a single "province" slot.
+    get currentProvinceValue() {
+        return this.showStateDropdown
+            ? this.registration.Registrant_State__c
+            : this.registration.Registrant_State_Province__c;
     }
 
     // Ask_Phone__c drives a lot of conditional structure - ported field-for-field from the
@@ -406,11 +511,82 @@ export default class SummitEventsRegisterPage extends LightningElement {
     }
 
     handleAddressChange(event) {
+        // Evaluate before mutating registration, so this reflects the country that was in
+        // effect when lightning-input-address last rendered its province field.
+        const wasDropdown = this.showStateDropdown;
+        const previousZip = this.registration.Registrant_Zip__c;
+
         this.registration.Registrant_Street_1__c = event.detail.street;
+        this.registration.Registrant_Street_2__c = event.detail.subpremise;
         this.registration.Registrant_City__c = event.detail.city;
-        this.registration.Registrant_State__c = event.detail.province;
-        this.registration.Registrant_Postal_Code__c = event.detail.postalCode;
         this.registration.Registrant_Country__c = event.detail.country;
+        this.registration.Registrant_Zip__c = event.detail.postalCode;
+
+        if (wasDropdown) {
+            this.registration.Registrant_State__c = event.detail.province;
+        } else {
+            this.registration.Registrant_State_Province__c = event.detail.province;
+        }
+
+        // register.js only looks up on the zip field's native 'change' event (blur-only).
+        // lightning-input-address's onchange fires on every keystroke instead, so debounce
+        // here to get the same "only after the user pauses" behavior and avoid hammering the
+        // Nominatim API on each character.
+        if (event.detail.postalCode && event.detail.postalCode !== previousZip) {
+            clearTimeout(this.zipLookupTimeout);
+            this.zipLookupTimeout = setTimeout(() => {
+                this.fillInCityStateOnZip(event.detail.postalCode);
+            }, 500);
+        }
+    }
+
+    // Ported from register.js fillInCityStateOnZip(): looks up city/state via the
+    // OpenStreetMap Nominatim API when a postal code is entered, same as the VF registration
+    // page. 5-digit numeric zips are queried as US zips regardless of the currently selected
+    // country, matching the original script exactly.
+    fillInCityStateOnZip(zip) {
+        let url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&addressdetails=1&postalcode=';
+        if (zip.length === 5 && /^[0-9]+$/.test(zip)) {
+            url += zip + '&country=united states';
+        } else {
+            url += zip;
+        }
+
+        fetch(url)
+            .then((response) => response.json())
+            .then((results) => {
+                if (!results || results.length === 0) {
+                    return;
+                }
+                const address = results[0].address || {};
+
+                const city = address.city || address.hamlet || address.town || '';
+
+                let state = address.state || address.county || '';
+                for (const [code, name] of Object.entries(RFI_STATES)) {
+                    if (name === state) {
+                        state = code;
+                        break;
+                    }
+                }
+
+                // Enhancement beyond VF parity - register.js computes this same value but never
+                // uses it. Only fill Country when it's blank; never override an explicit
+                // selection the registrant already made. Must happen before the showStateDropdown
+                // check below, since that depends on the (possibly just-filled) country.
+                if (!this.registration.Registrant_Country__c && address.country_code) {
+                    this.registration.Registrant_Country__c = address.country_code.toUpperCase();
+                }
+
+                this.registration.Registrant_City__c = city;
+                if (this.showStateDropdown) {
+                    this.registration.Registrant_State__c = state;
+                } else {
+                    this.registration.Registrant_State_Province__c = state;
+                }
+            })
+            // eslint-disable-next-line no-console
+            .catch((error) => console.error('Error looking up city/state for zip', error));
     }
 
     @api
