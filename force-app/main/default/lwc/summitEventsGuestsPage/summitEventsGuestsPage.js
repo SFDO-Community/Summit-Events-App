@@ -147,7 +147,11 @@ export default class SummitEventsGuestsPage extends LightningElement {
             return valid;
         }
         const fields = this.template.querySelectorAll('c-summit-events-question-field');
-        return Array.from(fields).reduce((ok, f) => ok && f.validate(), true);
+        let valid = true;
+        fields.forEach(f => {
+            if (!f.validate()) valid = false;
+        });
+        return valid;
     }
 
     // ── Event handlers ───────────────────────────────────────────────────────
