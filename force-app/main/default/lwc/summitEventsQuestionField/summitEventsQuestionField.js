@@ -7,6 +7,13 @@ export default class SummitEventsQuestionField extends LightningElement {
 
     connectedCallback() {
         this.inputValue = this.question?.currentValue || this.question?.defaultValue || '';
+
+        const hasInitialValue = Array.isArray(this.inputValue)
+            ? this.inputValue.length > 0
+            : !!this.inputValue;
+        if (hasInitialValue && !this.isCheckbox) {
+            this.dispatchChangeEvent();
+        }
     }
 
     // Field type detection
@@ -108,6 +115,11 @@ export default class SummitEventsQuestionField extends LightningElement {
             }
         });
         this.dispatchEvent(changeEvent);
+    }
+
+    @api
+    reset() {
+        this.inputValue = this.isMultiPicklist ? [] : (this.isCheckbox ? false : '');
     }
 
     @api

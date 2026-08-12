@@ -1,13 +1,5 @@
 <template>
     <div class="question-field">
-        <!-- Instructions -->
-        <template if:true={question.instructions}>
-            <div class="slds-m-bottom_small">
-                <lightning-formatted-rich-text value={question.instructions}>
-                </lightning-formatted-rich-text>
-            </div>
-        </template>
-
         <!-- Text Input -->
         <template if:true={isText}>
             <lightning-input
@@ -160,6 +152,14 @@
                 onchange={handleLookupChange}>
             </c-summit-events-lookup>
             -->
+        </template>
+
+        <!-- Instructions -->
+        <template if:true={question.instructions}>
+            <div class="slds-m-top_x-small">
+                <lightning-formatted-rich-text value={question.instructions}>
+                </lightning-formatted-rich-text>
+            </div>
         </template>
 
         <!-- Error/Help Text -->

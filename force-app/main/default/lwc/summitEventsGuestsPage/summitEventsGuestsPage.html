@@ -1,18 +1,10 @@
 <template>
     <div class="slds-m-around_medium">
-
-        <!-- Description -->
-        <template lwc:if={guestDescription}>
-            <div class="slds-m-bottom_medium">
-                <lightning-formatted-rich-text value={guestDescription}></lightning-formatted-rich-text>
-            </div>
-        </template>
-
         <div class="slds-grid slds-wrap slds-gutters">
 
             <!-- LEFT: Guest Input Form -->
             <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
-                <article class="slds-card">
+                <article class="slds-card slds-card_boundary">
                     <div class="slds-card__body slds-card__body_inner">
 
                         <!-- No guest questions configured -->
@@ -67,16 +59,16 @@
                             </p>
                         </template>
 
+                        <div class="slds-text-align_center slds-m-top_small">
+                            <lightning-button
+                                label={addButtonLabel}
+                                icon-name="utility:add"
+                                variant="neutral"
+                                disabled={isAtMaxGuests}
+                                onclick={handleAddGuest}>
+                            </lightning-button>
+                        </div>
                     </div>
-                    <footer class="slds-card__footer slds-p-top_none slds-p-bottom_large">
-                        <lightning-button
-                            label={addButtonLabel}
-                            icon-name="utility:add"
-                            variant="neutral"
-                            disabled={isAtMaxGuests}
-                            onclick={handleAddGuest}>
-                        </lightning-button>
-                    </footer>
                 </article>
             </div>
 
@@ -84,23 +76,25 @@
             <div class="slds-col slds-size_1-of-1 slds-medium-size_8-of-12" id="guestList">
                 <template lwc:if={hasGuests}>
                     <template for:each={guestList} for:item="guest">
-                        <article key={guest.id} class="slds-card slds-m-bottom_small">
-                            <div class="slds-card__body slds-card__body_inner">
-                                <div class="slds-grid slds-grid_align-spread">
-                                    <div>
-                                        <p class="slds-text-heading_x-small">{guest.displayName}</p>
-                                        <template lwc:if={guest.email}>
-                                            <p class="slds-text-body_small slds-text-color_weak">{guest.email}</p>
+                        <article key={guest.id} class="slds-card slds-card_boundary slds-m-bottom_small">
+                            <div class="slds-card__body slds-card__body_inner slds-p-around_small">
+                                <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-start">
+                                    <div class="slds-grid slds-wrap guest-field-grid">
+                                        <template for:each={guest.displayFields} for:item="f">
+                                            <div key={f.id} class="slds-p-right_large slds-p-bottom_small">
+                                                <p class="slds-text-body_small slds-text-color_weak">{f.label}</p>
+                                                <p class="slds-text-body_regular">{f.value}</p>
+                                            </div>
                                         </template>
                                     </div>
-                                    <div>
-                                        <lightning-button
-                                            label="Remove"
-                                            variant="destructive-text"
-                                            data-guest-id={guest.id}
-                                            onclick={handleRemoveGuest}>
-                                        </lightning-button>
-                                    </div>
+                                    <lightning-button-icon
+                                        icon-name="utility:delete"
+                                        variant="border-filled"
+                                        alternative-text={guest.removeLabel}
+                                        title={guest.removeLabel}
+                                        data-guest-id={guest.id}
+                                        onclick={handleRemoveGuest}>
+                                    </lightning-button-icon>
                                 </div>
                             </div>
                         </article>

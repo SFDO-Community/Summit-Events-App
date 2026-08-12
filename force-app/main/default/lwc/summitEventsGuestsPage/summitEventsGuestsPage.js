@@ -18,21 +18,20 @@ export default class SummitEventsGuestsPage extends LightningElement {
             const firstName = rec.Registrant_First_Name__c || '';
             const lastName  = rec.Registrant_Last_Name__c  || '';
             const email     = rec.Registrant_Email__c      || '';
+            const displayName = [firstName, lastName].filter(Boolean).join(' ') || `Guest ${idx + 1}`;
             return {
                 id: idx,
-                displayName: [firstName, lastName].filter(Boolean).join(' ') || `Guest ${idx + 1}`,
+                displayName,
                 email,
-                fields: rec
+                fields: rec,
+                displayFields: this._buildDisplayFields(rec),
+                removeLabel: `Remove ${displayName}`
             };
         });
         this._nextGuestId = this._guests.length;
     }
 
     // ── Computed getters ─────────────────────────────────────────────────────
-
-    get guestDescription() {
-        return this.eventData?.eventInfo?.Guest_Registration_Description__c;
-    }
 
     get guestQuestions() {
         return this.eventData?.guestQuestions || [];
@@ -58,8 +57,7 @@ export default class SummitEventsGuestsPage extends LightningElement {
     }
 
     get guestsRemainingText() {
-        const remaining = this.maxGuests - this._guests.length;
-        return `${remaining} guest registration${remaining !== 1 ? 's' : ''} remaining.`;
+        return `${this._guests.length} - ${this.maxGuests}`;
     }
 
     get addButtonLabel() {
@@ -93,6 +91,43 @@ export default class SummitEventsGuestsPage extends LightningElement {
                       this.guestForm.Registrant_Email__c);
         }
         return Object.values(this._guestQuestionAnswers).some(v => !!v);
+    }
+
+    _buildDisplayFields(fields) {
+        if (this.hasNoGuestQuestions) {
+            const nameFields = [
+                { key: 'Registrant_First_Name__c', label: 'First Name' },
+                { key: 'Registrant_Last_Name__c', label: 'Last Name' },
+                { key: 'Registrant_Email__c', label: 'Email' }
+            ];
+            return nameFields
+                .filter(f => !!fields?.[f.key])
+                .map(f => ({ id: f.key, label: f.label, value: fields[f.key] }));
+        }
+
+        return this.guestQuestions.reduce((answered, question) => {
+            const rawValue = fields?.[question.mapToField];
+            const hasValue = Array.isArray(rawValue) ? rawValue.length > 0 : !!rawValue;
+            if (!hasValue) {
+                return answered;
+            }
+
+            let value;
+            if (question.questionFieldType === 'Checkbox') {
+                value = rawValue ? 'Yes' : 'No';
+            } else if (question.picklistValues?.length) {
+                const labelFor = (val) =>
+                    question.picklistValues.find(opt => opt.value === val)?.label || val;
+                value = Array.isArray(rawValue)
+                    ? rawValue.map(labelFor).join(', ')
+                    : labelFor(rawValue);
+            } else {
+                value = Array.isArray(rawValue) ? rawValue.join(', ') : rawValue;
+            }
+
+            answered.push({ id: question.questionId, label: question.questionLabel, value });
+            return answered;
+        }, []);
     }
 
     _clearForm() {
@@ -139,14 +174,17 @@ export default class SummitEventsGuestsPage extends LightningElement {
         const firstName = this.guestForm.Registrant_First_Name__c || '';
         const lastName  = this.guestForm.Registrant_Last_Name__c  || '';
         const email     = this.guestForm.Registrant_Email__c      || '';
+        const displayName = [firstName, lastName].filter(Boolean).join(' ') || `Guest ${this._nextGuestId + 1}`;
 
         this._guests = [
             ...this._guests,
             {
                 id: this._nextGuestId++,
-                displayName: [firstName, lastName].filter(Boolean).join(' ') || `Guest ${this._nextGuestId}`,
+                displayName,
                 email,
-                fields: { ...this.guestForm }
+                fields: { ...this.guestForm },
+                displayFields: this._buildDisplayFields(this.guestForm),
+                removeLabel: `Remove ${displayName}`
             }
         ];
         this._clearForm();
