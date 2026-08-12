@@ -47,7 +47,21 @@ public with sharing class SummitEventsLWCController {
         @AuraEnabled public Boolean askTitle { get; set; }
         @AuraEnabled public Boolean askDietaryRestrictions { get; set; }
         @AuraEnabled public Boolean askAccessibilityNeeds { get; set; }
+        @AuraEnabled public Boolean askApplicantType { get; set; }
+        @AuraEnabled public Boolean askPreferredClassYear { get; set; }
+        @AuraEnabled public Boolean askRelationshipToInstitution { get; set; }
+        @AuraEnabled public Boolean askLastNameAsStudent { get; set; }
         @AuraEnabled public Integer maxGuests { get; set; }
+
+        // Event Details / Event Cost - shown near the top of the Register page, resolved from
+        // instance-level overrides falling back to the event-level base value, mirroring
+        // SummitEventsRegisterController's showLocation/totalEventCost logic.
+        @AuraEnabled public Boolean showLocation { get; set; }
+        @AuraEnabled public String locationTitle { get; set; }
+        @AuraEnabled public String locationAddress { get; set; }
+        @AuraEnabled public String locationMapLink { get; set; }
+        @AuraEnabled public Decimal baseEventCost { get; set; }
+        @AuraEnabled public String eventCostLabel { get; set; }
 
         // Whether each asked field is "Ask and require" (vs. optional "Ask") on the event config
         @AuraEnabled public Boolean askPreferredNameRequired { get; set; }
@@ -59,10 +73,19 @@ public with sharing class SummitEventsLWCController {
         @AuraEnabled public Boolean askTitleRequired { get; set; }
         @AuraEnabled public Boolean askDietaryRestrictionsRequired { get; set; }
         @AuraEnabled public Boolean askAccessibilityNeedsRequired { get; set; }
+        @AuraEnabled public Boolean askApplicantTypeRequired { get; set; }
+        @AuraEnabled public Boolean askPreferredClassYearRequired { get; set; }
+        @AuraEnabled public Boolean askRelationshipToInstitutionRequired { get; set; }
+        @AuraEnabled public Boolean askLastNameAsStudentRequired { get; set; }
 
         // Options for the built-in registrant fields that are picklists on Summit_Events_Registration__c
         @AuraEnabled public List<PicklistOption> genderOptions { get; set; }
         @AuraEnabled public List<PicklistOption> pronounOptions { get; set; }
+        @AuraEnabled public List<PicklistOption> applicantTypeOptions { get; set; }
+        @AuraEnabled public List<PicklistOption> relationshipToInstitutionOptions { get; set; }
+        @AuraEnabled public List<PicklistOption> accessibilityOptions { get; set; }
+        @AuraEnabled public String lastNameAsStudentLabel { get; set; }
+        @AuraEnabled public String accessibilityDetailLabel { get; set; }
         // Mailing address Country picklist, and its dependent State/Province options keyed by
         // country value. A country only appears in stateOptionsByCountry when it has 2+ defined
         // states/provinces - otherwise the page falls back to a free-text state field, matching
@@ -201,7 +224,7 @@ public with sharing class SummitEventsLWCController {
             );
 
             // Build event configuration
-            wrapper.config = buildEventConfiguration(wrapper.eventInfo, wrapper.appointmentTypes);
+            wrapper.config = buildEventConfiguration(wrapper.eventInfo, wrapper.instance, wrapper.appointmentTypes);
 
             // Get questions for registrants and guests
             List<String> registrantTypes = new List<String>{'Registrant', 'Registrant and Guest'};
@@ -285,8 +308,21 @@ public with sharing class SummitEventsLWCController {
         return wrapper;
     }
 
-    private static EventConfiguration buildEventConfiguration(Summit_Events__c eventInfo, Map<Id, Summit_Events_Appointment_Type__c> appointmentTypes) {
+    private static EventConfiguration buildEventConfiguration(Summit_Events__c eventInfo, Summit_Events_Instance__c eventInstance, Map<Id, Summit_Events_Appointment_Type__c> appointmentTypes) {
         EventConfiguration config = new EventConfiguration();
+
+        // Event Details - instance-level override falls back to the event-level base value
+        config.locationTitle = String.isNotBlank(eventInstance.Location_Title_Override__c) ? eventInstance.Location_Title_Override__c : eventInfo.Location_Title__c;
+        config.locationAddress = String.isNotBlank(eventInstance.Location_Address_Override__c) ? eventInstance.Location_Address_Override__c : eventInfo.Location_Address__c;
+        config.locationMapLink = String.isNotBlank(eventInstance.Location_Map_Link_Override__c) ? eventInstance.Location_Map_Link_Override__c : eventInfo.Location_Map_Link__c;
+        config.showLocation = String.isNotBlank(config.locationTitle) || String.isNotBlank(config.locationAddress) || String.isNotBlank(config.locationMapLink);
+
+        // Event Cost - the event's base sticker price, separate from wrapper.totalEventCost (which
+        // is the running total of actually-selected fees, used on the Submit/Review page)
+        Decimal baseFee = eventInstance.Event_Fee_Override__c != null ? eventInstance.Event_Fee_Override__c : eventInfo.Event_Fee__c;
+        Decimal additionalFee = eventInstance.Event_Fee_Additional_Override__c != null ? eventInstance.Event_Fee_Additional_Override__c : eventInfo.Event_Fee_Additional__c;
+        config.baseEventCost = (baseFee != null ? baseFee : 0) + (additionalFee != null ? additionalFee : 0);
+        config.eventCostLabel = String.isNotBlank(eventInfo.Event_Fee_Submit_List_Label__c) ? eventInfo.Event_Fee_Submit_List_Label__c : 'Event Cost';
 
         // Check for appointments
         config.hasAppointments = appointmentTypes != null && !appointmentTypes.isEmpty();
@@ -312,6 +348,10 @@ public with sharing class SummitEventsLWCController {
         config.askTitle = eventInfo.Ask_Title__c != 'Do not ask' && eventInfo.Ask_Title__c != null;
         config.askDietaryRestrictions = eventInfo.Ask_Dietary_Restrictions__c != 'Do not ask' && eventInfo.Ask_Dietary_Restrictions__c != null;
         config.askAccessibilityNeeds = eventInfo.Ask_Accessibility_Needs__c != 'Do not ask' && eventInfo.Ask_Accessibility_Needs__c != null;
+        config.askApplicantType = eventInfo.Ask_Applicant_Type__c != 'Do not ask' && eventInfo.Ask_Applicant_Type__c != null;
+        config.askPreferredClassYear = eventInfo.Ask_Preferred_Class_Year__c != 'Do not ask' && eventInfo.Ask_Preferred_Class_Year__c != null;
+        config.askRelationshipToInstitution = eventInfo.Ask_Relationship_To_Institution__c != 'Do not ask' && eventInfo.Ask_Relationship_To_Institution__c != null;
+        config.askLastNameAsStudent = eventInfo.Ask_Last_Name_As_Student__c != 'Do not ask' && eventInfo.Ask_Last_Name_As_Student__c != null;
 
         // "Ask and require" is the only value on these fields that makes the field mandatory - "Ask" alone is optional
         config.askPreferredNameRequired = eventInfo.Ask_Preferred_First_Name__c == 'Ask and require';
@@ -323,6 +363,11 @@ public with sharing class SummitEventsLWCController {
         config.askTitleRequired = eventInfo.Ask_Title__c == 'Ask and require';
         config.askDietaryRestrictionsRequired = eventInfo.Ask_Dietary_Restrictions__c == 'Ask and require';
         config.askAccessibilityNeedsRequired = eventInfo.Ask_Accessibility_Needs__c == 'Ask and require';
+        config.askApplicantTypeRequired = eventInfo.Ask_Applicant_Type__c == 'Ask and require';
+        config.askPreferredClassYearRequired = eventInfo.Ask_Preferred_Class_Year__c == 'Ask and require';
+        config.askRelationshipToInstitutionRequired = eventInfo.Ask_Relationship_To_Institution__c == 'Ask and require';
+        config.askLastNameAsStudentRequired = eventInfo.Ask_Last_Name_As_Student__c == 'Ask and require';
+        config.lastNameAsStudentLabel = eventInfo.Last_Name_As_Student_Label__c;
 
         if (config.askThirdPartyRegistrant) {
             config.thirdPartyOptions = buildThirdPartyOptions(eventInfo.Ask_Third_Party_Registrant__c);
@@ -336,6 +381,16 @@ public with sharing class SummitEventsLWCController {
         if (config.askMailingAddress) {
             config.countryOptions = buildPicklistFromField('Registrant_Country__c');
             config.stateOptionsByCountry = buildStateOptionsByCountry();
+        }
+        if (config.askApplicantType) {
+            config.applicantTypeOptions = buildPicklistFromField('Registrant_Applicant_Type__c');
+        }
+        if (config.askRelationshipToInstitution) {
+            config.relationshipToInstitutionOptions = buildPicklistFromField('Relationship_To_Institution__c');
+        }
+        if (config.askAccessibilityNeeds) {
+            config.accessibilityOptions = buildPicklistFromField('Accessibility_Need__c');
+            config.accessibilityDetailLabel = eventInfo.Accessibility_Detail_Label__c;
         }
 
         buildAdditionalInfoConfig(eventInfo, config);
@@ -560,12 +615,14 @@ public with sharing class SummitEventsLWCController {
         List<PicklistOption> options = new List<PicklistOption>();
         options.add(newPicklistOption('', 'Select...'));
 
-        String values = String.isNotBlank(picklistValuesLong) ? picklistValuesLong : picklistValues;
-        if (String.isBlank(values)) {
-            return options;
+        List<String> valueList = new List<String>();
+        if (String.isNotBlank(picklistValues)) {
+            valueList.addAll(picklistValues.split('\n'));
+        }
+        if (String.isNotBlank(picklistValuesLong)) {
+            valueList.addAll(picklistValuesLong.split('\n'));
         }
 
-        List<String> valueList = values.split('\n');
         for (String value : valueList) {
             value = value.trim();
             if (String.isNotBlank(value)) {

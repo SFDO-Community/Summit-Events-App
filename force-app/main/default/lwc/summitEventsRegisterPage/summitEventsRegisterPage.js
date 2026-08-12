@@ -120,6 +120,40 @@ export default class SummitEventsRegisterPage extends LightningElement {
         return this.eventData?.eventInfo || {};
     }
 
+    // Event Details / Event Cost - shown near the top of the page, mirroring
+    // SummitEventsRegisterController's showLocation/totalEventCost sections
+    get showLocation() {
+        return this.config.showLocation;
+    }
+
+    get locationTitle() {
+        return this.config.locationTitle;
+    }
+
+    get locationAddress() {
+        return this.config.locationAddress;
+    }
+
+    get locationMapLink() {
+        return this.config.locationMapLink;
+    }
+
+    get formattedLocationDate() {
+        return this.eventData?.formattedNavDate;
+    }
+
+    get showEventCost() {
+        return this.config.baseEventCost > 0;
+    }
+
+    get baseEventCost() {
+        return this.config.baseEventCost;
+    }
+
+    get eventCostLabel() {
+        return this.config.eventCostLabel || 'Event Cost';
+    }
+
     // Third Party Registrant - ported from the "THIRD PARTY REGISTRANTS" block in
     // SummitEventsRegister.page. When configured, a person other than the registrant (a parent, or
     // someone registering on a company's/other's behalf) can submit the registration; their own
@@ -324,6 +358,75 @@ export default class SummitEventsRegisterPage extends LightningElement {
 
     get showAccessibilityNeeds() {
         return this.config.askAccessibilityNeeds;
+    }
+
+    get accessibilityOptions() {
+        return this.config.accessibilityOptions || [];
+    }
+
+    get accessibilityDetailLabel() {
+        return this.config.accessibilityDetailLabel || 'Accessibility Details';
+    }
+
+    // Ported from SummitEventsRegister.page: the Accessibility Details textarea only appears
+    // when the picklist's value is literally 'Yes' - not a general "isAsked" boolean
+    get showAccessibilityDetails() {
+        return this.registration.Accessibility_Need__c === 'Yes';
+    }
+
+    get showApplicantType() {
+        return this.config.askApplicantType;
+    }
+
+    get applicantTypeRequired() {
+        return this.config.askApplicantTypeRequired || false;
+    }
+
+    get applicantTypeOptions() {
+        return this.config.applicantTypeOptions || [];
+    }
+
+    get showPreferredClassYear() {
+        return this.config.askPreferredClassYear;
+    }
+
+    get preferredClassYearRequired() {
+        return this.config.askPreferredClassYearRequired || false;
+    }
+
+    get showRelationshipToInstitution() {
+        return this.config.askRelationshipToInstitution;
+    }
+
+    get relationshipToInstitutionRequired() {
+        return this.config.askRelationshipToInstitutionRequired || false;
+    }
+
+    get relationshipToInstitutionOptions() {
+        return this.config.relationshipToInstitutionOptions || [];
+    }
+
+    // lightning-dual-listbox needs an array value; the field itself stores a ';'-delimited
+    // string, matching how Salesforce natively stores MultiselectPicklist values
+    get relationshipToInstitutionValue() {
+        const raw = this.registration.Relationship_To_Institution__c;
+        return raw ? raw.split(';') : [];
+    }
+
+    handleRelationshipToInstitutionChange(event) {
+        this.registration.Relationship_To_Institution__c = event.detail.value.join(';');
+    }
+
+    get showLastNameAsStudent() {
+        return this.config.askLastNameAsStudent;
+    }
+
+    get lastNameAsStudentRequired() {
+        return this.config.askLastNameAsStudentRequired || false;
+    }
+
+    get lastNameAsStudentLabel() {
+        return this.config.lastNameAsStudentLabel || 'Last Name as a Student';
     }
 
     // Field required state - "Ask and require" is the only value that makes the field mandatory
