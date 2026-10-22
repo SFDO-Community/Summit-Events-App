@@ -400,6 +400,10 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>Waitlist_Code__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>Allow_Other_Attendees__c</field>
             </layoutItems>
             <layoutItems>

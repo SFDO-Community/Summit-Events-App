@@ -16,6 +16,7 @@ public with sharing class SummitEventsConfirmationController {
     public Double existingPaymentAmount { get; set; }
     public Double eventOnlyPaymentAmount { get; set; }
     public Boolean paymentReceived { get; set; }
+    public Integer waitlistPosition { get; set; }
 
     private class questionData {
         String guestId { get; set; }
@@ -206,8 +207,24 @@ public with sharing class SummitEventsConfirmationController {
                             eventRegistration.Encrypted_Registration_Id_1__c = encryptedString;
                         }
 
-                        eventRegistration.Status__c = 'Registered';
+                        // Enable_Waitlist__c gate: when the Instance is full AND waitlist is enabled, overflow
+                        // registrations are stamped as Waitlisted instead of Registered. Additive branch — every
+                        // instance with waitlist off (or null) continues to hit the Registered path unchanged.
+                        // Capacity of 0 or blank means capacity is not tracked, matching the flows and tracker.
+                        if (eventInstance != null && (eventInstance.Enable_Waitlist__c == true || SummitEventsShared.isWaitlistCodeValid(eventInstance))
+                                && regCRUD.isInstanceFull(eventInstance.Id, eventRegistration.Id)) {
+                            eventRegistration.Status__c = 'Waitlisted';
+                        } else {
+                            eventRegistration.Status__c = 'Registered';
+                        }
                         eventRegistration = regCRUD.updateRegistration(eventRegistration);
+
+                        // For waitlisted registrants, compute FIFO position (# ahead + 1) so the confirmation
+                        // page can display "You're #N on the waitlist". Null when the save did not land.
+                        if (eventRegistration.Status__c == 'Waitlisted') {
+                            Integer ahead = regCRUD.getWaitlistPosition(eventRegistration.Event_Instance__c, eventRegistration.Id);
+                            waitlistPosition = ahead != null ? ahead + 1 : null;
+                        }
 
                     } else {
                         ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Hosted guest record(s) could not be saved.'));
@@ -285,6 +302,43 @@ public with sharing class SummitEventsConfirmationController {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, ex.getMessage()));
             }
             return newEvtReg;
+        }
+
+        // Re-reads capacity with a row lock so two submissions racing for the last seat are serialized:
+        // the second waits for the first to commit and then sees the updated count.
+        // Full means this registration's party does not fit in the seats left. In Registrants plus Guests mode the
+        // party is the registrant plus guests; in Individual Registrants mode every registration takes one seat.
+        // The registration is still Started here, so it is not yet counted against capacity.
+        public Boolean isInstanceFull(Id instanceId, Id registrationId) {
+            Summit_Events_Instance__c inst = [
+                SELECT Capacity__c, Current_Available_Capacity__c, Capacity_Control__c
+                FROM Summit_Events_Instance__c
+                WHERE Id = :instanceId
+                FOR UPDATE
+            ];
+            Decimal partySize = 1;
+            if (inst.Capacity_Control__c == 'Registrants plus Guests') {
+                Summit_Events_Registration__c party = [SELECT Total_Number_of_Guests__c FROM Summit_Events_Registration__c WHERE Id = :registrationId];
+                partySize = party.Total_Number_of_Guests__c != null && party.Total_Number_of_Guests__c > 0 ? party.Total_Number_of_Guests__c : 1;
+            }
+            return inst.Capacity__c != null && inst.Capacity__c > 0
+                    && inst.Current_Available_Capacity__c != null && inst.Current_Available_Capacity__c < partySize;
+        }
+
+        // Counts Waitlisted registrations on the same Instance ahead of this one (CreatedDate, then Id).
+        // Returns null if the saved record is not actually Waitlisted (e.g. the update failed), so the page
+        // never shows a position that the database does not reflect. Caller adds 1 for human display.
+        public Integer getWaitlistPosition(Id instanceId, Id registrationId) {
+            Summit_Events_Registration__c savedReg = [SELECT Status__c, CreatedDate FROM Summit_Events_Registration__c WHERE Id = :registrationId LIMIT 1];
+            if (savedReg.Status__c != 'Waitlisted') {
+                return null;
+            }
+            return [
+                SELECT COUNT() FROM Summit_Events_Registration__c
+                WHERE Event_Instance__c = :instanceId
+                AND Status__c = 'Waitlisted'
+                AND (CreatedDate < :savedReg.CreatedDate OR (CreatedDate = :savedReg.CreatedDate AND Id < :registrationId))
+            ];
         }
 
         public Boolean addGuestRegistration(List<Summit_Events_Registration__c> guestRegistrations) {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Waitlist_Code__c</fullName>
+    <description>Secret code that opens registration for this event, and all of its instances, as a waitlist when the instance is full.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Add &amp;waitlist=CODE to the registration link to let people register once an instance is full. They are placed on the waitlist. Case sensitive. Use a different code for each event. Leave blank to turn off.</inlineHelpText>
+    <label>Waitlist Code</label>
+    <length>80</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

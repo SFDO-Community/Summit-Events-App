@@ -1,0 +1,156 @@
+<template>
+    <lightning-card title="Event Attendee Tracker" icon-name="standard:event">
+        <div slot="actions">
+            <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" onclick={handleRefresh} variant="border-filled"></lightning-button-icon>
+        </div>
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </template>
+
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <!-- Summary -->
+            <div class="slds-grid slds-gutters_x-small slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-4">
+                    <div class="slds-box slds-box_xx-small slds-text-align_center slds-theme_success">
+                        <p class="slds-text-heading_medium">{checkedInCount}</p>
+                        <p class="slds-text-title_caps">Checked In</p>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <div class="slds-box slds-box_xx-small slds-text-align_center slds-theme_info">
+                        <p class="slds-text-heading_medium">{registeredCount}</p>
+                        <p class="slds-text-title_caps">Registered</p>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <div class="slds-box slds-box_xx-small slds-text-align_center slds-theme_warning">
+                        <p class="slds-text-heading_medium">{waitlistedCount}</p>
+                        <p class="slds-text-title_caps">Waitlisted</p>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <div class="slds-box slds-box_xx-small slds-text-align_center slds-theme_error">
+                        <p class="slds-text-heading_medium">{cancelledCount}</p>
+                        <p class="slds-text-title_caps">Cancelled</p>
+                    </div>
+                </div>
+            </div>
+
+            <template if:true={hasEntries}>
+
+                <template if:true={hasCheckedIn}>
+                    <div class="slds-m-bottom_medium">
+                        <h3 class="slds-text-title_caps slds-m-bottom_x-small">Checked In</h3>
+                        <ul class="slds-has-dividers_bottom-space entry-list">
+                            <template for:each={checkedInEntries} for:item="entry">
+                                <li key={entry.id} class="slds-item">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-gutters_x-small">
+                                        <div class="slds-col slds-grow-none"><lightning-icon icon-name="utility:record" size="xx-small" class="slds-icon-text-success" alternative-text="{entry.status}"></lightning-icon></div>
+                                        <div class="slds-col slds-truncate">
+                                            <p class="slds-truncate"><a href={entry.regRecordUrl} data-id={entry.id} onclick={handleContactClick}>{entry.contactName}</a></p>
+                                            <p class="slds-text-body_small slds-text-color_weak slds-truncate">{entry.email}</p>
+                                        </div>
+                                        <div class="slds-col slds-grow-none">
+                                            <div class="slds-grid slds-grid_vertical-align-center slds-gutters_xx-small">
+
+                                                <lightning-badge label="Checked In" class="slds-badge_inverse"></lightning-badge>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+
+
+                <template if:true={hasRegistered}>
+                    <div class="slds-m-bottom_medium">
+                        <h3 class="slds-text-title_caps slds-m-bottom_x-small">Registered</h3>
+                        <ul class="slds-has-dividers_bottom-space entry-list entry-list_tall">
+                            <template for:each={registeredEntries} for:item="entry">
+                                <li key={entry.id} class="slds-item">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-gutters_x-small">
+                                        <div class="slds-col slds-grow-none"><lightning-icon icon-name="utility:record" size="xx-small" class="slds-icon-text-default" alternative-text="{entry.status}"></lightning-icon></div>
+                                        <div class="slds-col slds-truncate">
+                                            <p class="slds-truncate"><a href={entry.regRecordUrl} data-id={entry.id} onclick={handleContactClick}>{entry.contactName}</a></p>
+                                            <p class="slds-text-body_small slds-text-color_weak slds-truncate">{entry.email}</p>
+                                        </div>
+                                        <div class="slds-col slds-grow-none">
+                                            <div class="slds-grid slds-grid_vertical-align-center slds-gutters_xx-small">
+                                                <lightning-button label="Check In" variant="success" data-id={entry.id} data-name={entry.contactName} onclick={handleCheckIn}></lightning-button>
+                                                <lightning-button label="Cancel" variant="destructive" data-id={entry.id} data-name={entry.contactName} onclick={handleCancel}></lightning-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+
+
+                <template if:true={hasWaitlisted}>
+                    <div class="slds-m-bottom_medium">
+                        <h3 class="slds-text-title_caps slds-m-bottom_x-small">Waitlisted</h3>
+                        <ul class="slds-has-dividers_bottom-space entry-list">
+                            <template for:each={waitlistedEntries} for:item="entry">
+                                <li key={entry.id} class="slds-item">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-gutters_x-small">
+                                        <div class="slds-col slds-grow-none"><span class="slds-badge slds-theme_warning">{entry.positionDisplay}</span></div>
+                                        <div class="slds-col slds-truncate">
+                                            <p class="slds-truncate"><a href={entry.regRecordUrl} data-id={entry.id} onclick={handleContactClick}>{entry.contactName}</a></p>
+                                            <p class="slds-text-body_small slds-text-color_weak slds-truncate">{entry.email}</p>
+                                        </div>
+                                        <div class="slds-col slds-grow-none">
+                                            <div class="slds-grid slds-grid_vertical-align-center slds-gutters_xx-small">
+                                                <lightning-button label="Cancel" variant="destructive" data-id={entry.id} data-name={entry.contactName} onclick={handleCancel}></lightning-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+
+
+                <template if:true={hasCancelled}>
+                    <div class="slds-m-bottom_medium">
+                        <h3 class="slds-text-title_caps slds-m-bottom_x-small">Cancelled</h3>
+                        <ul class="slds-has-dividers_bottom-space entry-list">
+                            <template for:each={cancelledEntries} for:item="entry">
+                                <li key={entry.id} class="slds-item">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-gutters_x-small">
+                                        <div class="slds-col slds-grow-none"><lightning-icon icon-name="utility:record" size="xx-small" class="slds-icon-text-light" alternative-text="{entry.status}"></lightning-icon></div>
+                                        <div class="slds-col slds-truncate">
+                                            <p class="slds-truncate"><span class="slds-text-color_weak slds-text-strike">{entry.contactName}</span></p>
+                                            <p class="slds-text-body_small slds-text-color_weak slds-truncate">{entry.email}</p>
+                                        </div>
+                                        <div class="slds-col slds-grow-none">
+                                            <div class="slds-grid slds-grid_vertical-align-center slds-gutters_xx-small">
+                                                <lightning-button label="Reinstate" variant="neutral" data-id={entry.id} data-name={entry.contactName} onclick={handleReinstate}></lightning-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+
+            </template>
+
+            <template if:false={hasEntries}>
+                <div class="slds-text-align_center slds-p-vertical_large">
+                    <p class="slds-text-body_regular slds-text-color_weak">No registrations yet for this event instance.</p>
+                </div>
+            </template>
+
+            <template if:true={error}>
+                <div class="slds-text-color_error slds-p-around_small">{error}</div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

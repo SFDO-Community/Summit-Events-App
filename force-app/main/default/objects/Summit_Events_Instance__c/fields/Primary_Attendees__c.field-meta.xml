@@ -8,7 +8,7 @@
     <summaryFilterItems>
         <field>Summit_Events_Registration__c.Status__c</field>
         <operation>notEqual</operation>
-        <value>Cancelled, Rescheduled, Started</value>
+        <value>Cancelled, Rescheduled, Started, Waitlisted</value>
     </summaryFilterItems>
     <summaryFilterItems>
         <field>Summit_Events_Registration__c.Guest_Host_Status__c</field>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Has_Waitlisted_Person</name>
+        <label>Found Waitlisted Person?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>No Waitlisted Found</defaultConnectorLabel>
+        <rules>
+            <name>Yes_Waitlisted_Found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Next_Waitlisted</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Promote_To_Registered</targetReference>
+            </connector>
+            <label>Yes Waitlisted Found</label>
+        </rules>
+    </decisions>
+    <description>When a seated registration (Registered, Confirmed or Attended) on a waitlist-enabled Instance is cancelled, promote the earliest waitlisted registration that fits in the free seats to Registered. Free seats are the instance's available capacity (which still counts the cancelled registration while this flow runs) plus the cancelled party's seats. In Registrants plus Guests mode a party only fits if its Total_Number_of_Guests__c is no larger than that, so a promotion never overfills the instance. Clone this flow to apply your own promotion rules. Hosted guests do not hold a seat in Individual Registrants mode, so cancelling one does not promote anyone.</description>
+    <environments>Default</environments>
+    <formulas>
+        <description>Largest party that fits in the seats that are free once this cancellation counts. The instance roll-ups are recalculated after record-triggered flows run, so Current_Available_Capacity__c still counts the cancelled registration here; add its seats back. Individual Registrants mode takes one seat per registration. Never goes negative, so an overbooked instance promotes nobody.</description>
+        <name>maxPartySize</name>
+        <dataType>Number</dataType>
+        <expression>IF(ISPICKVAL({!$Record.Event_Instance__r.Capacity_Control__c}, &quot;Registrants plus Guests&quot;),
+    MAX({!$Record.Event_Instance__r.Current_Available_Capacity__c} + {!$Record.Total_Number_of_Guests__c}, 0),
+    IF({!$Record.Event_Instance__r.Current_Available_Capacity__c} + 1 &gt;= 1, 1000000, 0))</expression>
+        <scale>0</scale>
+    </formulas>
+    <interviewLabel>Waitlist Auto Promote {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Waitlist Auto Promote</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Next_Waitlisted</name>
+        <label>Get Next Waitlisted Registration</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Has_Waitlisted_Person</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Event_Instance__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Event_Instance__c</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Waitlisted</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Total_Number_of_Guests__c</field>
+            <operator>LessThanOrEqualTo</operator>
+            <value>
+                <elementReference>maxPartySize</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Summit_Events_Registration__c</object>
+        <sortField>CreatedDate</sortField>
+        <sortOrder>Asc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Promote_To_Registered</name>
+        <label>Promote to Registered</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Next_Waitlisted.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Status__c</field>
+            <value>
+                <stringValue>Registered</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Summit_Events_Registration__c</object>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Next_Waitlisted</targetReference>
+        </connector>
+        <filterFormula>ISPICKVAL({!$Record.Status__c}, "Cancelled")
+&amp;&amp; (ISPICKVAL({!$Record__Prior.Status__c}, "Registered") || ISPICKVAL({!$Record__Prior.Status__c}, "Confirmed") || ISPICKVAL({!$Record__Prior.Status__c}, "Attended"))
+&amp;&amp; {!$Record.Event_Instance__r.Enable_Waitlist__c}
+&amp;&amp; NOT(NOT(ISPICKVAL({!$Record.Event_Instance__r.Capacity_Control__c}, "Registrants plus Guests")) &amp;&amp; ISPICKVAL({!$Record.Guest_Host_Status__c}, "Hosted registrant"))</filterFormula>
+        <object>Summit_Events_Registration__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

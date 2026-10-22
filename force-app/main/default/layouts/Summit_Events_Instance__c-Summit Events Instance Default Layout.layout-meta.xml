@@ -83,7 +83,8 @@
                 <field>Current_Available_Capacity__c</field>
             </layoutItems>
             <layoutItems>
-                <emptySpace>true</emptySpace>
+                <behavior>Edit</behavior>
+                <field>Enable_Waitlist__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>

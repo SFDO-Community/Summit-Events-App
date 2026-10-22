@@ -21,12 +21,24 @@ public without sharing class SummitEventsReadShared {
                         Instance_Start_Date__c, Instance_Start_Time__c, Instance_End_Date__c, Instance_End_Time__c, Instance_Time_Zone__c, Registration_Close_Date__c,
                         Registration_Close_Time__c, Event__r.Event_Home_Link_URL__c, Event_Name__c, Instance_Short_Description__c, Event__r.Event_Short_Listing_Description__c,
                         Virtual_Meeting_Link__c, Event__r.Location_Title__c, Event__r.Location_Address__c, Event__r.Location_Map_Link__c,
-                        Building_Override__c, Event__r.Building__c
+                        Building_Override__c, Event__r.Building__c,
+                        Enable_Waitlist__c
 
                 FROM Summit_Events_Instance__c
                 WHERE Id = :instanceId
                 WITH SECURITY_ENFORCED
         ];
+    }
+
+    /**
+     * Reads the waitlist code in system mode so guests never need field access to it.
+     *
+     * @param eventId Id of the Summit Event
+     * @return The Waitlist Code, or null when none is set
+     */
+    public static String getWaitlistCode(Id eventId) {
+        List<Summit_Events__c> events = [SELECT Waitlist_Code__c FROM Summit_Events__c WHERE Id = :eventId LIMIT 1];
+        return events.isEmpty() ? null : events[0].Waitlist_Code__c;
     }
 
     public static Summit_Events__c getEventById(Id eventId) {

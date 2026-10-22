@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Enable_Waitlist__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Master toggle for waitlist on this Instance. When checked, the registration wizard stays open past capacity and overflow registrations are automatically stamped as Waitlisted. When unchecked, the wizard closes at capacity (upstream default). Works in both pre-reg and reg windows when enabled.</description>
+    <inlineHelpText>Check to allow the form to accept registrations past capacity and route them to the waitlist. Uncheck to close the form when capacity is reached. Requires Capacity to be set.</inlineHelpText>
+    <label>Enable Waitlist</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

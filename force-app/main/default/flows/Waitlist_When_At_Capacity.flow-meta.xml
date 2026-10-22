@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <assignments>
+        <name>Set_Waitlisted</name>
+        <label>Set Waitlisted</label>
+        <locationX>176</locationX>
+        <locationY>500</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Status__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Waitlisted</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <name>Is_Instance_Full</name>
+        <label>Is Instance Full?</label>
+        <locationX>176</locationX>
+        <locationY>400</locationY>
+        <defaultConnectorLabel>Has Spots or Waitlist Disabled</defaultConnectorLabel>
+        <rules>
+            <name>Full</name>
+            <conditionLogic>1 AND 2 AND 3</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Instance.Capacity__c</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Get_Instance.Current_Available_Capacity__c</leftValueReference>
+                <operator>LessThanOrEqualTo</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Get_Instance.Enable_Waitlist__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Waitlisted</targetReference>
+            </connector>
+            <label>Full</label>
+        </rules>
+    </decisions>
+    <description>Before-save on Summit_Events_Registration__c. When a NEW registration with Status=Registered comes in and the parent Instance has capacity tracking on AND is at/over capacity AND Enable_Waitlist is true, flip Status to Waitlisted before commit. Guard for non-wizard, one-at-a-time insert paths (coordinator create, single API insert); the wizard itself inserts as Started and is handled by SummitEventsConfirmationController. Not a seat allocator for bulk loads: every record in one batch reads the same pre-batch capacity, so bulk imports into a nearly full instance should be seated deliberately. No-op when Enable_Waitlist is false.</description>
+    <environments>Default</environments>
+    <interviewLabel>Waitlist When At Capacity {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Waitlist When At Capacity</label>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Instance</name>
+        <label>Get Instance</label>
+        <locationX>176</locationX>
+        <locationY>300</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Is_Instance_Full</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Event_Instance__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Summit_Events_Instance__c</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Capacity__c</queriedFields>
+        <queriedFields>Current_Available_Capacity__c</queriedFields>
+        <queriedFields>Enable_Waitlist__c</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Instance</targetReference>
+        </connector>
+        <filterFormula>AND(
+    ISPICKVAL({!$Record.Status__c}, 'Registered'),
+    NOT(ISBLANK({!$Record.Event_Instance__c}))
+)</filterFormula>
+        <object>Summit_Events_Registration__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

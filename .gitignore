@@ -41,3 +41,5 @@ node_modules/
 **/*.tsbuildinfo
 
 **/graphql.config.yml
+/ai-logs/
+/.playwright-mcp/

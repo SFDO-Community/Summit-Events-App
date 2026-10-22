@@ -58,8 +58,6 @@
       "enableS1EncryptedStoragePref2": false
     },
     "industriesSettings": {
-      "enableAcademicOperations": true,
-      "enableAlumniRelations": true,
       "enableBenefitManagementPreference": true,
       "enableBenefitAndGoalSharingPref": true,
       "enableCarePlansPreference": true,
@@ -68,8 +66,7 @@
       "enableGroupMembershipPref": true,
       "enableIndustriesAssessment": true,
       "enableInteractionSummaryPref": true,
-      "enableInteractionSummaryRoleHierarchy": true,
-      "enableStudentSuccess": true
+      "enableInteractionSummaryRoleHierarchy": true
     },
     "InterestTaggingSettings": {
       "enableInterestTagging": true

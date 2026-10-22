@@ -121,7 +121,7 @@ public with sharing class SummitEventsShared {
         }
 
         List<String> validParameters = new List<String>{
-                'adminopen', 'instanceID', 'audience'
+                'adminopen', 'instanceID', 'audience', 'waitlist'
         };
         for (String parameterKey : currentPageParameters.keySet()) {
             if (validParameters.contains(parameterKey)) {
@@ -357,15 +357,43 @@ public with sharing class SummitEventsShared {
         return b;
     }
 
+    /**
+     * Checks the waitlist URL parameter against the Waitlist Code on the instance's Summit Event.
+     * Independent of adminopen. A blank code on the event never matches, and the comparison is exact and case sensitive.
+     *
+     * @param evtInstance Instance whose parent event holds the Waitlist Code
+     * @return True when the page URL carries the waitlist code of this instance's event
+     */
+    public static Boolean isWaitlistCodeValid(Summit_Events_Instance__c evtInstance) {
+        if (ApexPages.currentPage() == null || evtInstance == null || evtInstance.Event__r == null) {
+            return false;
+        }
+        String suppliedCode = ApexPages.currentPage().getParameters().get('waitlist');
+        if (String.isBlank(suppliedCode)) {
+            return false;
+        }
+        String eventCode = SummitEventsReadShared.getWaitlistCode(evtInstance.Event__r.Id);
+        return String.isNotBlank(eventCode) && eventCode.equals(suppliedCode);
+    }
+
     public static Boolean isEventClosed(Summit_Events_Instance__c evtInstance, String masterEventStatus) {
         // Figure out if the event is closed.
         Boolean eventIsClosed = false;
+        if (isWaitlistCodeValid(evtInstance)) {
+            // A valid waitlist code overrides capacity only. Close date and active statuses still apply, and adminopen is not consulted.
+            return checkCloseDateTime(evtInstance) || evtInstance.Active_Status__c != 'Active' || masterEventStatus != 'Active';
+        }
         if (ApexPages.currentPage() != null && String.isNotBlank(ApexPages.currentPage().getParameters().get('adminopen'))) {
             Boolean adminOpen = isBoolean(ApexPages.currentPage().getParameters().get('adminopen'));
             eventIsClosed = !adminOpen;
         } else {
             eventIsClosed = checkCloseDateTime(evtInstance);
-            if (evtInstance.Current_Available_Capacity__c <= 0 || evtInstance.Active_Status__c != 'Active' || masterEventStatus != 'Active') {
+            // Capacity gate: closed at capacity UNLESS Enable_Waitlist__c is true (then form stays open and
+            // ConfirmationController stamps overflow as Waitlisted). Backward-compatible: when the flag is
+            // false or null the existing "close at capacity" behavior is preserved.
+            Boolean closedByCapacity = (evtInstance.Enable_Waitlist__c != true
+                    && evtInstance.Current_Available_Capacity__c <= 0);
+            if (closedByCapacity || evtInstance.Active_Status__c != 'Active' || masterEventStatus != 'Active') {
                 eventIsClosed = true;
             }
         }

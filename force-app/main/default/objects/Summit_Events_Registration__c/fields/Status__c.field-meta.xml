@@ -43,6 +43,11 @@
                 <label>Cancelled</label>
             </value>
             <value>
+                <fullName>Waitlisted</fullName>
+                <default>false</default>
+                <label>Waitlisted</label>
+            </value>
+            <value>
                 <fullName>Rescheduled</fullName>
                 <default>false</default>
                 <label>Rescheduled</label>
