@@ -84,6 +84,17 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
         Assert.isTrue(containsUrl(updated.Event_Full_Text__c, cd.ContentDownloadUrl),
             'RTF should contain the ContentDownloadUrl but was: ' + updated.Event_Full_Text__c);
         Assert.areEqual(1, mock.callCount, 'The image should be fetched exactly once');
+        ContentDistribution prefs = [
+            SELECT PreferencesNotifyOnVisit, PreferencesAllowViewInBrowser, PreferencesAllowOriginalDownload,
+                   PreferencesPasswordRequired, PreferencesExpires
+            FROM   ContentDistribution
+            WHERE  Id = :cd.Id
+        ];
+        Assert.isFalse(prefs.PreferencesNotifyOnVisit, 'Guest views must not email the person who created the link');
+        Assert.isTrue(prefs.PreferencesAllowViewInBrowser, 'The image must be viewable in the browser');
+        Assert.isTrue(prefs.PreferencesAllowOriginalDownload, 'The direct download URL requires original download');
+        Assert.isFalse(prefs.PreferencesPasswordRequired, 'Guests cannot enter a password');
+        Assert.isFalse(prefs.PreferencesExpires, 'The link must not expire out from under a live event page');
         Assert.isTrue(mock.lastEndpoint.contains('/sobjects/Summit_Events__c/' + se.Id + '/richTextImageFields/' + SOURCE_FIELD + '/' + refId(1)),
             'The REST request should target the event, field and image reference: ' + mock.lastEndpoint);
         Assert.areEqual(1, [SELECT COUNT() FROM ContentDocumentLink WHERE LinkedEntityId = :se.Id],

@@ -418,6 +418,14 @@ public with sharing class SummitEventsRtfLinkPipeline {
                         ContentDistribution cd = new ContentDistribution();
                         cd.ContentVersionId = sfi.cvId;
                         cd.Name = (wrappedEvent.event.Name + ' - ' + field + i++).left(100); // Name max is 100
+                        // Set every preference explicitly so behavior does not depend on org defaults.
+                        // Notify-on-visit defaults to on, and every guest view of a public event page
+                        // would email whoever created the link.
+                        cd.PreferencesNotifyOnVisit = false;
+                        cd.PreferencesAllowViewInBrowser = true;
+                        cd.PreferencesAllowOriginalDownload = true; // needed for the direct ContentDownloadUrl
+                        cd.PreferencesPasswordRequired = false;
+                        cd.PreferencesExpires = false;
                         cdInsertList.add(cd);
                         visited.add(sfi.cvId);
                     }
