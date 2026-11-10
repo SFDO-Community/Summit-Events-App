@@ -43,3 +43,4 @@ package.json
 
 
 **/graphql.config.yml
+/.awb/
