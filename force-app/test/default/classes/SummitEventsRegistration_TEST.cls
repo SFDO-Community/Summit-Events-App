@@ -25,7 +25,7 @@ public class SummitEventsRegistration_TEST {
         email2.Event__c = seaTestInstances[1].Event__c;
         email2.Action_Status__c = 'Registered';
         email2.Action_Sub_status__c = 'In Progress';
-        email2.Email_Content__c = 'Sample text here {!Registrant_Last_Name__c} {!Add_To_Calendar_Link__c}';
+        email2.Email_Content__c = 'Sample text here {!Registrant_Last_Name__c} {!Add_To_Calendar_Link__c} {!Registrant_QR_Code_Image_URL__c}';
         email2.Letterhead_HTML__c = 'Letterhead goes here<br/>[[DONT_DELETE_CONTENT_HERE]]';
         email2.BCC_Email__c = 'bcc@example.com';
         insert email2;

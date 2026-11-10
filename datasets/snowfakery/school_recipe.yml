@@ -24,11 +24,13 @@
                     probability: 50%
                     pick: ${{fake.city}} University
     BillingCity:
-      fake: city
+      fake: City
     BillingStreet:
-      fake: street_address
+      fake: StreetAddress
     BillingState:
-      fake: state
+      fake: State
     BillingCountry:
-      fake: country
+      fake: CurrentCountry
+    Phone:
+      fake: PhoneNumber
     Industry: Education

@@ -5,7 +5,7 @@
     <externalId>false</externalId>
     <inlineHelpText>The street 1 reported by the event registrant upon registering. This may not be the same as on the contact record.</inlineHelpText>
     <label>Registrant Street 1</label>
-    <length>95</length>
+    <length>255</length>
     <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

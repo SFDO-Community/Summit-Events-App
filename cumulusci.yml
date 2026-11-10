@@ -1,187 +1,249 @@
 minimum_cumulusci_version: '3.34.0'
 project:
-    name: SummitEventsApp
-    package:
-        name: Summit Events App
-        namespace: summit
-        api_version: "61.0"
-    source_format: sfdx
-    git:
-        default_branch: master
-        repo_url: https://github.com/SFDO-Community/Summit-Events-App
+  name: SummitEventsApp
+  package:
+    name: Summit Events App
+    namespace: summit
+    api_version: "64.0"
+  source_format: sfdx
+  git:
+    default_branch: master
+    repo_url: https://github.com/SFDO-Community/Summit-Events-App
 
 tasks:
-    deploy_site_config:
-        description: Deploys configuration for Development.
-        class_path: cumulusci.tasks.salesforce.Deploy
-        options:
-            namespace_inject: $project_config.project__package__namespace
-            path: unpackaged/config/site
+  deploy_site_config:
+    description: Deploys configuration for Development.
+    class_path: cumulusci.tasks.salesforce.Deploy
+    options:
+      namespace_inject: $project_config.project__package__namespace
+      path: unpackaged/config/site
 
-    create_fake_school_data:
-        description: Makes fake account data to mimic schools with Education as industry
-        class_path: cumulusci.tasks.bulkdata.snowfakery.Snowfakery
-        options:
-            recipe: datasets/snowfakery/school_recipe.yml
+  create_fake_school_data:
+    description: Makes fake account data to mimic schools with Education as industry
+    class_path: cumulusci.tasks.bulkdata.snowfakery.Snowfakery
+    options:
+      recipe: datasets/snowfakery/school_recipe.yml
 
-    deploy_guest_sharing_rules:
-        description: Deploys configuration for Development.
-        class_path: cumulusci.tasks.salesforce.Deploy
-        options:
-            namespace_inject: $project_config.project__package__namespace
-            path: unpackaged/config/sharing
+  deploy_guest_sharing_rules:
+    description: Deploys configuration for Development.
+    class_path: cumulusci.tasks.salesforce.Deploy
+    options:
+      namespace_inject: $project_config.project__package__namespace
+      path: unpackaged/config/sharing
 
-    deploy_namespaced_guest_sharing_rules:
-        description: Deploys configuration for Development.
-        class_path: cumulusci.tasks.salesforce.Deploy
-        options:
-            namespace_inject: $project_config.project__package__namespace
-            path: unpackaged/config/summit__sharing
+  deploy_namespaced_guest_sharing_rules:
+    description: Deploys configuration for Development.
+    class_path: cumulusci.tasks.salesforce.Deploy
+    options:
+      namespace_inject: $project_config.project__package__namespace
+      path: unpackaged/config/summit__sharing
 
-    deploy_site_settings:
-        description: Setup the Custom Settings for the Event Site
-        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
-        options:
-            namespace_inject: $project_config.project__package__namespace
-            apex: >
-                Site mySite = [SELECT Id FROM Site WHERE Name = 'Summit_Events'];
-                SiteDetail mySiteDetail = [SELECT SecureURL FROM SiteDetail WHERE DurableId = :mySite.Id];
-                String url = mySiteDetail.SecureURL;
-                %%%NAMESPACE%%%Summit_Events_Settings__c eventSettings = %%%NAMESPACE%%%Summit_Events_Settings__c.getOrgDefaults();
-                eventSettings.%%%NAMESPACE%%%Community_Base_URL__c = url;
-                eventSettings.%%%NAMESPACE%%%Managed_Package__c = false;
-                upsert eventSettings;
+  deploy_site_settings:
+    description: Setup the Custom Settings for the Event Site
+    class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+    options:
+      namespace_inject: $project_config.project__package__namespace
+      apex: >
+        Site mySite = [SELECT Id FROM Site WHERE Name = 'Summit_Events'];
+        SiteDetail mySiteDetail = [SELECT SecureURL FROM SiteDetail WHERE DurableId = :mySite.Id];
+        String url = mySiteDetail.SecureURL;
+        %%%NAMESPACE%%%Summit_Events_Settings__c eventSettings = %%%NAMESPACE%%%Summit_Events_Settings__c.getOrgDefaults();
+        eventSettings.%%%NAMESPACE%%%Community_Base_URL__c = url;
+        eventSettings.%%%NAMESPACE%%%Managed_Package__c = false;
+        upsert eventSettings;
 
-    deploy_permission_set:
-        description: Give System Admins Event Admin Permission Set
-        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
-        options:
-            namespace_inject: $project_config.project__package__namespace
-            apex: >
-                List<PermissionSet> eventPermissionSets;
-                eventPermissionSets = [SELECT Name, Id FROM PermissionSet WHERE Name = 'Summit_Events_Admin'];
+  deploy_admin_permission_set:
+    description: Give System Admins Event Admin Permission Set
+    class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+    options:
+      namespace_inject: $project_config.project__package__namespace
+      apex: >
+        List<PermissionSet> eventPermissionSets;
+        eventPermissionSets = [SELECT Name, Id FROM PermissionSet WHERE Name = 'Summit_Events_Admin'];
+        
+        List<PermissionSetAssignment> permissionSetList = new List<PermissionSetAssignment>();
+        if (!eventPermissionSets.isEmpty()) {
+            for (User u: [ SELECT ID FROM User WHERE Profile.Name = 'System Administrator' ]) {
+                             permissionSetList.add(new PermissionSetAssignment(PermissionSetId = eventPermissionSets[0].Id, AssigneeId = u.Id));
+            }
+        }
+        if (!permissionSetList.isEmpty()) {
+            upsert permissionSetList;
+        }
 
-                List<PermissionSetAssignment> permissionSetList = new List<PermissionSetAssignment>();
-                if (!eventPermissionSets.isEmpty()) {
-                    for (User u: [ SELECT ID FROM User WHERE Profile.Name = 'System Administrator' ]) {
-                                     permissionSetList.add(new PermissionSetAssignment(PermissionSetId = eventPermissionSets[0].Id, AssigneeId = u.Id));
-                    }
-                }
-                if (!permissionSetList.isEmpty()) {
-                    upsert permissionSetList;
-                }
+  deploy_guest_permission_set:
+    description: Give Guest User Registrant Permission Set
+    class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+    options:
+      namespace_inject: $project_config.project__package__namespace
+      apex: >
+        String siteName = 'Summit_Events';
+        
+        List<Site> sites = [
+                SELECT GuestUserId
+                FROM Site
+                WHERE Name = :siteName
+        ];
+        
+        List<PermissionSet> eventPermissionSets;
+        eventPermissionSets = [SELECT Name, Id FROM PermissionSet WHERE Name = 'Summit_Events_Registrant'];
+        
+        List<PermissionSetAssignment> permissionSetList = new List<PermissionSetAssignment>();
+        
+        for (Site site : sites) {
+            for (permissionSet ps : eventPermissionSets) {
+                PermissionSetList.add(new PermissionSetAssignment(PermissionSetId = ps.Id, AssigneeId = site.GuestUserId));
+            }
+        }
+        
+        if (!permissionSetList.isEmpty()) {
+            upsert permissionSetList;
+        }
 
-    deploy_guest_permission_set:
-        description: Give System Admins Event Admin Permission Set
-        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
-        options:
-            namespace_inject: $project_config.project__package__namespace
-            apex: >
-                String siteName = 'Summit_Events';
+  create_community:
+    description: Deploys configuration for Development.
+    class_path: cumulusci.tasks.salesforce.CreateCommunity
+    options:
+      name: Summit Events
+      description: Summit Events Community
+      template: Build Your Own
+      skip_existing: True
 
-                Site site = [
-                        SELECT GuestUserId
-                        FROM Site
-                        WHERE Name = :siteName
-                ];
+  create_community_network:
+    description: Creates the community network for Development.
+    class_path: cumulusci.tasks.salesforce.network_member_group.CreateNetworkMemberGroups
+    options:
+      network_name: Summit Events
+      profile_names:
+        - Customer Community Login User
+      permission_set_names:
+        - Summit Events Registrant
 
-                List<PermissionSet> eventPermissionSets;
-                eventPermissionSets = [SELECT Name, Id FROM PermissionSet WHERE Name = 'Summit_Events_Registrant'];
+  create_community_experience_cloud_bundle:
+    description: Deploys Network config for community for Development.
+    class_path: cumulusci.tasks.salesforce.Deploy
+    options:
+      namespace_inject: $project_config.project__package__namespace
+      path: unpackaged/config/experiences
+      unmanaged: True
+      timeout: 520
 
-                List<PermissionSetAssignment> permissionSetList = new List<PermissionSetAssignment>();
-                if (!eventPermissionSets.isEmpty()) {
-                        permissionSetList.add(new PermissionSetAssignment(PermissionSetId = eventPermissionSets[0].Id, AssigneeId = site.GuestUserId));
-                }
-                if (!permissionSetList.isEmpty()) {
-                    upsert permissionSetList;
-                }
+  role_to_userUser:
+    description: Give Guest User Registrant Permission Set
+    class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+    options:
+      namespace_inject: $project_config.project__package__namespace
+      apex: >
+        User userUser = [SELECT Id FROM User WHERE Alias = 'UUser' LIMIT 1];
+        Id seaUserRole = [SELECT Id FROM UserRole WHERE Name = 'Summit Events Community Owner'].Id;
+        userUser.UserRoleId = seaUserRole;
+        userUser.Country = 'United States';
+        update userUser;
 
-    robot:
-        options:
-            suites: robot/SummitEventsApp/tests
-            options:
-                outputdir: robot/SummitEventsApp/results
+  create_community_publish:
+    description: Publishes the community for Development.
+    class_path: cumulusci.tasks.salesforce.PublishCommunity
+    options:
+      name: Summit Events
 
-    robot_testdoc:
-        options:
-            path: robot/SummitEventsApp/tests
-            output: robot/SummitEventsApp/doc/SummitEventsApp_tests.html
+  robot:
+    options:
+      suites: robot/SummitEventsApp/tests
+      options:
+        outputdir: robot/SummitEventsApp/results
 
-    install_managed:
-        options:
-            security_type: NONE
+  robot_testdoc:
+    options:
+      path: robot/SummitEventsApp/tests
+      output: robot/SummitEventsApp/doc/SummitEventsApp_tests.html
 
-    update_dependencies:
-        options:
-            security_type: NONE
+  install_managed:
+    options:
+      security_type: NONE
+
+  update_dependencies:
+    options:
+      security_type: NONE
 
 flows:
-    config_qa:
-        steps:
-            3:
-                task: deploy_permission_set
-            4:
-                task: deploy_site_config
-            5:
-                task: deploy_site_settings
-            6:
-                task: deploy_guest_permission_set
-            7:
-                task: deploy_guest_sharing_rules
-            8:
-                task: create_fake_school_data
+  config_qa:
+    steps:
+      1.3:
+        task: create_community
+      3:
+        task: deploy_admin_permission_set
+      4:
+        task: deploy_site_config
+      5:
+        task: deploy_site_settings
+      6:
+        task: deploy_guest_permission_set
+      8:
+        task: create_fake_school_data
 
-    config_dev:
-        steps:
-            3:
-                task: deploy_permission_set
-            4:
-                task: deploy_site_config
-            5:
-                task: deploy_site_settings
-            6:
-                task: deploy_guest_permission_set
-            7:
-                task: deploy_guest_sharing_rules
-            8:
-                task: create_fake_school_data
+  config_dev:
+    steps:
+      1.3:
+        task: role_to_userUser
+      3:
+        task: create_community
+      4:
+        task: create_community_network
+      5:
+        task: create_community_experience_cloud_bundle
+      6:
+        task: deploy_site_config
+      7:
+        task: create_community_publish
+      9:
+        task: deploy_admin_permission_set
+      11:
+        task: deploy_site_settings
+      12:
+        task: deploy_guest_permission_set
+#      13:
+#        task: create_fake_school_data
 
-    config_dev_namespaced:
-        steps:
-            3:
-                task: deploy_permission_set
-            4:
-                task: deploy_site_config
-            5:
-                task: deploy_site_settings
-            6:
-                task: deploy_guest_permission_set
-            7:
-                task: deploy_guest_sharing_rules
-            8:
-                task: create_fake_school_data
+  config_dev_namespaced:
+    steps:
+      3:
+        task: deploy_admin_permission_set
+      4:
+        task: deploy_site_config
+      5:
+        task: deploy_site_settings
+      6:
+        task: deploy_guest_permission_set
+      8:
+        task: create_fake_school_data
 
-    customer_org:
-        steps:
-            1:
-                task: install_managed
+  customer_org:
+    steps:
+      1:
+        task: install_managed
 
 plans:
-    install:
-        slug: install
-        title: Base Plan
-        tier: primary
-        is_listed: True
-        preflight_message: This will install Summit Events App (SEA) into your org.
-        post_install_message: "Thanks for installing SEA. Please review the [post-install instructions](https://sfdo-community-sprints.github.io/summit-events-app-documentation/docs/Getting-Started/Installing/) for next steps."
-        error_message: "If you experience an issue with the installation, please post in the [Trailblazer Community](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHi2SAE)."
-        steps:
-            1:
-                flow: customer_org
+  install:
+    slug: install
+    title: Base Plan
+    tier: primary
+    is_listed: True
+    preflight_message: This will install Summit Events App (SEA) into your org.
+    post_install_message: "Thanks for installing SEA. Please review the [post-install instructions](https://sfdo-community-sprints.github.io/summit-events-app-documentation/docs/Getting-Started/Installing/) for next steps."
+    error_message: "If you experience an issue with the installation, please post in the [Trailblazer Community](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHi2SAE)."
+    steps:
+      1:
+        flow: customer_org
 
 orgs:
-    scratch:
-        dev_namespaced:
-            config_file: orgs/namespaced.json
-            days: 7
-            namespaced: true
+  scratch:
+
+    dev_namespaced:
+      config_file: orgs/namespaced.json
+      days: 7
+      namespaced: true
+
+    dev:
+      config_file: orgs/educloud.json
+      days: 7
+      namespaced: false

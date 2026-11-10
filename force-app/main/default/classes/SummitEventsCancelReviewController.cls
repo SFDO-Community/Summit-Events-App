@@ -40,7 +40,7 @@ public with sharing class SummitEventsCancelReviewController {
                         eventInstance = SummitEventsReadShared.getInstanceById(eventRegistration.Event_Instance__c);
                         eventPage = SummitEventsReadShared.getEventById(eventInstance.Event__c);
                         templateSelected = SummitEventsShared.getTemplate(eventPage.Template__c);
-                        eventIsClosed = SummitEventsShared.isEventClosed(eventInstance, eventPage.Event_Status__c);
+                        eventIsClosed = SummitEventsShared.checkCloseDateTime(eventInstance);
 
                         if (eventInstance != null) {
                             formattedNavDate = SummitEventsShared.navBreadcrumbBuilder(eventInstance);

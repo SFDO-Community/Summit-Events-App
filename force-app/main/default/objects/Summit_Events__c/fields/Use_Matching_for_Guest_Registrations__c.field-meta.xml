@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Use_Matching_for_Guest_Registrations__c</fullName>
+    <businessStatus>Active</businessStatus>
+    <defaultValue>true</defaultValue>
+    <description>When a registrant inputs information for guest registrations use the matching rules configured.</description>
+    <inlineHelpText>When a registrant inputs information for guest registrations use the matching rules configured.</inlineHelpText>
+    <label>Use Matching for Guest Registrations</label>
+    <securityClassification>Public</securityClassification>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

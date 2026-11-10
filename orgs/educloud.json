@@ -1,0 +1,103 @@
+{
+  "orgName": "Summit Events Dev",
+  "edition": "Developer",
+  "features": [
+    "Sites",
+    "EducationCloud:10",
+    "AccountingSubledgerGrowthEdition",
+    "AccountingSubledgerUser",
+    "AnalyticsQueryService",
+    "Assessments",
+    "Communities",
+    "ContactsToMultipleAccounts",
+    "DataProcessingEngine",
+    "DecisionTable",
+    "DocumentChecklist",
+    "EnableSetPasswordInApi",
+    "FSCAlertFramework",
+    "Fundraising",
+    "IndustriesActionPlan",
+    "IndustriesSalesExcellenceAddOn",
+    "IndustriesServiceExcellenceAddOn",
+    "LightningScheduler",
+    "LightningServiceConsole",
+    "MarketingUser",
+    "OmniStudioDesigner",
+    "OmniStudioRuntime",
+    "PersonAccounts",
+    "PublicSectorAccess",
+    "StateAndCountryPicklist"
+  ],
+  "settings": {
+    "accountSettings": {
+      "enableRelateContactToMultipleAccounts": true
+    },
+    "apexSettings": {
+      "enableDisableParallelApexTesting": true
+    },
+    "chatterSettings": {
+      "enableChatter": true
+    },
+    "communitiesSettings": {
+      "enableCommunityWorkspaces": true,
+      "enableNetworksEnabled": true
+    },
+    "DocumentChecklistSettings": {
+      "deleteDCIWithFiles": true
+    },
+    "enhancedNotesSettings": {
+      "enableEnhancedNotes": true
+    },
+    "ForecastingSettings": {
+      "enableForecasts": true
+    },
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "mobileSettings": {
+      "enableS1EncryptedStoragePref2": false
+    },
+    "industriesSettings": {
+      "enableAcademicOperations": true,
+      "enableAlumniRelations": true,
+      "enableBenefitManagementPreference": true,
+      "enableBenefitAndGoalSharingPref": true,
+      "enableCarePlansPreference": true,
+      "enableDiscoveryFrameworkMetadata": true,
+      "enableEducationCloud": true,
+      "enableGroupMembershipPref": true,
+      "enableIndustriesAssessment": true,
+      "enableInteractionSummaryPref": true,
+      "enableInteractionSummaryRoleHierarchy": true,
+      "enableStudentSuccess": true
+    },
+    "InterestTaggingSettings": {
+      "enableInterestTagging": true
+    },
+    "nameSettings": {
+      "enableMiddleName": true,
+      "enableNameSuffix": true
+    },
+    "OpportunitySettings": {
+      "enableOpportunityTeam": true
+    },
+    "productSettings": {
+      "enableRevenueSchedule": true
+    },
+    "userManagementSettings": {
+      "enableEnhancedPermsetMgmt": true,
+      "enableEnhancedProfileMgmt": true,
+      "enableNewProfileUI": true,
+      "permsetsInFieldCreation": true
+    },
+    "securitySettings": {
+      "enableAdminLoginAsAnyUser": true,
+      "sessionSettings": {
+        "forceRelogin": false
+      }
+    },
+    "languageSettings": {
+      "enableTranslationWorkbench": true
+    }
+  }
+}

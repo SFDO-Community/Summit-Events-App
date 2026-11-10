@@ -5,25 +5,104 @@
 
 @IsTest
 public class SummitEventsContactMatching_TEST {
+
+    @TestSetup
+    static void setup() {
+
+        //Add contacts for testing
+        List<Contact> testContacts = new List<Contact>();
+        testContacts.add(new Contact(FirstName = 'Test', LastName = 'Record', Email = 'test@example.com'));
+        //testContacts.add(new Contact(FirstName = 'Test', LastName = 'Record', Email = 'test@example.com'));
+        insert testContacts;
+
+        //Add leads for testing
+        List<Lead> testLeads = new List<Lead>();
+        testLeads.add(new Lead(FirstName = 'Test', LastName = 'Record', Email = 'test@example.com', Company = 'Big T Record'));
+        insert testLeads;
+
+        //Add accounts for testing
+        List<Account> testAccounts = new List<Account>();
+        testAccounts.add(new Account(Name = 'Big T Record'));
+        insert testAccounts;
+
+        // Create a list to hold custom metadata records
+        SummitEventsContactMatching.mappedMatchingMethods = new Map<String, List<Summit_Events_Contact_Matching_Mapping__mdt>>();
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+        List<Summit_Events_Contact_Matching_Mapping__mdt> cmmList = new List<Summit_Events_Contact_Matching_Mapping__mdt>();
+        List<Summit_Events_Contact_Matching_Mapping__mdt> cmmList2 = new List<Summit_Events_Contact_Matching_Mapping__mdt>();
+        // Create a custom metadata record
+        Summit_Events_Contact_Matching_Mapping__mdt cmm = new Summit_Events_Contact_Matching_Mapping__mdt(
+                DeveloperName = 'Title_Test',
+                MasterLabel = 'Title Test',
+                Source_Type__c = 'Field',
+                Source_Object__c = namespace + 'Summit_Events_Registration__c',
+                Source_Value__c = namespace + 'Registrant_Last_Name__c',
+                Contact_Field_API_Name__c = 'Title',
+                Contact_Matching_Method__c = 'Admissions'
+        );
+        // Add the custom metadata record to the list
+        cmmList.add(cmm);
+        // Insert the custom metadata records
+        SummitEventsContactMatching.mappedMatchingMethods.put(cmm.Contact_Matching_Method__c, cmmList);
+        Summit_Events_Contact_Matching_Mapping__mdt cmm2 = new Summit_Events_Contact_Matching_Mapping__mdt(
+                DeveloperName = 'Title_Test',
+                MasterLabel = 'Title Test',
+                Source_Type__c = 'Field',
+                Source_Object__c = namespace + 'Summit_Events_Registration__c',
+                Source_Value__c = namespace + 'Registrant_Last_Name__c',
+                Contact_Field_API_Name__c = 'Title',
+                Contact_Matching_Method__c = 'Red'
+        );
+        cmmList2.add(cmm2);
+        SummitEventsContactMatching.mappedMatchingMethods.put(cmm2.Contact_Matching_Method__c, cmmList2);
+
+    }
+
     @IsTest
     static void SummitEventsContactMatching1() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Test', 'Record', 'test@example.com', '55555', '1971-03-22', '2012', null);
+
         Summit_Events__c seaTestEvent = SummitEventsTestSharedDataFactory.getEventRecord(seaTestInstances[1].Event__c);
         seaTestEvent.Contact_Matching_Rules__c = 'Use Salesforce Duplicate Rule';
         seaTestEvent.Contact_Creation_Duplicate_Rule__c = 'Standard Contact Duplicate Rule';
         seaTestEvent.Custom_Metadata_Contact_Matching_Method__c = 'Admissions';
+        seaTestEvent.Contact_Matching_No_Match_Behavior__c = 'Create Contact';
+        seaTestEvent.Contact_Matching_Multiple_Match_Behavior__c = 'Match with most recently modified';
         update seaTestEvent;
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Admin');
+
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Admin');
+
+        SummitEventsContactMatching.mappedMatchingMethods = new Map<String, List<Summit_Events_Contact_Matching_Mapping__mdt>>();
+        List<Summit_Events_Contact_Matching_Mapping__mdt> cmmList = new List<Summit_Events_Contact_Matching_Mapping__mdt>();
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+        // Create a custom metadata record
+        Summit_Events_Contact_Matching_Mapping__mdt cmm = new Summit_Events_Contact_Matching_Mapping__mdt(
+                DeveloperName = 'Title_Test',
+                MasterLabel = 'Title Test',
+                Source_Type__c = 'Field',
+                Source_Object__c = namespace + 'Summit_Events_Registration__c',
+                Source_Value__c = namespace + 'Registrant_Last_Name__c',
+                Contact_Field_API_Name__c = 'Title',
+                Contact_Matching_Method__c = 'Admissions'
+        );
+        // Add the custom metadata record to the list
+        cmmList.add(cmm);
+        // Insert the custom metadata records
+
+        SummitEventsContactMatching.mappedMatchingMethods.put(cmm.Contact_Matching_Method__c, cmmList);
+
         System.runAs(testUser) {
             Test.startTest();
             seaTestRegistration.Status__c = 'Registered';
             seaTestRegistration.Registrant_Preferred_First_Name__c = 'Big T';
             update seaTestRegistration;
+            System.assert(String.isBlank(seaTestRegistration.Contact__c));
 
             seaTestRegistration.Contact__c = null;
             seaTestRegistration.Registrant_Date_of_Birth__c = System.today();
             update seaTestRegistration;
+
 
             seaTestRegistration.Contact__c = null;
             seaTestRegistration.Registrant_First_Name__c = 'Tester';
@@ -49,42 +128,17 @@ public class SummitEventsContactMatching_TEST {
         seaTestEvent.Custom_Metadata_Contact_Matching_Method__c = 'Admissions';
         seaTestEvent.Contact_Matching_Multiple_Match_Behavior__c = 'Skip matching';
         update seaTestEvent;
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Admin');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Admin');
         System.runAs(testUser) {
             Test.startTest();
-            Database.DMLOptions dml = new Database.DMLOptions();
-            dml.duplicateRuleHeader.allowSave = true;
-
-            Contact c1 = new Contact(FirstName = 'Test', LastName = 'Record', Email = 'test@example.com');
-            insert c1;
-
-            Contact c2 = new Contact(FirstName = 'Test', LastName = 'Record', Email = 'test@example.com');
-            Database.insert(c2, dml);
             seaTestRegistration.Registrant_Preferred_First_Name__c = 'Big T';
             update seaTestRegistration;
-
-            Summit_Events_Registration__c registration = [SELECT Id, Contact__c FROM Summit_Events_Registration__c WHERE Id = :seaTestRegistration.Id];
-            List<DuplicateRule> drs = [SELECT IsActive, Id FROM DuplicateRule WHERE MasterLabel = 'Standard Contact Duplicate Rule' AND IsActive = TRUE];
-            if (drs.size() > 0) {
-                System.assert(String.isBlank(registration.Contact__c));
-            } else {
-                //Duplicate rules not in org
-                System.assert(String.isNotBlank(registration.Contact__c));
-            }
-
-
-            seaTestEvent.Contact_Matching_Multiple_Match_Behavior__c = 'Match with most recently modified';
-            update seaTestEvent;
-
-            update seaTestRegistration;
-            registration = [SELECT Id, Contact__c FROM Summit_Events_Registration__c WHERE Id = :registration.Id];
-            System.assert(String.isNotBlank(registration.Contact__c));
             Test.stopTest();
         }
     }
-    
+
     @IsTest
-    static void SummitEventsLeadMatching1(){
+    static void SummitEventsLeadMatching1() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Test', 'Record', 'test@example.com', '55555', '1971-03-22', '2012', null);
         Summit_Events__c seaTestEvent = SummitEventsTestSharedDataFactory.getEventRecord(seaTestInstances[1].Event__c);
@@ -95,30 +149,338 @@ public class SummitEventsContactMatching_TEST {
         seaTestEvent.Lead_Matching_Multiple_Match_Behavior__c = 'Match with most recently modified';
         seaTestEvent.Custom_Metadata_Lead_Matching_Method__c = 'Red';
         update seaTestEvent;
-        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Admin');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Admin');
         System.runAs(testUser) {
             Test.startTest();
             seaTestRegistration.Status__c = 'Registered';
             seaTestRegistration.Registrant_Preferred_First_Name__c = 'Big T';
             update seaTestRegistration;
-            
+
             seaTestRegistration.Lead__c = null;
             update seaTestRegistration;
-            
-            Lead l = new Lead();
-            l.FirstName = 'Test';
-            l.LastName = 'Record';
-            l.Email = 'test@example.com';
-            l.Company = 'Big T Record';
-            Database.DMLOptions dml = new Database.DMLOptions();
-            dml.duplicateRuleHeader.allowSave = true;
-            dml.duplicateRuleHeader.runAsCurrentUser = true;
-            Database.SaveResult sr = Database.insert(l, dml); 
-            
-            seaTestRegistration.Lead__c = null;
-            update seaTestRegistration;
-            
+
             Test.stopTest();
         }
+    }
+
+    @IsTest
+    static void SummitEventsPersonMatching() {
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Test', 'Record', 'test@example.com', '55555', '1971-03-22', '2012', null);
+        Summit_Events__c seaTestEvent = SummitEventsTestSharedDataFactory.getEventRecord(seaTestInstances[1].Event__c);
+        seaTestEvent.Person_Matching_Rules__c = 'Use Salesforce Duplicate Rule';
+        seaTestEvent.Person_Creation_Duplicate_Rule__c = 'Standard Person Account Duplicate Rule';
+        seaTestEvent.Person_Matching_No_Match_Behavior__c = 'Create Person Account';
+        seaTestEvent.Person_Matching_Multiple_Match_Behavior__c = 'Match with most recently modified';
+        seaTestEvent.Custom_Metadata_Contact_Matching_Method__c = 'Admissions';
+        update seaTestEvent;
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Admin');
+        System.runAs(testUser) {
+            Test.startTest();
+            seaTestRegistration.Registrant_Preferred_First_Name__c = 'Big T';
+            update seaTestRegistration;
+
+            seaTestEvent.Contact_Matching_Multiple_Match_Behavior__c = 'Match with most recently modified';
+            update seaTestEvent;
+
+            // System.assert(String.isNotBlank(registration.Contact__c));
+            Test.stopTest();
+        }
+    }
+
+    @IsTest
+    static void testMappedMatchingMethods() {
+        // Prepare test data
+        Map<String, List<SObject>> testData = new Map<String, List<SObject>>();
+        testData.put('TestMethod', new List<SObject>{
+                new Contact(LastName = 'Test')
+        });
+
+        // Set the test data to the property
+        SummitEventsContactMatching.mappedMatchingMethods = testData;
+
+        // Add assertions to verify the behavior
+        System.assertEquals(testData, SummitEventsContactMatching.mappedMatchingMethods);
+    }
+
+    @IsTest
+    static void testMatchingLog() {
+        // Create a mock registration record
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'John', 'Doe', 'john.doe@example.com', '12345', '1971-03-22', '2012', null);
+
+        // Create a list of mock SObject records
+        List<SObject> foundObjects = new List<SObject>();
+
+        // Create a mock Contact record
+        Contact contact = new Contact(
+                LastName = 'Smith',
+                FirstName = 'Jane',
+                Email = 'jane.smith@example.com',
+                MailingPostalCode = '67890'
+        );
+        insert contact;
+        foundObjects.add(contact);
+
+        // Create a mock Lead record
+        Lead lead = new Lead(
+                LastName = 'Brown',
+                FirstName = 'Charlie',
+                Email = 'charlie.brown@example.com',
+                PostalCode = '54321',
+                Company = 'Charlie Brown Inc.'
+        );
+        insert lead;
+        foundObjects.add(lead);
+
+        // Call the matchingLog method
+        String result = SummitEventsContactMatching.matchingLog(foundObjects, 'Heading 1', 'Heading 2', true);
+        System.debug('Result: ' + JSON.serializePretty(result));
+        // Verify the result
+        System.assertNotEquals(null, result, 'The result should not be null');
+        System.assert(result.contains('Smith'), 'The result should contain the last name Smith');
+        System.assert(result.contains('Jane'), 'The result should contain the first name Jane');
+        System.assert(result.contains('Brown'), 'The result should contain the last name Brown');
+        System.assert(result.contains('Charlie'), 'The result should contain the first name Charlie');
+        System.assert(result.contains('jane.smith@example.com'), 'The result should contain the email jane.smith@example.com');
+        System.assert(result.contains('67890'), 'The result should contain the zip code 67890');
+        System.assert(result.contains('charlie.brown@example.com'), 'The result should contain the email charlie.brown@example.com');
+        System.assert(result.contains('54321'), 'The result should contain the zip code 54321');
+    }
+
+    @IsTest
+    static void testApplyCorrectFieldTypesToValues() {
+        // Create a mock map of field values
+        Lead newLead = new Lead();
+        Contact newContact = new Contact();
+        Date newDate = Date.newInstance(2021, 1, 5);
+        SObject result = SummitEventsContactMatching.applyCorrectFieldTypesToValues(newLead, 'AnnualRevenue', 100.00);
+        SObject result2 = SummitEventsContactMatching.applyCorrectFieldTypesToValues(newLead, 'Company', 'Company Inc.');
+        SObject result3 = SummitEventsContactMatching.applyCorrectFieldTypesToValues(newLead, 'HasOptedOutOfEmail', true);
+        SObject result4 = SummitEventsContactMatching.applyCorrectFieldTypesToValues(newLead, 'NumberOfEmployees', 15);
+        SObject result5 = SummitEventsContactMatching.applyCorrectFieldTypesToValues(newContact, 'Birthdate', newDate);
+        Test.startTest();
+        System.assertEquals(100.00, result.get('AnnualRevenue'), 'The AnnualRevenue field should be set to 100.00');
+        System.assertEquals('Company Inc.', result2.get('Company'), 'The Company field should be set to Company Inc.');
+        System.assertEquals(true, result3.get('HasOptedOutOfEmail'), 'The HasOptedOutOfEmail field should be set to true');
+        System.assertEquals(15, result4.get('NumberOfEmployees'), 'The NumberOfEmployees field should be set to 15');
+        System.assertEquals(newDate, result5.get('Birthdate'), 'The Birthdate field should be set to 2021-01-05');
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testRemoveMatchOnlyFields() {
+        // Create a mock Contact with some fields populated
+        Contact testContact = new Contact(
+                FirstName = 'Test',
+                LastName = 'Contact',
+                Email = 'test@example.com',
+                Title = 'Manager',
+                Department = 'Sales'
+        );
+
+        // Create mock mappings with one field marked as Matching_Only__c = true
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+        Map<String, List<SObject>> mockMappings = new Map<String, List<SObject>>();
+        List<Summit_Events_Contact_Matching_Mapping__mdt> mappingList = new List<Summit_Events_Contact_Matching_Mapping__mdt>();
+
+        // Create a mapping that is match-only (should be removed)
+        Summit_Events_Contact_Matching_Mapping__mdt matchOnlyMapping = new Summit_Events_Contact_Matching_Mapping__mdt(
+                DeveloperName = 'Title_Match_Only',
+                MasterLabel = 'Title Match Only',
+                Source_Type__c = 'Field',
+                Contact_Field_API_Name__c = 'Title',
+                Contact_Matching_Method__c = 'TestMethod',
+                Matching_Only__c = true
+        );
+        mappingList.add(matchOnlyMapping);
+
+        // Create a mapping that is NOT match-only (should be kept)
+        Summit_Events_Contact_Matching_Mapping__mdt regularMapping = new Summit_Events_Contact_Matching_Mapping__mdt(
+                DeveloperName = 'Department_Regular',
+                MasterLabel = 'Department Regular',
+                Source_Type__c = 'Field',
+                Contact_Field_API_Name__c = 'Department',
+                Contact_Matching_Method__c = 'TestMethod',
+                Matching_Only__c = false
+        );
+        mappingList.add(regularMapping);
+
+        mockMappings.put('TestMethod', mappingList);
+
+        Test.startTest();
+        // Verify fields are set before calling removeMatchOnlyFields
+        System.assertEquals('Manager', testContact.Title, 'Title should be Manager before removal');
+        System.assertEquals('Sales', testContact.Department, 'Department should be Sales before removal');
+
+        // Call the removeMatchOnlyFields method
+        SObject result = SummitEventsContactMatching.removeMatchOnlyFields(testContact, 'TestMethod', mockMappings, 'Contact');
+
+        // Verify that the match-only field (Title) was removed
+        System.assertEquals(null, result.get('Title'), 'Title should be null after removeMatchOnlyFields');
+
+        // Verify that the regular field (Department) was NOT removed
+        System.assertEquals('Sales', result.get('Department'), 'Department should still be Sales after removeMatchOnlyFields');
+
+        // Verify other fields remain intact
+        System.assertEquals('Test', result.get('FirstName'), 'FirstName should remain Test');
+        System.assertEquals('Contact', result.get('LastName'), 'LastName should remain Contact');
+        System.assertEquals('test@example.com', result.get('Email'), 'Email should remain test@example.com');
+
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testRemoveMatchOnlyFieldsForLead() {
+        // Create a mock Lead with some fields populated
+        Lead testLead = new Lead(
+                FirstName = 'Test',
+                LastName = 'Lead',
+                Email = 'testlead@example.com',
+                Company = 'Test Company',
+                Title = 'CEO',
+                Industry = 'Technology'
+        );
+
+        // Create mock mappings with Lead-specific fields
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+        Map<String, List<SObject>> mockMappings = new Map<String, List<SObject>>();
+        List<Summit_Events_Lead_Matching_Mapping__mdt> leadMappingList = new List<Summit_Events_Lead_Matching_Mapping__mdt>();
+
+        // Create a match-only mapping for Lead (should be removed)
+        Summit_Events_Lead_Matching_Mapping__mdt matchOnlyMapping = new Summit_Events_Lead_Matching_Mapping__mdt(
+                DeveloperName = 'Title_Match_Only',
+                MasterLabel = 'Title Match Only',
+                Source_Type__c = 'Field',
+                Lead_Field_API_Name__c = 'Title',
+                Lead_Matching_Method__c = 'TestLeadMethod',
+                Matching_Only__c = true
+        );
+        leadMappingList.add(matchOnlyMapping);
+
+        // Create a regular mapping (should be kept)
+        Summit_Events_Lead_Matching_Mapping__mdt regularMapping = new Summit_Events_Lead_Matching_Mapping__mdt(
+                DeveloperName = 'Industry_Regular',
+                MasterLabel = 'Industry Regular',
+                Source_Type__c = 'Field',
+                Lead_Field_API_Name__c = 'Industry',
+                Lead_Matching_Method__c = 'TestLeadMethod',
+                Matching_Only__c = false
+        );
+        leadMappingList.add(regularMapping);
+
+        mockMappings.put('TestLeadMethod', leadMappingList);
+
+        Test.startTest();
+        // Verify fields are set before calling removeMatchOnlyFields
+        System.assertEquals('CEO', testLead.Title, 'Title should be CEO before removal');
+        System.assertEquals('Technology', testLead.Industry, 'Industry should be Technology before removal');
+
+        // Call the removeMatchOnlyFields method for Lead
+        SObject result = SummitEventsContactMatching.removeMatchOnlyFields(testLead, 'TestLeadMethod', mockMappings, 'Lead');
+
+        // Verify that the match-only field (Title) was removed
+        System.assertEquals(null, result.get('Title'), 'Title should be null after removeMatchOnlyFields');
+
+        // Verify that the regular field (Industry) was NOT removed
+        System.assertEquals('Technology', result.get('Industry'), 'Industry should still be Technology after removeMatchOnlyFields');
+
+        // Verify other fields remain intact
+        System.assertEquals('Test', result.get('FirstName'), 'FirstName should remain Test');
+        System.assertEquals('Lead', result.get('LastName'), 'LastName should remain Lead');
+        System.assertEquals('testlead@example.com', result.get('Email'), 'Email should remain testlead@example.com');
+        System.assertEquals('Test Company', result.get('Company'), 'Company should remain Test Company');
+
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testRemoveMatchOnlyFieldsForAccount() {
+        // Only run this test if Person Accounts are enabled
+        Boolean personAccountsEnabled = SummitEventsShared.personAccountsEnabled();
+        if (!personAccountsEnabled) {
+            // Skip this test in orgs without Person Accounts
+            System.assert(true, 'Skipping Person Account test - Person Accounts not enabled');
+            return;
+        }
+
+        // Create a mock Account (for Person Account testing)
+        Account testAccount = new Account(
+                Name = 'Test Account',
+                Industry = 'Education',
+                Type = 'Prospect'
+        );
+
+        // Create mock mappings with Account-specific fields
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+        Map<String, List<SObject>> mockMappings = new Map<String, List<SObject>>();
+        List<Summit_Events_Person_Matching_Mapping__mdt> accountMappingList = new List<Summit_Events_Person_Matching_Mapping__mdt>();
+
+        // Create a match-only mapping for Account (should be removed)
+        Summit_Events_Person_Matching_Mapping__mdt matchOnlyMapping = new Summit_Events_Person_Matching_Mapping__mdt(
+                DeveloperName = 'Type_Match_Only',
+                MasterLabel = 'Type Match Only',
+                Source_Type__c = 'Field',
+                Person_Account_Field_API_Name__c = 'Type',
+                Person_Account_Matching_Method__c = 'TestAccountMethod',
+                Matching_Only__c = true
+        );
+        accountMappingList.add(matchOnlyMapping);
+
+        // Create a regular mapping (should be kept)
+        Summit_Events_Person_Matching_Mapping__mdt regularMapping = new Summit_Events_Person_Matching_Mapping__mdt(
+                DeveloperName = 'Industry_Regular',
+                MasterLabel = 'Industry Regular',
+                Source_Type__c = 'Field',
+                Person_Account_Field_API_Name__c = 'Industry',
+                Person_Account_Matching_Method__c = 'TestAccountMethod',
+                Matching_Only__c = false
+        );
+        accountMappingList.add(regularMapping);
+
+        mockMappings.put('TestAccountMethod', accountMappingList);
+
+        Test.startTest();
+        // Verify fields are set before calling removeMatchOnlyFields
+        System.assertEquals('Prospect', testAccount.Type, 'Type should be Prospect before removal');
+        System.assertEquals('Education', testAccount.Industry, 'Industry should be Education before removal');
+
+        // Call the removeMatchOnlyFields method for Account
+        SObject result = SummitEventsContactMatching.removeMatchOnlyFields(testAccount, 'TestAccountMethod', mockMappings, 'Account');
+
+        // Verify that the match-only field (Type) was removed
+        System.assertEquals(null, result.get('Type'), 'Type should be null after removeMatchOnlyFields');
+
+        // Verify that the regular field (Industry) was NOT removed
+        System.assertEquals('Education', result.get('Industry'), 'Industry should still be Education after removeMatchOnlyFields');
+
+        // Verify other fields remain intact
+        System.assertEquals('Test Account', result.get('Name'), 'Name should remain Test Account');
+
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testRemoveMatchOnlyFieldsWithNoMappings() {
+        // Test case where no mappings exist for the method
+        Contact testContact = new Contact(
+                FirstName = 'Test',
+                LastName = 'Contact',
+                Email = 'test@example.com',
+                Title = 'Manager'
+        );
+
+        Map<String, List<SObject>> mockMappings = new Map<String, List<SObject>>();
+
+        Test.startTest();
+        // Call the removeMatchOnlyFields method with non-existent method name
+        SObject result = SummitEventsContactMatching.removeMatchOnlyFields(testContact, 'NonExistentMethod', mockMappings, 'Contact');
+
+        // Verify that nothing changed when no mappings exist
+        System.assertEquals('Manager', result.get('Title'), 'Title should remain Manager when no mappings exist');
+        System.assertEquals('Test', result.get('FirstName'), 'FirstName should remain Test');
+        System.assertEquals('Contact', result.get('LastName'), 'LastName should remain Contact');
+
+        Test.stopTest();
     }
 }

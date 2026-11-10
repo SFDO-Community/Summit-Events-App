@@ -6,3 +6,7 @@
 **/jsconfig.json
 
 **/.eslintrc.json
+
+
+# Added by Illuminated Cloud
+**/graphql.config.yml
