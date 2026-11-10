@@ -1,0 +1,37 @@
+name: Update contributors
+
+on:
+  schedule:
+    - cron: "17 13 1 * *"   # monthly, 1st of the month
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history is required for accurate counts
+
+      - name: Regenerate CONTRIBUTORS.md
+        run: python3 scripts/update_contributors.py
+
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          add-paths: CONTRIBUTORS.md
+          branch: automation/update-contributors
+          delete-branch: true
+          commit-message: "Update CONTRIBUTORS.md"
+          title: "Update CONTRIBUTORS.md"
+          body: |
+            Automated refresh of the contributor list from git history
+            (identities merged via `.mailmap`).
+
+            If someone appears twice, add a line to `.mailmap` and re-run.
