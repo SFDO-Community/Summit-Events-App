@@ -74,7 +74,7 @@ def render(people, overrides):
         ov = overrides.get(p["email"].lower(), {})
         handle = ov.get("github") or (m.group(1) if m else None)
         name = ov.get("name", p["name"])
-        who = f"[{name}](https://github.com/{handle})" if handle else p["name"]
+        who = f"[{name}](https://github.com/{handle})" if handle else name
         lo, hi = min(p["years"]), max(p["years"])
         rows.append(f"| {who} | {'@' + handle if handle else '—'} | {p['n']} | {lo if lo == hi else f'{lo}–{hi}'} |")
     return "\n".join(["| Contributor | GitHub | Commits | Active |", "|---|---|---|---|", *rows])
