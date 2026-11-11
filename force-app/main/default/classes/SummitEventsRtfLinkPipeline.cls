@@ -50,7 +50,9 @@ public with sharing class SummitEventsRtfLinkPipeline {
 
     private static final String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
     private static final String NOTIFICATION_TYPE = 'Summit_Events_Image_Publishing';
+    // ContentVersion URL shapes we recognize: ...?versionId=068... and .../version/download/068...
     private static final String CV_MARKER = 'versionId=068';
+    private static final String CV_DOWNLOAD_MARKER = '/version/download/068';
     private static final String RTA_MARKER = 'refid=0EM';
     // Keep in step with this class's API version
     private static final String REST_VERSION = 'v68.0';
@@ -80,6 +82,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
 
     private Map<Id,ContentDistribution> cvIdToCDMap;
     private Set<Id> publishableCvIds = new Set<Id>();
+    private String eventFieldList = '';
     // Fixed, translatable messages for the person who saved the event; never raw exception text
     private Set<String> problems = new Set<String>();
     private List<SummitEventWrapper> wrappedEventList;
@@ -179,6 +182,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
         // Safe dynamic SOQL: field names come from the RICHTEXT_FIELDS allowlist (plus the package
         // namespace) and the Ids are bound below. No user-controlled text reaches the query string.
         String fieldList = String.join(fields, ', ');
+        this.eventFieldList = fieldList;
         query = 'SELECT Name, ' + fieldList + ' FROM ' + namespace + 'Summit_Events__c WHERE Id IN :idList';
         if(eventOverrides == null) {
             Map<String,Object> binds = new Map<String,Object>{ 'idList' => idList };
@@ -199,7 +203,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
             for (String field : fields) {
                 String fieldVal = (String) freshEvent?.get(field);
                 if(!String.isBlank(fieldVal) && fieldVal.contains('<img') 
-                    && (fieldVal.contains(CV_MARKER) || fieldVal.contains(RTA_MARKER))) {
+                    && (fieldVal.contains(CV_MARKER) || fieldVal.contains(CV_DOWNLOAD_MARKER) || fieldVal.contains(RTA_MARKER))) {
                     wrappedEvent.fieldsWithLinks.add(field);
                 }
             }
@@ -387,14 +391,29 @@ public with sharing class SummitEventsRtfLinkPipeline {
             SELECT Id,
                    ContentDownloadUrl,
                    Name,
-                   ContentVersionId
+                   ContentVersionId,
+                   PreferencesAllowOriginalDownload,
+                   PreferencesPasswordRequired,
+                   PreferencesExpires
             FROM   ContentDistribution
             WHERE  ContentVersionId IN :this.publishableCvIds
             WITH   USER_MODE
         ];
 
+        // Reuse an existing link only if a guest can actually load the image from it. A file can have
+        // just one distribution, so if that one has expired, needs a password or blocks downloads we
+        // cannot add a better one. We never edit someone else's link; the image is left as written
+        // and the editor is told why.
         for(ContentDistribution cd : cdList) {
-            this.cvIdToCDMap.put(cd.ContentVersionId, cd);
+            Boolean usable = cd.PreferencesAllowOriginalDownload
+                && !cd.PreferencesPasswordRequired
+                && !cd.PreferencesExpires;
+            if(usable) {
+                this.cvIdToCDMap.put(cd.ContentVersionId, cd);
+            } else {
+                this.publishableCvIds.remove(cd.ContentVersionId);
+                this.problems.add(Label.SummitEventsImageNotifBlocked);
+            }
         }
     }
 
@@ -434,20 +453,32 @@ public with sharing class SummitEventsRtfLinkPipeline {
         }
 
         if(!cdInsertList.isEmpty()) {
-            Database.insert(cdInsertList, true, System.AccessLevel.USER_MODE);
+            // Partial success: one image that cannot be published (for example a file that already
+            // has a distribution this user cannot see) must not stop the others
+            List<Database.SaveResult> results = Database.insert(cdInsertList, false, System.AccessLevel.USER_MODE);
+            List<Id> createdIds = new List<Id>();
+            for(Database.SaveResult result : results) {
+                if(result.isSuccess()) {
+                    createdIds.add(result.getId());
+                } else {
+                    this.problems.add(Label.SummitEventsImageNotifFailed);
+                }
+            }
 
-            List<ContentDistribution> refreshed = [
-                SELECT Id, 
-                       ContentDownloadUrl,
-                       Name, 
-                       ContentVersionId  
-                FROM   ContentDistribution 
-                WHERE  Id IN :cdInsertList
-                WITH   USER_MODE
-            ];
+            if(!createdIds.isEmpty()) {
+                List<ContentDistribution> refreshed = [
+                    SELECT Id, 
+                           ContentDownloadUrl,
+                           Name, 
+                           ContentVersionId  
+                    FROM   ContentDistribution 
+                    WHERE  Id IN :createdIds
+                    WITH   USER_MODE
+                ];
 
-            for(ContentDistribution cd : refreshed) {
-                cvIdToCDMap.put(cd.ContentVersionId, cd);
+                for(ContentDistribution cd : refreshed) {
+                    cvIdToCDMap.put(cd.ContentVersionId, cd);
+                }
             }
         }
     }
@@ -462,14 +493,30 @@ public with sharing class SummitEventsRtfLinkPipeline {
 
         this.executionStage = 'push';
 
+        if(cvIdToCDMap.isEmpty()) {
+            return;
+        }
+
         List<Summit_Events__c> updateList = new List<Summit_Events__c>();
 
+        // The text we scanned can be seconds old (the async job makes callouts in between), so
+        // never write it back. Lock the records and apply each replacement to the current field
+        // value instead, which keeps anything the editor changed in the meantime.
+        Map<Id,Summit_Events__c> currentById = lockCurrentEvents();
+
         for(SummitEventWrapper wrappedEvent : wrappedEventList) {
+            Summit_Events__c current = currentById.get(wrappedEvent.event.Id);
+            if(current == null) {
+                continue; // deleted while we were working
+            }
             Summit_Events__c tempEvent = new Summit_Events__c();
-            tempEvent.Id = wrappedEvent.event.Id; // trigger records are immutable, we must create new records
+            tempEvent.Id = current.Id; // trigger records are immutable, we must create new records
             Boolean changed = false;
             for(String field : wrappedEvent.fieldsWithLinks) {
-                String rtf = (String) wrappedEvent.event.get(field);
+                String rtf = (String) current.get(field);
+                if(rtf == null) {
+                    continue;
+                }
                 String original = rtf;
                 for(SummitFieldItem sfi : wrappedEvent.fieldsToLinkMap.get(field) ?? new List<SummitFieldItem>()) {
                     ContentDistribution cd = sfi.cvId == null ? null : cvIdToCDMap.get(sfi.cvId);
@@ -492,6 +539,38 @@ public with sharing class SummitEventsRtfLinkPipeline {
             Database.update(updateList, true, System.AccessLevel.USER_MODE);
         }
      }
+
+    /**
+     * Re-read the events we are about to update and lock them until this transaction ends, so
+     * nobody can change them between this read and our write.
+     */
+    private Map<Id,Summit_Events__c> lockCurrentEvents() {
+
+        Map<Id,Summit_Events__c> eventsById = new Map<Id,Summit_Events__c>();
+        List<Id> eventIds = new List<Id>();
+        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
+            eventIds.add(wrappedEvent.event.Id);
+        }
+
+        if(eventOverrides != null) {
+            // Test seam: staged field contents are not in the database, so use them as they are
+            for(SummitEventWrapper wrappedEvent : wrappedEventList) {
+                eventsById.put(wrappedEvent.event.Id, wrappedEvent.event);
+            }
+            return eventsById;
+        }
+
+        if(!eventIds.isEmpty()) {
+            // Same allowlisted field list and bound Ids as filter(); nothing user-controlled is concatenated
+            String query = 'SELECT Name, ' + this.eventFieldList + ' FROM ' + namespace
+                + 'Summit_Events__c WHERE Id IN :eventIds FOR UPDATE';
+            Map<String,Object> binds = new Map<String,Object>{ 'eventIds' => eventIds };
+            for(SObject record : Database.queryWithBinds(query, binds, System.AccessLevel.USER_MODE)) {
+                eventsById.put(record.Id, (Summit_Events__c) record);
+            }
+        }
+        return eventsById;
+    }
 
     /**
      * Queue one async job for every event that still has rich text editor images
@@ -626,7 +705,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
      */
     private static SummitFieldItem toFieldItem(String url) {
 
-        String cvId = extractId(url, 'versionId', '068');
+        String cvId = extractId(url, 'versionId=', '068') ?? extractId(url, '/version/download/', '068');
         if(cvId != null && (cvId.length() == 15 || cvId.length() == 18)) {
             SummitFieldItem sfi = new SummitFieldItem();
             sfi.url = url;
@@ -635,7 +714,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
         }
 
         if(url.contains('rtaImage')) {
-            String refId = extractId(url, 'refid', '0EM');
+            String refId = extractId(url, 'refid=', '0EM');
             if(refId != null && (refId.length() == 15 || refId.length() == 18)) {
                 SummitFieldItem sfi = new SummitFieldItem();
                 sfi.url = url;
@@ -647,16 +726,17 @@ public with sharing class SummitEventsRtfLinkPipeline {
     }
 
     /**
-     * Read the alphanumeric run following key=prefix in a URL, e.g. versionId=068xxxx.
+     * Read the alphanumeric run that follows lead + prefix in a URL, for example
+     * versionId=068xxxx (lead 'versionId=') or /version/download/068xxxx.
      */
-    private static String extractId(String url, String key, String prefix) {
+    private static String extractId(String url, String lead, String prefix) {
 
-        Integer keyIdx = url.indexOf(key + '=' + prefix);
-        if (keyIdx == -1) {
+        Integer leadIdx = url.indexOf(lead + prefix);
+        if (leadIdx == -1) {
             return null;
         }
 
-        Integer idStart = keyIdx + key.length() + 1;
+        Integer idStart = leadIdx + lead.length();
         Integer i = idStart;
         while (i < url.length() && ALPHANUMERICS.indexOf(url.substring(i, i + 1)) != -1) {
             i++;

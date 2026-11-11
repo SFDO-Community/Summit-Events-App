@@ -43,6 +43,108 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
     }
 
     @IsTest
+    static void shouldConvertDownloadUrl_WhenThereIsNoVersionIdParameter() {
+
+        ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
+        String html = '<p><img src="https://example.force.com/sfc/servlet.shepherd/version/download/' + cv.Id + '" alt="test"></img></p>';
+        Summit_Events__c se = insertEvent('Download Path Event', html);
+
+        Test.startTest();
+        new SummitEventsRtfLinkPipeline(new Map<Id, Summit_Events__c>{ se.Id => se }).run();
+        Test.stopTest();
+
+        ContentDistribution cd = [SELECT Id, ContentDownloadUrl FROM ContentDistribution WHERE ContentVersionId = :cv.Id];
+        String updated = getEvent(se.Id).Event_Full_Text__c;
+        Assert.isFalse(updated.contains('/sfc/servlet.shepherd/'), 'The authenticated download URL should have been replaced');
+        Assert.isTrue(containsUrl(updated, cd.ContentDownloadUrl), 'The field should hold the public URL');
+    }
+
+    @IsTest
+    static void shouldKeepConcurrentEdit_WhenFieldChangesBetweenScanAndWrite() {
+
+        ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
+        Summit_Events__c se = insertEvent('Concurrent Event', versionLinkTag(cv.Id));
+        SummitEventsRtfLinkPipeline pipeline = new SummitEventsRtfLinkPipeline(new Map<Id, Summit_Events__c>{ se.Id => se });
+
+        // Run the stages by hand so an editor can save in the gap the async job would have
+        pipeline.filter();
+        pipeline.scan();
+        update new Summit_Events__c(Id = se.Id, Event_Full_Text__c = se.Event_Full_Text__c + '<p>edited meanwhile</p>');
+        pipeline.prepare();
+        pipeline.create();
+        pipeline.push();
+
+        ContentDistribution cd = [SELECT Id, ContentDownloadUrl FROM ContentDistribution WHERE ContentVersionId = :cv.Id];
+        String updated = getEvent(se.Id).Event_Full_Text__c;
+        Assert.isTrue(updated.contains('edited meanwhile'), 'An edit saved while the job ran must not be overwritten');
+        Assert.isTrue(containsUrl(updated, cd.ContentDownloadUrl), 'The image should still be converted');
+        Assert.isFalse(updated.contains('versionId=068'), 'The old URL should be gone');
+    }
+
+    @IsTest
+    static void shouldReuseDistribution_WhenExistingLinkIsUsable() {
+
+        ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
+        ContentDistribution existing = new ContentDistribution(
+            ContentVersionId = cv.Id, Name = 'Existing usable link',
+            PreferencesAllowOriginalDownload = true, PreferencesAllowViewInBrowser = true
+        );
+        insert existing;
+        Summit_Events__c se = insertEvent('Reuse Event', versionLinkTag(cv.Id));
+
+        Test.startTest();
+        new SummitEventsRtfLinkPipeline(new Map<Id, Summit_Events__c>{ se.Id => se }).run();
+        Test.stopTest();
+
+        Assert.areEqual(1, [SELECT COUNT() FROM ContentDistribution], 'A usable link should be reused, not duplicated');
+        existing = [SELECT ContentDownloadUrl FROM ContentDistribution WHERE Id = :existing.Id];
+        Assert.isTrue(containsUrl(getEvent(se.Id).Event_Full_Text__c, existing.ContentDownloadUrl), 'The existing link should be used');
+    }
+
+    @IsTest
+    static void shouldLeaveImageAlone_WhenExistingLinkBlocksDownload() {
+
+        // A file can only have one distribution, so a better link cannot be added next to it
+        ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
+        ContentDistribution blocked = new ContentDistribution(
+            ContentVersionId = cv.Id, Name = 'Existing view-only link',
+            PreferencesAllowOriginalDownload = false, PreferencesAllowViewInBrowser = true
+        );
+        insert blocked;
+        Summit_Events__c se = insertEvent('Blocked Link Event', versionLinkTag(cv.Id));
+
+        Test.startTest();
+        new SummitEventsRtfLinkPipeline(new Map<Id, Summit_Events__c>{ se.Id => se }).run();
+        Test.stopTest();
+
+        Assert.areEqual(se.Event_Full_Text__c, getEvent(se.Id).Event_Full_Text__c, 'An image whose link cannot serve it must be left as written');
+        List<ContentDistribution> links = [SELECT Id, PreferencesAllowOriginalDownload FROM ContentDistribution WHERE ContentVersionId = :cv.Id];
+        Assert.areEqual(1, links.size(), 'No second link can exist for the file');
+        Assert.isFalse(links[0].PreferencesAllowOriginalDownload, 'The existing link must not be modified');
+    }
+
+    @IsTest
+    static void shouldStillConvertOtherImages_WhenOneLinkIsBlocked() {
+
+        ContentVersion good = [SELECT Id FROM ContentVersion LIMIT 1];
+        ContentVersion bad = new ContentVersion(Title = 'Bad', PathOnClient = 'bad.png', VersionData = Blob.valueOf('png'), IsMajorVersion = true);
+        insert bad;
+        insert new ContentDistribution(
+            ContentVersionId = bad.Id, Name = 'Blocked', PreferencesAllowOriginalDownload = false, PreferencesAllowViewInBrowser = true
+        );
+        Summit_Events__c se = insertEvent('Mixed Event', versionLinkTag(bad.Id) + versionLinkTag(good.Id));
+
+        Test.startTest();
+        new SummitEventsRtfLinkPipeline(new Map<Id, Summit_Events__c>{ se.Id => se }).run();
+        Test.stopTest();
+
+        ContentDistribution goodLink = [SELECT Id, ContentDownloadUrl FROM ContentDistribution WHERE ContentVersionId = :good.Id];
+        String updated = getEvent(se.Id).Event_Full_Text__c;
+        Assert.isTrue(containsUrl(updated, goodLink.ContentDownloadUrl), 'The good image should still be converted');
+        Assert.isTrue(updated.contains(bad.Id), 'The blocked image should be left as written');
+    }
+
+    @IsTest
     static void shouldQueueNothing_WhenEventsHaveNoImages() {
 
         List<Summit_Events__c> events = new List<Summit_Events__c>();

@@ -35,4 +35,11 @@
         <shortDescription>More images are waiting</shortDescription>
         <value>Some images are still waiting to be made public. Save the event again to continue.</value>
     </labels>
+    <labels>
+        <fullName>SummitEventsImageNotifBlocked</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Existing public link cannot serve the image</shortDescription>
+        <value>A linked image wasn&apos;t updated because its existing public link has expired, needs a password or blocks downloads. Change that link&apos;s settings or remove it, then save the event again.</value>
+    </labels>
 </CustomLabels>
