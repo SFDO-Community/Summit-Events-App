@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>SummitEventsImageNotifTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for the image publishing notification</shortDescription>
+        <value>Summit Events: images need attention</value>
+    </labels>
+    <labels>
+        <fullName>SummitEventsImageNotifFile</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Linked file was skipped</shortDescription>
+        <value>A linked image wasn&apos;t made public because the file isn&apos;t an image or you don&apos;t have access to it.</value>
+    </labels>
+    <labels>
+        <fullName>SummitEventsImageNotifFetch</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Rich text image could not be fetched</shortDescription>
+        <value>An image uploaded in a rich text field couldn&apos;t be made public. It may be missing or not a supported image type.</value>
+    </labels>
+    <labels>
+        <fullName>SummitEventsImageNotifFailed</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Publishing images failed</shortDescription>
+        <value>Making images public failed. Make sure you can create public links and that public links are enabled for your org.</value>
+    </labels>
+    <labels>
+        <fullName>SummitEventsImageNotifMore</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>More images are waiting</shortDescription>
+        <value>Some images are still waiting to be made public. Save the event again to continue.</value>
+    </labels>
+    <labels>
+        <fullName>SummitEventsImageNotifBlocked</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Existing public link cannot serve the image</shortDescription>
+        <value>A linked image wasn&apos;t updated because its existing public link has expired, needs a password or blocks downloads. Change that link&apos;s settings or remove it, then save the event again.</value>
+    </labels>
+</CustomLabels>
