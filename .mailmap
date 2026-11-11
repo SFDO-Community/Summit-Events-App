@@ -1,0 +1,23 @@
+# Maps alternate names/emails to one canonical identity per contributor.
+# Used by git shortlog, git log and git blame. Format:
+#   Canonical Name <canonical@email> <alternate@email>
+# Add a line here when a contributor commits under a second email.
+
+Thaddaeus Dahlberg <16785863+tcdahlberg@users.noreply.github.com> <tcdahlberg@users.noreply.github.com>
+Thaddaeus Dahlberg <16785863+tcdahlberg@users.noreply.github.com> <thad@valleyhilldesign.com>
+Ryan Blake <60475518+rdblake21@users.noreply.github.com> <ryan.bts.mn@gmail.com>
+Ryan Blake <60475518+rdblake21@users.noreply.github.com> <rdblake@stthomas.edu>
+Matt Hubert <50189636+Scarrien@users.noreply.github.com> <matthubert10101@gmail.com>
+Matt Hubert <50189636+Scarrien@users.noreply.github.com> <matt.hubert@fdnpartners.com>
+Matt Hubert <50189636+Scarrien@users.noreply.github.com> <76977307+matt-hubert@users.noreply.github.com>
+Jim Hubert <58151529+jimhubert@users.noreply.github.com> <jimhubertcrm@gmail.com>
+Jeff Hilyard <jhilyard@users.noreply.github.com> <jeff@Jeffreys-MacBook-Pro.local>
+Mike Walter <57462572+walt0019@users.noreply.github.com> <walt0019@stthomas.edu>
+FrancisTR <123771828+FrancisTR@users.noreply.github.com> <fatran@stthomas.edu>
+David Ray <dray@salesforce.com> <david@raycreative.com>
+David Reed <d.reed@salesforce.com> <david@ktema.org>
+Paul Prescod <pprescod@salesforce.com> <paul@prescod.net>
+
+# Same email, different display name: the name on the right must be given explicitly.
+Matt Hubert <50189636+Scarrien@users.noreply.github.com> Matt <50189636+Scarrien@users.noreply.github.com>
+Jeff Hilyard <jhilyard@users.noreply.github.com> jhilyard <jhilyard@users.noreply.github.com>
