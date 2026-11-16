@@ -467,11 +467,7 @@ Created by Thaddaeus Dahlberg on 5/1/2018.
                                             <apex:inputCheckbox value="{!eventRegistration.Registrant_Receive_Texts__c}" id="AcceptTextMessage" styleClass="slds-checkbox__input"/>          
                                             <apex:outputLabel for="AcceptTextMessage" styleClass="slds-checkbox__label">
                                                 <span class="slds-checkbox_faux"></span>
-                                                <span class="slds-form-element__label">{!eventPage.Registrant_Receive_Texts_Label__c}
-                                                    <apex:outputText escape="false" rendered="{!IF(eventPage.Ask_Receive_Text_Messages__c == 'Ask and require', true, false)}">
-                                                        <abbr class="slds-required" title="required">*</abbr>
-                                                    </apex:outputText>
-                                                </span>
+                                                <span class="slds-form-element__label"><strong>{!eventPage.Registrant_Receive_Texts_Label__c}</strong></span>
                                             </apex:outputLabel>
                                         </span>
                                     </div>
