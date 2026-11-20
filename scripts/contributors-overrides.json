@@ -1,0 +1,8 @@
+{
+  "_comment": "Optional. Key = canonical email from .mailmap (lowercase). Fields: github (handle) and/or name (display name). Needed only when the email isn't a users.noreply.github.com address or the git name is unhelpful.",
+  "davidandrescuentasmar@gmail.com": {"github": "DavidCuentasMar"},
+  "akadis@salesforce.com": {"github": "akadisSFDC"},
+  "dwhitig@gmail.com": {"github": "dwhitig"},
+  "kreynen@gmail.com": {"name": "kreynen", "github": "kreynen"},
+  "mblanski@salesforce.com": {"github": "MatthewBlanski"}
+}

@@ -57,6 +57,7 @@ public with sharing class SummitEventsCancelReviewController {
         doCRUD regCrud = new doCRUD();
         if (eventRegistration != null) {
             eventRegistration.Status__c = 'Cancelled';
+            eventRegistration.Substatus__c = null;
             eventRegistration = regCrud.updateRegistration(eventRegistration);
         }
         PageReference pg = Page.SummitEventsCancelReview;
