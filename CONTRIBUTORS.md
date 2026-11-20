@@ -5,7 +5,7 @@ Thank you to everyone who has helped build the Summit Events App. This list is g
 <!-- CONTRIBUTORS:START -->
 | Contributor | GitHub | Commits | Active |
 |---|---|---|---|
-| [Thaddaeus Dahlberg](https://github.com/tcdahlberg) | @tcdahlberg | 1084 | 2019–2026 |
+| [Thaddaeus Dahlberg](https://github.com/tcdahlberg) | @tcdahlberg | 1092 | 2019–2026 |
 | [Ryan Blake](https://github.com/rdblake21) | @rdblake21 | 148 | 2020–2026 |
 | [Jim Hubert](https://github.com/jimhubert) | @jimhubert | 92 | 2020–2021 |
 | [Matt Hubert](https://github.com/Scarrien) | @Scarrien | 70 | 2020–2022 |
@@ -19,6 +19,7 @@ Thank you to everyone who has helped build the Summit Events App. This list is g
 | David Ray | — | 5 | 2021 |
 | Luke Parrott | — | 5 | 2019 |
 | [Alex Kadis](https://github.com/akadisSFDC) | @akadisSFDC | 4 | 2025 |
+| [Copilot Autofix powered by AI](https://github.com/Copilot) | @Copilot | 3 | 2026 |
 | David Glick | — | 3 | 2020 |
 | [dwhitig](https://github.com/dwhitig) | @dwhitig | 3 | 2021–2024 |
 | [Cori O'Brien](https://github.com/coriobriensfdo) | @coriobriensfdo | 2 | 2021–2025 |
