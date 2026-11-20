@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Convert_images_to_public_access__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Opt into making images in public-facing rich text on events, appointment types and emails public, so guests and email recipients can see them. Each image is stored as a file with a public link.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Opt into making images in public-facing rich text on events, appointment types and emails public, so guests and email recipients can see them. Each image is stored as a file with a public link.</inlineHelpText>
+    <label>Convert images to public access</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
