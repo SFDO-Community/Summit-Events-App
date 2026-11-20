@@ -21,8 +21,9 @@ public with sharing class SummitEventsRtaImageQueueable implements Queueable, Da
 
         Boolean hasMore = new SummitEventsRtfLinkPipeline(eventIds).runAsync();
 
-        // Each job is capped for limits; chain another for the remainder. Only chains
-        // when this job made progress, so a permanent failure cannot loop forever.
+        // Each job is capped for limits; chain another for the remainder. Only chains when this
+        // job published at least one image, so a permanent failure cannot loop forever or keep
+        // storing duplicate copies of the same images.
         if(hasMore && Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
             try {
                 System.enqueueJob(new SummitEventsRtaImageQueueable(eventIds));

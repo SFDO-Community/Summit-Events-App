@@ -40,6 +40,6 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Existing public link cannot serve the image</shortDescription>
-        <value>A linked image wasn&apos;t updated because its existing public link has expired, needs a password or blocks downloads. Change that link&apos;s settings or remove it, then save the event again.</value>
+        <value>A linked image wasn&apos;t updated because your existing public link for that file has expired, needs a password or blocks downloads. Change that link&apos;s settings or remove it, then save the event again.</value>
     </labels>
 </CustomLabels>

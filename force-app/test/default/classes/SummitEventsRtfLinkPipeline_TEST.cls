@@ -102,9 +102,9 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
     }
 
     @IsTest
-    static void shouldLeaveImageAlone_WhenExistingLinkBlocksDownload() {
+    static void shouldLeaveImageAlone_WhenEditorsOwnLinkBlocksDownload() {
 
-        // A file can only have one distribution, so a better link cannot be added next to it
+        // A user can have only one link per file, so the editor cannot add a better one next to their own
         ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
         ContentDistribution blocked = new ContentDistribution(
             ContentVersionId = cv.Id, Name = 'Existing view-only link',
@@ -119,8 +119,41 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
 
         Assert.areEqual(se.Event_Full_Text__c, getEvent(se.Id).Event_Full_Text__c, 'An image whose link cannot serve it must be left as written');
         List<ContentDistribution> links = [SELECT Id, PreferencesAllowOriginalDownload FROM ContentDistribution WHERE ContentVersionId = :cv.Id];
-        Assert.areEqual(1, links.size(), 'No second link can exist for the file');
+        Assert.areEqual(1, links.size(), 'The editor cannot have a second link to the same file');
         Assert.isFalse(links[0].PreferencesAllowOriginalDownload, 'The existing link must not be modified');
+    }
+
+    @IsTest
+    static void shouldAddUsableLink_WhenAnotherUsersLinkBlocksDownload() {
+
+        User editor = SummitEventsTestSharedDataFactory.userToRunWith('Minimum Access - Salesforce', 'Summit_Events_Admin');
+        ContentVersion cv = [SELECT Id, ContentDocumentId FROM ContentVersion LIMIT 1];
+        insert new ContentDocumentLink(ContentDocumentId = cv.ContentDocumentId, LinkedEntityId = editor.Id, ShareType = 'C');
+        ContentDistribution blocked = new ContentDistribution(
+            ContentVersionId = cv.Id, Name = 'Someone else\'s view-only link',
+            PreferencesAllowOriginalDownload = false, PreferencesAllowViewInBrowser = true
+        );
+        insert blocked;
+        Summit_Events__c se = insertEvent('Other User Link Event', versionLinkTag(cv.Id));
+
+        Test.startTest();
+        System.runAs(editor) {
+            new SummitEventsRtfLinkPipeline(new Map<Id, Summit_Events__c>{ se.Id => se }).run();
+        }
+        Test.stopTest();
+
+        List<ContentDistribution> addedLinks = [
+            SELECT ContentDownloadUrl, PreferencesAllowOriginalDownload
+            FROM   ContentDistribution
+            WHERE  ContentVersionId = :cv.Id AND Id != :blocked.Id
+        ];
+        Assert.areEqual(1, addedLinks.size(), 'The editor should add their own link next to someone else\'s unusable one');
+        ContentDistribution added = addedLinks[0];
+        Assert.isTrue(added.PreferencesAllowOriginalDownload, 'The added link must let guests load the image');
+        Assert.isTrue(containsUrl(getEvent(se.Id).Event_Full_Text__c, added.ContentDownloadUrl),
+            'The image should use the editor\'s new link');
+        Assert.isFalse([SELECT PreferencesAllowOriginalDownload FROM ContentDistribution WHERE Id = :blocked.Id].PreferencesAllowOriginalDownload,
+            'Someone else\'s link must not be modified');
     }
 
     @IsTest
@@ -275,6 +308,65 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
         // Chained jobs do not run in tests, so we see exactly one job's worth of work
         Assert.areEqual(20, mock.callCount, 'One job should fetch at most 20 images');
         Assert.areEqual(20, [SELECT COUNT() FROM ContentDistribution], 'One distribution per converted image');
+    }
+
+    @IsTest
+    static void shouldChainAnotherJob_WhenJobPublishedImagesAndMoreRemain() {
+
+        List<Id> eventIds = stageManyRtaEvents(25);
+        Test.setMock(HttpCalloutMock.class, new ImageMock(200, 'image/jpeg'));
+
+        Test.startTest();
+        new SummitEventsRtaImageQueueable(eventIds).execute(null);
+        Integer queued = Limits.getQueueableJobs();
+        Test.stopTest();
+
+        Assert.areEqual(1, queued, 'A job that published images should chain another for the rest');
+    }
+
+    @IsTest
+    static void shouldNotChainAnotherJob_WhenJobPublishedNothing() {
+
+        // Can edit events and create files, but cannot create public links, so every link insert fails
+        User editor = editorWithoutPublicLinks();
+        List<Id> eventIds = stageManyRtaEvents(25);
+        ImageMock mock = new ImageMock(200, 'image/jpeg');
+        Test.setMock(HttpCalloutMock.class, mock);
+        Integer queued;
+
+        Test.startTest();
+        System.runAs(editor) {
+            new SummitEventsRtaImageQueueable(eventIds).execute(null);
+            queued = Limits.getQueueableJobs();
+        }
+        Test.stopTest();
+
+        Assert.areEqual(0, queued, 'A job that published nothing must not chain, or the next job stores the same images again');
+        Assert.areEqual(20, mock.callCount, 'Only the first job\'s batch should have been fetched');
+        Assert.areEqual(0, [SELECT COUNT() FROM ContentDistribution], 'No link could be created');
+    }
+
+    @IsTest
+    static void shouldQueueOneJob_WhenSavingEventWithVersionLinkAndRtaImage() {
+
+        insert new Summit_Events_Settings__c(
+            SetupOwnerId = UserInfo.getOrganizationId(),
+            Opt_Into_Link_Automation__c = true
+        );
+        ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
+        // Converting the version link updates the event, which fires the trigger again inside the save
+        Summit_Events__c se = stageRtaEvent('Both Kinds Event', versionLinkTag(cv.Id) + rtaTag(1));
+        ImageMock mock = new ImageMock(200, 'image/jpeg');
+        Test.setMock(HttpCalloutMock.class, mock);
+
+        Test.startTest();
+        update new Summit_Events__c(Id = se.Id, Event_Name__c = 'Both Kinds Event Renamed');
+        Integer queued = Limits.getQueueableJobs();
+        Test.stopTest();
+
+        Assert.areEqual(1, queued, 'The nested trigger run must not queue a second job for the same image');
+        Assert.areEqual(1, mock.callCount, 'The image should be fetched once');
+        Assert.areEqual(2, [SELECT COUNT() FROM ContentVersion], 'Only one file should be stored for the uploaded image');
     }
 
     @IsTest
@@ -502,6 +594,36 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
             new Summit_Events__c(Id = saved.Id, Name = name, Event_Full_Text__c = html)
         );
         return saved;
+    }
+
+    private static List<Id> stageManyRtaEvents(Integer count) {
+        List<Id> eventIds = new List<Id>();
+        for(Integer i = 1; i <= count; i++) {
+            eventIds.add(stageRtaEvent('Bulk ' + i, rtaTag(i)).Id);
+        }
+        return eventIds;
+    }
+
+    // Minimum access user who can edit events and their rich text, but lacks Create Public Links
+    private static User editorWithoutPublicLinks() {
+        User editor = SummitEventsTestSharedDataFactory.userToRunWith('Minimum Access - Salesforce', null);
+        String objectName = Summit_Events__c.SObjectType.getDescribe(SObjectDescribeOptions.DEFERRED).getName();
+        System.runAs(new User(Id = UserInfo.getUserId())) {
+            PermissionSet editing = new PermissionSet(Name = 'Event_Editing_Without_Links', Label = 'Event Editing Without Links');
+            insert editing;
+            insert new ObjectPermissions(
+                ParentId = editing.Id, SobjectType = objectName,
+                PermissionsRead = true, PermissionsEdit = true, PermissionsDelete = true,
+                PermissionsViewAllRecords = true, PermissionsModifyAllRecords = true
+            );
+            insert new FieldPermissions(
+                ParentId = editing.Id, SobjectType = objectName,
+                Field = objectName + '.' + Summit_Events__c.Event_Full_Text__c.getDescribe().getName(),
+                PermissionsRead = true, PermissionsEdit = true
+            );
+            insert new PermissionSetAssignment(AssigneeId = editor.Id, PermissionSetId = editing.Id);
+        }
+        return editor;
     }
 
     private static Summit_Events__c getEvent(Id eventId) {

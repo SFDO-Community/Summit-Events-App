@@ -40,3 +40,5 @@ node_modules/
 **/*.tsbuildinfo
 
 **/graphql.config.yml
+/.awb/
+/.awb/

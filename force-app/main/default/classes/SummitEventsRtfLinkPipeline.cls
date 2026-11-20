@@ -33,7 +33,8 @@
  * - ApexSOQLInjection was a false positive on the dynamic query in filter(): the only concatenated
  *   parts are the namespace prefix and field names from the RICHTEXT_FIELDS allowlist, and record
  *   Ids are passed as a bind variable.
- * - ApexSuggestUsingNamedCred is intentionally suppressed in fetchImage(); see the note there.
+ * - ApexSuggestUsingNamedCred is intentionally suppressed in fetchImage(), and no Remote Site
+ *   Setting is required for its callout; see the note there.
  */
 public with sharing class SummitEventsRtfLinkPipeline {
 
@@ -75,6 +76,11 @@ public with sharing class SummitEventsRtfLinkPipeline {
     @TestVisible
     private static List<Summit_Events__c> eventOverrides;
 
+    // Events this transaction is already converting. push() updates the event, which fires the
+    // trigger again; without this guard the nested run would queue a second job for the same images
+    // and both jobs would store duplicate files.
+    private static Set<Id> eventsInProgress = new Set<Id>();
+
     // File extensions we are willing to publish
     private static final Set<String> IMAGE_FILE_EXTENSIONS = new Set<String>{
         'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'
@@ -89,7 +95,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
     private List<Id> idList;
     private String executionStage;
     private Boolean hasDeferredImages = false;
-    private Integer filesCreated = 0;
+    private Integer rtaImagesPublished = 0;
     
     public SummitEventsRtfLinkPipeline(Map<Id,Summit_Events__c> newMap) {
         this(new List<Id>(newMap.keySet()));
@@ -107,6 +113,9 @@ public with sharing class SummitEventsRtfLinkPipeline {
      */
     public void run() {
         this.executionStage = 'run';
+        if(!claimEvents()) {
+            return;
+        }
         try {
             filter();
             scan();
@@ -116,6 +125,8 @@ public with sharing class SummitEventsRtfLinkPipeline {
             enqueueRtaImages();
         } catch(Exception e) {
             this.problems.add(Label.SummitEventsImageNotifFailed);
+        } finally {
+            releaseEvents();
         }
         notifyProblems();
     }
@@ -123,10 +134,15 @@ public with sharing class SummitEventsRtfLinkPipeline {
     /**
      * Async entry point, called from {@link SummitEventsRtaImageQueueable}. Fetches
      * rich text editor images, stores them as files, and rewrites the fields.
-     * @return true when more images remain and another job should be chained
+     * @return true when more images remain and this job published at least one, so another
+     *         job should be chained. A job that published nothing would only fetch the same
+     *         images again and store duplicate files, so it never chains.
      */
     public Boolean runAsync() {
         this.executionStage = 'runAsync';
+        if(!claimEvents()) {
+            return false;
+        }
         Boolean hasMore = false;
         try {
             filter();
@@ -135,12 +151,34 @@ public with sharing class SummitEventsRtfLinkPipeline {
             prepare();
             create();
             push();
-            hasMore = this.hasDeferredImages && this.filesCreated > 0;
+            hasMore = this.hasDeferredImages && this.rtaImagesPublished > 0;
         } catch(Exception e) {
             this.problems.add(Label.SummitEventsImageNotifFailed);
+        } finally {
+            releaseEvents();
         }
         notifyProblems();
         return hasMore;
+    }
+
+    /**
+     * Drop events this transaction is already converting and mark the rest as in progress.
+     * @return true when at least one event is left to convert
+     */
+    private Boolean claimEvents() {
+        List<Id> unclaimedIds = new List<Id>();
+        for(Id eventId : this.idList) {
+            if(!eventsInProgress.contains(eventId)) {
+                unclaimedIds.add(eventId);
+            }
+        }
+        this.idList = unclaimedIds;
+        eventsInProgress.addAll(unclaimedIds);
+        return !unclaimedIds.isEmpty();
+    }
+
+    private void releaseEvents() {
+        eventsInProgress.removeAll(this.idList);
     }
 
     /**
@@ -322,7 +360,6 @@ public with sharing class SummitEventsRtfLinkPipeline {
             ));
         }
         Database.insert(versionList, true, System.AccessLevel.USER_MODE);
-        this.filesCreated = versionList.size();
 
         Map<String,Id> cvIdByRefId = new Map<String,Id>();
         for(Integer i = 0; i < refIds.size(); i++) {
@@ -400,26 +437,23 @@ public with sharing class SummitEventsRtfLinkPipeline {
             WITH   USER_MODE
         ];
 
-        // Reuse an existing link only if a guest can actually load the image from it. A file can have
-        // just one distribution, so if that one has expired, needs a password or blocks downloads we
-        // cannot add a better one. We never edit someone else's link; the image is left as written
-        // and the editor is told why.
+        // Reuse an existing link only if a guest can actually load the image from it. Links that have
+        // expired, need a password or block downloads are ignored, never edited, and create() adds a
+        // suitable link next to them. A file can have several links but only one per user, so that
+        // fails only when the unusable link is the editor's own (see create()).
         for(ContentDistribution cd : cdList) {
             Boolean usable = cd.PreferencesAllowOriginalDownload
                 && !cd.PreferencesPasswordRequired
                 && !cd.PreferencesExpires;
             if(usable) {
                 this.cvIdToCDMap.put(cd.ContentVersionId, cd);
-            } else {
-                this.publishableCvIds.remove(cd.ContentVersionId);
-                this.problems.add(Label.SummitEventsImageNotifBlocked);
             }
         }
     }
 
     /**
      * Create ContentDistribution records for any ContentVersion records
-     * that are not already linked to a ContentDistribution record.
+     * that do not already have a usable ContentDistribution record.
      */
     @TestVisible
     private void create() {
@@ -453,13 +487,16 @@ public with sharing class SummitEventsRtfLinkPipeline {
         }
 
         if(!cdInsertList.isEmpty()) {
-            // Partial success: one image that cannot be published (for example a file that already
-            // has a distribution this user cannot see) must not stop the others
+            // Partial success: one image that cannot be published must not stop the others
             List<Database.SaveResult> results = Database.insert(cdInsertList, false, System.AccessLevel.USER_MODE);
             List<Id> createdIds = new List<Id>();
             for(Database.SaveResult result : results) {
                 if(result.isSuccess()) {
                     createdIds.add(result.getId());
+                } else if(isDuplicateLink(result)) {
+                    // The editor already has a link to this file and it cannot serve the image. We
+                    // never change an existing link's restrictions, so the image is left as written.
+                    this.problems.add(Label.SummitEventsImageNotifBlocked);
                 } else {
                     this.problems.add(Label.SummitEventsImageNotifFailed);
                 }
@@ -483,6 +520,16 @@ public with sharing class SummitEventsRtfLinkPipeline {
         }
     }
 
+    // A user can have only one link per file; a second insert fails with DUPLICATE_VALUE
+    private static Boolean isDuplicateLink(Database.SaveResult result) {
+        for(Database.Error error : result.getErrors()) {
+            if(error.getStatusCode() == StatusCode.DUPLICATE_VALUE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Replace all converted URLs in the RTF fields with the corresponding ContentDistribution
      * record's ContentDownloadUrl (the direct file URL; DistributionPublicUrl is an HTML viewer
@@ -503,6 +550,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
         // never write it back. Lock the records and apply each replacement to the current field
         // value instead, which keeps anything the editor changed in the meantime.
         Map<Id,Summit_Events__c> currentById = lockCurrentEvents();
+        Integer rtaImagesReplaced = 0;
 
         for(SummitEventWrapper wrappedEvent : wrappedEventList) {
             Summit_Events__c current = currentById.get(wrappedEvent.event.Id);
@@ -521,11 +569,18 @@ public with sharing class SummitEventsRtfLinkPipeline {
                 for(SummitFieldItem sfi : wrappedEvent.fieldsToLinkMap.get(field) ?? new List<SummitFieldItem>()) {
                     ContentDistribution cd = sfi.cvId == null ? null : cvIdToCDMap.get(sfi.cvId);
                     if(cd != null) {
-                        rtf = rtf.replace(sfi.url, cd.ContentDownloadUrl);
+                        String replaced = rtf.replace(sfi.url, cd.ContentDownloadUrl);
+                        if(sfi.refId != null && replaced != rtf) {
+                            rtaImagesReplaced++;
+                        }
+                        rtf = replaced;
                     }
                 }
                 if(rtf != original) {
                     tempEvent.put(field,rtf);
+                    // Keep our copy in step with the save. Under the test seam it is the staged
+                    // record, so a nested trigger run reads what was saved, as it would from the database.
+                    current.put(field, rtf);
                     changed = true;
                 }
             }
@@ -537,6 +592,8 @@ public with sharing class SummitEventsRtfLinkPipeline {
         if(!updateList.isEmpty()) {
             this.executionStage = 'push.DML';
             Database.update(updateList, true, System.AccessLevel.USER_MODE);
+            // Only counted once saved: all-or-none, so reaching here means every replacement persisted
+            this.rtaImagesPublished = rtaImagesReplaced;
         }
      }
 
@@ -669,6 +726,9 @@ public with sharing class SummitEventsRtfLinkPipeline {
         // External Credential, a Connected App/OAuth flow and a permission set assigned in every
         // subscriber org, and it would run as a fixed identity instead of the editing user.
         // The session ID is only ever sent to this org's own My Domain URL built above.
+        // No Remote Site Setting is needed either: the Apex URL class docs say a URL from
+        // getOrgDomainUrl() can call the org's own Salesforce APIs without one, so subscribers
+        // have nothing to set up. Verified in a scratch org with no remote site for its domain.
         request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId()); // NOPMD
         request.setTimeout(60000);
 
