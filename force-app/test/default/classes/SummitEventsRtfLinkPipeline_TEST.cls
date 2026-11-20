@@ -102,13 +102,15 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
     }
 
     @IsTest
-    static void shouldLeaveImageAlone_WhenEditorsOwnLinkBlocksDownload() {
+    static void shouldNeverUseOrChangeBlockedLink_WhenEditorsOwnLinkBlocksDownload() {
 
-        // A user can have only one link per file, so the editor cannot add a better one next to their own
+        // An expiring link still has a working download URL (download-blocked and password links have
+        // none), so reusing it would put an image on the page that breaks when the link expires
         ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
         ContentDistribution blocked = new ContentDistribution(
-            ContentVersionId = cv.Id, Name = 'Existing view-only link',
-            PreferencesAllowOriginalDownload = false, PreferencesAllowViewInBrowser = true
+            ContentVersionId = cv.Id, Name = 'Existing expiring link',
+            PreferencesAllowOriginalDownload = true, PreferencesAllowViewInBrowser = true,
+            PreferencesExpires = true, ExpiryDate = System.now().addDays(1)
         );
         insert blocked;
         Summit_Events__c se = insertEvent('Blocked Link Event', versionLinkTag(cv.Id));
@@ -117,10 +119,7 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
         new SummitEventsRtfLinkPipeline(new Map<Id, Summit_Events__c>{ se.Id => se }).run();
         Test.stopTest();
 
-        Assert.areEqual(se.Event_Full_Text__c, getEvent(se.Id).Event_Full_Text__c, 'An image whose link cannot serve it must be left as written');
-        List<ContentDistribution> links = [SELECT Id, PreferencesAllowOriginalDownload FROM ContentDistribution WHERE ContentVersionId = :cv.Id];
-        Assert.areEqual(1, links.size(), 'The editor cannot have a second link to the same file');
-        Assert.isFalse(links[0].PreferencesAllowOriginalDownload, 'The existing link must not be modified');
+        assertBlockedLinkRespected(cv.Id, blocked.Id, getEvent(se.Id).Event_Full_Text__c);
     }
 
     @IsTest
@@ -162,9 +161,10 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
         ContentVersion good = [SELECT Id FROM ContentVersion LIMIT 1];
         ContentVersion bad = new ContentVersion(Title = 'Bad', PathOnClient = 'bad.png', VersionData = Blob.valueOf('png'), IsMajorVersion = true);
         insert bad;
-        insert new ContentDistribution(
+        ContentDistribution blocked = new ContentDistribution(
             ContentVersionId = bad.Id, Name = 'Blocked', PreferencesAllowOriginalDownload = false, PreferencesAllowViewInBrowser = true
         );
+        insert blocked;
         Summit_Events__c se = insertEvent('Mixed Event', versionLinkTag(bad.Id) + versionLinkTag(good.Id));
 
         Test.startTest();
@@ -174,7 +174,7 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
         ContentDistribution goodLink = [SELECT Id, ContentDownloadUrl FROM ContentDistribution WHERE ContentVersionId = :good.Id];
         String updated = getEvent(se.Id).Event_Full_Text__c;
         Assert.isTrue(containsUrl(updated, goodLink.ContentDownloadUrl), 'The good image should still be converted');
-        Assert.isTrue(updated.contains(bad.Id), 'The blocked image should be left as written');
+        assertBlockedLinkRespected(bad.Id, blocked.Id, updated);
     }
 
     @IsTest
@@ -255,6 +255,54 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
         String updated = getEvent(se.Id).Event_Full_Text__c;
         Assert.isFalse(updated.contains('rtaImage'), 'Both occurrences should be replaced');
         Assert.areEqual(2, updated.split('<img').size() - 1, 'Both images should still be present');
+    }
+
+    @IsTest
+    static void shouldReuseStoredFileDuringSave_WhenStalePageSavesConvertedUploadAgain() {
+
+        // An earlier job stored image 1 and rewrote the field, but the editor's page still held the
+        // old upload URL and they kept their value in Lightning's conflict dialog, adding image 2
+        insert new Summit_Events_Settings__c(
+            SetupOwnerId = UserInfo.getOrganizationId(),
+            Opt_Into_Link_Automation__c = true
+        );
+        Summit_Events__c se = stageRtaEvent('Stale Save Event', rtaTag(1) + rtaTag(2));
+        ContentVersion stored = storedUpload(se.Id, 1);
+        ImageMock mock = new ImageMock(200, 'image/jpeg');
+        Test.setMock(HttpCalloutMock.class, mock);
+
+        Test.startTest();
+        update new Summit_Events__c(Id = se.Id, Event_Name__c = 'Stale Save Event Renamed');
+        Integer queued = Limits.getQueueableJobs();
+        String afterSave = getEvent(se.Id).Event_Full_Text__c;
+        Test.stopTest();
+
+        Assert.areEqual(1, [SELECT COUNT() FROM ContentVersion WHERE PathOnClient LIKE :(refId(1) + '.%')],
+            'The stored image must not be stored again');
+        Assert.areEqual(1, mock.callCount, 'Only the new image should be fetched');
+        Assert.isTrue(mock.lastEndpoint.endsWith(refId(2)), 'The fetch should be for the new image: ' + mock.lastEndpoint);
+        Assert.areEqual(1, queued, 'Only the new image should need a job');
+        List<ContentDistribution> storedLinks = [SELECT ContentDownloadUrl FROM ContentDistribution WHERE ContentVersionId = :stored.Id];
+        Assert.areEqual(1, storedLinks.size(), 'The stored file should have been published');
+        Assert.isTrue(containsUrl(afterSave, storedLinks[0].ContentDownloadUrl), 'The stored image should be converted within the save itself');
+    }
+
+    @IsTest
+    static void shouldReuseStoredFileInJob_WhenUploadWasAlreadyStored() {
+
+        Summit_Events__c se = stageRtaEvent('Stored Upload Event', rtaTag(1));
+        ContentVersion stored = storedUpload(se.Id, 1);
+        ImageMock mock = new ImageMock(200, 'image/jpeg');
+        Test.setMock(HttpCalloutMock.class, mock);
+
+        Test.startTest();
+        new SummitEventsRtaImageQueueable(new List<Id>{ se.Id }).execute(null);
+        Test.stopTest();
+
+        Assert.areEqual(0, mock.callCount, 'An image already stored as a file should not be fetched again');
+        List<ContentDistribution> storedLinks = [SELECT ContentDownloadUrl FROM ContentDistribution WHERE ContentVersionId = :stored.Id];
+        Assert.areEqual(1, storedLinks.size(), 'The stored file should have been published');
+        Assert.isTrue(containsUrl(getEvent(se.Id).Event_Full_Text__c, storedLinks[0].ContentDownloadUrl), 'The stored file should be used');
     }
 
     @IsTest
@@ -594,6 +642,42 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
             new Summit_Events__c(Id = saved.Id, Name = name, Event_Full_Text__c = html)
         );
         return saved;
+    }
+
+    // The editor's own blocked link must never be changed or used. The platform usually rejects their
+    // second link to the file (DUPLICATE_VALUE), so the image stays as written, but in parallel test
+    // runs it sometimes accepts it (measured), and then the image must use that new usable link.
+    private static void assertBlockedLinkRespected(Id versionId, Id blockedId, String html) {
+        ContentDistribution blocked = [
+            SELECT ContentDownloadUrl, PreferencesAllowOriginalDownload, PreferencesPasswordRequired, PreferencesExpires
+            FROM   ContentDistribution
+            WHERE  Id = :blockedId
+        ];
+        Assert.isTrue(!blocked.PreferencesAllowOriginalDownload || blocked.PreferencesPasswordRequired || blocked.PreferencesExpires,
+            'The existing link must not be modified');
+        Assert.isTrue(blocked.ContentDownloadUrl == null || !containsUrl(html, blocked.ContentDownloadUrl),
+            'The blocked link must never be used: ' + html);
+        List<ContentDistribution> added = [
+            SELECT ContentDownloadUrl, PreferencesAllowOriginalDownload
+            FROM   ContentDistribution
+            WHERE  ContentVersionId = :versionId AND Id != :blockedId
+        ];
+        if(added.isEmpty()) {
+            Assert.isTrue(html.contains(versionId), 'With no usable link the image must be left as written: ' + html);
+        } else {
+            Assert.isTrue(added[0].PreferencesAllowOriginalDownload, 'Any added link must let guests load the image');
+            Assert.isTrue(containsUrl(html, added[0].ContentDownloadUrl), 'The image must use the usable link, never the blocked one: ' + html);
+        }
+    }
+
+    // A file stored for an upload the way an earlier job does it: on the event, named refId.extension
+    private static ContentVersion storedUpload(Id eventId, Integer n) {
+        ContentVersion stored = new ContentVersion(
+            Title = 'Stored ' + refId(n), PathOnClient = refId(n) + '.jpg', VersionData = Blob.valueOf('stored-image'),
+            FirstPublishLocationId = eventId, IsMajorVersion = true
+        );
+        insert stored;
+        return stored;
     }
 
     private static List<Id> stageManyRtaEvents(Integer count) {

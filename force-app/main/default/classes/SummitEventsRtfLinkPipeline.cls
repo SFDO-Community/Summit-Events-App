@@ -7,7 +7,8 @@
  *    These are converted synchronously.
  * 2. Rich text editor uploads (/servlet/rtaImage?...refid=0EM...). Their bytes are only
  *    reachable through the REST API, which needs a callout, so they are handled in
- *    {@link SummitEventsRtaImageQueueable}.
+ *    {@link SummitEventsRtaImageQueueable}. An upload already stored as a file on the event
+ *    (see reuseStoredImages()) is converted at once from that file instead.
  *
  * Either way the image ends up as a ContentVersion with a ContentDistribution, and the
  * img src is rewritten to the distribution's ContentDownloadUrl. (DistributionPublicUrl is
@@ -119,6 +120,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
         try {
             filter();
             scan();
+            reuseStoredImages();
             prepare();
             create();
             push();
@@ -147,6 +149,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
         try {
             filter();
             scan();
+            reuseStoredImages();
             fetch();
             prepare();
             create();
@@ -309,6 +312,67 @@ public with sharing class SummitEventsRtfLinkPipeline {
     }
 
     /**
+     * Point rich text editor images at the file an earlier job already stored for them, so they
+     * are converted without fetching them again. A save from a record page opened before that job
+     * rewrote the field (Lightning's "Choose values to keep" dialog, keeping your value) puts the
+     * original upload URLs back; without this, every such save would store the images again.
+     * Only files we stored on these events are considered: first published to the event and
+     * named refId.extension by fetch().
+     */
+    @TestVisible
+    private void reuseStoredImages() {
+
+        this.executionStage = 'reuseStoredImages';
+
+        Set<Id> eventIds = new Set<Id>();
+        Set<String> storedNames = new Set<String>();
+        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
+            for(List<SummitFieldItem> items : wrappedEvent.fieldsToLinkMap.values()) {
+                for(SummitFieldItem sfi : items) {
+                    if(sfi.refId != null && sfi.cvId == null) {
+                        eventIds.add(wrappedEvent.event.Id);
+                        for(String extension : IMAGE_EXTENSIONS.values()) {
+                            storedNames.add(sfi.refId + '.' + extension);
+                        }
+                    }
+                }
+            }
+        }
+
+        if(storedNames.isEmpty()) {
+            return;
+        }
+
+        // Oldest first, so repeated runs always settle on the same file
+        Map<String,Id> cvIdByRefId = new Map<String,Id>();
+        for(ContentVersion cv : [
+            SELECT Id,
+                   PathOnClient
+            FROM   ContentVersion
+            WHERE  FirstPublishLocationId IN :eventIds
+            AND    PathOnClient IN :storedNames
+            AND    IsLatest = true
+            WITH   USER_MODE
+            ORDER BY CreatedDate
+        ]) {
+            String refId = cv.PathOnClient.substringBeforeLast('.');
+            if(!cvIdByRefId.containsKey(refId)) {
+                cvIdByRefId.put(refId, cv.Id);
+            }
+        }
+
+        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
+            for(List<SummitFieldItem> items : wrappedEvent.fieldsToLinkMap.values()) {
+                for(SummitFieldItem sfi : items) {
+                    if(sfi.refId != null && sfi.cvId == null && cvIdByRefId.containsKey(sfi.refId)) {
+                        sfi.cvId = cvIdByRefId.get(sfi.refId);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Fetch rich text editor images through the REST API and store each as a file
      * owned by its event. This is the only stage that makes callouts, so it must run
      * in an async context, and all callouts must finish before any DML.
@@ -325,7 +389,8 @@ public with sharing class SummitEventsRtfLinkPipeline {
         for(SummitEventWrapper wrappedEvent : wrappedEventList) {
             for(String field : wrappedEvent.fieldsToLinkMap.keySet()) {
                 for(SummitFieldItem sfi : wrappedEvent.fieldsToLinkMap.get(field)) {
-                    if(sfi.refId == null || attempted.contains(sfi.refId)) {
+                    // cvId is already set when reuseStoredImages() found a stored file
+                    if(sfi.refId == null || sfi.cvId != null || attempted.contains(sfi.refId)) {
                         continue;
                     }
                     if(attempted.size() >= MAX_RTA_IMAGES_PER_JOB || totalBytes >= MAX_RTA_BYTES_PER_JOB
@@ -439,8 +504,8 @@ public with sharing class SummitEventsRtfLinkPipeline {
 
         // Reuse an existing link only if a guest can actually load the image from it. Links that have
         // expired, need a password or block downloads are ignored, never edited, and create() adds a
-        // suitable link next to them. A file can have several links but only one per user, so that
-        // fails only when the unusable link is the editor's own (see create()).
+        // suitable link next to them. A file can have several links but normally only one per user,
+        // so that can fail when the unusable link is the editor's own (see create()).
         for(ContentDistribution cd : cdList) {
             Boolean usable = cd.PreferencesAllowOriginalDownload
                 && !cd.PreferencesPasswordRequired
@@ -520,7 +585,9 @@ public with sharing class SummitEventsRtfLinkPipeline {
         }
     }
 
-    // A user can have only one link per file; a second insert fails with DUPLICATE_VALUE
+    // A user normally gets only one link per file; a second insert fails with DUPLICATE_VALUE.
+    // The platform does not enforce this every time (seen in parallel test runs); when it lets the
+    // insert through, the image simply uses the new usable link.
     private static Boolean isDuplicateLink(Database.SaveResult result) {
         for(Database.Error error : result.getErrors()) {
             if(error.getStatusCode() == StatusCode.DUPLICATE_VALUE) {
