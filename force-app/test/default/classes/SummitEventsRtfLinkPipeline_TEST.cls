@@ -264,7 +264,7 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
         // old upload URL and they kept their value in Lightning's conflict dialog, adding image 2
         insert new Summit_Events_Settings__c(
             SetupOwnerId = UserInfo.getOrganizationId(),
-            Opt_Into_Link_Automation__c = true
+            Convert_images_to_public_access__c = true
         );
         Summit_Events__c se = stageRtaEvent('Stale Save Event', rtaTag(1) + rtaTag(2));
         ContentVersion stored = storedUpload(se.Id, 1);
@@ -399,7 +399,7 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
 
         insert new Summit_Events_Settings__c(
             SetupOwnerId = UserInfo.getOrganizationId(),
-            Opt_Into_Link_Automation__c = true
+            Convert_images_to_public_access__c = true
         );
         ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
         // Converting the version link updates the event, which fires the trigger again inside the save
@@ -422,7 +422,7 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
 
         insert new Summit_Events_Settings__c(
             SetupOwnerId = UserInfo.getOrganizationId(),
-            Opt_Into_Link_Automation__c = true
+            Convert_images_to_public_access__c = true
         );
         Summit_Events__c se = stageRtaEvent('Trigger Event', rtaTag(1));
         ImageMock mock = new ImageMock(200, 'image/jpeg');
@@ -443,7 +443,7 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
 
         insert new Summit_Events_Settings__c(
             SetupOwnerId = UserInfo.getOrganizationId(),
-            Opt_Into_Link_Automation__c = true
+            Convert_images_to_public_access__c = true
         );
         ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
         String html = '<p><img src="https://example.force.com/sfc/servlet.shepherd/version/download/'
@@ -499,7 +499,7 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
     @IsTest
     static void shouldConvertVersionLink_WhenAppointmentTypeIsSaved() {
 
-        enableLinkAutomation(false, false);
+        enableImageConversion(false, false);
         ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
         Summit_Events__c se = insertEvent('Appointment Parent', '<p>x</p>');
 
@@ -517,7 +517,7 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
     @IsTest
     static void shouldConvertVersionLink_WhenEmailIsSaved() {
 
-        enableLinkAutomation(false, false);
+        enableImageConversion(false, false);
         ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
         Summit_Events__c se = insertEvent('Email Parent', '<p>x</p>');
 
@@ -535,7 +535,7 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
     @IsTest
     static void shouldDoNothing_WhenAppointmentTypeAndEmailTriggersAreTurnedOff() {
 
-        enableLinkAutomation(true, true);
+        enableImageConversion(true, true);
         ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
         Summit_Events__c se = insertEvent('Switched Off Parent', '<p>x</p>');
 
@@ -762,10 +762,10 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
         return email;
     }
 
-    private static void enableLinkAutomation(Boolean turnOffAppointmentTypeTrigger, Boolean turnOffEmailTrigger) {
+    private static void enableImageConversion(Boolean turnOffAppointmentTypeTrigger, Boolean turnOffEmailTrigger) {
         insert new Summit_Events_Settings__c(
             SetupOwnerId = UserInfo.getOrganizationId(),
-            Opt_Into_Link_Automation__c = true,
+            Convert_images_to_public_access__c = true,
             Turn_off_Appointment_Type_Trigger__c = turnOffAppointmentTypeTrigger,
             Turn_off_Email_Trigger__c = turnOffEmailTrigger
         );
