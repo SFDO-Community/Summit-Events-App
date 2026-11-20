@@ -11,6 +11,10 @@ private class SummitEventsRegisterAppointment_TEST {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'TestFirst', 'TestLast', 'test@valleyhill.net', '55418', '1971-03-22', '2012', null);
         List<Summit_Events_Appointment_Type__c> testAppointmentTypes = SummitEventsTestSharedDataFactory.createAppointmentTypes(seaTestInstances[1].Event__c);
+        Summit_Events_Appointment_Type__c limitedAppointType = testAppointmentTypes[0];
+        limitedAppointType.Appointment_Registrations_Limit__c = 1;
+        limitedAppointType.Enforce_Registrations_Limit__c = true;
+        update limitedAppointType;
 
         User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
 
@@ -70,6 +74,7 @@ private class SummitEventsRegisterAppointment_TEST {
             //run constructor again to simulate page load after save
             seaTestRegistration.UG_Event_Appointments__r.add(new Summit_Events_Appointments__c(Client_Created_Appointment__c = true));
             optionsCtrl = new SummitEventsRegisterAppointmentCtlr();
+            System.assertEquals(optionsCtrl.appointments.size(), 4);
             Test.stopTest();
         }
     }
