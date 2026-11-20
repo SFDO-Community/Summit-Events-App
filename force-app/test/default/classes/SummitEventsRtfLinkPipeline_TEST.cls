@@ -199,7 +199,7 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
     // Rich text editor images (rtaImage, via Queueable + REST callout)
     //
     // The platform strips rtaImage tags it cannot tie to a real upload, so these tests stage the
-    // field contents through SummitEventsRtfLinkPipeline.eventOverrides instead of saving them.
+    // field contents through SummitEventsRtfLinkPipeline.recordOverrides instead of saving them.
     // ---------------------------------------------------------------------------------------
 
     @IsTest
@@ -493,6 +493,106 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
     }
 
     // ---------------------------------------------------------------------------------------
+    // Appointment types (shown to guests) and emails (sent to registrants)
+    // ---------------------------------------------------------------------------------------
+
+    @IsTest
+    static void shouldConvertVersionLink_WhenAppointmentTypeIsSaved() {
+
+        enableLinkAutomation(false, false);
+        ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
+        Summit_Events__c se = insertEvent('Appointment Parent', '<p>x</p>');
+
+        Test.startTest();
+        Summit_Events_Appointment_Type__c appointmentType = insertAppointmentType(se.Id, versionLinkTag(cv.Id));
+        Test.stopTest();
+
+        List<ContentDistribution> links = [SELECT ContentDownloadUrl FROM ContentDistribution WHERE ContentVersionId = :cv.Id];
+        Assert.areEqual(1, links.size(), 'Saving an appointment type should create a public link for its image');
+        ContentDistribution cd = links[0];
+        String description = [SELECT Description__c FROM Summit_Events_Appointment_Type__c WHERE Id = :appointmentType.Id].Description__c;
+        Assert.isTrue(containsUrl(description, cd.ContentDownloadUrl), 'Saving an appointment type should make its image public: ' + description);
+    }
+
+    @IsTest
+    static void shouldConvertVersionLink_WhenEmailIsSaved() {
+
+        enableLinkAutomation(false, false);
+        ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
+        Summit_Events__c se = insertEvent('Email Parent', '<p>x</p>');
+
+        Test.startTest();
+        Summit_Events_Email__c email = insertEmail(se.Id, versionLinkTag(cv.Id));
+        Test.stopTest();
+
+        List<ContentDistribution> links = [SELECT ContentDownloadUrl FROM ContentDistribution WHERE ContentVersionId = :cv.Id];
+        Assert.areEqual(1, links.size(), 'Saving an email should create a public link for its image');
+        ContentDistribution cd = links[0];
+        String content = [SELECT Email_Content__c FROM Summit_Events_Email__c WHERE Id = :email.Id].Email_Content__c;
+        Assert.isTrue(containsUrl(content, cd.ContentDownloadUrl), 'Saving an email should make its image public: ' + content);
+    }
+
+    @IsTest
+    static void shouldDoNothing_WhenAppointmentTypeAndEmailTriggersAreTurnedOff() {
+
+        enableLinkAutomation(true, true);
+        ContentVersion cv = [SELECT Id FROM ContentVersion LIMIT 1];
+        Summit_Events__c se = insertEvent('Switched Off Parent', '<p>x</p>');
+
+        Test.startTest();
+        Summit_Events_Appointment_Type__c appointmentType = insertAppointmentType(se.Id, versionLinkTag(cv.Id));
+        Summit_Events_Email__c email = insertEmail(se.Id, versionLinkTag(cv.Id));
+        Test.stopTest();
+
+        Assert.areEqual(0, [SELECT COUNT() FROM ContentDistribution], 'No link should be created while the triggers are turned off');
+        Assert.isTrue([SELECT Description__c FROM Summit_Events_Appointment_Type__c WHERE Id = :appointmentType.Id].Description__c.contains(cv.Id),
+            'The appointment type should be left as written');
+        Assert.isTrue([SELECT Email_Content__c FROM Summit_Events_Email__c WHERE Id = :email.Id].Email_Content__c.contains(cv.Id),
+            'The email should be left as written');
+    }
+
+    @IsTest
+    static void shouldPublishRtaImage_WhenAppointmentTypeHasUpload() {
+
+        Summit_Events__c se = insertEvent('Appointment Upload Parent', '<p>x</p>');
+        Summit_Events_Appointment_Type__c appointmentType = insertAppointmentType(se.Id, '<p>placeholder</p>');
+        assertRtaImagePublished(appointmentType, Summit_Events_Appointment_Type__c.Description__c);
+    }
+
+    @IsTest
+    static void shouldPublishRtaImage_WhenEmailHasUpload() {
+
+        Summit_Events__c se = insertEvent('Email Upload Parent', '<p>x</p>');
+        Summit_Events_Email__c email = insertEmail(se.Id, '<p>placeholder</p>');
+        assertRtaImagePublished(email, Summit_Events_Email__c.Email_Content__c);
+    }
+
+    // Runs an upload through the trigger-time pipeline and its job for any supported record
+    private static void assertRtaImagePublished(SObject saved, Schema.SObjectField field) {
+
+        stageRichText(saved, field, rtaTag(1));
+        ImageMock mock = new ImageMock(200, 'image/png');
+        Test.setMock(HttpCalloutMock.class, mock);
+
+        Test.startTest();
+        new SummitEventsRtfLinkPipeline(new Map<Id, SObject>{ saved.Id => saved }).run();
+        Test.stopTest();
+
+        String objectName = saved.getSObjectType().getDescribe(SObjectDescribeOptions.DEFERRED).getName();
+        String fieldName = field.getDescribe().getName();
+        Assert.areEqual(1, mock.callCount, 'The upload should be fetched once');
+        Assert.isTrue(mock.lastEndpoint.contains('/sobjects/' + objectName + '/' + saved.Id + '/richTextImageFields/' + fieldName + '/' + refId(1)),
+            'The REST request should target this record and field: ' + mock.lastEndpoint);
+        ContentVersion stored = [SELECT Id, FirstPublishLocationId FROM ContentVersion WHERE PathOnClient = :(refId(1) + '.png')];
+        Assert.areEqual(saved.Id, stored.FirstPublishLocationId, 'The file should be stored on the record');
+        ContentDistribution cd = [SELECT ContentDownloadUrl FROM ContentDistribution WHERE ContentVersionId = :stored.Id];
+        Id savedId = saved.Id;
+        SObject updated = Database.query('SELECT ' + fieldName + ' FROM ' + objectName + ' WHERE Id = :savedId');
+        Assert.isTrue(containsUrl((String) updated.get(field), cd.ContentDownloadUrl),
+            'The field should hold the public URL: ' + updated.get(field));
+    }
+
+    // ---------------------------------------------------------------------------------------
     // Running as a real editor (standard profile + Summit_Events_Admin), in user mode
     // ---------------------------------------------------------------------------------------
 
@@ -633,12 +733,50 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
     }
 
     // Saves a placeholder event, and stages the real rich text for the pipeline to read
+    // Stages rich text for any supported record; the staged copy is queried so it carries the
+    // record's Name (auto-numbered on appointment types and emails, so it cannot be set in memory)
+    private static SObject stageRichText(SObject saved, Schema.SObjectField field, String html) {
+        Id savedId = saved.Id;
+        String objectName = saved.getSObjectType().getDescribe(SObjectDescribeOptions.DEFERRED).getName();
+        SObject staged = Database.query('SELECT Id, Name FROM ' + objectName + ' WHERE Id = :savedId');
+        staged.put(field, html);
+        if(SummitEventsRtfLinkPipeline.recordOverrides == null) {
+            SummitEventsRtfLinkPipeline.recordOverrides = new List<SObject>();
+        }
+        SummitEventsRtfLinkPipeline.recordOverrides.add(staged);
+        return staged;
+    }
+
+    private static Summit_Events_Appointment_Type__c insertAppointmentType(Id eventId, String description) {
+        Summit_Events_Appointment_Type__c appointmentType = new Summit_Events_Appointment_Type__c(
+            Summit_Events__c = eventId, Title__c = 'Campus tour', Sort_Order__c = 1,
+            Appointment_Type_Status__c = 'Active', Description__c = description
+        );
+        insert appointmentType;
+        return appointmentType;
+    }
+
+    private static Summit_Events_Email__c insertEmail(Id eventId, String content) {
+        Summit_Events_Email__c email = new Summit_Events_Email__c(Event__c = eventId, Email_Content__c = content);
+        insert email;
+        return email;
+    }
+
+    private static void enableLinkAutomation(Boolean turnOffAppointmentTypeTrigger, Boolean turnOffEmailTrigger) {
+        insert new Summit_Events_Settings__c(
+            SetupOwnerId = UserInfo.getOrganizationId(),
+            Opt_Into_Link_Automation__c = true,
+            Turn_off_Appointment_Type_Trigger__c = turnOffAppointmentTypeTrigger,
+            Turn_off_Email_Trigger__c = turnOffEmailTrigger
+        );
+    }
+
     private static Summit_Events__c stageRtaEvent(String name, String html) {
         Summit_Events__c saved = insertEvent(name, '<p>placeholder</p>');
-        if(SummitEventsRtfLinkPipeline.eventOverrides == null) {
-            SummitEventsRtfLinkPipeline.eventOverrides = new List<Summit_Events__c>();
+        if(SummitEventsRtfLinkPipeline.recordOverrides == null) {
+            SummitEventsRtfLinkPipeline.recordOverrides = new List<SObject>();
         }
-        SummitEventsRtfLinkPipeline.eventOverrides.add(
+        SummitEventsRtfLinkPipeline.recordOverrides.add(
             new Summit_Events__c(Id = saved.Id, Name = name, Event_Full_Text__c = html)
         );
         return saved;

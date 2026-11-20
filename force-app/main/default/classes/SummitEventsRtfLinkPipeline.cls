@@ -1,26 +1,29 @@
 /**
- * Makes images embedded in Summit_Events__c rich text fields publicly viewable by
- * guest users without granting guests access to event records.
+ * Makes images embedded in public-facing rich text fields publicly viewable by guest users and
+ * email recipients without granting them access to the records. Supported objects and fields are
+ * listed in RICHTEXT_FIELDS_BY_OBJECT: events, appointment types (shown on the appointments page)
+ * and emails (sent to registrants). Each has a trigger that calls {@link SummitEventsLinkHandler}.
  *
  * Two kinds of embedded images are handled:
  * 1. ContentVersion links (versionId=068...), e.g. pasted from a Files preview.
  *    These are converted synchronously.
  * 2. Rich text editor uploads (/servlet/rtaImage?...refid=0EM...). Their bytes are only
  *    reachable through the REST API, which needs a callout, so they are handled in
- *    {@link SummitEventsRtaImageQueueable}. An upload already stored as a file on the event
+ *    {@link SummitEventsRtaImageQueueable}. An upload already stored as a file on the record
  *    (see reuseStoredImages()) is converted at once from that file instead.
  *
  * Either way the image ends up as a ContentVersion with a ContentDistribution, and the
  * img src is rewritten to the distribution's ContentDownloadUrl. (DistributionPublicUrl is
  * an HTML viewer page and cannot be used as an image source.)
  *
- * Runs as the user who saved the event, in user mode. Guests never touch this code: the
+ * Runs as the user who saved the record, in user mode. Guests never touch this code: the
  * registration data model is master-detail all the way down, so guests cannot be given record
- * access to events, which is exactly why images must be made public instead.
+ * access to events (or their appointment types), and email recipients have no access at all,
+ * which is exactly why images must be made public instead.
  *
  * Security and Code Analyzer notes
  * - with sharing, and every query and DML statement is USER_MODE. The editor needs read access to
- *   the event fields and to any file they link, plus file create and public-link access (see the
+ *   the rich text fields and to any file they link, plus file create and public-link access (see the
  *   Summit_Events_Admin permission set). If they lack any of it the operation fails closed and the
  *   field is left unchanged. The single exception is notificationTypeId(), a system-mode lookup of
  *   our own notification type's Id so failures can be reported to ordinary editors.
@@ -32,22 +35,30 @@
  * - filter() only reads and rewrites rich text fields the user can update.
  * - Only allowlisted image content types are ever stored and made public.
  * - ApexSOQLInjection was a false positive on the dynamic query in filter(): the only concatenated
- *   parts are the namespace prefix and field names from the RICHTEXT_FIELDS allowlist, and record
- *   Ids are passed as a bind variable.
+ *   parts are the object name from the schema and field names from the RICHTEXT_FIELDS_BY_OBJECT
+ *   allowlist (plus the namespace prefix), and record Ids are passed as a bind variable.
  * - ApexSuggestUsingNamedCred is intentionally suppressed in fetchImage(), and no Remote Site
  *   Setting is required for its callout; see the note there.
  */
 public with sharing class SummitEventsRtfLinkPipeline {
 
-    // Inelegant, but schema introspection can't differentiate RTF from regular text fields
-    private static final Set<String> RICHTEXT_FIELDS = new Set<String>{
-        'Event_Full_Text__c', 'Event_Confirmation_Description__c',
-        'Event_Additional_Questions_Description__c', 
-        'Event_Appointment_Description__c', 'Event_Footer__c', 
-        'Event_Submit_Description__c', 'Event_Cancel_Review_Description__c',
-        'Event_Payment_Due_Description__c', 'Event_Payment_Received_Description__c',
-        'Event_description__c', 'Donation_Description__c', 
-        'Guest_Registration_Description__c'
+    // The rich text fields whose images the public sees, by object (names without namespace). Inelegant,
+    // but schema introspection can't differentiate RTF from regular text fields. Only list fields that
+    // are shown to guests or sent to registrants: converting a field makes its images public.
+    private static final Map<String,Set<String>> RICHTEXT_FIELDS_BY_OBJECT = new Map<String,Set<String>>{
+        'Summit_Events__c' => new Set<String>{
+            'Event_Full_Text__c', 'Event_Confirmation_Description__c',
+            'Event_Additional_Questions_Description__c',
+            'Event_Appointment_Description__c', 'Event_Footer__c',
+            'Event_Submit_Description__c', 'Event_Cancel_Review_Description__c',
+            'Event_Payment_Due_Description__c', 'Event_Payment_Received_Description__c',
+            'Event_description__c', 'Donation_Description__c',
+            'Guest_Registration_Description__c'
+        },
+        // Shown to guests on the appointments page
+        'Summit_Events_Appointment_Type__c' => new Set<String>{ 'Description__c' },
+        // Sent to registrants as the email body
+        'Summit_Events_Email__c' => new Set<String>{ 'Email_Content__c' }
     };
 
     private static final String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
@@ -75,12 +86,12 @@ public with sharing class SummitEventsRtfLinkPipeline {
     };
     
     @TestVisible
-    private static List<Summit_Events__c> eventOverrides;
+    private static List<SObject> recordOverrides;
 
-    // Events this transaction is already converting. push() updates the event, which fires the
+    // Records this transaction is already converting. push() updates the record, which fires the
     // trigger again; without this guard the nested run would queue a second job for the same images
     // and both jobs would store duplicate files.
-    private static Set<Id> eventsInProgress = new Set<Id>();
+    private static Set<Id> recordsInProgress = new Set<Id>();
 
     // File extensions we are willing to publish
     private static final Set<String> IMAGE_FILE_EXTENSIONS = new Set<String>{
@@ -89,23 +100,34 @@ public with sharing class SummitEventsRtfLinkPipeline {
 
     private Map<Id,ContentDistribution> cvIdToCDMap;
     private Set<Id> publishableCvIds = new Set<Id>();
-    private String eventFieldList = '';
-    // Fixed, translatable messages for the person who saved the event; never raw exception text
+    private String recordFieldList = '';
+    // Fixed, translatable messages for the person who saved the record; never raw exception text
     private Set<String> problems = new Set<String>();
-    private List<SummitEventWrapper> wrappedEventList;
+    private List<RecordWrapper> wrappedRecordList;
     private List<Id> idList;
     private String executionStage;
     private Boolean hasDeferredImages = false;
     private Integer rtaImagesPublished = 0;
-    
-    public SummitEventsRtfLinkPipeline(Map<Id,Summit_Events__c> newMap) {
+    // The object of the records being converted; null when there are none
+    private Schema.DescribeSObjectResult objectDescribe;
+
+    /**
+     * @param newMap Trigger.newMap of a supported object (see RICHTEXT_FIELDS_BY_OBJECT)
+     */
+    public SummitEventsRtfLinkPipeline(Map<Id,SObject> newMap) {
         this(new List<Id>(newMap.keySet()));
     }
 
-    public SummitEventsRtfLinkPipeline(List<Id> eventIds) {
+    /**
+     * @param recordIds records of one supported object (see RICHTEXT_FIELDS_BY_OBJECT)
+     */
+    public SummitEventsRtfLinkPipeline(List<Id> recordIds) {
         this.cvIdToCDMap = new Map<Id,ContentDistribution>();
-        this.wrappedEventList = new List<SummitEventWrapper>();
-        this.idList = eventIds;
+        this.wrappedRecordList = new List<RecordWrapper>();
+        this.idList = recordIds;
+        if(recordIds != null && !recordIds.isEmpty()) {
+            this.objectDescribe = recordIds[0].getSObjectType().getDescribe(SObjectDescribeOptions.DEFERRED);
+        }
     }
 
     /**
@@ -114,7 +136,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
      */
     public void run() {
         this.executionStage = 'run';
-        if(!claimEvents()) {
+        if(!claimRecords()) {
             return;
         }
         try {
@@ -128,7 +150,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
         } catch(Exception e) {
             this.problems.add(Label.SummitEventsImageNotifFailed);
         } finally {
-            releaseEvents();
+            releaseRecords();
         }
         notifyProblems();
     }
@@ -142,7 +164,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
      */
     public Boolean runAsync() {
         this.executionStage = 'runAsync';
-        if(!claimEvents()) {
+        if(!claimRecords()) {
             return false;
         }
         Boolean hasMore = false;
@@ -158,57 +180,59 @@ public with sharing class SummitEventsRtfLinkPipeline {
         } catch(Exception e) {
             this.problems.add(Label.SummitEventsImageNotifFailed);
         } finally {
-            releaseEvents();
+            releaseRecords();
         }
         notifyProblems();
         return hasMore;
     }
 
     /**
-     * Drop events this transaction is already converting and mark the rest as in progress.
-     * @return true when at least one event is left to convert
+     * Drop records this transaction is already converting and mark the rest as in progress.
+     * @return true when at least one record is left to convert
      */
-    private Boolean claimEvents() {
+    private Boolean claimRecords() {
         List<Id> unclaimedIds = new List<Id>();
-        for(Id eventId : this.idList) {
-            if(!eventsInProgress.contains(eventId)) {
-                unclaimedIds.add(eventId);
+        for(Id recordId : this.idList) {
+            if(!recordsInProgress.contains(recordId)) {
+                unclaimedIds.add(recordId);
             }
         }
         this.idList = unclaimedIds;
-        eventsInProgress.addAll(unclaimedIds);
+        recordsInProgress.addAll(unclaimedIds);
         return !unclaimedIds.isEmpty();
     }
 
-    private void releaseEvents() {
-        eventsInProgress.removeAll(this.idList);
+    private void releaseRecords() {
+        recordsInProgress.removeAll(this.idList);
     }
 
     /**
-     * Cheap first-pass filter to select and wrap Summit_Events__c records
-     * that have RTF fields with embedded images we can convert.
+     * Cheap first-pass filter to select and wrap records that have rich text
+     * fields with embedded images we can convert.
      */
     @TestVisible
     private void filter() {
 
         this.executionStage = 'filter';
 
-        List<Summit_Events__c> freshEventList = new List<Summit_Events__c>();
+        List<SObject> freshRecordList = new List<SObject>();
         List<String> fields = new List<String>();
         String query = '';
 
-        Summit_Events__c schemaObject = new Summit_Events__c();
-        Map<String,SObjectField> fieldMap = 
-            schemaObject
-                .getSObjectType()
-                .getDescribe()
-                .fields
-                .getMap();
+        Set<String> richTextFields = this.objectDescribe == null
+            ? null
+            : RICHTEXT_FIELDS_BY_OBJECT.get(this.objectDescribe.getLocalName());
+        if(richTextFields == null) {
+            // Not an object whose images are published; leave everything alone
+            return;
+        }
 
-        for(String field : RICHTEXT_FIELDS) {
+        Map<String,SObjectField> fieldMap = this.objectDescribe.fields.getMap();
+
+        for(String field : richTextFields) {
 
             Boolean isUpdateable = fieldMap.get(namespace + field).getDescribe().isUpdateable();
-            
+
             if(isUpdateable) {
                 fields.add(namespace + field);
             }
@@ -216,47 +240,48 @@ public with sharing class SummitEventsRtfLinkPipeline {
 
         if(fields.isEmpty()) {
             // The user cannot update any of the rich text fields, so there is nothing we may rewrite.
-            // wrappedEventList stays empty, which makes every later stage a no-op.
+            // wrappedRecordList stays empty, which makes every later stage a no-op.
             return;
         }
 
-        // Safe dynamic SOQL: field names come from the RICHTEXT_FIELDS allowlist (plus the package
-        // namespace) and the Ids are bound below. No user-controlled text reaches the query string.
+        // Safe dynamic SOQL: the object name comes from the schema, field names come from the
+        // RICHTEXT_FIELDS_BY_OBJECT allowlist (plus the package namespace) and the Ids are bound
+        // below. No user-controlled text reaches the query string.
         String fieldList = String.join(fields, ', ');
-        this.eventFieldList = fieldList;
-        query = 'SELECT Name, ' + fieldList + ' FROM ' + namespace + 'Summit_Events__c WHERE Id IN :idList';
-        if(eventOverrides == null) {
+        this.recordFieldList = fieldList;
+        query = 'SELECT Name, ' + fieldList + ' FROM ' + this.objectDescribe.getName() + ' WHERE Id IN :idList';
+        if(recordOverrides == null) {
             Map<String,Object> binds = new Map<String,Object>{ 'idList' => idList };
-            freshEventList = Database.queryWithBinds(query, binds, System.AccessLevel.USER_MODE);
+            freshRecordList = Database.queryWithBinds(query, binds, System.AccessLevel.USER_MODE);
         } else {
             // Test seam: the platform strips rtaImage tags it cannot tie to a real upload, so tests
             // cannot save realistic rich text and supply it here instead
             Set<Id> requestedIds = new Set<Id>(idList);
-            for(Summit_Events__c stagedEvent : eventOverrides) {
-                if(requestedIds.contains(stagedEvent.Id)) {
-                    freshEventList.add(stagedEvent);
+            for(SObject stagedRecord : recordOverrides) {
+                if(requestedIds.contains(stagedRecord.Id)) {
+                    freshRecordList.add(stagedRecord);
                 }
             }
         }
 
-        for(Summit_Events__c freshEvent : freshEventList) {
-            SummitEventWrapper wrappedEvent = new SummitEventWrapper();
+        for(SObject freshRecord : freshRecordList) {
+            RecordWrapper wrappedRecord = new RecordWrapper();
             for (String field : fields) {
-                String fieldVal = (String) freshEvent?.get(field);
+                String fieldVal = (String) freshRecord?.get(field);
                 if(!String.isBlank(fieldVal) && fieldVal.contains('<img') 
                     && (fieldVal.contains(CV_MARKER) || fieldVal.contains(CV_DOWNLOAD_MARKER) || fieldVal.contains(RTA_MARKER))) {
-                    wrappedEvent.fieldsWithLinks.add(field);
+                    wrappedRecord.fieldsWithLinks.add(field);
                 }
             }
-            if(!wrappedEvent.fieldsWithLinks.isEmpty()) {
-                wrappedEvent.event = freshEvent;
-                this.wrappedEventList.add(wrappedEvent);
+            if(!wrappedRecord.fieldsWithLinks.isEmpty()) {
+                wrappedRecord.record = freshRecord;
+                this.wrappedRecordList.add(wrappedRecord);
             }
         } 
     }
 
     /**
-     * Scan through wrapped events and find every convertible image: either a
+     * Scan through wrapped records and find every convertible image: either a
      * ContentVersion Id or a rich text editor image reference (0EM...).
      * Pattern and Matcher would have less cognitive overhead, but they
      * come attached to significant time complexity, so we're going to
@@ -268,11 +293,11 @@ public with sharing class SummitEventsRtfLinkPipeline {
         
         this.executionStage = 'scan';
 
-        for (SummitEventWrapper wrappedEvent : wrappedEventList) {
+        for (RecordWrapper wrappedRecord : wrappedRecordList) {
             Map<String, List<SummitFieldItem>> tempMap = new Map<String, List<SummitFieldItem>>();
         
-            for (String field : wrappedEvent.fieldsWithLinks) {
-                String html = (String) wrappedEvent.event.get(field);
+            for (String field : wrappedRecord.fieldsWithLinks) {
+                String html = (String) wrappedRecord.record.get(field);
                 List<SummitFieldItem> items = new List<SummitFieldItem>();
             
                 Integer pos = 0;
@@ -307,7 +332,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
                     tempMap.put(field, items);
                 }
             }
-            wrappedEvent.fieldsToLinkMap = tempMap;
+            wrappedRecord.fieldsToLinkMap = tempMap;
         }
     }
 
@@ -316,7 +341,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
      * are converted without fetching them again. A save from a record page opened before that job
      * rewrote the field (Lightning's "Choose values to keep" dialog, keeping your value) puts the
      * original upload URLs back; without this, every such save would store the images again.
-     * Only files we stored on these events are considered: first published to the event and
+     * Only files we stored on these records are considered: first published to the record and
      * named refId.extension by fetch().
      */
     @TestVisible
@@ -324,13 +349,13 @@ public with sharing class SummitEventsRtfLinkPipeline {
 
         this.executionStage = 'reuseStoredImages';
 
-        Set<Id> eventIds = new Set<Id>();
+        Set<Id> recordIds = new Set<Id>();
         Set<String> storedNames = new Set<String>();
-        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
-            for(List<SummitFieldItem> items : wrappedEvent.fieldsToLinkMap.values()) {
+        for(RecordWrapper wrappedRecord : wrappedRecordList) {
+            for(List<SummitFieldItem> items : wrappedRecord.fieldsToLinkMap.values()) {
                 for(SummitFieldItem sfi : items) {
                     if(sfi.refId != null && sfi.cvId == null) {
-                        eventIds.add(wrappedEvent.event.Id);
+                        recordIds.add(wrappedRecord.record.Id);
                         for(String extension : IMAGE_EXTENSIONS.values()) {
                             storedNames.add(sfi.refId + '.' + extension);
                         }
@@ -349,7 +374,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
             SELECT Id,
                    PathOnClient
             FROM   ContentVersion
-            WHERE  FirstPublishLocationId IN :eventIds
+            WHERE  FirstPublishLocationId IN :recordIds
             AND    PathOnClient IN :storedNames
             AND    IsLatest = true
             WITH   USER_MODE
@@ -361,8 +386,8 @@ public with sharing class SummitEventsRtfLinkPipeline {
             }
         }
 
-        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
-            for(List<SummitFieldItem> items : wrappedEvent.fieldsToLinkMap.values()) {
+        for(RecordWrapper wrappedRecord : wrappedRecordList) {
+            for(List<SummitFieldItem> items : wrappedRecord.fieldsToLinkMap.values()) {
                 for(SummitFieldItem sfi : items) {
                     if(sfi.refId != null && sfi.cvId == null && cvIdByRefId.containsKey(sfi.refId)) {
                         sfi.cvId = cvIdByRefId.get(sfi.refId);
@@ -374,7 +399,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
 
     /**
      * Fetch rich text editor images through the REST API and store each as a file
-     * owned by its event. This is the only stage that makes callouts, so it must run
+     * owned by its record. This is the only stage that makes callouts, so it must run
      * in an async context, and all callouts must finish before any DML.
      */
     @TestVisible
@@ -386,9 +411,9 @@ public with sharing class SummitEventsRtfLinkPipeline {
         Set<String> attempted = new Set<String>();
         Integer totalBytes = 0;
 
-        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
-            for(String field : wrappedEvent.fieldsToLinkMap.keySet()) {
-                for(SummitFieldItem sfi : wrappedEvent.fieldsToLinkMap.get(field)) {
+        for(RecordWrapper wrappedRecord : wrappedRecordList) {
+            for(String field : wrappedRecord.fieldsToLinkMap.keySet()) {
+                for(SummitFieldItem sfi : wrappedRecord.fieldsToLinkMap.get(field)) {
                     // cvId is already set when reuseStoredImages() found a stored file
                     if(sfi.refId == null || sfi.cvId != null || attempted.contains(sfi.refId)) {
                         continue;
@@ -399,7 +424,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
                         continue;
                     }
                     attempted.add(sfi.refId);
-                    FetchedImage image = fetchImage(wrappedEvent.event, field, sfi.refId);
+                    FetchedImage image = fetchImage(wrappedRecord.record, field, sfi.refId);
                     if(image != null) {
                         imageByRefId.put(sfi.refId, image);
                         totalBytes += image.body.size();
@@ -417,10 +442,10 @@ public with sharing class SummitEventsRtfLinkPipeline {
         for(String refId : refIds) {
             FetchedImage image = imageByRefId.get(refId);
             versionList.add(new ContentVersion(
-                Title = (image.eventName + ' - ' + refId).left(240),
+                Title = (image.recordName + ' - ' + refId).left(240),
                 PathOnClient = refId + '.' + image.extension,
                 VersionData = image.body,
-                FirstPublishLocationId = image.eventId,
+                FirstPublishLocationId = image.recordId,
                 IsMajorVersion = true
             ));
         }
@@ -432,8 +457,8 @@ public with sharing class SummitEventsRtfLinkPipeline {
         }
 
         // From here on the image is just another ContentVersion link
-        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
-            for(List<SummitFieldItem> items : wrappedEvent.fieldsToLinkMap.values()) {
+        for(RecordWrapper wrappedRecord : wrappedRecordList) {
+            for(List<SummitFieldItem> items : wrappedRecord.fieldsToLinkMap.values()) {
                 for(SummitFieldItem sfi : items) {
                     if(sfi.refId != null && cvIdByRefId.containsKey(sfi.refId)) {
                         sfi.cvId = cvIdByRefId.get(sfi.refId);
@@ -453,9 +478,9 @@ public with sharing class SummitEventsRtfLinkPipeline {
         this.executionStage = 'prepare';
 
         Set<Id> cvIdSet = new Set<Id>();
-        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
-            for(String field : wrappedEvent.fieldsToLinkMap.keySet()) {
-                for(SummitFieldItem sfi : wrappedEvent.fieldsToLinkMap.get(field)) {
+        for(RecordWrapper wrappedRecord : wrappedRecordList) {
+            for(String field : wrappedRecord.fieldsToLinkMap.keySet()) {
+                for(SummitFieldItem sfi : wrappedRecord.fieldsToLinkMap.get(field)) {
                     if(sfi.cvId != null) {
                         cvIdSet.add(sfi.cvId);
                     }
@@ -528,16 +553,16 @@ public with sharing class SummitEventsRtfLinkPipeline {
         List<ContentDistribution> cdInsertList = new List<ContentDistribution>();
         Set<Id> visited = new Set<Id>();
         
-        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
-            for(String field : wrappedEvent.fieldsToLinkMap.keySet()) {
+        for(RecordWrapper wrappedRecord : wrappedRecordList) {
+            for(String field : wrappedRecord.fieldsToLinkMap.keySet()) {
                 Integer i = 0;
-                for(SummitFieldItem sfi : wrappedEvent.fieldsToLinkMap.get(field)) {
+                for(SummitFieldItem sfi : wrappedRecord.fieldsToLinkMap.get(field)) {
                     if(publishableCvIds.contains(sfi.cvId) && !cvIdToCDMap.containsKey(sfi.cvId) && !visited.contains(sfi.cvId)) {
                         ContentDistribution cd = new ContentDistribution();
                         cd.ContentVersionId = sfi.cvId;
-                        cd.Name = (wrappedEvent.event.Name + ' - ' + field + i++).left(100); // Name max is 100
+                        cd.Name = ((String) wrappedRecord.record.get('Name') + ' - ' + field + i++).left(100); // Name max is 100
                         // Set every preference explicitly so behavior does not depend on org defaults.
-                        // Notify-on-visit defaults to on, and every guest view of a public event page
+                        // Notify-on-visit defaults to on, and every guest view of a public page or email
                         // would email whoever created the link.
                         cd.PreferencesNotifyOnVisit = false;
                         cd.PreferencesAllowViewInBrowser = true;
@@ -600,7 +625,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
     /**
      * Replace all converted URLs in the RTF fields with the corresponding ContentDistribution
      * record's ContentDownloadUrl (the direct file URL; DistributionPublicUrl is an HTML viewer
-     * page that cannot be used in an img tag), and update the Summit_Events__c record.
+     * page that cannot be used in an img tag), and update the record.
      */
     @TestVisible
     private void push() { 
@@ -611,29 +636,29 @@ public with sharing class SummitEventsRtfLinkPipeline {
             return;
         }
 
-        List<Summit_Events__c> updateList = new List<Summit_Events__c>();
+        List<SObject> updateList = new List<SObject>();
 
         // The text we scanned can be seconds old (the async job makes callouts in between), so
         // never write it back. Lock the records and apply each replacement to the current field
         // value instead, which keeps anything the editor changed in the meantime.
-        Map<Id,Summit_Events__c> currentById = lockCurrentEvents();
+        Map<Id,SObject> currentById = lockCurrentRecords();
         Integer rtaImagesReplaced = 0;
 
-        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
-            Summit_Events__c current = currentById.get(wrappedEvent.event.Id);
+        for(RecordWrapper wrappedRecord : wrappedRecordList) {
+            SObject current = currentById.get(wrappedRecord.record.Id);
             if(current == null) {
                 continue; // deleted while we were working
             }
-            Summit_Events__c tempEvent = new Summit_Events__c();
-            tempEvent.Id = current.Id; // trigger records are immutable, we must create new records
+            // Trigger records are immutable, so update a new in-memory record with the same Id
+            SObject tempRecord = this.objectDescribe.getSObjectType().newSObject(current.Id);
             Boolean changed = false;
-            for(String field : wrappedEvent.fieldsWithLinks) {
+            for(String field : wrappedRecord.fieldsWithLinks) {
                 String rtf = (String) current.get(field);
                 if(rtf == null) {
                     continue;
                 }
                 String original = rtf;
-                for(SummitFieldItem sfi : wrappedEvent.fieldsToLinkMap.get(field) ?? new List<SummitFieldItem>()) {
+                for(SummitFieldItem sfi : wrappedRecord.fieldsToLinkMap.get(field) ?? new List<SummitFieldItem>()) {
                     ContentDistribution cd = sfi.cvId == null ? null : cvIdToCDMap.get(sfi.cvId);
                     if(cd != null) {
                         String replaced = rtf.replace(sfi.url, cd.ContentDownloadUrl);
@@ -644,7 +669,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
                     }
                 }
                 if(rtf != original) {
-                    tempEvent.put(field,rtf);
+                    tempRecord.put(field,rtf);
                     // Keep our copy in step with the save. Under the test seam it is the staged
                     // record, so a nested trigger run reads what was saved, as it would from the database.
                     current.put(field, rtf);
@@ -652,7 +677,7 @@ public with sharing class SummitEventsRtfLinkPipeline {
                 }
             }
             if(changed) {
-                updateList.add(tempEvent);
+                updateList.add(tempRecord);
             }
         }
 
@@ -665,39 +690,39 @@ public with sharing class SummitEventsRtfLinkPipeline {
      }
 
     /**
-     * Re-read the events we are about to update and lock them until this transaction ends, so
+     * Re-read the records we are about to update and lock them until this transaction ends, so
      * nobody can change them between this read and our write.
      */
-    private Map<Id,Summit_Events__c> lockCurrentEvents() {
+    private Map<Id,SObject> lockCurrentRecords() {
 
-        Map<Id,Summit_Events__c> eventsById = new Map<Id,Summit_Events__c>();
-        List<Id> eventIds = new List<Id>();
-        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
-            eventIds.add(wrappedEvent.event.Id);
+        Map<Id,SObject> recordsById = new Map<Id,SObject>();
+        List<Id> recordIds = new List<Id>();
+        for(RecordWrapper wrappedRecord : wrappedRecordList) {
+            recordIds.add(wrappedRecord.record.Id);
         }
 
-        if(eventOverrides != null) {
+        if(recordOverrides != null) {
             // Test seam: staged field contents are not in the database, so use them as they are
-            for(SummitEventWrapper wrappedEvent : wrappedEventList) {
-                eventsById.put(wrappedEvent.event.Id, wrappedEvent.event);
+            for(RecordWrapper wrappedRecord : wrappedRecordList) {
+                recordsById.put(wrappedRecord.record.Id, wrappedRecord.record);
             }
-            return eventsById;
+            return recordsById;
         }
 
-        if(!eventIds.isEmpty()) {
+        if(!recordIds.isEmpty()) {
             // Same allowlisted field list and bound Ids as filter(); nothing user-controlled is concatenated
-            String query = 'SELECT Name, ' + this.eventFieldList + ' FROM ' + namespace
-                + 'Summit_Events__c WHERE Id IN :eventIds FOR UPDATE';
-            Map<String,Object> binds = new Map<String,Object>{ 'eventIds' => eventIds };
+            String query = 'SELECT Name, ' + this.recordFieldList + ' FROM ' + this.objectDescribe.getName()
+                + ' WHERE Id IN :recordIds FOR UPDATE';
+            Map<String,Object> binds = new Map<String,Object>{ 'recordIds' => recordIds };
             for(SObject record : Database.queryWithBinds(query, binds, System.AccessLevel.USER_MODE)) {
-                eventsById.put(record.Id, (Summit_Events__c) record);
+                recordsById.put(record.Id, record);
             }
         }
-        return eventsById;
+        return recordsById;
     }
 
     /**
-     * Queue one async job for every event that still has rich text editor images
+     * Queue one async job for every record that still has rich text editor images
      * waiting to be converted. Never enqueues from inside a Queueable, so the update
      * made by the job cannot start another job.
      */
@@ -709,19 +734,19 @@ public with sharing class SummitEventsRtfLinkPipeline {
             return;
         }
 
-        Set<Id> pendingEventIds = new Set<Id>();
-        for(SummitEventWrapper wrappedEvent : wrappedEventList) {
-            for(List<SummitFieldItem> items : wrappedEvent.fieldsToLinkMap.values()) {
+        Set<Id> pendingRecordIds = new Set<Id>();
+        for(RecordWrapper wrappedRecord : wrappedRecordList) {
+            for(List<SummitFieldItem> items : wrappedRecord.fieldsToLinkMap.values()) {
                 for(SummitFieldItem sfi : items) {
                     if(sfi.refId != null && sfi.cvId == null) {
-                        pendingEventIds.add(wrappedEvent.event.Id);
+                        pendingRecordIds.add(wrappedRecord.record.Id);
                     }
                 }
             }
         }
 
-        if(!pendingEventIds.isEmpty()) {
-            System.enqueueJob(new SummitEventsRtaImageQueueable(new List<Id>(pendingEventIds)));
+        if(!pendingRecordIds.isEmpty()) {
+            System.enqueueJob(new SummitEventsRtaImageQueueable(new List<Id>(pendingRecordIds)));
         }
     }
 
@@ -732,10 +757,10 @@ public with sharing class SummitEventsRtfLinkPipeline {
     }
 
     /**
-     * Tell the user who saved the event that something was not published, with an in-app
-     * (bell) notification that opens the event. Best effort: failing to notify must never
-     * stop an event from saving, and only fixed messages are sent, never exception text.
-     * @param targetId the event the notification should open
+     * Tell the user who saved the record that something was not published, with an in-app
+     * (bell) notification that opens the record. Best effort: failing to notify must never
+     * stop a record from saving, and only fixed messages are sent, never exception text.
+     * @param targetId the record the notification should open
      * @param messages short, user-safe messages
      */
     public static void notifyUser(Id targetId, Set<String> messages) {
@@ -777,13 +802,13 @@ public with sharing class SummitEventsRtfLinkPipeline {
      * Download one rich text editor image via the REST API using the running user's session.
      * @return the image, or null if it could not be fetched or is not an allowed image type
      */
-    private FetchedImage fetchImage(Summit_Events__c event, String field, String refId) {
+    private FetchedImage fetchImage(SObject record, String field, String refId) {
 
         HttpRequest request = new HttpRequest();
         request.setEndpoint(
             URL.getOrgDomainUrl().toExternalForm()
             + '/services/data/' + REST_VERSION
-            + '/sobjects/' + namespace + 'Summit_Events__c/' + event.Id
+            + '/sobjects/' + this.objectDescribe.getName() + '/' + record.Id
             + '/richTextImageFields/' + field + '/' + refId
         );
         request.setMethod('GET');
@@ -820,8 +845,8 @@ public with sharing class SummitEventsRtfLinkPipeline {
         }
 
         FetchedImage image = new FetchedImage();
-        image.eventId = event.Id;
-        image.eventName = event.Name;
+        image.recordId = record.Id;
+        image.recordName = (String) record.get('Name');
         image.extension = IMAGE_EXTENSIONS.get(contentType);
         image.body = body;
         return image;
@@ -872,12 +897,12 @@ public with sharing class SummitEventsRtfLinkPipeline {
     }
 
     // Simple wrapper to aggregate relevant values we'll use
-    private class SummitEventWrapper {
-        Summit_Events__c event;
+    private class RecordWrapper {
+        SObject record;
         Set<String> fieldsWithLinks;
         Map<String,List<SummitFieldItem>> fieldsToLinkMap;
 
-        private SummitEventWrapper() { 
+        private RecordWrapper() { 
             this.fieldsWithLinks = new Set<String>(); 
             this.fieldsToLinkMap = new Map<String,List<SummitFieldItem>>();
         }
@@ -891,8 +916,8 @@ public with sharing class SummitEventsRtfLinkPipeline {
     }
 
     private class FetchedImage {
-        Id eventId;
-        String eventName;
+        Id recordId;
+        String recordName;
         String extension;
         Blob body;
     }

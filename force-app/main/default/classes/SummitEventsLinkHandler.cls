@@ -1,5 +1,11 @@
 public with sharing class SummitEventsLinkHandler {
-    public static void run(Map<Id,Summit_Events__c> newMap) {
+    /**
+     * Makes images in the saved records' public-facing rich text fields public.
+     * Called from the event, appointment type and email triggers.
+     *
+     * @param newMap Trigger.newMap of a supported object (see SummitEventsRtfLinkPipeline)
+     */
+    public static void run(Map<Id,SObject> newMap) {
         new SummitEventsRtfLinkPipeline(newMap).run();
     }
 

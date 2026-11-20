@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Turn_off_Appointment_Type_Trigger__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Turns off Summit Event App's appointment type trigger, which makes images in the appointment type rich text public when link automation is on.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Turns off Summit Event App's appointment type trigger, which makes images in the appointment type rich text public when link automation is on.</inlineHelpText>
+    <label>Turn off Appointment Type Trigger</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
