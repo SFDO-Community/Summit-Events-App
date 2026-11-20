@@ -19,6 +19,7 @@ private class SummitEventsCancelReview_TEST {
             seaTestRegistration.Encrypted_Registration_Id_1__c = encryptedString;
         }
         seaTestRegistration.Status__c = 'Registered';
+        seaTestRegistration.Substatus__c = 'Attended';
         update seaTestRegistration;
 
         System.runAs(testUser) {
@@ -33,12 +34,13 @@ private class SummitEventsCancelReview_TEST {
             cancelReviewCtrl.cancelRegistration();
 
             Summit_Events_Registration__c statusRegistration = [
-                    SELECT Id, Status__c
+                    SELECT Id, Status__c, Substatus__c
                     FROM Summit_Events_Registration__c
                     WHERE Id = :seaTestRegistration.Id
             ];
 
             System.assertEquals(statusRegistration.Status__c, 'Cancelled');
+            System.assertEquals(null, statusRegistration.Substatus__c, 'Substatus should be cleared on cancellation');
             Test.stopTest();
         }
     }
