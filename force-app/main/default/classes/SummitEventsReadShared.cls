@@ -241,6 +241,16 @@ public without sharing class SummitEventsReadShared {
         ]);
     }
 
+    public static AggregateResult[] getLimitedAppointmentCountsByInstanceId(Id instanceId) {
+        return [
+                SELECT Count(Id) aCount, Event_Appointment_Type__c
+                FROM Summit_Events_Appointments__c
+                WHERE Event_Appointment_Type__r.Enforce_Registrations_Limit__c = TRUE
+                AND Event_Registration__r.Event_Instance__c = :instanceId
+                GROUP BY Event_Appointment_Type__c
+        ];
+    }
+
     public static Integer getAppointmentTypeCount(Id eventId, String instanceTitle, Date startDate, Date endDate, String dayOfWeek) {
         return [
                 SELECT COUNT()
