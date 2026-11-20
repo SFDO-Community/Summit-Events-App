@@ -1898,6 +1898,11 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Ask_Receive_Text_Messages__c</field>
+        <readable>true</readable>
+    </fieldPermissions>    
+    <fieldPermissions>
         <editable>true</editable>
         <field>Summit_Events__c.Audience__c</field>
         <readable>true</readable>
