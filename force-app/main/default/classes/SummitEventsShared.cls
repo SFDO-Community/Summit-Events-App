@@ -180,7 +180,7 @@ public with sharing class SummitEventsShared {
         if (String.isNotBlank(eventInformation.registrationId) && String.isBlank(eventInformation.valid)) {
             Summit_Events_Registration__c evtReg = new Summit_Events_Registration__c();
             evtReg = SummitEventsReadShared.getRegistrationById(eventInformation.registrationId);
-            if (evtReg.Status__c != 'Started' || evtReg == null) {
+            if (evtReg == null || evtReg.Status__c != 'Started') {
                 eventInformation.registrationId = '';
             }
         }

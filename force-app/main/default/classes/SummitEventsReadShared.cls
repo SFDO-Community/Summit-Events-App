@@ -83,8 +83,18 @@ public without sharing class SummitEventsReadShared {
         ]);
     }
 
-    public static Summit_Events_Registration__c getRegistrationById(Id registrationId) {
-        return [
+    public static Summit_Events_Registration__c getRegistrationById(String registrationId) {
+        //The id usually comes from the cookie, which can be missing or stale, so a blank, invalid or not found id returns null instead of throwing
+        if (String.isBlank(registrationId)) {
+            return null;
+        }
+        Id validRegistrationId;
+        try {
+            validRegistrationId = registrationId;
+        } catch (StringException e) {
+            return null;
+        }
+        List<Summit_Events_Registration__c> registrations = [
                 SELECT Id, Name, Status__c, Event_Name__c, Event_Instance_Title__c, Registrant_Email__c, Number_of_Guests__c, Registrant_Applicant_Type__c,
                         Registrant_Gender__c, Registrant_Street_1__c, Registrant_Street_2__c, Registrant_State__c, Registrant_City__c, Preferred_Visit_Time__c,
                         Registrant_Zip__c, Registrant_Phone__c, Registrant_Mobile_Phone__c, Registrant_College__c, Registrant_College_Code__c, Registrant_College_Year__c,
@@ -99,9 +109,10 @@ public without sharing class SummitEventsReadShared {
                         Event__r.Payment_Gateway__c, Event_Instance_Date_Time_Formatted__c, Event_Instance__c, Event_Instance__r.Instance_Title__c, Event__c,
                         Generated_Itinerary__c, Generated_Requested_Appointments__c, Registrant_First_Name__c, Registrant_Last_Name__c
                 FROM Summit_Events_Registration__c
-                WHERE Id = :registrationId
+                WHERE Id = :validRegistrationId
                 WITH SECURITY_ENFORCED
         ];
+        return registrations.isEmpty() ? null : registrations[0];
     }
 
     public static Map<Id, Summit_Events_Question__c> getAdditionalQuestionsByEventId(Id eventId, List<String> registrantTypes) {

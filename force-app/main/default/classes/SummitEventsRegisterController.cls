@@ -532,7 +532,15 @@ public with sharing class SummitEventsRegisterController {
             }
         }
 
-        eventRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience, eventFeeList);
+        Summit_Events_Registration__c savedRegistration = rCRUD.updateRegistration(eventRegistration, incomingEventRegistrationId, registrantAudience, eventFeeList);
+
+        //Stay on this page with the error message instead of moving on with no registration behind it
+        if (savedRegistration == null) {
+            return null;
+        }
+        eventRegistration = savedRegistration;
+        //A second save from this page updates the record instead of inserting it again
+        incomingEventRegistrationId = eventRegistration.Id;
 
         System.debug('Saved Registration id: ' + eventRegistration.Id);
         String dayOfWeek = SummitEventsShared.convertDateToDatetime(evtInstance.Instance_Start_Date__c, null, '').format('EEEE');
@@ -614,6 +622,14 @@ public with sharing class SummitEventsRegisterController {
                 }
             } catch (Exception ex) {
                 System.debug(ex.getMessage());
+                eventRegistration.Id = null;
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, getSaveErrorMessage(ex)));
+                return null;
+            }
+
+            if (eventRegistration.Id == null) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, getSaveErrorMessage(null)));
+                return null;
             }
 
             //Save fees
@@ -634,6 +650,24 @@ public with sharing class SummitEventsRegisterController {
             SummitEventsShared.createEncryptedCookie(registrantAudience, eventRegistration.Event_Instance__c, eventRegistration.Event__c, eventRegistration.Id, true);
 
             return eventRegistration;
+        }
+
+        /**
+         * Builds the message shown to the registrant when the registration cannot be saved.
+         * Validation rule and addError messages are written by the admin for registrants, so they are shown as is.
+         * Anything else gets a generic message so system details are not shown to guests.
+         *
+         * @param ex The exception thrown by the save, or null when the save did not run
+         * @return The message to show on the registration page
+         */
+        private String getSaveErrorMessage(Exception ex) {
+            if (ex instanceof DmlException) {
+                DmlException saveException = (DmlException) ex;
+                if (saveException.getNumDml() > 0 && saveException.getDmlType(0) == StatusCode.FIELD_CUSTOM_VALIDATION_EXCEPTION) {
+                    return saveException.getDmlMessage(0);
+                }
+            }
+            return 'We were unable to save your registration. Please try again or contact the event host.';
         }
 
         public void insertAppointments(List<Summit_Events_Appointments__c> appointments) {

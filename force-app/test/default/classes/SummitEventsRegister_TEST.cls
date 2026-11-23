@@ -43,6 +43,42 @@ private class SummitEventsRegister_TEST {
         }
     }
 
+    @IsTest static void testFailedSaveStaysOnPageWithMessage() {
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User','Summit_Events_Registrant');
+        System.runAs(testUser) {
+            Test.startTest();
+            PageReference pageRef = Page.SummitEventsRegister;
+            Test.setCurrentPage(pageRef);
+            ApexPages.currentPage().getParameters().put('instanceID', seaTestInstances[1].Id);
+            ApexPages.currentPage().getParameters().put('adminopen', 'true');
+            SummitEventsRegisterController registerController = new SummitEventsRegisterController();
+            //First name longer than the field allows makes the insert fail, standing in for a validation rule, flow or duplicate rule
+            registerController.eventRegistration.Registrant_First_Name__c = 'T'.repeat(81);
+            registerController.eventRegistration.Registrant_Last_Name__c = 'Tester';
+            registerController.eventRegistration.Registrant_Email__c = 'failedsave@test.com';
+
+            PageReference nextPage = registerController.saveContactRegistration();
+
+            //Registrant stays on the first page instead of moving on with no registration behind it
+            System.assertEquals(null, nextPage, 'A failed save should not move to the next page');
+            System.assertEquals(0, [SELECT COUNT() FROM Summit_Events_Registration__c WHERE Registrant_Email__c = 'failedsave@test.com']);
+
+            Boolean foundSaveMessage = false;
+            for (ApexPages.Message pageMessage : ApexPages.getMessages()) {
+                if (pageMessage.getSeverity() == ApexPages.Severity.ERROR && pageMessage.getSummary().startsWith('We were unable to save your registration')) {
+                    foundSaveMessage = true;
+                }
+            }
+            System.assert(foundSaveMessage, 'A failed save should show the generic error message');
+
+            //Form values are kept so the registrant can correct and resubmit
+            System.assertEquals('failedsave@test.com', registerController.eventRegistration.Registrant_Email__c);
+            System.assertEquals(null, registerController.eventRegistration.Id);
+            Test.stopTest();
+        }
+    }
+
     @IsTest static void testEventWithEmailRestrictionsOnInstance() {
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
         Summit_Events_Registration__c seaTestRegistration = SummitEventsTestSharedDataFactory.createEventRegistration(seaTestInstances[1], 'Test', 'Tester', 'test@test.net', '55555', '1971-03-22', '2012', null);

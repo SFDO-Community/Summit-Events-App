@@ -67,7 +67,7 @@ public with sharing class SummitEventsSubmitController {
 
             Summit_Events_Registration__c eventRegistration = SummitEventsReadShared.getRegistrationById(eventInformation.registrationId);
 
-            if (String.isNotBlank(eventRegistration.Guest_JSON__c)) {
+            if (eventRegistration != null && String.isNotBlank(eventRegistration.Guest_JSON__c)) {
 
                 List<String> registrantTypes = new List<String>{
                         'Guest', 'Registrant and Guest'
