@@ -31,6 +31,59 @@ private class SummitEventsAdditionalQuestions_TEST {
     }
 
     @IsTest
+    static void cookieWithoutRegistrationRedirectsToRegister() {
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Registrant');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+
+        String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
+
+        System.runAs(testUser) {
+            Test.startTest();
+
+            PageReference pageRef = Page.SummitEventsAdditionalQuestions;
+            Test.setCurrentPage(pageRef);
+
+            //Cookie knows the event but lost the registration, as when another instance's link overwrote it
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, '', true);
+
+            //Constructor must not throw on the blank registration id, or the page action below never runs
+            SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
+            System.assertEquals(null, questionController.eventRegistration.Id);
+
+            //Page action sends the registrant back to the first page of the same instance
+            PageReference eventPage = questionController.checkEventDetails();
+            System.assertNotEquals(null, eventPage, 'A cookie without a registration id should redirect');
+            System.assertEquals('https://google.com/' + namespace + 'SummitEventsRegister?instanceID=' + seaTestInstances[1].Id, eventPage.getUrl());
+
+            Test.stopTest();
+        }
+    }
+
+    @IsTest
+    static void cookieWithMissingRegistrationDoesNotThrow() {
+        List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();
+        SummitEventsTestSharedDataFactory.addQuestionsToEvent(seaTestInstances[1].Event__c, 'Text Area', 'Registrant');
+        User testUser = SummitEventsTestSharedDataFactory.userToRunWith('Standard User', 'Summit_Events_Registrant');
+        String missingRegistrationId = SummitEventsTestSharedDataFactory.getFakeId(Summit_Events_Registration__c.SObjectType);
+
+        System.runAs(testUser) {
+            Test.startTest();
+
+            PageReference pageRef = Page.SummitEventsAdditionalQuestions;
+            Test.setCurrentPage(pageRef);
+
+            //Cookie holds a registration id that no longer matches a record
+            SummitEventsShared.createEncryptedCookie('Transfer', seaTestInstances[1].Id, seaTestInstances[1].Event__c, missingRegistrationId, true);
+
+            SummitEventsAdditionalQuestionsCtlr questionController = new SummitEventsAdditionalQuestionsCtlr();
+            System.assertEquals(null, questionController.eventRegistration.Id);
+
+            Test.stopTest();
+        }
+    }
+
+    @IsTest
     static void eventWithDataNoQuestions() {
         SummitEventsTestSharedDataFactory.createContact('TestFirst1', 'TestLast1', 'test1@valleyhill.net', '55418', '(555) 555-5555', '1971-03-22');
         List<Summit_Events_Instance__c> seaTestInstances = SummitEventsTestSharedDataFactory.createTestEvent();

@@ -100,7 +100,11 @@ public with sharing class SummitEventsRegisterGuestsController {
 
             guestQuestionJSON = JSON.serialize(questionList);
 
+            //A missing or stale cookie leaves no registration; keep an empty one so the page action can redirect instead of the constructor throwing
             eventRegistration = SummitEventsReadShared.getRegistrationById(eventInformation.registrationId);
+            if (eventRegistration == null) {
+                eventRegistration = new Summit_Events_Registration__c();
+            }
 
             guestJSON = eventRegistration.Guest_JSON__c;
 

@@ -83,7 +83,11 @@ public with sharing class SummitEventsAdditionalQuestionsCtlr {
             //Get namespace if packaged
             String namespace = SummitEventsNamespace.StrTokenNSPrefix('');
 
+            //A missing or stale cookie leaves no registration; keep an empty one so the page action can redirect instead of the constructor throwing
             eventRegistration = SummitEventsReadShared.getRegistrationById(eventInformation.registrationId);
+            if (eventRegistration == null) {
+                eventRegistration = new Summit_Events_Registration__c();
+            }
 
             // eventInformation is an object gathered from the encrypted client cookie that contains a registration id without which thou shall not pass
             if (String.isNotBlank(eventInformation.registrationId)) {
