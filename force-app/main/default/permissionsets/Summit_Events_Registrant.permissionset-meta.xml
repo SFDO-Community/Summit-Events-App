@@ -107,6 +107,16 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Summit_Events_Appointment_Type__c.Enforce_Registrations_Limit__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events_Appointment_Type__c.Appointment_Registrations_Limit__c</field>
+        <readable>true</readable>
+    </fieldPermissions>    
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Summit_Events_Appointment_Type__c.Restrict_To_Instance_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1778,6 +1788,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Summit_Events__c.Ask_Title__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Summit_Events__c.Ask_Email_Confirmation__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
