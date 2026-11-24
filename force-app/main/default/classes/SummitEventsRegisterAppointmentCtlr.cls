@@ -231,7 +231,7 @@ public with sharing class SummitEventsRegisterAppointmentCtlr {
 
         Map<Id, Integer> appointmentTypeIdMapToCount = new Map<Id, Integer>();
         for (AggregateResult ar : eventAppointmentCounts) {
-            appointmentTypeIdMapToCount.put((Id) ar.get('Event_Appointment_Type__c'), (Integer) ar.get('aCount'));
+            appointmentTypeIdMapToCount.put((Id) ar.get('appointmentTypeId'), (Integer) ar.get('aCount'));
         }
 
         List<Id> unavailableAppointments = new List<Id>();

@@ -23,9 +23,11 @@
  *
  * Security and Code Analyzer notes
  * - with sharing, and every query and DML statement is USER_MODE. The editor needs read access to
- *   the rich text fields and to any file they link, plus file create and public-link access (see the
- *   Summit_Events_Admin permission set). If they lack any of it the operation fails closed and the
- *   field is left unchanged. The single exception is notificationTypeId(), a system-mode lookup of
+ *   the rich text fields and to any file they link, plus file create and public-link access. The
+ *   Summit_Events_Admin permission set grants the record and field access. Create Public Links is a
+ *   user permission, which a packaged permission set cannot carry, so each org grants it itself (dev
+ *   orgs get the unpackaged Summit_Events_Dev_Public_Links). If they lack any of it the operation
+ *   fails closed, the field is left unchanged and the editor is notified. The single exception is notificationTypeId(), a system-mode lookup of
  *   our own notification type's Id so failures can be reported to ordinary editors.
  * - Failures are reported to the editor with an in-app notification of fixed, translatable
  *   messages (Custom Labels). Raw exception text is never shown or sent.
@@ -786,12 +788,16 @@ public with sharing class SummitEventsRtfLinkPipeline {
     // The one deliberate use of system mode in this class: ordinary editors cannot query
     // CustomNotificationType, and without its Id they would never hear about a failure. This only
     // looks up the Id of our own fixed notification type by DeveloperName; no record data is read.
+    // DeveloperName is only unique within a namespace, so match ours: the package namespace when
+    // installed (a subscriber may have a type with the same name), none when deployed unmanaged.
     @TestVisible
     private static Id notificationTypeId() {
+        String namespacePrefix = String.isBlank(SummitEventsNamespace.getNamespace()) ? null : SummitEventsNamespace.getNamespace();
         List<CustomNotificationType> types = [
             SELECT Id
             FROM   CustomNotificationType
             WHERE  DeveloperName = :NOTIFICATION_TYPE
+            AND    NamespacePrefix = :namespacePrefix
             WITH   SYSTEM_MODE
             LIMIT  1
         ];

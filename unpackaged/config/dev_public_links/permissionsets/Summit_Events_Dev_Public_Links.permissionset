@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Dev orgs only, not packaged. Grants Create Public Links, needed by Convert images to public access, which a packaged permission set cannot carry. Assign with Summit_Events_Admin to rich text editors.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Summit Events Dev: Create Public Links</label>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ChatterFileLink</name>
+    </userPermissions>
+</PermissionSet>

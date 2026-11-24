@@ -1,8 +1,6 @@
 @IsTest
 public with sharing class SummitEventsRtfLinkPipeline_TEST {
 
-    private static final String SOURCE_FIELD = 'Event_Full_Text__c';
-
     @TestSetup
     static void makeData() {
         ContentVersion cv = new ContentVersion(
@@ -125,7 +123,7 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
     @IsTest
     static void shouldAddUsableLink_WhenAnotherUsersLinkBlocksDownload() {
 
-        User editor = SummitEventsTestSharedDataFactory.userToRunWith('Minimum Access - Salesforce', 'Summit_Events_Admin');
+        User editor = editor();
         ContentVersion cv = [SELECT Id, ContentDocumentId FROM ContentVersion LIMIT 1];
         insert new ContentDocumentLink(ContentDocumentId = cv.ContentDocumentId, LinkedEntityId = editor.Id, ShareType = 'C');
         ContentDistribution blocked = new ContentDistribution(
@@ -230,7 +228,10 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
         Assert.isTrue(prefs.PreferencesAllowOriginalDownload, 'The direct download URL requires original download');
         Assert.isFalse(prefs.PreferencesPasswordRequired, 'Guests cannot enter a password');
         Assert.isFalse(prefs.PreferencesExpires, 'The link must not expire out from under a live event page');
-        Assert.isTrue(mock.lastEndpoint.contains('/sobjects/Summit_Events__c/' + se.Id + '/richTextImageFields/' + SOURCE_FIELD + '/' + refId(1)),
+        // Names come from describe so they carry the package namespace when there is one
+        String objectName = Summit_Events__c.SObjectType.getDescribe(SObjectDescribeOptions.DEFERRED).getName();
+        String fieldName = Summit_Events__c.Event_Full_Text__c.getDescribe().getName();
+        Assert.isTrue(mock.lastEndpoint.contains('/sobjects/' + objectName + '/' + se.Id + '/richTextImageFields/' + fieldName + '/' + refId(1)),
             'The REST request should target the event, field and image reference: ' + mock.lastEndpoint);
         Assert.areEqual(1, [SELECT COUNT() FROM ContentDocumentLink WHERE LinkedEntityId = :se.Id],
             'The new file should be linked to the event so it appears in its Files related list');
@@ -597,12 +598,12 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
     // ---------------------------------------------------------------------------------------
 
     @IsTest
-    static void shouldPublishRtaImage_WhenEditorOnlyHasAdminPermissionSet() {
+    static void shouldPublishRtaImage_WhenEditorHasAdminPermissionSetAndPublicLinks() {
 
         Summit_Events__c se = stageRtaEvent('Editor RTA Event', rtaTag(1));
         ImageMock mock = new ImageMock(200, 'image/jpeg');
         Test.setMock(HttpCalloutMock.class, mock);
-        User editor = SummitEventsTestSharedDataFactory.userToRunWith('Minimum Access - Salesforce', 'Summit_Events_Admin');
+        User editor = editor();
 
         Test.startTest();
         System.runAs(editor) {
@@ -611,15 +612,39 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
         Test.stopTest();
 
         Assert.areEqual(1, mock.callCount, 'The editor should be able to fetch the image');
-        ContentDistribution cd = [SELECT Id, ContentDownloadUrl FROM ContentDistribution];
-        Assert.isTrue(containsUrl(getEvent(se.Id).Event_Full_Text__c, cd.ContentDownloadUrl),
-            'An editor with only the admin permission set should be able to publish the image');
+        List<ContentDistribution> links = [SELECT Id, ContentDownloadUrl FROM ContentDistribution];
+        Assert.areEqual(1, links.size(), 'The admin permission set plus Create Public Links should be enough to publish');
+        Assert.isTrue(containsUrl(getEvent(se.Id).Event_Full_Text__c, links[0].ContentDownloadUrl),
+            'The field should hold the public URL');
+    }
+
+    @IsTest
+    static void shouldLeaveImageAsWritten_WhenEditorOnlyHasPackagedPermissionSet() {
+
+        // What a subscriber gets from the package alone, before granting Create Public Links. The editor
+        // owns the image so they can read it, leaving the missing permission as the only obstacle.
+        User editor = editorWithoutPublicLinks();
+        ContentVersion cv;
+        System.runAs(editor) {
+            cv = new ContentVersion(Title = 'Editor image', PathOnClient = 'editor.png', VersionData = Blob.valueOf('png'), IsMajorVersion = true);
+            insert cv;
+        }
+        Summit_Events__c se = insertEvent('Packaged Only Event', versionLinkTag(cv.Id));
+
+        Test.startTest();
+        System.runAs(editor) {
+            new SummitEventsRtfLinkPipeline(new Map<Id, Summit_Events__c>{ se.Id => se }).run();
+        }
+        Test.stopTest();
+
+        Assert.areEqual(0, [SELECT COUNT() FROM ContentDistribution], 'Without Create Public Links no link can be created');
+        Assert.areEqual(se.Event_Full_Text__c, getEvent(se.Id).Event_Full_Text__c, 'The image should be left as written');
     }
 
     @IsTest
     static void shouldPublishVersionLink_WhenEditorOwnsTheImageFile() {
 
-        User editor = SummitEventsTestSharedDataFactory.userToRunWith('Minimum Access - Salesforce', 'Summit_Events_Admin');
+        User editor = editor();
         ContentVersion cv;
         System.runAs(editor) {
             cv = new ContentVersion(Title = 'Editor image', PathOnClient = 'editor.png', VersionData = Blob.valueOf('png'), IsMajorVersion = true);
@@ -647,7 +672,8 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
         );
         insert privateFile;
         Summit_Events__c se = insertEvent('Private Link Event', versionLinkTag(privateFile.Id));
-        User editor = SummitEventsTestSharedDataFactory.userToRunWith('Minimum Access - Salesforce', 'Summit_Events_Admin');
+        // Fully set up, so only the file access can be what stops publishing
+        User editor = editor();
 
         Test.startTest();
         System.runAs(editor) {
@@ -826,24 +852,23 @@ public with sharing class SummitEventsRtfLinkPipeline_TEST {
         return eventIds;
     }
 
-    // Minimum access user who can edit events and their rich text, but lacks Create Public Links
+    // What the package gives an editor: Minimum Access plus Summit_Events_Admin. A packaged permission
+    // set cannot carry user permissions, so this editor lacks Create Public Links.
     private static User editorWithoutPublicLinks() {
-        User editor = SummitEventsTestSharedDataFactory.userToRunWith('Minimum Access - Salesforce', null);
-        String objectName = Summit_Events__c.SObjectType.getDescribe(SObjectDescribeOptions.DEFERRED).getName();
+        return SummitEventsTestSharedDataFactory.userToRunWith('Minimum Access - Salesforce', 'Summit_Events_Admin');
+    }
+
+    // A fully set-up editor: the packaged permission set plus Create Public Links, which an org grants
+    // itself (dev orgs use the unpackaged Summit_Events_Dev_Public_Links). Created here so the test
+    // does not depend on anything outside the package.
+    private static User editor() {
+        User editor = editorWithoutPublicLinks();
         System.runAs(new User(Id = UserInfo.getUserId())) {
-            PermissionSet editing = new PermissionSet(Name = 'Event_Editing_Without_Links', Label = 'Event Editing Without Links');
-            insert editing;
-            insert new ObjectPermissions(
-                ParentId = editing.Id, SobjectType = objectName,
-                PermissionsRead = true, PermissionsEdit = true, PermissionsDelete = true,
-                PermissionsViewAllRecords = true, PermissionsModifyAllRecords = true
+            PermissionSet publicLinks = new PermissionSet(
+                Name = 'Test_Create_Public_Links', Label = 'Test Create Public Links', PermissionsChatterFileLink = true
             );
-            insert new FieldPermissions(
-                ParentId = editing.Id, SobjectType = objectName,
-                Field = objectName + '.' + Summit_Events__c.Event_Full_Text__c.getDescribe().getName(),
-                PermissionsRead = true, PermissionsEdit = true
-            );
-            insert new PermissionSetAssignment(AssigneeId = editor.Id, PermissionSetId = editing.Id);
+            insert publicLinks;
+            insert new PermissionSetAssignment(AssigneeId = editor.Id, PermissionSetId = publicLinks.Id);
         }
         return editor;
     }
