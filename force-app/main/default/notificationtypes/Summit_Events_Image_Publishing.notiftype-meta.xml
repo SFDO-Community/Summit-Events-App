@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomNotificationType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customNotifTypeName>Summit Events Image Publishing</customNotifTypeName>
+    <description>Tells the person who saved a Summit Event when an image in a rich text field could not be made public for guests.</description>
+    <desktop>true</desktop>
+    <masterLabel>Summit Events Image Publishing</masterLabel>
+    <mobile>false</mobile>
+    <slack>false</slack>
+</CustomNotificationType>

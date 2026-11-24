@@ -71,6 +71,35 @@ tasks:
             upsert permissionSetList;
         }
 
+  deploy_dev_public_links_permission_set:
+    description: Deploys the dev-only Create Public Links permission set, which a packaged permission set cannot carry (not packaged)
+    class_path: cumulusci.tasks.salesforce.Deploy
+    options:
+      path: unpackaged/config/dev_public_links
+
+  assign_dev_public_links_permission_set:
+    description: Give System Admins the dev-only Create Public Links permission set
+    class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+    options:
+      apex: >
+        List<PermissionSet> linkPermissionSets = [SELECT Id FROM PermissionSet WHERE Name = 'Summit_Events_Dev_Public_Links'];
+
+        if (!linkPermissionSets.isEmpty()) {
+            Set<Id> assignedUserIds = new Set<Id>();
+            for (PermissionSetAssignment existing : [SELECT AssigneeId FROM PermissionSetAssignment WHERE PermissionSetId = :linkPermissionSets[0].Id]) {
+                assignedUserIds.add(existing.AssigneeId);
+            }
+            List<PermissionSetAssignment> assignments = new List<PermissionSetAssignment>();
+            for (User u : [SELECT Id FROM User WHERE Profile.Name = 'System Administrator' AND IsActive = true]) {
+                if (!assignedUserIds.contains(u.Id)) {
+                    assignments.add(new PermissionSetAssignment(PermissionSetId = linkPermissionSets[0].Id, AssigneeId = u.Id));
+                }
+            }
+            if (!assignments.isEmpty()) {
+                insert assignments;
+            }
+        }
+
   deploy_guest_permission_set:
     description: Give Guest User Registrant Permission Set
     class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
@@ -172,6 +201,10 @@ flows:
         task: create_community
       3:
         task: deploy_admin_permission_set
+      3.1:
+        task: deploy_dev_public_links_permission_set
+      3.2:
+        task: assign_dev_public_links_permission_set
       4:
         task: deploy_site_config
       5:
@@ -197,6 +230,10 @@ flows:
         task: create_community_publish
       9:
         task: deploy_admin_permission_set
+      9.1:
+        task: deploy_dev_public_links_permission_set
+      9.2:
+        task: assign_dev_public_links_permission_set
       11:
         task: deploy_site_settings
       12:
@@ -208,6 +245,10 @@ flows:
     steps:
       3:
         task: deploy_admin_permission_set
+      3.1:
+        task: deploy_dev_public_links_permission_set
+      3.2:
+        task: assign_dev_public_links_permission_set
       4:
         task: deploy_site_config
       5:

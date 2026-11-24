@@ -3,6 +3,10 @@
 **/tsconfig*.json
 **/*.tsbuildinfo
 **/eslint.config.mjs
+**/jsconfig.json
+
+**/.eslintrc.json
+
 
 # Added by Illuminated Cloud
 **/graphql.config.yml

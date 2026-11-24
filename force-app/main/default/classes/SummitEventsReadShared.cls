@@ -242,8 +242,9 @@ public without sharing class SummitEventsReadShared {
     }
 
     public static AggregateResult[] getLimitedAppointmentCountsByInstanceId(Id instanceId) {
+        // Aliased so callers read the same key with or without the package namespace
         return [
-                SELECT Count(Id) aCount, Event_Appointment_Type__c
+                SELECT Count(Id) aCount, Event_Appointment_Type__c appointmentTypeId
                 FROM Summit_Events_Appointments__c
                 WHERE Event_Appointment_Type__r.Enforce_Registrations_Limit__c = TRUE
                 AND Event_Registration__r.Event_Instance__c = :instanceId
