@@ -1,0 +1,33 @@
+- snowfakery_version: 3
+- plugin: snowfakery.standard_plugins.Salesforce.SOQLDataset
+- object: Contact
+  count: 100
+  fields:
+      FirstName: ${{fake.first_name}}
+      LastName: ${{fake.last_name}}
+      Email: ${{fake.email}}
+      Phone: ${{fake.phone_number}}
+      MailingStreet: ${{fake.street_address}}
+      MailingCity: ${{fake.city}}
+      MailingState: ${{fake.state}}
+      MailingPostalCode: ${{fake.postcode}}
+      MailingCountry: ${{fake.country}}
+  friends:
+    - object: summit_events_Registration__c
+      fields:
+        __instance:
+          SOQLDataset.iterate:
+            fields: Id, Instance_Title__c, Event__c
+            from: summit_events_instance__c
+            where: Event__r.Name = 'Sample - Open House for Prospective Graduate Students'
+        Contact__c: ${{Contact}}
+        Event__c: ${{__instance.Event__c}}
+        Event_Instance__c: ${{__instance.Id}}
+        registrant_first_name__c: ${{Contact.FirstName}}
+        registrant_last_name__c: ${{Contact.LastName}}
+        registrant_email__c: ${{Contact.Email}}
+        registrant_phone__c: ${{Contact.Phone}}
+        registrant_street_1__c: ${{Contact.MailingStreet}}
+        registrant_city__c: ${{Contact.MailingCity}}
+        registrant_postal_code__c: ${{Contact.MailingPostalCode}}
+        status__c: 'Registered'
